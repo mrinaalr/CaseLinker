@@ -2115,6 +2115,120 @@ if _LOCAL_DISK_TOOLS:
             return {"error": str(e), "write": False, "mutated": False}
 
 
+    # --- Repair and expand: propose a change to extraction, measure it, never admit it ---
+
+    @mcp.tool()
+    async def describe_pipeline() -> dict[str, Any]:
+        """READ (local MCP only). What can be extended in CaseLinker and what is the maintainer's to decide.
+
+        Layers with their paths, document kinds, every registered detector with the file and line
+        that defines it, the fields the resolver settles, the resolution rules (families, the 0.7
+        single-family line), approved compiled rules, extensions found under extensions/, the fixed
+        gate, the decisions reserved for the maintainer (document kinds, stored fields, cases
+        columns, ontology mapping and pins, corpus writes) and open review counts. Start here.
+        """
+        try:
+            from caselinker_mcp.repair_expand import describe_pipeline as _describe
+
+            return await asyncio.to_thread(_describe)
+        except Exception as e:
+            logger.exception("describe_pipeline failed")
+            return {"error": str(e), "write": False}
+
+    @mcp.tool()
+    async def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False) -> dict[str, Any]:
+        """READ (local MCP only). Why one stored value is what it is.
+
+        For each field (age | sentence | investigation_type | cybertip_reporter | date, empty = all):
+        the stored resolution, the stored rows resolved by today's resolver, and a replay of today's
+        deterministic readers on the stored text. Every candidate a reader raised, with its detector,
+        role, whether the span gate kept it and why, and a people-masked excerpt; spans shaped like
+        the field that no reader raised (unread); stored rows today's readers no longer raise.
+        Stanza, the LLM and human verdicts are not replayed (their stored rows are carried); spaCy
+        only with use_spacy. A difference means the code changed, not which value is right.
+        """
+        try:
+            from caselinker_mcp.repair_expand import diagnose_case as _diagnose
+
+            return await asyncio.to_thread(_diagnose, case_id, field=field, use_spacy=use_spacy)
+        except Exception as e:
+            logger.exception("diagnose_case failed")
+            return {"error": str(e), "write": False}
+
+    @mcp.tool()
+    async def profile_new_source(
+        path: str, doc_kind: str = "press_release", extension: str = "", max_cases: int = 200
+    ) -> dict[str, Any]:
+        """READ (local MCP only). Split a local PDF or .txt into cases and count what today's readers extract.
+
+        Nothing is stored. Reports the source detected (or unknown), cases split, case lengths, how
+        many cases fill each column, raised / kept / dropped-by-reason per detector, resolution status
+        per field, review reasons, field-shaped spans no reader raised, and how many cases are already
+        in the corpus by content fingerprint. extension= also rehearses extensions/<name> on the same
+        cases. spaCy, Stanza, the semantic model and the LLM are off.
+        """
+        try:
+            from caselinker_mcp.repair_expand import profile_new_source as _profile
+
+            return await asyncio.to_thread(_profile, path, doc_kind=doc_kind, extension=extension, max_cases=max_cases)
+        except Exception as e:
+            logger.exception("profile_new_source failed")
+            return {"error": str(e), "write": False}
+
+    @mcp.tool()
+    async def scaffold_extension(
+        name: str, field: str, value_type: str = "", role: str = "stated",
+        doc_kind: str = "press_release", dry_run: bool = True,
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Create extensions/<name>/ with a detector stub and a test that fails until written.
+
+        field is age | sentence | investigation_type (gated by the existing span gate) or a new field
+        with value_type number | money | duration | literal (the gate reads the value from the span).
+        dry_run (default) returns the files without writing. An extension runs only in
+        profile_new_source and run_gate; ingest never loads one, and a new field is never stored.
+        """
+        try:
+            from caselinker_mcp.repair_expand import scaffold_extension as _scaffold
+
+            return await asyncio.to_thread(
+                _scaffold, name, field, value_type=value_type, role=role, doc_kind=doc_kind, dry_run=dry_run
+            )
+        except Exception as e:
+            logger.exception("scaffold_extension failed")
+            return {"error": str(e), "write": False}
+
+    @mcp.tool()
+    async def run_gate(
+        rule: dict[str, Any] | None = None,
+        extension: str = "",
+        case_ids: list[str] | None = None,
+        sample: int = 200,
+        checks: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """READ (local MCP only). Fixed checks, and every case a proposed change would move.
+
+        No rule or extension: grades this checkout. integrity (the gate's own files and the lines of
+        its fixed tests unchanged from origin/main), the fixed test files, and, when extraction code
+        differs from origin/main, a replay of both on a frozen sample (every k-th case id, plus
+        case_ids) listing each case whose columns, assertions or resolutions change.
+        rule: a compiled-rule candidate {id, field (age | sentence | investigation_type), role, regex,
+        group?, document_kinds?, positives, negatives}; validated against its quotes, run over every
+        stored case in a child process, each match span-gated, and the stored resolutions recomputed
+        with it. extension: extensions/<name> rehearsed on the frozen sample. The proposal never runs
+        in this process. Pass means the checks hold, not that the change is right: read the listed
+        cases. Admission is a commit the maintainer reviews; nothing here writes.
+        """
+        try:
+            from caselinker_mcp.repair_expand import run_gate as _gate
+
+            return await asyncio.to_thread(
+                _gate, rule=rule, extension=extension, case_ids=case_ids, sample=sample, checks=checks
+            )
+        except Exception as e:
+            logger.exception("run_gate failed")
+            return {"error": str(e), "write": False}
+
+
 if __name__ == "__main__":
     if MCP_TRANSPORT == "sse":
         _sse_app = build_mcp_sse_app()

@@ -154,8 +154,8 @@ You can process additional PDFs to add more cases to the database.
    - Provides REST API endpoints for case data, analysis, and statistics
 
 3. **`caselinker_mcp/server.py`** - **MCP server for agents and operators**
-   - **Local stdio:** **55 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine
-   - **Railway hosted MCP:** **45 tools** — same corpus/READ surface; collector **WRITE tools** are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
+   - **Local stdio:** **62 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine
+   - **Railway hosted MCP:** **47 tools** — same corpus/READ surface; collector **WRITE tools** are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
    - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` and `caselinker_mcp/tool_registry.md` for setup, auth, and the full catalog
 
 **Typical use case:**
@@ -405,7 +405,7 @@ CaseLinker/
 │   ├── data/lstar_all_cases.json     # Transition matrix + L* trajectories
 │   ├── compute_lstar.py              # Rebuild L* export
 │   └── lifecycle_api.py              # /lifecycle + trusted API payload
-├── caselinker_mcp/                   # MCP server (55 local / 45 Railway; corpus + collector + RECAP)
+├── caselinker_mcp/                   # MCP server (62 local / 47 Railway; corpus + collector + RECAP)
 │   ├── server.py                     # MCPServer (mcp 2.x) entry point
 │   ├── collector_tools.py            # Collector wrappers (WRITE local-only)
 │   ├── public_records.py             # DOJ API + CourtListener/RECAP READ
