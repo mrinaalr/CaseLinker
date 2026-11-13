@@ -370,7 +370,7 @@ CaseLinker/
 │   └── auth.py                       # Access gates / keys for sensitive views
 ├── collector/                        # press → PDF, plus collector/pacer/ court fetch
 ├── scripts/
-│   ├── rebuild_oxigraph.py           # Wholesale Oxigraph reload (N-Quads PUT /store)
+│   ├── rebuild_oxigraph.py           # Oxigraph bulk reload into an empty store
 │   ├── stats/                        # Corpus statistics scripts
 │   ├── verify/                       # Claims, uniqueness, ICAC TF alignment, triage tests
 │   └── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
