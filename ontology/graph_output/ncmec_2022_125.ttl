@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,7 +30,10 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_125/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_125/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_125/legal-proceeding> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_125/admission/1> .
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2022_125/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/grindr>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/admission/1/extraction-confidence> a ns5:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -52,42 +55,32 @@
     ns5:hasConfidence 0.5242 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 35.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/registered-sex-offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/registered-sex-offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_125/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/registered-sex-offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/grindr> a ns5:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#OnlineDatingPlatform> ;
-    rdfs:label "Grindr" ;
-    ns1:name "Grindr" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a ns5:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_125/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_125/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "child porn" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/event/distribution> a ns5:Event,
-        ns2:CSAM_Distribution ;
+        ns1:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/event/online-only> a ns3:ChildSexualAbuseEvent,
@@ -100,23 +93,23 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns2:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held without bond" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_125/charge/1> .
+    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_125/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/location/lake-county> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Lake County" ;
-    ns1:name "Lake County" .
+    ns4:name "Lake County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/location/leesburg> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Leesburg" ;
-    ns1:name "Leesburg" .
+    ns4:name "Leesburg" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
@@ -127,32 +120,42 @@
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     skos:altLabel "Fla." ;
-    ns1:name "Florida" .
+    ns4:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/florida-fl-12> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
-    ns1:name "Florida" .
+    ns4:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/lake-mary-city-fl> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Lake Mary city" ;
     dcterms:identifier "fips:1238425" ;
     skos:altLabel "Lake Mary" ;
-    ns1:name "Lake Mary city" .
+    ns4:name "Lake Mary city" .
 
 <https://w3id.org/caselinker/resource/location/mount-dora-city> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mount Dora city" ;
     dcterms:identifier "fips:1247050" ;
     skos:altLabel "Mount Dora" ;
-    ns1:name "Mount Dora city" .
+    ns4:name "Mount Dora city" .
+
+<https://w3id.org/caselinker/resource/platform/grindr> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#OnlineDatingPlatform> ;
+    rdfs:label "Grindr" ;
+    ns4:name "Grindr" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns4:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "did not register to his sex offender registry" ;
     dcterms:source <https://www.fox35orlando.com/news/lake-county-sex-offender-arrested-on-child-porn-charges-report-states> ;
-    ns1:description "did not register to his sex offender registry" .
+    ns4:description "did not register to his sex offender registry" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_125/phase/arrested> a ns3:InitialPhase,
         ns5:Phase ;

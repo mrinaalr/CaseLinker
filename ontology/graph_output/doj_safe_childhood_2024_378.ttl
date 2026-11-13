@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -27,9 +27,10 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/legal-step/sentenced> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/agency/wilson-county-sheriffs-office> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/agency/wilson-county-sheriffs-office> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -45,46 +46,46 @@
     ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns4:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns2:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns4:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI",
         "FBI San Antonio Field Office" ;
     ns2:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/agency/wilson-county-sheriffs-office> a ns4:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Wilson County Sheriff's Office" ;
     ns2:name "Wilson County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/2> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/event/project-safe-childhood> a ns4:Event,
-        ns3:ProjectSafeChildhoodOperation ;
+        ns5:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/1>,
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/charge/2> ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/sentence/1> .
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/legal-step/sentenced> a ns4:Event,
         ns4:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/location/san-antonio> a ns4:PlaceLikeEntity,
@@ -92,8 +93,8 @@
     rdfs:label "San Antonio" ;
     ns2:name "San Antonio" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
     rdfs:label "300 months" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/role/offender/1> .
 
@@ -109,14 +110,14 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/phase/sentenced> a ns4:Phase,
-        ns5:SentencingPhase ;
+        ns3:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/event/possession> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_378/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

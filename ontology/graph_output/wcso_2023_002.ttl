@@ -1,12 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/wcso_2023_002> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/wcso_2023_002> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case wcso_2023_002" ;
     dcterms:created "2026-11-11T18:46:09.922141"^^xsd:dateTime ;
@@ -16,41 +16,42 @@
     dcterms:provenance <https://w3id.org/caselinker/resource/case/wcso_2023_002/provenance> ;
     dcterms:source <https://washoelife.washoecounty.gov/sheriff/rsonu-and-nevada-state-police-parole-and-probation-arrest-reno-man-for-possession-of-child-pornography/>,
         "WCSO" ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/wcso_2023_002/event/possession>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/wcso_2023_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/wcso_2023_002/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/nevada-state-police-department> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/nevada-state-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/wcso_2023_002/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/wcso_2023_002/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/wcso_2023_002/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/wcso_2023_002/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/wcso_2023_002/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/wcso_2023_002/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/wcso_2023_002/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/nevada-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:StateAgency ;
     rdfs:label "Nevada State Police Department" ;
-    ns3:name "Nevada State Police Department" .
+    ns2:name "Nevada State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/wcso_2023_002/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wcso_2023_002/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/wcso_2023_002/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/wcso_2023_002/charge/1> .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/wcso_2023_002/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/wcso_2023_002/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wcso_2023_002/event/possession> .
+
+<https://w3id.org/caselinker/resource/case/wcso_2023_002/event/possession> a ns1:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/wcso_2023_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/wcso_2023_002/role/offender/1> a ns1:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/wcso_2023_002/event/possession> .
-
-<https://w3id.org/caselinker/resource/case/wcso_2023_002/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" .
 

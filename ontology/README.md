@@ -55,6 +55,8 @@ flowchart LR
   inv -->|hasPhase / currentPhase| phase
   inv -->|hasStep| event
   inv -->|involvesAgency| agency
+  inv -->|uco-core:object| person
+  inv -->|uco-core:object| plat
   event -->|usesChannel, one event only| plat
   vRole -->|participatesInEvent, one event only| event
   oRole -->|participatesInEvent, one event only| event
@@ -64,7 +66,7 @@ flowchart LR
   inv -->|hasStep| proc
 ```
 
-Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's platforms (nodes in the case graph; `cac:usesChannel` only when the case has one event), victim/offender/defendant roles played by UCO `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
+Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's people and platforms as `uco-core:object` of the investigation (`cac:usesChannel` and `cac:participatesInEvent` only when the case has one event), victim/offender/defendant roles played by those `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
 
 Example files: [`graph_output/nj_ag_2017_001.ttl`](graph_output/nj_ag_2017_001.ttl) (Turtle) and the matching `.jsonld`.
 
@@ -94,7 +96,7 @@ flowchart TD
 2. **Map** — [`features_to_cac.py`](features_to_cac.py) (`CaseToCAC.map_case`). Batch wrapper: [`graph_generate.py`](graph_generate.py).
 3. **Emit** — `{case_id}.ttl` + `{case_id}.jsonld` under [`graph_output/`](graph_output/).
 4. **Validate** — SHACL; non-conformant graphs are reported (`validate()` / `validate_shacl=True`).
-5. **Serve** — wholesale Oxigraph reload ([`oxigraph_rebuild.py`](oxigraph_rebuild.py), [`scripts/rebuild_oxigraph.py`](../scripts/rebuild_oxigraph.py)). Query policy (LIMIT / Update / SERVICE): [`run/sparql_proxy.py`](../run/sparql_proxy.py). HTTP route: [`run/main.py`](../run/main.py) `GET|POST /sparql`.
+5. **Serve** — Oxigraph bulk reload into an empty store ([`oxigraph_rebuild.py`](oxigraph_rebuild.py), [`scripts/rebuild_oxigraph.py`](../scripts/rebuild_oxigraph.py)). Query policy (LIMIT / Update / SERVICE): [`run/sparql_proxy.py`](../run/sparql_proxy.py). HTTP route: [`run/main.py`](../run/main.py) `GET|POST /sparql`.
 
 Rebuild is remap-and-overwrite, not incremental. Platform/agency extra facts can vary by batch order ([issue #10](https://github.com/mrinaalr/CaseLinker/issues/10)).
 
@@ -165,8 +167,8 @@ See [`caselinker_mcp/README.md`](../caselinker_mcp/README.md). To run SPARQL aga
 # Map all DB ids → graph_output/*.ttl + *.jsonld (SHACL on)
 python3 -c "from ontology.graph_generate import generate_graphs; ..."  # or use features_to_cac CLI
 
-# Reload production Oxigraph (wholesale PUT /store)
-python3 scripts/rebuild_oxigraph.py
+# Build the N-Quads for a reload; the load runs in the web service after a volume wipe (docs/SPARQL.md#reloading-the-store)
+python3 scripts/rebuild_oxigraph.py --output caselinker.nq.gz --no-load
 ```
 
 One-off: `python3 ontology/features_to_cac.py <case_id>`. Live SPARQL tests: `CASELINKER_SPARQL_LIVE=1 pytest tests/test_sparql_live.py -q`. Proxy unit tests: `pytest tests/test_sparql_proxy.py tests/test_oxigraph_rebuild.py -q`.

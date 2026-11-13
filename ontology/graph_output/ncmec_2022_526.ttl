@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -30,15 +30,17 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_526/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_526/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_526/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_526/agency/stillwater-police-department> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_526/cybertip> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_526/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 22.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 22.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_526/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -48,7 +50,7 @@
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_526/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_526/agency/stillwater-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Stillwater Police Department" ;
     ns3:name "Stillwater Police Department" .
 
@@ -58,7 +60,7 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_526/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns2:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_526/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
@@ -112,14 +114,9 @@
     skos:altLabel "Stillwater" ;
     ns3:name "Stillwater city" .
 
-<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Twitter / X" ;
-    ns3:name "Twitter / X" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:HotlineOrganization,
-        ns6:FederalAgency ;
+        ns4:HotlineOrganization,
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns3:name "National Center for Missing and Exploited Children" .
@@ -130,10 +127,15 @@
     ns1:severityLevel 3 ;
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2022_526/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Twitter / X" ;
+    ns3:name "Twitter / X" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_526/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

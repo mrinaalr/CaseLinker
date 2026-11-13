@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,10 +24,11 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_294/phase/indicted> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_294/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_294/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_294/agency/la-salle-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_294/agency/ottawa-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_294/agency/ottawa-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_294/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -43,41 +44,38 @@
     ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Illinois High Tech Crimes Bureau" ;
     ns3:name "Illinois High Tech Crimes Bureau" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/agency/la-salle-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "La Salle County Sheriff's Office" ;
     ns3:name "La Salle County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/agency/ottawa-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Ottawa Police Department" ;
     ns3:name "Ottawa Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_294/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_294/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): La Salle County Jail" ;
-    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_294/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_294/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/location/oglesby> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Oglesby" ;
     ns3:name "Oglesby" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_294/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_294/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_294/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_294/event/possession> .
 
@@ -97,6 +95,9 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_294/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_294/phase/indicted> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

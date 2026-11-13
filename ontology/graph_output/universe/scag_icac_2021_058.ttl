@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2021_058> a ns5:CACInvestigation,
-        ns1:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case scag_icac_2021_058" ;
     dcterms:created "2026-11-11T17:01:10.330781"^^xsd:dateTime ;
     dcterms:date "2021-06-04"^^xsd:date ;
@@ -28,47 +28,48 @@
     ns5:hasPhase <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/phase/charged> ;
     ns5:hasStep <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/event/possession>,
         <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified>,
         <https://w3id.org/caselinker/resource/agency/colleton-county-sheriff-s-office-sc>,
         <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/cybertip>,
+        <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns5:CSAMIncident ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/narrative> ;
-    ns1:hasConfidence 0.501 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/narrative> ;
+    ns3:hasConfidence 0.501 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 30.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 30.0 .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified> a ns1:OrganizationLikeEntity,
-        ns3:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified> a ns3:OrganizationLikeEntity,
+        ns6:StateAgency ;
     rdfs:label "Attorney General's Office" ;
-    ns4:name "Attorney General's Office" .
+    ns1:name "Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/agency/colleton-county-sheriff-s-office-sc> a ns1:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/colleton-county-sheriff-s-office-sc> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
     rdfs:label "Colleton County Sheriff's Office" ;
     dcterms:identifier "ori:SC0150000" ;
-    ns4:name "Colleton County Sheriff's Office" .
+    ns1:name "Colleton County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns4:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/charge/1> a ns2:CriminalCharge,
         ns2:StateCharge ;
@@ -83,10 +84,10 @@
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns4:name "observe" .
+    ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
+<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns2:chargeCount "20"^^xsd:nonNegativeInteger ;
@@ -98,48 +99,48 @@
     rdfs:label "Defendant Role · role/offender/1" ;
     ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/colleton-county-sc> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/colleton-county-sc> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Colleton County" ;
     dcterms:identifier "fips:45029" ;
-    ns4:name "Colleton County" .
+    ns1:name "Colleton County" .
 
-<https://w3id.org/caselinker/resource/location/columbia-city-sc> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/columbia-city-sc> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Columbia city" ;
     dcterms:identifier "fips:4516000" ;
     skos:altLabel "Columbia" ;
-    ns4:name "Columbia city" .
+    ns1:name "Columbia city" .
 
-<https://w3id.org/caselinker/resource/location/south-carolina-sc> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/south-carolina-sc> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "South Carolina" ;
     dcterms:identifier "fips:45" ;
     skos:altLabel "S.c." ;
-    ns4:name "South Carolina" .
+    ns1:name "South Carolina" .
 
-<https://w3id.org/caselinker/resource/location/south-carolina-sc-45> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/south-carolina-sc-45> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "South Carolina" ;
     dcterms:identifier "fips:45" ;
-    ns4:name "South Carolina" .
+    ns1:name "South Carolina" .
 
-<https://w3id.org/caselinker/resource/location/walterboro-city-sc> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/walterboro-city-sc> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Walterboro city" ;
     dcterms:identifier "fips:4574275" ;
     skos:altLabel "Walterboro" ;
-    ns4:name "Walterboro city" .
+    ns1:name "Walterboro city" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/event/possession> a ns5:CSAMIncident,
-        ns1:Event ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns5:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/phase/charged> a ns5:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
 <https://w3id.org/caselinker/resource/case/scag_icac_2021_058/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/scag_icac_2021_058/phase/charged> a ns5:LegalProcessPhase,
-        ns1:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

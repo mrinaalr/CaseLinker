@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -21,20 +21,22 @@
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_125/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_125/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_125/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_125/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_125/legal-proceeding> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 29.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 29.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_125/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_125/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_125/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_125/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_125/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -50,21 +52,16 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_125/location/manchester> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Manchester" ;
-    ns1:name "Manchester" .
+    ns3:name "Manchester" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_125/location/south-windsor> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "South Windsor" ;
-    ns1:name "South Windsor" .
+    ns3:name "South Windsor" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_125/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_125/event/possession> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_125/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -72,10 +69,15 @@
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_125/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_125/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

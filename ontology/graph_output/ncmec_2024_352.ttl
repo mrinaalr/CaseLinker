@@ -2,9 +2,9 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -33,7 +33,10 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_352/agency/attorney-generals-internet-crime-against-children-task-force>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_352/agency/dekalb-county-sheriffs-office>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_352/agency/dekalb-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip/reporter/snapchat/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · cybertip/reporter/snapchat/has-role" ;
@@ -42,11 +45,11 @@
     ns1:source <https://w3id.org/caselinker/resource/esp/snapchat> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip/reporter/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 23.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 23.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_352/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -79,10 +82,10 @@
         ns7:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip> a ns5:ESPReport,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip> a ns6:ESPReport,
         <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:reportedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip/reporter/snapchat> ;
+    ns6:reportedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip/reporter/snapchat> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_352/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
@@ -125,21 +128,9 @@
     dcterms:identifier "fips:17" ;
     ns1:name "Illinois" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns4:encryptionLevel "end-to-end" ;
-    ns4:operatedBy <https://w3id.org/caselinker/resource/esp/snapchat> ;
-    ns1:name "Snapchat" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip/reporter/snapchat> a ns5:ReporterRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_352/cybertip/reporter/snapchat> a ns6:ReporterRole ;
     rdfs:label "Reporter Role · cybertip/reporter/snapchat" ;
-    ns5:isAnonymous false .
+    ns6:isAnonymous false .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_352/event/csam> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -148,14 +139,26 @@
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_352/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/esp/snapchat> a ns4:ElectronicServiceProvider ;
+<https://w3id.org/caselinker/resource/esp/snapchat> a ns5:ElectronicServiceProvider ;
     rdfs:label "Snapchat" ;
     ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns5:operatedBy <https://w3id.org/caselinker/resource/esp/snapchat> ;
+    ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_352/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

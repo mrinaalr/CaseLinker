@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case doj_safe_childhood_2025_300" ;
     dcterms:created "2026-11-10T19:32:40.062529"^^xsd:dateTime ;
     dcterms:date "2025-04-23"^^xsd:date ;
@@ -29,24 +29,26 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/legal-step/convicted> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/mississippi-attorney-generals-office>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/agency/prentiss-county-sheriffs-department> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/agency/prentiss-county-sheriffs-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/assessment/semantic/exploitive-positions> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
-    dcterms:subject ns5:PositionOfTrust ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/narrative> ;
-    ns6:hasConfidence 0.4933 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    dcterms:subject ns4:PositionOfTrust ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/narrative> ;
+    ns3:hasConfidence 0.4933 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns1:CSAMIncident ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/narrative> ;
-    ns6:hasConfidence 0.5784 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/narrative> ;
+    ns3:hasConfidence 0.5784 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -62,64 +64,99 @@
     ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/person/victim/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/doj> a ns3:OrganizationLikeEntity,
+        ns6:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns2:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/fbi> a ns6:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/fbi> a ns3:OrganizationLikeEntity,
+        ns6:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI",
         "FBI Jackson Field Office" ;
     ns2:name "Federal Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/mississippi-attorney-generals-office> a ns6:OrganizationLikeEntity,
-        ns3:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/mississippi-attorney-generals-office> a ns3:OrganizationLikeEntity,
+        ns6:StateAgency ;
     rdfs:label "Mississippi Attorney General's Office" ;
     ns2:name "Mississippi Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/agency/prentiss-county-sheriffs-department> a ns6:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/agency/prentiss-county-sheriffs-department> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
     rdfs:label "Prentiss County Sheriff's Department" ;
     ns2:name "Prentiss County Sheriff's Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/3> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/3> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/event/project-safe-childhood> a ns6:Event,
-        ns3:ProjectSafeChildhoodOperation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/event/project-safe-childhood> a ns3:Event,
+        ns6:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/relationship/teacher> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/relationship/teacher> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/1>,
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/charge/3> ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/sentence/1> .
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/legal-step/convicted> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/legal-step/convicted> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/relationship/teacher> a ns4:CustodialRelationship,
+        ns4:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> ;
+    ns4:relationshipType "teacher" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/sentence/1> a ns5:CriminalSentence,
+        ns5:SupervisedRelease ;
+    rdfs:label "five years supervised release" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/aberdeen-city-ms> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Aberdeen city" ;
+    dcterms:identifier "fips:2800180" ;
+    skos:altLabel "Aberdeen" ;
+    ns2:name "Aberdeen city" .
+
+<https://w3id.org/caselinker/resource/location/booneville-city-ms> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Booneville city" ;
+    dcterms:identifier "fips:2807780" ;
+    skos:altLabel "Booneville" ;
+    ns2:name "Booneville city" .
+
+<https://w3id.org/caselinker/resource/location/mississippi-ms> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Mississippi" ;
+    dcterms:identifier "fips:28" ;
+    ns2:name "Mississippi" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
@@ -127,47 +164,12 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/relationship/teacher> a ns5:CustodialRelationship,
-        ns5:Teacher ;
-    rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> ;
-    ns5:relationshipType "teacher" ;
-    ns2:isDirectional true ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/sentence/1> a ns4:CriminalSentence,
-        ns4:SupervisedRelease ;
-    rdfs:label "five years supervised release" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/location/aberdeen-city-ms> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Aberdeen city" ;
-    dcterms:identifier "fips:2800180" ;
-    skos:altLabel "Aberdeen" ;
-    ns2:name "Aberdeen city" .
-
-<https://w3id.org/caselinker/resource/location/booneville-city-ms> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Booneville city" ;
-    dcterms:identifier "fips:2807780" ;
-    skos:altLabel "Booneville" ;
-    ns2:name "Booneville city" .
-
-<https://w3id.org/caselinker/resource/location/mississippi-ms> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mississippi" ;
-    dcterms:identifier "fips:28" ;
-    ns2:name "Mississippi" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/phase/convicted> a ns6:Phase,
-        ns4:SentencingPhase ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/phase/convicted> a ns3:Phase,
+        ns5:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_300/event/possession> a ns1:CSAMIncident,
-        ns6:Event ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 

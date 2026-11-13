@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -9,7 +9,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_206> a ns4:CACInvestigation,
-        ns2:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2025_206" ;
     dcterms:created "2026-11-10T16:33:12.336060"^^xsd:dateTime ;
     dcterms:date "2025-03-21"^^xsd:date ;
@@ -27,98 +27,101 @@
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_206/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_206/legal-proceeding> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_206/agency/collier-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_206/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1> ;
-    ns2:hasConfidence 0.65 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns4:CSAMIncident ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_206/narrative> ;
-    ns2:hasConfidence 0.5101 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_206/narrative> ;
+    ns3:hasConfidence 0.5101 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_206/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_206/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_206/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_206/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/agency/collier-county-sheriffs-office> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/agency/collier-county-sheriffs-office> a ns3:OrganizationLikeEntity,
         ns5:LocalAgency ;
     rdfs:label "Collier County Sheriff's Office" ;
-    ns1:name "Collier County Sheriff's Office" .
+    ns2:name "Collier County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_206/charge/1> .
+    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_206/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/location/east-naples> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/location/east-naples> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "East Naples" ;
-    ns1:name "East Naples" .
+    ns2:name "East Naples" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_206/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_206/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/collier-county-fl> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/collier-county-fl> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Collier County" ;
     dcterms:identifier "fips:12021" ;
-    ns1:name "Collier County" .
+    ns2:name "Collier County" .
 
-<https://w3id.org/caselinker/resource/location/florida-fl> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/florida-fl> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     skos:altLabel "Fla." ;
-    ns1:name "Florida" .
+    ns2:name "Florida" .
 
-<https://w3id.org/caselinker/resource/location/florida-fl-12> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/florida-fl-12> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
-    ns1:name "Florida" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
+    ns2:name "Florida" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_206/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "using the Kik account involved in the uploads" ;
     dcterms:source <https://www.gulfcoastnewsnow.com/article/child-porn-kik-naples-arrest-florida/64254096> ;
-    ns1:description "using the Kik account involved in the uploads" .
+    ns2:description "using the Kik account involved in the uploads" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_206/event/possession> a ns4:CSAMIncident,
-        ns2:Event ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns4:severityLevel 3 ;
     ns4:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_206/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_206/phase/arrested> a ns4:InitialPhase,
-        ns2:Phase ;
+        ns3:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
 

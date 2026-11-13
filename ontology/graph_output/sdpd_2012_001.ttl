@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns6: <https://cacontology.projectvic.org#> .
 @prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -29,9 +29,12 @@
         <https://w3id.org/caselinker/resource/case/sdpd_2012_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/sdpd_2012_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/sdpd_2012_001/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/sdpd_2012_001/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/sdpd_2012_001/cybertip>,
+        <https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/webcam-platform> .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -47,20 +50,14 @@
     ns2:source <https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/victim/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/webcam-platform> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns1:VideoStreamingPlatform ;
-    rdfs:label "Webcam platform" ;
-    ns1:allowsAnonymousChat "true" ;
-    ns2:name "Webcam platform" .
-
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2012_001/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/sdpd_2012_001/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -69,7 +66,7 @@
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/event/online-only> a ns6:ChildSexualAbuseEvent,
@@ -80,32 +77,26 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2012_001/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/sdpd_2012_001/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/sdpd_2012_001/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/sdpd_2012_001/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into county jail" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/sdpd_2012_001/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/sdpd_2012_001/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/sdpd_2012_001/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
+<https://w3id.org/caselinker/resource/case/sdpd_2012_001/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> ;
-    ns3:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/victim/1> .
@@ -124,12 +115,24 @@
     skos:altLabel "San Diego" ;
     ns2:name "San Diego city" .
 
+<https://w3id.org/caselinker/resource/platform/webcam-platform> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns3:VideoStreamingPlatform ;
+    rdfs:label "Webcam platform" ;
+    ns3:allowsAnonymousChat "true" ;
+    ns2:name "Webcam platform" .
+
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns7:HotlineOrganization,
-        ns4:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/sdpd_2012_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/phase/booked> a ns6:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -138,6 +141,6 @@
 <https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/victim/1> a ns6:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/sdpd_2012_001/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

@@ -2,17 +2,17 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns7: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns8: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns8: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_478> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
+        ns5:EnduringEntity ;
     rdfs:label "Case ncmec_2023_478" ;
     dcterms:created "2026-11-10T10:05:11.083303"^^xsd:dateTime ;
     dcterms:date "2023-11-06"^^xsd:date ;
@@ -30,28 +30,31 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2023_478/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_478/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_478/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_478/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_478/cybertip> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_478/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/admission/1/extraction-confidence> a ns5:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_478/admission/1> ;
-    ns6:hasConfidence 0.65 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_478/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns2:CSAMIncident ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_478/narrative> ;
-    ns6:hasConfidence 0.5072 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_478/narrative> ;
+    ns5:hasConfidence 0.5072 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1/age> a ns8:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 41.0 .
+    ns8:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1> ;
+    ns8:concernsAgeQuality ns8:Age ;
+    ns8:hasAgeInYears 41.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_478/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -60,19 +63,8 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_478/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/kik> a ns6:DigitalSystemEntity,
-        ns7:MessagingService ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a ns6:DigitalSystemEntity,
-        ns7:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns7:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/charge/1> a ns8:CSAM_Possession,
-        ns8:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_478/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -81,48 +73,59 @@
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_478/event/online-only> a ns2:ChildSexualAbuseEvent,
-        ns6:Event ;
+        ns5:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_478/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
+        ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns8:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns8:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns8:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_478/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_478/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/location/cumberland> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/location/cumberland> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cumberland" ;
     ns1:name "Cumberland" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/operation> a ns6:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/operation> a ns5:Event,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/role/offender/1> a ns8:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/barron-county-wi> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/barron-county-wi> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Barron County" ;
     dcterms:identifier "fips:55005" ;
     ns1:name "Barron County" .
 
-<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wisconsin" ;
     dcterms:identifier "fips:55" ;
     skos:altLabel "Wis." ;
     ns1:name "Wisconsin" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns6:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/platform/kik> a ns5:DigitalSystemEntity,
+        ns7:MessagingService ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns5:DigitalSystemEntity,
+        ns7:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns7:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
         ns3:HotlineOrganization,
-        ns5:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
@@ -132,10 +135,10 @@
     dcterms:source <https://www.weau.com/2023/11/06/cumberland-man-accused-possessing-child-pornography-methamphetamine/> ;
     ns1:description "saved the image and may have sent it to others during conversations online" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_478/phase/charged> a ns2:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2023_478/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_478/phase/charged> a ns2:LegalProcessPhase,
-        ns6:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

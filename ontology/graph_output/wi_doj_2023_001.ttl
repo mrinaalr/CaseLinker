@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -27,11 +27,12 @@
     ns3:hasStep <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fond-du-lac-county-district-attorneys-office-wi-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/admission/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/admission/1>,
+        <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/admission/1/extraction-confidence> a ns6:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -46,66 +47,66 @@
     ns6:hasConfidence 0.5129 ;
     ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 50.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 50.0 .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns1:name "U.S. Department of Justice" .
+    ns2:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fond-du-lac-county-district-attorneys-office-wi-unverified> a ns6:OrganizationLikeEntity,
-        ns2:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Fond Du Lac County District Attorney's Office" ;
-    ns1:name "Fond Du Lac County District Attorney's Office" .
+    ns2:name "Fond Du Lac County District Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
+    ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a ns6:OrganizationLikeEntity,
-        ns2:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Wisconsin Department of Justice" ;
-    ns1:name "Wisconsin Department of Justice" .
+    ns2:name "Wisconsin Department of Justice" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/charge/1> .
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/location/city-of-fond-du-lac> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "City of Fond Du Lac" ;
-    ns1:name "City of Fond Du Lac" .
+    ns2:name "City of Fond Du Lac" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/location/du-lac-county> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Du Lac County" ;
-    ns1:name "Du Lac County" .
+    ns2:name "Du Lac County" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/operation> a ns6:Event,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/event/possession> .
 
@@ -114,22 +115,22 @@
     rdfs:label "Wisconsin" ;
     dcterms:identifier "fips:55" ;
     skos:altLabel "Wis" ;
-    ns1:name "Wisconsin" .
+    ns2:name "Wisconsin" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "having sexually explicit images and videos of children as young as 1-2 years old on his cell phone" ;
     dcterms:source <https://www.wisdoj.gov/PressReleases/8.8.23_ICAC_Fond_Du_Lac_Firefighter.pdf> ;
-    ns1:description "having sexually explicit images and videos of children as young as 1-2 years old on his cell phone" .
+    ns2:description "having sexually explicit images and videos of children as young as 1-2 years old on his cell phone" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/event/possession> a ns3:CSAMIncident,
         ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns3:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/wi_doj_2023_001/phase/charged> a ns3:LegalProcessPhase,
         ns6:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/wi_doj_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

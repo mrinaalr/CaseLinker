@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_343> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
+        ns6:EnduringEntity ;
     rdfs:label "Case ncmec_2022_343" ;
     dcterms:created "2026-11-10T09:19:00.472052"^^xsd:dateTime ;
     dcterms:date "2022-02-09"^^xsd:date ;
@@ -28,45 +28,46 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_343/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_343/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_343/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/carteret-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/pine-knoll-shores-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/pine-knoll-shores-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns1:CSAMIncident ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_343/narrative> ;
-    ns4:hasConfidence 0.5066 ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_343/narrative> ;
+    ns6:hasConfidence 0.5066 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 45.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 45.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_343/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_343/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/carteret-county-sheriffs-office> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/carteret-county-sheriffs-office> a ns6:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Carteret County Sheriff's Office" ;
-    ns3:name "Carteret County Sheriff's Office" .
+    ns2:name "Carteret County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/pine-knoll-shores-police-department> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/agency/pine-knoll-shores-police-department> a ns6:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Pine Knoll Shores Police Department" ;
-    ns3:name "Pine Knoll Shores Police Department" .
+    ns2:name "Pine Knoll Shores Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_343/charge/1> a ns5:CriminalCharge,
         ns5:StateCharge ;
@@ -79,8 +80,8 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2022_343/charge/3> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
         ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in the Carteret County Detention Center" ;
@@ -89,17 +90,17 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_343/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_343/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/location/beaufort> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/location/beaufort> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Beaufort" ;
-    ns3:name "Beaufort" .
+    ns2:name "Beaufort" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/location/down-east> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/location/down-east> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Down East" ;
-    ns3:name "Down East" .
+    ns2:name "Down East" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/operation> a ns4:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/operation> a ns6:Event,
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
@@ -107,27 +108,27 @@
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_343/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/carteret-county-nc> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/carteret-county-nc> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Carteret County" ;
     dcterms:identifier "fips:37031" ;
-    ns3:name "Carteret County" .
+    ns2:name "Carteret County" .
 
-<https://w3id.org/caselinker/resource/location/north-carolina-nc> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/north-carolina-nc> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "North Carolina" ;
     dcterms:identifier "fips:37" ;
     skos:altLabel "N.c." ;
-    ns3:name "North Carolina" .
+    ns2:name "North Carolina" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_343/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
+        ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_343/phase/charged> a ns1:LegalProcessPhase,
+        ns6:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_343/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_343/phase/charged> a ns1:LegalProcessPhase,
-        ns4:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

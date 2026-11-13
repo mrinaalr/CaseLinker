@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -24,7 +24,8 @@
         <https://w3id.org/caselinker/resource/case/europol_2016_002/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/europol_2016_002/legal-step/convicted>,
         <https://w3id.org/caselinker/resource/case/europol_2016_002/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-police-department> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/europol_2016_002/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -34,46 +35,43 @@
     ns1:target <https://w3id.org/caselinker/resource/case/europol_2016_002/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/federal-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Federal Police Department" ;
     ns1:name "Federal Police Department" .
 
-<https://w3id.org/caselinker/resource/case/europol_2016_002/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/europol_2016_002/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/europol_2016_002/charge/2> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/europol_2016_002/charge/2> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:MultiJurisdictionalInvestigation ;
+        ns2:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns4:crossesBorders true .
+    ns2:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/europol_2016_002/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/europol_2016_002/charge/1>,
         <https://w3id.org/caselinker/resource/case/europol_2016_002/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
-
-<https://w3id.org/caselinker/resource/case/europol_2016_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/europol_2016_002/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
@@ -84,7 +82,10 @@
     rdfs:label "CSAMIncident · event/csam" ;
     ns3:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/europol_2016_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/europol_2016_002/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
-        ns2:SentencingPhase ;
+        ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
 

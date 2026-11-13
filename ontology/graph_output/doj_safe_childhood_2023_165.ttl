@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -34,18 +34,21 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/boone-north-carolina-police-department>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/boone-north-carolina-police-department>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/idaho-falls-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 41.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 41.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -54,28 +57,18 @@
     ns3:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1> ;
     ns3:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/kik> a ns4:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns3:name "Kik" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns3:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/boone-north-carolina-police-department> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Boone North Carolina Police Department" ;
     ns3:name "Boone North Carolina Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns4:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns3:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a ns4:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns3:name "Homeland Security Investigations" .
 
@@ -86,28 +79,28 @@
     ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/idaho-falls-police-department> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Idaho Falls Police Department" ;
     ns3:name "Idaho Falls Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns3:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/2> a ns2:CSAM_Distribution,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/2> a ns1:CSAM_Distribution,
+        ns1:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/3> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/3> a ns1:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution ;
+        ns1:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/event/online-only> a ns5:ChildSexualAbuseEvent,
@@ -119,25 +112,25 @@
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/event/project-safe-childhood> a ns4:Event,
-        ns6:ProjectSafeChildhoodOperation ;
+        ns2:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns2:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/1>,
+    ns1:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/charge/3> ;
-    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/1>,
+    ns1:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/legal-step/sentenced> a ns4:Event,
         ns4:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
+        ns1:LegalProceeding,
+        ns1:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/location/blackfoot> a ns4:PlaceLikeEntity,
@@ -154,18 +147,18 @@
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/1> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/1> a ns1:CriminalSentence,
+        ns1:PrisonSentence ;
     rdfs:label "24 Years" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/2> a ns2:CriminalSentence,
-        ns2:SupervisedRelease ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/2> a ns1:CriminalSentence,
+        ns1:SupervisedRelease ;
     rdfs:label "15 years supervised release" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/3> a ns2:CriminalSentence,
-        ns2:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/sentence/3> a ns1:CriminalSentence,
+        ns1:MonetaryPenalty ;
     rdfs:label "$8,000" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/role/offender/1> .
 
@@ -194,12 +187,22 @@
     skos:altLabel "Pocatello" ;
     ns3:name "Pocatello city" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/kik> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/phase/sentenced> a ns4:Phase,
-        ns2:SentencingPhase ;
+        ns1:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_165/role/offender/1> a ns5:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

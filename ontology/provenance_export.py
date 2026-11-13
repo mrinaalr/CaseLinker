@@ -4,6 +4,13 @@ Provenance graph for one case. Separate file from the CAC case graph.
 
 The case graph (features_to_cac.py) is not modified. Decoys and contested
 mentions are annotations here. They are not VictimRole or OffenderRole nodes.
+
+An annotation a resolution used is also a ``uco-core:Annotation`` whose
+``uco-core:object`` is the case-graph node it supports (#73). The node comes from
+the mapper's record of what it minted for each value, never from re-deriving the
+numbering: ``person/offender/N/age``, ``sentence/N``, ``cybertip``,
+``cybertip/reporter/{esp}``. Set-aside annotations (decoys, statutory thresholds)
+link to nothing.
 """
 
 from __future__ import annotations
@@ -11,7 +18,7 @@ from __future__ import annotations
 import sys
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from rdflib import Graph, Literal, Namespace, RDF, RDFS, URIRef
 from rdflib.namespace import DCTERMS, XSD
@@ -19,6 +26,7 @@ from rdflib.namespace import DCTERMS, XSD
 _ONTOLOGY = Path(__file__).resolve().parent
 _REPO = _ONTOLOGY.parent
 _SHAPES = _ONTOLOGY / "caselinker-provenance-shapes.ttl"
+_COVERAGE_SHAPES = _ONTOLOGY / "caselinker-evidence-coverage-shapes.ttl"
 _STORAGE = _REPO / "src" / "Storage Layer"
 
 PROV = Namespace("http://www.w3.org/ns/prov#")
@@ -26,6 +34,12 @@ OA = Namespace("http://www.w3.org/ns/oa#")
 CAC_CORE = Namespace("https://cacontology.projectvic.org/core#")
 CL = Namespace("https://w3id.org/caselinker/ns/provenance#")
 BASE = Namespace("https://w3id.org/caselinker/resource/")
+UCO_CORE = Namespace("https://ontology.unifiedcyberontology.org/uco/core/")
+
+# The sentence string the mapper labels a node with, per resolved bucket
+# (merge_processing._apply_resolved_sentences). Exposure, prior and custody mint no node.
+_SENTENCE_SUFFIX = {"supervised_release": ("supervis", "supervised release"), "probation": ("probation", "probation")}
+_SENTENCE_ROLES = ("imposed", "supervised_release", "probation", "fine")
 
 _ROLE_TYPE = {
     "victim": Namespace("https://cacontology.projectvic.org#").VictimRole,
@@ -98,6 +112,64 @@ def _used_by_resolution(field: str, res: Dict[str, Any], assertions: List[Dict[s
     return used
 
 
+def _norm(value: Any) -> str:
+    return " ".join(str(value).split()).lower()
+
+
+def _sentence_label(value: Any, role: str) -> str:
+    text = str(value).strip()
+    if role in _SENTENCE_SUFFIX:
+        cue, suffix = _SENTENCE_SUFFIX[role]
+        return text if cue in text.lower() else f"{text} {suffix}"
+    return text
+
+
+def _months(text: str) -> Optional[float]:
+    """Duration in months of a sentence string, or None. Same parser as extraction."""
+    try:
+        if str(_REPO / "src" / "Processing Layer" / "field_assertions") not in sys.path:
+            sys.path.insert(0, str(_REPO / "src" / "Processing Layer" / "field_assertions"))
+        import span_gate as sg  # type: ignore
+    except Exception:
+        return None
+    m = sg.DURATION_RE.search(sg.normalize_surface(text))
+    return sg.duration_months(m) if m else None
+
+
+def evidence_targets(
+    assertion: Dict[str, Any],
+    evidence_nodes: Iterable[Tuple[str, str, str, URIRef]],
+) -> List[URIRef]:
+    """Case-graph nodes the mapper minted from this assertion's field, role and value."""
+    field = str(assertion.get("field") or "")
+    role = str(assertion.get("role") or "")
+    value = assertion.get("value")
+    out: List[URIRef] = []
+    for n_field, n_role, n_value, node in evidence_nodes:
+        if n_field != field:
+            continue
+        if field == "age":
+            ok = n_role == role and _norm(n_value) == _norm(value)
+        elif field == "sentence":
+            if role not in _SENTENCE_ROLES:
+                continue
+            label = _sentence_label(value, role)
+            # A repeat of one term ("10 years", "ten years") votes for the same node.
+            ok = _norm(label) == _norm(n_value) or (
+                role in ("imposed",) and _months(label) is not None and _months(label) == _months(n_value)
+                and not any(_norm(n_value).endswith(s) for _c, s in _SENTENCE_SUFFIX.values())
+            )
+        elif field == "investigation_type":
+            ok = _norm(value) == "cybertip" and role == n_role
+        elif field == "cybertip_reporter":
+            ok = role == n_role and _norm(value) == _norm(n_value)
+        else:
+            ok = False
+        if ok and node not in out:
+            out.append(node)
+    return out
+
+
 def build_provenance_graph(
     case_id: str,
     assertions: List[Dict[str, Any]],
@@ -107,12 +179,21 @@ def build_provenance_graph(
     issued_at: Optional[str] = None,
     location_grounds: Optional[List[Dict[str, Any]]] = None,
     agency_grounds: Optional[List[Dict[str, Any]]] = None,
+    evidence_nodes: Optional[Iterable[Tuple[str, str, str, URIRef]]] = None,
 ) -> Graph:
     """One graph: an extraction activity, one agent per method, one annotation per assertion.
 
     Optional ``location_grounds`` / ``agency_grounds`` add authority-link entities so
     each grounded IRI can show gazetteer/registry version, GEOID/ORI, and hint source.
+    ``evidence_nodes`` is the mapper's record for this case (``CaseToCAC.evidence_nodes``);
+    with it, every annotation its field's resolution used names the node it supports.
+    A resolution that does not record its winners links nothing, so a field never
+    over-links.
     """
+    evidence_nodes = list(evidence_nodes or [])
+    used_by_field = {
+        field: _used_by_resolution(field, res, assertions) for field, res in (resolutions or {}).items()
+    }
     g = Graph()
     g.bind("prov", PROV)
     g.bind("oa", OA)
@@ -186,6 +267,14 @@ def build_provenance_graph(
         g.add((node, CAC_CORE.usesMethod, agent_for(assertion)))
         g.add((node, CAC_CORE.assesses, narrative))
         g.add((node, PROV.wasGeneratedBy, activity))
+        used = used_by_field.get(field)
+        if evidence_nodes and used is not None and assertion.get("id") in used:
+            targets = evidence_targets(assertion, evidence_nodes)
+            if targets:
+                # UCO requires at least one core:object on a core:Annotation.
+                g.add((node, RDF.type, UCO_CORE.Annotation))
+                for target_node in targets:
+                    g.add((node, UCO_CORE.object, target_node))
 
         target = _iri(case_id, "assertion", str(index), "target")
         position = _iri(case_id, "assertion", str(index), "position")
@@ -217,7 +306,7 @@ def build_provenance_graph(
         g.add((node, CL.resolutionStatus, Literal(status)))
         g.add((node, CL.ruleSetVersion, Literal(str(res.get("rule_set_version") or rule_set or "resolve_v3.0"))))
         g.add((node, PROV.wasGeneratedBy, activity))
-        used = _used_by_resolution(field, res, assertions)
+        used = used_by_field.get(field)
         for source, row_id in by_field.get(field, []):
             if used is None or row_id in used:
                 g.add((node, PROV.wasDerivedFrom, source))
@@ -309,6 +398,24 @@ def validate_provenance(graph: Graph) -> tuple[bool, str]:
     return bool(conforms), text or ""
 
 
+def evidence_coverage(case_graph: Graph, provenance_graph: Graph) -> Tuple[bool, str]:
+    """Validate case + provenance together: every age, sentence, CyberTip report and
+    reporter role node needs an annotation whose ``uco-core:object`` is that node."""
+    from pyshacl import validate as shacl_validate
+
+    union = Graph()
+    for triple in case_graph:
+        union.add(triple)
+    for triple in provenance_graph:
+        union.add(triple)
+    shapes = Graph()
+    shapes.parse(str(_COVERAGE_SHAPES), format="turtle")
+    conforms, _results, text = shacl_validate(
+        data_graph=union, shacl_graph=shapes, inference="none", advanced=False, abort_on_first=False,
+    )
+    return bool(conforms), text or ""
+
+
 def graph_uses_case_roles(graph: Graph) -> bool:
     """True if this graph types anything as VictimRole or OffenderRole."""
     for role in _ROLE_TYPE.values():
@@ -317,7 +424,13 @@ def graph_uses_case_roles(graph: Graph) -> bool:
     return False
 
 
-def export_stored_case(case_id: str, output_dir: Path, storage: Any = None) -> Optional[Path]:
+def export_stored_case(
+    case_id: str,
+    output_dir: Path,
+    storage: Any = None,
+    *,
+    evidence_nodes: Optional[Iterable[Tuple[str, str, str, URIRef]]] = None,
+) -> Optional[Path]:
     """
     Write ``{case_id}.provenance.ttl`` beside a case export.
 
@@ -382,6 +495,7 @@ def export_stored_case(case_id: str, output_dir: Path, storage: Any = None) -> O
         issued_at=str(started) if started else None,
         location_grounds=location_grounds if isinstance(location_grounds, list) else None,
         agency_grounds=agency_grounds if isinstance(agency_grounds, list) else None,
+        evidence_nodes=evidence_nodes,
     )
     conforms, report = validate_provenance(graph)
     if not conforms:

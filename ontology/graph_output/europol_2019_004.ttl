@@ -1,12 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/europol_2019_004> a ns4:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/europol_2019_004> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case europol_2019_004" ;
     dcterms:created "2026-11-11T14:12:07.412001"^^xsd:dateTime ;
@@ -20,11 +20,14 @@
         <https://w3id.org/caselinker/resource/case/europol_2019_004/location/france>,
         <https://w3id.org/caselinker/resource/case/europol_2019_004/location/italy>,
         <https://w3id.org/caselinker/resource/case/europol_2019_004/location/spain> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/europol_2019_004/phase/arrested> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/europol_2019_004/phase/arrested> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/europol_2019_004/event/distribution>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/europol_2019_004/phase/arrested> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/europol_2019_004/phase/arrested> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/europol_2019_004/event/distribution>,
         <https://w3id.org/caselinker/resource/case/europol_2019_004/event/multi-jurisdiction> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/europol_2019_004/agency/joint-cybercrime-action-taskforce> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/europol_2019_004/agency/joint-cybercrime-action-taskforce> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/europol_2019_004/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/whatsapp> .
 
 <https://w3id.org/caselinker/resource/case/europol_2019_004/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -33,19 +36,8 @@
     ns1:source <https://w3id.org/caselinker/resource/case/europol_2019_004/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/europol_2019_004/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns3:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns3:MessagingService ;
-    rdfs:label "WhatsApp" ;
-    ns3:encryptionLevel "end-to-end" ;
-    ns1:name "WhatsApp" .
-
 <https://w3id.org/caselinker/resource/case/europol_2019_004/agency/joint-cybercrime-action-taskforce> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Joint Cybercrime Action Taskforce" ;
     ns1:name "Joint Cybercrime Action Taskforce" .
 
@@ -54,9 +46,9 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/europol_2019_004/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns2:crossesBorders true .
+    ns4:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/europol_2019_004/location/europe> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -78,13 +70,24 @@
     rdfs:label "Spain" ;
     ns1:name "Spain" .
 
-<https://w3id.org/caselinker/resource/case/europol_2019_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/europol_2019_004/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/europol_2019_004/phase/arrested> a ns4:InitialPhase,
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns3:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns3:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    ns3:encryptionLevel "end-to-end" ;
+    ns1:name "WhatsApp" .
+
+<https://w3id.org/caselinker/resource/case/europol_2019_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/europol_2019_004/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
 

@@ -1670,6 +1670,26 @@ async def sparql_query(
     the public ``/sparql`` route: Update (INSERT/DELETE/LOAD/DROP/…) and SERVICE
     rejected; default outer LIMIT 1000 (max 10_000); default timeout 90s
     (clamped 1–600).
+
+    Graph layout: each case is one named graph ``…/resource/case/{id}``; its
+    evidence is in ``…/case/{id}/provenance``. Keep a join inside
+    ``GRAPH ?g { ... }`` and count ``DISTINCT ?g``; a join across the union
+    default graph fans out over shared platform / agency / location nodes and
+    can time out. A query the store reports as cancelled returns ``error`` plus
+    ``hint`` instead of partial rows.
+
+    The case node ``?case a cac:CACInvestigation`` has ``uco-core:object``
+    edges to every person, platform, CyberTip report and admission in the case.
+    ``cac:usesChannel`` (event → platform) and ``cac:participatesInEvent``
+    (role → event) exist only when the case has one offense event, because the
+    release states platforms and roles per case, not per act.
+
+    Evidence: in the provenance graph, an ``oa:Annotation`` that a resolution
+    used carries ``uco-core:object`` pointing at the case node it supports
+    (``person/{offender,victim}/N/age``, ``sentence/N``, ``cybertip``,
+    ``cybertip/reporter/{esp}``); its quote is ``oa:hasTarget/oa:hasSelector``
+    with ``oa:exact`` and ``oa:start``/``oa:end`` into the release text. Filter
+    ``?ann a oa:Annotation``: the case node uses ``uco-core:object`` too.
     """
     try:
         from caselinker_mcp.sparql_tool import run_sparql

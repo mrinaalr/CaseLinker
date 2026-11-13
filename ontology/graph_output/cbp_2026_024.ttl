@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,8 +29,9 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/cbp_2026_024/phase/sentenced> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/cbp_2026_024/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/cbp_2026_024/legal-step/sentenced> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/cbp_2026_024/agency/cameron-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/cbp_2026_024/agency/denton-county-sheriffs-office> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/cbp_2026_024/agency/cameron-county-sheriffs-office>,
+        <https://w3id.org/caselinker/resource/case/cbp_2026_024/agency/denton-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/cbp_2026_024/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -40,25 +41,25 @@
     ns1:target <https://w3id.org/caselinker/resource/case/cbp_2026_024/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/agency/cameron-county-sheriffs-office> a ns4:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Cameron County Sheriff's Office" ;
     ns1:name "Cameron County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/agency/denton-county-sheriffs-office> a ns4:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Denton County Sheriff's Office" ;
     ns1:name "Denton County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/cbp_2026_024/sentence/1> .
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/cbp_2026_024/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/legal-step/sentenced> a ns4:Event,
         ns4:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/location/brownsville> a ns4:PlaceLikeEntity,
@@ -76,11 +77,8 @@
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_024/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/cbp_2026_024/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/cbp_2026_024/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
     rdfs:label "77 months" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/cbp_2026_024/role/offender/1> .
 
@@ -111,8 +109,11 @@
     dcterms:identifier "fips:48" ;
     ns1:name "Texas" .
 
+<https://w3id.org/caselinker/resource/case/cbp_2026_024/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/phase/sentenced> a ns4:Phase,
-        ns5:SentencingPhase ;
+        ns3:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_024/role/offender/1> a ns2:OffenderRole ;

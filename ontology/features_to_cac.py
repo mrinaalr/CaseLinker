@@ -966,8 +966,9 @@ class CaseToCAC:
         The graph states only what the case's extracted fields state. A link
         between two nodes (a role in an event, a platform used in an event) is
         written only when the case has exactly one event to attach it to; the
-        extraction holds case-level sets, not pairings. Nothing is added to
-        satisfy a SHACL shape.
+        extraction holds case-level sets, not pairings. People and platforms
+        are always objects of the investigation itself (``_link_to_case``).
+        Nothing is added to satisfy a SHACL shape.
 
         Returns
         -------
@@ -977,6 +978,10 @@ class CaseToCAC:
             warnings : list of human-readable warning strings for unmapped values
         """
         warnings: List[str] = []
+        # (field, role, value, node) for every node minted from a resolved field. The
+        # provenance export links an annotation to its node from this, never by
+        # re-deriving the numbering (#73).
+        self.evidence_nodes: List[Tuple[str, str, str, URIRef]] = []
         case = _mask_case_people(case)
         cg = ConjunctiveGraph()
         self._bind_namespaces(cg)
@@ -1005,6 +1010,7 @@ class CaseToCAC:
         self._link_to_single_event(
             det_g, case, event_uris, victim_uris, offender_uris, platform_uris
         )
+        self._link_to_case(det_g, inv_uri, victim_uris, offender_uris, platform_uris)
 
         # --- NLP mapping (separate named graph) ---
         self.map_nlp_features(nlp_g, case, inv_uri, warnings)
@@ -1110,7 +1116,9 @@ class CaseToCAC:
         try:
             from provenance_export import export_stored_case
 
-            provenance_path = export_stored_case(case_id, output_dir, storage)
+            provenance_path = export_stored_case(
+                case_id, output_dir, storage, evidence_nodes=getattr(self, "evidence_nodes", None)
+            )
         except Exception as exc:
             logger.warning("Provenance graph skipped for %s: %s", case_id, exc)
 
@@ -1184,7 +1192,7 @@ class CaseToCAC:
         case: Dict[str, Any],
         warnings: List[str],
     ) -> List[URIRef]:
-        """Create platform nodes (shared singletons). Linking is ``_link_to_single_event``."""
+        """Create platform nodes (shared singletons). Linking is ``_link_to_case`` and ``_link_to_single_event``."""
         platforms_raw = case.get("platforms_used") or []
         if isinstance(platforms_raw, str):
             try:
@@ -1409,7 +1417,7 @@ class CaseToCAC:
             g.add((role_uri, RDF.type, CAC.VictimRole))
             self._has_role(g, person_uri, role_uri)
             if n - 1 < len(victim_ages):
-                self._age(g, person_uri, victim_ages[n - 1])
+                self._age(g, person_uri, victim_ages[n - 1], "victim")
             victim_uris.append(role_uri)
 
         # --- Offenders ---
@@ -1461,7 +1469,7 @@ class CaseToCAC:
             self._has_role(g, person_uri, role_uri)
             # Age (only if we have it for this index; omit on press digests)
             if not press_digest and n - 1 < len(perp_ages):
-                self._age(g, person_uri, perp_ages[n - 1])
+                self._age(g, person_uri, perp_ages[n - 1], "perpetrator")
             offender_uris.append(role_uri)
             offender_people.append(person_uri)
 
@@ -1551,10 +1559,15 @@ class CaseToCAC:
         g.add((rel_uri, UCO_CORE.kindOfRelationship, Literal("Has_Role")))
         g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
 
-    @staticmethod
-    def _age(g: Graph, person_uri: URIRef, years: int) -> None:
+    def _evidence(self, field: str, role: str, value: Any, node: URIRef) -> None:
+        if not hasattr(self, "evidence_nodes"):
+            self.evidence_nodes = []
+        self.evidence_nodes.append((field, role, str(value), node))
+
+    def _age(self, g: Graph, person_uri: URIRef, years: int, role: str) -> None:
         """An age the release states for this person, as a CAC ``AgeAtTimeSituation``."""
         age_uri = URIRef(f"{person_uri}/age")
+        self._evidence("age", role, int(years), age_uri)
         g.add((age_uri, RDF.type, CAC_TEMPORAL.AgeAtTimeSituation))
         g.add((age_uri, CAC_TEMPORAL.ageSubject, person_uri))
         g.add((age_uri, CAC_TEMPORAL.concernsAgeQuality, CAC_TEMPORAL.Age))
@@ -1708,6 +1721,7 @@ class CaseToCAC:
                 break
             sentence_class = self._match_sentence(sent_text)
             sent_uri = BASE[f"case/{case_id}/sentence/{j}"]
+            self._evidence("sentence", "", sent_text, sent_uri)
             g.add((sent_uri, RDF.type, sentence_class))
             g.add((sent_uri, RDF.type, CAC_LEGAL.CriminalSentence))
             g.add((sent_uri, RDFS.label, Literal(sent_text)))
@@ -2440,6 +2454,35 @@ class CaseToCAC:
         if levels and max(levels) > 0:
             g.add((evt_uri, CAC.severityLevel, Literal(max(levels), datatype=XSD.integer)))
 
+    def _link_to_case(
+        self,
+        g: Graph,
+        inv_uri: URIRef,
+        victim_uris: List[URIRef],
+        offender_uris: List[URIRef],
+        platform_uris: List[URIRef],
+    ) -> None:
+        """
+        List the case's people and platforms as objects of the investigation.
+
+        People and platforms are extracted per case, so the case is the scope
+        the release states for them. ``_link_to_single_event`` adds the event
+        edge only when the case has one CSA event; with none or several, these
+        nodes had no edge to the investigation at all and a query starting from
+        the case could not reach them. ``uco-core:object`` is the edge the
+        CyberTip report and admissions already use: a CASE investigation is a
+        ``ContextualCompilation`` of the objects it concerns. It says "this
+        case concerns this person / platform", never which act used which.
+        """
+        roles = set(victim_uris + offender_uris)
+        for rel in g.subjects(RDF.type, UCO_CORE.Relationship):
+            if g.value(rel, UCO_CORE.target) in roles:
+                person = g.value(rel, UCO_CORE.source)
+                if person is not None:
+                    g.add((inv_uri, UCO_CORE.object, person))
+        for p_uri in dict.fromkeys(platform_uris):
+            g.add((inv_uri, UCO_CORE.object, p_uri))
+
     def map_cybertip(
         self,
         g: Graph,
@@ -2464,6 +2507,7 @@ class CaseToCAC:
             return None
         case_id = case.get("id", "unknown")
         tip_uri = BASE[f"case/{case_id}/cybertip"]
+        self._evidence("investigation_type", "case_action", "cybertip", tip_uri)
         g.add((tip_uri, RDF.type, CAC_NCMEC.NCMECCybertipReport))
         g.add((tip_uri, RDFS.label, Literal("CyberTipline report")))
         # CAC types a hotline report as a UCO Observation, whose name UCO fixes as "observe".
@@ -2486,6 +2530,7 @@ class CaseToCAC:
             for name in reporter.get("esps") or []:
                 esp_uri = self._get_or_create_esp(g, str(name))
                 role_uri = BASE[f"case/{case_id}/cybertip/reporter/{_slug(str(name))}"]
+                self._evidence("cybertip_reporter", "named_esp", name, role_uri)
                 g.add((role_uri, RDF.type, CAC_HOTLINES.ReporterRole))
                 # The release names the provider, so the reporter is not anonymous.
                 g.add((role_uri, CAC_HOTLINES.isAnonymous, Literal(False)))

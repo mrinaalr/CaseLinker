@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,8 +25,9 @@
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/event/possession>,
         <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/columbia-county-probation-department-ny-unverified>,
-        <https://w3id.org/caselinker/resource/agency/new-york-state-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/columbia-county-probation-department-ny-unverified>,
+        <https://w3id.org/caselinker/resource/agency/new-york-state-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -34,34 +35,34 @@
     ns4:concernsAgeQuality ns4:Age ;
     ns4:hasAgeInYears 36.0 .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/columbia-county-probation-department-ny-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Columbia County Probation Department" ;
-    ns3:name "Columbia County Probation Department" .
+    ns2:name "Columbia County Probation Department" .
 
 <https://w3id.org/caselinker/resource/agency/new-york-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "New York State Police Department" ;
-    ns3:name "New York State Police Department" .
+    ns2:name "New York State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/charge/1> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/charge/1> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/event/possession> .
 
@@ -70,29 +71,29 @@
     rdfs:label "Hudson city" ;
     dcterms:identifier "fips:3635969" ;
     skos:altLabel "Hudson" ;
-    ns3:name "Hudson city" .
+    ns2:name "Hudson city" .
 
 <https://w3id.org/caselinker/resource/location/livingston-county-ny> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Livingston County" ;
     dcterms:identifier "fips:36051" ;
     skos:altLabel "Livingston" ;
-    ns3:name "Livingston County" .
+    ns2:name "Livingston County" .
 
 <https://w3id.org/caselinker/resource/location/new-york-ny> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New York" ;
     dcterms:identifier "fips:36" ;
-    ns3:name "New York" .
+    ns2:name "New York" .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

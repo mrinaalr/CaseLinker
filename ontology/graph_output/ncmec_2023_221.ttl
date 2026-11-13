@@ -2,9 +2,9 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,7 +26,9 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_221/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_221/legal-proceeding> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_221/agency/tulare-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_221/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_221/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_221/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_221/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -46,8 +48,8 @@
     rdfs:label "Tulare Police Department" ;
     ns1:name "Tulare Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_221/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_221/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_221/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -56,13 +58,13 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_221/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Tulare County Jail" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_221/charge/1> .
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_221/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_221/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_221/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_221/event/csam> .
 
@@ -80,22 +82,22 @@
     skos:altLabel "Tulare" ;
     ns1:name "Tulare city" .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns6:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_221/event/csam> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" ;
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_221/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_221/phase/booked> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns4:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns4:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_221/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

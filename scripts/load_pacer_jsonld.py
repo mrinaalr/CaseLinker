@@ -3,7 +3,7 @@
 
 Each file becomes named graph ``urn:pacer:kg:<percent-encoded-relative-path>``.
 This is incremental Graph Store POST — it does not replace the store.
-``scripts/rebuild_oxigraph.py`` PUT does not restore these graphs.
+A full reload with ``scripts/rebuild_oxigraph.py`` loads them through ``--extra-nq``.
 
 Usage (from repo root):
   python3 scripts/load_pacer_jsonld.py

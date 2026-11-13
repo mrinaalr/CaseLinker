@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,7 +24,8 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_236/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_236/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_236/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_236/agency/pinellas-park-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_236/agency/pinellas-park-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_236/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_236/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -34,30 +35,27 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_236/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_236/agency/pinellas-park-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Pinellas Park Police Department" ;
     ns1:name "Pinellas Park Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_236/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_236/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_236/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_236/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Pinellas County Jail" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_236/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_236/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_236/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_236/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_236/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_236/event/possession> .
 
@@ -77,6 +75,9 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_236/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_236/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_236/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

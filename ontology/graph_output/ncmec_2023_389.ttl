@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_389> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_389> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2023_389" ;
     dcterms:created "2026-11-10T10:04:40.931250"^^xsd:dateTime ;
@@ -22,14 +22,16 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2023_389/location/essex-county>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_389/location/montclair>,
         <https://w3id.org/caselinker/resource/location/new-jersey-nj> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_389/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_389/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/distribution>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_389/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_389/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_389/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office>,
-        <https://w3id.org/caselinker/resource/agency/usss> .
+        <https://w3id.org/caselinker/resource/agency/usss> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_389/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_389/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -45,18 +47,18 @@
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_389/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns1:StateAgency ;
     rdfs:label "New Jersey Attorney General's Office" ;
     ns3:name "New Jersey Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/usss> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "U.S. Secret Service" ;
     ns3:name "U.S. Secret Service" .
 
@@ -91,7 +93,7 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_389/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/possession> .
 
 <https://w3id.org/caselinker/resource/location/new-jersey-nj> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -99,21 +101,21 @@
     dcterms:identifier "fips:34" ;
     ns3:name "New Jersey" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/possession> a ns4:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:severityLevel 3 ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_389/phase/charged> a ns4:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
 <https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
     rdfs:label "social media" ;
     ns3:name "social media" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_389/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_389/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_389/phase/charged> a ns1:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

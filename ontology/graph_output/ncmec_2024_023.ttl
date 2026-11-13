@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,7 +27,9 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_023/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_023/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_023/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_023/agency/yuma-police-department> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_023/agency/yuma-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_023/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_023/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -42,27 +44,22 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_023/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_023/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_023/agency/yuma-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Yuma Police Department" ;
     ns1:name "Yuma Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/1> a ns5:CriminalCharge,
+        ns5:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_023/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns5:crossesBorders true .
+    ns4:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_023/event/online-only> a ns3:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -74,13 +71,13 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_023/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_023/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_023/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_023/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/arizona-az> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -103,10 +100,15 @@
     skos:altLabel "Phoenix" ;
     ns1:name "Phoenix city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_023/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_023/phase/arrested> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_023/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

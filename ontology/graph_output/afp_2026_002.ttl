@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002> a ns2:CACInvestigation,
+        ns1:EnduringEntity ;
     rdfs:label "Case afp_2026_002" ;
     dcterms:created "2026-11-10T17:41:10.919526"^^xsd:dateTime ;
     dcterms:date "2026-09-21"^^xsd:date ;
@@ -21,37 +21,34 @@
         <https://w3id.org/caselinker/resource/case/afp_2026_002/location/canberra>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/location/east-bunbury>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/location/washington> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/afp_2026_002/event/multi-jurisdiction>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/afp_2026_002/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/event/online-only>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> ;
+    ns5:object <https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns1:CSAMIncident ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/afp_2026_002/narrative> ;
-    ns3:hasConfidence 0.5068 ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/afp_2026_002/narrative> ;
+    ns1:hasConfidence 0.5068 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1/has-role> a ns5:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1> .
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns2:name "social media" .
-
-<https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a ns1:OrganizationLikeEntity,
+        ns3:LocalAgency ;
     rdfs:label "Australian Federal Police" ;
-    ns2:name "Australian Federal Police" .
+    ns5:name "Australian Federal Police" .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -59,56 +56,61 @@
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/2> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    dcterms:subject ns1:ChildSexualAbuseEvent .
+    dcterms:subject ns2:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/event/multi-jurisdiction> a ns3:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/event/multi-jurisdiction> a ns1:Event,
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns5:crossesBorders true .
+    ns3:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns3:Event ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/event/online-only> a ns2:ChildSexualAbuseEvent,
+        ns1:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
+<https://w3id.org/caselinker/resource/case/afp_2026_002/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/1>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/location/australia> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/afp_2026_002/location/australia> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Australia" ;
-    ns2:name "Australia" .
+    ns5:name "Australia" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/location/canberra> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/afp_2026_002/location/canberra> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Canberra" ;
-    ns2:name "Canberra" .
+    ns5:name "Canberra" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/location/east-bunbury> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/afp_2026_002/location/east-bunbury> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "East Bunbury" ;
-    ns2:name "East Bunbury" .
+    ns5:name "East Bunbury" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/location/washington> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/afp_2026_002/location/washington> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington" ;
-    ns2:name "Washington" .
-
-<https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns5:name "Washington" .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> a ns1:LegalProcessPhase,
-        ns3:Phase ;
+<https://w3id.org/caselinker/resource/platform/social-media> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns5:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> a ns2:LegalProcessPhase,
+        ns1:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 

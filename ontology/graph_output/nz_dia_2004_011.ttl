@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,8 +25,10 @@
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/event/possession>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/legal-step/sentenced> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs>,
-        <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/agency/department-inspectors> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs>,
+        <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/agency/department-inspectors> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kazaa> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -35,28 +37,22 @@
     ns1:source <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/kazaa> a ns6:DigitalSystemEntity,
-        ns4:FileHostingService ;
-    rdfs:label "Kazaa" ;
-    ns4:platformType "p2p" ;
-    ns1:name "Kazaa" .
-
 <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns6:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "NZ DIA" ;
     ns1:name "NZ DIA" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/agency/department-inspectors> a ns6:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Department Inspectors" ;
     ns1:name "Department Inspectors" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_011/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_011/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/event/distribution> a ns6:Event,
-        ns5:CSAM_Distribution ;
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/event/hands-on> a ns3:ChildSexualAbuseEvent,
@@ -69,34 +65,40 @@
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns5:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/charge/1> ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/1>,
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/charge/1> ;
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/1>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/2> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/legal-step/sentenced> a ns6:Event,
         ns6:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/1> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
+    rdfs:label "seven months" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/2> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
+    rdfs:label "two to 14 years" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/kazaa> a ns6:DigitalSystemEntity,
+        ns5:FileHostingService ;
+    rdfs:label "Kazaa" ;
+    ns5:platformType "p2p" ;
+    ns1:name "Kazaa" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "seven months" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_011/sentence/2> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "two to 14 years" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1> .
-
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/phase/sentenced> a ns6:Phase,
-        ns5:SentencingPhase ;
+        ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_011/role/offender/1> a ns3:OffenderRole ;

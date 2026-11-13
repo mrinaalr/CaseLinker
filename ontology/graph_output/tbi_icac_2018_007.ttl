@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,10 +25,12 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/event/csam>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/portland-police-department-tn>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/cybertip>,
+        <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -37,37 +39,32 @@
     ns2:source <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns2:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/portland-police-department-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Portland Police Department" ;
     dcterms:identifier "ori:TN0830200" ;
     ns2:name "Portland Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Tennessee Bureau of Investigation" ;
     dcterms:identifier "ori:TNTBI0000" ;
     ns2:name "Tennessee Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/2> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/2> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/event/csam> a ns1:CSAMIncident,
@@ -80,11 +77,11 @@
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Sumner County Jail" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/1>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/2>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/charge/3> .
 
@@ -93,10 +90,7 @@
     rdfs:label "Nashville" ;
     ns2:name "Nashville" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/sumner-county-tn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -105,12 +99,20 @@
     dcterms:identifier "fips:47165" ;
     ns2:name "Sumner County" .
 
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:HotlineOrganization,
-        ns3:FederalAgency ;
+        ns5:HotlineOrganization,
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2018_007/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case doj_safe_childhood_2026_227" ;
     dcterms:created "2026-11-10T19:29:13.465294"^^xsd:dateTime ;
     dcterms:date "2026-04-28"^^xsd:date ;
@@ -32,23 +32,25 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/usao>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/agency/chippewa-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1> ;
-    ns5:hasConfidence 0.65 ;
-    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 29.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 29.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,24 +59,24 @@
     ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns5:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/hsi> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns1:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/usao> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/agency/chippewa-county-sheriffs-office> a ns5:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/agency/chippewa-county-sheriffs-office> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Chippewa County Sheriff's Office" ;
     ns1:name "Chippewa County Sheriff's Office" .
 
@@ -82,16 +84,16 @@
         ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/event/distribution> a ns5:Event,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/event/distribution> a ns3:Event,
         ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/event/project-safe-childhood> a ns5:Event,
-        ns6:ProjectSafeChildhoodOperation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/event/project-safe-childhood> a ns3:Event,
+        ns5:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
@@ -100,62 +102,57 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/sentence/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/sentence/3> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
         ns4:LegalProceeding,
         ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/location/detroit> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/location/detroit> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Detroit" ;
     ns1:name "Detroit" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/location/milwaukee> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/location/milwaukee> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Milwaukee" ;
     ns1:name "Milwaukee" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/location/united-states> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/location/united-states> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/operation> a ns5:Event,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/operation> a ns3:Event,
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/sentence/1> a ns4:CriminalSentence,
         ns4:PrisonSentence ;
     rdfs:label "6 Years" ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/sentence/2> a ns4:CriminalSentence,
         ns4:SupervisedRelease ;
     rdfs:label "15 years supervised release" ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/sentence/3> a ns4:CriminalSentence,
         ns4:MonetaryPenalty ;
     rdfs:label "$38,500" ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/chippewa-county-wi> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/chippewa-county-wi> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Chippewa County" ;
     dcterms:identifier "fips:55017" ;
     ns1:name "Chippewa County" .
 
-<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wisconsin" ;
     dcterms:identifier "fips:55" ;
     ns1:name "Wisconsin" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a ns5:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had been using Kik to trade images of child pornography for over a year" ;
@@ -163,17 +160,22 @@
     ns1:description "had been using Kik to trade images of child pornography for over a year" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/event/possession> a ns2:CSAMIncident,
-        ns5:Event ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/phase/sentenced> a ns5:Phase,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/phase/sentenced> a ns3:Phase,
         ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_227/role/offender/1> a ns2:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;

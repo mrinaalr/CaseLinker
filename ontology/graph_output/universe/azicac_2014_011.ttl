@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,8 +28,10 @@
         <https://w3id.org/caselinker/resource/case/azicac_2014_011/event/possession>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_011/event/production>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_011/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-task-force-az-unverified>,
-        <https://w3id.org/caselinker/resource/agency/chandler-police-department-az> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-task-force-az-unverified>,
+        <https://w3id.org/caselinker/resource/agency/chandler-police-department-az> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/azicac_2014_011/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -59,28 +61,23 @@
     ns2:hasConfidence 0.4782 ;
     ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_011/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/azicac_2014_011/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/azicac_2014_011/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/azicac_2014_011/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns3:name "chat" .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/azicac_2014_011/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/azicac_2014_011/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/azicac-task-force-az-unverified> a ns2:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "AZICAC Task Force" ;
-    ns3:name "AZICAC Task Force" .
+    ns4:name "AZICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/chandler-police-department-az> a ns2:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Chandler Police Department" ;
     dcterms:identifier "ori:AZ0070500" ;
-    ns3:name "Chandler Police Department" .
+    ns4:name "Chandler Police Department" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/charge/1> a ns5:CriminalCharge ;
     rdfs:label "Sexual Exploitation of a" .
@@ -102,9 +99,9 @@
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/event/multi-jurisdiction> a ns2:Event,
-        ns4:MultiJurisdictionalInvestigation ;
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns4:crossesBorders true .
+    ns3:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/event/possession> a ns1:CSAMIncident,
         ns2:Event ;
@@ -127,15 +124,12 @@
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/location/australia> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Australia" ;
-    ns3:name "Australia" .
+    ns4:name "Australia" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/location/maricopa-county-jail> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maricopa County Jail" ;
-    ns3:name "Maricopa County Jail" .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns4:name "Maricopa County Jail" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
@@ -144,7 +138,15 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Arizona" ;
     dcterms:identifier "fips:04" ;
-    ns3:name "Arizona" .
+    ns4:name "Arizona" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns4:name "chat" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_011/phase/charged> a ns1:LegalProcessPhase,
         ns2:Phase ;

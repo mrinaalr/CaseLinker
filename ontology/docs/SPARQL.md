@@ -104,12 +104,25 @@ Press-release case graphs and PACER court-record graphs modeled by the CASE-UCO 
 
 | Family | Named graph | Source | Load |
 |---|---|---|---|
-| Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` (old one-file PACER bundles lived in `ontology/PACER/` and compiled to `graph_output/pacer/pacer_{slug}.ttl`) | Wholesale `python3 scripts/rebuild_oxigraph.py` (`PUT /store`) |
+| Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` (old one-file PACER bundles lived in `ontology/PACER/` and compiled to `graph_output/pacer/pacer_{slug}.ttl`) | `python3 scripts/rebuild_oxigraph.py` bulk load into an empty store (see [Reloading the store](#reloading-the-store)) |
 | CASE-UCO SDK modeled PACER KG | `urn:pacer:kg:<relative/path.jsonld>` | `ontology/PACER/` family folders (`BULK_FOLDER/`, `ENTICEMENT/`, `ENTERPRISE/`, `PRODUCTION/`, `SEXTORTION/`, `TRAFFICKING/`; 128 documents, 41 investigations, 128 annotations; modeled by the CASE-UCO SDK MCP server) | Incremental `python3 scripts/load_pacer_jsonld.py --post` (`POST /store`) |
 
 `rebuild_oxigraph.py` globs `ontology/graph_output/{pool}/*.ttl`, skips `*.provenance.ttl` as cases, and loads the sidecar beside the selected case file into `…/case/{case_id}/provenance`. It does not read CASE-UCO SDK JSON-LD under `ontology/PACER/`.
 
-Running a full `rebuild_oxigraph.py` PUT does not restore the `urn:pacer:kg:…` graphs — re-run `load_pacer_jsonld.py --post` after any full rebuild.
+A full reload starts from an empty store, so pass the PACER N-Quads (`load_pacer_jsonld.py --output`) as `--extra-nq` to load them in the same run.
+
+## Reloading the store
+
+The hosted store is `oxigraph serve` from `ghcr.io/oxigraph/oxigraph:0.5.13` on a 5 GB Railway volume (`/data/caselinker_oxigraph`). A reload is a bulk load into an empty store:
+
+1. Build the N-Quads anywhere: `python3 scripts/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`, and `python3 scripts/load_pacer_jsonld.py --output pacer.nq` for the PACER graphs.
+2. Copy both to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`, and the same for `pacer.nq`.
+3. Wipe the volume (Railway dashboard → `oxigraph-volume-S6Fs` → Settings → Wipe volume). The bulk loader refuses a store that is not empty.
+4. In the web service: `python3 scripts/rebuild_oxigraph.py --skip-build --output /tmp/caselinker.nq.gz --extra-nq /tmp/pacer.nq`.
+
+`bulk_load_nquads` posts 500,000-line slices to `POST /store?no_transaction`, Oxigraph's bulk loader, which writes sorted data files and no write-ahead log. It holds the rebuild lock, so `/sparql` answers 503 while the store is partial, and fails unless the store's quad count equals the lines sent. A failed load keeps the lock, so a partial store is never served; rerun the load after another wipe, or remove `/tmp/caselinker-sparql-rebuild.lock` in the web service to serve what is there. Between the wipe and the start of the load the store is empty and `/sparql` answers with no rows. A full load (6,151,655 quads) takes about 5 minutes and leaves about 2.1 GB on the volume.
+
+The transactional path (plain `PUT` or `POST /store`, or `CLEAR ALL` before a load) logs every quad before writing it. On this volume that log reached 3.87 GB and filled the disk before a full load finished.
 
 ## Namespaces
 
@@ -156,11 +169,11 @@ LIMIT 50
 | Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/")) }` (live store **10,802**) |
 | Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance")) }` (live store **10,802**) |
 | Named graphs (press release) | one per case + one provenance graph; **10,802** cases live |
-| Triples (statements in named graphs) | `SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }` (live store **6,043,604** across **21,901** named graphs: 10,802 case + 10,802 provenance + 297 PACER) |
-| Distinct triples (graph ignored) | **5,531,457**, counted from the N-Quads export; a triple asserted in more than one named graph counts once |
+| Triples (statements in named graphs) | `SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }` (live store **6,151,655** across **21,901** named graphs: 10,802 case + 10,802 provenance + 297 PACER) |
+| Distinct triples (graph ignored) | **5,639,508**, counted from the N-Quads export; a triple asserted in more than one named graph counts once |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL and/or source label) |
-| Reload | wholesale `python3 scripts/rebuild_oxigraph.py` (not incremental) |
+| Reload | bulk load into an empty store, `python3 scripts/rebuild_oxigraph.py` ([Reloading the store](#reloading-the-store)) |
 
 Platform/agency extra facts can vary by generation batch order ([issue #10](https://github.com/mrinaalr/CaseLinker/issues/10)).
 
@@ -211,6 +224,46 @@ GROUP BY ?platform ?label
 ORDER BY DESC(?cases)
 LIMIT 8
 ```
+
+### People and platforms in a case
+
+The investigation lists its people and platforms with `uco-core:object`. A person's role comes from the `Has_Role` relationship whose source is that person. `cac:usesChannel` and `cac:participatesInEvent` tie them to an offense event only when the case has one event.
+
+```sparql
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?kind ?node ?label WHERE {
+  BIND(<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_191> AS ?case)
+  GRAPH ?case {
+    ?case uco-core:object ?node .
+    { ?node a uco-identity:Person . ?rel uco-core:source ?node ; uco-core:target ?role . ?role a ?kind }
+    UNION { ?node a cac-core:DigitalSystemEntity ; rdfs:label ?label . BIND("platform" AS ?kind) }
+  }
+}
+```
+
+### Quote behind a case node
+
+An annotation a resolution used names the node it supports with `uco-core:object`: offender and victim ages (`person/{offender,victim}/N/age`), imposed sentences (`sentence/N`), the CyberTip report (`cybertip`) and its reporter role (`cybertip/reporter/{esp}`). Annotations a resolution set aside (statutory thresholds, decoys) name no node. Match `?ann a oa:Annotation`, because the investigation also uses `uco-core:object`.
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+SELECT ?node ?field ?value ?method ?quote ?start ?end WHERE {
+  GRAPH <https://w3id.org/caselinker/resource/case/afp_2016_001/provenance> {
+    ?ann a oa:Annotation ; uco-core:object ?node ; dcterms:subject ?field ; prov:value ?value ;
+         cac-core:usesMethod ?method ; oa:hasTarget/oa:hasSelector ?q, ?pos .
+    ?q oa:exact ?quote . ?pos oa:start ?start ; oa:end ?end .
+  }
+}
+```
+
+`caselinker-evidence-coverage-shapes.ttl`, validated over a case graph and its provenance graph together, requires every age, sentence, CyberTip report and reporter-role node to have such an annotation.
 
 ### Who sent a case's CyberTip
 

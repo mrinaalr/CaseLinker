@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -24,11 +24,12 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/phase/arrested> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/event/possession>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ada-county-sheriff-s-office-id>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ada-county-sheriff-s-office-id>,
         <https://w3id.org/caselinker/resource/agency/boise-police-department-id>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/usms> .
+        <https://w3id.org/caselinker/resource/agency/usms> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -38,13 +39,13 @@
     ns1:target <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ada-county-sheriff-s-office-id> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Ada County Sheriff's Office" ;
     dcterms:identifier "ori:ID0010000" ;
     ns1:name "Ada County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/boise-police-department-id> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Boise Police Department" ;
     dcterms:identifier "ori:ID0010100" ;
     ns1:name "Boise Police Department" .
@@ -56,36 +57,33 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "U.S. Marshals Service" ;
     ns1:name "U.S. Marshals Service" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/charge/1> .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/event/possession> .
 
@@ -105,6 +103,9 @@
 <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/event/possession> a ns4:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2021_003/phase/arrested> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

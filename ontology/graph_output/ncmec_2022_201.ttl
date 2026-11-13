@@ -2,15 +2,15 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_201> a ns5:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_201> a ns6:CACInvestigation,
         ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2022_201" ;
     dcterms:created "2026-11-10T09:18:12.319031"^^xsd:dateTime ;
@@ -24,13 +24,15 @@
         <https://w3id.org/caselinker/resource/location/cole-county-mo>,
         <https://w3id.org/caselinker/resource/location/jefferson-city-city-mo>,
         <https://w3id.org/caselinker/resource/location/missouri-mo> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/distribution>,
+    ns6:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_201/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_201/agency/boone-county-cyber-crime-taskforce> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_201/admission/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_201/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_201/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_201/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -51,52 +53,46 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_201/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_201/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a ns3:DigitalSystemEntity,
-        ns6:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns6:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
-        ns7:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_201/agency/boone-county-cyber-crime-taskforce> a ns3:OrganizationLikeEntity,
-        ns7:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Boone County Cyber Crime Taskforce" ;
     ns1:name "Boone County Cyber Crime Taskforce" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_201/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_201/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/distribution> a ns3:Event,
-        ns4:CSAM_Distribution ;
+        ns7:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/online-only> a ns5:ChildSexualAbuseEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/online-only> a ns6:ChildSexualAbuseEvent,
         ns3:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/possession> a ns5:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_201/event/possession> a ns6:CSAMIncident,
         ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_201/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns4:LegalProceeding ;
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_201/charge/1> .
+    ns7:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_201/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_201/location/applegate> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Applegate" ;
     ns1:name "Applegate" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_201/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_201/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/cole-county-mo> a ns3:PlaceLikeEntity,
@@ -118,6 +114,12 @@
     dcterms:identifier "fips:29" ;
     skos:altLabel "Mo." ;
     ns1:name "Missouri" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns3:DigitalSystemEntity,
+        ns5:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_201/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "downloading and uploading child porn to the internet" ;

@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,45 +26,46 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_479/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_479/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_479/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/michigan-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 79.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 79.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_479/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_479/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_479/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_479/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/michigan-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "Michigan State Police Department" ;
-    ns3:name "Michigan State Police Department" .
+    ns1:name "Michigan State Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
+    ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child porn" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/2> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/2> a ns2:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_479/event/csam> a ns4:CSAMIncident,
@@ -72,7 +73,7 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_479/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_479/event/online-only> a ns4:ChildSexualAbuseEvent,
@@ -81,13 +82,13 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_479/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/1>,
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_479/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_479/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_479/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/michigan-mi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -95,19 +96,19 @@
     rdfs:label "Michigan" ;
     dcterms:identifier "fips:26" ;
     skos:altLabel "Mich." ;
-    ns3:name "Michigan" .
+    ns1:name "Michigan" .
 
 <https://w3id.org/caselinker/resource/location/montrose-city-mi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Montrose city" ;
     dcterms:identifier "fips:2655280" ;
     skos:altLabel "Montrose" ;
-    ns3:name "Montrose city" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns1:name "Montrose city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_479/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_479/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

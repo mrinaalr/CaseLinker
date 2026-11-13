@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,17 +28,18 @@
         <https://w3id.org/caselinker/resource/case/gbi_2026_006/event/possession>,
         <https://w3id.org/caselinker/resource/case/gbi_2026_006/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/gbi_2026_006/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/dekalb-county-police-department-ga>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/dekalb-county-police-department-ga>,
         <https://w3id.org/caselinker/resource/agency/georgia-bureau-of-investigations-child-exploitation-and-computer-crimes-unit>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/gbi_2026_006/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/gbi_2026_006/cybertip>,
+        <https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 27.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 27.0 .
 
 <https://w3id.org/caselinker/resource/case/gbi_2026_006/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -48,14 +49,14 @@
     ns2:target <https://w3id.org/caselinker/resource/case/gbi_2026_006/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/dekalb-county-police-department-ga> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "DeKalb County Police Department" ;
     dcterms:identifier "ori:GA0440200" ;
     skos:altLabel "Dekalb County Police Department" ;
     ns2:name "DeKalb County Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/georgia-bureau-of-investigations-child-exploitation-and-computer-crimes-unit> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Georgia Bureau of Investigation's Child Exploitation and Computer Crimes Unit" ;
     ns2:name "Georgia Bureau of Investigation's Child Exploitation and Computer Crimes Unit" .
 
@@ -82,7 +83,7 @@
 
 <https://w3id.org/caselinker/resource/case/gbi_2026_006/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/gbi_2026_006/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
@@ -129,8 +130,8 @@
     ns2:name "Georgia" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:HotlineOrganization,
-        ns3:FederalAgency ;
+        ns3:HotlineOrganization,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
@@ -140,10 +141,10 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/gbi_2026_006/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/gbi_2026_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -26,11 +26,13 @@
     ns5:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/event/csam>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-crimes-against-children-unit-oh-unverified>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-crimes-against-children-unit-oh-unverified>,
         <https://w3id.org/caselinker/resource/agency/austintown-police-department-oh>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/mahoning-county-sheriff-s-office-oh>,
-        <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> .
+        <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -53,31 +55,31 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/attorney-generals-crimes-against-children-unit-oh-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Attorney General's Crimes Against Children Unit" ;
     ns1:name "Attorney General's Crimes Against Children Unit" .
 
 <https://w3id.org/caselinker/resource/agency/austintown-police-department-oh> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Austintown Police Department" ;
     dcterms:identifier "ori:OH0500100" ;
     skos:altLabel "Austintown Township Police Department" ;
     ns1:name "Austintown Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
     ns1:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/mahoning-county-sheriff-s-office-oh> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Mahoning County Sheriff's Office" ;
     dcterms:identifier "ori:OH0500000" ;
     ns1:name "Mahoning County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Ohio Bureau of Criminal Investigation" ;
     ns1:name "Ohio Bureau of Criminal Investigation" .
 
@@ -85,11 +87,11 @@
         ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/event/trust-violation> a ns4:AuthorityAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/relationship/coach> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/relationship/coach> .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -99,15 +101,12 @@
     ns6:chargeCount "4"^^xsd:nonNegativeInteger ;
     ns6:hasCharge <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/relationship/coach> a ns4:Coach,
-        ns4:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/relationship/coach> a ns2:Coach,
+        ns2:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/offender/1> ;
-    ns4:relationshipType "coach" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/offender/1> ;
+    ns2:relationshipType "coach" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/victim/1> .
@@ -125,8 +124,8 @@
     dcterms:identifier "fips:39" ;
     ns1:name "Ohio" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/phase/charged> a ns5:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -135,6 +134,9 @@
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/event/csam> a ns5:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_003/role/victim/1> a ns5:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

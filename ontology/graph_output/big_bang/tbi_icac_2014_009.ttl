@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -27,9 +27,10 @@
         <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/legal-step/sentenced> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/giles-county-sheriff-s-office-tn>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/giles-county-sheriff-s-office-tn>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn>,
-        <https://w3id.org/caselinker/resource/agency/tennessee-department-of-correction> .
+        <https://w3id.org/caselinker/resource/agency/tennessee-department-of-correction> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -39,20 +40,20 @@
     ns1:target <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/giles-county-sheriff-s-office-tn> a ns5:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Giles County Sheriff's Office" ;
     dcterms:identifier "ori:TN0280000" ;
     skos:altLabel "Giles County Sheriff's Department" ;
     ns1:name "Giles County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a ns5:OrganizationLikeEntity,
-        ns2:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Tennessee Bureau of Investigation" ;
     dcterms:identifier "ori:TNTBI0000" ;
     ns1:name "Tennessee Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/tennessee-department-of-correction> a ns5:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Tennessee Department of Correction" ;
     ns1:name "Tennessee Department of Correction" .
 
@@ -66,15 +67,15 @@
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns4:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility: remains in the custody" ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/sentence/1> .
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/legal-step/sentenced> a ns5:Event,
         ns5:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/location/nashville> a ns5:PlaceLikeEntity,
@@ -82,11 +83,8 @@
     rdfs:label "Nashville" ;
     ns1:name "Nashville" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/sentence/1> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
     rdfs:label "12 years" ;
     ns5:assesses <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/role/offender/1> .
 
@@ -103,8 +101,11 @@
     skos:altLabel "Pulaski" ;
     ns1:name "Pulaski city" .
 
+<https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/phase/sentenced> a ns5:Phase,
-        ns4:SentencingPhase ;
+        ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2014_009/role/offender/1> a ns3:OffenderRole ;

@@ -1,6 +1,6 @@
 """Rebuild fence for the public SPARQL proxy.
 
-Wholesale Graph Store PUT /store can take tens of seconds on the full corpus.
+A full bulk reload of the store takes about five minutes.
 Oxigraph does not expose a documented atomic swap that lets queries keep
 seeing a consistent previous dataset for the whole upload, so /sparql returns
 503 while a rebuild holds this lock.
@@ -16,7 +16,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 REDIS_KEY = "caselinker:sparql_rebuild"
-# Long enough for a full-corpus PUT; crashed rebuilds expire instead of 503ing forever.
+# Long enough for a full-corpus bulk load; crashed rebuilds expire instead of 503ing forever.
 REDIS_TTL_S = 30 * 60
 
 

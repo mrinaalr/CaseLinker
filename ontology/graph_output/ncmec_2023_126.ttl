@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -26,32 +26,35 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_126/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_126/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_126/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_126/agency/dayton-police-department> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_126/agency/dayton-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 34.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 34.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_126/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_126/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2023_126/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_126/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns4:name "ICAC Task Force" .
+    ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_126/agency/dayton-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Dayton Police Department" ;
-    ns4:name "Dayton Police Department" .
+    ns3:name "Dayton Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_126/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
@@ -77,7 +80,7 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_126/location/dayton> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Dayton" ;
-    ns4:name "Dayton" .
+    ns3:name "Dayton" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_126/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -87,18 +90,7 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Nevada" ;
     dcterms:identifier "fips:32" ;
-    ns4:name "Nevada" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns4:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns6:encryptionLevel "end-to-end" ;
-    ns4:name "Snapchat" .
+    ns3:name "Nevada" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_126/event/csam> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -107,10 +99,21 @@
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_126/phase/indicted> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns6:encryptionLevel "end-to-end" ;
+    ns3:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_126/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

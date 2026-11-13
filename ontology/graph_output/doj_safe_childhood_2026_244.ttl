@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,9 +30,10 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/legal-step/convicted> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -62,28 +63,28 @@
     ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "CEOS" ;
     ns1:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns1:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/3> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/3> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
@@ -96,22 +97,22 @@
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/event/project-safe-childhood> a ns4:Event,
-        ns5:ProjectSafeChildhoodOperation ;
+        ns3:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/1>,
+    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/legal-step/convicted> a ns4:Event,
         ns4:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/location/united-states> a ns4:PlaceLikeEntity,
@@ -141,10 +142,10 @@
     dcterms:identifier "fips:36" ;
     ns1:name "New York" .
 
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/phase/convicted> a ns4:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
+
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_244/phase/convicted> a ns4:Phase,
-        ns3:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/convicted" .
 

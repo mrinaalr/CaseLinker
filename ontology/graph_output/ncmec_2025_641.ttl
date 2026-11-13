@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -23,13 +23,14 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_641/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_641/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_641/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_641/agency/orange-county-sheriffs-office> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_641/agency/orange-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 25.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 25.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_641/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -43,23 +44,23 @@
     rdfs:label "Orange County Sheriff's Office" ;
     ns1:name "Orange County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/1> a ns3:CriminalCharge,
-        ns3:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/1> a ns5:CriminalCharge,
+        ns5:StateCharge ;
     rdfs:label "third-degree sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_641/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_641/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "15"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/1>,
+    ns5:chargeCount "15"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_641/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_641/location/hillsborough> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -67,7 +68,7 @@
     rdfs:label "Hillsborough" ;
     ns1:name "Hillsborough" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_641/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_641/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_641/event/possession> .
 
@@ -75,10 +76,10 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_641/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_641/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

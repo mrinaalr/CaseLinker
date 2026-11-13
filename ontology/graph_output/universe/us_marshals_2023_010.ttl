@@ -1,13 +1,13 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case us_marshals_2023_010" ;
     dcterms:created "2026-11-11T18:14:32.482921"^^xsd:dateTime ;
@@ -23,12 +23,14 @@
         <https://w3id.org/caselinker/resource/location/martinsburg-city-wv>,
         <https://w3id.org/caselinker/resource/location/maryland-md>,
         <https://w3id.org/caselinker/resource/location/west-virginia-wv> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/multi-jurisdiction>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/trust-violation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/usms>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/agency/berkeley-county-sheriffs-office> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/usms>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/agency/berkeley-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -45,7 +47,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "U.S. Marshals Service" ;
     skos:altLabel "U.S. Marshals",
         "U.S. Marshals Capital Area Regional Fugitive Task Force",
@@ -54,12 +56,12 @@
     ns1:name "U.S. Marshals Service" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/agency/berkeley-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Berkeley County Sheriff's Office" ;
     ns1:name "Berkeley County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:MultiJurisdictionalInvestigation ;
+        ns2:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/trust-violation> a ns3:CustodialAbuse,
@@ -77,12 +79,6 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Montgomery County" ;
     ns1:name "Montgomery County" .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/relationship/parent> a ns3:CaregiverRelationship,
         ns3:CustodialRelationship ;
@@ -120,11 +116,17 @@
     dcterms:identifier "fips:54" ;
     ns1:name "West Virginia" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> a ns2:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> a ns2:VictimRole ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;

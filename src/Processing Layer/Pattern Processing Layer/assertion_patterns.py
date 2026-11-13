@@ -31,7 +31,7 @@ _pp = importlib.util.module_from_spec(_spec)
 assert _spec.loader
 _spec.loader.exec_module(_pp)
 
-REGEX_VERSION = "regex_3.0.2"
+REGEX_VERSION = "regex_3.0.3"
 GATE_VERSION = "victim_age_gate_v2"
 
 # ---------------------------------------------------------------------------
@@ -72,7 +72,7 @@ _VICTIM_ALIASES = re.compile(r"\b(?:Doe|Victim|Minor|Child|Juvenile)\b")
 
 _NAME_RE = r"[A-Z][\w'’\-]*\.?(?:\s+[A-Z][\w'’\-]*\.?){0,4}"
 _DEFENDANT_SUBJECT_RE = re.compile(
-    rf"\b([A-Z][a-z'’\-]{{2,}})(?:\s+(?:Jr|Sr|II|III)\.?)?,?\s+(?:(?:[a-z]\w*|\d{{1,3}}),?\s+){{0,3}}?"
+    rf"\b([A-Z][a-z'’\-]{{2,}})(?:\s+(?:Jr|Sr|II|III)\.?)?(?:\s*\(\d{{1,3}}\))?,?\s+(?:(?:[a-z]\w*|\d{{1,3}}),?\s+){{0,3}}?"
     rf"(?:was|were|is|has\s+been|had\s+been|has|had|will\s+be|also|later|then|previously)?\s*"
     rf"(?:{_DEFENDANT_VERBS})\b"
 )
@@ -180,7 +180,7 @@ _FEMALE_MALE_RIGHT = re.compile(r"^\W*(?:years?\W*olds?\W*)(?:fe)?male\b(?!\s+(?
 _VICTIM_LEFT = re.compile(
     rf"\b(?:{VICTIM_NOUNS})(?:\s*,\s*|\s+)(?:an?\s+)?(?:who\s+)?(?:(?:was|is|were)\s+)?(?:then\s+)?(?:only\s+)?"
     r"(?:approximately\s+|about\s+|around\s+|just\s+)?(?:(?:between\s+the\s+)?ages?d?\s+(?:of\s+)?)?"
-    rf"(?:{sg.NUMBER_RE}\s*(?:and|to|-|through)\s*)?$",
+    rf"(?:{sg.NUMBER_RE}\s*(?:and|to|-|through|thru)\s*)?$",
     re.I,
 )
 _JUVENILE_DEFENDANT_RIGHT = re.compile(
@@ -203,9 +203,10 @@ _CONTACT_WITH_CHILD_LEFT = re.compile(
 _NAME_BEFORE_COMMA = re.compile(
     rf"({_NAME_RE})(?:,?\s+(?:Jr|Sr|II|III|IV)\.?)?\s*(?:,|\()\s*(?:(?:then|now|age|aged)\s+)?$"
 )
-# "charged Cesar Garcia (age 45)" — the verb is before the name, not after the number.
+# "charged Cesar Garcia (age 45)" / "arrested Cesar Garcia (45)" — the verb is before the name,
+# not after the number.
 _CHARGED_PAREN_AGE = re.compile(
-    rf"\b(?:charged|arrested|indicted|arraigned|booked)\s+{_NAME_RE}\s*\(\s*age[d]?\s*$",
+    rf"\b(?:charged|arrested|indicted|arraigned|booked)\s+{_NAME_RE}\s*\(\s*(?:age[d]?\s*)?$",
     re.I,
 )
 _VICTIM_PAREN_AGE = re.compile(
@@ -269,6 +270,66 @@ _DESCRIBED_CHILD_AGE = re.compile(
 )
 
 
+# A stated span of victim ages ("girls between the ages of 8 and 13", "victims ages 6 to 16",
+# "an 8- to 10-year-old girl") is kept as a span (#19). The ends are not two victims.
+_VICTIM_ESTIMATED_LEFT = re.compile(
+    rf"\b(?:{VICTIM_NOUNS})\s+(?:who\s+)?(?:(?:was|were|is|are|appear(?:ed|s)?)\s+)?"
+    rf"(?:estimated\s+to\s+be|approximately|about|around|roughly)\s+(?:between\s+)?"
+    rf"(?:{sg.NUMBER_RE}\s*(?:and|to|-|through|thru)\s*)?$",
+    re.I,
+)
+VICTIM_RANGE_MAX_AGE = 17
+# "slideshows of CSAM focused on girls roughly 7 to 12 years old": ages of children shown in
+# material, wherever the material word sits in the sentence.
+_MATERIAL_IN_SENTENCE = re.compile(
+    r"\b(?:images?|videos?|photos?|photographs?|pictures?|files?|porn\w*|csam|materials?|depict\w*|collections?"
+    r"|slideshows?|footage|movies?|posing|objectionable|publications?|shows?|showing)\b",
+    re.I,
+)
+# Spans that describe a group, not children in this case: a study ("one in seven children, ages
+# 10 to 17"), or the children someone works with ("a tennis coach for children between …").
+_GROUP_SPAN_LEFT = re.compile(
+    r"\b(?:\d+|one)\s+in\s+(?:\d+|\w+)\b|\bpercent\b|%|\bstud(?:y|ies)\b|\bstatistics?\b|\bsurvey\b"
+    r"|\b(?:coach|teacher|tutor|instructor|counselor|mentor|program|camp|league|class(?:es)?|lessons?|serv(?:es|ed|ing))\b[^.;]{0,40}$"
+    r"|\b(?:attract\w*|preferences?|interest(?:ed)?\s+in|fantas\w*)\b[^.;]{0,70}$",
+    re.I,
+)
+# "to entice a 13-year-old female", "sexual relations with a 15-year old female": the child the
+# act was done to. Not "identified as a 13-year-old female" or "a 16-year-old male had recorded".
+_ACTED_ON_LEFT = re.compile(
+    r"\b(?:with|entic\w+|coerc\w+|contact\w*|solicit\w+|abus\w+|assault\w+|molest\w+|rap(?:e|ed|ing)|lur(?:e|ed|ing)"
+    r"|direct(?:ed|ing)?|messag\w+|text(?:ed|ing)|groom\w+|exploit\w+|extort\w+|depicting|front\s+of|account\s+of"
+    r"|recovery\s+of|rescue\s+of|(?:messages?|images?|photos?|pictures?|videos?|material)\s+to)"
+    r"\s+(?:an?|the)\s+(?:approximately\s+)?$",
+    re.I,
+)
+
+
+def _victim_range_role(text: str, s: int, e: int, left: str, extras: Dict) -> Optional[Tuple[str, float, Dict]]:
+    """``victim_range`` when the span at this token is tied to victims, with both ends under 18."""
+    found = sg.age_range_at(text, s, e)
+    if not found:
+        return None
+    low, high, span_end = found
+    extras["range"] = [low, high]
+    if high > VICTIM_RANGE_MAX_AGE:
+        return None  # "ages 12 thru 19" reaches adults: not a span of child victims, and never cut to 17
+    ss, se = sg.sentence_at(text, s, e)
+    tail = sg.normalize_surface(text[span_end : min(se, span_end + 80)])
+    lead = sg.normalize_surface(text[max(ss, s - 120) : s])
+    noun = _VICTIM_LEFT.search(lead[-90:]) or _VICTIM_ESTIMATED_LEFT.search(lead[-110:]) or _VICTIM_RIGHT.match(tail)
+    if not noun:
+        return None
+    named_victims = bool(_VICTIM_NOUN_EXACT.search(noun.group(0)))
+    if not named_victims and not sg.has_victimization_cue(text, s, e):
+        return None  # "serves youth between the ages of 13 and 18" is a program, not this case
+    if not named_victims and _MATERIAL_IN_SENTENCE.search(text[ss:s]):
+        return None
+    if _GROUP_SPAN_LEFT.search(sg.normalize_surface(text[ss:s])):
+        return None
+    return "victim_range", 0.8, extras
+
+
 def _sting_within(text: str, s: int, e: int, chars: int = 800) -> bool:
     """A posing / undercover cue in the preceding stretch of this case, not a later one."""
     return bool(_STING_CUES.search(text[max(0, s - chars) : e]))
@@ -312,6 +373,9 @@ def age_role_lexical(text: str, s: int, e: int, shape: str, defendants: Set[str]
     if sg.is_closed_age_range(text, s, e):
         if sg.is_depicted_material(text, s, e):
             return "depicted_in_material", 0.8, extras
+        ranged = _victim_range_role(text, s, e, left, extras)
+        if ranged:
+            return ranged
         extras["weak"] = "age_range"
         return "unknown", 0.5, extras
 
@@ -340,6 +404,9 @@ def age_role_lexical(text: str, s: int, e: int, shape: str, defendants: Set[str]
         if re.match(placed, right, re.I) or re.match(placed, after_name, re.I):
             return "perpetrator", 0.9, extras
         if _entity_is_defendant(name, defendants):
+            return "perpetrator", 0.85, extras
+        # "Police arrested 21-year-old [name] on …": the name is the object of the arrest (#17).
+        if nm is None and _ARREST_OF_LEFT.search(left[-40:]):
             return "perpetrator", 0.85, extras
         return "unknown", 0.5, extras
 
@@ -390,6 +457,9 @@ def age_role_lexical(text: str, s: int, e: int, shape: str, defendants: Set[str]
         return "victim", 0.8, extras
     if _VICTIM_LEFT.search(left[-80:]):
         if _BETWEEN_AGES_LEFT.search(left[-60:]):
+            ranged = None if sg.is_depicted_material(text, s, e) else _victim_range_role(text, s, e, left, extras)
+            if ranged:
+                return ranged
             extras["weak"] = "age_range"
             return "unknown", 0.5, extras
         if not _VICTIM_NOUN_EXACT.search(left[-80:]) and not sg.has_victimization_cue(text, s, e):
@@ -397,7 +467,16 @@ def age_role_lexical(text: str, s: int, e: int, shape: str, defendants: Set[str]
             return "victim", 0.6, extras
         return "victim", 0.8, extras
     if _FEMALE_MALE_RIGHT.match(right):
-        return "victim", 0.6, extras  # bare "N-year-old female": weak, needs a second family
+        # "tried to engage with a 13-year-old female": a child in this case when the sentence shows
+        # victimization (#17). A bare "N-year-old female" stays weak and needs a second family.
+        if (
+            (sg.parse_number(text[s:e]) or 99) <= VICTIM_RANGE_MAX_AGE
+            and _ACTED_ON_LEFT.search(left[-45:])
+            and sg.has_victimization_cue(text, s, e)
+        ):
+            return "victim", 0.8, extras
+        extras["weak"] = "bare_female_male"
+        return "victim", 0.6, extras
     if _ANAPHOR_LEFT.search(left[-12:]) and _ANAPHOR_RIGHT.match(right):
         ss, se = sg.sentence_at(text, s, e)
         if _DEFENDANT_CUE.search(text[ss:se]):

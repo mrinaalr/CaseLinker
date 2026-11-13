@@ -1,17 +1,17 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns3: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org#> .
-@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns8: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns7: <https://cacontology.projectvic.org#> .
+@prefix ns8: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001> a ns6:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001> a ns7:CACInvestigation,
         ns1:EnduringEntity ;
     rdfs:label "Case mt_doj_2025_001" ;
     dcterms:created "2026-11-11T15:39:07.938966"^^xsd:dateTime ;
@@ -25,16 +25,20 @@
         <https://w3id.org/caselinker/resource/location/carter-county-mt>,
         <https://w3id.org/caselinker/resource/location/helena-city-mt>,
         <https://w3id.org/caselinker/resource/location/montana-mt> ;
-    ns6:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/phase/charged> ;
-    ns6:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/phase/charged> ;
-    ns6:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/ai-csam>,
+    ns7:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/phase/charged> ;
+    ns7:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/phase/charged> ;
+    ns7:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/ai-csam>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/trust-violation> ;
-    ns8:involvesAgency <https://w3id.org/caselinker/resource/agency/carter-county-sheriff-s-office-mt>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/carter-county-sheriff-s-office-mt>,
         <https://w3id.org/caselinker/resource/agency/division-of-criminal-investigation-mt-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/cybertip> .
+    ns6:object <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/cybertip>,
+        <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -45,70 +49,59 @@
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns6:CSAMIncident ;
+    dcterms:subject ns7:CSAMIncident ;
     ns1:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/narrative> ;
     ns1:hasConfidence 0.5198 ;
     ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1/age> a ns8:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 31.0 .
+    ns8:ageSubject <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1> ;
+    ns8:concernsAgeQuality ns8:Age ;
+    ns8:hasAgeInYears 31.0 .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1/has-role> a ns6:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> .
+    ns6:isDirectional true ;
+    ns6:kindOfRelationship "Has_Role" ;
+    ns6:source <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1> ;
+    ns6:target <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1/has-role> a ns6:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/victim/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/platform/gen-ai> a ns1:DigitalSystemEntity,
-        ns2:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns2:platformType "generative-ai" ;
-    ns3:name "Gen AI" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a ns1:DigitalSystemEntity,
-        ns2:SocialMediaPlatform ;
-    rdfs:label "social media" ;
-    ns3:name "social media" .
+    ns6:isDirectional true ;
+    ns6:kindOfRelationship "Has_Role" ;
+    ns6:source <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/victim/1> ;
+    ns6:target <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/carter-county-sheriff-s-office-mt> a ns1:OrganizationLikeEntity,
-        ns8:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Carter County Sheriff's Office" ;
     dcterms:identifier "ori:MT0060000" ;
-    ns3:name "Carter County Sheriff's Office" .
+    ns6:name "Carter County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/division-of-criminal-investigation-mt-unverified> a ns1:OrganizationLikeEntity,
-        ns8:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Division of Criminal Investigation" ;
-    ns3:name "Division of Criminal Investigation" .
+    ns6:name "Division of Criminal Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns6:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns3:name "observe" .
+    ns2:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns6:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/ai-csam> a ns6:DigitallyGeneratedCSAMIncident,
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/ai-csam> a ns7:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
         ns1:Event ;
     rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/possession> a ns6:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/event/possession> a ns7:CSAMIncident,
         ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
@@ -118,60 +111,71 @@
     ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> ;
     ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/relationship/parent> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
 <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/relationship/parent> a ns5:CaregiverRelationship,
         ns5:CustodialRelationship ;
     rdfs:label "Caregiver Relationship · relationship/parent" ;
     ns5:involvesChild <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> ;
     ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> ;
     ns5:relationshipType "parent" ;
-    ns3:isDirectional true ;
-    ns3:source <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> .
+    ns6:isDirectional true ;
+    ns6:source <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> ;
+    ns6:target <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/alzada-cdp-mt> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Alzada CDP" ;
     dcterms:identifier "fips:3001300" ;
     skos:altLabel "Alzada" ;
-    ns3:name "Alzada CDP" .
+    ns6:name "Alzada CDP" .
 
 <https://w3id.org/caselinker/resource/location/carter-county-mt> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Carter County" ;
     dcterms:identifier "fips:30011" ;
-    ns3:name "Carter County" .
+    ns6:name "Carter County" .
 
 <https://w3id.org/caselinker/resource/location/helena-city-mt> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Helena city" ;
     dcterms:identifier "fips:3035600" ;
     skos:altLabel "Helena" ;
-    ns3:name "Helena city" .
+    ns6:name "Helena city" .
 
 <https://w3id.org/caselinker/resource/location/montana-mt> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Montana" ;
     dcterms:identifier "fips:30" ;
-    ns3:name "Montana" .
+    ns6:name "Montana" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns1:DigitalSystemEntity,
+        ns3:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns3:platformType "generative-ai" ;
+    ns6:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns1:DigitalSystemEntity,
+        ns3:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    ns6:name "social media" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
-        ns7:HotlineOrganization,
-        ns8:FederalAgency ;
+        ns2:HotlineOrganization,
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
+    ns6:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/phase/charged> a ns7:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/phase/charged> a ns6:LegalProcessPhase,
-        ns1:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> a ns6:VictimRole ;
+<https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/victim/1> a ns7:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2025_001/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;

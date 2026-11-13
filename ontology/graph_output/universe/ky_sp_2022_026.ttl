@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -24,13 +24,15 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 32.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 32.0 .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -51,11 +53,11 @@
     rdfs:label "Kentucky State Police Department" ;
     ns3:name "Kentucky State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/event/trust-violation> a ns1:CustodialAbuse,
-        ns1:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/event/trust-violation> a ns4:CustodialAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/offender/1> ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/relationship/parent> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/relationship/parent> .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -63,15 +65,12 @@
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): lodged in the McCracken County Jail" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/relationship/parent> a ns1:CaregiverRelationship,
-        ns1:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/relationship/parent> a ns4:CaregiverRelationship,
+        ns4:CustodialRelationship ;
     rdfs:label "Caregiver Relationship · relationship/parent" ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/offender/1> ;
-    ns1:relationshipType "parent" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/offender/1> ;
+    ns4:relationshipType "parent" ;
     ns3:isDirectional true ;
     ns3:source <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/offender/1> ;
     ns3:target <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/victim/1> .
@@ -90,12 +89,15 @@
     skos:altLabel "Paducah" ;
     ns3:name "Paducah city" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2022_026/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2022_026/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

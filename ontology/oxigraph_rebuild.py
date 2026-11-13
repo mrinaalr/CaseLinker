@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Dict, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 from rdflib import Graph, URIRef
 
@@ -165,7 +165,7 @@ def build_nquads(
     When ``{case_id}.provenance.ttl`` sits beside the chosen case file, those
     triples go into ``…/case/{case_id}/provenance``. A missing sidecar is
     normal. A sidecar that does not parse is recorded and does not remove the
-    case. Overwrites *destination*.
+    case. Overwrites *destination*, gzip-compressed when its name ends in ``.gz``.
 
     Graphs are written as they are parsed. The previous single in-memory
     Dataset made each added triple slower as the store grew.
@@ -177,7 +177,7 @@ def build_nquads(
     provenance_loaded = 0
     quads = 0
     total = len(ttl_by_id)
-    with destination.open("w", encoding="utf-8") as handle:
+    with _open_nquads(destination, "wt") as handle:
         for case_id, path in ttl_by_id.items():
             try:
                 parsed = _parse_turtle(path)
@@ -218,16 +218,49 @@ def build_nquads(
     }
 
 
-def put_nquads(
-    nq_path: Path,
+def _open_nquads(path: Path, mode: str = "rb"):
+    """Open an N-Quads file, gzip-compressed when the name ends in ``.gz``."""
+    encoding = None if "b" in mode else "utf-8"
+    if str(path).endswith(".gz"):
+        import gzip
+
+        return gzip.open(str(path), mode, encoding=encoding, compresslevel=1) if "w" in mode \
+            else gzip.open(str(path), mode, encoding=encoding)
+    return path.open(mode.replace("t", ""), encoding=encoding)
+
+
+def bulk_load_nquads(
+    nq_paths: List[Path],
     oxigraph_url: str,
     *,
-    timeout_s: float = 300.0,
-) -> None:
-    """Wholesale-replace the Oxigraph dataset via Graph Store PUT /store.
+    chunk_lines: int = 500_000,
+    retries: int = 4,
+    retry_wait_s: float = 20.0,
+    timeout_s: float = 1800.0,
+    client: Any = None,
+) -> Dict[str, int]:
+    """Load N-Quads into an empty Oxigraph store through its bulk loader.
 
-    Holds the rebuild lock for the duration of the PUT so /sparql can 503.
+    ``POST /store?no_transaction`` makes ``oxigraph serve`` use the bulk loader,
+    which writes sorted data files directly and keeps no write-ahead log. The
+    transactional path (plain ``PUT``/``POST /store``) logs every quad first, and
+    on the 5 GB volume that log overflowed the disk before a full load finished.
+
+    The bulk path is not atomic, so it only loads into an empty store: wipe the
+    volume (or start a fresh location) first. ``CLEAR ALL`` is not a substitute,
+    because the delete goes through the log and the old data stays on disk until
+    compaction. Each file is sent in ``chunk_lines`` slices so a dropped
+    connection costs one slice, not the whole load. A slice is posted again after
+    a failure; reposting quads already stored is harmless, a store is a set.
+
+    Holds the rebuild lock so ``/sparql`` answers 503 while the store is partial,
+    and keeps it when the load fails. Returns lines sent and the store's quad
+    count, and raises when the store
+    does not end with exactly the lines sent (the files hold no duplicate quads:
+    every case is its own named graph).
     """
+    import time
+
     import httpx
 
     _run = Path(__file__).resolve().parent.parent / "run"
@@ -235,23 +268,86 @@ def put_nquads(
         sys.path.insert(0, str(_run))
     from sparql_rebuild_lock import acquire_rebuild_lock, release_rebuild_lock
 
-    acquire_rebuild_lock()
+    if chunk_lines < 1:
+        raise ValueError(f"chunk_lines must be at least 1, got {chunk_lines}")
+    base = oxigraph_url.rstrip("/")
+    own_client = client is None
+    http = client or httpx.Client(timeout=timeout_s)
+
+    def count() -> int:
+        response = http.post(
+            f"{base}/query",
+            data={"query": "SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }"},
+            headers={"Accept": "application/sparql-results+json"},
+        )
+        response.raise_for_status()
+        return int(response.json()["results"]["bindings"][0]["n"]["value"])
+
+    def post(body: bytes, label: str) -> None:
+        for attempt in range(1, retries + 1):
+            try:
+                response = http.post(
+                    f"{base}/store?no_transaction",
+                    content=body,
+                    headers={"Content-Type": "application/n-quads"},
+                )
+                if response.status_code < 400:
+                    return
+                error = f"HTTP {response.status_code} {response.text[:300]}"
+                if response.status_code < 500:
+                    raise RuntimeError(f"Oxigraph rejected {label}: {error}")
+            except httpx.HTTPError as exc:
+                error = repr(exc)
+            print(f"  {label}: attempt {attempt} failed: {error}", flush=True)
+            if attempt < retries:
+                time.sleep(retry_wait_s)
+        raise RuntimeError(f"Oxigraph bulk load failed at {label} after {retries} attempts")
+
     try:
-        base = oxigraph_url.rstrip("/")
-        url = f"{base}/store"
-        with nq_path.open("rb") as handle:
-            response = httpx.put(
-                url,
-                content=handle,
-                headers={"Content-Type": "application/n-quads"},
-                timeout=timeout_s,
-            )
-        if response.status_code >= 400:
+        before = count()
+        if before:
             raise RuntimeError(
-                f"Oxigraph PUT {url} failed: HTTP {response.status_code} {response.text[:2000]}"
+                f"Oxigraph store at {base} already holds {before} quads. The bulk loader "
+                "only loads an empty store; wipe the volume first."
             )
+        acquire_rebuild_lock()
+        return _bulk_post(nq_paths, chunk_lines, post, count, release_rebuild_lock)
     finally:
-        release_rebuild_lock()
+        if own_client:
+            http.close()
+
+
+def _bulk_post(nq_paths, chunk_lines, post, count, release_lock) -> Dict[str, int]:
+    """Post every file in slices. Releases the rebuild lock only after a complete load.
+
+    A failed load keeps the lock: the store is partial, and /sparql should keep
+    answering 503 until the load is redone or the lock is removed by hand.
+    """
+    sent = 0
+    for path in nq_paths:
+        buf: List[bytes] = []
+        with _open_nquads(path) as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                buf.append(line)
+                if len(buf) >= chunk_lines:
+                    post(b"".join(buf), f"{path.name} line {sent + len(buf)}")
+                    sent += len(buf)
+                    buf = []
+                    print(f"  {sent} quads loaded", flush=True)
+        if buf:
+            post(b"".join(buf), f"{path.name} line {sent + len(buf)}")
+            sent += len(buf)
+        print(f"  {path.name} done, {sent} quads loaded", flush=True)
+    after = count()
+    if after != sent:
+        raise RuntimeError(
+            f"Oxigraph holds {after} quads after loading {sent} lines; "
+            "the rebuild lock stays in place"
+        )
+    release_lock()
+    return {"quads_sent": sent, "store_quads": after}
 
 
 def summarize_sources(ttl_by_id: Mapping[str, Path]) -> Dict[str, int]:

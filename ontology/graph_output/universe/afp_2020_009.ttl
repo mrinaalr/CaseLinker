@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,37 +28,38 @@
         <https://w3id.org/caselinker/resource/case/afp_2020_009/event/possession>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department>,
-        <https://w3id.org/caselinker/resource/case/afp_2020_009/agency/northern-territory-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department>,
+        <https://w3id.org/caselinker/resource/case/afp_2020_009/agency/northern-territory-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 28.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Australian Federal Police" ;
-    ns4:name "Australian Federal Police" .
+    ns1:name "Australian Federal Police" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/agency/northern-territory-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Northern Territory Police Department" ;
-    ns4:name "Northern Territory Police Department" .
+    ns1:name "Northern Territory Police Department" .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/2> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
@@ -72,48 +73,48 @@
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/location/brisbane> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Brisbane" ;
-    ns4:name "Brisbane" .
+    ns1:name "Brisbane" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/location/darwin> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Darwin" ;
-    ns4:name "Darwin" .
+    ns1:name "Darwin" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/location/malak> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Malak" ;
-    ns4:name "Malak" .
+    ns1:name "Malak" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/location/northern-territory> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Northern Territory" ;
-    ns4:name "Northern Territory" .
+    ns1:name "Northern Territory" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns4:name "United States" .
+    ns1:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

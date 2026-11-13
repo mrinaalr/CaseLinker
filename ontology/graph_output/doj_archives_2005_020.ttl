@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -34,11 +34,13 @@
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/legal-step/sentenced> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/ice>,
         <https://w3id.org/caselinker/resource/agency/ice-us-immigration-and-customs-enforcement>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -55,27 +57,27 @@
     ns1:target <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/department-of-homeland-security> a ns6:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Department of Homeland Security" ;
     ns1:name "Department of Homeland Security" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns1:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/ice> a ns6:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "ICE" ;
     ns1:name "ICE" .
 
 <https://w3id.org/caselinker/resource/agency/ice-us-immigration-and-customs-enforcement> a ns6:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "# ICE # U.S. Immigration and Customs Enforcement" ;
     ns1:name "# ICE # U.S. Immigration and Customs Enforcement" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns6:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
@@ -91,19 +93,19 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/event/multi-jurisdiction> a ns6:Event,
-        ns2:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns2:crossesBorders true .
+    ns4:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/event/trafficking> a ns6:Event,
         ns5:SexTrafficking ;
     rdfs:label "Sex Trafficking · event/trafficking" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/event/trust-violation> a ns4:AuthorityAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/relationship/teacher> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
@@ -135,18 +137,12 @@
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/relationship/teacher> a ns4:CustodialRelationship,
-        ns4:Teacher ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/relationship/teacher> a ns2:CustodialRelationship,
+        ns2:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/offender/1> ;
-    ns4:relationshipType "teacher" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/offender/1> ;
+    ns2:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/role/victim/1> .
@@ -176,6 +172,12 @@
     dcterms:identifier "fips:13" ;
     skos:altLabel "Ga." ;
     ns1:name "Georgia" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_020/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_020/phase/sentenced> a ns6:Phase,
         ns5:SentencingPhase ;

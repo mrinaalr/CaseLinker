@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_093> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_093> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2022_093" ;
     dcterms:created "2026-11-10T09:17:37.314947"^^xsd:dateTime ;
@@ -20,13 +20,15 @@
         "NCMEC" ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/chandlerville-village-il>,
         <https://w3id.org/caselinker/resource/location/illinois-il> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_093/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_093/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/distribution>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_093/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_093/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_093/legal-proceeding> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_093/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_093/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -52,25 +54,25 @@
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_093/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_093/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:CSAM_Distribution ;
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_093/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Morgan County Jail" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_093/charge/1> .
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_093/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_093/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_093/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/possession> .
 
 <https://w3id.org/caselinker/resource/location/chandlerville-village-il> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -86,20 +88,20 @@
     skos:altLabel "Ill." ;
     ns1:name "Illinois" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/possession> a ns4:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_093/phase/charged> a ns4:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
 <https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
     rdfs:label "social media" ;
     ns1:name "social media" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_093/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2022_093/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_093/phase/charged> a ns2:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

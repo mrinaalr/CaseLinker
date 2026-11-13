@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017> a ns4:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case de_ag_2012_017" ;
     dcterms:created "2026-11-10T18:11:18.418316"^^xsd:dateTime ;
@@ -21,20 +21,22 @@
     dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware-de>,
         <https://w3id.org/caselinker/resource/location/milford-city-de>,
         <https://w3id.org/caselinker/resource/location/wilmington-city-de> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_017/phase/charged> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_017/phase/charged> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2012_017/event/distribution>,
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_017/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_017/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2012_017/event/distribution>,
         <https://w3id.org/caselinker/resource/case/de_ag_2012_017/event/trust-violation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified>,
         <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force>,
         <https://w3id.org/caselinker/resource/agency/delaware-department-of-justice>,
-        <https://w3id.org/caselinker/resource/agency/doj> .
+        <https://w3id.org/caselinker/resource/agency/doj> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 42.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 42.0 .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -51,22 +53,22 @@
     ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Child Predator Task Force" ;
     ns2:name "Child Predator Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Delaware Child Predator Task Force" ;
     ns2:name "Delaware Child Predator Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/delaware-department-of-justice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns1:StateAgency ;
     rdfs:label "Delaware Department of Justice" ;
     ns2:name "Delaware Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns2:name "U.S. Department of Justice" .
 
@@ -74,21 +76,18 @@
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/event/trust-violation> a ns1:CustodialAbuse,
-        ns1:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/event/trust-violation> a ns5:CustodialAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1> ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/de_ag_2012_017/relationship/mother> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/de_ag_2012_017/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/relationship/mother> a ns1:CustodialRelationship,
-        ns1:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/relationship/mother> a ns5:CustodialRelationship,
+        ns5:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1> ;
-    ns1:relationshipType "parent" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1> ;
+    ns5:relationshipType "parent" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/victim/1> .
@@ -113,14 +112,17 @@
     skos:altLabel "Wilmington" ;
     ns2:name "Wilmington city" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/phase/charged> a ns4:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/victim/1> a ns4:VictimRole ;
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_017/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;

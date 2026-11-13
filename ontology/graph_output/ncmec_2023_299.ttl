@@ -1,6 +1,6 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -19,8 +19,9 @@
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_299/phase/arrested> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_299/phase/arrested> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_299/event/possession> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_299/admission/1> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_299/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_299/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_299/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -28,20 +29,17 @@
     ns3:hasConfidence 0.65 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_299/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_299/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_299/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_299/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_299/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_299/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a ns3:OrganizationLikeEntity,
-        ns1:StateAgency ;
+        ns2:StateAgency ;
     rdfs:label "Arkansas State Police Department" ;
-    ns2:name "Arkansas State Police Department" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_299/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns1:name "Arkansas State Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_299/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -50,11 +48,14 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_299/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "would hire his own attorney" ;
     dcterms:source <https://www.deltaplexnews.com/20000-bond-set-for-man-involved-in-allegedly-possessing-child-porn/> ;
-    ns2:description "would hire his own attorney" .
+    ns1:description "would hire his own attorney" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_299/event/possession> a ns4:CSAMIncident,
         ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_299/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_299/phase/arrested> a ns4:InitialPhase,
         ns3:Phase ;

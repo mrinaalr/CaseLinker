@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -21,39 +21,37 @@
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_677/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_677/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_677/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_677/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_677/legal-proceeding> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_677/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_677/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_677/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_677/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_677/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_677/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_677/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/1> a ns2:CriminalCharge,
-        ns2:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/2> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/2> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/3> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_677/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_677/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_677/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_677/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_677/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_677/event/possession> .
 
@@ -62,18 +60,21 @@
     rdfs:label "New Mexico" ;
     dcterms:identifier "fips:35" ;
     skos:altLabel "N.m." ;
-    ns3:name "New Mexico" .
+    ns2:name "New Mexico" .
 
 <https://w3id.org/caselinker/resource/location/new-mexico-nm-35> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New Mexico" ;
     dcterms:identifier "fips:35" ;
-    ns3:name "New Mexico" .
+    ns2:name "New Mexico" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_677/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_677/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_677/phase/arrested> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

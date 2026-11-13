@@ -2,9 +2,9 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,11 +26,12 @@
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_098/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_098/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_098/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_098/agency/frederick-county-cyber-crimes-task-force>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_098/agency/frederick-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_098/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_098/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_098/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -60,17 +61,17 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/agency/frederick-county-cyber-crimes-task-force> a ns2:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Frederick County Cyber Crimes Task Force" ;
     ns1:name "Frederick County Cyber Crimes Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/agency/frederick-county-sheriffs-office> a ns2:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Frederick County Sheriff's Office" ;
     ns1:name "Frederick County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_098/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_098/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -80,19 +81,16 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns6:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_098/charge/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_098/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/operation> a ns2:Event,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_098/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_098/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_098/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_098/event/possession> .
 
@@ -111,7 +109,7 @@
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
         ns5:HotlineOrganization,
-        ns4:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
@@ -120,6 +118,9 @@
         ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns3:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_098/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_098/phase/charged> a ns3:LegalProcessPhase,
         ns2:Phase ;

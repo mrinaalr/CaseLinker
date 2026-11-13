@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -24,7 +24,8 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_540/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_540/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_540/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_540/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_540/legal-proceeding> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_540/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -33,25 +34,25 @@
     ns3:hasConfidence 0.5092 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 43.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 43.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_540/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_540/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_540/event/distribution> a ns3:Event,
-        ns1:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_540/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -64,19 +65,19 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_540/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns1:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_540/charge/1> ;
-    ns1:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2024_540/sentence/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_540/charge/1> ;
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2024_540/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_540/location/chesterfield-township> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Chesterfield Township" ;
-    ns5:name "Chesterfield Township" .
+    ns4:name "Chesterfield Township" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_540/sentence/1> a ns1:CriminalSentence,
-        ns1:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_540/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
     rdfs:label "10-year" ;
     ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1> .
 
@@ -84,15 +85,15 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Macomb County" ;
     dcterms:identifier "fips:26099" ;
-    ns5:name "Macomb County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns4:name "Macomb County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_540/phase/charged> a ns2:LegalProcessPhase,
         ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_540/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_540/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -23,7 +23,9 @@
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/phase/charged> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/event/trust-violation> .
+        <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/event/trust-violation> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -37,61 +39,55 @@
     ns2:concernsAgeQuality ns2:Age ;
     ns2:hasAgeInYears 12.0 .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/victim/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/victim/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/event/trust-violation> a ns1:CustodialAbuse,
+        ns1:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/relationship/mother> .
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/relationship/mother> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/relationship/mother> a ns1:CustodialRelationship,
+        ns1:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> ;
-    ns3:relationshipType "parent" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> .
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> ;
+    ns1:relationshipType "parent" ;
+    ns3:isDirectional true ;
+    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/allegheny-county-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Allegheny County" ;
     dcterms:identifier "fips:42003" ;
-    ns1:name "Allegheny County" .
+    ns3:name "Allegheny County" .
 
 <https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Harrisburg city" ;
     dcterms:identifier "fips:4232800" ;
     skos:altLabel "Harrisburg" ;
-    ns1:name "Harrisburg city" .
+    ns3:name "Harrisburg city" .
 
 <https://w3id.org/caselinker/resource/location/pitcairn-borough-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pitcairn borough" ;
     dcterms:identifier "fips:4260712" ;
     skos:altLabel "Pitcairn" ;
-    ns1:name "Pitcairn borough" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
+    ns3:name "Pitcairn borough" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -101,6 +97,12 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns4:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_002/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

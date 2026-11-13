@@ -2,9 +2,9 @@
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -31,12 +31,15 @@
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/event/possession>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/admission/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/admission/1>,
+        <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media>,
+        <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -44,11 +47,11 @@
     ns3:hasConfidence 0.65 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 43.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 43.0 .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,18 +60,8 @@
     ns2:source <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns2:name "social media" .
-
-<https://w3id.org/caselinker/resource/platform/twitter-x> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Twitter / X" ;
-    ns2:name "Twitter / X" .
-
 <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Division of Criminal Justice Financial & Computer Crimes Bureau" ;
     ns2:name "Division of Criminal Justice Financial & Computer Crimes Bureau" .
 
@@ -79,18 +72,18 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office> a ns3:OrganizationLikeEntity,
-        ns6:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "New Jersey Attorney General's Office" ;
     ns2:name "New Jersey Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> a ns3:OrganizationLikeEntity,
-        ns6:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "New Jersey State Police Department" ;
     ns2:name "New Jersey State Police Department" .
 
@@ -110,7 +103,7 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/event/multi-jurisdiction> a ns3:Event,
-        ns6:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -161,15 +154,25 @@
     dcterms:identifier "fips:36" ;
     ns2:name "New York" .
 
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/platform/twitter-x> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Twitter / X" ;
+    ns2:name "Twitter / X" .
+
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "practice law in New York, not New Jersey, but he practices from the office in Millburn" ;
     dcterms:source <https://www.njoag.gov/millburn-lawyer-arrested-on-charges-that-he-used-twitter-accounts-to-distribute-child-pornography> ;
     ns2:description "practice law in New York, not New Jersey, but he practices from the office in Millburn" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_020/phase/charged> a ns1:LegalProcessPhase,
         ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_020/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

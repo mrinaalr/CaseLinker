@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
@@ -29,7 +29,11 @@
         <https://w3id.org/caselinker/resource/case/svicac_2022_010/event/possession>,
         <https://w3id.org/caselinker/resource/case/svicac_2022_010/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/svicac_2022_010/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/bureau-of-prisons> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/bureau-of-prisons> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -43,41 +47,31 @@
     ns4:concernsAgeQuality ns4:Age ;
     ns4:hasAgeInYears 9.0 .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_010/role/victim/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_010/role/victim/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/victim/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns3:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a ns6:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns3:name "Kik" .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/bureau-of-prisons> a ns6:OrganizationLikeEntity,
         ns5:LocalAgency ;
     rdfs:label "Bureau of Prisons" ;
-    ns3:name "Bureau of Prisons" .
+    ns2:name "Bureau of Prisons" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_010/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_010/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/event/distribution> a ns6:Event,
-        ns2:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/event/hands-on> a ns1:ChildSexualAbuseEvent,
@@ -90,29 +84,29 @@
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns2:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2022_010/charge/1> ;
-    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/1>,
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2022_010/charge/1> ;
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/1>,
         <https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/2> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/legal-step/sentenced> a ns6:Event,
         ns6:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/victim/1> a ns1:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/1> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
     rdfs:label "six years" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/2> a ns2:CriminalSentence,
-        ns2:SupervisedRelease ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_010/sentence/2> a ns3:CriminalSentence,
+        ns3:SupervisedRelease ;
     rdfs:label "five years supervised release" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1> .
 
@@ -121,31 +115,41 @@
     rdfs:label "Dublin city" ;
     dcterms:identifier "fips:0620018" ;
     skos:altLabel "Dublin" ;
-    ns3:name "Dublin city" .
+    ns2:name "Dublin city" .
 
 <https://w3id.org/caselinker/resource/location/oakland-city-ca> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Oakland city" ;
     dcterms:identifier "fips:0653000" ;
     skos:altLabel "Oakland" ;
-    ns3:name "Oakland city" .
+    ns2:name "Oakland city" .
 
 <https://w3id.org/caselinker/resource/location/walnut-creek-city-ca> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Walnut Creek city" ;
     dcterms:identifier "fips:0683346" ;
     skos:altLabel "Walnut Creek" ;
-    ns3:name "Walnut Creek city" .
+    ns2:name "Walnut Creek city" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
+
+<https://w3id.org/caselinker/resource/case/svicac_2022_010/phase/sentenced> a ns6:Phase,
+        ns3:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2022_010/phase/sentenced> a ns6:Phase,
-        ns2:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_010/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

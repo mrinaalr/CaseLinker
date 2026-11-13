@@ -1,15 +1,15 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006> a ns4:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ice_2026_006> a ns1:CACInvestigation,
         ns3:EnduringEntity ;
     rdfs:label "Case ice_2026_006" ;
     dcterms:created "2026-11-11T14:31:10.353161"^^xsd:dateTime ;
@@ -22,24 +22,27 @@
     dcterms:spatial <https://w3id.org/caselinker/resource/location/missouri-mo>,
         <https://w3id.org/caselinker/resource/location/new-jersey-nj>,
         <https://w3id.org/caselinker/resource/location/st-francois-county-mo> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ice_2026_006/phase/sentenced> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ice_2026_006/phase/sentenced> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/ice_2026_006/event/csam>,
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ice_2026_006/phase/sentenced> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ice_2026_006/phase/sentenced> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ice_2026_006/event/csam>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/event/production>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/legal-step/sentenced> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/ice_2026_006/agency/park-hills-police-department> .
+        <https://w3id.org/caselinker/resource/case/ice_2026_006/agency/park-hills-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 41.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 41.0 .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -48,49 +51,39 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ice_2026_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns2:name "Kik" .
-
 <https://w3id.org/caselinker/resource/agency/hsi> a ns3:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     skos:altLabel "HSI St. Louis" ;
     ns2:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns3:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns2:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/agency/park-hills-police-department> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Park Hills Police Department" ;
     ns2:name "Park Hills Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ice_2026_006/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ice_2026_006/charge/2> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/event/csam> a ns4:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ice_2026_006/event/csam> a ns1:CSAMIncident,
         ns3:Event ;
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/event/distribution> a ns3:Event,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/event/multi-jurisdiction> a ns3:Event,
-        ns1:MultiJurisdictionalInvestigation ;
+        ns6:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/event/production> a ns3:Event,
@@ -98,26 +91,26 @@
     rdfs:label "Production Offense · event/production" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/event/project-safe-childhood> a ns3:Event,
-        ns1:ProjectSafeChildhoodOperation ;
+        ns6:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ice_2026_006/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ice_2026_006/charge/1>,
         <https://w3id.org/caselinker/resource/case/ice_2026_006/charge/2> ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/ice_2026_006/sentence/1> .
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/ice_2026_006/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/legal-step/sentenced> a ns3:Event,
         ns3:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/ice_2026_006/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
     rdfs:label "50 years" ;
     ns3:assesses <https://w3id.org/caselinker/resource/case/ice_2026_006/role/offender/1> .
 
@@ -139,13 +132,23 @@
     dcterms:identifier "fips:29187" ;
     ns2:name "St. Francois County" .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ice_2026_006/phase/sentenced> a ns3:Phase,
-        ns5:SentencingPhase ;
+        ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ice_2026_006/role/offender/1> a ns4:OffenderRole ;
+<https://w3id.org/caselinker/resource/case/ice_2026_006/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ice_2026_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

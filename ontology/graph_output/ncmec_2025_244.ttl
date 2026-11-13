@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,10 +27,11 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_244/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_244/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_244/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_244/agency/coweta-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_244/agency/ongoing-investigation> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_244/agency/ongoing-investigation> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -39,62 +40,62 @@
     ns2:hasConfidence 0.5387 ;
     ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 64.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 64.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_244/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_244/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_244/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_244/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/agency/coweta-county-sheriffs-office> a ns2:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Coweta County Sheriff's Office" ;
-    ns3:name "Coweta County Sheriff's Office" .
+    ns1:name "Coweta County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/agency/ongoing-investigation> a ns2:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Ongoing Investigation" ;
-    ns3:name "Ongoing Investigation" .
+    ns1:name "Ongoing Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/2> a ns6:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns5:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/1>,
+    ns6:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_244/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/location/atlanta> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Atlanta" ;
-    ns3:name "Atlanta" .
+    ns1:name "Atlanta" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_244/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_244/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_244/event/possession> .
 
@@ -102,31 +103,31 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Coweta County" ;
     dcterms:identifier "fips:13077" ;
-    ns3:name "Coweta County" .
+    ns1:name "Coweta County" .
 
 <https://w3id.org/caselinker/resource/location/georgia-ga> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Georgia" ;
     dcterms:identifier "fips:13" ;
     skos:altLabel "Ga." ;
-    ns3:name "Georgia" .
+    ns1:name "Georgia" .
 
 <https://w3id.org/caselinker/resource/location/newnan-city> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Newnan city" ;
     dcterms:identifier "fips:1355020" ;
     skos:altLabel "Newnan" ;
-    ns3:name "Newnan city" .
+    ns1:name "Newnan city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/event/possession> a ns4:CSAMIncident,
         ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns4:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_244/phase/charged> a ns4:LegalProcessPhase,
         ns2:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_244/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

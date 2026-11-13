@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,93 +27,95 @@
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_224/phase/arrested> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_224/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_224/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_224/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_224/legal-proceeding> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/victim/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/event/trust-violation> a ns4:CustodialAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/event/trust-violation> a ns1:CustodialAbuse,
+        ns1:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_224/relationship/mother> .
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_224/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_224/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in the Paul Rein Detention Facility" ;
-    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_224/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_224/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_224/location/columbia-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Columbia County" ;
-    ns1:name "Columbia County" .
+    ns2:name "Columbia County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_224/location/coulmbia-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Coulmbia County" ;
-    ns1:name "Coulmbia County" .
+    ns2:name "Coulmbia County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/relationship/mother> a ns4:CustodialRelationship,
-        ns4:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/relationship/mother> a ns1:CustodialRelationship,
+        ns1:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> ;
-    ns4:relationshipType "parent" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1> .
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> ;
+    ns1:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/broward-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Broward County" ;
     dcterms:identifier "fips:12011" ;
     skos:altLabel "Broward" ;
-    ns1:name "Broward County" .
+    ns2:name "Broward County" .
 
 <https://w3id.org/caselinker/resource/location/columbia-county-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Columbia County" ;
     dcterms:identifier "fips:12023" ;
     skos:altLabel "Columbia" ;
-    ns1:name "Columbia County" .
+    ns2:name "Columbia County" .
 
 <https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     skos:altLabel "Fla." ;
-    ns1:name "Florida" .
+    ns2:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/pompano-beach-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pompano Beach city" ;
     dcterms:identifier "fips:1258050" ;
     skos:altLabel "Pompano Beach" ;
-    ns1:name "Pompano Beach city" .
+    ns2:name "Pompano Beach city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_224/phase/arrested> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -128,7 +130,7 @@
     rdfs:label "Victim Role · role/victim/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_224/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_224/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_224/event/possession> .
 

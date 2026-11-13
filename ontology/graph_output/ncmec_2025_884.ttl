@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,10 +26,11 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_884/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_884/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_884/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/texas-department-of-criminal-justice>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/texas-department-of-criminal-justice>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/crimes-against-children-task-force>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/district-attorneys-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/henderson-county-sheriffs-office> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/henderson-county-sheriffs-office> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_884/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -39,27 +40,27 @@
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_884/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/texas-department-of-criminal-justice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Texas Department of Criminal Justice" ;
     ns3:name "Texas Department of Criminal Justice" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/crimes-against-children-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Crimes Against Children Task Force" ;
     ns3:name "Crimes Against Children Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/district-attorneys-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "District Attorney's Office" ;
     ns3:name "District Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/agency/henderson-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Henderson County Sheriff's Office" ;
     ns3:name "Henderson County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_884/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_884/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -72,23 +73,20 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_884/charge/1> .
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_884/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/legal-step/sentenced> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_884/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
@@ -106,7 +104,10 @@
     dcterms:identifier "fips:48213" ;
     ns3:name "Henderson County" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_884/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_884/phase/sentenced> a <https://cacontology.projectvic.org/core#Phase>,
-        ns4:SentencingPhase ;
+        ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 

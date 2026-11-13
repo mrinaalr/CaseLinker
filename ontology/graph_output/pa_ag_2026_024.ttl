@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,14 +30,16 @@
     ns3:hasStep <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/event/ai-csam>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/event/csam>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified>,
-        <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified>,
+        <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 38.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 38.0 .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,24 +48,18 @@
     ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/gen-ai> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns6:platformType "generative-ai" ;
-    ns1:name "Gen AI" .
-
 <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Office of the Attorney General" ;
     ns1:name "Office of the Attorney General" .
 
 <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Pennsylvania State Police Department" ;
     ns1:name "Pennsylvania State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/event/ai-csam> a ns3:DigitallyGeneratedCSAMIncident,
@@ -77,10 +73,10 @@
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/charge/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/location/havertown> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -92,7 +88,7 @@
     rdfs:label "Kamnik" ;
     ns1:name "Kamnik" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/berks-county-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -120,10 +116,16 @@
     dcterms:identifier "fips:42" ;
     ns1:name "Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/gen-ai> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns6:platformType "generative-ai" ;
+    ns1:name "Gen AI" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_024/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_024/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

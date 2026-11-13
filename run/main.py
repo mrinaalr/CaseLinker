@@ -3898,18 +3898,22 @@ Prefixes (use as needed):
 PREFIX cac: <https://cacontology.projectvic.org#>
 PREFIX cac-core: <https://cacontology.projectvic.org/core#>
 PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/>
 PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>
 PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>
 PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>
 PREFIX cac-plat: <https://cacontology.projectvic.org/platforms#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX oa: <http://www.w3.org/ns/oa#>
 
 Useful patterns:
 - Investigation: ?case a cac:CACInvestigation
-- Platform use: GRAPH ?case { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label } (the case graph IRI is the case IRI; cac:usesChannel exists only when the case has one event)
+- Platform use: ?case uco-core:object ?platform . ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label (cac:usesChannel exists only when the case has one event)
+- People: ?case uco-core:object ?person . ?person a uco-identity:Person . ?rel uco-core:source ?person ; uco-core:target ?role . ?role a ?roleClass
 - CyberTip and who sent it: ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport . OPTIONAL { ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?reporter }
 - Agency: ?case cac-multi:involvesAgency ?agency . ?agency rdfs:label ?label
+- Quote behind a node: GRAPH <case-iri/provenance> { ?ann a oa:Annotation ; uco-core:object ?node ; oa:hasTarget/oa:hasSelector ?q . ?q oa:exact ?quote } (ages, sentences, CyberTip report and reporter role)
 - Press-release case graphs only: FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))
 """
 

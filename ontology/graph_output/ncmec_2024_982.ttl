@@ -2,10 +2,10 @@
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,9 +29,10 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_982/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_982/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_982/operation> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_982/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_982/cybertip> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_982/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_982/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -39,11 +40,11 @@
     ns3:hasConfidence 0.65 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 51.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 51.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_982/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -52,8 +53,8 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_982/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_982/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_982/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "child pornography and" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_982/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -63,11 +64,11 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_982/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns6:LegalProceeding ;
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): jailed without bail at the Luzerne County Correctional Facility" ;
-    ns6:chargeCount "26"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_982/charge/1> .
+    ns7:chargeCount "26"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_982/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_982/location/plains-township> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -83,7 +84,7 @@
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_982/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_982/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_982/event/possession> .
 
@@ -102,7 +103,7 @@
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
         ns5:HotlineOrganization,
-        ns7:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
@@ -117,10 +118,10 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_982/phase/charged> a ns1:LegalProcessPhase,
         ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_982/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

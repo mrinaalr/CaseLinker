@@ -2,8 +2,8 @@
 @prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -33,7 +33,9 @@
     ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns5:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/admission/1> .
+    ns4:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/telegram> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/admission/1/extraction-confidence> a ns2:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -54,48 +56,43 @@
     ns1:concernsAgeQuality ns1:Age ;
     ns1:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/telegram> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Telegram" ;
-    ns5:name "Telegram" .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns2:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns5:name "U.S. Department of Justice" .
+    ns4:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns2:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns5:name "Federal Bureau of Investigation" .
+    ns4:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns5:name "National Center for Missing and Exploited Children" .
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/3> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/3> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns3:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/event/distribution> a ns2:Event,
-        ns4:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/event/hands-on> a ns3:ChildSexualAbuseEvent,
@@ -116,34 +113,34 @@
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/1>,
+    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/charge/3> ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/1>,
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/legal-step/sentenced> a ns2:Event,
         ns2:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
     rdfs:label "seven years" ;
     ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/2> a ns4:CriminalSentence,
-        ns4:SupervisedRelease ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/2> a ns5:CriminalSentence,
+        ns5:SupervisedRelease ;
     rdfs:label "10 years supervised release" ;
     ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/3> a ns4:CriminalSentence,
-        ns4:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/sentence/3> a ns5:CriminalSentence,
+        ns5:MonetaryPenalty ;
     rdfs:label "$56,500" ;
     ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1> .
 
@@ -151,26 +148,31 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maine" ;
     dcterms:identifier "fips:23" ;
-    ns5:name "Maine" .
+    ns4:name "Maine" .
 
 <https://w3id.org/caselinker/resource/location/portland-city-me> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Portland city" ;
     dcterms:identifier "fips:2360545" ;
     skos:altLabel "Portland" ;
-    ns5:name "Portland city" .
+    ns4:name "Portland city" .
+
+<https://w3id.org/caselinker/resource/platform/telegram> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Telegram" ;
+    ns4:name "Telegram" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "accessing, viewing, and distributing child sexual abuse material over the internet" ;
     dcterms:source <https://www.justice.gov/usao-me/pr/portland-man-sentenced-distributing-and-possessing-child-pornography> ;
-    ns5:description "accessing, viewing, and distributing child sexual abuse material over the internet" .
+    ns4:description "accessing, viewing, and distributing child sexual abuse material over the internet" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/phase/sentenced> a ns2:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/phase/sentenced> a ns2:Phase,
-        ns4:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_199/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

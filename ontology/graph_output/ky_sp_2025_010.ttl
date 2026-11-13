@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,14 +28,15 @@
         <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/event/possession>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 18.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 18.0 .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -51,28 +52,28 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "Kentucky State Police Department" ;
     ns2:name "Kentucky State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/2> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Powell County Detention Center" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/1>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/location/denniston> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -84,7 +85,7 @@
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/event/possession> .
 
@@ -112,10 +113,10 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ky_sp_2025_010/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2025_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

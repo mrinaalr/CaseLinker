@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,9 +29,10 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_224/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_224/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_224/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_224/agency/department-of-social-services>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_224/agency/sumter-county-sheriffs-office> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_224/agency/sumter-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_224/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -40,77 +41,74 @@
     ns3:hasConfidence 0.5022 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_224/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_224/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_224/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_224/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_224/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_224/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns4:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/agency/department-of-social-services> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Department of Social Services" ;
-    ns4:name "Department of Social Services" .
+    ns1:name "Department of Social Services" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/agency/sumter-county-sheriffs-office> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Sumter County Sheriff's Office" ;
-    ns4:name "Sumter County Sheriff's Office" .
+    ns1:name "Sumter County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/1> a ns4:CriminalCharge,
+        ns4:StateCharge ;
     rdfs:label "Sexual Exploitation of a Minor in the 2nd" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/2> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/2> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/3> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/event/distribution> a ns3:Event,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "24"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/1>,
+    ns4:chargeCount "24"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_224/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/location/columbia> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Columbia" ;
-    ns4:name "Columbia" .
+    ns1:name "Columbia" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/location/haynsworth-st> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Haynsworth St." ;
-    ns4:name "Haynsworth St." .
+    ns1:name "Haynsworth St." .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/location/sumter-county> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Sumter County" ;
-    ns4:name "Sumter County" .
+    ns1:name "Sumter County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/location/thames> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Thames" ;
-    ns4:name "Thames" .
+    ns1:name "Thames" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_224/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_224/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_224/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_224/event/possession> .
 
@@ -119,18 +117,21 @@
     rdfs:label "South Carolina" ;
     dcterms:identifier "fips:45" ;
     skos:altLabel "S.c." ;
-    ns4:name "South Carolina" .
+    ns1:name "South Carolina" .
 
 <https://w3id.org/caselinker/resource/location/sumter-city> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Sumter city" ;
     dcterms:identifier "fips:4570405" ;
     skos:altLabel "Sumter" ;
-    ns4:name "Sumter city" .
+    ns1:name "Sumter city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/event/possession> a ns2:CSAMIncident,
         ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_224/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_224/phase/charged> a ns2:LegalProcessPhase,
         ns3:Phase ;

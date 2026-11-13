@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,8 +25,10 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_247/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_247/agency/arapahoe-county-sheriffs-office> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_247/agency/arapahoe-county-sheriffs-office> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_247/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_247/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -43,63 +45,57 @@
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_247/agency/arapahoe-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Arapahoe County Sheriff's Office" ;
     ns2:name "Arapahoe County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/1> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/1> a ns4:CriminalCharge ;
     rdfs:label "investigation of sexual" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/2> a ns1:CriminalCharge,
-        ns1:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/2> a ns4:CriminalCharge,
+        ns4:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/3> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/3> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/4> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/4> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/trust-violation> a ns1:AuthorityAbuse,
+        ns1:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_247/relationship/coach> .
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_247/relationship/coach> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_247/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Arapahoe County Jail" ;
-    ns1:chargeCount "21"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/1>,
+    ns4:chargeCount "21"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/3>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_247/charge/4> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/relationship/coach> a ns5:Coach,
-        ns5:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/relationship/coach> a ns1:Coach,
+        ns1:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> ;
-    ns5:relationshipType "coach" ;
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> ;
+    ns1:relationshipType "coach" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/victim/1> .
@@ -109,6 +105,12 @@
     rdfs:label "Arapahoe County" ;
     dcterms:identifier "fips:08005" ;
     ns2:name "Arapahoe County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_247/phase/booked> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -122,7 +124,7 @@
     rdfs:label "Victim Role · role/victim/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_247/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_247/event/csam> .
 

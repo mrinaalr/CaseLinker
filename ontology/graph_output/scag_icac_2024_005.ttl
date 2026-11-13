@@ -3,8 +3,8 @@
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -29,11 +29,12 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/event/possession>,
         <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified>,
         <https://w3id.org/caselinker/resource/agency/horry-county-sheriff-s-office-sc>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/cybertip>,
+        <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -63,12 +64,12 @@
     ns1:target <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/attorney-generals-office-sc-unverified> a ns3:OrganizationLikeEntity,
-        ns6:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Attorney General's Office" ;
     ns1:name "Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/horry-county-sheriff-s-office-sc> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Horry County Sheriff's Office" ;
     dcterms:identifier "ori:SC0260000" ;
     ns1:name "Horry County Sheriff's Office" .
@@ -79,15 +80,15 @@
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/1> a ns6:CriminalCharge,
+        ns6:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/2> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/2> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/3> a ns6:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -97,14 +98,14 @@
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns5:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/1>,
+    ns6:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/1>,
         <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/2>,
         <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/event/possession> .
 
@@ -144,7 +145,7 @@
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
         ns7:HotlineOrganization,
-        ns6:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
@@ -154,10 +155,10 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/scag_icac_2024_005/phase/charged> a ns2:LegalProcessPhase,
         ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/scag_icac_2024_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
