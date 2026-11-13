@@ -1,17 +1,17 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_014> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
+        ns1:EnduringEntity ;
     rdfs:label "Case pa_ag_2026_014" ;
     dcterms:created "2026-11-11T16:48:49.422109"^^xsd:dateTime ;
     dcterms:date "2026-01"^^xsd:gYearMonth ;
@@ -31,21 +31,25 @@
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/event/possession>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/operation> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai>,
+        <https://w3id.org/caselinker/resource/platform/social-media>,
+        <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns3:CSAMIncident ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/narrative> ;
-    ns2:hasConfidence 0.5209 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns1:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/narrative> ;
+    ns1:hasConfidence 0.5209 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/assessment/semantic/sextortion> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/assessment/semantic/sextortion> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · sextortion" ;
     dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/narrative> ;
-    ns2:hasConfidence 0.4997 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns1:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/narrative> ;
+    ns1:hasConfidence 0.4997 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -53,93 +57,93 @@
     ns5:concernsAgeQuality ns5:Age ;
     ns5:hasAgeInYears 20.0 .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/gen-ai> a ns2:DigitalSystemEntity,
-        ns6:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns6:platformType "generative-ai" ;
-    ns1:name "Gen AI" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
-        ns6:SocialMediaPlatform ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
-<https://w3id.org/caselinker/resource/platform/twitter-x> a ns2:DigitalSystemEntity,
-        ns6:SocialMediaPlatform ;
-    rdfs:label "Twitter / X" ;
-    ns1:name "Twitter / X" .
-
-<https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a ns2:OrganizationLikeEntity,
-        ns7:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a ns1:OrganizationLikeEntity,
+        ns4:StateAgency ;
     rdfs:label "Office of the Attorney General" ;
-    ns1:name "Office of the Attorney General" .
+    ns2:name "Office of the Attorney General" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/event/ai-csam> a ns3:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
-        ns2:Event ;
+        ns1:Event ;
     rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/event/distribution> a ns2:Event,
-        ns4:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/event/distribution> a ns1:Event,
+        ns7:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/event/possession> a ns3:CSAMIncident,
-        ns2:Event ;
+        ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/charge/1> .
+    ns7:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/location/strawberry-square> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/location/strawberry-square> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Strawberry Square" ;
-    ns1:name "Strawberry Square" .
+    ns2:name "Strawberry Square" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/operation> a ns2:Event,
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/operation> a ns1:Event,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/butler-county-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/butler-county-pa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Butler County" ;
     dcterms:identifier "fips:42019" ;
-    ns1:name "Butler County" .
+    ns2:name "Butler County" .
 
-<https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Harrisburg city" ;
     dcterms:identifier "fips:4232800" ;
     skos:altLabel "Harrisburg" ;
-    ns1:name "Harrisburg city" .
+    ns2:name "Harrisburg city" .
 
-<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
     dcterms:identifier "fips:42" ;
-    ns1:name "Pennsylvania" .
+    ns2:name "Pennsylvania" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns1:DigitalSystemEntity,
+        ns6:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns6:platformType "generative-ai" ;
+    ns2:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns1:DigitalSystemEntity,
+        ns6:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/platform/twitter-x> a ns1:DigitalSystemEntity,
+        ns6:SocialMediaPlatform ;
+    rdfs:label "Twitter / X" ;
+    ns2:name "Twitter / X" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/phase/charged> a ns3:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_014/phase/charged> a ns3:LegalProcessPhase,
-        ns2:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

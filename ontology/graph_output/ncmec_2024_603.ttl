@@ -2,8 +2,8 @@
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,8 +28,11 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_603/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_603/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_603/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_603/agency/st-louis-county-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_603/agency/st-louis-county-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_603/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -52,33 +55,23 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_603/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_603/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns2:name "Kik" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
-        ns4:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/agency/st-louis-county-police-department> a ns3:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "St. Louis County Police Department" ;
     ns2:name "St. Louis County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_603/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_603/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/event/distribution> a ns3:Event,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -91,10 +84,10 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_603/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_603/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/location/saint-louis-county> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -106,10 +99,7 @@
     rdfs:label "St. Louis County" ;
     ns2:name "St. Louis County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_603/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_603/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_603/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/ballwin-city> a ns3:PlaceLikeEntity,
@@ -124,6 +114,19 @@
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
     ns2:name "Missouri" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_603/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_603/phase/charged> a ns1:LegalProcessPhase,
         ns3:Phase ;

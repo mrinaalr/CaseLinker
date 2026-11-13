@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,9 +26,12 @@
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/svicac_2022_017/phase/booked> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/svicac_2022_017/event/possession>,
         <https://w3id.org/caselinker/resource/case/svicac_2022_017/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/idaho-crimes-against-children-task-force>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/idaho-crimes-against-children-task-force>,
         <https://w3id.org/caselinker/resource/agency/moscow-police-department-ca-unverified>,
-        <https://w3id.org/caselinker/resource/agency/seaside-police-department-ca> .
+        <https://w3id.org/caselinker/resource/agency/seaside-police-department-ca> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/2>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -57,38 +60,38 @@
     ns1:target <https://w3id.org/caselinker/resource/case/svicac_2022_017/role/offender/2> .
 
 <https://w3id.org/caselinker/resource/agency/idaho-crimes-against-children-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Idaho Crimes Against Children Task Force" ;
     ns1:name "Idaho Crimes Against Children Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/moscow-police-department-ca-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Moscow Police Department" ;
     ns1:name "Moscow Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/seaside-police-department-ca> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Seaside Police Department" ;
     dcterms:identifier "ori:CA0271000" ;
     ns1:name "Seaside Police Department" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_017/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_017/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_017/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into Monterey County Jail" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2022_017/charge/1> .
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2022_017/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_017/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_017/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/svicac_2022_017/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2022_017/role/offender/2> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/svicac_2022_017/role/offender/2> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/2" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/svicac_2022_017/event/possession> .
 
@@ -119,24 +122,24 @@
     skos:altLabel "Seaside" ;
     ns1:name "Seaside city" .
 
+<https://w3id.org/caselinker/resource/case/svicac_2022_017/phase/booked> a ns3:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+
 <https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
     rdfs:label "social media" ;
     ns1:name "social media" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/2" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2022_017/phase/booked> a ns3:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/booked" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2022_017/event/possession> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns3:severityLevel 1 ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/svicac_2022_017/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/2" .
 

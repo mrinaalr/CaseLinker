@@ -55,6 +55,8 @@ flowchart LR
   inv -->|hasPhase / currentPhase| phase
   inv -->|hasStep| event
   inv -->|involvesAgency| agency
+  inv -->|uco-core:object| person
+  inv -->|uco-core:object| plat
   event -->|usesChannel, one event only| plat
   vRole -->|participatesInEvent, one event only| event
   oRole -->|participatesInEvent, one event only| event
@@ -64,7 +66,7 @@ flowchart LR
   inv -->|hasStep| proc
 ```
 
-Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's platforms (nodes in the case graph; `cac:usesChannel` only when the case has one event), victim/offender/defendant roles played by UCO `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
+Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's people and platforms as `uco-core:object` of the investigation (`cac:usesChannel` and `cac:participatesInEvent` only when the case has one event), victim/offender/defendant roles played by those `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
 
 Example files: [`graph_output/nj_ag_2017_001.ttl`](graph_output/nj_ag_2017_001.ttl) (Turtle) and the matching `.jsonld`.
 

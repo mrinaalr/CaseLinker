@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,10 +28,11 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_336/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_336/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_336/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/indiana-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_336/cybertip> .
+    ns6:object <https://w3id.org/caselinker/resource/case/ncmec_2025_336/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_336/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_336/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -39,42 +40,42 @@
     ns3:concernsAgeQuality ns3:Age ;
     ns3:hasAgeInYears 26.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_336/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_336/role/offender/1/has-role> a ns6:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_336/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_336/role/offender/1> .
+    ns6:isDirectional true ;
+    ns6:kindOfRelationship "Has_Role" ;
+    ns6:source <https://w3id.org/caselinker/resource/case/ncmec_2025_336/person/offender/1> ;
+    ns6:target <https://w3id.org/caselinker/resource/case/ncmec_2025_336/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
+    ns6:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/indiana-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns1:StateAgency ;
     rdfs:label "Indiana State Police Department" ;
-    ns1:name "Indiana State Police Department" .
+    ns6:name "Indiana State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_336/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_336/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_336/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
     ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:name "observe" .
+    ns6:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_336/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Clark County Jail" ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_336/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_336/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_336/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_336/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_336/event/possession> .
 
@@ -82,50 +83,50 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clark County" ;
     dcterms:identifier "fips:18019" ;
-    ns1:name "Clark County" .
+    ns6:name "Clark County" .
 
 <https://w3id.org/caselinker/resource/location/clarksville-town-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clarksville town" ;
     dcterms:identifier "fips:1812934" ;
     skos:altLabel "Clarksville" ;
-    ns1:name "Clarksville town" .
+    ns6:name "Clarksville town" .
 
 <https://w3id.org/caselinker/resource/location/indiana-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indiana" ;
     dcterms:identifier "fips:18" ;
-    ns1:name "Indiana" .
+    ns6:name "Indiana" .
 
 <https://w3id.org/caselinker/resource/location/otisco-cdp-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Otisco CDP" ;
     dcterms:identifier "fips:1857222" ;
     skos:altLabel "Otisco" ;
-    ns1:name "Otisco CDP" .
+    ns6:name "Otisco CDP" .
 
 <https://w3id.org/caselinker/resource/location/sellersburg-town-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Sellersburg town" ;
     dcterms:identifier "fips:1868670" ;
     skos:altLabel "Sellersburg" ;
-    ns1:name "Sellersburg town" .
+    ns6:name "Sellersburg town" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:HotlineOrganization,
-        ns4:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
+    ns6:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_336/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_336/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_336/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_336/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

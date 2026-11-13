@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -25,9 +25,10 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2023_539/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_539/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_539/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_539/agency/granite-shoals-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_539/agency/granite-shoals-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2023_539/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_539/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -36,39 +37,39 @@
     ns5:hasConfidence 0.5126 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_539/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_539/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_539/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_539/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2023_539/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2023_539/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns2:name "ICAC Task Force" .
+    ns4:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
-        ns4:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
+    ns4:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_539/agency/granite-shoals-police-department> a ns5:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Granite Shoals Police Department" ;
-    ns2:name "Granite Shoals Police Department" .
+    ns4:name "Granite Shoals Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/1> a ns3:CriminalCharge,
-        ns3:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/1> a ns2:CriminalCharge,
+        ns2:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/2> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/2> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/3> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/3> a ns2:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_539/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -81,11 +82,11 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_539/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns3:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in the Burnet County Jail" ;
-    ns3:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/1>,
+    ns2:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_539/charge/3> .
 
@@ -93,10 +94,7 @@
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_539/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_539/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_539/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/granite-shoals-city> a ns5:PlaceLikeEntity,
@@ -104,7 +102,10 @@
     rdfs:label "Granite Shoals city" ;
     dcterms:identifier "fips:4830584" ;
     skos:altLabel "Granite Shoals" ;
-    ns2:name "Granite Shoals city" .
+    ns4:name "Granite Shoals city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_539/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_539/phase/charged> a ns1:LegalProcessPhase,
         ns5:Phase ;

@@ -1,11 +1,11 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/nbi_2020_001> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/nbi_2020_001> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case nbi_2020_001" ;
     dcterms:created "2026-11-11T15:44:11.116150"^^xsd:dateTime ;
@@ -27,10 +27,14 @@
         <https://w3id.org/caselinker/resource/case/nbi_2020_001/location/southview-homes-subdivision>,
         <https://w3id.org/caselinker/resource/case/nbi_2020_001/location/visaya>,
         <https://w3id.org/caselinker/resource/case/nbi_2020_001/location/wisteria-st> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/nbi_2020_001/phase/arrested> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/nbi_2020_001/phase/arrested> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/nbi_2020_001/event/distribution>,
-        <https://w3id.org/caselinker/resource/case/nbi_2020_001/event/trust-violation> .
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/nbi_2020_001/phase/arrested> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/nbi_2020_001/phase/arrested> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/nbi_2020_001/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/nbi_2020_001/event/trust-violation> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/nbi_2020_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/nbi_2020_001/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/facebook-messenger> .
 
 <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,25 +50,15 @@
     ns1:source <https://w3id.org/caselinker/resource/case/nbi_2020_001/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" ;
-    ns1:name "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Facebook Messenger" ;
-    ns1:name "Facebook Messenger" .
-
 <https://w3id.org/caselinker/resource/case/nbi_2020_001/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/nbi_2020_001/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/nbi_2020_001/event/trust-violation> a ns2:CustodialAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/nbi_2020_001/relationship/mother> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/nbi_2020_001/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/nbi_2020_001/location/barangay-san-vicente> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -126,27 +120,37 @@
     rdfs:label "Wisteria St." ;
     ns1:name "Wisteria St." .
 
+<https://w3id.org/caselinker/resource/case/nbi_2020_001/relationship/mother> a ns2:CustodialRelationship,
+        ns2:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> ;
+    ns2:relationshipType "parent" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Facebook Messenger" ;
+    ns1:name "Facebook Messenger" .
+
 <https://w3id.org/caselinker/resource/case/nbi_2020_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/nbi_2020_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/nbi_2020_001/relationship/mother> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
-    rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> ;
-    ns3:relationshipType "parent" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/nbi_2020_001/phase/arrested> a ns2:InitialPhase,
+<https://w3id.org/caselinker/resource/case/nbi_2020_001/phase/arrested> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> a ns2:VictimRole ;
+<https://w3id.org/caselinker/resource/case/nbi_2020_001/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/nbi_2020_001/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;

@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2011_009> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/azicac_2011_009> a ns6:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case azicac_2011_009" ;
     dcterms:created "2026-11-10T09:11:40.236339"^^xsd:dateTime ;
@@ -21,13 +21,16 @@
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/phoenix-city-az> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on>,
+    ns6:hasStep <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/trust-violation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-az-unverified>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-az-unverified>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/phoenix-police-department-az> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip>,
+        <https://w3id.org/caselinker/resource/case/azicac_2011_009/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/azicac_2011_009/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/aol-instant-messenger> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip/reporter/aol/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · cybertip/reporter/aol/has-role" ;
@@ -36,11 +39,11 @@
     ns1:source <https://w3id.org/caselinker/resource/esp/aol> ;
     ns1:target <https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip/reporter/aol> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2011_009/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/azicac_2011_009/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/azicac_2011_009/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 26.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/azicac_2011_009/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 26.0 .
 
 <https://w3id.org/caselinker/resource/case/azicac_2011_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -62,22 +65,22 @@
     ns1:name "AZICAC" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
     ns1:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/phoenix-police-department-az> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Phoenix Police Department" ;
     dcterms:identifier "ori:AZ0072300" ;
     ns1:name "Phoenix Police Department" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip> a ns7:ESPReport,
+<https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip> a ns5:ESPReport,
         <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns7:reportedBy <https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip/reporter/aol> ;
+    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns5:reportedBy <https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip/reporter/aol> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/trust-violation> a ns4:CustodialAbuse,
@@ -85,9 +88,6 @@
     rdfs:label "Custodial Abuse · event/trust-violation" ;
     ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/azicac_2011_009/role/offender/1> ;
     ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/azicac_2011_009/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2011_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2011_009/relationship/mother> a ns4:CustodialRelationship,
         ns4:FamilialRelationship ;
@@ -99,7 +99,7 @@
     ns1:source <https://w3id.org/caselinker/resource/case/azicac_2011_009/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/azicac_2011_009/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/esp/aol> a ns5:ElectronicServiceProvider ;
+<https://w3id.org/caselinker/resource/esp/aol> a ns7:ElectronicServiceProvider ;
     rdfs:label "AOL" ;
     ns1:name "AOL" .
 
@@ -110,37 +110,40 @@
     skos:altLabel "Phoenix" ;
     ns1:name "Phoenix city" .
 
-<https://w3id.org/caselinker/resource/platform/aol-instant-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns5:MessagingService ;
-    rdfs:label "AOL Instant Messenger" ;
-    ns5:platformType "legacy" ;
-    ns1:name "AOL Instant Messenger" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns7:HotlineOrganization,
-        ns3:FederalAgency ;
+        ns5:HotlineOrganization,
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip/reporter/aol> a ns7:ReporterRole ;
+<https://w3id.org/caselinker/resource/case/azicac_2011_009/cybertip/reporter/aol> a ns5:ReporterRole ;
     rdfs:label "Reporter Role · cybertip/reporter/aol" ;
-    ns7:isAnonymous false .
+    ns5:isAnonymous false .
+
+<https://w3id.org/caselinker/resource/case/azicac_2011_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/platform/aol-instant-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns7:MessagingService ;
+    rdfs:label "AOL Instant Messenger" ;
+    ns7:platformType "legacy" ;
+    ns1:name "AOL Instant Messenger" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on> a ns6:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
+    ns6:severityLevel 3 ;
+    ns6:usesChannel <https://w3id.org/caselinker/resource/platform/aol-instant-messenger> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2011_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/aol-instant-messenger> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2011_009/role/victim/1> a ns2:VictimRole ;
+<https://w3id.org/caselinker/resource/case/azicac_2011_009/role/victim/1> a ns6:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on> .
+    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2011_009/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on> .
+    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2011_009/event/hands-on> .
 

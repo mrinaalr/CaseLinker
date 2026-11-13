@@ -1,15 +1,15 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_006> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
+        ns1:EnduringEntity ;
     rdfs:label "Case nz_dia_2005_006" ;
     dcterms:created "2026-11-11T16:25:26.877640"^^xsd:dateTime ;
     dcterms:date "2005-07-18"^^xsd:date ;
@@ -27,89 +27,91 @@
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/possession>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/legal-step/sentenced> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs>,
-        <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/agency/department-inspectors> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs>,
+        <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/agency/department-inspectors> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kazaa> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns2:CSAMIncident ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/narrative> ;
-    ns3:hasConfidence 0.54 ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/narrative> ;
+    ns1:hasConfidence 0.54 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1/has-role> a ns6:Relationship ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns6:isDirectional true ;
-    ns6:kindOfRelationship "Has_Role" ;
-    ns6:source <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/person/offender/1> ;
-    ns6:target <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/kazaa> a ns3:DigitalSystemEntity,
-        ns4:FileHostingService ;
-    rdfs:label "Kazaa" ;
-    ns4:platformType "p2p" ;
-    ns6:name "Kazaa" .
-
-<https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns1:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "NZ DIA" ;
-    ns6:name "NZ DIA" .
+    ns3:name "NZ DIA" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/agency/department-inspectors> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/agency/department-inspectors> a ns1:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Department Inspectors" ;
-    ns6:name "Department Inspectors" .
+    ns3:name "Department Inspectors" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/distribution> a ns3:Event,
-        ns5:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/distribution> a ns1:Event,
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns3:Event ;
+        ns1:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/multi-jurisdiction> a ns3:Event,
-        ns1:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/multi-jurisdiction> a ns1:Event,
+        ns5:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns1:crossesBorders true .
+    ns5:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
+        ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/1>,
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/1>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/legal-step/sentenced> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/legal-step/sentenced> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/location/wellington> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/location/wellington> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wellington" ;
-    ns6:name "Wellington" .
+    ns3:name "Wellington" .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
+    rdfs:label "nine months" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/2> a ns4:CriminalSentence,
+        ns4:MonetaryPenalty ;
+    rdfs:label "$2,000" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/kazaa> a ns1:DigitalSystemEntity,
+        ns6:FileHostingService ;
+    rdfs:label "Kazaa" ;
+    ns6:platformType "p2p" ;
+    ns3:name "Kazaa" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "nine months" ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/sentence/2> a ns5:CriminalSentence,
-        ns5:MonetaryPenalty ;
-    rdfs:label "$2,000" ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/phase/sentenced> a ns3:Phase,
-        ns5:SentencingPhase ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_006/phase/sentenced> a ns1:Phase,
+        ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_006/role/offender/1> a ns2:OffenderRole ;

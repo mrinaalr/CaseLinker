@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -27,25 +27,27 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_557/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_557/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_557/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/west-alabama-human-trafficking-task-force> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/west-alabama-human-trafficking-task-force> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 22.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 22.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_557/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_557/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_557/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_557/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/west-alabama-human-trafficking-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:LocalAgency ;
     rdfs:label "West Alabama Human Trafficking Task Force" ;
-    ns2:name "West Alabama Human Trafficking Task Force" .
+    ns3:name "West Alabama Human Trafficking Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_557/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -70,7 +72,7 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2022_557/location/uscaloosa-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Uscaloosa County" ;
-    ns2:name "Uscaloosa County" .
+    ns3:name "Uscaloosa County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_557/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -81,19 +83,14 @@
     rdfs:label "Alabama" ;
     dcterms:identifier "fips:01" ;
     skos:altLabel "Ala." ;
-    ns2:name "Alabama" .
+    ns3:name "Alabama" .
 
 <https://w3id.org/caselinker/resource/location/northport-city-al> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Northport city" ;
     dcterms:identifier "fips:0155200" ;
     skos:altLabel "Northport" ;
-    ns2:name "Northport city" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
+    ns3:name "Northport city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_557/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -101,10 +98,15 @@
     ns1:severityLevel 3 ;
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2022_557/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_557/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

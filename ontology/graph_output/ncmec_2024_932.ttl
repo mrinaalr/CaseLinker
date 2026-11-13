@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -27,9 +27,11 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/oregon-department-of-human-services>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/oregon-department-of-human-services>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/bend-police-department>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/sunriver-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/sunriver-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,17 +48,17 @@
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/oregon-department-of-human-services> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Oregon Department of Human Services" ;
     ns2:name "Oregon Department of Human Services" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/bend-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Bend Police Department" ;
     ns2:name "Bend Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/sunriver-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Sunriver Police Department" ;
     ns2:name "Sunriver Police Department" .
 
@@ -76,11 +78,11 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/trust-violation> a ns4:AuthorityAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/trust-violation> a ns3:AuthorityAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_932/relationship/coach> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_932/relationship/coach> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -93,18 +95,12 @@
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/relationship/coach> a ns4:Coach,
-        ns4:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/relationship/coach> a ns3:Coach,
+        ns3:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> ;
-    ns4:relationshipType "coach" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> ;
+    ns3:relationshipType "coach" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/victim/1> .
@@ -115,6 +111,12 @@
     dcterms:identifier "fips:4171250" ;
     skos:altLabel "Sunriver" ;
     ns2:name "Sunriver CDP" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/arrested> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

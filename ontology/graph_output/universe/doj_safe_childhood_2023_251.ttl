@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -33,15 +33,18 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/legal-step/pleaded-guilty>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/usao>,
         <https://w3id.org/caselinker/resource/agency/western-missouri-cyber-crimes-task-force> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/admission/1>,
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/admission/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/cybertip> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/cybertip>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/dropbox>,
+        <https://w3id.org/caselinker/resource/platform/google-drive> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -62,76 +65,66 @@
     ns3:hasConfidence 0.5608 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 29.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 29.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/dropbox> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Dropbox" ;
-    ns4:name "Dropbox" .
-
-<https://w3id.org/caselinker/resource/platform/google-drive> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Google Drive" ;
-    ns4:name "Google Drive" .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns3:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "CEOS" ;
-    ns4:name "CEOS" .
+    ns1:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns3:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns4:name "U.S. Department of Justice" .
+    ns1:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a ns3:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns4:name "Homeland Security Investigations" .
+    ns1:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns3:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns4:name "U.S. Attorney's Office" .
+    ns1:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/agency/western-missouri-cyber-crimes-task-force> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Western Missouri Cyber Crimes Task Force" ;
-    ns4:name "Western Missouri Cyber Crimes Task Force" .
+    ns1:name "Western Missouri Cyber Crimes Task Force" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/2> a ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/3> a ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/3> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
     ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns4:name "observe" .
+    ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/event/distribution> a ns3:Event,
-        ns6:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/event/multi-jurisdiction> a ns3:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -143,22 +136,22 @@
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/event/project-safe-childhood> a ns3:Event,
-        ns5:ProjectSafeChildhoodOperation ;
+        ns4:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns6:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/1>,
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/legal-step/pleaded-guilty> a ns3:Event,
         ns3:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:PleaBargaining ;
+        ns5:LegalProceeding,
+        ns5:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/operation> a ns3:Event,
@@ -173,42 +166,52 @@
     rdfs:label "Kansas City city" ;
     dcterms:identifier "fips:2036000" ;
     skos:altLabel "Kansas City" ;
-    ns4:name "Kansas City city" .
+    ns1:name "Kansas City city" .
 
 <https://w3id.org/caselinker/resource/location/missouri-mo> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
     skos:altLabel "Mo." ;
-    ns4:name "Missouri" .
+    ns1:name "Missouri" .
 
 <https://w3id.org/caselinker/resource/location/ohio-oh> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ohio" ;
     dcterms:identifier "fips:39" ;
-    ns4:name "Ohio" .
+    ns1:name "Ohio" .
+
+<https://w3id.org/caselinker/resource/platform/dropbox> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Dropbox" ;
+    ns1:name "Dropbox" .
+
+<https://w3id.org/caselinker/resource/platform/google-drive> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Google Drive" ;
+    ns1:name "Google Drive" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
         ns7:HotlineOrganization,
-        ns5:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns4:name "National Center for Missing and Exploited Children" .
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "previously communicating with a female from Ohio, beginning when she was 15 years old, and he admitted to sharing ima..." ;
     dcterms:source <https://www.justice.gov/usao-wdmo/pr/independence-man-pleads-guilty-transporting-child-pornography> ;
-    ns4:description "previously communicating with a female from Ohio, beginning when she was 15 years old, and he admitted to sharing images and videos with her" .
+    ns1:description "previously communicating with a female from Ohio, beginning when she was 15 years old, and he admitted to sharing images and videos with her" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to sharing images and videos with her" ;
     dcterms:source <https://www.justice.gov/usao-wdmo/pr/independence-man-pleads-guilty-transporting-child-pornography> ;
-    ns4:description "to sharing images and videos with her" .
+    ns1:description "to sharing images and videos with her" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/phase/pleaded-guilty> a ns3:Phase,
+        ns5:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_251/phase/pleaded-guilty> a ns3:Phase,
-        ns6:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

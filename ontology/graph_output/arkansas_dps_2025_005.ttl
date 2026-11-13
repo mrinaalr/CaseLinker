@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -32,10 +32,12 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/nevada-county-sheriff-s-office-ar>,
-        <https://w3id.org/caselinker/resource/agency/usms> .
+        <https://w3id.org/caselinker/resource/agency/usms> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -52,7 +54,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "Arkansas State Police Department" ;
     ns1:name "Arkansas State Police Department" .
 
@@ -63,34 +65,34 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/nevada-county-sheriff-s-office-ar> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Nevada County Sheriff's Office" ;
     dcterms:identifier "ori:AR0500000" ;
     ns1:name "Nevada County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "U.S. Marshals Service" ;
     skos:altLabel "U.S. Marshals Service Western District of Arkansas Fugitive Task Force" ;
     ns1:name "U.S. Marshals Service" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/charge/1> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/charge/1> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/relationship/coach> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/relationship/coach> .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remains in custody" ;
-    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/location/hempstead> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -112,18 +114,12 @@
     rdfs:label "Sevier" ;
     ns1:name "Sevier" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/relationship/coach> a ns5:Coach,
-        ns5:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/relationship/coach> a ns4:Coach,
+        ns4:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> ;
-    ns5:relationshipType "coach" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> ;
+    ns4:relationshipType "coach" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/victim/1> .
@@ -161,6 +157,12 @@
     skos:altLabel "Texarkana" ;
     ns1:name "Texarkana city" .
 
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
@@ -174,7 +176,7 @@
     rdfs:label "Victim Role · role/victim/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_005/event/hands-on> .
 

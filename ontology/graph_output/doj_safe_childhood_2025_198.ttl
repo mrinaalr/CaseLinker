@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -37,8 +37,11 @@
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/kansas-police-department>,
         <https://w3id.org/caselinker/resource/agency/missouri-police-department> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/2> .
+    ns6:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/2>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/1/extraction-confidence> a ns2:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -52,64 +55,59 @@
     ns2:hasConfidence 0.65 ;
     ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 27.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 27.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 15.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 15.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1/has-role> a ns6:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1> .
+    ns6:isDirectional true ;
+    ns6:kindOfRelationship "Has_Role" ;
+    ns6:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1> ;
+    ns6:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/victim/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/victim/1/has-role> a ns6:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns4:name "social media" .
+    ns6:isDirectional true ;
+    ns6:kindOfRelationship "Has_Role" ;
+    ns6:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1> ;
+    ns6:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns2:OrganizationLikeEntity,
         ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns4:name "U.S. Department of Justice" .
+    ns6:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/kansas-police-department> a ns2:OrganizationLikeEntity,
         ns5:LocalAgency ;
     rdfs:label "Kansas Police Department" ;
-    ns4:name "Kansas Police Department" .
+    ns6:name "Kansas Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/missouri-police-department> a ns2:OrganizationLikeEntity,
         ns5:LocalAgency ;
     rdfs:label "Missouri Police Department" ;
-    ns4:name "Missouri Police Department" .
+    ns6:name "Missouri Police Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/2> a ns3:CSAM_Production,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/2> a ns4:CSAM_Production,
+        ns4:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/3> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/3> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/4> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/4> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
@@ -131,26 +129,26 @@
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/1>,
+    ns4:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/3>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/charge/4> ;
-    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/sentence/1> .
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/legal-step/sentenced> a ns2:Event,
         ns2:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/victim/1> a ns1:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/sentence/1> a ns3:CriminalSentence,
-        ns3:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
     rdfs:label "300 months" ;
     ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1> .
 
@@ -159,67 +157,72 @@
     rdfs:label "Grain Valley city" ;
     dcterms:identifier "fips:2928090" ;
     skos:altLabel "Grain Valley" ;
-    ns4:name "Grain Valley city" .
+    ns6:name "Grain Valley city" .
 
 <https://w3id.org/caselinker/resource/location/jackson-county-mo> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Jackson County" ;
     dcterms:identifier "fips:29095" ;
-    ns4:name "Jackson County" .
+    ns6:name "Jackson County" .
 
 <https://w3id.org/caselinker/resource/location/kansas-city-city-ks> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kansas City city" ;
     dcterms:identifier "fips:2036000" ;
     skos:altLabel "Kansas City" ;
-    ns4:name "Kansas City city" .
+    ns6:name "Kansas City city" .
 
 <https://w3id.org/caselinker/resource/location/kansas-ks> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kansas" ;
     dcterms:identifier "fips:20" ;
-    ns4:name "Kansas" .
+    ns6:name "Kansas" .
 
 <https://w3id.org/caselinker/resource/location/leavenworth-city-ks> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Leavenworth city" ;
     dcterms:identifier "fips:2039000" ;
     skos:altLabel "Leavenworth" ;
-    ns4:name "Leavenworth city" .
+    ns6:name "Leavenworth city" .
 
 <https://w3id.org/caselinker/resource/location/missouri-mo> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
-    ns4:name "Missouri" .
+    ns6:name "Missouri" .
 
 <https://w3id.org/caselinker/resource/location/missouri-mo-29> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
     skos:altLabel "Mo." ;
-    ns4:name "Missouri" .
+    ns6:name "Missouri" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns6:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "also communicating with a second minor on a social media application and engaging in sexually explicit conversations ..." ;
     dcterms:source <https://www.justice.gov/usao-wdmo/pr/kansas-man-sentenced-300-months-enticement-minor-and-production-child-pornography> ;
-    ns4:description "also communicating with a second minor on a social media application and engaging in sexually explicit conversations with the second minor" .
+    ns6:description "also communicating with a second minor on a social media application and engaging in sexually explicit conversations with the second minor" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "travelling across state lines in attempt to meet the second minor but was unsuccessful in contacting the second minor" ;
     dcterms:source <https://www.justice.gov/usao-wdmo/pr/kansas-man-sentenced-300-months-enticement-minor-and-production-child-pornography> ;
-    ns4:description "travelling across state lines in attempt to meet the second minor but was unsuccessful in contacting the second minor" .
+    ns6:description "travelling across state lines in attempt to meet the second minor but was unsuccessful in contacting the second minor" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/phase/sentenced> a ns2:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/phase/sentenced> a ns2:Phase,
-        ns3:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_198/role/offender/1> a ns1:OffenderRole ;
-    rdfs:label "Offender Role · role/offender/1" .
 

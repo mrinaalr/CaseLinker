@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
@@ -28,39 +28,41 @@
     ns5:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/legal-step/sentenced> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified>,
-        <https://w3id.org/caselinker/resource/agency/new-lexington-police-department-oh> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified>,
+        <https://w3id.org/caselinker/resource/agency/new-lexington-police-department-oh> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 25.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/victim/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/victim/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified> a ns6:OrganizationLikeEntity,
-        ns3:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Attorney General's Bureau of Criminal Investigation" ;
-    ns1:name "Attorney General's Bureau of Criminal Investigation" .
+    ns3:name "Attorney General's Bureau of Criminal Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/new-lexington-police-department-oh> a ns6:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "New Lexington Police Department" ;
     dcterms:identifier "ori:OH0640200" ;
-    ns1:name "New Lexington Police Department" .
+    ns3:name "New Lexington Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/event/trust-violation> a ns2:CustodialAbuse,
         ns2:TrustViolation ;
@@ -80,18 +82,15 @@
         ns7:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/relationship/mother> a ns2:CustodialRelationship,
         ns2:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
     ns2:involvesChild <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1> ;
     ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1> ;
     ns2:relationshipType "parent" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1> .
+    ns3:isDirectional true ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/sentence/1> a ns7:CriminalSentence,
         ns7:PrisonSentence ;
@@ -103,26 +102,29 @@
     rdfs:label "New Lexington village" ;
     dcterms:identifier "fips:3954866" ;
     skos:altLabel "New Lexington" ;
-    ns1:name "New Lexington village" .
+    ns3:name "New Lexington village" .
 
 <https://w3id.org/caselinker/resource/location/ohio-oh> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ohio" ;
     dcterms:identifier "fips:39" ;
-    ns1:name "Ohio" .
+    ns3:name "Ohio" .
 
 <https://w3id.org/caselinker/resource/location/perry-county-oh> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Perry County" ;
     dcterms:identifier "fips:39127" ;
-    ns1:name "Perry County" .
+    ns3:name "Perry County" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/phase/sentenced> a ns6:Phase,
         ns7:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_012/role/victim/1> a ns5:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

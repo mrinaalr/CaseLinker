@@ -1,13 +1,13 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003> a ns4:CACInvestigation,
         ns2:EnduringEntity ;
     rdfs:label "Case south_florida_icac_2026_003" ;
     dcterms:created "2026-11-11T17:56:20.012212"^^xsd:dateTime ;
@@ -17,13 +17,16 @@
     dcterms:provenance <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/provenance> ;
     dcterms:source <https://margatetalk.com/margate-child-porn-arrest-48364>,
         "SOUTH FLORIDA ICAC" ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/csam>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/phase/arrested> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/phase/arrested> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/csam>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/distribution>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/legal-proceeding> ;
     ns1:object <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/admission/1>,
-        <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/admission/2> .
+        <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/admission/2>,
+        <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/meganz> .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/admission/1/extraction-confidence> a ns2:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -51,38 +54,24 @@
     ns1:source <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/distribution> a ns2:Event,
-        ns5:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/charge/1> .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/csam> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a ns2:DigitalSystemEntity,
-        ns4:MessagingService ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
-
-<https://w3id.org/caselinker/resource/platform/meganz> a ns2:DigitalSystemEntity,
-        ns4:FileHostingService ;
-    rdfs:label "Mega.nz" ;
-    ns4:encryptionLevel "end-to-end" ;
-    ns1:name "Mega.nz" .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/csam> .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "operating the Kik account, sending child pornography, and saving Mega links containing illegal material on his phone" ;
@@ -94,14 +83,28 @@
     dcterms:source <https://margatetalk.com/margate-child-porn-arrest-48364> ;
     ns1:description "to operating the Kik account, sending child pornography, and saving Mega links containing illegal material on his phone" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/csam> a ns3:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/event/csam> a ns4:CSAMIncident,
         ns2:Event ;
     rdfs:label "CSAMIncident · event/csam" ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
+    ns4:severityLevel 3 ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
         <https://w3id.org/caselinker/resource/platform/meganz> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/phase/arrested> a ns3:InitialPhase,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_003/phase/arrested> a ns4:InitialPhase,
         ns2:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns2:DigitalSystemEntity,
+        ns5:MessagingService ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/meganz> a ns2:DigitalSystemEntity,
+        ns5:FileHostingService ;
+    rdfs:label "Mega.nz" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns1:name "Mega.nz" .
 

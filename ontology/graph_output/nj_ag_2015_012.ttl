@@ -1,17 +1,17 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns8: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012> a ns1:CACInvestigation,
         ns8:EnduringEntity ;
     rdfs:label "Case nj_ag_2015_012" ;
     dcterms:created "2026-11-11T15:55:42.247147"^^xsd:dateTime ;
@@ -26,21 +26,25 @@
         <https://w3id.org/caselinker/resource/location/morris-county-nj>,
         <https://w3id.org/caselinker/resource/location/morristown-town-nj>,
         <https://w3id.org/caselinker/resource/location/new-jersey-nj> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/phase/sentenced> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/phase/sentenced> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only>,
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/phase/sentenced> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/phase/sentenced> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/legal-step/sentenced> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/saddle-river-police-department-nj> .
+        <https://w3id.org/caselinker/resource/agency/saddle-river-police-department-nj> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/webcam-platform> .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 34.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 34.0 .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,7 +61,7 @@
     ns2:target <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified> a ns8:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Division of Criminal Justice Financial & Computer Crimes Bureau" ;
     ns2:name "Division of Criminal Justice Financial & Computer Crimes Bureau" .
 
@@ -68,7 +72,7 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/saddle-river-police-department-nj> a ns8:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Saddle River Police Department" ;
     dcterms:identifier "ori:NJ0025800" ;
     ns2:name "Saddle River Police Department" .
@@ -90,9 +94,6 @@
         ns7:LegalProceeding,
         ns7:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
-
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/relationship/parent> a ns5:CaregiverRelationship,
         ns5:CustodialRelationship ;
@@ -140,35 +141,38 @@
     dcterms:identifier "fips:34" ;
     ns2:name "New Jersey" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns8:DigitalSystemEntity,
-        ns6:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/webcam-platform> a ns8:DigitalSystemEntity,
-        ns6:VideoStreamingPlatform ;
-    rdfs:label "Webcam platform" ;
-    ns6:allowsAnonymousChat "true" ;
-    ns2:name "Webcam platform" .
-
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/phase/sentenced> a ns8:Phase,
         ns7:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only> a ns3:ChildSexualAbuseEvent,
+<https://w3id.org/caselinker/resource/platform/chat> a ns8:DigitalSystemEntity,
+        ns4:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/webcam-platform> a ns8:DigitalSystemEntity,
+        ns4:VideoStreamingPlatform ;
+    rdfs:label "Webcam platform" ;
+    ns4:allowsAnonymousChat "true" ;
+    ns2:name "Webcam platform" .
+
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only> a ns1:ChildSexualAbuseEvent,
         ns8:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/webcam-platform> .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/role/victim/1> a ns3:VictimRole ;
-    rdfs:label "Victim Role · role/victim/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only> .
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/role/offender/1> a ns3:OffenderRole ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/role/victim/1> a ns1:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only> .
+
+<https://w3id.org/caselinker/resource/case/nj_ag_2015_012/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only> .
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nj_ag_2015_012/event/online-only> .
 

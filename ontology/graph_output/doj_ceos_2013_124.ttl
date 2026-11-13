@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -30,33 +30,30 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/event/production>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/legal-step/pleaded-guilty> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/new-york-state-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/new-york-state-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 27.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 27.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns5:name "chat" .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/new-york-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "New York State Police Department" ;
-    ns5:name "New York State Police Department" .
+    ns2:name "New York State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/event/online-only> a ns3:ChildSexualAbuseEvent,
@@ -73,26 +70,26 @@
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/charge/1> .
+    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding,
-        ns4:PleaBargaining ;
+        ns1:LegalProceeding,
+        ns1:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/location/syracuse> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Syracuse" ;
-    ns5:name "Syracuse" .
+    ns2:name "Syracuse" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns5:name "United States" .
+    ns2:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
@@ -102,25 +99,30 @@
     rdfs:label "Albany city" ;
     dcterms:identifier "fips:3601000" ;
     skos:altLabel "Albany" ;
-    ns5:name "Albany city" .
+    ns2:name "Albany city" .
 
 <https://w3id.org/caselinker/resource/location/new-york-ny> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New York" ;
     dcterms:identifier "fips:36" ;
-    ns5:name "New York" .
+    ns2:name "New York" .
 
 <https://w3id.org/caselinker/resource/location/rochester-city-ny> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Rochester city" ;
     dcterms:identifier "fips:3663000" ;
     skos:altLabel "Rochester" ;
-    ns5:name "Rochester city" .
+    ns2:name "Rochester city" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        ns1:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_124/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
-        ns4:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

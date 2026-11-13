@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -25,27 +25,29 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/legal-proceeding> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 47.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 47.0 .
 
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/victim/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
@@ -59,11 +61,11 @@
         ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/event/trust-violation> a ns1:AuthorityAbuse,
-        ns1:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/event/trust-violation> a ns3:AuthorityAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/relationship/teacher> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -76,30 +78,27 @@
 <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/location/douglas-county-corrections> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Douglas County Corrections" ;
-    ns4:name "Douglas County Corrections" .
+    ns1:name "Douglas County Corrections" .
 
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/relationship/teacher> a ns1:CustodialRelationship,
-        ns1:Teacher ;
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/relationship/teacher> a ns3:CustodialRelationship,
+        ns3:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> ;
-    ns1:relationshipType "teacher" ;
-    ns4:isDirectional true ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> .
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> ;
+    ns3:relationshipType "teacher" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/omaha-city-ne> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Omaha city" ;
     dcterms:identifier "fips:3137000" ;
     skos:altLabel "Omaha" ;
-    ns4:name "Omaha city" .
+    ns1:name "Omaha city" .
 
-<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -109,6 +108,9 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ne_sp_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ne_sp_2026_001/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

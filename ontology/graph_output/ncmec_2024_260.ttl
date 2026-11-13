@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,25 +25,27 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_260/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_260/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_260/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_260/agency/volusia-county-sheriffs-office> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_260/agency/volusia-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/facebook> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 31.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 31.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_260/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_260/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_260/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_260/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_260/agency/volusia-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Volusia County Sheriff's Office" ;
-    ns3:name "Volusia County Sheriff's Office" .
+    ns1:name "Volusia County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_260/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -71,25 +73,20 @@
     rdfs:label "Port Orange city" ;
     dcterms:identifier "fips:1258575" ;
     skos:altLabel "Port Orange" ;
-    ns3:name "Port Orange city" .
+    ns1:name "Port Orange city" .
 
 <https://w3id.org/caselinker/resource/location/south-daytona-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "South Daytona city" ;
     dcterms:identifier "fips:1267325" ;
     skos:altLabel "South Daytona" ;
-    ns3:name "South Daytona city" .
+    ns1:name "South Daytona city" .
 
 <https://w3id.org/caselinker/resource/location/volusia-county-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Volusia County" ;
     dcterms:identifier "fips:12127" ;
-    ns3:name "Volusia County" .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" ;
-    ns3:name "Facebook" .
+    ns1:name "Volusia County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_260/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -97,10 +94,15 @@
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_260/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_260/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

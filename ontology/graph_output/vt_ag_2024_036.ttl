@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -29,9 +29,10 @@
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns5:object <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/assessment/semantic/registered-sex-offender> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · registered_sex_offender" ;
@@ -40,35 +41,35 @@
     ns1:hasConfidence 0.4515 ;
     ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 26.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 26.0 .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_036/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_036/role/offender/1/has-role> a ns5:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/role/offender/1> .
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified> a ns1:OrganizationLikeEntity,
-        ns5:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Attorney General's Office" ;
-    ns3:name "Attorney General's Office" .
+    ns5:name "Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns5:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
+    ns5:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/charge/1> a ns6:CSAM_Possession,
         ns6:CriminalCharge ;
@@ -128,16 +129,13 @@
     rdfs:label "Pownal CDP" ;
     dcterms:identifier "fips:5056950" ;
     skos:altLabel "Pownal" ;
-    ns3:name "Pownal CDP" .
+    ns5:name "Pownal CDP" .
 
 <https://w3id.org/caselinker/resource/location/vermont-vt> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Vermont" ;
     dcterms:identifier "fips:50" ;
-    ns3:name "Vermont" .
-
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns5:name "Vermont" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/phase/sentenced> a ns1:Phase,
         ns6:SentencingPhase ;
@@ -145,4 +143,7 @@
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_036/role/offender/1> a ns2:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_036/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

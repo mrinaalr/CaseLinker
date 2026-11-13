@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -33,9 +33,12 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/event/online-only>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/event/production>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/agency/kenmore-police-department> .
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/agency/kenmore-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/skype> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -43,38 +46,28 @@
     ns3:concernsAgeQuality ns3:Age ;
     ns3:hasAgeInYears 36.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns4:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/skype> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Skype" ;
-    ns4:name "Skype" .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns4:name "Federal Bureau of Investigation" .
+    ns2:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns4:name "U.S. Attorney's Office" .
+    ns2:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/agency/kenmore-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Kenmore Police Department" ;
-    ns4:name "Kenmore Police Department" .
+    ns2:name "Kenmore Police Department" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/charge/1> a ns5:CSAM_Production,
         ns5:CriminalCharge ;
@@ -93,7 +86,7 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -115,22 +108,22 @@
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/location/buffalo> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Buffalo" ;
-    ns4:name "Buffalo" .
+    ns2:name "Buffalo" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/location/new-baltimore> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New Baltimore" ;
-    ns4:name "New Baltimore" .
+    ns2:name "New Baltimore" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/location/western-district-of-new-york> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Western District of New York" ;
-    ns4:name "Western District of New York" .
+    ns2:name "Western District of New York" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/location/western-new-york> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Western New York" ;
-    ns4:name "Western New York" .
+    ns2:name "Western New York" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
@@ -139,25 +132,35 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Michigan" ;
     dcterms:identifier "fips:26" ;
-    ns4:name "Michigan" .
+    ns2:name "Michigan" .
 
 <https://w3id.org/caselinker/resource/location/new-york-ny> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New York" ;
     dcterms:identifier "fips:36" ;
     skos:altLabel "N.y." ;
-    ns4:name "New York" .
+    ns2:name "New York" .
 
 <https://w3id.org/caselinker/resource/location/new-york-ny-36> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New York" ;
     dcterms:identifier "fips:36" ;
-    ns4:name "New York" .
+    ns2:name "New York" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/skype> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Skype" ;
+    ns2:name "Skype" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/phase/indicted> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_019/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

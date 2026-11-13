@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,14 +27,16 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_181/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_181/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_181/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_181/agency/homestead-police-department>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_181/agency/miami-dade-school-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_181/agency/homestead-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_181/agency/miami-dade-school-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 37.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 37.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -51,12 +53,12 @@
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/agency/homestead-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Homestead Police Department" ;
     ns2:name "Homestead Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/agency/miami-dade-school-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Miami-Dade School Police Department" ;
     ns2:name "Miami-Dade School Police Department" .
 
@@ -68,11 +70,11 @@
         ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_181/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_181/event/trust-violation> a ns6:AuthorityAbuse,
+        ns6:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_181/relationship/teacher> .
+    ns6:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/offender/1> ;
+    ns6:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_181/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -81,15 +83,12 @@
     ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_181/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_181/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_181/relationship/teacher> a ns6:CustodialRelationship,
+        ns6:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/offender/1> ;
-    ns3:relationshipType "teacher" ;
+    ns6:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/victim/1> ;
+    ns6:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/offender/1> ;
+    ns6:relationshipType "teacher" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/victim/1> .
@@ -108,8 +107,8 @@
     skos:altLabel "Miami-dade" ;
     ns2:name "Miami-Dade County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/phase/arrested> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -118,6 +117,9 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_181/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_181/role/victim/1> a ns1:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

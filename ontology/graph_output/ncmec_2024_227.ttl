@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,61 +27,46 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_227/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_227/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_227/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_227/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_227/legal-proceeding> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/facebook-messenger>,
+        <https://w3id.org/caselinker/resource/platform/whatsapp> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 66.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 66.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 6.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 6.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/victim/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/victim/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/victim/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns3:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:SocialMediaPlatform ;
-    rdfs:label "Facebook" ;
-    ns3:name "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:MessagingService ;
-    rdfs:label "Facebook Messenger" ;
-    ns3:name "Facebook Messenger" .
-
-<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:MessagingService ;
-    rdfs:label "WhatsApp" ;
-    ns4:encryptionLevel "end-to-end" ;
-    ns3:name "WhatsApp" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/event/hands-on> a ns2:ChildSexualAbuseEvent,
@@ -94,27 +79,27 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_227/charge/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_227/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/location/little-havana> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Little Havana" ;
-    ns3:name "Little Havana" .
+    ns1:name "Little Havana" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/location/miami> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Miami" ;
-    ns3:name "Miami" .
+    ns1:name "Miami" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/location/miami-dade-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Miami-dade County" ;
-    ns3:name "Miami-dade County" .
+    ns1:name "Miami-dade County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/role/victim/1> a ns2:VictimRole ;
@@ -125,15 +110,36 @@
     rdfs:label "Miami Beach city" ;
     dcterms:identifier "fips:1245025" ;
     skos:altLabel "Miami Beach" ;
-    ns3:name "Miami Beach city" .
+    ns1:name "Miami Beach city" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:SocialMediaPlatform ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:MessagingService ;
+    rdfs:label "Facebook Messenger" ;
+    ns1:name "Facebook Messenger" .
+
+<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns1:name "WhatsApp" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_227/phase/arrested> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_227/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_227/phase/arrested> a ns2:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
 

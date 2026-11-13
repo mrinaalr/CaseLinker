@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -29,13 +29,15 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_530/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2022_530/agency/hillsborough-county-sheriffs-office> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2022_530/agency/hillsborough-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 23.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 23.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -56,31 +58,31 @@
     rdfs:label "Hillsborough County Sheriff's Office" ;
     ns1:name "Hillsborough County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/2> a ns2:CSAM_Distribution,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/2> a ns3:CSAM_Distribution,
+        ns3:CriminalCharge ;
     rdfs:label "transmission of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_530/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_530/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_530/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Hillsborough County jail" ;
-    ns2:chargeCount "19"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/1>,
+    ns3:chargeCount "19"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_530/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_530/location/brandon> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -98,15 +100,12 @@
     rdfs:label "Hillsborough County" ;
     ns1:name "Hillsborough County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> ;
-    ns3:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/victim/1> .
@@ -118,8 +117,8 @@
     skos:altLabel "Valrico" ;
     ns1:name "Valrico CDP" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_530/phase/booked> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -129,11 +128,14 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_530/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_530/event/possession> .
 

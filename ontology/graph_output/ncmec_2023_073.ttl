@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_073> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2023_073" ;
     dcterms:created "2026-11-10T10:02:53.886869"^^xsd:dateTime ;
     dcterms:date "2023-05"^^xsd:gYearMonth ;
@@ -26,20 +26,23 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_073/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_073/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_073/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-attorney-general-task-force> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-attorney-general-task-force> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/meganz> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns2:CSAMIncident ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_073/narrative> ;
-    ns6:hasConfidence 0.501 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_073/narrative> ;
+    ns3:hasConfidence 0.501 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 18.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 18.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_073/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -48,59 +51,59 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_073/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
-        ns7:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/meganz> a ns6:DigitalSystemEntity,
-        ns7:FileHostingService ;
-    rdfs:label "Mega.nz" ;
-    ns7:encryptionLevel "end-to-end" ;
-    ns1:name "Mega.nz" .
-
-<https://w3id.org/caselinker/resource/agency/illinois-attorney-general-task-force> a ns6:OrganizationLikeEntity,
-        ns5:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/illinois-attorney-general-task-force> a ns3:OrganizationLikeEntity,
+        ns6:StateAgency ;
     rdfs:label "Illinois Attorney General Task Force" ;
     ns1:name "Illinois Attorney General Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_073/event/online-only> a ns2:ChildSexualAbuseEvent,
-        ns6:Event ;
+        ns3:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_073/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_073/charge/1> .
+    ns7:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_073/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/location/centralia> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/location/centralia> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Centralia" ;
     ns1:name "Centralia" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/jefferson-county-il> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/jefferson-county-il> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Jefferson County" ;
     dcterms:identifier "fips:17081" ;
     ns1:name "Jefferson County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
+        ns5:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/meganz> a ns3:DigitalSystemEntity,
+        ns5:FileHostingService ;
+    rdfs:label "Mega.nz" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns1:name "Mega.nz" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_073/phase/charged> a ns2:LegalProcessPhase,
-        ns6:Phase ;
+        ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_073/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

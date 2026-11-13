@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -23,8 +23,9 @@
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/anchorage-police-department-ak>,
-        <https://w3id.org/caselinker/resource/agency/fbi> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/anchorage-police-department-ak>,
+        <https://w3id.org/caselinker/resource/agency/fbi> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -34,36 +35,36 @@
     ns2:target <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/anchorage-police-department-ak> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Anchorage Police Department" ;
     dcterms:identifier "ori:AK0010100" ;
     ns2:name "Anchorage Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI Anchorage Field Office",
         "FBI's Child Exploitation and Human Trafficking Task Force" ;
     ns2:name "Federal Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/1> a ns4:CriminalCharge,
-        ns4:SexTrafficking ;
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/1> a ns3:CriminalCharge,
+        ns3:SexTrafficking ;
     rdfs:label "sex trafficking" .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/2> a ns3:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/event/trafficking> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:SexTrafficking ;
+        ns3:SexTrafficking ;
     rdfs:label "Sex Trafficking · event/trafficking" .
 
 <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/1>,
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/location/juneau> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -71,10 +72,7 @@
     rdfs:label "Juneau" ;
     ns2:name "Juneau" .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/anchorage-municipality-ak> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -83,6 +81,9 @@
     dcterms:identifier "fips:0203000" ;
     skos:altLabel "Anchorage" ;
     ns2:name "Anchorage municipality" .
+
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_001/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

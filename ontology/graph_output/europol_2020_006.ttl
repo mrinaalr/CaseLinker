@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,32 +28,29 @@
         <https://w3id.org/caselinker/resource/case/europol_2020_006/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/europol_2020_006/event/production>,
         <https://w3id.org/caselinker/resource/case/europol_2020_006/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/state-postal-and-communications-police-department>,
-        <https://w3id.org/caselinker/resource/case/europol_2020_006/agency/italian-state-police-department> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/state-postal-and-communications-police-department>,
+        <https://w3id.org/caselinker/resource/case/europol_2020_006/agency/italian-state-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/europol_2020_006/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/dark-web> .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_006/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/europol_2020_006/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/europol_2020_006/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/europol_2020_006/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/dark-web> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#DarkWebService> ;
-    rdfs:label "dark web" ;
-    ns1:name "dark web" .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/europol_2020_006/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/europol_2020_006/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/state-postal-and-communications-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "State Postal and Communications Police Department" ;
-    ns1:name "State Postal and Communications Police Department" .
+    ns3:name "State Postal and Communications Police Department" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/agency/italian-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Italian State Police Department" ;
-    ns1:name "Italian State Police Department" .
+    ns3:name "Italian State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_006/charge/1> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/europol_2020_006/charge/1> a ns1:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/event/csam> a ns2:CSAMIncident,
@@ -61,9 +58,9 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns3:crossesBorders true .
+    ns4:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/event/production> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/production#ProductionOffense> ;
@@ -71,46 +68,51 @@
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/europol_2020_006/charge/1> .
+    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/europol_2020_006/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/location/australia> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Australia" ;
-    ns1:name "Australia" .
+    ns3:name "Australia" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/location/canada> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Canada" ;
-    ns1:name "Canada" .
+    ns3:name "Canada" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/location/denmark> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Denmark" ;
-    ns1:name "Denmark" .
+    ns3:name "Denmark" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/location/france> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "France" ;
-    ns1:name "France" .
+    ns3:name "France" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/location/italy> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Italy" ;
-    ns1:name "Italy" .
+    ns3:name "Italy" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/location/netherlands> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Netherlands" ;
-    ns1:name "Netherlands" .
+    ns3:name "Netherlands" .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_006/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/platform/dark-web> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#DarkWebService> ;
+    rdfs:label "dark web" ;
+    ns3:name "dark web" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/europol_2020_006/role/offender/1> a ns4:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_006/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

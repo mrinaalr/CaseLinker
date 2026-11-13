@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,43 +24,45 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_844/phase/indicted> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_844/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_844/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_844/agency/dayton-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_844/agency/dayton-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/dropbox> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 55.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 55.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_844/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_844/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_844/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_844/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_844/agency/dayton-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Dayton Police Department" ;
-    ns3:name "Dayton Police Department" .
+    ns1:name "Dayton Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/1> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/1> a ns2:CriminalCharge ;
     rdfs:label "illegal use of minor in nudity-oriented material or performance after he was indicted Tuesday by" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/2> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/2> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_844/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Montgomery County Jail" ;
-    ns1:chargeCount "13"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/1>,
+    ns2:chargeCount "13"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_844/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_844/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_844/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_844/event/csam> .
 
@@ -69,18 +71,13 @@
     rdfs:label "Dayton city" ;
     dcterms:identifier "fips:3921000" ;
     skos:altLabel "Dayton" ;
-    ns3:name "Dayton city" .
+    ns1:name "Dayton city" .
 
 <https://w3id.org/caselinker/resource/location/ohio-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ohio" ;
     dcterms:identifier "fips:39" ;
-    ns3:name "Ohio" .
-
-<https://w3id.org/caselinker/resource/platform/dropbox> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Dropbox" ;
-    ns3:name "Dropbox" .
+    ns1:name "Ohio" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_844/event/csam> a ns4:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -88,10 +85,15 @@
     ns4:severityLevel 3 ;
     ns4:usesChannel <https://w3id.org/caselinker/resource/platform/dropbox> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_844/phase/indicted> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/platform/dropbox> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Dropbox" ;
+    ns1:name "Dropbox" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_844/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

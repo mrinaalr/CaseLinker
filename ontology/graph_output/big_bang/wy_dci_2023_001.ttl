@@ -1,12 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case wy_dci_2023_001" ;
     dcterms:created "2026-11-11T18:44:05.586993"^^xsd:dateTime ;
@@ -20,13 +20,16 @@
         <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/location/casper>,
         <https://w3id.org/caselinker/resource/location/california-ca>,
         <https://w3id.org/caselinker/resource/location/natrona-county-wy> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/phase/charged> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/phase/charged> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/event/multi-jurisdiction>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/casper-police-department-wy>,
-        <https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation-wy> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/casper-police-department-wy>,
+        <https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation-wy> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/facetime> .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -42,32 +45,27 @@
     ns1:source <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/facetime> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "FaceTime" ;
-    ns1:name "FaceTime" .
-
 <https://w3id.org/caselinker/resource/agency/casper-police-department-wy> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Casper Police Department" ;
     dcterms:identifier "ori:WY0130100" ;
     ns1:name "Casper Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation-wy> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Wyoming Division of Criminal Investigation" ;
     dcterms:identifier "ori:WY0110400" ;
     ns1:name "Wyoming Division of Criminal Investigation" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:MultiJurisdictionalInvestigation ;
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/event/trust-violation> a ns2:CustodialAbuse,
-        ns2:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/event/trust-violation> a ns4:CustodialAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/relationship/mother> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -85,18 +83,12 @@
     rdfs:label "Casper" ;
     ns1:name "Casper" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/relationship/mother> a ns2:CustodialRelationship,
-        ns2:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/relationship/mother> a ns4:CustodialRelationship,
+        ns4:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1> ;
-    ns2:relationshipType "parent" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1> ;
+    ns4:relationshipType "parent" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/victim/1> .
@@ -113,11 +105,22 @@
     dcterms:identifier "fips:56025" ;
     ns1:name "Natrona County" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/phase/charged> a ns3:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/platform/facetime> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "FaceTime" ;
+    ns1:name "FaceTime" .
+
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/victim/1> a ns3:VictimRole ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2023_001/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;

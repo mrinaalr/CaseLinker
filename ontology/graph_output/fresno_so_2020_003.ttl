@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,8 +25,11 @@
         <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/operation> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+        <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -34,23 +37,23 @@
     ns2:concernsAgeQuality ns2:Age ;
     ns2:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2020_003/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2020_003/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns4:name "Homeland Security Investigations" .
+    ns1:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns4:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
@@ -65,7 +68,7 @@
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/location/central-valley> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Central Valley" ;
-    ns4:name "Central Valley" .
+    ns1:name "Central Valley" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
@@ -80,17 +83,7 @@
     rdfs:label "Clovis city" ;
     dcterms:identifier "fips:0614218" ;
     skos:altLabel "Clovis" ;
-    ns4:name "Clovis city" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns4:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns4:name "social media" .
+    ns1:name "Clovis city" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/event/hands-on> a ns3:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -99,10 +92,20 @@
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2020_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_003/phase/booked> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/fresno_so_2020_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

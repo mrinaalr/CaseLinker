@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,13 +27,15 @@
         <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/event/online-only>,
         <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/henderson-police-department-nv>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/metropolitan-police-department-nv-unverified>,
         <https://w3id.org/caselinker/resource/agency/nevada-attorney-generals>,
-        <https://w3id.org/caselinker/resource/agency/north-las-vegas-police-department-nv> .
+        <https://w3id.org/caselinker/resource/agency/north-las-vegas-police-department-nv> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -50,20 +52,20 @@
     ns1:target <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI",
         "FBI's Child Exploitation Task Force" ;
     ns1:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/henderson-police-department-nv> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Henderson Police Department" ;
     dcterms:identifier "ori:NV0020300" ;
     ns1:name "Henderson Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns1:name "Homeland Security Investigations" .
 
@@ -74,45 +76,42 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/metropolitan-police-department-nv-unverified> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Metropolitan Police Department" ;
     ns1:name "Metropolitan Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/nevada-attorney-generals> a ns4:OrganizationLikeEntity,
-        ns5:StateAgency ;
+        ns2:StateAgency ;
     rdfs:label "Nevada Attorney General's" ;
     ns1:name "Nevada Attorney General's" .
 
 <https://w3id.org/caselinker/resource/agency/north-las-vegas-police-department-nv> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "North Las Vegas Police Department" ;
     dcterms:identifier "ori:NV0020200" ;
     ns1:name "North Las Vegas Police Department" .
 
-<https://w3id.org/caselinker/resource/case/lvmpd_2026_002/charge/1> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/lvmpd_2026_002/charge/1> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns3:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/event/multi-jurisdiction> a ns4:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns2:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the North Las Vegas Detention Center" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/operation> a ns4:Event,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/lvmpd_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/lvmpd_2026_002/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/lvmpd_2026_002/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/event/online-only> .
 
@@ -136,17 +135,20 @@
     skos:altLabel "North Las Vegas" ;
     ns1:name "North Las Vegas city" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/event/online-only> a ns3:ChildSexualAbuseEvent,
         ns4:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/lvmpd_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/lvmpd_2026_002/phase/booked> a ns3:InitialPhase,
         ns4:Phase ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 

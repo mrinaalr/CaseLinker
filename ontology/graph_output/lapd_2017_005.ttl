@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -30,7 +30,9 @@
         <https://w3id.org/caselinker/resource/case/lapd_2017_005/legal-proceeding> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/los-angeles-police-department-ca>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/lapd_2017_005/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/lapd_2017_005/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -64,8 +66,8 @@
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2017_005/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/lapd_2017_005/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/lapd_2017_005/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -76,37 +78,31 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2017_005/event/trust-violation> a ns4:AuthorityAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/lapd_2017_005/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/lapd_2017_005/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/lapd_2017_005/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/lapd_2017_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked at LAPD 77thRegional Jail" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/lapd_2017_005/charge/1> .
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/lapd_2017_005/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/lapd_2017_005/location/san-pedro> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "San Pedro" ;
     ns1:name "San Pedro" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2017_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/lapd_2017_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/lapd_2017_005/relationship/teacher> a ns4:CustodialRelationship,
-        ns4:Teacher ;
+<https://w3id.org/caselinker/resource/case/lapd_2017_005/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> ;
-    ns4:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/victim/1> .
@@ -131,6 +127,12 @@
     skos:altLabel "Rancho Palos Verdes" ;
     ns1:name "Rancho Palos Verdes city" .
 
+<https://w3id.org/caselinker/resource/case/lapd_2017_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2017_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/lapd_2017_005/phase/booked> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
@@ -138,6 +140,6 @@
 <https://w3id.org/caselinker/resource/case/lapd_2017_005/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/lapd_2017_005/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

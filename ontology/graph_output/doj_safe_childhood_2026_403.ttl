@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -30,17 +30,20 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/agency/folsom-police-department> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/agency/folsom-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 26.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 26.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -50,28 +53,28 @@
     ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "CEOS" ;
     ns1:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns1:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
     ns1:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/agency/folsom-police-department> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Folsom Police Department" ;
     ns1:name "Folsom Police Department" .
 
@@ -91,7 +94,7 @@
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/event/project-safe-childhood> a ns4:Event,
-        ns5:ProjectSafeChildhoodOperation ;
+        ns3:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/legal-proceeding> a ns4:Event,
@@ -147,6 +150,17 @@
     skos:altLabel "Sacramento" ;
     ns1:name "Sacramento city" .
 
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/event/possession> a ns2:CSAMIncident,
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/phase/sentenced> a ns4:Phase,
+        ns6:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
 <https://w3id.org/caselinker/resource/platform/snapchat> a ns4:DigitalSystemEntity,
         ns7:MessagingService ;
     rdfs:label "Snapchat" ;
@@ -158,19 +172,8 @@
     rdfs:label "social media" ;
     ns1:name "social media" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/event/possession> a ns2:CSAMIncident,
-        ns4:Event ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
-
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/phase/sentenced> a ns4:Phase,
-        ns6:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_403/role/offender/1> a ns2:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;

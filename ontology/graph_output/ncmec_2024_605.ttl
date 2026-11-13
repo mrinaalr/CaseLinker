@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_605> a ns4:CACInvestigation,
-        ns6:EnduringEntity ;
+        ns1:EnduringEntity ;
     rdfs:label "Case ncmec_2024_605" ;
     dcterms:created "2026-11-10T21:26:52.086035"^^xsd:dateTime ;
     dcterms:date "2024-12-23"^^xsd:date ;
@@ -25,14 +25,16 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_605/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_605/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_605/event/trust-violation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_605/agency/department-of-family-services> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_605/agency/department-of-family-services> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1/extraction-confidence> a ns1:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1> ;
-    ns6:hasConfidence 0.65 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -40,72 +42,72 @@
     ns5:concernsAgeQuality ns5:Age ;
     ns5:hasAgeInYears 20.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/victim/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/victim/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/agency/department-of-family-services> a ns6:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/agency/department-of-family-services> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
     rdfs:label "Department of Family Services" ;
-    ns2:name "Department of Family Services" .
+    ns3:name "Department of Family Services" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/event/multi-jurisdiction> a ns6:Event,
-        ns3:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/event/multi-jurisdiction> a ns1:Event,
+        ns6:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/event/trust-violation> a ns1:CustodialAbuse,
-        ns1:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/event/trust-violation> a ns2:CustodialAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_605/relationship/mother> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_605/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/relationship/mother> a ns1:CustodialRelationship,
-        ns1:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/relationship/mother> a ns2:CustodialRelationship,
+        ns2:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> ;
-    ns1:relationshipType "parent" ;
-    ns2:isDirectional true ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> .
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> ;
+    ns2:relationshipType "parent" ;
+    ns3:isDirectional true ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/location/missouri-mo> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/missouri-mo> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
-    ns2:name "Missouri" .
+    ns3:name "Missouri" .
 
-<https://w3id.org/caselinker/resource/location/missouri-mo-29> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/missouri-mo-29> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
     skos:altLabel "Mo." ;
-    ns2:name "Missouri" .
+    ns3:name "Missouri" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_605/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "dropped the baby after tripping" ;
     dcterms:source <https://www.wcax.com/2024/12/23/dad-charged-after-2-month-old-brought-hospital-with-over-14-fractures-police-say/> ;
-    ns2:description "dropped the baby after tripping" .
+    ns3:description "dropped the baby after tripping" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_605/phase/charged> a ns4:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_605/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_605/phase/charged> a ns4:LegalProcessPhase,
-        ns6:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_605/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -32,7 +32,8 @@
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/cbp_2026_058/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/cbp_2026_058/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/cbp_2026_058/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/cbp_2026_058/agency/el-paso-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/cbp_2026_058/agency/el-paso-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/cbp_2026_058/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_058/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -42,20 +43,20 @@
     ns2:target <https://w3id.org/caselinker/resource/case/cbp_2026_058/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_058/agency/el-paso-police-department> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "El Paso Police Department" ;
     ns2:name "El Paso Police Department" .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_058/event/multi-jurisdiction> a ns4:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_058/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility: booked into the El Paso County Jail" ;
-    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/cbp_2026_058/sentence/1> .
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/cbp_2026_058/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_058/location/el-paso-county> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -87,11 +88,8 @@
     rdfs:label "West Texas" ;
     ns2:name "West Texas" .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_058/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/cbp_2026_058/sentence/1> a ns3:CriminalSentence,
-        ns3:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/cbp_2026_058/sentence/1> a ns5:CriminalSentence,
+        ns5:MonetaryPenalty ;
     rdfs:label "$2,525" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/cbp_2026_058/role/offender/1> .
 
@@ -116,10 +114,13 @@
 
 <https://w3id.org/caselinker/resource/location/united-states> skos:altLabel "United States of America" .
 
+<https://w3id.org/caselinker/resource/case/cbp_2026_058/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/cbp_2026_058/phase/booked> a ns1:InitialPhase,
         ns4:Phase ;
     rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_058/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/cbp_2026_058/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

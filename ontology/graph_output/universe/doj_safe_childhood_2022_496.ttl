@@ -2,16 +2,16 @@
 @prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
+        ns6:EnduringEntity ;
     rdfs:label "Case doj_safe_childhood_2022_496" ;
     dcterms:created "2026-11-11T11:19:40.739323"^^xsd:dateTime ;
     dcterms:date "2022-02-15"^^xsd:date ;
@@ -35,11 +35,14 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/legal-step/sentenced> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/agency/cumberland-county-sheriffs-office> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/agency/cumberland-county-sheriffs-office> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/omegle> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -54,40 +57,28 @@
     ns3:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/person/offender/1> ;
     ns3:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns7:DigitalSystemEntity,
-        ns6:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns3:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/omegle> a ns7:DigitalSystemEntity,
-        ns6:AnonymousChatPlatform ;
-    rdfs:label "Omegle" ;
-    ns6:guestAccountsAllowed "true" ;
-    ns6:identityVerificationRequired "false" ;
-    ns3:name "Omegle" .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns7:OrganizationLikeEntity,
-        ns4:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ceos> a ns6:OrganizationLikeEntity,
+        ns7:FederalAgency ;
     rdfs:label "CEOS" ;
     ns3:name "CEOS" .
 
-<https://w3id.org/caselinker/resource/agency/doj> a ns7:OrganizationLikeEntity,
-        ns4:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
+        ns7:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns3:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns7:OrganizationLikeEntity,
-        ns4:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/hsi> a ns6:OrganizationLikeEntity,
+        ns7:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns3:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a ns7:OrganizationLikeEntity,
-        ns4:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/usao> a ns6:OrganizationLikeEntity,
+        ns7:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns3:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/agency/cumberland-county-sheriffs-office> a ns7:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/agency/cumberland-county-sheriffs-office> a ns6:OrganizationLikeEntity,
+        ns7:LocalAgency ;
     rdfs:label "Cumberland County Sheriff's Office" ;
     ns3:name "Cumberland County Sheriff's Office" .
 
@@ -103,23 +94,23 @@
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/csam> a ns2:CSAMIncident,
-        ns7:Event ;
+        ns6:Event ;
     rdfs:label "CSAMIncident · event/csam" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/multi-jurisdiction> a ns7:Event,
-        ns4:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/multi-jurisdiction> a ns6:Event,
+        ns7:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/online-only> a ns2:ChildSexualAbuseEvent,
-        ns7:Event ;
+        ns6:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/project-safe-childhood> a ns7:Event,
-        ns4:ProjectSafeChildhoodOperation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/event/project-safe-childhood> a ns6:Event,
+        ns7:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
         ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
@@ -129,18 +120,18 @@
     ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/legal-step/sentenced> a ns7:Event,
-        ns7:LegalEvent,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/legal-step/sentenced> a ns6:Event,
+        ns6:LegalEvent,
         ns5:LegalProceeding,
         ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/location/cumberland-county> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/location/cumberland-county> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cumberland County" ;
     ns3:name "Cumberland County" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/location/portland> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/location/portland> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Portland" ;
     ns3:name "Portland" .
@@ -148,51 +139,63 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/sentence/1> a ns5:CriminalSentence,
         ns5:PrisonSentence ;
     rdfs:label "Five Years" ;
-    ns7:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/role/offender/1> .
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/sentence/2> a ns5:CriminalSentence,
         ns5:SupervisedRelease ;
     rdfs:label "five years supervised release" ;
-    ns7:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/role/offender/1> .
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/florida-fl> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/florida-fl> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     ns3:name "Florida" .
 
-<https://w3id.org/caselinker/resource/location/fort-pierce-city-fl> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/fort-pierce-city-fl> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fort Pierce city" ;
     dcterms:identifier "fips:1224300" ;
     skos:altLabel "Fort Pierce" ;
     ns3:name "Fort Pierce city" .
 
-<https://w3id.org/caselinker/resource/location/maine-me> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/maine-me> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maine" ;
     dcterms:identifier "fips:23" ;
     ns3:name "Maine" .
 
-<https://w3id.org/caselinker/resource/location/martin-county-fl> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/martin-county-fl> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Martin County" ;
     dcterms:identifier "fips:12085" ;
     ns3:name "Martin County" .
 
-<https://w3id.org/caselinker/resource/location/stuart-city-fl> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/stuart-city-fl> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Stuart city" ;
     dcterms:identifier "fips:1268875" ;
     skos:altLabel "Stuart" ;
     ns3:name "Stuart city" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
+        ns4:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/phase/sentenced> a ns7:Phase,
+<https://w3id.org/caselinker/resource/platform/omegle> a ns6:DigitalSystemEntity,
+        ns4:AnonymousChatPlatform ;
+    rdfs:label "Omegle" ;
+    ns4:guestAccountsAllowed "true" ;
+    ns4:identityVerificationRequired "false" ;
+    ns3:name "Omegle" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/phase/sentenced> a ns6:Phase,
         ns5:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_496/role/offender/1> a ns2:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

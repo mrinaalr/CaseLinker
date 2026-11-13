@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,11 +29,13 @@
         <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/spooner-police-department-wi>,
         <https://w3id.org/caselinker/resource/agency/washburn-county-sheriff-s-office-wi>,
-        <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> .
+        <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -50,7 +52,7 @@
     ns2:target <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns2:name "U.S. Department of Justice" .
 
@@ -61,56 +63,50 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/spooner-police-department-wi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Spooner Police Department" ;
     dcterms:identifier "ori:WI0660100" ;
     ns2:name "Spooner Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/washburn-county-sheriff-s-office-wi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Washburn County Sheriff's Office" ;
     dcterms:identifier "ori:WI0660000" ;
     ns2:name "Washburn County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "Wisconsin Department of Justice" ;
     ns2:name "Wisconsin Department of Justice" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:MultiJurisdictionalInvestigation ;
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked in the Washburn County Jail" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/charge/1> .
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> ;
-    ns3:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/victim/1> .
@@ -147,6 +143,12 @@
     dcterms:identifier "fips:55" ;
     ns2:name "Wisconsin" .
 
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/phase/booked> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
@@ -159,7 +161,7 @@
     rdfs:label "Victim Role · role/victim/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_001/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2019_001/event/possession> .
 

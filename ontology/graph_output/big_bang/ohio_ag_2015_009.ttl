@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -27,20 +27,22 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/columbus-police-department-oh>,
-        <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/columbus-police-department-oh>,
+        <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 37.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 37.0 .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 13.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 13.0 .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,34 +59,34 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/columbus-police-department-oh> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Columbus Police Department" ;
     dcterms:identifier "ori:OHCOP0000" ;
     ns1:name "Columbus Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Ohio Bureau of Criminal Investigation" ;
     ns1:name "Ohio Bureau of Criminal Investigation" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/sentence/1> .
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/legal-step/sentenced> a ns6:Event,
         ns6:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
     rdfs:label "32 years" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/role/offender/1> .
 
@@ -107,14 +109,8 @@
     dcterms:identifier "fips:39" ;
     ns1:name "Ohio" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/phase/sentenced> a ns6:Phase,
-        ns4:SentencingPhase ;
+        ns5:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/role/offender/1> a ns2:OffenderRole ;
@@ -125,4 +121,10 @@
         ns6:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns2:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 

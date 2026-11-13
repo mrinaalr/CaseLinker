@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -26,7 +26,9 @@
     ns5:hasPhase <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/phase/sentenced> ;
     ns5:hasStep <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/legal-step/sentenced> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -49,15 +51,15 @@
     ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns1:StateAgency ;
     rdfs:label "Office of the Attorney General" ;
     ns2:name "Office of the Attorney General" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/event/trust-violation> a ns1:AuthorityAbuse,
-        ns1:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/event/trust-violation> a ns3:AuthorityAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/offender/1> ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/relationship/coach> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/relationship/coach> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/legal-step/sentenced> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -70,15 +72,12 @@
     rdfs:label "Strawberry Square" ;
     ns2:name "Strawberry Square" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/relationship/coach> a ns1:Coach,
-        ns1:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/relationship/coach> a ns3:Coach,
+        ns3:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/offender/1> ;
-    ns1:relationshipType "coach" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/offender/1> ;
+    ns3:relationshipType "coach" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/victim/1> .
@@ -102,12 +101,15 @@
     dcterms:identifier "fips:42" ;
     ns2:name "Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/phase/sentenced> a <https://cacontology.projectvic.org/core#Phase>,
         <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_034/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_034/role/victim/1> a ns5:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

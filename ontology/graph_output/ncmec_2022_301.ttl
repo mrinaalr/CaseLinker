@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_301> a ns4:CACInvestigation,
-        ns3:EnduringEntity ;
+        ns6:EnduringEntity ;
     rdfs:label "Case ncmec_2022_301" ;
     dcterms:created "2026-11-10T09:18:46.166256"^^xsd:dateTime ;
     dcterms:date "2022-05-25"^^xsd:date ;
@@ -29,117 +29,119 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_301/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_301/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_301/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_301/agency/boca-raton-police-department>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_301/agency/boynton-beach-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_301/cybertip> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_301/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1/extraction-confidence> a ns6:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1> ;
-    ns3:hasConfidence 0.65 ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 35.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_301/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_301/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/agency/boca-raton-police-department> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/agency/boca-raton-police-department> a ns6:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Boca Raton Police Department" ;
-    ns1:name "Boca Raton Police Department" .
+    ns3:name "Boca Raton Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/agency/boynton-beach-police-department> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/agency/boynton-beach-police-department> a ns6:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Boynton Beach Police Department" ;
-    ns1:name "Boynton Beach Police Department" .
+    ns3:name "Boynton Beach Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "“possession of 10 or more images of child pornography”" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/2> a ns2:CriminalCharge ;
     rdfs:label "“possess" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_301/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns1:name "observe" .
+    ns3:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/event/distribution> a ns3:Event,
-        ns5:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/event/distribution> a ns6:Event,
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_301/event/online-only> a ns4:ChildSexualAbuseEvent,
-        ns3:Event ;
+        ns6:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_301/event/possession> a ns4:CSAMIncident,
-        ns3:Event ;
+        ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "24"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/1>,
+    ns2:chargeCount "24"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_301/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/location/palm-beaches> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/location/palm-beaches> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Palm Beaches" ;
-    ns1:name "Palm Beaches" .
+    ns3:name "Palm Beaches" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/operation> a ns3:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/operation> a ns6:Event,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/boynton-beach-city-fl> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/boynton-beach-city-fl> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Boynton Beach city" ;
     dcterms:identifier "fips:1207875" ;
     skos:altLabel "Boynton Beach" ;
-    ns1:name "Boynton Beach city" .
+    ns3:name "Boynton Beach city" .
 
-<https://w3id.org/caselinker/resource/location/florida-fl> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/florida-fl> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
-    ns1:name "Florida" .
+    ns3:name "Florida" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_301/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was not expecting to see any child pornography and did not intend on seeing any" ;
     dcterms:source <https://bocapost.com/arrests/boynton-beach-arrests/boynton-beach-man-arrested-for-possession-of-more-than-600-images-of-child-porn/> ;
-    ns1:description "was not expecting to see any child pornography and did not intend on seeing any" .
+    ns3:description "was not expecting to see any child pornography and did not intend on seeing any" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_301/phase/arrested> a ns4:InitialPhase,
+        ns6:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_301/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_301/phase/arrested> a ns4:InitialPhase,
-        ns3:Phase ;
-    rdfs:label "Initial Phase · phase/arrested" .
 

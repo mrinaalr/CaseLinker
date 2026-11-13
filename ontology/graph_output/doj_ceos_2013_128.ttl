@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -34,47 +34,48 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/legal-step/pleaded-guilty> ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 33.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 33.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns3:name "Federal Bureau of Investigation" .
+    ns2:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns3:name "U.S. Attorney's Office" .
+    ns2:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/2> a ns5:CSAM_Production,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/2> a ns3:CSAM_Production,
+        ns3:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/event/csam> a ns1:CSAMIncident,
@@ -87,43 +88,43 @@
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding,
-        ns5:PleaBargaining ;
+        ns3:LegalProceeding,
+        ns3:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/location/charleston> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Charleston" ;
-    ns3:name "Charleston" .
+    ns2:name "Charleston" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/location/pike-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pike County" ;
-    ns3:name "Pike County" .
+    ns2:name "Pike County" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/location/southern-district-of-west-virginia> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Southern District of West Virginia" ;
-    ns3:name "Southern District of West Virginia" .
+    ns2:name "Southern District of West Virginia" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns3:name "United States" .
+    ns2:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/location/wva> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "W.va." ;
-    ns3:name "W.va." .
+    ns2:name "W.va." .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
@@ -132,24 +133,24 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kentucky" ;
     dcterms:identifier "fips:21" ;
-    ns3:name "Kentucky" .
+    ns2:name "Kentucky" .
 
 <https://w3id.org/caselinker/resource/location/mingo-county-wv> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mingo County" ;
     dcterms:identifier "fips:54059" ;
-    ns3:name "Mingo County" .
+    ns2:name "Mingo County" .
 
 <https://w3id.org/caselinker/resource/location/west-virginia-wv> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "West Virginia" ;
     dcterms:identifier "fips:54" ;
-    ns3:name "West Virginia" .
+    ns2:name "West Virginia" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        ns3:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_128/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
-        ns5:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

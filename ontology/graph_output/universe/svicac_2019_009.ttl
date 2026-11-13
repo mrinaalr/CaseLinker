@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,7 +29,9 @@
         <https://w3id.org/caselinker/resource/case/svicac_2019_009/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/svicac_2019_009/legal-proceeding> ;
     ns1:object <https://w3id.org/caselinker/resource/case/svicac_2019_009/admission/1>,
-        <https://w3id.org/caselinker/resource/case/svicac_2019_009/admission/2> .
+        <https://w3id.org/caselinker/resource/case/svicac_2019_009/admission/2>,
+        <https://w3id.org/caselinker/resource/case/svicac_2019_009/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/svicac_2019_009/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2019_009/admission/1/extraction-confidence> a ns4:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -57,8 +59,8 @@
     ns1:source <https://w3id.org/caselinker/resource/case/svicac_2019_009/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2019_009/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/svicac_2019_009/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2019_009/event/csam> a ns2:CSAMIncident,
@@ -69,37 +71,31 @@
         ns4:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2019_009/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/svicac_2019_009/event/trust-violation> a ns5:CustodialAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/svicac_2019_009/relationship/mother> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/svicac_2019_009/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2019_009/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remains in federal custody" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2019_009/charge/1> .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2019_009/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2019_009/location/cordons-antioch> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cordon’s Antioch" ;
     ns1:name "Cordon’s Antioch" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2019_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2019_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2019_009/relationship/mother> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/svicac_2019_009/relationship/mother> a ns5:CustodialRelationship,
+        ns5:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> ;
-    ns3:relationshipType "parent" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> ;
+    ns5:relationshipType "parent" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/victim/1> .
@@ -134,6 +130,12 @@
     dcterms:source <https://www.mercurynews.com/2019/05/23/feds-antioch-man-admitted-to-raping-toddler-documenting-it/> ;
     ns1:description "molesting a girl when she was 2 or 3 years old, in 2011, when he was living in Florida" .
 
+<https://w3id.org/caselinker/resource/case/svicac_2019_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/svicac_2019_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/svicac_2019_009/phase/charged> a ns2:LegalProcessPhase,
         ns4:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
@@ -141,6 +143,6 @@
 <https://w3id.org/caselinker/resource/case/svicac_2019_009/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/svicac_2019_009/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

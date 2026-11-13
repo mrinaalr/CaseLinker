@@ -1,11 +1,11 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -35,12 +35,15 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/legal-step/convicted>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/operation> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/a-task-force>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/grant-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/missing-and-exploited-children-task-force> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/missing-and-exploited-children-task-force> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/icloud> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -54,64 +57,58 @@
     ns6:concernsAgeQuality ns6:Age ;
     ns6:hasAgeInYears 11.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/victim/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/platform/icloud> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns7:FileHostingService ;
-    rdfs:label "iCloud" ;
-    ns7:platformType "cloud-backup" ;
-    ns2:name "iCloud" .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
+    ns1:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns2:name "Homeland Security Investigations" .
+    ns1:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
+    ns1:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/a-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "a Task Force" ;
-    ns2:name "a Task Force" .
+    ns1:name "a Task Force" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/grant-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Grant County Sheriff's Office" ;
-    ns2:name "Grant County Sheriff's Office" .
+    ns1:name "Grant County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/agency/missing-and-exploited-children-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Missing and Exploited Children Task Force" ;
-    ns2:name "Missing and Exploited Children Task Force" .
+    ns1:name "Missing and Exploited Children Task Force" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/2> a ns7:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/3> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/3> a ns7:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns3:ChildSexualAbuseEvent .
 
@@ -128,7 +125,7 @@
     rdfs:label "Production Offense · event/production" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/event/project-safe-childhood> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:ProjectSafeChildhoodOperation ;
+        ns4:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/event/trust-violation> a ns5:CustodialAbuse,
@@ -139,38 +136,38 @@
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/1>,
+    ns7:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+        ns7:LegalProceeding,
+        ns7:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/location/soap-lake> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Soap Lake" ;
-    ns2:name "Soap Lake" .
+    ns1:name "Soap Lake" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/location/spokane> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Spokane" ;
-    ns2:name "Spokane" .
+    ns1:name "Spokane" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns2:name "United States" .
+    ns1:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/location/washington-state> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington State" ;
-    ns2:name "Washington State" .
+    ns1:name "Washington State" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
@@ -182,31 +179,37 @@
     ns5:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1> ;
     ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1> ;
     ns5:relationshipType "parent" ;
-    ns2:isDirectional true ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1> .
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/grant-county-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Grant County" ;
     dcterms:identifier "fips:53025" ;
-    ns2:name "Grant County" .
+    ns1:name "Grant County" .
 
 <https://w3id.org/caselinker/resource/location/washington-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington" ;
     dcterms:identifier "fips:53" ;
-    ns2:name "Washington" .
+    ns1:name "Washington" .
+
+<https://w3id.org/caselinker/resource/platform/icloud> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns2:FileHostingService ;
+    rdfs:label "iCloud" ;
+    ns2:platformType "cloud-backup" ;
+    ns1:name "iCloud" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
+        ns7:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
-        ns4:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_253/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

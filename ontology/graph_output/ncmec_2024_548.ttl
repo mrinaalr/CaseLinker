@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_548> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
+        ns4:EnduringEntity ;
     rdfs:label "Case ncmec_2024_548" ;
     dcterms:created "2026-11-10T21:26:33.082390"^^xsd:dateTime ;
     dcterms:date "2024-10-16"^^xsd:date ;
@@ -27,46 +27,47 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_548/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_548/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_548/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/michigan-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns1:CSAMIncident ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_548/narrative> ;
-    ns2:hasConfidence 0.5 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_548/narrative> ;
+    ns4:hasConfidence 0.5 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 44.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 44.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_548/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_548/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/michigan-state-police-department> a ns2:OrganizationLikeEntity,
-        ns6:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/michigan-state-police-department> a ns4:OrganizationLikeEntity,
+        ns3:StateAgency ;
     rdfs:label "Michigan State Police Department" ;
-    ns3:name "Michigan State Police Department" .
+    ns2:name "Michigan State Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
-        ns6:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_548/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
@@ -76,42 +77,42 @@
         ns5:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/event/distribution> a ns2:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/event/distribution> a ns4:Event,
         ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_548/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns2:Event ;
+        ns4:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_548/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
+        ns4:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
         ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
     ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_548/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_548/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/location/clyde-township> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/location/clyde-township> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clyde Township" ;
-    ns3:name "Clyde Township" .
+    ns2:name "Clyde Township" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/operation> a ns2:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/operation> a ns4:Event,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_548/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_548/phase/charged> a ns1:LegalProcessPhase,
+        ns4:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_548/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_548/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

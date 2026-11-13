@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,13 +27,16 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/agency/state-attorney-generals-office> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/agency/state-attorney-generals-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 14.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 14.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -50,46 +53,43 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/agency/state-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns6:StateAgency ;
     rdfs:label "State Attorney General's Office" ;
     ns1:name "State Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns6:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/relationship/teacher> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Guadalupe County Jail" ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/location/judson> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Judson" ;
     ns1:name "Judson" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/relationship/teacher> a ns5:CustodialRelationship,
-        ns5:Teacher ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/relationship/teacher> a ns2:CustodialRelationship,
+        ns2:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> ;
-    ns5:relationshipType "teacher" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> ;
+    ns2:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/victim/1> .
@@ -100,29 +100,32 @@
     dcterms:identifier "fips:48" ;
     ns1:name "Texas" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/phase/charged> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
 <https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         ns7:MessagingService ;
     rdfs:label "Snapchat" ;
     ns7:encryptionLevel "end-to-end" ;
     ns1:name "Snapchat" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/phase/charged> a ns3:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/charged" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/possession> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1056/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1056/event/possession> .
 

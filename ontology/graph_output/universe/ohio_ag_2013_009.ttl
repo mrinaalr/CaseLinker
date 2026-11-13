@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -21,16 +21,18 @@
         <https://w3id.org/caselinker/resource/location/youngstown-city-oh> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/phase/arrested> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified>,
         <https://w3id.org/caselinker/resource/agency/bcis-investigation-division-oh-unverified>,
         <https://w3id.org/caselinker/resource/agency/mahoning-county-sheriff-s-office-oh>,
-        <https://w3id.org/caselinker/resource/agency/youngstown-police-department-oh> .
+        <https://w3id.org/caselinker/resource/agency/youngstown-police-department-oh> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 14.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 14.0 .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -47,29 +49,26 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Attorney General's Bureau of Criminal Investigation" ;
     ns1:name "Attorney General's Bureau of Criminal Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/bcis-investigation-division-oh-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "BCI's Investigation Division" ;
     ns1:name "BCI's Investigation Division" .
 
 <https://w3id.org/caselinker/resource/agency/mahoning-county-sheriff-s-office-oh> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Mahoning County Sheriff's Office" ;
     dcterms:identifier "ori:OH0500000" ;
     ns1:name "Mahoning County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/youngstown-police-department-oh> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Youngstown Police Department" ;
     dcterms:identifier "ori:OH0500900" ;
     ns1:name "Youngstown Police Department" .
-
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" .
@@ -90,10 +89,13 @@
     skos:altLabel "Youngstown" ;
     ns1:name "Youngstown city" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 

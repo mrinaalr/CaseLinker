@@ -212,6 +212,46 @@ ORDER BY DESC(?cases)
 LIMIT 8
 ```
 
+### People and platforms in a case
+
+The investigation lists its people and platforms with `uco-core:object`. A person's role comes from the `Has_Role` relationship whose source is that person. `cac:usesChannel` and `cac:participatesInEvent` tie them to an offense event only when the case has one event.
+
+```sparql
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?kind ?node ?label WHERE {
+  BIND(<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_191> AS ?case)
+  GRAPH ?case {
+    ?case uco-core:object ?node .
+    { ?node a uco-identity:Person . ?rel uco-core:source ?node ; uco-core:target ?role . ?role a ?kind }
+    UNION { ?node a cac-core:DigitalSystemEntity ; rdfs:label ?label . BIND("platform" AS ?kind) }
+  }
+}
+```
+
+### Quote behind a case node
+
+An annotation a resolution used names the node it supports with `uco-core:object`: offender and victim ages (`person/{offender,victim}/N/age`), imposed sentences (`sentence/N`), the CyberTip report (`cybertip`) and its reporter role (`cybertip/reporter/{esp}`). Annotations a resolution set aside (statutory thresholds, decoys) name no node. Match `?ann a oa:Annotation`, because the investigation also uses `uco-core:object`.
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+SELECT ?node ?field ?value ?method ?quote ?start ?end WHERE {
+  GRAPH <https://w3id.org/caselinker/resource/case/afp_2016_001/provenance> {
+    ?ann a oa:Annotation ; uco-core:object ?node ; dcterms:subject ?field ; prov:value ?value ;
+         cac-core:usesMethod ?method ; oa:hasTarget/oa:hasSelector ?q, ?pos .
+    ?q oa:exact ?quote . ?pos oa:start ?start ; oa:end ?end .
+  }
+}
+```
+
+`caselinker-evidence-coverage-shapes.ttl`, validated over a case graph and its provenance graph together, requires every age, sentence, CyberTip report and reporter-role node to have such an annotation.
+
 ### Who sent a case's CyberTip
 
 A CyberTip report is an object of the investigation. When the release names who sent it, the report is `hotlines:reportedBy` a `ReporterRole` that an `ElectronicServiceProvider` (`resource/esp/{slug}`) plays; NCMEC is the receiver (`hotlines:receivedBy`), never the reporter. No `reportedBy` means the release does not say. The quote and confidence come from the provenance graph through the extraction run.

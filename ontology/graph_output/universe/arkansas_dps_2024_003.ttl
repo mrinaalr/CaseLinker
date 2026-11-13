@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,63 +24,65 @@
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/phase/charged> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/event/possession>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-attorney-generals-office>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-attorney-generals-office>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/saline-county-sheriff-s-office-ar> .
+        <https://w3id.org/caselinker/resource/agency/saline-county-sheriff-s-office-ar> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 42.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 42.0 .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Arkansas Attorney General's Office" ;
-    ns5:name "Arkansas Attorney General's Office" .
+    ns4:name "Arkansas Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns5:name "ICAC Task Force" .
+    ns4:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns5:name "National Center for Missing and Exploited Children" .
+    ns4:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/saline-county-sheriff-s-office-ar> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Saline County Sheriff's Office" ;
     dcterms:identifier "ori:AR0630000" ;
-    ns5:name "Saline County Sheriff's Office" .
+    ns4:name "Saline County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/1> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/1> a ns1:CriminalCharge ;
     rdfs:label "CSAM" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/2> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/2> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "Possession of Child Sexual" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "172"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/1>,
+    ns1:chargeCount "172"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/1>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/event/possession> .
 
@@ -89,19 +91,14 @@
     rdfs:label "Arkansas" ;
     dcterms:identifier "fips:05" ;
     skos:altLabel "Ark." ;
-    ns5:name "Arkansas" .
+    ns4:name "Arkansas" .
 
 <https://w3id.org/caselinker/resource/location/benton-city-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Benton city" ;
     dcterms:identifier "fips:0505290" ;
     skos:altLabel "Benton" ;
-    ns5:name "Benton city" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns5:name "social media" .
+    ns4:name "Benton city" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/event/possession> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -109,10 +106,15 @@
     ns3:severityLevel 3 ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns4:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

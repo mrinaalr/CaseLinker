@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -23,17 +23,18 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/phase/booked> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/event/possession>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/jerome-police-department-id>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/rupert-police-department-id>,
-        <https://w3id.org/caselinker/resource/agency/twin-falls-police-department-id> .
+        <https://w3id.org/caselinker/resource/agency/twin-falls-police-department-id> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 24.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 24.0 .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -49,46 +50,46 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/jerome-police-department-id> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Jerome Police Department" ;
     dcterms:identifier "ori:ID0270100" ;
     ns1:name "Jerome Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/rupert-police-department-id> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Rupert Police Department" ;
     dcterms:identifier "ori:ID0340100" ;
     ns1:name "Rupert Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/twin-falls-police-department-id> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Twin Falls Police Department" ;
     dcterms:identifier "ori:ID0420200" ;
     ns1:name "Twin Falls Police Department" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/2> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Jerome County Jail" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/1>,
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/1>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/event/possession> .
 
@@ -102,10 +103,10 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/phase/booked> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/idaho_icac_2022_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

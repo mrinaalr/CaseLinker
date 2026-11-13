@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,7 +26,8 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/sjpd_2025_003/event/distribution>,
         <https://w3id.org/caselinker/resource/case/sjpd_2025_003/event/possession>,
         <https://w3id.org/caselinker/resource/case/sjpd_2025_003/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/sjpd_2025_003/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2025_003/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -41,25 +42,25 @@
     skos:altLabel "ICAC" ;
     ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/2> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2025_003/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2025_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into Santa Clara County Main Jail" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/1>,
         <https://w3id.org/caselinker/resource/case/sjpd_2025_003/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2025_003/location/san-josé> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -67,10 +68,7 @@
     rdfs:label "San José" ;
     ns2:name "San José" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2025_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/sjpd_2025_003/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/sjpd_2025_003/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/sjpd_2025_003/event/possession> .
 
@@ -97,6 +95,9 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/sjpd_2025_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2025_003/phase/booked> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

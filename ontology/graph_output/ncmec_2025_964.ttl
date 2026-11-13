@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -26,30 +26,32 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_964/legal-proceeding> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_964/agency/centralia-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_964/cybertip> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_964/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 35.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_964/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_964/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_964/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_964/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/agency/centralia-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:LocalAgency ;
     rdfs:label "Centralia Police Department" ;
-    ns1:name "Centralia Police Department" .
+    ns3:name "Centralia Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
     ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:name "observe" .
+    ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
@@ -64,23 +66,18 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/location/centralia> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Centralia" ;
-    ns1:name "Centralia" .
+    ns3:name "Centralia" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_964/event/possession> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:HotlineOrganization,
         ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
+    ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -88,10 +85,15 @@
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_964/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_964/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

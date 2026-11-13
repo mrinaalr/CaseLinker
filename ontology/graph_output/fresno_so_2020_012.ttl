@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,26 +24,28 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 33.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 33.0 .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2020_012/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2020_012/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Fresno County Sheriff's Office" ;
     dcterms:identifier "ori:CA0100000" ;
-    ns3:name "Fresno County Sheriff's Office" .
+    ns1:name "Fresno County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -64,18 +66,13 @@
     rdfs:label "Fresno city" ;
     dcterms:identifier "fips:0627000" ;
     skos:altLabel "Fresno" ;
-    ns3:name "Fresno city" .
+    ns1:name "Fresno city" .
 
 <https://w3id.org/caselinker/resource/location/fresno-county-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fresno County" ;
     dcterms:identifier "fips:06019" ;
-    ns3:name "Fresno County" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns3:name "social media" .
+    ns1:name "Fresno County" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/event/hands-on> a ns2:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -83,10 +80,15 @@
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/fresno_so_2020_012/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/fresno_so_2020_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

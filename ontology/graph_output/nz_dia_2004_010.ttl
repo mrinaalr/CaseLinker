@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,8 +27,9 @@
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/event/possession>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/legal-step/pleaded-guilty> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs>,
-        <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/agency/department-inspectors> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs>,
+        <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/agency/department-inspectors> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/assessment/semantic/dissemination> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · dissemination" ;
@@ -65,22 +66,22 @@
     ns1:hasConfidence 0.513 ;
     ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_010/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_010/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns1:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "NZ DIA" ;
-    ns4:name "NZ DIA" .
+    ns3:name "NZ DIA" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/agency/department-inspectors> a ns1:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Department Inspectors" ;
-    ns4:name "Department Inspectors" .
+    ns3:name "Department Inspectors" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/event/distribution> a ns1:Event,
         ns5:CSAM_Distribution ;
@@ -91,9 +92,9 @@
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/event/multi-jurisdiction> a ns1:Event,
-        ns3:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns3:crossesBorders true .
+    ns4:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/event/possession> a ns2:CSAMIncident,
         ns1:Event ;
@@ -114,20 +115,20 @@
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/location/new-zealand> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New Zealand" ;
-    ns4:name "New Zealand" .
+    ns3:name "New Zealand" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/location/tauranga> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tauranga" ;
-    ns4:name "Tauranga" .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns3:name "Tauranga" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/sentence/1> a ns5:CriminalSentence,
         ns5:PrisonSentence ;
     rdfs:label "one year" ;
     ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_010/phase/pleaded-guilty> a ns1:Phase,
         ns5:PreTrialPhase ;

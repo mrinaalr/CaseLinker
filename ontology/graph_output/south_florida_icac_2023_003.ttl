@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003> a ns4:CACInvestigation,
         ns2:EnduringEntity ;
     rdfs:label "Case south_florida_icac_2023_003" ;
     dcterms:created "2026-11-11T17:56:06.199151"^^xsd:dateTime ;
@@ -21,12 +21,14 @@
     dcterms:spatial <https://w3id.org/caselinker/resource/location/broward-county-fl>,
         <https://w3id.org/caselinker/resource/location/florida-fl>,
         <https://w3id.org/caselinker/resource/location/lauderhill-city-fl> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/distribution>,
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/distribution>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/online-only>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/sextortion>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/instagram> .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -49,23 +51,18 @@
     ns1:source <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/instagram> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Instagram" ;
-    ns1:name "Instagram" .
-
 <https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/charge/1> a ns4:CriminalCharge,
-        ns4:SextortionCharge ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/charge/1> a ns3:CriminalCharge,
+        ns3:SextortionCharge ;
     rdfs:label "sextortion" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/distribution> a ns2:Event,
-        ns4:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/multi-jurisdiction> a ns2:Event,
@@ -73,7 +70,7 @@
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
     ns5:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/online-only> a ns3:ChildSexualAbuseEvent,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/event/online-only> a ns4:ChildSexualAbuseEvent,
         ns2:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
@@ -83,15 +80,12 @@
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns4:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/charge/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/broward-county-fl> a ns2:PlaceLikeEntity,
@@ -113,4 +107,12 @@
     dcterms:identifier "fips:1239550" ;
     skos:altLabel "Lauderhill" ;
     ns1:name "Lauderhill city" .
+
+<https://w3id.org/caselinker/resource/platform/instagram> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Instagram" ;
+    ns1:name "Instagram" .
+
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2023_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,6 +1,6 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
@@ -22,8 +22,9 @@
     ns4:hasStep <https://w3id.org/caselinker/resource/case/spd_2018_001/event/csam>,
         <https://w3id.org/caselinker/resource/case/spd_2018_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/spd_2018_001/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/spd_2018_001/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/spd_2018_001/assessment/semantic/exploitive-positions> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -32,24 +33,24 @@
     ns5:hasConfidence 0.451 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/spd_2018_001/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/spd_2018_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/spd_2018_001/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/spd_2018_001/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/spd_2018_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/spd_2018_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns2:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/spd_2018_001/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
@@ -71,9 +72,6 @@
     ns3:hasCharge <https://w3id.org/caselinker/resource/case/spd_2018_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/spd_2018_001/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/spd_2018_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/spd_2018_001/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2018_001/event/csam> .
@@ -82,10 +80,13 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington" ;
     dcterms:identifier "fips:53" ;
-    ns2:name "Washington" .
+    ns1:name "Washington" .
 
 <https://w3id.org/caselinker/resource/case/spd_2018_001/event/csam> a ns4:CSAMIncident,
         ns5:Event ;
     rdfs:label "CSAMIncident · event/csam" ;
     ns4:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/spd_2018_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

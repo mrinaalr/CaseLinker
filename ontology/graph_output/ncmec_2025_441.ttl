@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,10 +25,11 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_441/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_441/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_441/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/carroll-county-sheriffs-office>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/carroll-county-sheriffs-office>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/department-of-police-department>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/montgomery-county-department-of-police-department>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/montgomery-county-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/montgomery-county-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_441/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -38,40 +39,37 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_441/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/carroll-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Carroll County Sheriff's Office" ;
     ns1:name "Carroll County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/department-of-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Department of Police Department" ;
     ns1:name "Department of Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/montgomery-county-department-of-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Montgomery County Department of Police Department" ;
     ns1:name "Montgomery County Department of Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/agency/montgomery-county-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Montgomery County Police Department" ;
     ns1:name "Montgomery County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_441/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_441/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_441/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_441/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_441/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_441/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_441/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_441/event/possession> .
 
@@ -103,6 +101,9 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_441/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_441/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

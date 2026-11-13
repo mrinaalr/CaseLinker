@@ -1,17 +1,17 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_008> a ns4:CACInvestigation,
-        ns5:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case doj_archives_2005_008" ;
     dcterms:created "2026-11-10T18:24:00.519379"^^xsd:dateTime ;
     dcterms:date "2005-10-14"^^xsd:date ;
@@ -31,24 +31,26 @@
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/production>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/legal-step/pleaded-guilty> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/federal-district-court>,
         <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/irc> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1/extraction-confidence> a ns3:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1> ;
-    ns5:hasConfidence 0.65 ;
-    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1/age> a ns7:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 34.0 .
+    ns7:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1> ;
+    ns7:concernsAgeQuality ns7:Age ;
+    ns7:hasAgeInYears 34.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,35 +59,29 @@
     ns1:source <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/irc> a ns5:DigitalSystemEntity,
-        ns7:AnonymousChatPlatform ;
-    rdfs:label "IRC" ;
-    ns7:platformType "legacy" ;
-    ns1:name "IRC" .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns5:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/doj> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns1:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/fbi> a ns5:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/fbi> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
     ns1:name "Federal Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/federal-district-court> a ns5:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/federal-district-court> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Federal District Court" ;
     ns1:name "Federal District Court" .
 
-<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a ns5:OrganizationLikeEntity,
-        ns3:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a ns3:OrganizationLikeEntity,
+        ns5:StateAgency ;
     rdfs:label "Pennsylvania State Police Department" ;
     ns1:name "Pennsylvania State Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/usao> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
@@ -97,36 +93,36 @@
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/distribution> a ns5:Event,
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/distribution> a ns3:Event,
         ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/hands-on> a ns4:ChildSexualAbuseEvent,
-        ns5:Event ;
+        ns3:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/multi-jurisdiction> a ns5:Event,
-        ns3:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/multi-jurisdiction> a ns3:Event,
+        ns5:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/possession> a ns4:CSAMIncident,
-        ns5:Event ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/production> a ns5:Event,
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/event/production> a ns3:Event,
         <https://cacontology.projectvic.org/production#ProductionOffense> ;
     rdfs:label "Production Offense · event/production" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/legal-step/pleaded-guilty> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/legal-step/pleaded-guilty> a ns3:Event,
+        ns3:LegalEvent,
         ns6:LegalProceeding,
         ns6:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
@@ -134,29 +130,35 @@
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/role/offender/1> a ns4:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/district-of-columbia-dc> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/district-of-columbia-dc> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "District of Columbia" ;
     dcterms:identifier "fips:11" ;
     skos:altLabel "D.c." ;
     ns1:name "District of Columbia" .
 
-<https://w3id.org/caselinker/resource/location/district-of-columbia-dc-11> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/district-of-columbia-dc-11> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "District of Columbia" ;
     dcterms:identifier "fips:11" ;
     skos:altLabel "Washington" ;
     ns1:name "District of Columbia" .
 
+<https://w3id.org/caselinker/resource/platform/irc> a ns3:DigitalSystemEntity,
+        ns2:AnonymousChatPlatform ;
+    rdfs:label "IRC" ;
+    ns2:platformType "legacy" ;
+    ns1:name "IRC" .
+
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_008/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "charges contained in an indictment handed down on June 9, 2005" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DC%20Schiffer%20Plea%20PR_101405.pdf> ;
     ns1:description "charges contained in an indictment handed down on June 9, 2005" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/phase/pleaded-guilty> a ns5:Phase,
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/phase/pleaded-guilty> a ns3:Phase,
         ns6:PreTrialPhase ;
     rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

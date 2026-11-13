@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,11 +29,13 @@
         <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/event/production>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/legal-step/pleaded-guilty> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-il-unverified>,
-        <https://w3id.org/caselinker/resource/agency/vandalia-police-department-il> .
+        <https://w3id.org/caselinker/resource/agency/vandalia-police-department-il> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/person/offender/2> .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -68,44 +70,44 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Illinois High Tech Crimes Bureau" ;
     ns1:name "Illinois High Tech Crimes Bureau" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-il-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:StateAgency ;
+        ns2:StateAgency ;
     rdfs:label "Office of the Attorney General" ;
     ns1:name "Office of the Attorney General" .
 
 <https://w3id.org/caselinker/resource/agency/vandalia-police-department-il> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Vandalia Police Department" ;
     dcterms:identifier "ori:IL0260400" ;
     ns1:name "Vandalia Police Department" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/2> a ns2:CSAM_Production,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/2> a ns5:CSAM_Production,
+        ns5:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/3> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/3> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/4> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/4> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns3:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/event/possession> a ns3:CSAMIncident,
@@ -118,18 +120,18 @@
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "5"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/1>,
+    ns5:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/1>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/2>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/3>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/charge/4> .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding,
-        ns2:PleaBargaining ;
+        ns5:LegalProceeding,
+        ns5:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/role/offender/1> a ns3:OffenderRole ;
@@ -164,13 +166,13 @@
     skos:altLabel "Vandalia" ;
     ns1:name "Vandalia city" .
 
+<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        ns5:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/2" .
-
-<https://w3id.org/caselinker/resource/case/illinois_ag_2023_022/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
-        ns2:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
+        ns4:EnduringEntity ;
     rdfs:label "Case ncmec_2024_615" ;
     dcterms:created "2026-11-10T21:26:55.604193"^^xsd:dateTime ;
     dcterms:date "2024-02-17"^^xsd:date ;
@@ -29,22 +29,24 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_615/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_615/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_615/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1/extraction-confidence> a ns4:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1> ;
-    ns2:hasConfidence 0.65 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 21.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 21.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -53,99 +55,99 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/kik> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
-
-<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a ns2:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
+        ns2:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615/event/csam> a ns3:CSAMIncident,
-        ns2:Event ;
+        ns4:Event ;
     rdfs:label "CSAMIncident · event/csam" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/event/distribution> a ns2:Event,
-        ns6:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/event/distribution> a ns4:Event,
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615/event/online-only> a ns3:ChildSexualAbuseEvent,
-        ns2:Event ;
+        ns4:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_615/charge/1> ;
-    ns6:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_615/charge/1> ;
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/legal-step/sentenced> a ns4:Event,
+        ns4:LegalEvent,
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/location/omaha> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/location/omaha> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Omaha" ;
     ns1:name "Omaha" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/1> a ns6:CriminalSentence,
-        ns6:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
     rdfs:label "120 months" ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1> .
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/2> a ns6:CriminalSentence,
-        ns6:SupervisedRelease ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/sentence/2> a ns5:CriminalSentence,
+        ns5:SupervisedRelease ;
     rdfs:label "five-year supervised release" ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1> .
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/ashland-city-ne> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/ashland-city-ne> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ashland city" ;
     dcterms:identifier "fips:3102305" ;
     skos:altLabel "Ashland" ;
     ns1:name "Ashland city" .
 
-<https://w3id.org/caselinker/resource/location/nebraska-ne> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/nebraska-ne> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Nebraska" ;
     dcterms:identifier "fips:31" ;
     skos:altLabel "Neb." ;
     ns1:name "Nebraska" .
 
+<https://w3id.org/caselinker/resource/platform/kik> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "viewing child porn online" ;
     dcterms:source <https://panhandle.newschannelnebraska.com/story/50465745/ashland-man-receives-jail-time-following-child-pornography-conviction> ;
     ns1:description "viewing child porn online" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_615/phase/sentenced> a ns4:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_615/phase/sentenced> a ns2:Phase,
-        ns6:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_615/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

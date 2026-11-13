@@ -1,12 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_633> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_633> a ns2:CACInvestigation,
         ns4:EnduringEntity ;
     rdfs:label "Case ncmec_2024_633" ;
     dcterms:created "2026-11-10T21:27:01.567666"^^xsd:dateTime ;
@@ -17,53 +17,54 @@
     dcterms:source <https://www.newportdispatch.com/2024/08/16/manchester-man-charged-with-child-sexual-abuse-image-possession/#:~:text=Martin%20Easton%2C%2047%2C%20was%20taken,sexually%20explicit%20images%20of%20children>,
         "NCMEC" ;
     dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_633/location/manchester> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_633/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_633/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_633/event/possession>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_633/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_633/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_633/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_633/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_633/agency/manchester-police-department> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_633/agency/manchester-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_633/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_633/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns1:CSAMIncident ;
+    dcterms:subject ns2:CSAMIncident ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_633/narrative> ;
     ns4:hasConfidence 0.5557 ;
     ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_633/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_633/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_633/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_633/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_633/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_633/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_633/agency/manchester-police-department> a ns4:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Manchester Police Department" ;
-    ns2:name "Manchester Police Department" .
+    ns3:name "Manchester Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_633/location/manchester> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Manchester" ;
-    ns2:name "Manchester" .
+    ns3:name "Manchester" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_633/operation> a ns4:Event,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_633/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_633/event/possession> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_633/event/possession> a ns2:CSAMIncident,
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_633/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_633/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_633/event/possession> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_633/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_633/phase/charged> a ns1:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_633/phase/charged> a ns2:LegalProcessPhase,
         ns4:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 

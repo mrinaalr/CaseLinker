@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -24,11 +24,12 @@
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_315/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_315/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_315/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_315/agency/lagrange-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_315/agency/lagrange-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_315/agency/lagrange-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_315/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/assessment/semantic/evidence-seizure> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · evidence_seizure" ;
@@ -45,7 +46,7 @@
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_315/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a ns5:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns3:name "Homeland Security Investigations" .
 
@@ -56,35 +57,35 @@
     ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/agency/lagrange-county-sheriffs-office> a ns5:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "LaGrange County Sheriff's Office" ;
     ns3:name "LaGrange County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/agency/lagrange-police-department> a ns5:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "LaGrange Police Department" ;
     ns3:name "LaGrange Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/2> a ns2:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns4:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/1>,
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_315/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/location/howe-indiana> a ns5:PlaceLikeEntity,
@@ -97,16 +98,16 @@
     rdfs:label "Lagrange, Indiana" ;
     ns3:name "Lagrange, Indiana" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_315/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_315/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_315/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_315/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/event/possession> a ns1:CSAMIncident,
         ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_315/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_315/phase/arrested> a ns1:InitialPhase,
         ns5:Phase ;

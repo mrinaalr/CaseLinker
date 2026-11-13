@@ -1,13 +1,13 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_017> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_017> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ky_sp_2026_017" ;
     dcterms:created "2026-11-11T15:07:47.952004"^^xsd:dateTime ;
@@ -20,13 +20,15 @@
     dcterms:spatial <https://w3id.org/caselinker/resource/location/frankfort-city-ky>,
         <https://w3id.org/caselinker/resource/location/kentucky-ky>,
         <https://w3id.org/caselinker/resource/location/kentucky-ky-21> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/sextortion>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/sextortion>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/legal-proceeding> ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-ky-unverified>,
         <https://w3id.org/caselinker/resource/agency/bureau-of-justice-assistance-ky-unverified>,
         <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-ky-unverified> .
+        <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-ky-unverified> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -55,26 +57,23 @@
     rdfs:label "Office of the Attorney General" ;
     ns2:name "Office of the Attorney General" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/charge/1> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/charge/1> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/trafficking> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:SexTrafficking ;
+        ns3:SexTrafficking ;
     rdfs:label "Sex Trafficking · event/trafficking" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/charge/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/sextortion> .
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/sextortion> .
 
 <https://w3id.org/caselinker/resource/location/frankfort-city-ky> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -97,14 +96,17 @@
         "Ky." ;
     ns2:name "Kentucky" .
 
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/sextortion> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    rdfs:label "Sextortion Incident · event/sextortion" ;
+    ns1:severityLevel 3 ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
     rdfs:label "social media" ;
     ns2:name "social media" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_017/event/sextortion> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    rdfs:label "Sextortion Incident · event/sextortion" ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 

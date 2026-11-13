@@ -1,11 +1,11 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -35,7 +35,9 @@
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/lexington-county-sheriff-s-office-sc>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/cybertip>,
+        <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/person/offender/2> .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -88,40 +90,40 @@
     skos:altLabel "Lexington County Sheriff's Department" ;
     ns1:name "Lexington County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/1> a ns7:CriminalCharge,
-        ns7:StateCharge ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/2> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/2> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/3> a ns7:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/event/distribution> a ns5:Event,
-        ns7:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns7:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns7:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/1>,
         <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/2>,
         <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/role/offender/1> a ns7:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/role/offender/2> a ns7:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/role/offender/2> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/2" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/event/possession> .
 
@@ -166,17 +168,11 @@
     ns1:name "South Carolina" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
-        ns3:HotlineOrganization,
+        ns7:HotlineOrganization,
         ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
-
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/2" .
 
 <https://w3id.org/caselinker/resource/case/scag_icac_2023_042/phase/charged> a ns2:LegalProcessPhase,
         ns5:Phase ;
@@ -186,4 +182,10 @@
         ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scag_icac_2023_042/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/2" .
 

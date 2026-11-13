@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,30 +24,27 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/agency/detective-carlow>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/agency/vancouver-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/agency/detective-carlow>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/agency/vancouver-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1129/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1129/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns3:name "chat" .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/agency/detective-carlow> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Detective Carlow" ;
-    ns3:name "Detective Carlow" .
+    ns2:name "Detective Carlow" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/agency/vancouver-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Vancouver Police Department" ;
-    ns3:name "Vancouver Police Department" .
+    ns2:name "Vancouver Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/event/hands-on> a ns1:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -66,10 +63,7 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/location/vancouver-washington> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Vancouver, Washington" ;
-    ns3:name "Vancouver, Washington" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1129/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns2:name "Vancouver, Washington" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" .
@@ -79,13 +73,21 @@
     rdfs:label "Vancouver city" ;
     dcterms:identifier "fips:5374060" ;
     skos:altLabel "Vancouver" ;
-    ns3:name "Vancouver city" .
+    ns2:name "Vancouver city" .
 
 <https://w3id.org/caselinker/resource/location/washington-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington" ;
     dcterms:identifier "fips:53" ;
-    ns3:name "Washington" .
+    ns2:name "Washington" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1129/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1129/phase/booked> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

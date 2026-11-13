@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,7 +25,9 @@
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/legal-step/convicted> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/agency/department-of-internal-affairs-gaming-and-censorship-regulation-group> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/agency/department-of-internal-affairs-gaming-and-censorship-regulation-group> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/irc> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/assessment/semantic/dissemination> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · dissemination" ;
@@ -62,14 +64,8 @@
     ns1:source <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/irc> a ns2:DigitalSystemEntity,
-        ns4:AnonymousChatPlatform ;
-    rdfs:label "IRC" ;
-    ns4:platformType "legacy" ;
-    ns1:name "IRC" .
-
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/agency/department-of-internal-affairs-gaming-and-censorship-regulation-group> a ns2:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Department of Internal Affair's Gaming and Censorship Regulation Group" ;
     ns1:name "Department of Internal Affair's Gaming and Censorship Regulation Group" .
 
@@ -82,9 +78,9 @@
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/event/multi-jurisdiction> a ns2:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns5:crossesBorders true .
+    ns4:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/event/possession> a ns3:CSAMIncident,
         ns2:Event ;
@@ -101,11 +97,17 @@
     rdfs:label "New Zealand" ;
     ns1:name "New Zealand" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2005_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/platform/irc> a ns2:DigitalSystemEntity,
+        ns5:AnonymousChatPlatform ;
+    rdfs:label "IRC" ;
+    ns5:platformType "legacy" ;
+    ns1:name "IRC" .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2005_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2005_001/phase/convicted> a ns2:Phase,
         <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;

@@ -3,8 +3,8 @@
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,7 +27,9 @@
         <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/legal-proceeding> ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/cybertip>,
+        <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -51,7 +53,7 @@
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
@@ -67,9 +69,6 @@
     ns3:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/charge/1>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/event/csam> .
@@ -80,14 +79,8 @@
     dcterms:identifier "fips:47025" ;
     ns2:name "Claiborne County" .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns6:encryptionLevel "end-to-end" ;
-    ns2:name "Snapchat" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:HotlineOrganization,
+        ns6:HotlineOrganization,
         ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
@@ -99,7 +92,16 @@
     ns1:severityLevel 3 ;
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
+<https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_008/phase/indicted> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns2:name "Snapchat" .
 

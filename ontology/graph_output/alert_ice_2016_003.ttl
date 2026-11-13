@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,15 +25,17 @@
         <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/event/distribution>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/calgary-ice>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/calgary-ice>,
         <https://w3id.org/caselinker/resource/agency/ice>,
-        <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/agency/alberta--airdrie-rcmp-general-investigation-section-and-crime-reduction-unit> .
+        <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/agency/alberta--airdrie-rcmp-general-investigation-section-and-crime-reduction-unit> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 34.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 34.0 .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -43,41 +45,41 @@
     ns2:target <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/calgary-ice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "Calgary ICE" ;
     ns2:name "Calgary ICE" .
 
 <https://w3id.org/caselinker/resource/agency/ice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "ICE" ;
     ns2:name "ICE" .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/agency/alberta--airdrie-rcmp-general-investigation-section-and-crime-reduction-unit> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Alberta- Airdrie RCMP General Investigation Section and Crime Reduction Unit" ;
     ns2:name "Alberta- Airdrie RCMP General Investigation Section and Crime Reduction Unit" .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/2> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/2> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/3> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/3> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns3:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/1>,
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/1>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/2>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/charge/3> .
 
@@ -95,14 +97,9 @@
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/event/csam> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns2:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/event/csam> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -110,10 +107,15 @@
     ns3:severityLevel 3 ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/alert_ice_2016_003/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/alert_ice_2016_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

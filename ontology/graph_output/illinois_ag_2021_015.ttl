@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015> a ns5:CACInvestigation,
-        ns2:EnduringEntity ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015> a ns2:CACInvestigation,
+        ns6:EnduringEntity ;
     rdfs:label "Case illinois_ag_2021_015" ;
     dcterms:created "2026-11-11T14:38:30.895211"^^xsd:dateTime ;
     dcterms:date "2021-04-29"^^xsd:date ;
@@ -25,20 +25,22 @@
         <https://w3id.org/caselinker/resource/location/illinois-il>,
         <https://w3id.org/caselinker/resource/location/illinois-il-17>,
         <https://w3id.org/caselinker/resource/location/marshall-city-il> ;
-    ns5:currentPhase <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/phase/sentenced> ;
-    ns5:hasPhase <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/phase/sentenced> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/event/csam>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/phase/sentenced> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/phase/sentenced> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/event/csam>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/legal-step/sentenced> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/marshall-police-department-il>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 50.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 50.0 .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -47,19 +49,19 @@
     ns1:source <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/marshall-police-department-il> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/marshall-police-department-il> a ns6:OrganizationLikeEntity,
         ns3:LocalAgency ;
     rdfs:label "Marshall Police Department" ;
     dcterms:identifier "ori:IL0120200" ;
     ns1:name "Marshall Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns6:OrganizationLikeEntity,
         ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
@@ -74,10 +76,10 @@
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/charge/3> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    dcterms:subject ns5:ChildSexualAbuseEvent .
+    dcterms:subject ns2:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
@@ -86,13 +88,13 @@
         <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/charge/3> ;
     ns4:resultsSentence <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/legal-step/sentenced> a ns6:Event,
+        ns6:LegalEvent,
         ns4:LegalProceeding,
         ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/location/pitts> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/location/pitts> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pitts’" ;
     ns1:name "Pitts’" .
@@ -100,60 +102,60 @@
 <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/sentence/1> a ns4:CriminalSentence,
         ns4:PrisonSentence ;
     rdfs:label "36 years" ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/role/offender/1> .
+    ns6:assesses <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/chicago-city-il> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/chicago-city-il> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Chicago city" ;
     dcterms:identifier "fips:1714000" ;
     skos:altLabel "Chicago" ;
     ns1:name "Chicago city" .
 
-<https://w3id.org/caselinker/resource/location/clark-county-il> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/clark-county-il> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clark County" ;
     dcterms:identifier "fips:17023" ;
     ns1:name "Clark County" .
 
-<https://w3id.org/caselinker/resource/location/illinois-il> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/illinois-il> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Illinois" ;
     dcterms:identifier "fips:17" ;
     ns1:name "Illinois" .
 
-<https://w3id.org/caselinker/resource/location/illinois-il-17> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/illinois-il-17> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Illinois" ;
     dcterms:identifier "fips:17" ;
     skos:altLabel "Illinois’" ;
     ns1:name "Illinois" .
 
-<https://w3id.org/caselinker/resource/location/marshall-city-il> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/marshall-city-il> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Marshall city" ;
     dcterms:identifier "fips:1747163" ;
     skos:altLabel "Marshall" ;
     ns1:name "Marshall city" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/event/csam> a ns2:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/phase/sentenced> a ns6:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/event/csam> .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns6:DigitalSystemEntity,
         <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
     rdfs:label "social media" ;
     ns1:name "social media" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/event/csam> a ns5:CSAMIncident,
-        ns2:Event ;
-    rdfs:label "CSAMIncident · event/csam" ;
-    ns5:severityLevel 3 ;
-    ns5:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
-
 <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/phase/sentenced> a ns2:Phase,
-        ns4:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
-
-<https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/role/offender/1> a ns5:OffenderRole ;
-    rdfs:label "Offender Role · role/offender/1" ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/illinois_ag_2021_015/event/csam> .
 

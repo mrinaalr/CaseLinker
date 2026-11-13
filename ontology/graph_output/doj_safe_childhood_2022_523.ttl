@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -37,8 +37,11 @@
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/2> .
+    ns4:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/2>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/1/extraction-confidence> a ns5:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -52,63 +55,58 @@
     ns5:hasConfidence 0.65 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 29.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 29.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 10.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 10.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/victim/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/victim/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns5:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "CEOS" ;
-    ns2:name "CEOS" .
+    ns4:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns5:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
+    ns4:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns5:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns2:name "Federal Bureau of Investigation" .
+    ns4:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
+    ns4:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
         ns6:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
+    ns4:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/charge/1> a ns1:CSAM_Possession,
         ns1:CriminalCharge ;
@@ -166,7 +164,7 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/location/hazeltons-portland> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Hazelton’s Portland" ;
-    ns2:name "Hazelton’s Portland" .
+    ns4:name "Hazelton’s Portland" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/operation> a ns5:Event,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
@@ -189,34 +187,39 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maine" ;
     dcterms:identifier "fips:23" ;
-    ns2:name "Maine" .
+    ns4:name "Maine" .
 
 <https://w3id.org/caselinker/resource/location/portland-city-me> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Portland city" ;
     dcterms:identifier "fips:2360545" ;
     skos:altLabel "Portland" ;
-    ns2:name "Portland city" .
+    ns4:name "Portland city" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns4:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "wanted to see her “sexy body,” and asked her to send him pictures of her in her panties and without a shirt" ;
     dcterms:source <https://www.justice.gov/usao-me/pr/portland-man-sentenced-possessing-child-pornography> ;
-    ns2:description "wanted to see her “sexy body,” and asked her to send him pictures of her in her panties and without a shirt" .
+    ns4:description "wanted to see her “sexy body,” and asked her to send him pictures of her in her panties and without a shirt" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "wished he could have sex with her" ;
     dcterms:source <https://www.justice.gov/usao-me/pr/portland-man-sentenced-possessing-child-pornography> ;
-    ns2:description "wished he could have sex with her" .
+    ns4:description "wished he could have sex with her" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/phase/sentenced> a ns5:Phase,
+        ns1:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/phase/sentenced> a ns5:Phase,
-        ns1:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_523/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

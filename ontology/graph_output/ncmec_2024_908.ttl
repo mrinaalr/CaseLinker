@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -21,7 +21,10 @@
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_908/phase/charged> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_908/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_908/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_908/agency/woodward-police-department> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_908/agency/woodward-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -43,21 +46,16 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_908/agency/woodward-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Woodward Police Department" ;
     ns1:name "Woodward Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_908/event/trust-violation> a ns2:AuthorityAbuse,
-        ns2:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_908/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_908/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_908/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_908/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -65,25 +63,30 @@
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into jail" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_908/relationship/teacher> a ns2:CustodialRelationship,
-        ns2:Teacher ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_908/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/offender/1> ;
-    ns2:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_908/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_908/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_908/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

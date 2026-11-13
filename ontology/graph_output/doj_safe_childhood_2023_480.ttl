@@ -3,8 +3,8 @@
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns7: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -37,7 +37,9 @@
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/agency/mansfield-police-department> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/agency/mansfield-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/assessment/semantic/possession-csam> a ns7:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -92,14 +94,14 @@
     rdfs:label "Mansfield Police Department" ;
     ns1:name "Mansfield Police Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/2> a ns6:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/3> a ns6:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
@@ -107,25 +109,25 @@
         ns4:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/event/trust-violation> a ns6:AuthorityAbuse,
-        ns6:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns6:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/offender/1> ;
-    ns6:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/legal-proceeding> a ns7:Event,
         ns7:LegalEvent,
-        ns5:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/1>,
+    ns6:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/legal-step/pleaded-guilty> a ns7:Event,
         ns7:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:PleaBargaining ;
+        ns6:LegalProceeding,
+        ns6:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/location/boston> a ns7:PlaceLikeEntity,
@@ -148,15 +150,12 @@
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/relationship/teacher> a ns6:CustodialRelationship,
-        ns6:Teacher ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns6:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/victim/1> ;
-    ns6:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/offender/1> ;
-    ns6:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/victim/1> .
@@ -175,16 +174,19 @@
     skos:altLabel "Rollins’" ;
     ns1:name "Rollins CDP" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/phase/pleaded-guilty> a ns7:Phase,
-        ns5:PreTrialPhase ;
+        ns6:PreTrialPhase ;
     rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/event/possession> a ns2:CSAMIncident,
         ns7:Event ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_480/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

@@ -3,8 +3,8 @@
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -31,7 +31,9 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_302/legal-proceeding> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_302/agency/dekalb-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_302/agency/rockford-police-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_302/agency/rockford-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_302/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_302/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -45,12 +47,6 @@
     ns1:kindOfRelationship "Has_Role" ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_302/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_302/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns5:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns5:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns3:FederalAgency ;
@@ -68,12 +64,12 @@
     rdfs:label "Rockford Police Department" ;
     ns1:name "Rockford Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_302/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_302/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "unlawful possession of child pornography and one count of unlawful grooming" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_302/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns6:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_302/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -86,18 +82,18 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_302/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Winnebago County Jail; held at the DeKalb County Jail" ;
-    ns6:chargeCount "5"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_302/charge/1> .
+    ns5:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_302/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_302/location/dekalb-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Dekalb County" ;
     ns1:name "Dekalb County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_302/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_302/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/dekalb-city-il> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -121,10 +117,16 @@
     skos:altLabel "Rockford" ;
     ns1:name "Rockford city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_302/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns6:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_302/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_302/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

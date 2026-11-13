@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,9 +25,10 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_223/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_223/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_223/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/maryland-state-police-department> .
+        <https://w3id.org/caselinker/resource/agency/maryland-state-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_223/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_223/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -35,47 +36,47 @@
     ns4:concernsAgeQuality ns4:Age ;
     ns4:hasAgeInYears 21.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_223/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_223/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/ncmec_2023_223/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/ncmec_2023_223/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_223/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_223/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns5:name "Federal Bureau of Investigation" .
+    ns3:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns5:name "ICAC Task Force" .
+    ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/maryland-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns2:StateAgency ;
     rdfs:label "Maryland State Police Department" ;
-    ns5:name "Maryland State Police Department" .
+    ns3:name "Maryland State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_223/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_223/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child porn" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_223/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_223/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held without bond" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_223/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_223/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_223/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_223/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_223/event/possession> .
 
@@ -84,23 +85,23 @@
     rdfs:label "George County" ;
     dcterms:identifier "fips:28039" ;
     skos:altLabel "George's County" ;
-    ns5:name "George County" .
+    ns3:name "George County" .
 
 <https://w3id.org/caselinker/resource/location/suitland-cdp> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Suitland CDP" ;
     dcterms:identifier "fips:2475725" ;
     skos:altLabel "Suitland" ;
-    ns5:name "Suitland CDP" .
+    ns3:name "Suitland CDP" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_223/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_223/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_223/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_223/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

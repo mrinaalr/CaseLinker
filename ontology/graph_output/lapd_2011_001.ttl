@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/lapd_2011_001> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case lapd_2011_001" ;
     dcterms:created "2026-11-11T15:34:21.860703"^^xsd:dateTime ;
@@ -19,14 +19,16 @@
     dcterms:source <https://www.lapdonline.org/newsroom/lausd-teacher-arrested-for-distribution-of-child-pornography-detectives-seek-possible-additional-victims/>,
         "LAPD" ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/los-angeles-city-ca> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/lapd_2011_001/phase/arrested> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/lapd_2011_001/phase/arrested> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/distribution>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/lapd_2011_001/phase/arrested> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/lapd_2011_001/phase/arrested> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/lapd_2011_001/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/los-angeles-police-department-ca> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/los-angeles-police-department-ca> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/lapd_2011_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/lapd_2011_001/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/lapd_2011_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -49,21 +51,21 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/los-angeles-police-department-ca> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Los Angeles Police Department" ;
     dcterms:identifier "ori:CA0194200" ;
     ns1:name "Los Angeles Police Department" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/2> a ns5:CSAM_Distribution,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/2> a ns2:CSAM_Distribution,
+        ns2:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/trust-violation> a ns3:AuthorityAbuse,
@@ -74,17 +76,11 @@
 
 <https://w3id.org/caselinker/resource/case/lapd_2011_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/1>,
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/lapd_2011_001/charge/2> .
-
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/lapd_2011_001/relationship/teacher> a ns3:CustodialRelationship,
         ns3:Teacher ;
@@ -103,20 +99,26 @@
     skos:altLabel "Los Angeles" ;
     ns1:name "Los Angeles city" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/phase/arrested> a ns2:InitialPhase,
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/phase/arrested> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession> a ns2:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession> a ns4:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns2:severityLevel 3 .
+    ns4:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/role/victim/1> a ns2:VictimRole ;
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/lapd_2011_001/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/lapd_2011_001/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2011_001/event/possession> .
 

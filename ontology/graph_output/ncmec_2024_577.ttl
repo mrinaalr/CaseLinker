@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,9 +28,10 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_577/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_577/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_577/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_577/agency/boone-county-sheriffs-office> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_577/agency/boone-county-sheriffs-office> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_577/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_577/cybertip> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_577/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_577/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_577/admission/1/extraction-confidence> a ns4:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -46,12 +47,12 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_577/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_577/agency/boone-county-sheriffs-office> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Boone County Sheriff's Office" ;
     ns1:name "Boone County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_577/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_577/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_577/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -68,20 +69,17 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_577/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Callaway County Jail" ;
-    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_577/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_577/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_577/operation> a ns4:Event,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_577/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_577/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_577/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/callaway-county-mo> a ns4:PlaceLikeEntity,
@@ -114,6 +112,9 @@
     rdfs:label "downloading and viewing child pornography" ;
     dcterms:source <https://abc17news.com/news/2024/05/16/fulton-man-charged-with-child-porn-possession-failure-to-register-as-a-sex-offender/> ;
     ns1:description "downloading and viewing child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_577/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_577/phase/charged> a ns3:LegalProcessPhase,
         ns4:Phase ;

@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
+        ns2:EnduringEntity ;
     rdfs:label "Case south_florida_icac_2025_007" ;
     dcterms:created "2026-11-11T17:56:19.030154"^^xsd:dateTime ;
     dcterms:date "2025-09-16"^^xsd:date ;
@@ -33,51 +33,52 @@
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/legal-step/sentenced> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/palm-beach-county-sheriff-s-office-fl>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 30.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 30.0 .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1/has-role> a ns6:Relationship ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns6:isDirectional true ;
-    ns6:kindOfRelationship "Has_Role" ;
-    ns6:source <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> ;
-    ns6:target <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/doj> a ns4:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/doj> a ns2:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns6:name "U.S. Department of Justice" .
+    ns4:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns4:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/hsi> a ns2:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns6:name "Homeland Security Investigations" .
+    ns4:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns6:name "ICAC Task Force" .
+    ns4:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/palm-beach-county-sheriff-s-office-fl> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/palm-beach-county-sheriff-s-office-fl> a ns2:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Palm Beach County Sheriff's Office" ;
     dcterms:identifier "ori:FL0500000" ;
-    ns6:name "Palm Beach County Sheriff's Office" .
+    ns4:name "Palm Beach County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/usao> a ns2:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns6:name "U.S. Attorney's Office" .
+    ns4:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
@@ -87,20 +88,20 @@
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/distribution> a ns4:Event,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/distribution> a ns2:Event,
         ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/multi-jurisdiction> a ns4:Event,
-        ns2:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/multi-jurisdiction> a ns2:Event,
+        ns5:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/project-safe-childhood> a ns4:Event,
-        ns2:ProjectSafeChildhoodOperation ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/project-safe-childhood> a ns2:Event,
+        ns5:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
         ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
@@ -108,68 +109,68 @@
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/charge/2> ;
     ns3:resultsSentence <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/legal-step/sentenced> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/legal-step/sentenced> a ns2:Event,
+        ns2:LegalEvent,
         ns3:LegalProceeding,
         ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/location/west-palm-beach> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/location/west-palm-beach> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "West Palm Beach" ;
-    ns6:name "West Palm Beach" .
+    ns4:name "West Palm Beach" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/sentence/1> a ns3:CriminalSentence,
         ns3:PrisonSentence ;
     rdfs:label "20 years" ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1> .
+    ns2:assesses <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/farmington-city-mi> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/farmington-city-mi> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Farmington city" ;
     dcterms:identifier "fips:2627380" ;
     skos:altLabel "Farmington" ;
-    ns6:name "Farmington city" .
+    ns4:name "Farmington city" .
 
-<https://w3id.org/caselinker/resource/location/florida-fl> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/florida-fl> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     skos:altLabel "Fla." ;
-    ns6:name "Florida" .
+    ns4:name "Florida" .
 
-<https://w3id.org/caselinker/resource/location/miami-city-fl> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/miami-city-fl> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Miami city" ;
     dcterms:identifier "fips:1245000" ;
     skos:altLabel "Miami" ;
-    ns6:name "Miami city" .
+    ns4:name "Miami city" .
 
-<https://w3id.org/caselinker/resource/location/michigan-mi> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/michigan-mi> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Michigan" ;
     dcterms:identifier "fips:26" ;
-    ns6:name "Michigan" .
+    ns4:name "Michigan" .
 
-<https://w3id.org/caselinker/resource/location/palm-beach-county-fl> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/palm-beach-county-fl> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Palm Beach County" ;
     dcterms:identifier "fips:12099" ;
-    ns6:name "Palm Beach County" .
+    ns4:name "Palm Beach County" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/csam> a ns1:CSAMIncident,
-        ns4:Event ;
+        ns2:Event ;
     rdfs:label "CSAMIncident · event/csam" ;
     ns1:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/phase/sentenced> a ns4:Phase,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/phase/sentenced> a ns2:Phase,
         ns3:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/event/csam> .
+
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2025_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -35,11 +35,13 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/legal-step/pleaded-guilty>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/agency/frederick-county-sheriffs-office> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/agency/frederick-county-sheriffs-office> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -47,42 +49,37 @@
     ns5:concernsAgeQuality ns5:Age ;
     ns5:hasAgeInYears 41.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns4:name "social media" .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "CEOS" ;
-    ns4:name "CEOS" .
+    ns2:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns4:name "U.S. Department of Justice" .
+    ns2:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns4:name "Homeland Security Investigations" .
+    ns2:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns4:name "U.S. Attorney's Office" .
+    ns2:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/agency/frederick-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Frederick County Sheriff's Office" ;
-    ns4:name "Frederick County Sheriff's Office" .
+    ns2:name "Frederick County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
@@ -108,7 +105,7 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/event/production> a <https://cacontology.projectvic.org/core#Event>,
@@ -116,7 +113,7 @@
     rdfs:label "Production Offense · event/production" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/event/project-safe-childhood> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:ProjectSafeChildhoodOperation ;
+        ns4:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
@@ -138,7 +135,7 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns4:name "United States" .
+    ns2:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
@@ -152,44 +149,49 @@
     rdfs:label "Baltimore city" ;
     dcterms:identifier "fips:2404000" ;
     skos:altLabel "Baltimore" ;
-    ns4:name "Baltimore city" .
+    ns2:name "Baltimore city" .
 
 <https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
-    ns4:name "Florida" .
+    ns2:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/frederick-county-md> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Frederick County" ;
     dcterms:identifier "fips:24021" ;
-    ns4:name "Frederick County" .
+    ns2:name "Frederick County" .
 
 <https://w3id.org/caselinker/resource/location/maryland-md> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maryland" ;
     dcterms:identifier "fips:24" ;
-    ns4:name "Maryland" .
+    ns2:name "Maryland" .
 
 <https://w3id.org/caselinker/resource/location/miami-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Miami city" ;
     dcterms:identifier "fips:1245000" ;
     skos:altLabel "Miami" ;
-    ns4:name "Miami city" .
+    ns2:name "Miami city" .
 
 <https://w3id.org/caselinker/resource/location/new-market-town-md> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New Market town" ;
     dcterms:identifier "fips:2455650" ;
     skos:altLabel "New Market" ;
-    ns4:name "New Market town" .
+    ns2:name "New Market town" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
         ns3:PreTrialPhase ;
     rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2021_024/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
