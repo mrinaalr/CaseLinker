@@ -313,7 +313,7 @@ extracted_features:
 document_version_id, extraction_run_id
 ```
 
-**Two databases, one schema.** [`storage.py`](src/Storage%20Layer/storage.py) (SQLite) and [`storage_postgres.py`](src/Storage%20Layer/storage_postgres.py) (psycopg2 pool) both call `apply_*_schema` from the provenance, assertion and fingerprint modules. `DATABASE_URL` selects Postgres; `CASELINKER_DB` points SQLite elsewhere. [`test_storage_parity.py`](tests/test_storage_parity.py) keeps them aligned.
+**Two databases, one schema.** [`storage.py`](src/Storage%20Layer/storage.py) (SQLite) and [`storage_postgres.py`](src/Storage%20Layer/storage_postgres.py) (psycopg2 pool) both call `apply_*_schema` from the provenance, assertion and fingerprint modules. `DATABASE_URL` selects Postgres; `CASELINKER_DB` points SQLite elsewhere. [`test_storage_parity.py`](tests/storage/test_storage_parity.py) keeps them aligned.
 
 **Reproduce the corpus.** `GET /api/corpus` streams every table as one JSON object (trusted key); [`scripts/run/import_corpus_from_api.py`](scripts/run/import_corpus_from_api.py) rebuilds a local SQLite from it. Or ingest PDFs yourself.
 
@@ -381,7 +381,7 @@ flowchart LR
   inv -.->|"dcterms:provenance"| prov
 ```
 
-**Pipeline.** [`features_to_cac.py`](ontology/features_to_cac.py) `CaseToCAC.map_case` turns a case dict into an rdflib dataset (platforms, topics, roles, severity, investigation type, prosecution, agencies, locations, technology, NLP features, admissions). [`graph_generate.py`](ontology/graph_generate.py) batch-writes `{case_id}.ttl` and `.jsonld` under `ontology/graph_output/` and, beside each, `{case_id}.provenance.ttl` from [`provenance_export.py`](ontology/provenance_export.py). pySHACL validates against the core shapes; a `done.txt` lets a stopped run continue.
+**Pipeline.** [`features_to_cac.py`](ontology/pipeline/features_to_cac.py) `CaseToCAC.map_case` turns a case dict into an rdflib dataset (platforms, topics, roles, severity, investigation type, prosecution, agencies, locations, technology, NLP features, admissions). [`graph_generate.py`](ontology/pipeline/graph_generate.py) batch-writes `{case_id}.ttl` and `.jsonld` under `ontology/graph_output/` and, beside each, `{case_id}.provenance.ttl` from [`provenance_export.py`](ontology/pipeline/provenance_export.py). pySHACL validates against the core shapes; a `done.txt` lets a stopped run continue.
 
 **Provenance graphs.** Every assertion is a W3C Web Annotation and a CAC `AssessmentResult` with `TextPositionSelector` and `TextQuoteSelector`, confidence, method and issue time. Runs and methods are PROV-O activities and software agents; each resolution records the assertions it derived from. The vocabulary ([`caselinker-provenance.ttl`](ontology/caselinker-provenance.ttl), version 3.1) adds `evidenceFamily`, `resolutionStatus`, `ruleSetVersion`, grounding terms (`fipsCode`, `oriCode`, `groundStatus`, registry versions). [`caselinker-provenance-shapes.ttl`](ontology/caselinker-provenance-shapes.ttl) rejects a graph missing any of them.
 
@@ -390,12 +390,12 @@ flowchart LR
 | Pool | Ids | Folder | Used by |
 |---|---|---|---|
 | Full corpus (staging) | all DB ids | `graph_output/*.ttl` | Oxigraph, `/patterns` find and load |
-| Universe | [`universe_ids.txt`](ontology/universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` Universe |
-| Big Bang | [`big_bang_ids.txt`](ontology/big_bang_ids.txt) (968) | `graph_output/big_bang/` | bridge-dense subset |
-| Analysis | [`analysis_ids.txt`](ontology/analysis_ids.txt) (124) | `graph_output/analysis/` | MCP exports, research cohorts |
-| Compare | [`selected_200_ids.txt`](ontology/selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
+| Universe | [`universe_ids.txt`](ontology/pools/universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` Universe |
+| Big Bang | [`big_bang_ids.txt`](ontology/pools/big_bang_ids.txt) (968) | `graph_output/big_bang/` | bridge-dense subset |
+| Analysis | [`analysis_ids.txt`](ontology/pools/analysis_ids.txt) (124) | `graph_output/analysis/` | MCP exports, research cohorts |
+| Compare | [`selected_200_ids.txt`](ontology/pools/selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
 
-**Oxigraph.** [`oxigraph_rebuild.py`](ontology/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis > pacer), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/rebuild_oxigraph.py`](scripts/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs modeled with the CASE-UCO SDK are named graphs `urn:pacer:kg:…`, written by [`scripts/load_pacer_jsonld.py`](scripts/load_pacer_jsonld.py) `--output` and loaded in the same bulk load through `--extra-nq`.
+**Oxigraph.** [`oxigraph_rebuild.py`](ontology/pipeline/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis > pacer), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/oxigraph/rebuild_oxigraph.py`](scripts/oxigraph/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs modeled with the CASE-UCO SDK are named graphs `urn:pacer:kg:…`, written by [`scripts/oxigraph/load_pacer_jsonld.py`](scripts/oxigraph/load_pacer_jsonld.py) `--output` and loaded in the same bulk load through `--extra-nq`.
 
 **Public SPARQL** ([`run/sparql_proxy.py`](run/sparql_proxy.py)). SPARQL 1.1 Query only, classified with rdflib's parser rather than regex. Update and `SERVICE` are rejected; a missing outer `LIMIT` becomes 1000 and anything above 10,000 is a 400. 30 requests per minute per IP, 32 s store timeout. While a rebuild holds the lock ([`sparql_rebuild_lock.py`](run/sparql_rebuild_lock.py)) the endpoint returns 503. When the Railway store is asleep, [`oxigraph_wake.py`](run/oxigraph_wake.py) retries once and then answers HTTP 200 with `status: "waking"`, `retry: true` and `Retry-After`, so agents never see a raw 502.
 
@@ -543,9 +543,9 @@ Runbook for a corpus change, from the repo root with `.venv` active:
 ```bash
 SKIP_PRECOMPUTE_CLUSTERS=1 ./scripts/run/ingest_all_pdfs.sh     # or python3 src/main.py <pdf>
 python3 scripts/run/precompute_clusters.py                       # slim caches + Redis
-python3 -c "from ontology.graph_generate import generate_graphs; generate_graphs()"   # TTL, JSON-LD, provenance
-python3 scripts/load_pacer_jsonld.py --output pacer.nq           # urn:pacer:kg graphs
-python3 scripts/rebuild_oxigraph.py --no-load --output caselinker.nq.gz   # then wipe the volume and load from the web service (ontology/docs/SPARQL.md#reloading-the-store)
+python3 -c "from ontology.pipeline.graph_generate import generate_graphs; generate_graphs()"   # TTL, JSON-LD, provenance
+python3 scripts/oxigraph/load_pacer_jsonld.py --output pacer.nq           # urn:pacer:kg graphs
+python3 scripts/oxigraph/rebuild_oxigraph.py --no-load --output caselinker.nq.gz   # then wipe the volume and load from the web service (ontology/docs/SPARQL.md#reloading-the-store)
 ```
 
 Locally, `python3 run/main.py` serves on port 8000, `scripts/run/local_oxigraph.sh` runs a read-only store from an N-Quads backup, and `scripts/run/reresolve_assertions.py` re-votes stored assertions under a new rule set without touching the PDFs.
@@ -569,9 +569,9 @@ Every claim in a PR is either verified (ran it) or asserted (read it), and label
 
 | What | Where |
 |---|---|
-| Unit and integration tests, 61 files | [`tests/`](tests/): extraction end to end from real excerpts ([`test_field_assertions.py`](tests/test_field_assertions.py)), SQLite/Postgres parity, provenance, fingerprints, SPARQL proxy policy, Oxigraph rebuild, dereferencing, grounding, collector fetchers, SHACL canary that must fail |
-| Live checks | `CASELINKER_SPARQL_LIVE=1 pytest tests/test_sparql_live.py -q` |
-| Phase 3 paired samples | Two 200-case samples (development seed 20261017, holdout seed 20261018), one seat per source, frozen ids and per-case judgments under [`scripts/verify/`](scripts/verify/); [`phase3_paired_results.py`](scripts/verify/phase3_paired_results.py) adds Wilson intervals |
+| Unit and integration tests, 83 files in 9 folders | [`tests/`](tests/) ([map](tests/README.md)): extraction end to end from real excerpts ([`test_field_assertions.py`](tests/extraction/test_field_assertions.py)), SQLite/Postgres parity, provenance, fingerprints, SPARQL proxy policy, Oxigraph rebuild, dereferencing, grounding, collector fetchers, SHACL canary that must fail |
+| Live checks | `CASELINKER_SPARQL_LIVE=1 pytest tests/api/test_sparql_live.py -q` |
+| Phase 3 paired samples | Two 200-case samples (development seed 20261017, holdout seed 20261018), one seat per source, frozen ids and per-case judgments under [`scripts/verify/`](scripts/verify/); [`phase3_paired_results.py`](scripts/verify/phase_3/phase3_paired_results.py) adds Wilson intervals |
 | Grounding precision | Frozen location and agency samples and holdouts with reports in [`scripts/verify/extraction/`](scripts/verify/extraction/); hint sources under 95% precision are demoted by policy file |
 | Paper claims | [`scripts/verify/paper/`](scripts/verify/paper/): a registry of 64 claims from the Affordances for Harm paper, snapshot manifests and drift modes (`verify_paper.py`) |
 | Corpus hygiene | [`verify_cac.py`](scripts/verify/verify_cac.py) before ingest, [`validate_case_uniqueness.py`](scripts/verify/validate_case_uniqueness.py), MCP duplicate audit tools |
@@ -601,8 +601,10 @@ CaseLinker/
 │                                      sparql_rebuild_lock.py, redis_cache.py, corpus_export.py
 ├── caselinker_mcp/                    server.py, client.py, sparql_tool.py, facet_local.py,
 │                                      public_records.py, collector_tools.py, clean_and_validate.py
-├── ontology/                          features_to_cac.py, graph_generate.py, provenance_export.py,
-│   │                                  oxigraph_rebuild.py, cohort_sparql.py, select_cases.py, big_bang.py
+├── ontology/
+│   ├── pipeline/                      features_to_cac.py, graph_generate.py, provenance_export.py,
+│   │                                  shacl_validation.py, oxigraph_rebuild.py, cohort_sparql.py
+│   ├── pools/                         *_ids.txt, select_cases.py, big_bang.py, eval_big_bang_graphs.py
 │   ├── vendor/                        pinned CAC, UCO, CASE, gUFO, OA copies (CAC_ONTOLOGY_VERSION)
 │   ├── caselinker-provenance.ttl      provenance vocabulary and shapes
 │   ├── graph_output/                  staging + universe/ big_bang/ analysis/ (TTL, JSON-LD, provenance)
@@ -612,17 +614,18 @@ CaseLinker/
 ├── state_machines/                    iris.py, sparql_queries.py, trajectory.py, bellman.py,
 │                                      compute_lstar.py, lifecycle_api.py, graphs/, data/
 ├── collector/                         press and court collection suite, pacer/
-├── scripts/
+├── scripts/                           README.md: what each script does and writes
 │   ├── run/                           ingest_all_pdfs.sh, import_corpus_from_api.py, precompute_clusters.py,
 │   │                                  reresolve_assertions.py, llm_residue_pass.py, train_*.py, backfill_*.py
-│   ├── verify/                        extraction precision, phase-3 paired results, paper claims, verify_cac.py
-│   ├── stats/  explore/  validation/
-│   ├── rebuild_oxigraph.py  load_pacer_jsonld.py  warm_oxigraph.py
+│   ├── verify/                        extraction/ precision + holdouts, phase_3/, paper/ claims, verify_cac.py
+│   ├── oxigraph/                      rebuild_oxigraph.py, load_pacer_jsonld.py, warm_oxigraph.py
+│   ├── stats/  ontology_audit/
 ├── visualization/                     11 HTML pages, assets/ (v4 shell, D3 viewers), questions/
 ├── data/                              case_studies.json, gazetteer/, agency_registry/
 ├── config/                            victim_age_overrides.json (human verdicts)
 ├── models/                            triage_bundle.joblib (tracked), translation and student bundles (local)
-├── tests/
+├── tests/                             collection/ extraction/ grounding/ graphs/ storage/ api/ mcp/ privacy/ research/
+├── extensions/                        rehearsal-only readers (restitution/)
 ├── Procfile  setup.sh  requirements.txt  requirements-ml.txt  config.py  .mcp.json
 └── README.md  ARCHITECTURE.md  search.md  triage.md
 ```

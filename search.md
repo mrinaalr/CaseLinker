@@ -101,7 +101,7 @@ Catalog: `caselinker_mcp/tool_registry.md`.
 Directions worth exploring (not committed product plans):
 
 1. **Cross-walk facet cohorts ↔ SPARQL / Patterns** — shipped for the Search dialog.  
-   Visible cohorts copy a SPARQL query (`POST /api/cohort-sparql`: inline `VALUES` of named graphs `…/resource/case/{id}`, one row per case with source, platforms, agencies, phase, steps, charges, and sentences) or open `/patterns?cohort=search` with the same ids (auto-merge when the set has at most 8 cases; otherwise Find cases + Load on graph). Builder: `ontology/cohort_sparql.py`. Small cohorts stay behind the existing id gate, so this path does not reveal them. The facet path itself is not replayed in SPARQL; those tags live on the case rows.
+   Visible cohorts copy a SPARQL query (`POST /api/cohort-sparql`: inline `VALUES` of named graphs `…/resource/case/{id}`, one row per case with source, platforms, agencies, phase, steps, charges, and sentences) or open `/patterns?cohort=search` with the same ids (auto-merge when the set has at most 8 cases; otherwise Find cases + Load on graph). Builder: `ontology/pipeline/cohort_sparql.py`. Small cohorts stay behind the existing id gate, so this path does not reveal them. The facet path itself is not replayed in SPARQL; those tags live on the case rows.
 
 2. **Guided NL → facet path (not full-text)**  
    Map short analyst phrases (“Discord + production + 2024”) onto prune constraints or a path, keeping mosaic defaults. Distinct from `/api/llm/chat` SQL chat and from Elastic-style keyword search.

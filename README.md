@@ -292,7 +292,7 @@ A deterministic mapping layer translates each case's extracted features into CAC
 **Pipeline flow**:
 
 1. **CaseLinker case features** — already extracted (platforms, topics, investigation signals, prosecution outcomes).
-2. **Mapping layer** — deterministic translation to CAC entities and relationships (`ontology/graph_generate.py`).
+2. **Mapping layer** — deterministic translation to CAC entities and relationships (`ontology/pipeline/graph_generate.py`).
 3. **RDF emission** — per-case graphs as Turtle and JSON-LD under `ontology/graph_output/`.
 4. **SHACL validation** — only conformant graphs enter the merged corpus.
 5. **SPARQL-queryable corpus** — canonical per-case graphs are loaded into Oxigraph (named graph per case; union default graph) and served at `GET|POST /sparql`.
@@ -369,12 +369,12 @@ CaseLinker/
 │   ├── redis_cache.py                # Optional Redis caching (production)
 │   └── auth.py                       # Access gates / keys for sensitive views
 ├── collector/                        # press → PDF, plus collector/pacer/ court fetch
-├── scripts/
-│   ├── rebuild_oxigraph.py           # Oxigraph bulk reload into an empty store
+├── scripts/                          # README.md: what each script does and writes
+│   ├── oxigraph/                     # Oxigraph bulk reload, PACER N-Quads, cache warm
 │   ├── stats/                        # Corpus statistics scripts
 │   ├── verify/                       # Claims, uniqueness, ICAC TF alignment, triage tests
 │   └── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
-├── visualization/                    # Static HTML (served by run/main.py)
+├── visualization/                    # Static HTML (served by run/main.py); README.md maps pages → routes → APIs
 │   ├── assets/                       # v4.css, v4.js (shared shell), caselinker-api.js, page scripts, cover.png
 │   ├── home.html                     # /
 │   ├── analysis.html                 # /analysis (question → SPARQL → answers → evidence)
@@ -393,9 +393,8 @@ CaseLinker/
 │   ├── docs/SPARQL.md                # Public SPARQL 1.1 API guide
 │   ├── w3id-caselinker.htaccess      # Submit to perma-id as ids/caselinker/.htaccess
 │   ├── caselinker-provenance.ttl     # Provenance vocabulary (w3id ns)
-│   ├── features_to_cac.py            # Case features → CAC RDF
-│   ├── graph_generate.py             # Batch TTL / JSON-LD
-│   ├── oxigraph_rebuild.py           # Canonical TTL → named-graph N-Quads
+│   ├── pipeline/                     # features_to_cac.py (case → CAC RDF), graph_generate.py, oxigraph_rebuild.py
+│   ├── pools/                        # *_ids.txt case pools + the scripts that select them
 │   ├── platform_affordance_evidence/ q2/ q3/  # Research evidence
 │   ├── PACER/                        # PACER graphs + BULK_FOLDER (fetchers live in collector/pacer/)
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
@@ -411,6 +410,8 @@ CaseLinker/
 │   ├── public_records.py             # DOJ API + CourtListener/RECAP READ
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
 │   └── tool_registry.md              # Full tool catalog (READ vs WRITE)
+├── tests/                            # 9 area folders; README.md: how to run, gate tier
+├── extensions/                       # Rehearsal-only readers for run_gate (restitution/)
 ├── models/                           # triage_bundle.joblib (optional; /api/triage-live)
 ├── data/                             # case_studies.json (served by /api/case-studies)
 ├── setup.sh
@@ -544,7 +545,7 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 
 ## Deployment
 
-CaseLinker can be deployed to cloud platforms for public access. The app includes a `Procfile` for deployment to Railway, Heroku, and similar platforms. The SPARQL proxy reads `OXIGRAPH_URL` (private Oxigraph base URL). After regenerating case graphs, reload the store with `python3 scripts/rebuild_oxigraph.py` (wholesale overwrite, not incremental). Optional Redis (`REDIS_URL`) backs the server caches (facet trees, merged graphs, source aggregates); without it the app caches in memory.
+CaseLinker can be deployed to cloud platforms for public access. The app includes a `Procfile` for deployment to Railway, Heroku, and similar platforms. The SPARQL proxy reads `OXIGRAPH_URL` (private Oxigraph base URL). After regenerating case graphs, reload the store with `python3 scripts/oxigraph/rebuild_oxigraph.py` (wholesale overwrite, not incremental). Optional Redis (`REDIS_URL`) backs the server caches (facet trees, merged graphs, source aggregates); without it the app caches in memory.
 
 
 ## Sources and Ethics

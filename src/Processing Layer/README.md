@@ -63,7 +63,7 @@ A wrong final is worse than review.
 
 Per-method rows are not copied into the JSON blob. They are `field_assertions`, `field_resolutions`, and `review_queue`. MCP reads them with `get_case_assertions` and `get_field_disagreements`.
 
-The CAC mapper (`ontology/features_to_cac.py`) still reads those legacy columns. A regenerated graph picks up cleaner ages, sentences, and dates. It does not yet draw a decoy role or an assertion edge.
+The CAC mapper (`ontology/pipeline/features_to_cac.py`) still reads those legacy columns. A regenerated graph picks up cleaner ages, sentences, and dates. It does not yet draw a decoy role or an assertion edge.
 
 ## LLM
 
@@ -126,4 +126,4 @@ Every PDF in the repo root, models kept warm, cluster rebuild skipped:
 
 `--no-aggregate` skips NCMEC and the large DOJ compilations. LLM stays off for that command unless `CASELINKER_LLM=1` is already set. Leave it off for a corpus ingest. Turn it on for a residue pass after deterministic resolution.
 
-Tests: `tests/test_field_assertions.py`. It runs real excerpts through extract → resolve → the legacy fields.
+Tests: `tests/extraction/test_field_assertions.py`. It runs real excerpts through extract → resolve → the legacy fields.
