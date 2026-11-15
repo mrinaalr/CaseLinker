@@ -1,0 +1,3168 @@
+#!/usr/bin/env python3
+"""
+CaseLinker → CAC Ontology mapper.
+
+Transforms a CaseLinker case dict (as returned by CaseStorage.get_case()) into a
+typed RDF knowledge graph using the CAC Ontology v3.0.0 class vocabulary.
+
+Uses rdflib 7.x with manual CAC namespace bindings.
+(case-uco and case-uco-cac are not published on PyPI as of May 2026.)
+
+Entry points
+------------
+map_case(case_dict)
+    Map one case dict → (ConjunctiveGraph, list[str] warnings)
+
+export_case(case_id, output_path, db_url=None)
+    Full pipeline: load from DB → map → validate → write JSON-LD + Turtle.
+
+validate(graph)
+    Run pyshacl against cacontology-core-shapes.ttl
+
+CLI
+---
+python features_to_cac.py                  # runs test fixture azicac_2011_006
+python features_to_cac.py <case_id>        # loads from DB (DATABASE_URL must be set)
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+import re
+import sys
+from decimal import Decimal
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
+from urllib.parse import quote
+
+from rdflib import (
+    XSD,
+    Dataset,
+    Graph,
+    Literal,
+    Namespace,
+    RDF,
+    RDFS,
+    OWL,
+    URIRef,
+)
+# rdflib 7.x: ConjunctiveGraph is deprecated; Dataset is the replacement.
+# Keep the alias for backward-compatibility in type hints.
+ConjunctiveGraph = Dataset
+from rdflib.namespace import DCTERMS, SKOS
+
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+
+_THIS_DIR = Path(__file__).parent.parent  # ontology/
+_REPO_ROOT = _THIS_DIR.parent
+_OUTPUT_DIR = _THIS_DIR / "output"
+_TEST_OUTPUT_DIR = _THIS_DIR / "graph_output"
+_SHACL_NS = Namespace("http://www.w3.org/ns/shacl#")
+_VENDOR_DIR = _THIS_DIR / "vendor"
+_CORE_SHAPES_FILENAME = "cacontology-core-shapes.ttl"
+
+
+def get_cac_ontology_dir() -> Path:
+    """Resolve the CAC Ontology TTL directory.
+
+    Precedence:
+      1. ``CAC_ONTOLOGY_DIR`` environment variable (absolute or ``~`` path)
+      2. The pinned copy in ``ontology/vendor/cac-3.1.0``
+
+    See ``CAC_ONTOLOGY_VERSION`` for the upstream commit of every vendored file.
+    """
+    env = os.environ.get("CAC_ONTOLOGY_DIR", "").strip()
+    if env:
+        return Path(env).expanduser().resolve()
+    return (_VENDOR_DIR / "cac-3.1.0").resolve()
+
+
+def get_core_shapes_path() -> Path:
+    """Path to ``cacontology-core-shapes.ttl`` under :func:`get_cac_ontology_dir`."""
+    return get_cac_ontology_dir() / _CORE_SHAPES_FILENAME
+
+
+def load_core_shapes_graph() -> Tuple[Graph, int]:
+    """Parse core SHACL shapes; raise if missing or empty.
+
+    Returns
+    -------
+    (shapes_graph, shape_count)
+        ``shape_count`` is the number of ``sh:NodeShape`` + ``sh:PropertyShape``
+        subjects. Never returns a zero-shape graph.
+    """
+    shapes_path = get_core_shapes_path()
+    if not shapes_path.is_file():
+        raise FileNotFoundError(
+            f"SHACL shapes file not found at {shapes_path}. "
+            f"Set CAC_ONTOLOGY_DIR to a CAC Ontology ontology/ directory, "
+            f"or ensure pinned copies exist under {_VENDOR_DIR}."
+        )
+
+    shapes_graph = Graph()
+    shapes_graph.parse(str(shapes_path), format="turtle")
+    shape_iris = set(shapes_graph.subjects(RDF.type, _SHACL_NS.NodeShape)) | set(
+        shapes_graph.subjects(RDF.type, _SHACL_NS.PropertyShape)
+    )
+    shape_count = len(shape_iris)
+    if shape_count == 0:
+        raise RuntimeError(
+            f"SHACL shapes graph loaded 0 NodeShape/PropertyShape subjects from "
+            f"{shapes_path} ({len(shapes_graph)} triples). Refusing to validate "
+            f"(empty shapes would report conforms=True)."
+        )
+    return shapes_graph, shape_count
+
+
+# Back-compat for callers/tests that imported the old constant.
+_CAC_ONTOLOGY_DIR = get_cac_ontology_dir()
+
+# ---------------------------------------------------------------------------
+# CAC / UCO Namespaces
+# ---------------------------------------------------------------------------
+
+BASE = Namespace("https://w3id.org/caselinker/resource/")
+
+CAC = Namespace("https://cacontology.projectvic.org#")
+CAC_CORE = Namespace("https://cacontology.projectvic.org/core#")
+CAC_GROOMING = Namespace("https://cacontology.projectvic.org/grooming#")
+CAC_CUSTODIAL = Namespace("https://cacontology.projectvic.org/custodial#")
+CAC_PLATFORMS = Namespace("https://cacontology.projectvic.org/platforms#")
+CAC_LEGAL = Namespace("https://cacontology.projectvic.org/legal-outcomes#")
+CAC_SEXTORTION = Namespace("https://cacontology.projectvic.org/sextortion#")
+CAC_DETECTION = Namespace("https://cacontology.projectvic.org/detection#")
+CAC_PRODUCTION = Namespace("https://cacontology.projectvic.org/production#")
+CAC_TASKFORCE = Namespace("https://cacontology.projectvic.org/taskforce#")
+CAC_NCMEC = Namespace("https://cacontology.projectvic.org/us/ncmec#")
+CAC_MULTI = Namespace("https://cacontology.projectvic.org/multi-jurisdiction#")
+CAC_AI = Namespace("https://cacontology.projectvic.org/ai-csam#")
+CAC_USA_FEDERAL = Namespace("https://cacontology.projectvic.org/usa-federal-law#")
+CAC_UNDERCOVER = Namespace("https://cacontology.projectvic.org/undercover#")
+CAC_HOTLINES = Namespace("https://cacontology.projectvic.org/hotlines#")
+CAC_TEMPORAL = Namespace("https://cacontology.projectvic.org/temporal#")
+CAC_REGISTRY = Namespace("https://cacontology.projectvic.org/sex-offender-registry#")
+
+# Every term below is declared in ontology/vendor (tests/graphs/test_term_resolution.py).
+# CaseLinker mints no vocabulary of its own in case graphs; grounding and
+# extraction facts live in the provenance graph (caselinker-provenance.ttl).
+
+UCO_CORE = Namespace("https://ontology.unifiedcyberontology.org/uco/core/")
+UCO_ACTION = Namespace("https://ontology.unifiedcyberontology.org/uco/action/")
+UCO_IDENTITY = Namespace("https://ontology.unifiedcyberontology.org/uco/identity/")
+UCO_ROLE = Namespace("https://ontology.unifiedcyberontology.org/uco/role/")
+UCO_LOCATION = Namespace("https://ontology.unifiedcyberontology.org/uco/location/")
+GUFO = Namespace("http://purl.org/nemo/gufo#")
+
+# Named graph URIs
+GRAPH_DETERMINISTIC = BASE["graphs/deterministic"]
+GRAPH_NLP = BASE["graphs/nlp"]
+
+# ---------------------------------------------------------------------------
+# Slug helper
+# ---------------------------------------------------------------------------
+
+def _slug(text: str) -> str:
+    """Convert a string to a URL-safe slug."""
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_]+", "-", text)
+    text = text.strip("-")
+    return text or "unknown"
+
+
+def _source_url_term(raw_url: str) -> Union[URIRef, Literal]:
+    """Percent-encode a press-release URL so it is a legal Turtle IRI.
+
+    Ingestion often stores PDF filenames with spaces. RDFLib refuses to
+    serialize those as IRIs. If encoding still fails, fall back to a literal
+    so the case graph still writes.
+    """
+    raw = str(raw_url).strip()
+    try:
+        return URIRef(quote(raw, safe=":/?#[]@!$&'()*+,;=%"))
+    except Exception:  # pragma: no cover — last-resort fallback
+        return Literal(raw)
+
+
+def _case_bool_flag(case: Dict[str, Any], key: str) -> bool:
+    """Read a boolean feature from a hoisted case dict (or extracted_features fallback)."""
+    val = case.get(key)
+    if val is None:
+        ef = case.get("extracted_features")
+        if isinstance(ef, str):
+            try:
+                ef = json.loads(ef)
+            except (json.JSONDecodeError, TypeError):
+                ef = None
+        if isinstance(ef, dict):
+            val = ef.get(key)
+    if val is True or val == 1:
+        return True
+    if isinstance(val, str) and val.strip().lower() in ("true", "1", "yes"):
+        return True
+    return False
+
+
+def _case_feature(case: Dict[str, Any], key: str, default: Any = None) -> Any:
+    """Read a feature from a hoisted case dict (or extracted_features fallback)."""
+    val = case.get(key)
+    if val is not None:
+        return val
+    ef = case.get("extracted_features")
+    if isinstance(ef, str):
+        try:
+            ef = json.loads(ef)
+        except (json.JSONDecodeError, TypeError):
+            ef = None
+    if isinstance(ef, dict) and key in ef:
+        return ef.get(key, default)
+    return default
+
+
+_CASE_RAW_KEYS = frozenset({"id", "raw_data", "case_text", "source_url", "assertions", "resolutions"})
+
+
+def _mask_case_people(case: Dict[str, Any]) -> Dict[str, Any]:
+    """Copy of a case whose features carry no person names (graphs never hold them)."""
+    import importlib.util
+
+    if "people_mask" not in sys.modules:
+        path = Path(__file__).resolve().parents[2] / "src" / "Processing Layer" / "field_assertions" / "people_mask.py"
+        spec = importlib.util.spec_from_file_location("people_mask", path)
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        sys.modules["people_mask"] = mod
+        spec.loader.exec_module(mod)
+    pk = sys.modules["people_mask"]
+
+    raw = case.get("raw_data")
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw)
+        except (json.JSONDecodeError, TypeError):
+            raw = None
+    text = case.get("case_text") or (raw.get("case_text") if isinstance(raw, dict) else "") or ""
+    out = dict(case)
+    hoisted = {k: v for k, v in case.items() if k not in _CASE_RAW_KEYS and k != "extracted_features"}
+    out.update(pk.mask_feature_strings(hoisted, text))
+    ef = case.get("extracted_features")
+    if isinstance(ef, str):
+        try:
+            ef = json.loads(ef)
+        except (json.JSONDecodeError, TypeError):
+            ef = None
+    if isinstance(ef, dict):
+        out["extracted_features"] = pk.mask_feature_strings(ef, text or str(ef.get("case_text") or ""))
+    return out
+
+
+# Statuses after which the accused is convicted: a guilty plea, a verdict or a sentence.
+_CONVICTED_STATUSES = frozenset({"pleaded_guilty", "pled_guilty", "convicted", "sentenced"})
+
+
+def _prosecution_record(case: Dict[str, Any]) -> Dict[str, Any]:
+    """The case's prosecution facts, or {} when the release reports none."""
+    record = case.get("prosecution_outcome")
+    if not record and case.get("prosecution_outcomes"):
+        record = (case["prosecution_outcomes"] or [None])[0]
+    if not isinstance(record, dict):
+        return {}
+    has_facts = any(
+        record.get(k) for k in ("booking_status", "status", "charges", "sentences", "jail")
+    )
+    return record if has_facts else {}
+
+
+def _date_at_stated_precision(value: Any) -> Optional[Literal]:
+    """A case date as ``xsd:date`` / ``xsd:gYearMonth`` / ``xsd:gYear``, never more precise than stored.
+
+    Ingest pads a month-only batch date to ``YYYY-MM-01`` (``merge_processing``
+    replaces it when the release states a day), so a stored ``-01`` day is read
+    as month precision. No day or time is invented (#23).
+    """
+    if value is None:
+        return None
+    text = str(value).strip()
+    if re.fullmatch(r"\d{4}", text):
+        return Literal(text, datatype=XSD.gYear)
+    m = re.fullmatch(r"(\d{4}-\d{2})(?:-(\d{2}))?", text[:10]) if len(text) >= 7 else None
+    if not m:
+        return None
+    if m.group(2) and m.group(2) != "01":
+        return Literal(text[:10], datatype=XSD.date)
+    return Literal(m.group(1), datatype=XSD.gYearMonth)
+
+
+def _xsd_datetime(value: Any) -> Optional[Literal]:
+    """A stored timestamp (``2026-10-18 05:52:13.049383``) as ``xsd:dateTime``."""
+    text = str(value or "").strip().replace(" ", "T", 1)
+    if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", text):
+        return None
+    return Literal(text, datatype=XSD.dateTime)
+# ---------------------------------------------------------------------------
+# PLATFORM_MAP
+# 44 canonical platform labels → (CAC class, extra properties dict)
+# SKIP sentinel means: do not create a platform node.
+# ---------------------------------------------------------------------------
+
+_SKIP = "__SKIP__"
+
+PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
+    # --- Social Media ---
+    "Facebook":                 ("SocialMediaPlatform",      {}),
+    "Instagram":                ("SocialMediaPlatform",      {}),
+    "TikTok":                   ("SocialMediaPlatform",      {}),
+    "Twitter / X":              ("SocialMediaPlatform",      {}),
+    "MeWe":                     ("SocialMediaPlatform",      {}),
+    "MySpace":                  ("SocialMediaPlatform",      {"platformType": "legacy"}),
+    "Craigslist":               ("SocialMediaPlatform",      {"platformType": "classifieds"}),
+    "social media":             ("SocialMediaPlatform",      {}),
+    # Dating / hookup
+    "Grindr":                   ("OnlineDatingPlatform",     {}),
+    "Skout":                    ("OnlineDatingPlatform",     {}),
+    "Tinder":                   ("OnlineDatingPlatform",     {}),
+    "MeetMe":                   ("OnlineDatingPlatform",     {}),
+    "Reddit":                   ("SocialMediaPlatform",      {}),
+    "Tumblr":                   ("SocialMediaPlatform",      {}),
+    "Yubo":                     ("SocialMediaPlatform",      {"platformType": "teen-social"}),
+    # --- Messaging ---
+    "Facebook Messenger":       ("MessagingService",         {}),
+    "WhatsApp":                 ("MessagingService",         {"encryptionLevel": "end-to-end"}),
+    "Telegram":                 ("MessagingService",         {}),
+    "Snapchat":                 ("MessagingService",         {"encryptionLevel": "end-to-end"}),
+    "Skype":                    ("MessagingService",         {}),
+    "FaceTime":                 ("MessagingService",         {}),
+    "Kik":                      ("MessagingService",         {}),
+    "Discord":                  ("MessagingService",         {}),
+    "AOL Instant Messenger":    ("MessagingService",         {"platformType": "legacy"}),
+    "Yahoo Chat":               ("MessagingService",         {"platformType": "legacy"}),
+    "Signal":                   ("MessagingService",         {"encryptionLevel": "end-to-end"}),
+    "Wickr":                    ("MessagingService",         {"encryptionLevel": "end-to-end"}),
+    "Chat Avenue":              ("MessagingService",         {"platformType": "anonymous-chat"}),
+    # --- Anonymous Chat ---
+    "Omegle":                   ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true", "identityVerificationRequired": "false"}),
+    "Whisper":                  ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true", "identityVerificationRequired": "false"}),
+    "Monkey":                   ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true", "identityVerificationRequired": "false"}),
+    "Chatroulette":             ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true", "identityVerificationRequired": "false"}),
+    "YouNow":                   ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true"}),
+    "IRC":                      ("AnonymousChatPlatform",    {"platformType": "legacy"}),
+    "chat":                     ("AnonymousChatPlatform",    {}),
+    # --- Video Streaming ---
+    "YouTube":                  ("VideoStreamingPlatform",   {}),
+    "YouTube Live":             ("VideoStreamingPlatform",   {}),
+    "Twitch":                   ("VideoStreamingPlatform",   {}),
+    "Webcam platform":          ("VideoStreamingPlatform",   {"allowsAnonymousChat": "true"}),
+    # --- Gaming ---
+    "Roblox":                   ("GamePlatform",             {"allowsAnonymousChat": "true"}),
+    "Minecraft":                ("GamePlatform",             {}),
+    "Wizard 101":               ("GamePlatform",             {}),
+    "Call of Duty":             ("GamePlatform",             {}),
+    "CS:GO":                    ("GamePlatform",             {}),
+    "Steam":                    ("GamePlatform",             {}),
+    "Xbox Live":                ("GamePlatform",             {}),
+    "PlayStation Network":      ("GamePlatform",             {}),
+    "Fortnite":                 ("GamePlatform",             {}),
+    # VR surfaces — no VRPlatform class in cacontology-platforms.ttl; GamePlatform is nearest parent
+    "Oculus":                   ("GamePlatform",             {"platformType": "vr"}),
+    "VRChat":                   ("GamePlatform",             {"platformType": "vr"}),
+    # --- File Hosting ---
+    "Dropbox":                  ("FileHostingService",       {}),
+    "Google Drive":             ("FileHostingService",       {}),
+    "Mega.nz":                  ("FileHostingService",       {"encryptionLevel": "end-to-end"}),
+    "MediaFire":                ("FileHostingService",       {}),
+    "OneDrive":                 ("FileHostingService",       {}),
+    "iCloud":                   ("FileHostingService",       {"platformType": "cloud-backup"}),
+    # --- P2P (no P2PService in CAC TTL — FileHostingService + platformType=p2p) ---
+    "LimeWire":                 ("FileHostingService",       {"platformType": "p2p"}),
+    "BitTorrent":               ("FileHostingService",       {"platformType": "p2p"}),
+    "Kazaa":                    ("FileHostingService",       {"platformType": "p2p"}),
+    # --- Messaging (legacy / avatar social) ---
+    "IMVU":                     ("MessagingService",         {"platformType": "avatar-social"}),
+    "Gigatribe":                ("FileHostingService",       {"platformType": "p2p"}),
+    # --- Generative AI (offense instrument; maps to platforms# + ai-csam event typing) ---
+    "Gen AI":                   ("FileHostingService",       {"platformType": "generative-ai"}),
+    "ChatGPT":                  ("MessagingService",         {"platformType": "generative-ai"}),
+    "Stable Diffusion":         ("FileHostingService",       {"platformType": "generative-ai"}),
+    "Midjourney":               ("FileHostingService",       {"platformType": "generative-ai"}),
+    "DALL-E":                   ("FileHostingService",       {"platformType": "generative-ai"}),
+    # --- Dark Web ---
+    "Tor":                      ("DarkWebService",           {}),
+    "I2P":                      ("DarkWebService",           {}),
+    "dark web":                 ("DarkWebService",           {}),
+    # --- SKIP (extracted; no CAC platform class — see MAPPING_PLAN.md) ---
+    "Cash App":                 (_SKIP,                      {}),
+    "online":                   (_SKIP,                      {}),
+}
+
+_PLATFORM_CLASS_URI: Dict[str, URIRef] = {
+    "SocialMediaPlatform":   CAC_PLATFORMS.SocialMediaPlatform,
+    "OnlineDatingPlatform":  CAC_PLATFORMS.OnlineDatingPlatform,
+    "MessagingService":      CAC_PLATFORMS.MessagingService,
+    "AnonymousChatPlatform": CAC_PLATFORMS.AnonymousChatPlatform,
+    "VideoStreamingPlatform":CAC_PLATFORMS.VideoStreamingPlatform,
+    "GamePlatform":          CAC_PLATFORMS.GamePlatform,
+    "FileHostingService":    CAC_PLATFORMS.FileHostingService,
+    "CryptocurrencyService": CAC_PLATFORMS.CryptocurrencyService,
+    "DarkWebService":        CAC_PLATFORMS.DarkWebService,
+}
+
+# ---------------------------------------------------------------------------
+# TOPIC_MAP
+# case_topics values → (CAC class URI, spine branch, extra_triples_fn_name)
+# ---------------------------------------------------------------------------
+
+# Each entry: (primary_class_uri, creates_second_node: bool, second_class_uri | None)
+TOPIC_MAP: Dict[str, Dict[str, Any]] = {
+    "production": {
+        "class": CAC_PRODUCTION.ProductionOffense,
+        "severity": 3,
+        "secondary_charge_class": CAC_LEGAL.CSAM_Production,
+    },
+    "possession": {
+        "class": CAC.CSAMIncident,
+        "severity": 2,
+        "secondary_charge_class": CAC_LEGAL.CSAM_Possession,
+    },
+    "distribution": {
+        "class": CAC_LEGAL.CSAM_Distribution,
+        "severity": 2,
+        "secondary_charge_class": CAC_LEGAL.CSAM_Distribution,
+    },
+    "trafficking": {
+        "class": CAC_LEGAL.SexTrafficking,
+        "severity": 3,
+        "secondary_charge_class": CAC_LEGAL.SexTrafficking,
+    },
+    "csam": {
+        "class": CAC.CSAMIncident,
+        "severity": 2,
+        "secondary_charge_class": None,
+    },
+    "international": {
+        "class": CAC_MULTI.MultiJurisdictionalInvestigation,
+        "severity": 0,
+        "crosses_borders": True,
+    },
+    "multi_state": {
+        "class": CAC_MULTI.MultiJurisdictionalInvestigation,
+        "severity": 0,
+        "crosses_borders": False,
+    },
+    "hands_on": {
+        "class": CAC.ChildSexualAbuseEvent,
+        "severity": 3,
+    },
+    "online_only": {
+        # Resolved at mapping time: GroomingSolicitation if grooming present, else ChildSexualAbuseEvent
+        "class": CAC.ChildSexualAbuseEvent,
+        "class_if_grooming": CAC.GroomingSolicitation,
+        "severity": 1,
+    },
+    "family": {
+        "class": CAC_CUSTODIAL.FamilialRelationship,
+        "severity": 0,
+    },
+    "stranger": {
+        "class": CAC_GROOMING.OnlinePredator,
+        "severity": 0,
+    },
+    "grooming": {
+        "class": CAC_GROOMING.OnlineGrooming,
+        "severity": 1,
+    },
+    "sextortion": {
+        "class": CAC_SEXTORTION.SextortionIncident,
+        "severity": 2,
+        "secondary_charge_class": CAC_LEGAL.SextortionCharge,
+    },
+    "ai_csam": {
+        "class": CAC.DigitallyGeneratedCSAMIncident,
+        "secondary_class": CAC_AI.AIGeneratedCSAM,
+        "severity": 3,
+    },
+    # legacy alias from earlier extracts
+    "ai_generated": {
+        "class": CAC.DigitallyGeneratedCSAMIncident,
+        "secondary_class": CAC_AI.AIGeneratedCSAM,
+        "severity": 3,
+    },
+    "project_safe_childhood": {
+        "class": CAC_MULTI.ProjectSafeChildhoodOperation,
+        "severity": 0,
+    },
+}
+
+# ---------------------------------------------------------------------------
+# INVESTIGATION_TYPE_MAP
+# ---------------------------------------------------------------------------
+
+INVESTIGATION_TYPE_MAP: Dict[str, Optional[URIRef]] = {
+    "undercover": CAC_UNDERCOVER.UndercoverOperation,
+    "proactive":  CAC_TASKFORCE.ProactiveOperation,
+    "reactive":   CAC_TASKFORCE.ReactiveOperation,
+    # NCMEC CyberTipline referral origin (tip-driven → reactive operation).
+    # Complements NCMECCybertipReport when agencies_involved includes NCMEC.
+    "cybertip":   CAC_TASKFORCE.ReactiveOperation,
+    "online":     CAC_TASKFORCE.TaskForceOperation,
+    "unknown":    None,  # No operation node: an unknown type is not a fact about the case
+}
+
+# ---------------------------------------------------------------------------
+# PROSECUTION maps (phases vs legal-proceeding events — cacontology-core.ttl,
+# cacontology-legal-outcomes.ttl)
+# ---------------------------------------------------------------------------
+
+# Investigation hasPhase / currentPhase → cac-core:Phase subclasses
+PROSECUTION_PHASE_MAP: Dict[str, URIRef] = {
+    "arrested":       CAC.InitialPhase,
+    "booked":         CAC.InitialPhase,
+    "charged":        CAC.LegalProcessPhase,
+    "indicted":       CAC.LegalProcessPhase,
+    "pleaded_guilty": CAC_LEGAL.PreTrialPhase,
+    "pled_guilty":    CAC_LEGAL.PreTrialPhase,
+    "convicted":      CAC_LEGAL.SentencingPhase,
+    "sentenced":      CAC_LEGAL.SentencingPhase,
+}
+
+# Investigation hasStep → legal-outcomes:LegalProceeding event subclasses
+PROSECUTION_STEP_MAP: Dict[str, URIRef] = {
+    "pleaded_guilty": CAC_LEGAL.PleaBargaining,
+    "pled_guilty":    CAC_LEGAL.PleaBargaining,
+    "convicted":      CAC_LEGAL.SentencingHearing,
+    "sentenced":      CAC_LEGAL.SentencingHearing,
+}
+
+# Charge patterns → (CAC charge class, optional cluster tag for generic CriminalCharge).
+# First substring match wins — specific before generic.
+CHARGE_MATCH_RULES: List[Tuple[str, URIRef, Optional[str]]] = [
+    # --- Distribution/production-specific before broad matter-portraying / pornography ---
+    ("distributing matter portraying a minor under the age of 12",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing matter portraying a minor over the age of 12",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing matter portraying a minor over 12 but under 18",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing matter portraying a minor over the",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing matter portraying a minor",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing pornography involving minors",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distribution of matter portraying a minor under the age of 12",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distribution of a matter portraying a minor",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distribution of matter portraying",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("dissemination of child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing child porn",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("transmitting child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("with intent to distribute child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("intent to disseminate child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("possession with the intent to disseminate child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("possession with intent to disseminate child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("reproducing or distributing child pornography",
+     CAC_LEGAL.CSAM_Distribution, None),
+    ("manufacturing child pornography",
+     CAC_LEGAL.CSAM_Production, None),
+    ("production of child porn",
+     CAC_LEGAL.CSAM_Production, None),
+    # --- CSAM (matter portraying / performance-as-material) before bare possession ---
+    ("matter portraying a minor under the age of 12 in a sexual performance",
+     CAC_LEGAL.CSAM_Possession, None),
+    ("matter portraying a minor over the age of 12 in a sexual performance",
+     CAC_LEGAL.CSAM_Possession, None),
+    ("matter portraying a minor under the age of 12", CAC_LEGAL.CSAM_Possession, None),
+    ("matter portraying a minor over the age of 12", CAC_LEGAL.CSAM_Possession, None),
+    ("matter portraying a minor", CAC_LEGAL.CSAM_Possession, None),
+    ("possessing matter portraying a minor under the age of 12 in a sexual performance",
+     CAC_LEGAL.CSAM_Possession, None),
+    ("possessing matter portraying a minor over the age of 12 in a sexual performance",
+     CAC_LEGAL.CSAM_Possession, None),
+    ("possessing matter portraying a minor under the age of 12", CAC_LEGAL.CSAM_Possession, None),
+    ("possessing matter portraying a minor over the age of 12", CAC_LEGAL.CSAM_Possession, None),
+    ("possessing matter portraying a minor", CAC_LEGAL.CSAM_Possession, None),
+    ("possessing or viewing matter portraying a minor", CAC_LEGAL.CSAM_Possession, None),
+    ("distributing matter portraying a minor", CAC_LEGAL.CSAM_Distribution, None),
+    ("distributing matter portraying", CAC_LEGAL.CSAM_Distribution, None),
+    ("material depicting the sexual performance of a child", CAC_LEGAL.CSAM_Possession, None),
+    ("child sexually abusive material", CAC_LEGAL.CSAM_Possession, None),
+    ("sexually exploitative material", CAC_LEGAL.CSAM_Possession, None),
+    ("manufacturing child sexual abuse images", CAC_LEGAL.CSAM_Production, None),
+    ("distributing child sex abuse materials", CAC_LEGAL.CSAM_Distribution, None),
+    # --- Sexual performance statutes (generic; not Florida DirectPromotion proxy) ---
+    ("promoting the sexual performance of a child",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("promoting a sexual performance of a child",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("promoting sexual performance",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("producing/directing sexual performance of a child",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("sexual performance of a child",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("use of a minor under 16 in a sexual performance",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("promoting a minor under the age of 16 in a sexual performance",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    ("attempted use of a child in a sexual",
+     CAC_LEGAL.CriminalCharge, "sexual_performance_of_child"),
+    # --- Sexual exploitation (StateCharge; no Georgia subclass) ---
+    ("sexual exploitation of a minor", CAC_LEGAL.StateCharge, None),
+    ("sexual exploitation of a child", CAC_LEGAL.StateCharge, None),
+    ("sexual exploitation of children", CAC_LEGAL.StateCharge, None),
+    ("second-degree sexual exploitation", CAC_LEGAL.StateCharge, None),
+    ("second-degree sex exploitation of a minor", CAC_LEGAL.StateCharge, None),
+    ("third-degree exploitation of a minor", CAC_LEGAL.StateCharge, None),
+    ("3rd-degree sexual exploitation", CAC_LEGAL.StateCharge, None),
+    ("sexual exploitation", CAC_LEGAL.CriminalCharge, "sexual_exploitation_unspecified"),
+    # --- Contact-abuse clusters → generic CriminalCharge + cluster tag ---
+    ("encouraging child sexual abuse in the first degree",
+     CAC_LEGAL.CriminalCharge, "encouraging_child_sexual_abuse"),
+    ("encouraging child sexual abuse in the second degree",
+     CAC_LEGAL.CriminalCharge, "encouraging_child_sexual_abuse"),
+    ("encouraging child sexual abuse",
+     CAC_LEGAL.CriminalCharge, "encouraging_child_sexual_abuse"),
+    ("encouraging child sex abuse",
+     CAC_LEGAL.CriminalCharge, "encouraging_child_sexual_abuse"),
+    ("child molestation", CAC_LEGAL.CriminalCharge, "child_molestation"),
+    ("gross sexual imposition", CAC_LEGAL.CriminalCharge, "gross_sexual_imposition"),
+    ("sexual conduct with a minor", CAC_LEGAL.CriminalCharge, "sexual_conduct_with_minor"),
+    ("lewd and lascivious", CAC_LEGAL.CriminalCharge, "lewd_indecent_liberties"),
+    ("indecent liberties with a minor", CAC_LEGAL.CriminalCharge, "lewd_indecent_liberties"),
+    ("indecent liberties with a", CAC_LEGAL.CriminalCharge, "lewd_indecent_liberties"),
+    ("first-degree statutory rape", CAC_LEGAL.CriminalCharge, "statutory_sex_offense"),
+    ("statutory sex offense", CAC_LEGAL.CriminalCharge, "statutory_sex_offense"),
+    ("statutory rape", CAC_LEGAL.CriminalCharge, "statutory_sex_offense"),
+    ("criminal sexual misconduct with a minor",
+     CAC_LEGAL.CriminalCharge, "criminal_sexual_misconduct_minor"),
+    ("oral copulation", CAC_LEGAL.CriminalCharge, "oral_copulation"),
+    ("sexual battery of a victim under", CAC_LEGAL.CriminalCharge, "sexual_battery"),
+    ("sexual battery", CAC_LEGAL.CriminalCharge, "sexual_battery"),
+    ("aggravated rape of a child", CAC_LEGAL.CriminalCharge, "aggravated_sexual_abuse"),
+    ("continuous sexual abuse of a child", CAC_LEGAL.CriminalCharge, "sexual_abuse_of_minor"),
+    ("sexual abuse of children", CAC_LEGAL.CriminalCharge, "sexual_abuse_of_minor"),
+    ("sexual abuse of a minor", CAC_LEGAL.CriminalCharge, "sexual_abuse_of_minor"),
+    ("child sex exploitation", CAC_LEGAL.CriminalCharge, "child_exploitation"),
+    ("child exploitation", CAC_LEGAL.CriminalCharge, "child_exploitation"),
+    ("felony child exploitation", CAC_LEGAL.CriminalCharge, "child_exploitation"),
+    ("voyeurism", CAC_LEGAL.CriminalCharge, "voyeurism"),
+    ("rape first degree", CAC_LEGAL.CriminalCharge, "rape"),
+    ("rape third degree", CAC_LEGAL.CriminalCharge, "rape"),
+    ("rape 2nd", CAC_LEGAL.CriminalCharge, "rape"),
+    ("rape", CAC_LEGAL.CriminalCharge, "rape"),
+    ("sodomy 2nd", CAC_LEGAL.CriminalCharge, "sodomy"),
+    ("sodomy", CAC_LEGAL.CriminalCharge, "sodomy"),
+    ("unlawful sexual contact", CAC_LEGAL.CriminalCharge, "unlawful_sexual_contact"),
+    ("child sexual assault", CAC_LEGAL.CriminalCharge, "child_sexual_assault"),
+    ("child sex assault", CAC_LEGAL.CriminalCharge, "child_sexual_assault"),
+    ("penal code section 288", CAC_LEGAL.CriminalCharge, "ca_penal_288"),
+    ("endangering the welfare of a child", CAC_LEGAL.CriminalCharge, "endangering_welfare"),
+    ("endangering the welfare of a", CAC_LEGAL.CriminalCharge, "endangering_welfare"),
+    ("illegal use of a minor in nudity-oriented",
+     CAC_LEGAL.CriminalCharge, "nudity_oriented_minor"),
+    ("aggravated unlawful photography", CAC_LEGAL.CriminalCharge, "unlawful_photography"),
+    ("animal sexual abuse", CAC_LEGAL.CriminalCharge, "animal_sexual_abuse"),
+    ("disseminating matter harmful to juveniles",
+     CAC_LEGAL.CriminalCharge, "disseminating_harmful_juveniles"),
+    ("soliciting a child for unlawful sexual conduct", CAC_LEGAL.OnlineEnticement, None),
+    ("enticing a child", CAC_LEGAL.OnlineEnticement, None),
+    # --- Typed CSAM / travel / AI (existing) ---
+    ("causing production", CAC_LEGAL.CSAM_CausingProduction, None),
+    ("obscene visual representation", CAC.DigitallyGeneratedCSAMIncident, None),
+    ("ai-generated", CAC.DigitallyGeneratedCSAMIncident, None),
+    ("ai generated", CAC.DigitallyGeneratedCSAMIncident, None),
+    ("artificial intelligence", CAC.DigitallyGeneratedCSAMIncident, None),
+    ("synthetic", CAC.DigitallyGeneratedCSAMIncident, None),
+    ("deepfake", CAC.DigitallyGeneratedCSAMIncident, None),
+    ("traveling to meet", CAC_LEGAL.TravelingToMeetAfterComputerLure, None),
+    ("travel to meet", CAC_LEGAL.TravelingToMeetAfterComputerLure, None),
+    ("child sexual abuse material", CAC_LEGAL.CSAM_Possession, None),
+    ("transmission of child pornography", CAC_LEGAL.CSAM_Distribution, None),
+    ("distribution of child pornography", CAC_LEGAL.CSAM_Distribution, None),
+    ("production of child pornography", CAC_LEGAL.CSAM_Production, None),
+    ("possession of child pornography", CAC_LEGAL.CSAM_Possession, None),
+    ("child pornography", CAC_LEGAL.CSAM_Possession, None),
+    ("child porn", CAC_LEGAL.CSAM_Possession, None),
+    ("pandering obscenity", CAC_LEGAL.CSAM_Possession, None),
+    ("pandering", CAC_LEGAL.CSAM_Possession, None),
+    ("obscenity involving a minor", CAC_LEGAL.CSAM_Possession, None),
+    ("obscene material", CAC_LEGAL.CSAM_Possession, None),
+    ("obscenity", CAC_LEGAL.CSAM_Possession, None),
+    ("pornography", CAC_LEGAL.CSAM_Possession, None),
+    ("online enticement", CAC_LEGAL.OnlineEnticement, None),
+    ("enticement", CAC_LEGAL.OnlineEnticement, None),
+    ("luring", CAC_LEGAL.OnlineEnticement, None),
+    ("sex trafficking", CAC_LEGAL.SexTrafficking, None),
+    ("sextortion", CAC_LEGAL.SextortionCharge, None),
+    ("dissemination", CAC_LEGAL.CSAM_Distribution, None),
+    ("distribution", CAC_LEGAL.CSAM_Distribution, None),
+    ("transmission", CAC_LEGAL.CSAM_Distribution, None),
+    ("production", CAC_LEGAL.CSAM_Production, None),
+    ("possession", CAC_LEGAL.CSAM_Possession, None),
+    ("coercion", CAC_LEGAL.CSAM_CausingProduction, None),
+    ("trafficking", CAC_LEGAL.SexTrafficking, None),
+]
+
+# Backward-compatible alias for audits importing CHARGE_PATTERN_MAP
+CHARGE_PATTERN_MAP: List[Tuple[str, URIRef]] = [
+    (pat, cls) for pat, cls, _cluster in CHARGE_MATCH_RULES
+]
+
+# Contact-abuse charge clusters → the CAC offense class the charge concerns. CAC has no
+# contact-abuse charge class, so the charge stays a CriminalCharge with
+# dcterms:subject <offense class>; no offense event is minted from a charge.
+CONTACT_CLUSTER_EVENT_MAP: Dict[str, URIRef] = {
+    "child_molestation": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+    "gross_sexual_imposition": CAC_USA_FEDERAL.AbusiveContactWithMinor,
+    "sexual_conduct_with_minor": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+    "lewd_indecent_liberties": CAC_USA_FEDERAL.AbusiveContactWithMinor,
+    "statutory_sex_offense": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+    "criminal_sexual_misconduct_minor": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+    "oral_copulation": CAC_USA_FEDERAL.AbusiveContactWithMinor,
+    "sexual_battery": CAC_USA_FEDERAL.AbusiveContactWithMinor,
+    "aggravated_sexual_abuse": CAC_USA_FEDERAL.AggravatedSexualAbuse,
+    "sexual_abuse_of_minor": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+    "rape": CAC_USA_FEDERAL.AggravatedSexualAbuse,
+    "sodomy": CAC_USA_FEDERAL.AbusiveContactWithMinor,
+    "unlawful_sexual_contact": CAC_USA_FEDERAL.AbusiveContactWithMinor,
+    "child_sexual_assault": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+    "ca_penal_288": CAC_USA_FEDERAL.SexualAbuseOfMinor,
+}
+
+# All contact-abuse cluster tags (dcterms:subject defaults to ChildSexualAbuseEvent).
+CONTACT_ABUSE_CLUSTERS: frozenset = frozenset({
+    *CONTACT_CLUSTER_EVENT_MAP.keys(),
+    "encouraging_child_sexual_abuse",
+    "child_exploitation",
+    "voyeurism",
+    "endangering_welfare",
+    "nudity_oriented_minor",
+    "unlawful_photography",
+    "animal_sexual_abuse",
+    "disseminating_harmful_juveniles",
+})
+
+# Proposed charge→event parallels NOT implemented in this pass (for review).
+PROPOSED_CHARGE_EVENT_PARALLELS: List[Dict[str, str]] = [
+    {
+        "charge_cluster_or_class": "CSAM_Possession / CSAM_Production / CSAM_Distribution",
+        "proposed_event": "cacontology:CSAMIncident",
+        "uri": "https://cacontology.projectvic.org#CSAMIncident",
+        "note": "Topic mapper already creates CSAM events; avoid duplicate per charge.",
+    },
+    {
+        "charge_cluster_or_class": "OnlineEnticement",
+        "proposed_event": "cacontology:GroomingSolicitation",
+        "uri": "https://cacontology.projectvic.org#GroomingSolicitation",
+        "note": "Often overlaps topic-based grooming events.",
+    },
+    {
+        "charge_cluster_or_class": "SexTrafficking",
+        "proposed_event": "cacontology-usa-federal:SexTraffickingOfMinors",
+        "uri": "https://cacontology.projectvic.org/usa-federal-law#SexTraffickingOfMinors",
+        "note": "Event layer only; not committed.",
+    },
+    {
+        "charge_cluster_or_class": "sexual_performance_of_child",
+        "proposed_event": "cacontology:CSAMIncident",
+        "uri": "https://cacontology.projectvic.org#CSAMIncident",
+        "note": "NY/OH performance statutes are material-adjacent; needs jurisdictional review.",
+    },
+    {
+        "charge_cluster_or_class": "StateCharge (sexual exploitation)",
+        "proposed_event": "cacontology-usa-federal:CommercialSexualExploitation",
+        "uri": "https://cacontology.projectvic.org/usa-federal-law#CommercialSexualExploitation",
+        "note": "Broad; may not fit state-only press charges.",
+    },
+]
+
+SENTENCE_PATTERN_MAP: List[Tuple[str, URIRef]] = [
+    ("life",              CAC_LEGAL.LifeImprisonmentSentence),
+    ("mandatory minimum", CAC_LEGAL.MandatoryMinimumSentencing),
+    ("probation",         CAC_LEGAL.ProbationSentence),
+    ("supervised release",CAC_LEGAL.SupervisedRelease),
+    (r"\$",               CAC_LEGAL.MonetaryPenalty),
+    ("year",              CAC_LEGAL.PrisonSentence),
+    ("month",             CAC_LEGAL.PrisonSentence),
+]
+
+# ---------------------------------------------------------------------------
+# SEVERITY_MAP
+# severity_indicators list → (severityLevel int, extra CAC node class or None)
+# ---------------------------------------------------------------------------
+
+SEVERITY_MAP: Dict[str, Tuple[int, Optional[URIRef]]] = {
+    "infant":                (3, None),
+    "very_young":            (2, None),
+    "under_12":              (2, None),
+    "sexual_abuse":          (3, None),
+    "physical_abuse":        (3, None),
+    "grooming":              (1, None),  # ML semantic severity; not a case_topic
+    "multiple_perpetrators": (1, CAC.ConspiracyToCommitCSA),
+}
+
+# ---------------------------------------------------------------------------
+# ROLE_MAP
+# relationship_to_victim → (custodial class, relationship class)
+# ---------------------------------------------------------------------------
+
+ROLE_MAP: Dict[str, Tuple[URIRef, URIRef]] = {
+    # Generic family label (when specific relationship not parsed)
+    "family":       (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.FamilialRelationship),
+    # Specific family members
+    "father":       (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.CaregiverRelationship),
+    "mother":       (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.CaregiverRelationship),
+    "parent":       (CAC_CUSTODIAL.CaregiverRelationship,      CAC_CUSTODIAL.CaregiverRelationship),
+    "brother":      (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.FamilialRelationship),
+    "sister":       (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.FamilialRelationship),
+    "sibling":      (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.FamilialRelationship),
+    "uncle":        (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.Relative),
+    "aunt":         (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.Relative),
+    "cousin":       (CAC_CUSTODIAL.FamilialRelationship,       CAC_CUSTODIAL.Relative),
+    # Positions of trust
+    "teacher":      (CAC_CUSTODIAL.Teacher,                    CAC_CUSTODIAL.PositionOfTrust),
+    "coach":        (CAC_CUSTODIAL.Coach,                      CAC_CUSTODIAL.PositionOfTrust),
+    "mentor":       (CAC_CUSTODIAL.Mentor,                     CAC_CUSTODIAL.PositionOfTrust),
+    "babysitter":   (CAC_CUSTODIAL.Babysitter,                 CAC_CUSTODIAL.PositionOfTrust),
+    "guardian":     (CAC_CUSTODIAL.Guardian,                   CAC_CUSTODIAL.CaregiverRelationship),
+    "family friend":(CAC_CUSTODIAL.FamilyFriend,               CAC_CUSTODIAL.PositionOfTrust),
+}
+
+# relationship_to_victim → the custodial:relationshipType value CAC allows (custodial-shapes sh:in).
+# "stranger" is no custodial relationship and maps to nothing.
+_CUSTODIAL_RELATIONSHIP_TYPE: Dict[str, str] = {
+    "family": "relative", "father": "parent", "mother": "parent", "parent": "parent",
+    "brother": "relative", "sister": "relative", "sibling": "relative", "uncle": "relative",
+    "aunt": "relative", "cousin": "relative", "teacher": "teacher", "coach": "coach",
+    "mentor": "mentor", "babysitter": "babysitter", "guardian": "guardian",
+    "family friend": "family_friend",
+}
+
+# ---------------------------------------------------------------------------
+# AGENCY tiering patterns
+# ---------------------------------------------------------------------------
+
+_STATE_ATTORNEY_PATTERN = re.compile(
+    r"Attorney General|County Attorney|District Attorney|State Attorney|"
+    r"State Police|Bureau of Investigation|\bGBI\b|\bCBI\b|\bBCI\b|\bMBI\b|\bSBI\b|"
+    r"Department of Public Safety|State Bureau",
+    re.I,
+)
+
+_FEDERAL_PATTERNS: List[Tuple[re.Pattern, str]] = [
+    (re.compile(r"\bFBI\b|Federal Bureau of Investigation", re.I), "fbi"),
+    (re.compile(r"\bHSI\b|Homeland Security Investigations?", re.I), "hsi"),
+    (re.compile(r"\bICE\b|Immigration and Customs Enforcement", re.I), "ice"),
+    (re.compile(r"\bUSMS\b|U\.?S\.? Marshals?", re.I), "usms"),
+    (re.compile(r"\bUSAO\b|U\.?S\.? Attorney", re.I), "usao"),
+    (re.compile(r"\bDEA\b|Drug Enforcement Administration", re.I), "dea"),
+    (re.compile(r"\bATF\b", re.I), "atf"),
+    (re.compile(r"\bNCMEC\b|National Center for Missing", re.I), "ncmec"),
+    (re.compile(r"\bCEOS\b|Child Exploitation and Obscenity", re.I), "ceos"),
+    (re.compile(r"\bDOJ\b|Department of Justice", re.I), "doj"),
+]
+
+_ICAC_PATTERN = re.compile(r"ICAC\b|Internet Crimes Against Children", re.I)
+
+# ---------------------------------------------------------------------------
+# TECHNOLOGY_SIGNAL_MAP
+# ---------------------------------------------------------------------------
+
+INVESTIGATION_TECH_MAP: Dict[str, URIRef] = {
+    "PhotoDNA":      CAC_DETECTION.ContentHashingAction,
+    "CSAI Match":    CAC_DETECTION.AutomatedDetectionAction,
+    "hash matching": CAC_DETECTION.ContentHashingAction,
+}
+
+ANON_NETWORK_MAP: Dict[str, URIRef] = {
+    "Tor":            CAC_PLATFORMS.DarkWebService,
+    "I2P":            CAC_PLATFORMS.DarkWebService,
+    "dark web":       CAC_PLATFORMS.DarkWebService,
+    "cryptocurrency": CAC_PLATFORMS.CryptocurrencyService,
+}
+
+# P2P clients reuse PLATFORM_MAP
+P2P_CLIENT_MAP: Dict[str, str] = {
+    "LimeWire":   "LimeWire",
+    "BitTorrent": "BitTorrent",
+    "Kazaa":      "Kazaa",
+    "Gigatribe":  "Gigatribe",
+}
+
+# ---------------------------------------------------------------------------
+# NLP concept thresholds for v1
+# ---------------------------------------------------------------------------
+
+NLP_CONCEPT_MAP: Dict[str, Tuple[float, URIRef]] = {
+    "grooming":              (0.45, CAC_GROOMING.OnlineGrooming),
+    "sextortion":            (0.45, CAC_SEXTORTION.SextortionIncident),
+    "production_csam":       (0.50, CAC_PRODUCTION.ProductionOffense),
+    "possession_csam":       (0.50, CAC.CSAMIncident),
+    "dissemination":         (0.45, CAC_LEGAL.CSAM_Distribution),
+    "exploitive_positions":  (0.45, CAC_CUSTODIAL.PositionOfTrust),
+    "registered_sex_offender":(0.45, CAC_REGISTRY.RegisteredSexOffender),
+    "evidence_seizure":      (0.45, CAC_PRODUCTION.ProducedContent),
+    # Do not promote DigitallyGeneratedCSAMIncident from this vague embedding —
+    # same false-positive class as case_topics ai_csam. AI-CSAM graph nodes come
+    # from case_topics ai_csam / phrase cues only.
+    # "ai_and_internet_tools": (0.50, CAC.DigitallyGeneratedCSAMIncident),
+}
+
+# Regex-extracted perpetrator admission confidence → numeric score for AssessmentResult.
+PERPETRATOR_ADMISSION_CONFIDENCE: Dict[str, float] = {
+    "high": 0.9,
+    "medium": 0.65,
+    "low": 0.4,
+}
+
+# ===========================================================================
+# Graph builder
+# ===========================================================================
+
+class CaseToCAC:
+    """
+    Maps a single CaseLinker case dict to a CAC Ontology RDF graph.
+
+    Usage::
+
+        mapper = CaseToCAC()
+        g, warnings = mapper.map_case(case_dict)
+        jsonld = g.serialize(format="json-ld", indent=2)
+    """
+
+    def __init__(self) -> None:
+        # In-process singleton registry: slug → URIRef (shared across calls)
+        self._platform_registry: Dict[str, URIRef] = {}
+        self._agency_registry: Dict[str, URIRef] = {}
+        self._location_registry: Dict[str, URIRef] = {}
+
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
+
+    def map_case(
+        self,
+        case: Dict[str, Any],
+    ) -> Tuple[ConjunctiveGraph, List[str]]:
+        """
+        Map one case dict to a ConjunctiveGraph.
+
+        The graph states only what the case's extracted fields state. A link
+        between two nodes (a role in an event, a platform used in an event) is
+        written only when the case has exactly one event to attach it to; the
+        extraction holds case-level sets, not pairings. People and platforms
+        are always objects of the investigation itself (``_link_to_case``).
+        Nothing is added to satisfy a SHACL shape.
+
+        Returns
+        -------
+        (graph, warnings)
+            graph    : rdflib ConjunctiveGraph with two named graphs
+                       (deterministic + nlp)
+            warnings : list of human-readable warning strings for unmapped values
+        """
+        warnings: List[str] = []
+        # (field, role, value, node) for every node minted from a resolved field. The
+        # provenance export links an annotation to its node from this, never by
+        # re-deriving the numbering (#73).
+        self.evidence_nodes: List[Tuple[str, str, str, URIRef]] = []
+        case = _mask_case_people(case)
+        cg = ConjunctiveGraph()
+        self._bind_namespaces(cg)
+
+        det_g = cg.get_context(GRAPH_DETERMINISTIC)
+        nlp_g = cg.get_context(GRAPH_NLP)
+        self._bind_namespaces(det_g)
+        self._bind_namespaces(nlp_g)
+
+        case_id = case.get("id", "unknown")
+
+        # --- investigation shell (always created) ---
+        inv_uri = self.build_investigation_shell(det_g, case, warnings)
+
+        # --- deterministic mapping steps ---
+        event_uris = self.map_topics(det_g, case, inv_uri, warnings)
+        platform_uris = self.map_platforms(det_g, case, warnings)
+        victim_uris, offender_uris = self.map_roles(det_g, case, inv_uri, warnings)
+        self.map_perpetrator_admissions(det_g, case, inv_uri, warnings)
+        self.map_prosecution(det_g, case, inv_uri, offender_uris, warnings)
+        agency_uris = self.map_agencies(det_g, case, inv_uri, warnings)
+        self.map_locations(det_g, case, inv_uri, warnings)
+        platform_uris += self.map_technology(det_g, case, inv_uri, warnings)
+        self.map_investigation_type(det_g, case, inv_uri, warnings)
+        self.map_cybertip(det_g, case, inv_uri, agency_uris, warnings)
+        self._link_to_single_event(
+            det_g, case, event_uris, victim_uris, offender_uris, platform_uris
+        )
+        self._link_to_case(det_g, inv_uri, victim_uris, offender_uris, platform_uris)
+
+        # --- NLP mapping (separate named graph) ---
+        self.map_nlp_features(nlp_g, case, inv_uri, warnings)
+
+        _label_case_nodes(det_g, case_id)
+        _label_case_nodes(nlp_g, case_id)
+        return cg, warnings
+
+    def validate(
+        self, graph: ConjunctiveGraph
+    ) -> Tuple[bool, str]:
+        """
+        Run pyshacl against cacontology-core-shapes.ttl.
+
+        ``conforms`` is False only for violations that are CaseLinker's: a
+        shape that requires a value the release does not state, or a shape CAC
+        has to fix, is reported but does not fail the graph
+        (``shacl_validation.UNSTATED`` / ``UPSTREAM``). The report text lists
+        every violation with its bucket.
+
+        Raises
+        ------
+        FileNotFoundError
+            If the shapes file is missing.
+        RuntimeError
+            If the shapes graph has zero ``sh:NodeShape`` / ``sh:PropertyShape``
+            subjects, or if pyshacl is not installed.
+        Exception
+            Other pyshacl / parse errors propagate (never swallowed into
+            ``conforms=True``).
+
+        Returns
+        -------
+        (conforms, report_text)
+        """
+        shapes_graph, _shape_count = load_core_shapes_graph()
+
+        try:
+            from pyshacl import validate as shacl_validate
+        except ImportError as exc:
+            raise RuntimeError(
+                "pyshacl is required for SHACL validation; pip install pyshacl"
+            ) from exc
+
+        data_graph = Graph()
+        for ctx in graph.graphs():
+            for triple in ctx:
+                data_graph.add(triple)
+
+        _conforms, results_graph, results_text = shacl_validate(
+            data_graph=data_graph,
+            shacl_graph=shapes_graph,
+            inference="none",
+            advanced=False,
+            allow_infos=True,
+            abort_on_first=False,
+        )
+        from shacl_validation import classify_report
+
+        buckets = classify_report(results_graph)
+        summary = "\n".join(
+            f"{bucket}: {sum(c.values())} " + "; ".join(f"{m} ({n})" for m, n in c.most_common())
+            for bucket, c in buckets.items() if c
+        )
+        return not buckets["caselinker"], (summary + "\n\n" + results_text) if summary else results_text
+
+    def export_case(
+        self,
+        case_id: str,
+        output_dir: Optional[Path] = None,
+        db_url: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Full pipeline: load from DB → map → validate → write files.
+
+        Returns a result dict with keys:
+            case_id, node_count, edge_count, node_types, warnings,
+            shacl_conforms, shacl_report, jsonld_path, ttl_path
+        """
+        output_dir = output_dir or _OUTPUT_DIR
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        storage = self._storage_for_case(case_id, db_url)
+        case = storage.get_case(case_id) if storage is not None else None
+        if case is None:
+            raise ValueError(
+                f"Case '{case_id}' not found. Ensure DATABASE_URL is set and the case exists."
+            )
+
+        graph, warnings = self.map_case(case)
+
+        jsonld_path = output_dir / f"{case_id}.jsonld"
+        ttl_path = output_dir / f"{case_id}.ttl"
+        # Turtle serialization of a Dataset writes only the default graph.
+        # map_case puts every triple in named graphs, so that file is empty.
+        flat = flatten_dataset(graph)
+        _write_serialized(flat, jsonld_path, "json-ld")
+        _write_serialized(flat, ttl_path, "turtle")
+
+        conforms, shacl_report = self.validate(graph)
+        summary = self._graph_summary(graph)
+        provenance_path = None
+        try:
+            from provenance_export import export_stored_case
+
+            provenance_path = export_stored_case(
+                case_id, output_dir, storage, evidence_nodes=getattr(self, "evidence_nodes", None)
+            )
+        except Exception as exc:
+            logger.warning("Provenance graph skipped for %s: %s", case_id, exc)
+
+        return {
+            "case_id": case_id,
+            **summary,
+            "warnings": warnings,
+            "shacl_conforms": conforms,
+            "shacl_report": shacl_report,
+            "jsonld_path": str(jsonld_path),
+            "ttl_path": str(ttl_path),
+            "provenance_ttl_path": str(provenance_path) if provenance_path else None,
+        }
+
+    # ------------------------------------------------------------------
+    # Step 1: Investigation shell
+    # ------------------------------------------------------------------
+
+    def build_investigation_shell(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        warnings: List[str],
+    ) -> URIRef:
+        """Create the root CACInvestigation node and its metadata."""
+        case_id = case.get("id", "unknown")
+        inv_uri = BASE[f"case/{case_id}"]
+
+        g.add((inv_uri, RDF.type, CAC.CACInvestigation))
+        g.add((inv_uri, RDF.type, CAC_CORE.EnduringEntity))
+        g.add((inv_uri, DCTERMS.identifier, Literal(case_id)))
+        # One hop from this case to its evidence graph. The assertions stay
+        # in that graph; this triple is only the pointer.
+        g.add((inv_uri, DCTERMS.provenance, URIRef(str(inv_uri) + "/provenance")))
+
+        if case.get("source"):
+            g.add((inv_uri, DCTERMS.source, Literal(case["source"])))
+        if case.get("source_url"):
+            g.add((inv_uri, DCTERMS.source, _source_url_term(str(case["source_url"]))))
+        if case.get("notes"):
+            g.add((inv_uri, RDFS.comment, Literal(case["notes"])))
+        if case.get("tags"):
+            tags = case["tags"] if isinstance(case["tags"], list) else [case["tags"]]
+            for tag in tags:
+                g.add((inv_uri, DCTERMS.subject, Literal(str(tag))))
+        for prop, key in ((DCTERMS.created, "created_at"), (DCTERMS.modified, "updated_at")):
+            stamp = _xsd_datetime(case.get(key))
+            if stamp is not None:
+                g.add((inv_uri, prop, stamp))
+
+        # The release date, at the precision stored. Roles, phases and
+        # proceedings get no begin point: the release date is not when any of
+        # them began.
+        date_range = case.get("date_range") or {}
+        released = _date_at_stated_precision(
+            (date_range.get("start") if isinstance(date_range, dict) else None)
+            or case.get("date_start")
+        )
+        if released is not None:
+            g.add((inv_uri, DCTERMS.date, released))
+
+        return inv_uri
+
+    # ------------------------------------------------------------------
+    # Step 2: Platforms
+    # ------------------------------------------------------------------
+
+    def map_platforms(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        warnings: List[str],
+    ) -> List[URIRef]:
+        """Create platform nodes (shared singletons). Linking is ``_link_to_case`` and ``_link_to_single_event``."""
+        platforms_raw = case.get("platforms_used") or []
+        if isinstance(platforms_raw, str):
+            try:
+                platforms_raw = json.loads(platforms_raw)
+            except (json.JSONDecodeError, TypeError):
+                platforms_raw = [platforms_raw]
+
+        # Also pick up p2p_clients and anonymization_network labels
+        p2p = case.get("p2p_clients") or []
+        anon = case.get("anonymization_network") or []
+        all_platforms = list(platforms_raw) + list(p2p) + [
+            label for label in anon if label in PLATFORM_MAP
+        ]
+
+        uris: List[URIRef] = []
+        seen: set = set()
+        for label in all_platforms:
+            if label in seen:
+                continue
+            seen.add(label)
+
+            mapping = PLATFORM_MAP.get(label)
+            if mapping is None:
+                warnings.append(f"PLATFORM_MAP: unmapped label '{label}' — skipped")
+                continue
+
+            class_name, extra_props = mapping
+            if class_name == _SKIP:
+                continue
+
+            class_uri = _PLATFORM_CLASS_URI.get(class_name)
+            if class_uri is None:
+                warnings.append(f"PLATFORM_MAP: unknown class '{class_name}' for '{label}'")
+                continue
+
+            slug = _slug(label)
+            p_uri = self._get_or_create_platform(g, slug, label, class_uri, extra_props)
+            uris.append(p_uri)
+
+        return uris
+
+    def _get_or_create_platform(
+        self,
+        g: Graph,
+        slug: str,
+        label: str,
+        class_uri: URIRef,
+        extra_props: Optional[Dict[str, Any]] = None,
+    ) -> URIRef:
+        """Return a shared singleton platform URIRef and write its full node.
+
+        The registry is only an IRI cache. Types, label, and ``extra_props`` go
+        into every case graph that references the platform, so a case's graph
+        does not depend on which case in the batch saw the slug first (#10).
+        """
+        uri = self._platform_registry.get(slug)
+        if uri is None:
+            uri = BASE[f"platform/{slug}"]
+            self._platform_registry[slug] = uri
+        g.add((uri, RDF.type, class_uri))
+        g.add((uri, RDF.type, CAC_CORE.DigitalSystemEntity))
+        g.add((uri, RDFS.label, Literal(label)))
+        g.add((uri, UCO_CORE.name, Literal(label)))
+        for prop_name, prop_val in (extra_props or {}).items():
+            g.add((uri, CAC_PLATFORMS[prop_name], Literal(prop_val)))
+        return uri
+
+    # ------------------------------------------------------------------
+    # Step 3: Topics → Event nodes
+    # ------------------------------------------------------------------
+
+    def map_topics(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> Dict[str, URIRef]:
+        """
+        Create event nodes from case_topics.
+
+        Returns a dict of {topic_key: event_uri} for use by downstream steps.
+        """
+        topics_raw = case.get("case_topics") or []
+        if isinstance(topics_raw, str):
+            try:
+                topics_raw = json.loads(topics_raw)
+            except (json.JSONDecodeError, TypeError):
+                topics_raw = [topics_raw]
+
+        case_id = case.get("id", "unknown")
+        event_uris: Dict[str, URIRef] = {}
+
+        # Normalise: if both "csam" and "possession" are present, merge into one CSAMIncident
+        topics_set = set(topics_raw)
+        if "csam" in topics_set and "possession" in topics_set:
+            topics_set.discard("csam")  # keep "possession" to drive the node
+
+        # online_only is a grooming event only when the release's topics say grooming;
+        # a similarity score never chooses an event's class.
+        has_grooming = "grooming" in topics_set
+
+        # Multi-jurisdiction: merge international + multi_state into one node
+        multi_juris_uri: Optional[URIRef] = None
+        has_international = "international" in topics_set
+        has_multi_state = "multi_state" in topics_set
+        if has_international or has_multi_state:
+            mj_uri = BASE[f"case/{case_id}/event/multi-jurisdiction"]
+            g.add((mj_uri, RDF.type, CAC_MULTI.MultiJurisdictionalInvestigation))
+            g.add((mj_uri, RDF.type, CAC_CORE.Event))
+            if has_international:
+                g.add((mj_uri, CAC_MULTI.crossesBorders, Literal(True)))
+            g.add((inv_uri, CAC.hasStep, mj_uri))
+            event_uris["international"] = mj_uri
+            event_uris["multi_state"] = mj_uri
+            multi_juris_uri = mj_uri
+            topics_set.discard("international")
+            topics_set.discard("multi_state")
+
+        for topic in topics_set:
+            config = TOPIC_MAP.get(topic)
+            if config is None:
+                warnings.append(f"TOPIC_MAP: unmapped topic '{topic}' — skipped")
+                continue
+
+            # Resolve online_only → GroomingSolicitation vs ChildSexualAbuseEvent
+            if topic == "online_only":
+                class_uri = (
+                    config["class_if_grooming"]
+                    if has_grooming
+                    else config["class"]
+                )
+            elif topic == "family":
+                # "family" topic creates a relationship node, handled in map_roles
+                event_uris["family"] = None
+                continue
+            elif topic == "stranger":
+                # handled in map_roles
+                event_uris["stranger"] = None
+                continue
+            else:
+                class_uri = config["class"]
+
+            slug_key = _slug(topic)
+            evt_uri = BASE[f"case/{case_id}/event/{slug_key}"]
+            g.add((evt_uri, RDF.type, class_uri))
+            g.add((evt_uri, RDF.type, CAC_CORE.Event))
+            secondary = config.get("secondary_class")
+            if secondary is not None:
+                g.add((evt_uri, RDF.type, secondary))
+            g.add((inv_uri, CAC.hasStep, evt_uri))
+            event_uris[topic] = evt_uri
+
+        return event_uris
+
+    # ------------------------------------------------------------------
+    # Step 4: Roles + Person nodes
+    # ------------------------------------------------------------------
+
+    def map_roles(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> Tuple[List[URIRef], List[URIRef]]:
+        """
+        Create victim and offender roles and the people who play them.
+
+        A victim exists only when the case states a victim count or a victim age;
+        a release about possessed images names no identified child, and CSAM
+        event types already carry that. An offender exists for each extracted
+        perpetrator age or count, or one when the release reports a prosecution.
+        The offender's role is ``OffenderRole`` once convicted (plea, verdict or
+        sentence) and ``DefendantRole`` before. A person plays a role through a
+        UCO ``Has_Role`` relationship; an age is a CAC ``AgeAtTimeSituation``.
+
+        Returns (victim_role_uris, offender_role_uris).
+        """
+        case_id = case.get("id", "unknown")
+        victim_uris: List[URIRef] = []
+        offender_uris: List[URIRef] = []
+
+        # --- Victims ---
+        raw_victim_count = case.get("victim_count")
+        try:
+            victim_count = int(raw_victim_count) if raw_victim_count else 0
+        except (TypeError, ValueError):
+            victim_count = 0
+        if victim_count > 200:
+            # A year mis-parsed as a count ("4/17/2007" in a footer).
+            warnings.append(
+                f"victim_count={victim_count} for {case_id!r} looks like an upstream "
+                f"extraction error; no victims mapped."
+            )
+            victim_count = 0
+        case_demo = case.get("case_demographics") or {}
+        if isinstance(case_demo, str):
+            try:
+                case_demo = json.loads(case_demo)
+            except (json.JSONDecodeError, TypeError):
+                case_demo = {}
+        victim_ages: List[int] = []
+        if isinstance(case_demo, dict):
+            victim_ages = [int(a) for a in (case_demo.get("ages") or []) if a is not None]
+            age_range = case_demo.get("age_range") or {}
+            if (
+                not victim_ages
+                and isinstance(age_range, dict)
+                and age_range.get("min") is not None
+                and age_range.get("min") == age_range.get("max")
+                and victim_count <= 1
+            ):
+                victim_ages = [int(age_range["min"])]
+        # victim_gender / perpetrator_gender: no CAC Person gender property in TTL yet
+        # (MAPPING_PLAN Q7.5d). Omit RDF triples until Cory adds VictimGender / OffenderGender.
+
+        for n in range(1, max(victim_count, len(victim_ages)) + 1):
+            person_uri = BASE[f"case/{case_id}/person/victim/{n}"]
+            role_uri = BASE[f"case/{case_id}/role/victim/{n}"]
+            g.add((person_uri, RDF.type, UCO_IDENTITY.Person))
+            g.add((role_uri, RDF.type, CAC.VictimRole))
+            self._has_role(g, person_uri, role_uri)
+            if n - 1 < len(victim_ages):
+                self._age(g, person_uri, victim_ages[n - 1], "victim")
+            victim_uris.append(role_uri)
+
+        # --- Offenders ---
+        perp_ages = case.get("perpetrator_age")
+        if perp_ages is None:
+            perp_ages = []
+        elif isinstance(perp_ages, (int, float)):
+            perp_ages = [int(perp_ages)]
+        elif isinstance(perp_ages, list):
+            perp_ages = [int(a) for a in perp_ages if a is not None]
+        else:
+            perp_ages = []
+
+        try:
+            perp_count_raw = int(case.get("perpetrator_count") or 0)
+        except (TypeError, ValueError):
+            perp_count_raw = 0
+        if perp_count_raw > 200:
+            warnings.append(
+                f"perpetrator_count={perp_count_raw} for {case_id!r} looks "
+                f"like an upstream extraction error. Using the stated ages instead."
+            )
+            perp_count_raw = 0
+        prosecution = _prosecution_record(case)
+        press_digest = _case_bool_flag(case, "press_digest_pollution")
+        if press_digest:
+            if len(perp_ages) > 1:
+                warnings.append(
+                    f"press_digest_pollution: suppressed fan-out of {len(perp_ages)} "
+                    f"perpetrator ages to a single OffenderRole (press digest, not one "
+                    f"coordinated matter)."
+                )
+            perp_count = 1 if (perp_ages or prosecution) else 0
+        else:
+            perp_count = perp_count_raw or len(perp_ages) or (1 if prosecution else 0)
+
+        status = str(
+            prosecution.get("booking_status") or prosecution.get("status") or ""
+        ).lower().strip()
+        offender_class = (
+            CAC.OffenderRole if status in _CONVICTED_STATUSES else CAC_LEGAL.DefendantRole
+        )
+        offender_people: List[URIRef] = []
+        for n in range(1, perp_count + 1):
+            person_uri = BASE[f"case/{case_id}/person/offender/{n}"]
+            role_uri = BASE[f"case/{case_id}/role/offender/{n}"]
+            g.add((person_uri, RDF.type, UCO_IDENTITY.Person))
+            g.add((role_uri, RDF.type, offender_class))
+            self._has_role(g, person_uri, role_uri)
+            # Age (only if we have it for this index; omit on press digests)
+            if not press_digest and n - 1 < len(perp_ages):
+                self._age(g, person_uri, perp_ages[n - 1], "perpetrator")
+            offender_uris.append(role_uri)
+            offender_people.append(person_uri)
+
+        # Registration is stated once per case; it attributes only to a sole offender.
+        if bool(case.get("perpetrator_registered_sex_offender", False)):
+            if len(offender_people) == 1:
+                rso_uri = BASE[f"case/{case_id}/role/registered-sex-offender/1"]
+                g.add((rso_uri, RDF.type, CAC_REGISTRY.RegisteredSexOffender))
+                self._has_role(g, offender_people[0], rso_uri)
+            else:
+                warnings.append(
+                    f"perpetrator_registered_sex_offender with {len(offender_people)} "
+                    f"offenders — not attributed to any one of them"
+                )
+
+        # --- Relationship node ---
+        rel = case.get("relationship_to_victim")
+        if isinstance(rel, str):
+            rel = rel.lower().strip()
+        role_config = ROLE_MAP.get(rel) if rel else None
+
+        if role_config and len(offender_uris) == 1 and len(victim_uris) > 1:
+            warnings.append(
+                f"relationship_to_victim '{rel}' with {len(victim_uris)} victims — the release "
+                f"does not say which victim; no custodial relationship mapped"
+            )
+            role_config = None
+        elif role_config and len(offender_uris) != 1:
+            warnings.append(
+                f"relationship_to_victim '{rel}' with {len(offender_uris)} offenders — "
+                f"no custodial relationship mapped"
+            )
+            role_config = None
+
+        if role_config:
+            rel_class, secondary_class = role_config
+            # "his stepdaughter" states a victim even when no count was extracted.
+            if not victim_uris:
+                person_uri = BASE[f"case/{case_id}/person/victim/1"]
+                role_uri = BASE[f"case/{case_id}/role/victim/1"]
+                g.add((person_uri, RDF.type, UCO_IDENTITY.Person))
+                g.add((role_uri, RDF.type, CAC.VictimRole))
+                self._has_role(g, person_uri, role_uri)
+                victim_uris.append(role_uri)
+            rel_uri = BASE[f"case/{case_id}/relationship/{_slug(rel)}"]
+            g.add((rel_uri, RDF.type, rel_class))
+            g.add((rel_uri, RDF.type, CAC_CUSTODIAL.CustodialRelationship))
+            g.add((rel_uri, CAC_CUSTODIAL.relationshipType,
+                   Literal(_CUSTODIAL_RELATIONSHIP_TYPE[rel])))
+
+            # A custodial relationship is a UCO relationship, custodian (source) →
+            # child (target); it is mapped only when the release pairs one of each.
+            g.add((rel_uri, CAC_CUSTODIAL.involvesChild, victim_uris[0]))
+            g.add((rel_uri, CAC_CUSTODIAL.involvesCustodian, offender_uris[0]))
+            g.add((rel_uri, UCO_CORE.source, offender_uris[0]))
+            g.add((rel_uri, UCO_CORE.target, victim_uris[0]))
+            g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
+
+            # Trust violation for familial / custodial relationships
+            is_familial = rel in {
+                "family", "father", "mother", "parent", "brother", "sister",
+                "sibling", "uncle", "aunt", "cousin", "guardian",
+                "babysitter", "family friend",
+            }
+            is_professional = rel in {"teacher", "coach", "mentor", "childcare provider"}
+            if is_familial or is_professional:
+                tv_uri = BASE[f"case/{case_id}/event/trust-violation"]
+                g.add((tv_uri, RDF.type, CAC_CUSTODIAL.TrustViolation))
+                g.add((tv_uri, RDF.type,
+                       CAC_CUSTODIAL.CustodialAbuse if is_familial
+                       else CAC_CUSTODIAL.AuthorityAbuse))
+                g.add((tv_uri, CAC_CUSTODIAL.violatesRelationship, rel_uri))
+                g.add((tv_uri, CAC_CUSTODIAL.perpetratedBy, offender_uris[0]))
+                g.add((inv_uri, CAC.hasStep, tv_uri))
+        elif rel and rel not in ("stranger", "unknown", ""):
+            warnings.append(f"ROLE_MAP: unmapped relationship '{rel}' — no relationship node")
+
+        return victim_uris, offender_uris
+
+    @staticmethod
+    def _has_role(g: Graph, person_uri: URIRef, role_uri: URIRef) -> None:
+        """UCO's idiom for a role bearer: a ``Has_Role`` relationship, person → role."""
+        rel_uri = URIRef(f"{role_uri}/has-role")
+        g.add((rel_uri, RDF.type, UCO_CORE.Relationship))
+        g.add((rel_uri, UCO_CORE.source, person_uri))
+        g.add((rel_uri, UCO_CORE.target, role_uri))
+        g.add((rel_uri, UCO_CORE.kindOfRelationship, Literal("Has_Role")))
+        g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
+
+    def _evidence(self, field: str, role: str, value: Any, node: URIRef) -> None:
+        if not hasattr(self, "evidence_nodes"):
+            self.evidence_nodes = []
+        self.evidence_nodes.append((field, role, str(value), node))
+
+    def _age(self, g: Graph, person_uri: URIRef, years: int, role: str) -> None:
+        """An age the release states for this person, as a CAC ``AgeAtTimeSituation``."""
+        age_uri = URIRef(f"{person_uri}/age")
+        self._evidence("age", role, int(years), age_uri)
+        g.add((age_uri, RDF.type, CAC_TEMPORAL.AgeAtTimeSituation))
+        g.add((age_uri, CAC_TEMPORAL.ageSubject, person_uri))
+        g.add((age_uri, CAC_TEMPORAL.concernsAgeQuality, CAC_TEMPORAL.Age))
+        g.add((age_uri, CAC_TEMPORAL.hasAgeInYears, Literal(Decimal(int(years)))))
+
+    # ------------------------------------------------------------------
+    # Step 5b: Investigation type → operation node
+    # ------------------------------------------------------------------
+
+    def map_investigation_type(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> Optional[URIRef]:
+        """Create a TaskForce operation node from investigation_type."""
+        inv_type = (case.get("investigation_type") or "").lower().strip()
+        if not inv_type:
+            return None
+
+        op_class = INVESTIGATION_TYPE_MAP.get(inv_type)
+        if op_class is None:
+            if inv_type != "unknown":
+                warnings.append(f"INVESTIGATION_TYPE_MAP: unmapped type '{inv_type}' — skipped")
+            return None
+
+        case_id = case.get("id", "unknown")
+        op_uri = BASE[f"case/{case_id}/operation"]
+        g.add((op_uri, RDF.type, op_class))
+        g.add((op_uri, RDF.type, CAC_CORE.Event))
+        g.add((inv_uri, CAC.hasStep, op_uri))
+        return op_uri
+
+    # ------------------------------------------------------------------
+    # Step 6: Prosecution
+    # ------------------------------------------------------------------
+
+    def map_prosecution(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        offender_uris: List[URIRef],
+        warnings: List[str],
+    ) -> None:
+        """Create LegalProceeding, CriminalCharge, CriminalSentence, Phase, and step events.
+
+        A charge is an allegation: it is a ``CriminalCharge`` on the proceeding,
+        never an abuse event. Phases and proceedings carry no begin point; the
+        release date is not when they began.
+        """
+        case_id = case.get("id", "unknown")
+
+        prosecution = _prosecution_record(case)
+        if not prosecution:
+            return
+
+        status = (
+            prosecution.get("booking_status")
+            or prosecution.get("status")
+            or ""
+        ).lower().strip()
+
+        # Status → phase (hasPhase) and/or legal event (hasStep)
+        phase_class = PROSECUTION_PHASE_MAP.get(status)
+        if phase_class:
+            phase_uri = BASE[f"case/{case_id}/phase/{_slug(status)}"]
+            g.add((phase_uri, RDF.type, phase_class))
+            g.add((phase_uri, RDF.type, CAC_CORE.Phase))
+            g.add((inv_uri, CAC.hasPhase, phase_uri))
+            g.add((inv_uri, CAC.currentPhase, phase_uri))
+        elif status:
+            warnings.append(f"PROSECUTION_PHASE_MAP: unmapped status '{status}' — skipped")
+
+        step_class = PROSECUTION_STEP_MAP.get(status)
+        if step_class:
+            step_uri = BASE[f"case/{case_id}/legal-step/{_slug(status)}"]
+            g.add((step_uri, RDF.type, step_class))
+            g.add((step_uri, RDF.type, CAC_LEGAL.LegalProceeding))
+            g.add((step_uri, RDF.type, CAC_CORE.LegalEvent))
+            g.add((step_uri, RDF.type, CAC_CORE.Event))
+            g.add((inv_uri, CAC.hasStep, step_uri))
+
+        # Charges and sentences → LegalProceeding (domain in legal-outcomes.ttl)
+        charges_raw = prosecution.get("charges") or []
+        if isinstance(charges_raw, str):
+            try:
+                charges_raw = json.loads(charges_raw)
+            except (json.JSONDecodeError, TypeError):
+                charges_raw = []
+
+        jail_str = str(prosecution.get("jail") or "").strip()
+        sentences_raw = prosecution.get("sentences") or []
+        if isinstance(sentences_raw, str):
+            sentences_raw = [sentences_raw] if sentences_raw.strip() else []
+        sentence_texts = [
+            str(s).strip() for s in sentences_raw if s is not None and str(s).strip()
+        ]
+
+        # Collapse synonym charge strings that map to the same CAC class/cluster
+        # (e.g. "child porn" + "child pornography" + "possession of child pornography").
+        charges_raw = self._collapse_duplicate_charges(charges_raw, warnings)
+
+        has_charges = bool(charges_raw)
+        has_sentence_durations = bool(sentence_texts)
+        has_jail = bool(jail_str)
+
+        proceeding_uri: Optional[URIRef] = None
+        if has_charges or has_sentence_durations or has_jail:
+            proceeding_uri = BASE[f"case/{case_id}/legal-proceeding"]
+            g.add((proceeding_uri, RDF.type, CAC_LEGAL.LegalProceeding))
+            g.add((proceeding_uri, RDF.type, CAC_CORE.LegalEvent))
+            g.add((proceeding_uri, RDF.type, CAC_CORE.Event))
+            g.add((inv_uri, CAC.hasStep, proceeding_uri))
+
+        total_counts = 0
+        for i, charge in enumerate(charges_raw, start=1):
+            if isinstance(charge, dict):
+                charge_str = str(charge.get("charge") or "")
+                count = charge.get("count", 1)
+            else:
+                charge_str = str(charge)
+                count = 1
+
+            charge_class, cluster, _unmapped = self._match_charge(charge_str, warnings)
+
+            charge_uri = BASE[f"case/{case_id}/charge/{i}"]
+            g.add((charge_uri, RDF.type, charge_class))
+            if charge_class != CAC_LEGAL.CriminalCharge:
+                g.add((charge_uri, RDF.type, CAC_LEGAL.CriminalCharge))
+            g.add((charge_uri, RDFS.label, Literal(charge_str)))
+            if cluster in CONTACT_ABUSE_CLUSTERS:
+                g.add((charge_uri, DCTERMS.subject,
+                       CONTACT_CLUSTER_EVENT_MAP.get(cluster, CAC.ChildSexualAbuseEvent)))
+            if proceeding_uri is not None:
+                g.add((proceeding_uri, CAC_LEGAL.hasCharge, charge_uri))
+            try:
+                total_counts += max(int(count or 1), 1)
+            except (TypeError, ValueError):
+                total_counts += 1
+
+        # CAC has no per-charge count; chargeCount is the proceeding's total.
+        if proceeding_uri is not None and total_counts:
+            g.add((proceeding_uri, CAC_LEGAL.chargeCount,
+                   Literal(total_counts, datatype=XSD.nonNegativeInteger)))
+
+        # CriminalSentence only from duration/outcome phrases — not county-jail names.
+        for j, sent_text in enumerate(sentence_texts, start=1):
+            if proceeding_uri is None:
+                break
+            sentence_class = self._match_sentence(sent_text)
+            sent_uri = BASE[f"case/{case_id}/sentence/{j}"]
+            self._evidence("sentence", "", sent_text, sent_uri)
+            g.add((sent_uri, RDF.type, sentence_class))
+            g.add((sent_uri, RDF.type, CAC_LEGAL.CriminalSentence))
+            g.add((sent_uri, RDFS.label, Literal(sent_text)))
+            g.add((proceeding_uri, CAC_LEGAL.resultsSentence, sent_uri))
+            # A CAC sentence is an AssessmentResult about the person sentenced.
+            if len(offender_uris) == 1:
+                g.add((sent_uri, CAC_CORE.assesses, offender_uris[0]))
+
+        # Pretrial detention: legal-outcomes has bailStatus on LegalProceeding, not a
+        # dedicated pretrial-detention node class — annotate via bailStatus + comment.
+        if has_jail and proceeding_uri is not None and not has_sentence_durations:
+            if re.search(r'non-bondable', jail_str, re.I):
+                g.add((proceeding_uri, CAC_LEGAL.bailStatus,
+                       Literal("held_without_bail")))
+            g.add((proceeding_uri, RDFS.comment,
+                   Literal(f"Pretrial detention facility (not a sentence): {jail_str}")))
+            warnings.append(
+                f"PROSECUTION (info): jail location recorded as pretrial detention only "
+                f"(no CriminalSentence) — {jail_str[:80]}"
+            )
+        elif has_jail and proceeding_uri is not None:
+            g.add((proceeding_uri, RDFS.comment,
+                   Literal(f"Pretrial detention facility: {jail_str}")))
+
+    # ------------------------------------------------------------------
+    # Step 7: Agencies
+    # ------------------------------------------------------------------
+
+    def map_agencies(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> List[URIRef]:
+        """Create agency nodes (shared singletons) and link to investigation.
+
+        When ``agency_grounds`` is present (or the pinned CDE registry is on disk),
+        grounded mentions mint readable ``agency/{name}-{st}`` IRIs with
+        ``caselinker:oriCode``. A mention that is not grounded is shared only as far
+        as its label supports (``agency_grounding.ungrounded_agency_scope``): in a
+        release from one state it becomes ``agency/{name}-{st}-unverified``, and in a
+        release with no state it becomes ``case/{id}/agency/{name}``, which no other
+        case can reach. Federal bodies and labels that name a state stay shared.
+        """
+        agencies_raw = case.get("agencies_involved") or []
+        if isinstance(agencies_raw, str):
+            try:
+                agencies_raw = json.loads(agencies_raw)
+            except (json.JSONDecodeError, TypeError):
+                agencies_raw = [agencies_raw]
+
+        grounds = case.get("agency_grounds")
+        if not isinstance(grounds, list):
+            grounds = []
+        if not grounds and agencies_raw:
+            grounds = self._ground_agencies_for_case(case, agencies_raw, warnings)
+        ground_by_mention = {
+            str(gnd.get("mention") or "").strip(): gnd
+            for gnd in grounds
+            if isinstance(gnd, dict) and gnd.get("mention")
+        }
+
+        case_id = case.get("id", "unknown")
+        uris: List[URIRef] = []
+        seen: set = set()
+        used_slugs: set = set()
+
+        for agency_name in agencies_raw:
+            if not agency_name or agency_name in seen:
+                continue
+            seen.add(agency_name)
+
+            case_text = ""
+            raw = case.get("raw_data")
+            if isinstance(raw, dict):
+                case_text = str(raw.get("case_text") or "")
+            if not case_text:
+                case_text = str(case.get("case_text") or "")
+            _, class_uri = self._classify_agency(
+                agency_name, case.get("source"), case_text
+            )
+            gnd = ground_by_mention.get(str(agency_name).strip()) or {}
+            status = (gnd.get("status") or "").strip() or "ungrounded"
+            display = (gnd.get("agency_name") or agency_name).strip()
+            case_scope = None
+            if status == "grounded" and gnd.get("slug"):
+                slug = str(gnd["slug"]).strip()
+            elif status == "grounded":
+                slug = self._readable_agency_slug(
+                    agency_name=display,
+                    state_hint=gnd.get("state_hint"),
+                    ori=gnd.get("ori"),
+                    used=used_slugs,
+                )
+            else:
+                slug = _slug(agency_name)
+                scope = self._ungrounded_agency_scope(
+                    agency_name, gnd, federal=class_uri == CAC_MULTI.FederalAgency
+                )
+                if scope == "state":
+                    slug = f"{slug}-{str(gnd.get('state_hint')).strip().lower()}-unverified"
+                elif scope == "case":
+                    case_scope = str(case_id)
+            used_slugs.add(slug)
+            ag_uri = self._get_or_create_agency(
+                g,
+                slug,
+                display,
+                class_uri,
+                case_scope=case_scope,
+                ori=gnd.get("ori") if status == "grounded" else None,
+                ground_status=status,
+                ground_meta=gnd if status == "grounded" else None,
+                article_mention=(
+                    str(agency_name).strip() if status == "grounded" else None
+                ),
+            )
+
+            g.add((inv_uri, CAC_MULTI.involvesAgency, ag_uri))
+            uris.append(ag_uri)
+
+        return uris
+
+    def _ground_agencies_for_case(
+        self,
+        case: Dict[str, Any],
+        agencies_raw: List[Any],
+        warnings: List[str],
+    ) -> List[Dict[str, Any]]:
+        from pathlib import Path
+        import importlib.util
+        import sys
+
+        ground_path = (
+            Path(__file__).resolve().parents[2]
+            / "src"
+            / "Processing Layer"
+            / "agency_grounding.py"
+        )
+        if not ground_path.is_file():
+            warnings.append("agency_grounding.py missing — agency grounds skipped")
+            return []
+        try:
+            spec = importlib.util.spec_from_file_location(
+                "agency_grounding", ground_path
+            )
+            mod = importlib.util.module_from_spec(spec)
+            assert spec.loader
+            sys.modules["agency_grounding"] = mod
+            spec.loader.exec_module(mod)
+            return mod.ground_case_agencies(
+                agencies_raw,
+                source=case.get("source"),
+                case_id=case.get("id"),
+                location_grounds=case.get("location_grounds"),
+            )
+        except Exception as exc:  # noqa: BLE001 — remap path must not hide graph build
+            # Missing registry should fail loud on ingest; remap warns and continues.
+            if exc.__class__.__name__ == "AgencyRegistryError":
+                raise
+            warnings.append(f"agency_grounding failed: {exc}")
+            return []
+
+    def _ungrounded_agency_scope(
+        self, agency_name: str, gnd: Dict[str, Any], *, federal: bool
+    ) -> str:
+        import importlib.util
+        import sys
+        from pathlib import Path
+
+        proc = Path(__file__).resolve().parents[2] / "src" / "Processing Layer"
+        if str(proc) not in sys.path:
+            sys.path.insert(0, str(proc))
+        mod = sys.modules.get("agency_grounding")
+        if mod is None:
+            spec = importlib.util.spec_from_file_location(
+                "agency_grounding", proc / "agency_grounding.py"
+            )
+            mod = importlib.util.module_from_spec(spec)
+            assert spec.loader
+            sys.modules["agency_grounding"] = mod
+            spec.loader.exec_module(mod)
+        return mod.ungrounded_agency_scope(agency_name, gnd, federal=federal)
+
+    @staticmethod
+    def _readable_agency_slug(
+        *,
+        agency_name: str,
+        state_hint: Any,
+        ori: Any,
+        used: set,
+    ) -> str:
+        from pathlib import Path
+        import importlib.util
+        import sys
+
+        ground_path = (
+            Path(__file__).resolve().parents[2]
+            / "src"
+            / "Processing Layer"
+            / "agency_grounding.py"
+        )
+        spec = importlib.util.spec_from_file_location("agency_grounding", ground_path)
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        sys.modules["agency_grounding"] = mod
+        spec.loader.exec_module(mod)
+        return mod.readable_agency_slug(
+            agency_name=agency_name,
+            state_hint=str(state_hint or "") or None,
+            ori=str(ori or "") or None,
+            collision_slugs=used,
+        )
+
+    # ------------------------------------------------------------------
+    # Step 7b: Geographic locations (NER)
+    # ------------------------------------------------------------------
+
+    def map_locations(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> List[URIRef]:
+        """Create shared ``uco-location:Location`` nodes from NER ``locations``.
+
+        When ``location_grounds`` is present (ingest linker) or the Census gazetteer
+        is on disk, grounded mentions mint readable ``location/{name}-{st}``
+        singletons (GEOID suffix on collision) so "Cumberland County" in NJ and NC
+        do not collapse. Ungrounded mentions keep the string slug. Link via
+        ``dcterms:spatial``. A mention the gazetteer did not ground (ungrounded,
+        ambiguous, outside the US registry) is a node of this case only,
+        ``case/{id}/location/{slug}``, so one "Springfield" never joins cases
+        in different states.
+        """
+        locations_raw = case.get("locations") or []
+        if isinstance(locations_raw, str):
+            try:
+                locations_raw = json.loads(locations_raw)
+            except (json.JSONDecodeError, TypeError):
+                locations_raw = [locations_raw]
+        if not isinstance(locations_raw, list):
+            warnings.append(
+                f"locations: expected list, got {type(locations_raw).__name__} — skipped"
+            )
+            return []
+
+        grounds = case.get("location_grounds")
+        if not isinstance(grounds, list) or not grounds:
+            grounds = self._ground_locations_for_case(case, locations_raw, warnings)
+        ground_by_mention = {
+            str(gnd.get("mention") or "").strip(): gnd
+            for gnd in grounds
+            if isinstance(gnd, dict) and gnd.get("mention")
+        }
+
+        case_id = case.get("id", "unknown")
+        uris: List[URIRef] = []
+        seen_slugs: set = set()
+
+        for raw in locations_raw:
+            if raw is None:
+                continue
+            label = str(raw).strip()
+            if len(label) < 2:
+                continue
+            gnd = ground_by_mention.get(label) or {}
+            status = (gnd.get("status") or "").strip() or "ungrounded"
+            fips = (gnd.get("fips") or gnd.get("geoid") or "").strip()
+            entity_name = (gnd.get("entity_name") or "").strip()
+            display = entity_name or label
+            if status == "grounded" and fips:
+                slug = (gnd.get("slug") or "").strip() or self._readable_location_slug(
+                    entity_name=display,
+                    state_hint=gnd.get("state_hint"),
+                    fips=fips,
+                    used=seen_slugs,
+                )
+            else:
+                slug = _slug(label)
+                status = status if status != "grounded" else "ungrounded"
+            grounded = status == "grounded" and bool(fips)
+            if slug in seen_slugs:
+                loc_uri = (
+                    (self._location_registry.get(slug) or BASE[f"location/{slug}"])
+                    if grounded else BASE[f"case/{case_id}/location/{slug}"]
+                )
+                if grounded and label and label != display:
+                    self._add_alt_label(g, loc_uri, label)
+                g.add((inv_uri, DCTERMS.spatial, loc_uri))
+                continue
+            seen_slugs.add(slug)
+
+            if grounded:
+                loc_uri = self._get_or_create_location(
+                    g, slug, display, fips=fips, article_mention=label,
+                )
+            else:
+                loc_uri = BASE[f"case/{case_id}/location/{slug}"]
+                g.add((loc_uri, RDF.type, UCO_LOCATION.Location))
+                g.add((loc_uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+                g.add((loc_uri, RDFS.label, Literal(display)))
+                g.add((loc_uri, UCO_CORE.name, Literal(display)))
+            g.add((inv_uri, DCTERMS.spatial, loc_uri))
+            uris.append(loc_uri)
+
+        return uris
+
+    @staticmethod
+    def _readable_location_slug(
+        *,
+        entity_name: str,
+        state_hint: Any,
+        fips: str,
+        used: set,
+    ) -> str:
+        from pathlib import Path
+        import importlib.util
+        import sys
+
+        ground_path = (
+            Path(__file__).resolve().parents[2]
+            / "src"
+            / "Processing Layer"
+            / "location_grounding.py"
+        )
+        spec = importlib.util.spec_from_file_location("location_grounding", ground_path)
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        sys.modules["location_grounding"] = mod
+        spec.loader.exec_module(mod)
+        return mod.readable_location_slug(
+            entity_name=entity_name,
+            mention=entity_name,
+            state_hint=str(state_hint or "") or None,
+            fips=fips,
+            entity_kind=None,
+            collision_slugs=used,
+        )
+
+    def _ground_locations_for_case(
+        self,
+        case: Dict[str, Any],
+        locations_raw: List[Any],
+        warnings: List[str],
+    ) -> List[Dict[str, Any]]:
+        """Remap path: ground on the fly when stored ``location_grounds`` is absent.
+
+        Requires the pinned gazetteer — raises (does not silently slug).
+        """
+        from pathlib import Path
+        import importlib.util
+        import sys
+
+        ground_path = (
+            Path(__file__).resolve().parents[2]
+            / "src"
+            / "Processing Layer"
+            / "location_grounding.py"
+        )
+        if not ground_path.is_file():
+            raise RuntimeError(f"location_grounding.py missing at {ground_path}")
+        spec = importlib.util.spec_from_file_location(
+            "location_grounding", ground_path
+        )
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        sys.modules["location_grounding"] = mod
+        spec.loader.exec_module(mod)
+        case_text = ""
+        raw = case.get("raw_data")
+        if isinstance(raw, dict):
+            case_text = str(raw.get("case_text") or "")
+        if not case_text:
+            case_text = str(case.get("case_text") or "")
+        return mod.ground_case_locations(
+            locations_raw,
+            source=case.get("source"),
+            case_text=case_text,
+            case_id=case.get("id"),
+        )
+
+    @staticmethod
+    def _add_alt_label(g: Graph, uri: URIRef, mention: str) -> None:
+        """Article wording as skos:altLabel; skip if empty or already present."""
+        text = (mention or "").strip()
+        if not text:
+            return
+        existing = {str(o) for o in g.objects(uri, SKOS.altLabel)}
+        labels = {str(o) for o in g.objects(uri, RDFS.label)}
+        if text in existing or text in labels:
+            return
+        g.add((uri, SKOS.altLabel, Literal(text)))
+
+    def _get_or_create_location(
+        self,
+        g: Graph,
+        slug: str,
+        label: str,
+        *,
+        fips: Optional[str] = None,
+        article_mention: Optional[str] = None,
+    ) -> URIRef:
+        """Return shared singleton location URIRef, creating it if new.
+
+        Always (re)assert ``rdfs:label`` / ``uco-core:name`` on the current graph.
+        Registry hits from earlier cases in a batch used to omit labels, which made
+        location nodes look vacuous in per-case TTL/JSON-LD. A grounded place
+        carries its Census code as ``dcterms:identifier "fips:…"``; how it was
+        grounded is in the provenance graph. Article wording (when distinct from
+        the canonical label) is ``skos:altLabel``.
+        """
+        uri = self._location_registry.get(slug)
+        if uri is None:
+            uri = BASE[f"location/{slug}"]
+            self._location_registry[slug] = uri
+        g.add((uri, RDF.type, UCO_LOCATION.Location))
+        g.add((uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+        g.add((uri, RDFS.label, Literal(label)))
+        g.add((uri, UCO_CORE.name, Literal(label)))
+        if article_mention:
+            self._add_alt_label(g, uri, article_mention)
+        if fips:
+            g.add((uri, DCTERMS.identifier, Literal(f"fips:{fips}")))
+        return uri
+
+    def _classify_agency(
+        self, name: str, source: Optional[str] = None, case_text: str = ""
+    ) -> Tuple[str, URIRef]:
+        """Return (slug, CAC agency class URI) for an agency name string."""
+        import importlib.util
+        from pathlib import Path
+
+        gate_path = (
+            Path(__file__).resolve().parents[2]
+            / "src"
+            / "Processing Layer"
+            / "agency_context_gate.py"
+        )
+        spec = importlib.util.spec_from_file_location("agency_context_gate", gate_path)
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        spec.loader.exec_module(mod)
+        is_state_doj_label = mod.is_state_doj_label
+        pathway_bucket_for_label = mod.pathway_bucket_for_label
+
+        if is_state_doj_label(name):
+            return _slug(name), CAC_MULTI.StateAgency
+
+        bucket, _ = pathway_bucket_for_label(
+            name, source, case_text, gate_decision="keep"
+        )
+        if bucket == "federal":
+            for pattern, fixed_slug in _FEDERAL_PATTERNS:
+                if pattern.search(name):
+                    return fixed_slug, CAC_MULTI.FederalAgency
+            return _slug(name), CAC_MULTI.FederalAgency
+
+        if _ICAC_PATTERN.search(name):
+            return _slug(name), CAC_TASKFORCE.StateICACtaskForce
+
+        if _STATE_ATTORNEY_PATTERN.search(name):
+            return _slug(name), CAC_MULTI.StateAgency
+
+        return _slug(name), CAC_MULTI.LocalAgency
+
+    def _get_or_create_agency(
+        self,
+        g: Graph,
+        slug: str,
+        label: str,
+        class_uri: URIRef,
+        *,
+        ori: Optional[str] = None,
+        ground_status: Optional[str] = None,
+        ground_meta: Optional[Dict[str, Any]] = None,
+        article_mention: Optional[str] = None,
+        case_scope: Optional[str] = None,
+    ) -> URIRef:
+        """Return shared singleton agency URIRef, creating it if new.
+
+        Always (re)assert ``rdfs:label`` on the current graph — same fix as
+        locations. Registry hits from earlier cases in a batch used to omit
+        labels, so many per-case graphs referenced agencies with no label triple.
+        Article wording (when distinct from the CDE/federal canonical name) is
+        ``skos:altLabel``.
+        """
+        if case_scope:
+            # Not a shared node: the label could not be tied to one agency.
+            uri = BASE[f"case/{case_scope}/agency/{slug}"]
+        else:
+            uri = self._agency_registry.get(slug)
+            if uri is None:
+                uri = BASE[f"agency/{slug}"]
+                self._agency_registry[slug] = uri
+        g.add((uri, RDF.type, class_uri))
+        g.add((uri, RDF.type, CAC_CORE.OrganizationLikeEntity))
+        g.add((uri, RDFS.label, Literal(label)))
+        g.add((uri, UCO_CORE.name, Literal(label)))
+        if article_mention:
+            self._add_alt_label(g, uri, article_mention)
+        if ori:
+            g.add((uri, DCTERMS.identifier, Literal(f"ori:{ori}")))
+        return uri
+
+    # ------------------------------------------------------------------
+    # Step 8: Technology signals
+    # ------------------------------------------------------------------
+
+    def map_technology(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> List[URIRef]:
+        """Detection steps (PhotoDNA, hash matching, CSAI Match) and anonymization networks.
+
+        A detection technology is a ``cac-core:DetectionEvent`` step of the
+        investigation. ``CyberTipline`` is the tip itself (``map_cybertip``), not a
+        method. Returns the anonymization-network platform nodes.
+        """
+        case_id = case.get("id", "unknown")
+
+        for tech in (case.get("investigation_technology") or []):
+            if tech == "CyberTipline":
+                continue
+            class_uri = INVESTIGATION_TECH_MAP.get(tech)
+            if class_uri is None:
+                warnings.append(f"TECHNOLOGY_MAP: unmapped tech '{tech}' — skipped")
+                continue
+            tech_uri = BASE[f"case/{case_id}/detection/{_slug(tech)}"]
+            g.add((tech_uri, RDF.type, class_uri))
+            g.add((tech_uri, RDFS.label, Literal(tech)))
+            g.add((inv_uri, CAC.hasStep, tech_uri))
+
+        networks: List[URIRef] = []
+        for net in (case.get("anonymization_network") or []):
+            class_uri = ANON_NETWORK_MAP.get(net)
+            if class_uri is None:
+                warnings.append(f"ANON_MAP: unmapped network '{net}' — skipped")
+                continue
+            networks.append(self._get_or_create_platform(g, _slug(net), net, class_uri))
+        return networks
+
+    # ------------------------------------------------------------------
+    # Step 9: NLP features (separate named graph)
+    # ------------------------------------------------------------------
+
+    def map_nlp_features(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> None:
+        """
+        Map semantic-similarity scores into the NLP named graph as assessments.
+
+        A score says the narrative resembles a concept; it does not say the
+        concept happened. Each concept at or above its threshold is one
+        ``cac-core:AssessmentResult`` that assesses the case narrative, with
+        ``dcterms:subject`` the CAC class it resembles and ``hasConfidence`` the
+        score. No event or role is minted from a score.
+        """
+        case_id = case.get("id", "unknown")
+        ml = _case_feature(case, "ml_features") or {}
+        if isinstance(ml, str):
+            try:
+                ml = json.loads(ml)
+            except (json.JSONDecodeError, TypeError):
+                ml = {}
+
+        semantic = ml.get("semantic_severity") or {} if isinstance(ml, dict) else {}
+        scores = semantic.get("scores") or {}
+        if not scores:
+            return
+
+        narrative = BASE[f"case/{case_id}/narrative"]
+        for concept, (threshold, class_uri) in NLP_CONCEPT_MAP.items():
+            score = scores.get(concept)
+            if score is None or score < threshold:
+                continue
+            node_uri = BASE[f"case/{case_id}/assessment/semantic/{_slug(concept)}"]
+            g.add((node_uri, RDF.type, CAC_CORE.AssessmentResult))
+            g.add((node_uri, RDFS.label, Literal(f"semantic similarity · {concept}")))
+            g.add((node_uri, CAC_CORE.assesses, narrative))
+            g.add((node_uri, DCTERMS.subject, class_uri))
+            g.add((node_uri, CAC_CORE.hasConfidence, Literal(Decimal(str(round(float(score), 4))))))
+            g.add((node_uri, CAC_CORE.usesMethod, BASE["extractor/semantic-embedding"]))
+
+    # ------------------------------------------------------------------
+    # Step 10: Perpetrator admissions (regex extraction → CAC artifact)
+    # ------------------------------------------------------------------
+
+    def map_perpetrator_admissions(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> None:
+        """
+        Map ``perpetrator_admissions`` feature records to
+        ``cacontology-undercover:IncriminatingStatement`` nodes.
+
+        CaseLinker extracts these from ICAC press-release narrative via
+        regex attribution frames in ``perpetrator_admissions.py``. There is
+        no dedicated ``PerpetratorAdmission`` class in CAC; the undercover
+        module's ``IncriminatingStatement`` ("statement made by suspect",
+        subClassOf ``uco-observable:Message``, ``cac-core:Artifact``) is the
+        closest fit. A statement is an object of the investigation
+        (``uco-core:object``), not a step, and is not tied to any one offender
+        or event: the release states neither pairing.
+        """
+        case_id = case.get("id", "unknown")
+        raw = _case_feature(case, "perpetrator_admissions")
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw)
+            except (json.JSONDecodeError, TypeError):
+                raw = None
+        if not isinstance(raw, list) or not raw:
+            return
+
+        source_url = case.get("source_url")
+
+        for index, record in enumerate(raw, start=1):
+            if not isinstance(record, dict):
+                continue
+            quote = str(record.get("quote") or "").strip()
+            if not quote:
+                continue
+
+            confidence_label = str(record.get("confidence") or "medium").lower()
+            confidence_score = PERPETRATOR_ADMISSION_CONFIDENCE.get(
+                confidence_label, 0.65
+            )
+
+            adm_uri = BASE[f"case/{case_id}/admission/{index}"]
+            label = quote if len(quote) <= 120 else f"{quote[:117]}..."
+
+            g.add((adm_uri, RDF.type, CAC_UNDERCOVER.IncriminatingStatement))
+            g.add((adm_uri, RDFS.label, Literal(label)))
+            g.add((adm_uri, UCO_CORE.description, Literal(quote)))
+            if source_url:
+                g.add((adm_uri, DCTERMS.source, _source_url_term(str(source_url))))
+            g.add((inv_uri, UCO_CORE.object, adm_uri))
+
+            result_uri = BASE[f"case/{case_id}/admission/{index}/extraction-confidence"]
+            g.add((result_uri, RDF.type, CAC_CORE.AssessmentResult))
+            g.add((result_uri, CAC_CORE.hasConfidence, Literal(Decimal(str(round(confidence_score, 4))))))
+            g.add((result_uri, CAC_CORE.assesses, adm_uri))
+            g.add((result_uri, CAC_CORE.usesMethod, BASE["extractor/perpetrator-admissions"]))
+
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+
+    # Event classes that receive participatesInEvent + usesChannel (core CSA spine).
+    # Includes all cacontology:ChildSexualAbuseEvent direct subclasses from core TTL,
+    # sextortion incidents, usa-federal contact offense events, and production offenses
+    # (cacontology-production:ProductionOffense is ExploitationEvent, not CSA subclass).
+    _CSA_EVENT_TYPES: Tuple[URIRef, ...] = (
+        CAC.ChildSexualAbuseEvent,
+        CAC.CSAMIncident,
+        CAC.DigitallyGeneratedCSAMIncident,
+        CAC.LiveStreamingCSA,
+        CAC.GroomingSolicitation,
+        CAC.Sextortion,
+        CAC.ConspiracyToCommitCSA,
+        CAC_SEXTORTION.SextortionIncident,
+        CAC_PRODUCTION.ProductionOffense,
+        CAC_PRODUCTION.LiveProductionEvent,
+        CAC_USA_FEDERAL.SexualAbuseOfMinor,
+        CAC_USA_FEDERAL.AbusiveContactWithMinor,
+        CAC_USA_FEDERAL.AggravatedSexualAbuse,
+    )
+
+    def _core_csa_event_uris(
+        self,
+        g: Graph,
+        event_uris: Dict[str, URIRef],
+    ) -> List[URIRef]:
+        """Return event URIs typed as a CSA / production offense class in _CSA_EVENT_TYPES."""
+        result: List[URIRef] = []
+        for evt_uri in event_uris.values():
+            if evt_uri is None:
+                continue
+            if any((evt_uri, RDF.type, cls) in g for cls in self._CSA_EVENT_TYPES):
+                result.append(evt_uri)
+        return result
+
+    def _link_to_single_event(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        event_uris: Dict[str, URIRef],
+        victim_uris: List[URIRef],
+        offender_uris: List[URIRef],
+        platform_uris: List[URIRef],
+    ) -> None:
+        """
+        Attach roles, platforms and severity to the case's one CSA event.
+
+        Roles, platforms and severity indicators are extracted per case, not per
+        event. With one CSA event the case and the event are the same scope, so
+        ``participatesInEvent``, ``usesChannel`` and ``severityLevel`` say
+        exactly what the release says. With several, any pairing would be a
+        guess; the nodes stay in the case graph unlinked to an event.
+        """
+        events = self._core_csa_event_uris(g, event_uris)
+        if len(events) != 1:
+            return
+        evt_uri = events[0]
+        for role_uri in victim_uris + offender_uris:
+            g.add((role_uri, CAC.participatesInEvent, evt_uri))
+        for p_uri in dict.fromkeys(platform_uris):
+            g.add((evt_uri, CAC.usesChannel, p_uri))
+
+        severity_raw = case.get("severity_indicators") or []
+        if isinstance(severity_raw, str):
+            try:
+                severity_raw = json.loads(severity_raw)
+            except (json.JSONDecodeError, TypeError):
+                severity_raw = [severity_raw]
+        levels = [SEVERITY_MAP[i][0] for i in severity_raw if i in SEVERITY_MAP]
+        if levels and max(levels) > 0:
+            g.add((evt_uri, CAC.severityLevel, Literal(max(levels), datatype=XSD.integer)))
+
+    def _link_to_case(
+        self,
+        g: Graph,
+        inv_uri: URIRef,
+        victim_uris: List[URIRef],
+        offender_uris: List[URIRef],
+        platform_uris: List[URIRef],
+    ) -> None:
+        """
+        List the case's people and platforms as objects of the investigation.
+
+        People and platforms are extracted per case, so the case is the scope
+        the release states for them. ``_link_to_single_event`` adds the event
+        edge only when the case has one CSA event; with none or several, these
+        nodes had no edge to the investigation at all and a query starting from
+        the case could not reach them. ``uco-core:object`` is the edge the
+        CyberTip report and admissions already use: a CASE investigation is a
+        ``ContextualCompilation`` of the objects it concerns. It says "this
+        case concerns this person / platform", never which act used which.
+        """
+        roles = set(victim_uris + offender_uris)
+        for rel in g.subjects(RDF.type, UCO_CORE.Relationship):
+            if g.value(rel, UCO_CORE.target) in roles:
+                person = g.value(rel, UCO_CORE.source)
+                if person is not None:
+                    g.add((inv_uri, UCO_CORE.object, person))
+        for p_uri in dict.fromkeys(platform_uris):
+            g.add((inv_uri, UCO_CORE.object, p_uri))
+
+    def map_cybertip(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        agency_uris: List[URIRef],
+        warnings: List[str],
+    ) -> Optional[URIRef]:
+        """
+        The CyberTipline report this case's release says it came from (#20).
+
+        A tip exists only when the resolved investigation types include
+        ``cybertip``: a tip sentence about this case, not an NCMEC footer.
+        NCMEC receives every CyberTip, so it is the receiver
+        (``hotlines:receivedBy``), never the reporter. The reporter is the
+        ``cybertip_reporter`` field: a named ESP becomes a ``ReporterRole``
+        played by that platform; an unnamed ESP or a member of the public
+        types the report (``ESPReport`` / ``PublicReport``) with no bearer; an
+        unstated reporter leaves the report without ``reportedBy``.
+        """
+        if "cybertip" not in (_case_feature(case, "investigation_types") or []):
+            return None
+        case_id = case.get("id", "unknown")
+        tip_uri = BASE[f"case/{case_id}/cybertip"]
+        self._evidence("investigation_type", "case_action", "cybertip", tip_uri)
+        g.add((tip_uri, RDF.type, CAC_NCMEC.NCMECCybertipReport))
+        g.add((tip_uri, RDFS.label, Literal("CyberTipline report")))
+        # CAC types a hotline report as a UCO Observation, whose name UCO fixes as "observe".
+        g.add((tip_uri, UCO_CORE.name, Literal("observe")))
+        g.add((inv_uri, UCO_CORE.object, tip_uri))
+
+        ncmec = BASE["agency/ncmec"]
+        if ncmec in agency_uris:
+            g.add((ncmec, RDF.type, CAC_HOTLINES.HotlineOrganization))
+            g.add((tip_uri, CAC_HOTLINES.receivedBy, ncmec))
+
+        reporter = _case_feature(case, "cybertip_reporter") or {}
+        if not isinstance(reporter, dict):
+            return tip_uri
+        kind = reporter.get("kind")
+        if kind == "public":
+            g.add((tip_uri, RDF.type, CAC_HOTLINES.PublicReport))
+        elif kind == "esp":
+            g.add((tip_uri, RDF.type, CAC_HOTLINES.ESPReport))
+            for name in reporter.get("esps") or []:
+                esp_uri = self._get_or_create_esp(g, str(name))
+                role_uri = BASE[f"case/{case_id}/cybertip/reporter/{_slug(str(name))}"]
+                self._evidence("cybertip_reporter", "named_esp", name, role_uri)
+                g.add((role_uri, RDF.type, CAC_HOTLINES.ReporterRole))
+                # The release names the provider, so the reporter is not anonymous.
+                g.add((role_uri, CAC_HOTLINES.isAnonymous, Literal(False)))
+                g.add((tip_uri, CAC_HOTLINES.reportedBy, role_uri))
+                self._has_role(g, esp_uri, role_uri)
+            if reporter.get("category") and not reporter.get("esps"):
+                g.add((tip_uri, RDFS.comment, Literal(
+                    f"Reported by an unnamed {str(reporter['category']).replace('_', ' ')}"
+                )))
+        return tip_uri
+
+    def _get_or_create_esp(self, g: Graph, name: str) -> URIRef:
+        """A shared ``ElectronicServiceProvider`` (the company that files CyberTips).
+
+        When the case already uses a platform of that name (Kik, Snapchat), the
+        platform is ``operatedBy`` the provider. A reporter never adds a platform
+        to a case: reporting a tip is not using the service in the offense.
+        """
+        uri = BASE[f"esp/{_slug(name)}"]
+        g.add((uri, RDF.type, CAC_PLATFORMS.ElectronicServiceProvider))
+        g.add((uri, RDFS.label, Literal(name)))
+        g.add((uri, UCO_CORE.name, Literal(name)))
+        platform_uri = BASE[f"platform/{_slug(name)}"]
+        if (platform_uri, RDF.type, CAC_CORE.DigitalSystemEntity) in g:
+            g.add((platform_uri, CAC_PLATFORMS.operatedBy, uri))
+        return uri
+
+    @staticmethod
+    def _match_charge(
+        charge_str: str, warnings: List[str]
+    ) -> Tuple[URIRef, Optional[str], bool]:
+        """
+        Match a charge string to a CAC charge class via pattern table.
+
+        Returns (class_uri, cluster_tag, is_unmapped_generic). Unmatched charges
+        are kept as CriminalCharge only (not dropped).
+        """
+        lower = re.sub(r'\s+', ' ', charge_str.lower()).strip()
+        for pattern, class_uri, cluster in CHARGE_MATCH_RULES:
+            if pattern.lower() in lower:
+                return class_uri, cluster, False
+        warnings.append(
+            f"CHARGE_MAP (info): generic CriminalCharge for "
+            f"'{charge_str[:100]}'"
+        )
+        return CAC_LEGAL.CriminalCharge, None, True
+
+    @classmethod
+    def _collapse_duplicate_charges(
+        cls,
+        charges_raw: List[Any],
+        warnings: List[str],
+    ) -> List[Dict[str, Any]]:
+        """
+        Merge charge rows that resolve to the same CAC class + cluster.
+
+        Feature extraction often emits synonymous press-release fragments
+        ("child porn", "child pornography", "possession of child pornography")
+        as separate charges; those become duplicate viz nodes otherwise.
+        Prefer the most specific label (longest, expanded "porn"→"pornography").
+        """
+        if not charges_raw:
+            return []
+
+        def _label_rank(label: str) -> Tuple[int, int]:
+            # Higher is better: expanded form, then longer phrasing.
+            expanded = 1 if re.search(r'\bpornography\b', label, re.I) else 0
+            return (expanded, len(label))
+
+        def _parse_row(charge: Any) -> Tuple[str, int]:
+            if isinstance(charge, dict):
+                label = str(charge.get("charge") or "").strip()
+                try:
+                    count = int(charge.get("count") or 1)
+                except (TypeError, ValueError):
+                    count = 1
+            else:
+                label = str(charge).strip()
+                count = 1
+            return label, max(count, 1)
+
+        merged: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        order: List[Tuple[str, str, str]] = []
+
+        for charge in charges_raw:
+            label, count = _parse_row(charge)
+            if not label:
+                continue
+            # Quiet match — map_prosecution will warn on the collapsed set.
+            charge_class, cluster, unmapped = cls._match_charge(label, [])
+            # Typed CAC classes (CSAM_Possession, etc.) and clustered generics collapse
+            # by class/cluster. Bare unmatched CriminalCharge only collapses near-
+            # identical labels so distinct unknowns stay separate.
+            if unmapped and not cluster:
+                norm = re.sub(r"\s+", " ", label.lower()).strip()
+                norm = re.sub(r"\bporn\b", "pornography", norm)
+                key = (str(charge_class), "", norm)
+            else:
+                key = (str(charge_class), cluster or "", "")
+            if key not in merged:
+                merged[key] = {"charge": label, "count": count}
+                order.append(key)
+                continue
+            merged[key]["count"] = int(merged[key]["count"]) + count
+            if _label_rank(label) > _label_rank(str(merged[key]["charge"])):
+                merged[key]["charge"] = label
+
+        if len(merged) < len([c for c in charges_raw if _parse_row(c)[0]]):
+            warnings.append(
+                f"CHARGE_MAP (info): collapsed {len(charges_raw)} charge strings "
+                f"→ {len(merged)} unique CAC charge nodes"
+            )
+        return [merged[k] for k in order]
+
+    @classmethod
+    def classify_charge_string(cls, charge_str: str) -> Tuple[str, str]:
+        """
+        Classify a charge string for audits (no graph side effects).
+
+        Returns (short class name, match kind) where kind is 'pattern',
+        'generic_cluster', 'generic', or 'empty'.
+        """
+        if not charge_str or not str(charge_str).strip():
+            return ("—", "empty")
+        lower = re.sub(r'\s+', ' ', str(charge_str).lower()).strip()
+        for pattern, class_uri, cluster in CHARGE_MATCH_RULES:
+            if pattern.lower() in lower:
+                if cluster:
+                    return (f"CriminalCharge:{cluster}", "generic_cluster")
+                return (class_uri.split("#")[-1], "pattern")
+        return ("CriminalCharge", "generic")
+
+    @staticmethod
+    def _match_sentence(sent_str: str) -> URIRef:
+        """Match a sentence string to a CAC sentence class."""
+        lower = sent_str.lower()
+        for pattern, class_uri in SENTENCE_PATTERN_MAP:
+            if re.search(pattern, lower):
+                return class_uri
+        return CAC_LEGAL.PrisonSentence  # safe default
+
+    @staticmethod
+    def _bind_namespaces(g: Graph) -> None:
+        """Bind all namespace prefixes onto a graph."""
+        g.bind("caselinker", BASE)
+        g.bind("cacontology", CAC)
+        g.bind("cac-core", CAC_CORE)
+        g.bind("cacontology-grooming", CAC_GROOMING)
+        g.bind("cacontology-custodial", CAC_CUSTODIAL)
+        g.bind("cacontology-platforms", CAC_PLATFORMS)
+        g.bind("cacontology-legal-outcomes", CAC_LEGAL)
+        g.bind("cacontology-sextortion", CAC_SEXTORTION)
+        g.bind("cacontology-detection", CAC_DETECTION)
+        g.bind("cacontology-production", CAC_PRODUCTION)
+        g.bind("cacontology-taskforce", CAC_TASKFORCE)
+        g.bind("cacontology-us-ncmec", CAC_NCMEC)
+        g.bind("cacontology-multi", CAC_MULTI)
+        g.bind("cacontology-usa-federal", CAC_USA_FEDERAL)
+        g.bind("cacontology-undercover", CAC_UNDERCOVER)
+        g.bind("uco-action", UCO_ACTION)
+        g.bind("uco-core", UCO_CORE)
+        g.bind("uco-identity", UCO_IDENTITY)
+        g.bind("uco-role", UCO_ROLE)
+        g.bind("uco-location", UCO_LOCATION)
+        g.bind("gufo", GUFO)
+        g.bind("dcterms", DCTERMS)
+        g.bind("skos", SKOS)
+
+    @staticmethod
+    def _graph_summary(cg: ConjunctiveGraph) -> Dict[str, Any]:
+        """Count nodes, edges, and node types across all named graphs."""
+        subjects: set = set()
+        predicates: set = set()
+        type_counts: Dict[str, int] = {}
+        edge_count = 0
+
+        for ctx in cg.graphs():
+            for s, p, o in ctx:
+                subjects.add(s)
+                edge_count += 1
+                if p == RDF.type and isinstance(o, URIRef):
+                    label = o.split("#")[-1].split("/")[-1]
+                    type_counts[label] = type_counts.get(label, 0) + 1
+
+        return {
+            "node_count": len(subjects),
+            "edge_count": edge_count,
+            "node_types": dict(sorted(type_counts.items(), key=lambda x: -x[1])),
+        }
+
+    @staticmethod
+    def _storage_layer_dir() -> str:
+        storage_layer_dir = str(_REPO_ROOT / "src" / "Storage Layer")
+        if storage_layer_dir not in sys.path:
+            sys.path.insert(0, storage_layer_dir)
+        return storage_layer_dir
+
+    @staticmethod
+    def _open_local_sqlite() -> Any:
+        """
+        Open the local SQLite file case export reads, or None when that file
+        is absent. Repo-root caselinker.db, then config.DATABASE_PATH.
+        """
+        db_path = _REPO_ROOT / "caselinker.db"
+        if not db_path.is_file():
+            try:
+                cfg_path = _REPO_ROOT / "config.py"
+                if cfg_path.is_file():
+                    cfg_ns: Dict[str, Any] = {}
+                    exec(cfg_path.read_text(), cfg_ns)
+                    configured = cfg_ns.get("DATABASE_PATH")
+                    if configured:
+                        candidate = Path(configured)
+                        if not candidate.is_absolute():
+                            candidate = _REPO_ROOT / candidate
+                        if candidate.is_file():
+                            db_path = candidate
+            except Exception as exc:
+                logger.debug("config.py lookup failed: %s", exc)
+        if not db_path.is_file():
+            return None
+        try:
+            CaseToCAC._storage_layer_dir()
+            from storage import CaseStorage as SqliteCaseStorage  # type: ignore
+            return SqliteCaseStorage(db_path=str(db_path))
+        except Exception as exc:
+            logger.warning("SQLite open failed (db=%s): %s", db_path, exc)
+            return None
+
+    @staticmethod
+    def _open_postgres(db_url: Optional[str] = None) -> Any:
+        """Open Postgres when DATABASE_URL or db_url is set, else None."""
+        url = db_url or os.getenv("DATABASE_URL")
+        if not url:
+            return None
+        try:
+            CaseToCAC._storage_layer_dir()
+            from storage_postgres import CaseStorage as PgCaseStorage  # type: ignore
+            return PgCaseStorage()
+        except Exception as exc:
+            logger.warning("PostgreSQL open failed: %s", exc)
+            return None
+
+    @staticmethod
+    def _storage_for_case(case_id: str, db_url: Optional[str] = None) -> Any:
+        """
+        The storage object that holds this case: local SQLite if the case is
+        there, otherwise Postgres. None when neither has it.
+        """
+        sqlite = CaseToCAC._open_local_sqlite()
+        if sqlite is not None:
+            try:
+                if sqlite.get_case(case_id) is not None:
+                    return sqlite
+            except Exception as exc:
+                logger.warning("SQLite load failed for '%s': %s", case_id, exc)
+        postgres = CaseToCAC._open_postgres(db_url)
+        if postgres is None:
+            return None
+        try:
+            if postgres.get_case(case_id) is not None:
+                return postgres
+        except Exception as exc:
+            logger.warning("PostgreSQL load failed for '%s': %s", case_id, exc)
+        return None
+
+    @staticmethod
+    def _load_from_db(
+        case_id: str, db_url: Optional[str] = None
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Load a case dict from a database.
+
+        Priority order:
+          1. Local SQLite (caselinker.db at repo root, configured via config.DATABASE_PATH)
+          2. PostgreSQL via DATABASE_URL (when running against the cloud DB)
+        Returns None if neither is available or the case is not found.
+        """
+        storage = CaseToCAC._storage_for_case(case_id, db_url)
+        if storage is None:
+            return None
+        return storage.get_case(case_id)
+
+    @staticmethod
+    def _load_from_local_sqlite(case_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Load a case from the local SQLite DB (caselinker.db) using the
+        CaseLinker SQLite CaseStorage class. Returns None if the DB file is
+        absent, the module fails to import, or the case is not found.
+        """
+        storage = CaseToCAC._open_local_sqlite()
+        if storage is None:
+            return None
+        try:
+            return storage.get_case(case_id)
+        except Exception as exc:
+            logger.warning("SQLite load failed for '%s': %s", case_id, exc)
+            return None
+
+
+# ===========================================================================
+# Test fixture
+# ===========================================================================
+
+AZICAC_2011_006_FIXTURE: Dict[str, Any] = {
+    "id": "azicac_2011_006",
+    "source": "AZICAC",
+    "source_url": None,
+    "date_start": "2011",
+    "date_end": "2011",
+    "date_range": {"start": "2011", "end": "2011"},
+    "victim_count": 1,
+    "perpetrator_count": 2,
+    "case_demographics": {
+        "ages": [8],
+        "age_range": {"min": 8, "max": 8},
+        "victim_gender": "female",
+    },
+    "perpetrator_gender": "male",
+    "perpetrator_age": [32, 41],
+    "perpetrator_registered_sex_offender": False,
+    "relationship_to_victim": "family",
+    "previous_conviction": None,
+    "platforms_used": [],
+    "p2p_clients": ["LimeWire"],
+    "anonymization_network": [],
+    "investigation_type": "proactive",
+    "agencies_involved": ["FBI", "AZICAC", "Maricopa County Attorney's Office"],
+    "organizations": ["Maricopa County Attorney's Office"],
+    "locations": ["Mesa, Arizona"],
+    "prosecution_outcome": {
+        "booking_status": "convicted",
+        "charges": [
+            {"count": 1, "charge": "CSAM Production"},
+            {"count": 1, "charge": "CSAM Production"},
+        ],
+        "jail": "15 years",
+    },
+    "prosecution_outcomes": [],
+    "evidence_volume": {
+        "images": None,
+        "videos": None,
+        "storage_size": None,
+        "messages": None,
+    },
+    "severity_indicators": ["under_12", "sexual_abuse", "multiple_perpetrators"],
+    "case_topics": ["production", "hands_on", "family", "csam"],
+    "severity_phrases": ["dangerous"],
+    "perpetrator_admissions": [
+        {
+            "quote": "I have a problem and I need help",
+            "quote_type": "direct",
+            "frame": "admitted_quote",
+            "themes": ["recidivism_escalation"],
+            "confidence": "high",
+            "context": "Defendant-1 admitted \"I have a problem and I need help\"",
+        }
+    ],
+    "perpetrator_admission_themes": ["recidivism_escalation"],
+    "investigation_technology": [],
+    "tags": [],
+    "notes": None,
+    "ml_features": {
+        "semantic_severity": {
+            "scores": {
+                "grooming": 0.31,
+                "production_csam": 0.72,
+                "possession_csam": 0.28,
+                "sextortion": 0.12,
+                "dissemination": 0.20,
+                "evidence_seizure": 0.48,
+                "exploitive_positions": 0.51,
+                "registered_sex_offender": 0.30,
+            },
+            "phrases": ["dangerous"],
+            "concept_metadata": {"model": "all-MiniLM-L6-v2", "threshold": 0.35},
+        }
+    },
+    "created_at": "2026-05-26T00:00:00",
+    "updated_at": "2026-05-26T00:00:00",
+}
+
+# Expected node types from MAPPING_PLAN.md §6.2
+_EXPECTED_NODE_TYPES = {
+    "CACInvestigation",
+    "ProductionOffense",
+    "ChildSexualAbuseEvent",
+    "ConspiracyToCommitCSA",
+    "VictimRole",
+    "OffenderRole",
+    "Person",
+    "FamilialRelationship",
+    "CustodialAbuse",
+    "FileHostingService",       # LimeWire (p2p)
+    "ProactiveOperation",
+    "FederalAgency",
+    "StateICACtaskForce",
+    "StateAgency",
+    "Location",                 # NER locations → uco-location:Location
+    "PlaceLikeEntity",
+    "CSAM_Production",
+    "PrisonSentence",
+    "SentencingPhase",
+}
+
+
+# ===========================================================================
+# CLI / test runner
+# ===========================================================================
+
+_GENERIC_TYPES = frozenset({
+    CAC_CORE.Event, CAC_CORE.EnduringEntity, CAC_CORE.LegalEvent, CAC_CORE.Phase,
+    CAC_LEGAL.CriminalCharge, CAC_LEGAL.CriminalSentence, CAC_LEGAL.LegalProceeding,
+    CAC_CORE.PlaceLikeEntity, CAC_CORE.OrganizationLikeEntity, CAC_CORE.DigitalSystemEntity,
+})
+
+
+def _label_case_nodes(g: Graph, case_id: str) -> None:
+    """Give every case-scoped node without a label one built from its type and IRI.
+
+    "CSAM incident · event/csam", "Person · person/victim/1". The label
+    names what the node is and where it sits; it adds no fact.
+    """
+    prefix = str(BASE[f"case/{case_id}"])
+    for node in set(g.subjects(RDF.type, None)):
+        if not isinstance(node, URIRef) or (node, RDFS.label, None) in g:
+            continue
+        iri = str(node)
+        if iri == prefix:
+            g.add((node, RDFS.label, Literal(f"Case {case_id}")))
+            continue
+        if not iri.startswith(prefix + "/"):
+            continue
+        types = sorted(
+            (t for t in g.objects(node, RDF.type) if t not in _GENERIC_TYPES),
+            key=str,
+        ) or sorted(g.objects(node, RDF.type), key=str)
+        name = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", re.split(r"[#/]", str(types[0]))[-1])
+        name = name.replace("_", " ")
+        g.add((node, RDFS.label, Literal(f"{name[:1].upper()}{name[1:]} · {iri[len(prefix) + 1:]}")))
+
+
+def flatten_dataset(dataset: Any) -> Graph:
+    """Copy every triple in a Dataset's named graphs into one graph.
+
+    ``Dataset.serialize(format="turtle")`` emits only the default graph.
+    Case triples are not in that graph, so the Turtle file is empty.
+    """
+    flat = Graph()
+    contexts = dataset.graphs() if hasattr(dataset, "graphs") else [dataset]
+    for ctx in contexts:
+        for triple in ctx:
+            flat.add(triple)
+    return flat
+
+
+def _write_serialized(graph: Graph, path: Path, fmt: str) -> None:
+    data = graph.serialize(format=fmt)
+    if isinstance(data, bytes):
+        path.write_bytes(data)
+    else:
+        path.write_text(data)
+
+
+def run_test(case_dict: Dict[str, Any], output_dir: Path) -> None:
+    """
+    Map a case, validate, write output, and print a summary report.
+
+    Compares actual node types against expected types from MAPPING_PLAN.md §6.2.
+    """
+    case_id = case_dict.get("id", "unknown")
+    print(f"\n{'='*60}")
+    print(f"  CaseLinker → CAC Ontology Test Run")
+    print(f"  Case: {case_id}")
+    print(f"{'='*60}\n")
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    mapper = CaseToCAC()
+    graph, warnings = mapper.map_case(case_dict)
+    summary = mapper._graph_summary(graph)
+
+    # Write outputs
+    jsonld_path = output_dir / f"{case_id}.jsonld"
+    ttl_path = output_dir / f"{case_id}.ttl"
+    graph.serialize(destination=str(jsonld_path), format="json-ld", indent=2)
+
+    # Same flatten as export_case. Prefixes stay on this CLI path only;
+    # export_case leaves them unbound so the bytes match the Phase 3 export.
+    flat = flatten_dataset(graph)
+    for prefix, ns in graph.namespaces():
+        flat.bind(prefix, ns, replace=True)
+    _write_serialized(flat, ttl_path, "turtle")
+
+    print(f"Output files written:")
+    print(f"  {jsonld_path}")
+    print(f"  {ttl_path}")
+    print()
+
+    # Node / edge counts
+    print(f"Graph statistics:")
+    print(f"  Nodes (unique subjects): {summary['node_count']}")
+    print(f"  Edges (triples):         {summary['edge_count']}")
+    print()
+
+    # Node type breakdown
+    print("Node types created:")
+    for type_name, count in summary["node_types"].items():
+        print(f"  {count:3d}  {type_name}")
+    print()
+
+    # Warnings
+    if warnings:
+        print(f"Warnings ({len(warnings)}):")
+        for w in warnings:
+            print(f"  ⚠  {w}")
+    else:
+        print("Warnings: none")
+    print()
+
+    # Expected vs actual node type comparison
+    actual_types = set(summary["node_types"].keys())
+    missing = _EXPECTED_NODE_TYPES - actual_types
+    unexpected = actual_types - _EXPECTED_NODE_TYPES - {
+        # These are acceptable additions not in the original plan
+        "EnduringEntity", "Event", "Phase", "Role", "AssessmentResult",
+        "CriminalCharge", "CriminalSentence", "TrustViolation",
+        "OrganizationLikeEntity", "DigitalSystemEntity", "CustodialRelationship",
+        "IncriminatingStatement",
+    }
+
+    print("MAPPING_PLAN.md §6.2 node type comparison:")
+    if not missing:
+        print("  ✓ All expected node types present")
+    else:
+        print(f"  ✗ Missing expected types ({len(missing)}):")
+        for t in sorted(missing):
+            print(f"      - {t}")
+
+    if unexpected:
+        print(f"  + Unexpected (but valid) types ({len(unexpected)}):")
+        for t in sorted(unexpected):
+            print(f"      + {t}")
+    print()
+
+    # SHACL validation
+    print("SHACL validation:")
+    conforms, shacl_report = mapper.validate(graph)
+    if conforms:
+        print("  ✓ Conforms — all SHACL constraints satisfied")
+    else:
+        print("  ✗ Does not fully conform")
+        if shacl_report:
+            for line in shacl_report.splitlines()[:40]:
+                print(f"    {line}")
+            if len(shacl_report.splitlines()) > 40:
+                print(f"    ... ({len(shacl_report.splitlines()) - 40} more lines)")
+    print()
+
+    print("Status: MAPPED ✓" + ("  VALID ✓" if conforms else "  VALID ✗"))
+    print()
+
+
+def _load_case_with_fallback(case_id: str) -> Tuple[Optional[Dict[str, Any]], str]:
+    """
+    Load a case for the CLI runner.
+
+    Returns ``(case_dict, source)`` where source is one of:
+      ``"sqlite"``, ``"postgres"``, ``"fixture"``, ``"missing"``.
+
+    Fixture is only used as a last-resort training-wheels fallback for
+    azicac_2011_006 when no DB is reachable.
+    """
+    sqlite_case = CaseToCAC._load_from_local_sqlite(case_id)
+    if sqlite_case is not None:
+        return sqlite_case, "sqlite"
+
+    if os.getenv("DATABASE_URL"):
+        pg_case = CaseToCAC._load_from_db(case_id)
+        if pg_case is not None:
+            return pg_case, "postgres"
+
+    if case_id == "azicac_2011_006":
+        return AZICAC_2011_006_FIXTURE, "fixture"
+
+    return None, "missing"
+
+
+def main() -> None:
+    """
+    CLI entry point.
+
+    Default behaviour: load real cases from the local SQLite DB
+    (caselinker.db at the repo root). PostgreSQL is used as a fallback
+    when DATABASE_URL is set. The azicac_2011_006 fixture is the last
+    resort and is only kept as training wheels for environments without
+    any DB.
+
+    Usage::
+
+        python features_to_cac.py
+            → loads azicac_2011_006 from local DB (or fixture if DB absent)
+
+        python features_to_cac.py <case_id> [<case_id> ...]
+            → loads each case_id from local DB and writes its graph
+    """
+    logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
+
+    case_ids: List[str] = sys.argv[1:] if len(sys.argv) > 1 else ["azicac_2011_006"]
+
+    print(f"Loading {len(case_ids)} case(s) from local SQLite DB at "
+          f"{_REPO_ROOT / 'caselinker.db'}")
+    print()
+
+    overall_ok = True
+    for case_id in case_ids:
+        case, source = _load_case_with_fallback(case_id)
+        if case is None:
+            print(f"✗ '{case_id}' not found in any data source (sqlite/postgres/fixture)")
+            overall_ok = False
+            continue
+
+        marker = {
+            "sqlite":   "  → loaded from LOCAL SQLite",
+            "postgres": "  → loaded from PostgreSQL (DATABASE_URL)",
+            "fixture":  "  → loaded from in-code FIXTURE (training wheels)",
+        }.get(source, "")
+        print(marker)
+        run_test(case, _TEST_OUTPUT_DIR)
+
+    if not overall_ok:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

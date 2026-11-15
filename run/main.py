@@ -119,9 +119,9 @@ from sparql_proxy import (
     prepare_sparql_query,
     sparql_cors_allow_origin,
 )
-_ontology_dir = str(_REPO_ROOT / "ontology")
-if _ontology_dir not in sys.path:
-    sys.path.append(_ontology_dir)
+_ontology_pipeline = str(_REPO_ROOT / "ontology" / "pipeline")
+if _ontology_pipeline not in sys.path:
+    sys.path.append(_ontology_pipeline)
 from cohort_sparql import build_cohort_case_query
 from sparql_rebuild_lock import rebuild_in_progress
 from oxigraph_wake import (
@@ -4711,7 +4711,7 @@ if _q_results_path.is_file():
 
 def _compare_pool_id_order() -> List[str]:
     """Stratified 200 ids for Patterns demo chips (from select_cases.py output)."""
-    p = _ontology_dir / "selected_200_ids.txt"
+    p = _ontology_dir / "pools" / "selected_200_ids.txt"
     if not p.is_file():
         return []
     return [ln.strip() for ln in p.read_text().splitlines() if ln.strip()]
@@ -4820,8 +4820,8 @@ def api_ontology_cases(
             headers={"Cache-Control": "public, max-age=3600"},
         )
 
-    if str(_ontology_dir) not in sys.path:
-        sys.path.insert(0, str(_ontology_dir))
+    if str(_ontology_dir / "pipeline") not in sys.path:
+        sys.path.insert(0, str(_ontology_dir / "pipeline"))
     from merge_graph_cache import graph_dir_for_pool, graph_manifest  # noqa: E402
 
     staging_total = _staging_graph_count()
@@ -5017,7 +5017,7 @@ def api_ontology_pacer():
             ],
             "note": (
                 "CASE-UCO compact JSON-LD (CASE/UCO/CAC). Also queryable in Oxigraph as "
-                "urn:pacer:kg:… after scripts/load_pacer_jsonld.py --post."
+                "urn:pacer:kg:… after scripts/oxigraph/load_pacer_jsonld.py --post."
             ),
         },
         headers={"Cache-Control": "public, max-age=600"},
@@ -5052,8 +5052,8 @@ def api_ontology_merged(
         return out
 
     ontology_dir = Path(__file__).resolve().parent.parent / "ontology"
-    if str(ontology_dir) not in sys.path:
-        sys.path.insert(0, str(ontology_dir))
+    if str(ontology_dir / "pipeline") not in sys.path:
+        sys.path.insert(0, str(ontology_dir / "pipeline"))
     from merge_graph_cache import get_or_build_merged  # noqa: E402
 
     try:
@@ -5195,8 +5195,8 @@ def _ontology_merged_for_lookup(pool_norm: str) -> Dict[str, Any]:
     mem = _ontology_merged_mem.get(merge_pool)
     if isinstance(mem, dict) and mem.get("flat_nodes") is not None:
         return mem
-    if str(_ontology_dir) not in sys.path:
-        sys.path.insert(0, str(_ontology_dir))
+    if str(_ontology_dir / "pipeline") not in sys.path:
+        sys.path.insert(0, str(_ontology_dir / "pipeline"))
     from merge_graph_cache import get_or_build_merged  # noqa: E402
     payload = get_or_build_merged(
         merge_pool,
@@ -5431,8 +5431,8 @@ def api_ontology_cache_warm(
     """Rebuild merged graph disk/redis caches (run after batch graph generation)."""
     global _ontology_feature_rows_mem, _ontology_feature_rows_count
     ontology_dir = Path(__file__).resolve().parent.parent / "ontology"
-    if str(ontology_dir) not in sys.path:
-        sys.path.insert(0, str(ontology_dir))
+    if str(ontology_dir / "pipeline") not in sys.path:
+        sys.path.insert(0, str(ontology_dir / "pipeline"))
     from merge_graph_cache import get_or_build_merged, warm_all_caches  # noqa: E402
 
     _ontology_catalog_mem.clear()

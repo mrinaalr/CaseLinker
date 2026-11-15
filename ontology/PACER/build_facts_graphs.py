@@ -2470,8 +2470,8 @@ def write_graph(facts_path: Path, output_path: Path) -> None:
     facts = load_facts(facts_path)
     slug = slug_from_facts_path(facts_path)
     ontology_dir = PACER_DIR.parent
-    if str(ontology_dir) not in sys.path:
-        sys.path.insert(0, str(ontology_dir))
+    if str(ontology_dir / "pipeline") not in sys.path:
+        sys.path.insert(0, str(ontology_dir / "pipeline"))
     from pacer_jsonld_to_ttl import pacer_graph_iri  # noqa: E402
 
     document = {

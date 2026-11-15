@@ -282,7 +282,7 @@ A self-modifying coding agent has been reported to score well by disabling the c
 - **The grader and its tests are pinned to `origin/main`.** Integrity fails if either changed.
 - **Errors are reported by type**, never by message, since a message can quote case text.
 
-`tests/test_repair_expand.py` covers these cases: an extension that patches the span gate and claims a value, one that hangs, one that raises, one that prints, one that aims a literal at a name, an edited grader, and a weakened test.
+`tests/mcp/test_repair_expand.py` covers these cases: an extension that patches the span gate and claims a value, one that hangs, one that raises, one that prints, one that aims a literal at a name, an edited grader, and a weakened test.
 
 ### Extensions
 
