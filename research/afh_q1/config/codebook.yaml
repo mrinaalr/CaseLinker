@@ -1,0 +1,107 @@
+# AfH 2.0 six-class affordance codebook. Version bump on any edit.
+#
+# Three levels per (case, platform, class). Each level requires the one above.
+#
+#   A available     the platform had the capability natively in the case's
+#                   publication year (platforms.yaml). Says nothing about use.
+#   B action_relevant  the documented conduct on that platform is the kind the
+#                   capability bears on (conduct categories below), and the
+#                   platform-use record is stated or inferred. Still not proof
+#                   the capability mattered.
+#   C instrumental  a sentence naming the platform also states the
+#                   capability-specific behaviour (cues below). Deterministic
+#                   and reviewable; validated on a sample (see outputs/validation).
+#
+# Publication year is an upper bound on conduct time. When the capability's
+# first year is within 2 years of publication the row carries
+# period_uncertain=true (the conduct may predate the feature).
+#
+# Cues are case-insensitive regexes, matched against sentences that name the
+# platform (same sentence only). A cue anywhere else in the release produces a
+# review candidate, never a C row.
+version: codebook-2
+# codebook-2 (2026-11-16): after the 107-row validation review: appositive
+# descriptions of a platform ("Telegram, an encrypted messaging application";
+# "Kik is a file-sharing platform") and generic official quotes no longer
+# count as instrumental; Anonymity also matches "two separate X accounts";
+# DistributionInfrastructure also matches receipt "downloaded ... using/via X".
+
+conduct_categories:
+  # First match wins, checked in this order against the platform sentence.
+  sextortion:      '\b(?:sextort\w*|extort\w*|threaten\w*\s+(?:to\s+)?(?:post|share|send|release|expose|distribut|publish)\w*|blackmail\w*)'
+  production:      '\b(?:produc\w*|record\w*|film\w*|creat\w*|generat\w*|livestream\w*|live-stream\w*)\b'
+  solicitation:    '\b(?:solicit\w*|entic\w*|lur\w*|groom\w*|coerc\w*|persuad\w*|asked\s+(?:the\s+)?(?:minor|child|girl|boy|victim|her|him)\s+(?:to|for)|request\w*\s+(?:nude|explicit|sexual)|travel\w*\s+to\s+meet|meet\w*\s+(?:for|to\s+engage))'
+  distribution:    '\b(?:distribut\w*|shar(?:e|ed|ing)|trad(?:e|ed|ing)|upload\w*|post(?:ed|ing)|transmit\w*|disseminat\w*|made\s+available|advertis\w*)'
+  contact:         '\b(?:contact\w*|communicat\w*|messag\w*|chat\w*|talk\w*|convers\w*|met\b|befriend\w*|sent\s+(?:the\s+)?(?:minor|child|girl|boy|victim))'
+  receipt_possession: '\b(?:receiv\w*|download\w*|possess\w*|stor(?:e|ed|ing)|sav(?:e|ed)|access\w*|view\w*|collect\w*)'
+  platform_report: '\b(?:cybertip\w*|reported\s+(?:the|an|a)?\s*(?:account|user|upload)|flagged|tip\s+from)'
+
+classes:
+  Anonymity:
+    capability: anonymity
+    definition: Accounts can be created and used without verified identity, so an offender can present as someone else or as no one.
+    action_relevant_conduct: [contact, solicitation, sextortion]
+    instrumental_cues: '\b(?:pos(?:ed|ing)\s+as|pretend\w*\s+to\s+be|claim\w*\s+to\s+be\s+(?:a|an)\s+\d{1,2}|fake\s+(?:profile|account|name|persona|identity)|false\s+(?:identity|name|persona)|fictitious\s+(?:profile|account|persona)|(?:multiple|several|numerous|different|two|three|separate|\d+)\s+(?:separate\s+|different\s+)?(?:[A-Z]?\w+\s+)?(?:accounts|usernames|profiles)|anonymous\s+(?:account|profile|user)|under\s+(?:the\s+)?(?:username|screen\s*name|alias)|catfish\w*)'
+    exclude_cues: '\banonymous\s+tip'
+    exclusions: Anonymous tips to police; an undercover officer's persona (that is the investigator, not the offender) when the sentence says officer/agent/detective posed as.
+    undercover_guard: '\b(?:officer|agent|detective|investigator|undercover|uc)\b[^.]{0,40}\b(?:pos(?:ed|ing)\s+as|pretend)'
+
+  Ephemerality:
+    capability: ephemerality
+    definition: Messages or media delete automatically after viewing or a timer, reducing what the platform or the victim retains.
+    action_relevant_conduct: [solicitation, sextortion, production, contact]
+    instrumental_cues: '\b(?:disappear\w*|ephemeral|self-destruct\w*|auto(?:matically)?[- ]delet\w*|vanish(?:\s+mode)?|deleted\s+(?:automatically|after\s+(?:being\s+)?viewed)|would\s+not\s+be\s+saved|temporary\s+(?:messages|photos|images))'
+    exclusions: The offender deleting an account or chats by hand (evidence destruction); screenshots of snaps (that is capture, the opposite of ephemerality) go to review.
+    review_cues: '\b(?:screenshot\w*|screen\s+(?:shot|record\w*)|deleted\s+(?:the|his|her|their)\s+(?:account|messages|chats|app))'
+
+  ContactDiscovery:
+    capability: contact_discovery
+    definition: The platform surfaces strangers to each other (search, suggestions, public rooms or groups, random matching), enabling first contact.
+    action_relevant_conduct: [contact, solicitation, sextortion]
+    instrumental_cues: '\b(?:met\s+(?:the\s+)?(?:victim|minor|child|girl|boy|juvenile|teen\w*|her|him)\s+(?:on|through|via|using)|(?:first|initially)\s+(?:met|contacted|connected|encountered)|friend\s+request|(?:added|follow\w*)\s+(?:the\s+)?(?:victim|minor|child|girl|boy|her|him)\b|random(?:ly)?\s+(?:match\w*|pair\w*|connect\w*|chat\w*)|quick\s+add|people\s+nearby|search(?:ed|ing)?\s+for\s+(?:minors|children|girls|boys|kids)|public\s+(?:group|chat\s*room|room|server|channel|forum)|found\s+(?:the\s+)?(?:victim|minor|child|girl|boy|her|him)\s+(?:on|through|via))'
+    exclusions: Officers finding the offender; "found on his phone" (forensics).
+
+  UnmonitoredCommunication:
+    capability: unmonitored_communication
+    definition: Private one-to-one or closed-group channels outside parental, public or proactive moderator view.
+    action_relevant_conduct: [contact, solicitation, sextortion]
+    instrumental_cues: '\b(?:private\s+(?:message\w*|chat\w*|conversation\w*|group|server|channel|room)|direct\s+messag\w*|\bdms?\b|encrypt\w*|secret\s+(?:chat|conversation|group)|mov(?:e|ed|ing)\s+(?:the\s+)?(?:conversation|communication\w*|chat\w*)\s+to|(?:switch|migrat)\w*\s+to|(?:asked|told|instructed)\s+(?:the\s+)?(?:victim|minor|child|girl|boy|her|him)\s+to\s+(?:download|use|install|communicate\s+(?:on|via|through))|(?:to\s+)?avoid\s+(?:detection|parents|being\s+caught)|keep\s+(?:it|their\s+\w+|the\s+\w+)\s+(?:a\s+)?secret)'
+    exclude_cues: ',\s*an?\s+(?:\w+\s+){0,2}(?:encrypted|private)\s+(?:\w+\s+){0,2}(?:app\w*|platform|service)|\bis\s+an?\s+(?:\w+\s+){0,3}(?:encrypted|private)\s+(?:\w+\s+){0,2}(?:app\w*|platform|service)'
+    exclusions: Public posts; group trading channels (DistributionInfrastructure); appositive descriptions of the app ("Telegram, an encrypted messaging application").
+
+  DistributionInfrastructure:
+    capability: distribution_infrastructure
+    definition: Sharing to audiences beyond one recipient (groups, channels, servers, links, feeds, peer-to-peer).
+    action_relevant_conduct: [distribution, receipt_possession, platform_report]
+    instrumental_cues: '\b(?:(?:group|channel|server|room|chat)s?\b[^.]{0,80}\b(?:distribut\w*|shar\w*|trad\w*|post\w*|upload\w*)|(?:distribut\w*|shar\w*|trad\w*|post\w*|upload\w*)\b[^.]{0,80}\b(?:group|channel|server|members|other\s+users|followers|link\w*)|peer-to-peer|\bp2p\b|file[- ]sharing|shared\s+(?:folder|album|link)|download\s+link|made\s+(?:the\s+)?(?:files?|images?|videos?|material|them)?\s*available|upload\w*\s+(?:\w+\s+){0,6}(?:images?|videos?|files?|material|child\s+(?:pornography|sexual\s+abuse))|distribut\w*\s+(?:\w+\s+){0,6}(?:images?|videos?|files?|material|child\s+(?:pornography|sexual\s+abuse)|csam)|download\w*\b[^.]{0,120}\b(?:using|utilizing|via|through|from)\b)'
+    exclude_cues: '\b(?:is|as)\s+an?\s+(?:[\w-]+\s+){0,3}(?:file[- ]sharing|social\s+media|messaging)\b[^.]{0,60}\b(?:platform|app\w*|service|website)'
+    exclusions: Dyadic sending to one victim (UnmonitoredCommunication or solicitation); storage-only mentions; descriptions of what the platform is.
+
+  GenerativeSynthesis:
+    capability: generative_synthesis
+    definition: Creating or altering sexual imagery with generative or image-manipulation AI, including from a real child's benign photo.
+    action_relevant_conduct: [production, distribution, receipt_possession, solicitation, sextortion]
+    instrumental_cues: '\b(?:ai[- ]generated|computer[- ]generated|generated\s+(?:using|with|by)|(?:used|using|use)\s+(?:an?\s+)?(?:ai|artificial\s+intelligence|generative)\b|artificial\s+intelligence\s+(?:to|tool|program|app\w*|software|platform)|deep\s*fake\w*|morph\w*|nudif\w*|face[- ]?swap\w*|digitally\s+(?:altered|manipulated|created)|text[- ]to[- ]image|stable\s+diffusion|synthetic\s+(?:image|csam|material))'
+    exclude_cues: '\b(?:threats?|crimes?|forms?|dangers?|risks?)\s+(?:like|such\s+as|including)\b'
+    exclusions: Mentions of AI as a detection tool by police or a platform; officials' general statements ("new threats like AI-generated abuse material").
+    detection_guard: '\b(?:detect\w*|flag\w*|identif\w*|scan\w*)\b[^.]{0,40}\b(?:ai|artificial\s+intelligence)\b'
+
+harms:
+  # Victim-facing harm categories from AfH 1.0 Sec. 7 (h1..h6, h5 unused there).
+  # support: direct = cue in the platform sentence; case_level = case_topics or
+  # cue elsewhere in the release; none.
+  h1_groomed_toward_in_person:
+    cue: '\b(?:meet\w*\s+(?:in\s+person|up|for\s+sex|to\s+engage)|travel\w*\s+(?:\w+\s+){0,4}to\s+meet|arrang\w*\s+(?:to\s+)?(?:a\s+)?meet\w*|hands[- ]on|in-person\s+(?:abuse|contact|meeting))'
+    topics: [hands_on]
+  h2_coerced_self_generated:
+    cue: '\b(?:(?:asked|convinced|persuaded|coerced|enticed|pressured|directed|instructed|requested|solicited|induced)\s+(?:\w+\s+){0,5}(?:send|take|produce|make|record|film)\w*\s+(?:\w+\s+){0,4}(?:images?|photos?|pictures?|videos?|nudes?)|self-generated)'
+    topics: []
+  h3_material_distributed:
+    cue: '\b(?:distribut\w*|shar(?:e|ed|ing)|trad(?:e|ed|ing)|upload\w*|disseminat\w*|re-?victimi\w*)'
+    topics: [distribution]
+  h4_sextorted:
+    cue: '\b(?:sextort\w*|extort\w*|threaten\w*\s+(?:to\s+)?(?:post|share|send|release|expose|distribut|publish)\w*|blackmail\w*)'
+    topics: [sextortion]
+  h6_likeness_synthesized:
+    cue: '\b(?:ai[- ]generated|deep\s*fake\w*|morph\w*|nudif\w*|face[- ]?swap\w*|digitally\s+(?:altered|manipulated)|(?:used|using)\s+(?:an?\s+)?(?:ai|artificial\s+intelligence))'
+    topics: [ai_csam]

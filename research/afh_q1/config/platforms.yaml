@@ -1,0 +1,88 @@
+# Platform registry for the AfH 2.0 Q1 manifest. Version bump on any edit.
+#
+# status
+#   specific        a named product or service                      -> strict and broad eligibility
+#   technology      a technology class, not one product ("Gen AI")  -> broad only, reported separately
+#   generic         a bare category ("social media", "chat")        -> broad only
+#   ambiguous_alias the label's matcher also catches other things   -> broad only, flagged
+#   excluded        no platform information ("online", "internet")  -> never eligible
+#
+# capabilities: class -> first year the capability existed natively on the product
+# (and `until` when it ended). Classes: anonymity, ephemerality, contact_discovery,
+# unmonitored_communication, distribution_infrastructure, generative_synthesis.
+# "Native" means a built-in feature, not a workaround. A class missing from the
+# list means not native (e.g. WhatsApp anonymity: a phone number is required).
+#
+# basis: every year below is compiled from widely reported product history, at
+# year precision, without a primary citation. All rows are needs_author_check
+# until an author confirms or corrects them. Capability rows never count as
+# evidence that an offender used the capability.
+version: platforms-1
+basis_default: needs_author_check
+
+platforms:
+  online:            {status: excluded}
+  internet:          {status: excluded}
+  social media:      {status: generic, family: social}
+  chat:              {status: generic, family: messaging}
+  Webcam platform:   {status: ambiguous_alias, family: video, note: "label covers any webcam/cam-site mention incl. MyFreeCams"}
+  Gen AI:            {status: technology, family: ai, capabilities: {generative_synthesis: 2017}, note: "GAN face-swap ~2017; diffusion image models 2022"}
+  Mega.nz:           {status: ambiguous_alias, family: file_hosting, launched: 2013, capabilities: {distribution_infrastructure: 2013, anonymity: 2013}, note: "alias 'mega' also matches unrelated words; verify sample"}
+
+  Kik:               {status: specific, family: messaging, launched: 2010, capabilities: {anonymity: 2010, unmonitored_communication: 2010, distribution_infrastructure: 2010, contact_discovery: 2010}, note: "username-only signup, no phone number; public groups searchable from ~2016"}
+  Snapchat:          {status: specific, family: messaging, launched: 2011, capabilities: {ephemerality: 2011, unmonitored_communication: 2011, distribution_infrastructure: 2013, contact_discovery: 2017, anonymity: 2011}, note: "disappearing snaps from launch; Stories 2013; Quick Add ~2017"}
+  Discord:           {status: specific, family: messaging, launched: 2015, capabilities: {anonymity: 2015, unmonitored_communication: 2015, distribution_infrastructure: 2015, contact_discovery: 2015}}
+  WhatsApp:          {status: specific, family: messaging, launched: 2009, capabilities: {unmonitored_communication: 2009, distribution_infrastructure: 2011, ephemerality: 2020}, note: "phone number required; disappearing messages Nov 2020; E2E 2016"}
+  Telegram:          {status: specific, family: messaging, launched: 2013, capabilities: {unmonitored_communication: 2013, ephemerality: 2013, anonymity: 2013, distribution_infrastructure: 2015, contact_discovery: 2015}, note: "secret chats with self-destruct 2013; channels 2015; usernames hide phone"}
+  Facebook Messenger: {status: specific, family: messaging, launched: 2008, capabilities: {unmonitored_communication: 2008, ephemerality: 2016}, note: "Facebook Chat 2008, app 2011; secret conversations timer 2016; vanish mode 2020"}
+  Skype:             {status: specific, family: messaging, launched: 2003, until: 2025, capabilities: {unmonitored_communication: 2003, anonymity: 2003, contact_discovery: 2003}}
+  FaceTime:          {status: specific, family: messaging, launched: 2010, capabilities: {unmonitored_communication: 2010}}
+  IRC:               {status: specific, family: messaging, launched: 1988, capabilities: {anonymity: 1988, unmonitored_communication: 1988, distribution_infrastructure: 1988, contact_discovery: 1988}}
+  MeWe:              {status: specific, family: social, launched: 2016, capabilities: {unmonitored_communication: 2016, distribution_infrastructure: 2016, contact_discovery: 2016}}
+  AOL Instant Messenger: {status: specific, family: messaging, launched: 1997, until: 2017, capabilities: {anonymity: 1997, unmonitored_communication: 1997}}
+  Wickr:             {status: specific, family: messaging, launched: 2012, until: 2023, capabilities: {ephemerality: 2012, anonymity: 2012, unmonitored_communication: 2012}, note: "consumer app retired 2023"}
+  Chat Avenue:       {status: specific, family: chat_room, capabilities: {anonymity: 2000, contact_discovery: 2000, unmonitored_communication: 2000}, note: "launch year uncertain"}
+  Yahoo Chat:        {status: specific, family: chat_room, launched: 1997, until: 2012, capabilities: {anonymity: 1997, contact_discovery: 1997, unmonitored_communication: 1997}}
+  IMVU:              {status: specific, family: game, launched: 2004, capabilities: {anonymity: 2004, contact_discovery: 2004, unmonitored_communication: 2004}}
+
+  Facebook:          {status: specific, family: social, launched: 2004, capabilities: {distribution_infrastructure: 2004, contact_discovery: 2008, unmonitored_communication: 2008}, note: "real-name policy: anonymity not native; fake accounts are a workaround"}
+  Instagram:         {status: specific, family: social, launched: 2010, capabilities: {distribution_infrastructure: 2010, anonymity: 2010, contact_discovery: 2012, unmonitored_communication: 2013, ephemerality: 2016}, note: "Direct 2013; Stories and disappearing Direct media 2016"}
+  Twitter / X:       {status: specific, family: social, launched: 2006, capabilities: {anonymity: 2006, distribution_infrastructure: 2006, contact_discovery: 2006, unmonitored_communication: 2006}}
+  TikTok:            {status: specific, family: social, launched: 2017, capabilities: {distribution_infrastructure: 2017, contact_discovery: 2017, anonymity: 2017, unmonitored_communication: 2017}, note: "DMs blocked for under-16 accounts from 2020"}
+  MySpace:           {status: specific, family: social, launched: 2003, capabilities: {distribution_infrastructure: 2003, contact_discovery: 2003, unmonitored_communication: 2003, anonymity: 2003}}
+  Reddit:            {status: specific, family: social, launched: 2005, capabilities: {anonymity: 2005, distribution_infrastructure: 2005, contact_discovery: 2005, unmonitored_communication: 2008}}
+  Tumblr:            {status: specific, family: social, launched: 2007, capabilities: {anonymity: 2007, distribution_infrastructure: 2007, contact_discovery: 2007, unmonitored_communication: 2015}}
+  Yubo:              {status: specific, family: social, launched: 2015, capabilities: {contact_discovery: 2015, unmonitored_communication: 2015, anonymity: 2015}}
+  Whisper:           {status: specific, family: anonymous_chat, launched: 2012, capabilities: {anonymity: 2012, contact_discovery: 2012, unmonitored_communication: 2012}}
+  Omegle:            {status: specific, family: anonymous_chat, launched: 2009, until: 2023, capabilities: {anonymity: 2009, contact_discovery: 2009, unmonitored_communication: 2009}, note: "random stranger matching; shut down Nov 2023"}
+  Chatroulette:      {status: specific, family: anonymous_chat, launched: 2009, capabilities: {anonymity: 2009, contact_discovery: 2009, unmonitored_communication: 2009}}
+  Monkey:            {status: specific, family: anonymous_chat, launched: 2016, capabilities: {anonymity: 2016, contact_discovery: 2016, unmonitored_communication: 2016}}
+  Grindr:            {status: specific, family: dating, launched: 2009, capabilities: {contact_discovery: 2009, unmonitored_communication: 2009, anonymity: 2009}}
+  Skout:             {status: specific, family: dating, launched: 2007, capabilities: {contact_discovery: 2007, unmonitored_communication: 2007, anonymity: 2007}}
+  Craigslist:        {status: specific, family: classifieds, launched: 1995, capabilities: {contact_discovery: 1995, anonymity: 1995}, note: "anonymized email relay"}
+
+  Dropbox:           {status: specific, family: file_hosting, launched: 2008, capabilities: {distribution_infrastructure: 2008}}
+  Google Drive:      {status: specific, family: file_hosting, launched: 2012, capabilities: {distribution_infrastructure: 2012}}
+  OneDrive:          {status: specific, family: file_hosting, launched: 2007, capabilities: {distribution_infrastructure: 2007}}
+  iCloud:            {status: specific, family: file_hosting, launched: 2011, capabilities: {distribution_infrastructure: 2012}, note: "mostly cited as storage; shared albums 2012"}
+  BitTorrent:        {status: specific, family: p2p, launched: 2001, capabilities: {distribution_infrastructure: 2001}}
+  LimeWire:          {status: specific, family: p2p, launched: 2000, until: 2010, capabilities: {distribution_infrastructure: 2000}}
+  Kazaa:             {status: specific, family: p2p, launched: 2001, until: 2006, capabilities: {distribution_infrastructure: 2001}}
+  Tor:               {status: specific, family: anonymization, launched: 2002, capabilities: {anonymity: 2002, distribution_infrastructure: 2004}, note: "onion services 2004"}
+  Cash App:          {status: specific, family: payment, launched: 2013, capabilities: {}, note: "payment rail: none of the six classes (CoercionLeverage is out of AfH scope)"}
+
+  YouTube:           {status: specific, family: video, launched: 2005, capabilities: {distribution_infrastructure: 2005, contact_discovery: 2005, anonymity: 2005}}
+  Twitch:            {status: specific, family: video, launched: 2011, capabilities: {distribution_infrastructure: 2011, contact_discovery: 2011, unmonitored_communication: 2011, anonymity: 2011}}
+
+  Roblox:            {status: specific, family: game, launched: 2006, capabilities: {contact_discovery: 2006, unmonitored_communication: 2006, anonymity: 2006}}
+  Minecraft:         {status: specific, family: game, launched: 2011, capabilities: {contact_discovery: 2011, unmonitored_communication: 2011, anonymity: 2011}}
+  Fortnite:          {status: specific, family: game, launched: 2017, capabilities: {contact_discovery: 2017, unmonitored_communication: 2017, anonymity: 2017}}
+  Xbox Live:         {status: specific, family: game, launched: 2002, capabilities: {contact_discovery: 2002, unmonitored_communication: 2002, anonymity: 2002}}
+  PlayStation Network: {status: specific, family: game, launched: 2006, capabilities: {contact_discovery: 2006, unmonitored_communication: 2006, anonymity: 2006}}
+  Steam:             {status: specific, family: game, launched: 2003, capabilities: {contact_discovery: 2003, unmonitored_communication: 2003, anonymity: 2003}}
+  Call of Duty:      {status: specific, family: game, launched: 2003, capabilities: {contact_discovery: 2003, unmonitored_communication: 2003, anonymity: 2003}}
+  CS:GO:             {status: specific, family: game, launched: 2012, capabilities: {contact_discovery: 2012, unmonitored_communication: 2012, anonymity: 2012}}
+  Wizard 101:        {status: specific, family: game, launched: 2008, capabilities: {contact_discovery: 2008, unmonitored_communication: 2008, anonymity: 2008}}
+  Oculus:            {status: specific, family: game, launched: 2016, capabilities: {contact_discovery: 2016, unmonitored_communication: 2016, anonymity: 2016}}
+
+  Stable Diffusion:  {status: specific, family: ai, launched: 2022, capabilities: {generative_synthesis: 2022}}
