@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -28,13 +29,14 @@ if str(RUN) not in sys.path:
 
 from platform_affordance_evidence_freshness import (  # noqa: E402
     gap_gate,
-    read_corpus_identity,
+    mismatched_inputs,
+    read_live_identity,
     rebuild_decision,
     snapshot_freshness,
 )
 
 EVIDENCE = ROOT / "ontology" / "platform_affordance_evidence" / "platform_affordance_evidence.json"
-DB = ROOT / "caselinker.db"
+DB = Path(os.environ.get("CASELINKER_DB", str(ROOT / "caselinker.db")))
 BUILDER = ROOT / "ontology" / "platform_affordance_evidence" / "platform_affordance_evidence.py"
 
 
@@ -47,25 +49,26 @@ def refresh_platform_affordance_evidence(root: Path | None = None) -> dict:
     """
     root = root or ROOT
     evidence = root / "ontology" / "platform_affordance_evidence" / "platform_affordance_evidence.json"
-    database = root / "caselinker.db"
+    database = Path(os.environ.get("CASELINKER_DB", str(root / "caselinker.db")))
     builder = root / "ontology" / "platform_affordance_evidence" / "platform_affordance_evidence.py"
     if not evidence.is_file():
         raise FileNotFoundError(evidence)
     if not database.is_file():
         raise FileNotFoundError(database)
     meta = json.loads(evidence.read_text(encoding="utf-8")).get("_meta") or {}
-    with sqlite3.connect(database) as conn:
-        live = read_corpus_identity(conn)
+    with sqlite3.connect(f"file:{database}?mode=ro", uri=True) as conn:
+        live = read_live_identity(conn, root)
     decision = rebuild_decision(meta, live)
     rebuilt = False
     if decision == "rebuild":
-        completed = subprocess.run([sys.executable, str(builder)], cwd=root)
+        completed = subprocess.run([sys.executable, str(builder)], cwd=root,
+                                   env={**os.environ, "CASELINKER_DB": str(database)})
         if completed.returncode != 0:
             raise RuntimeError(f"evidence builder exited {completed.returncode}")
         rebuilt = True
         meta = json.loads(evidence.read_text(encoding="utf-8")).get("_meta") or {}
-        with sqlite3.connect(database) as conn:
-            live = read_corpus_identity(conn)
+        with sqlite3.connect(f"file:{database}?mode=ro", uri=True) as conn:
+            live = read_live_identity(conn, root)
     freshness = snapshot_freshness(meta, live)
     return {"decision": decision, "rebuilt": rebuilt, "freshness": freshness}
 
@@ -88,10 +91,12 @@ def main(argv: list[str] | None = None) -> int:
     if not DB.is_file():
         print("caselinker.db is absent; corpus identity was not compared", file=sys.stderr)
         return 1 if args.strict else 0
-    with sqlite3.connect(DB) as conn:
-        live = read_corpus_identity(conn)
+    with sqlite3.connect(f"file:{DB}?mode=ro", uri=True) as conn:
+        live = read_live_identity(conn, ROOT)
     decision = rebuild_decision(meta, live)
     print(f"decision={decision} live_cases={None if live is None else live.get('case_count')}")
+    if decision != "current":
+        print("mismatched=" + ",".join(mismatched_inputs(meta, live)))
     if args.check:
         if args.strict and (decision != "current" or gate != "ok"):
             return 1

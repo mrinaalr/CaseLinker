@@ -73,7 +73,7 @@ else:
 from case_jurisdiction import derive_jurisdiction
 from corpus_export import iter_corpus_json
 from platform_affordance_evidence_freshness import (
-    read_corpus_identity,
+    read_live_identity,
     require_fresh_block,
     with_snapshot_freshness,
 )
@@ -4304,7 +4304,7 @@ _CASE_STUDIES_NOTES_MAX_TEXT = 1500
 
 
 def _live_platform_affordance_corpus() -> Optional[Dict[str, Any]]:
-    """Case count and extraction-run fingerprint for the database this process serves.
+    """Case count, extraction-run fingerprint, platform pairs and code versions for the served database.
 
     None means the comparison was not run. Callers must treat that as unverified,
     not as a match.
@@ -4317,11 +4317,11 @@ def _live_platform_affordance_corpus() -> Optional[Dict[str, Any]]:
 
             conn = get_connection()
             pooled = True
-            return read_corpus_identity(conn)
+            return read_live_identity(conn)
         from storage import get_connection
 
         conn = get_connection(str(storage.db_path))
-        return read_corpus_identity(conn)
+        return read_live_identity(conn)
     except Exception:
         logger.exception("platform affordance corpus identity unavailable")
         return None

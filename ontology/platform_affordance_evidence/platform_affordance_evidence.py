@@ -14,6 +14,7 @@ Outputs:
 from __future__ import annotations
 
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -22,7 +23,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-DB = "caselinker.db"
+DB = os.environ.get("CASELINKER_DB", "caselinker.db")
 CANDIDATES_FILE = "ontology/platform_affordance_evidence/candidates.json"
 OUTPUT_DIR = Path("ontology/platform_affordance_evidence")
 TEXT_CAP = 6000
@@ -907,9 +908,21 @@ def write_affordance_md(
 def main() -> None:
     test_mode = "--test" in sys.argv
 
-    print("Loading candidates...", flush=True)
-    with open(CANDIDATES_FILE, encoding="utf-8") as f:
-        candidates = json.load(f)
+    # Candidates are recomputed from the database on every build. The 2026-11-12
+    # snapshot read a candidates.json 23 days older than the corpus; never again.
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "build_candidates", Path(__file__).resolve().parent / "build_candidates.py")
+    build_candidates = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_candidates)
+    print("Computing candidates from DB...", flush=True)
+    src = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    try:
+        candidates = build_candidates.compute_candidates(src)
+    finally:
+        src.close()
+    Path(CANDIDATES_FILE).write_text(json.dumps(candidates, indent=2), encoding="utf-8")
 
     case_to_platforms: Dict[str, List[str]] = defaultdict(list)
     for entry in candidates["flat"]:
@@ -924,7 +937,7 @@ def main() -> None:
     print(f"Total cases to process: {len(all_case_ids)}", flush=True)
 
     print("Loading case texts from DB...", flush=True)
-    conn = sqlite3.connect(DB)
+    conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     db_rows: Dict[str, str] = {}
     # SQLite's default variable limit is 32766. Chunk so a doubled corpus still fits.
     for start in range(0, len(all_case_ids), 5000):
@@ -942,9 +955,10 @@ def main() -> None:
         run_dir = Path(__file__).resolve().parents[2] / "run"
         if str(run_dir) not in sys.path:
             sys.path.insert(0, str(run_dir))
-        from platform_affordance_evidence_freshness import read_corpus_identity
+        from platform_affordance_evidence_freshness import candidate_pool_sha256, read_live_identity
 
-        corpus_identity = read_corpus_identity(conn)
+        corpus_identity = read_live_identity(conn, Path(__file__).resolve().parents[2])
+        corpus_identity["candidate_pool_sha256"] = candidate_pool_sha256(candidates)
     except Exception as exc:
         print(f"Corpus identity not recorded: {exc}", flush=True)
     conn.close()
@@ -985,6 +999,10 @@ def main() -> None:
                 {
                     "corpus_case_count": corpus_identity["case_count"],
                     "extraction_run_fingerprint": corpus_identity["extraction_run_fingerprint"],
+                    "platform_pairs": corpus_identity["platform_pairs"],
+                    "platform_pairs_sha256": corpus_identity["platform_pairs_sha256"],
+                    "candidate_pool_sha256": corpus_identity["candidate_pool_sha256"],
+                    "code_versions": corpus_identity["code_versions"],
                 }
                 if corpus_identity
                 else {}
