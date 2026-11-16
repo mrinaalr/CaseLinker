@@ -1053,6 +1053,42 @@ def _integrity(root: Path = _REPO_ROOT) -> Dict[str, Any]:
     }
 
 
+# The gate's pytest children run with an allow-listed environment. Every key named in a
+# .env file, and every production-looking variable, is set to "" so that run/main.py's
+# load_dotenv(override=False) cannot fill it back in. An empty DATABASE_URL means SQLite.
+_TEST_ENV_PASS = ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "VIRTUAL_ENV", "CASELINKER_DB")
+_TEST_ENV_BLANK = (
+    "DATABASE_URL", "DATABASE_PRIVATE_URL", "DATABASE_PUBLIC_URL", "PGHOST", "PGPORT", "PGUSER", "PGPASSWORD",
+    "PGDATABASE", "PGSERVICE", "PGPASSFILE", "OXIGRAPH_URL", "CASELINKER_API_URL", "CASELINKER_KEY",
+    "CASELINKER_TRUSTED_KEYS", "REDIS_URL", "GROQ_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY", "JINA_API_KEY", "RAILWAY_ENVIRONMENT", "RAILWAY_SERVICE_NAME", "RAILWAY_TOKEN",
+)
+_DOTENV_KEY = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=")
+
+
+def _dotenv_keys(root: Path) -> List[str]:
+    """Variable names (never values) declared in the .env files run/main.py loads."""
+    keys: List[str] = []
+    for path in (root / ".env", root / "run" / ".env"):
+        if path.is_file():
+            for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+                m = _DOTENV_KEY.match(line)
+                if m:
+                    keys.append(m.group(1))
+    return keys
+
+
+def _test_env(root: Path = _REPO_ROOT, environ: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    """Environment for a gate pytest child: allow-listed basics, every secret and .env key blanked."""
+    source = os.environ if environ is None else environ
+    env = {k: source[k] for k in _TEST_ENV_PASS if k in source}
+    for key in (*_TEST_ENV_BLANK, *_dotenv_keys(root)):
+        env[key] = ""
+    env["PYTHONHASHSEED"] = "0"
+    env["CASELINKER_GATE_CHILD"] = "1"
+    return env
+
+
 def _run_tests(extension: str = "") -> Dict[str, Any]:
     """Each fixed test file in its own process (a whole-suite run collides on module names)."""
     targets = [t for t in TEST_TIER if (_REPO_ROOT / t).exists()]
@@ -1066,7 +1102,7 @@ def _run_tests(extension: str = "") -> Dict[str, Any]:
         try:
             proc = subprocess.run(
                 [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "-rf", target],
-                cwd=_REPO_ROOT, capture_output=True, text=True, timeout=900,
+                cwd=_REPO_ROOT, capture_output=True, text=True, timeout=900, env=_test_env(_REPO_ROOT),
             )
             output = proc.stdout
         except subprocess.TimeoutExpired:
