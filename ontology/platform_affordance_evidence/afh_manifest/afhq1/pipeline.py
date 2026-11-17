@@ -233,7 +233,7 @@ class Record:
 
     @property
     def primary_tier(self) -> str:
-        """Tier every downstream level uses: tiers-1+linewrap-2 (Decision 1). `tier` stays the
+        """Tier every downstream level uses: tiers-1+linewrap-3 (Decision 1). `tier` stays the
         tiers-1 baseline, used only for baseline counts and for re-drawing historical samples."""
         return self.tier_linewrap or self.tier
 

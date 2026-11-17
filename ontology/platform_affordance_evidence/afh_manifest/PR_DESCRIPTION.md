@@ -75,7 +75,7 @@ Generative synthesis is almost entirely recorded under the "Gen AI" technology l
 ## Design
 
 - **Snapshot.** Read-only export from the corpus DB. `dataset_identity` hashes every case's id, content fingerprint, text, platforms, topics, source and year. `run_all.py --verify` regenerates everything and compares against `RUN_IDENTITY.json`.
-- **Evidence tiers.** The existing sentence rules, plus an additive hard-wrap repair (`tiers-1+linewrap-2`) that never demotes and refuses promotions earned only by agency social-media boilerplate. Every downstream level reads the same tier (`Record.primary_tier`). The original-rule result is kept as a baseline.
+- **Evidence tiers.** The existing sentence rules, plus an additive hard-wrap repair (`tiers-1+linewrap-3`) that never demotes and refuses promotions earned only by agency social-media boilerplate. Every downstream level reads the same tier (`Record.primary_tier`). The original-rule result is kept as a baseline.
 - **Affordance levels.** Each is a subset of the one before:
   - available (native in the case's publication year, from a dated registry);
   - capability-relevant documented conduct;

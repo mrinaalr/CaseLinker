@@ -74,3 +74,48 @@ def test_agency_social_boilerplate_cannot_earn_a_promotion():
                    "Source: facebook.com/somecounty/posts/123", "Mugshots are available on the Attorney General's Twitter page"):
         assert pe.AGENCY_SOCIAL_BOILERPLATE.search(footer), footer
     assert not pe.AGENCY_SOCIAL_BOILERPLATE.search("He messaged the girl on Facebook and asked for photos.")
+
+
+def _promoted(text: str, platforms):
+    published = pe.process_case("synthetic_2024_004", platforms, text)["records"]
+    return {r["platform"]: r["stated_vs_inferred"] for r in published}, \
+        pe.linewrap_tiers("synthetic_2024_004", platforms, text, published)
+
+
+def test_news_attribution_to_an_agency_post_cannot_earn_a_promotion():
+    for text in (
+        "Synthetic Man Arrested\n\nIn a Facebook post, the sheriff's office said\n"
+        "the man was arrested for possessing child sexual abuse material.\n",
+        "Synthetic Man Arrested\n\nOfficers found images, according to a Facebook post from the\n"
+        "police department, and the man was arrested for possessing child sexual abuse material.\n",
+        "Synthetic Man Arrested\n\nThe tips came from a national center, the sheriff's office said on Facebook\n"
+        "after the man was arrested for possessing child sexual abuse material.\n",
+    ):
+        base, lw = _promoted(text, ["Facebook"])
+        repaired = pe.process_case("s", ["Facebook"], pe.repair_line_wraps(text))["records"][0]["stated_vs_inferred"]
+        assert base["Facebook"] == "named_only" and repaired != "named_only", text  # a promotion was on offer
+        assert lw["Facebook"] == "named_only", text
+
+
+def test_reporting_duty_statement_is_boilerplate_for_the_companies_it_lists():
+    s = ("Through different companies google, Facebook, Instagram who are required by law to report any "
+         "concerning activity or illegal contraband they find on their servers, a sergeant said.")
+    assert pe.boilerplate_names_platform(s, "Facebook")
+    assert pe.boilerplate_names_platform(s, "Instagram")
+    assert not pe.boilerplate_names_platform(
+        "Facebook reported the account, and the man was charged with sending images to a child on Instagram.",
+        "Instagram")
+
+
+def test_agency_post_refuses_only_the_platform_it_names():
+    text = ("Synthetic Man Arrested\n\nIn a Facebook post, the sheriff's office said they got a tip about criminal "
+            "activity on Kik,\nand after conducting a search warrant, investigators arrested the man for distributing "
+            "child sexual abuse material.\n")
+    base, lw = _promoted(text, ["Facebook", "Kik"])
+    assert base == {"Facebook": "named_only", "Kik": "named_only"}
+    assert lw == {"Facebook": "named_only", "Kik": "stated"}
+
+
+def test_footer_link_list_refuses_every_platform_it_lists():
+    assert pe.boilerplate_names_platform("Troop F Headquarters Facebook X (formerly Twitter) YouTube", "YouTube")
+    assert not pe.boilerplate_names_platform("He shared the videos on YouTube, the police department said.", "YouTube")

@@ -139,7 +139,7 @@ def inventory(cases: List[dict], records: List[pl.Record], excluded: List[dict],
             **{f"{k}.{c}": v for k, d in checks.items() for c, v in d.items()},
         },
         "tiers": {"broad": broad, "strict": strict_t, "analysed_for_affordances": analysed},
-        "tiers_linewrap_alternative": {"strict": strict_lw, "rules": "tiers-1+linewrap-2 (additive line-wrap repair with agency social-media guard)",
+        "tiers_linewrap_alternative": {"strict": strict_lw, "rules": "tiers-1+linewrap-3 (additive line-wrap repair with agency social-media guard)",
                                        "status": "primary documented-use count (Decision 1, adopted on validation); "
                                                  "tiers-1 strict row is the original-rule baseline"},
         "tier_definition": "case tier = best record tier (stated > inferred > named_only); tiers are mutually exclusive per case",

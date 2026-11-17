@@ -8,7 +8,7 @@
 |---|---|
 | Platform registry | `platforms-2` |
 | Codebook | `codebook-6` |
-| Evidence tiers | `tiers-1` (baseline) and `tiers-1+linewrap-2` (primary) |
+| Evidence tiers | `tiers-1` (baseline) and `tiers-1+linewrap-3` (primary) |
 
 Every downstream level reads the primary tier (`Record.primary_tier`).
 

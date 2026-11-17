@@ -23,7 +23,7 @@ RULES = {
     "C_verbs": "published rules on stored text; OFFENSE_KEYWORDS + " + ", ".join(pl.SENSITIVITY_EXTRA_VERBS),
     "D_combined": "B and C together",
     "Bplus_unwrap_additive": "max(A, B) per record: the repair can add evidence a hard wrap hid, never remove a tier the stored text earns",
-    "Bplus_guarded": "Bplus, but a promotion earned only by agency social-media boilerplate is refused (builder linewrap_tiers, tiers-1+linewrap-2); the primary rule",
+    "Bplus_guarded": "Bplus, but a promotion earned only by agency social-media boilerplate is refused (builder linewrap_tiers, tiers-1+linewrap-3); the primary rule",
 }
 
 

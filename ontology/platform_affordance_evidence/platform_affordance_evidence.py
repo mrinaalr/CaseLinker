@@ -286,10 +286,15 @@ TIER_RULES_VERSION = "tiers-1"
 # as two fragments and the verb never meets the platform name. The repair joins a single
 # line break that does not end a sentence (no . ! ? : before it); blank-line paragraph
 # breaks stay. Its tier is reported in stated_vs_inferred_linewrap, beside the published one.
-LINEWRAP_RULES_VERSION = "tiers-1+linewrap-2"
+LINEWRAP_RULES_VERSION = "tiers-1+linewrap-3"
 # linewrap-2: a promotion is refused when the sentence that earned it is agency social-media
 # boilerplate (an agency's own page, post, footer links or post URL). In a blind review of 45
 # of 269 promoted cases, all 6 non-use promotions were of this kind.
+# linewrap-3: the refusal applies only to the platform the boilerplate names (the same sentence can
+# be real evidence for another platform: "In a Facebook post, the sheriff's office said ... on Kik"),
+# and covers news-style attributions ("in / according to a Facebook post", "said on Facebook") and
+# statements that companies are required by law to report.
+_SOCIAL = r"(?:facebook|twitter|x|instagram|youtube|tiktok)"
 AGENCY_SOCIAL_BOILERPLATE = re.compile(
     r"(?:posted|shared|announced|published|available)\b[^.]{0,80}\bon\s+(?:its|their|our|the\s+[\w.' ’]{0,60}?)\s*(?:official\s+)?"
     r"(?:facebook|twitter|x|instagram|youtube|tiktok)\s+(?:page|account|feed|channel|profile)"
@@ -297,9 +302,24 @@ AGENCY_SOCIAL_BOILERPLATE = re.compile(
     r"(?:facebook|twitter|instagram|youtube)\s+(?:page|account|feed|channel|post)"
     r"|(?:facebook|twitter|x|youtube|instagram)\.com/\S*"
     r"|\bfacebook\s+x\s*\(formerly\s+twitter\)"
-    r"|\b(?:follow|like|find)\s+us\s+on\b",
+    r"|\b(?:follow|like|find)\s+us\s+on\b"
+    rf"|\b(?:in|according\s+to|via)\s+an?\s+{_SOCIAL}\s+(?:post|statement|update|video)\b"
+    rf"|\b(?:said|announced|posted|wrote|shared|stated)\s+on\s+{_SOCIAL}\b"
+    r"|\bcompan(?:y|ies)\b[^.]{0,80}\brequired\s+by\s+law\s+to\s+report\b",
     re.IGNORECASE,
 )
+
+
+def boilerplate_names_platform(sentence: str, platform: str) -> bool:
+    """True when an agency social-media / reporting-duty phrase in ``sentence`` names ``platform``."""
+    terms = [t.strip() for t in platform_text_terms(platform) if t.strip()]
+    for m in AGENCY_SOCIAL_BOILERPLATE.finditer(sentence or ""):
+        frag = m.group(0).lower()
+        if any(re.search(r"(?<![a-z])" + re.escape(t) + r"(?![a-z])", frag) for t in terms):
+            return True
+        if frag.startswith(("follow us", "like us", "find us", "facebook x")):
+            return True  # footer link lists: every platform in them is boilerplate
+    return False
 _LINE_WRAP = re.compile(r"(?<![.!?:\n])[ \t]*\n(?!\n)[ \t]*")
 
 
@@ -310,7 +330,7 @@ def repair_line_wraps(text: str) -> str:
 
 def linewrap_tiers(case_id: str, platforms: List[str], case_text: str,
                    published: List[Dict[str, Any]]) -> Dict[str, str]:
-    """Tier per platform under tiers-1+linewrap-2: the better of the published tier and the
+    """Tier per platform under tiers-1+linewrap-3: the better of the published tier and the
     tier on repaired text. Additive by design: in a blind review all 10 sampled records the
     plain repair demoted were real offender use (joined lines trip the comma-list heuristic).
     A promotion earned only by agency social-media boilerplate is refused."""
@@ -323,7 +343,7 @@ def linewrap_tiers(case_id: str, platforms: List[str], case_text: str,
         a, b = r["stated_vs_inferred"], repaired.get(r["platform"], "named_only")
         if TIER_RANK[b] > TIER_RANK[a]:
             _tier, sentence = best_sentence(lines_with_platform(offense, r["platform"]), r["platform"])
-            if sentence and AGENCY_SOCIAL_BOILERPLATE.search(sentence):
+            if sentence and boilerplate_names_platform(sentence, r["platform"]):
                 b = a
         out[r["platform"]] = a if TIER_RANK[a] >= TIER_RANK[b] else b
     return out
