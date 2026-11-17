@@ -135,3 +135,9 @@ def test_model_coded_procedure_needs_a_date_and_is_kept_once():
     bundle, quotes, log = C.assemble(case, sources, answers, "coder_A", C.MODELS["coders"]["coder_A"])
     assert not any(e["action"] == "PROC_PLEA" for e in bundle["events"])
     assert any("procedure act without a stated date" in line for line in log)
+
+
+def test_a_quote_stops_at_its_sentence_even_when_the_words_run_past_it():
+    page = "The next day, the defendant drove to the hotel. At the hotel, the defendant met Minor Victim 1."
+    s, e, q = C.locate_sentence(page, "The next day, the defendant drove to the hotel. At the")
+    assert q == "The next day, the defendant drove to the hotel."

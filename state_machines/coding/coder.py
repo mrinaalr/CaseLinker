@@ -316,8 +316,11 @@ def locate_sentence(page_text: str, start_words: str) -> Tuple[int, int, str]:
     if begin < i and i - begin <= 400:
         i, sw = begin, page_n[begin:i] + sw
     end = len(page_n)
-    for m in re.finditer(r"[.;!?](?=\s|$)", page_n[i + len(sw):]):
-        k = i + len(sw) + m.end()
+    # the sentence ends at its first true terminator, even when the given words run past it
+    for m in re.finditer(r"[.;!?](?=\s|$)", page_n[i:]):
+        k = i + m.end()
+        if k - i < 12:
+            continue
         if not _ABBREV.search(page_n[max(i, k - 8):k]):
             end = k
             break

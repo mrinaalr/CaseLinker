@@ -188,10 +188,12 @@ def match_events(a: dict, b: dict) -> List[Tuple[str, str]]:
             if eb["event_id"] in used or role(a, ea) != role(b, eb) or not _overlap(sa, _spans(b, eb)):
                 continue
             sb = _spans(b, eb)
-            # overlap size only: preferring same-action pairs would inflate action agreement
+            # overlap size decides; the action code only breaks an exact tie, which happens when one
+            # sentence holds several acts (both cite the same passage). It never outweighs overlap.
             score = sum(max(0, min(x[3], y[3]) - max(x[2], y[2])) for x in sa for y in sb if x[:2] == y[:2])
-            if best is None or score > best[0]:
-                best = (score, eb["event_id"])
+            key = (score, eb["action"] == ea["action"])
+            if best is None or key > best[0]:
+                best = (key, eb["event_id"])
         if best:
             used.add(best[1])
             pairs.append((ea["event_id"], best[1]))
