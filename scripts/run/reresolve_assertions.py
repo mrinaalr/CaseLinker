@@ -62,15 +62,22 @@ def _new_human(stored, text, case_id):
     return [a for a in fresh if (a["value"], a["role"], a["span_start"]) not in have]
 
 
-# Detectors added after a case's run; their assertions are appended to that run.
-_NEW_DETECTORS = ("cybertip_reporter",)
+# Detectors added or widened after a case's run; their assertions are appended to that run.
+_NEW_DETECTORS = ("cybertip_reporter", "investigation_type")
 
 
 def _new_detected(stored, text):
+    """New assertions only. A CyberTip scope mention is appended only where no stored row covers
+    its span (#71): rows are append-only, so a mention stored as ``unscoped`` that today reads as
+    ``case_action`` changes only on a re-extract, never by stacking a second role on one span."""
     amod = processing.assertions_module
     have = {(a["field"], a["value"], a["role"], a["span_start"]) for a in stored}
+    tip_spans = {(a["span_start"], a["span_end"]) for a in stored if a["field"] == "investigation_type"}
     fresh = [amod.gate_assertion(text, a) for a in amod.patterns.cybertip_reporter_assertions(text)]
-    return [a for a in fresh if a["field"] in _NEW_DETECTORS
+    fresh += [amod.gate_assertion(text, a) for a in amod.patterns.cybertip_assertions(text)
+              if (a["span_start"], a["span_end"]) not in tip_spans
+              and not any(s < a["span_end"] and a["span_start"] < e for s, e in tip_spans)]
+    return [a for a in fresh if a["field"] in _NEW_DETECTORS and a.get("span_ok", True)
             and (a["field"], a["value"], a["role"], a["span_start"]) not in have]
 
 
