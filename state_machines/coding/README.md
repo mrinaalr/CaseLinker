@@ -66,7 +66,8 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
   | `qwen3:8b` | 29.6 | 0.80 | 0.81 | 1.0 / 0.70 | 0.60 / 1.0 |
 
   The 8B model was slower and not more accurate; `llama3.1:8b` ran about 50 s a page under the old prompt.
-- **Two requests in flight** (`runtime.parallel = 2`): 5.1 s per page wall time against 7.9 s serial.
+- **Requests in flight:** on synthetic pages two in flight gave 5.1 s per page against 7.9 s serial. Real filings are denser (prompts of about 1,400 tokens, answers of 200–900 tokens, up to 24 acts a page) and cost about 19–22 s per page with `qwen3:4b`; going from two to four in flight barely helps there, because the GPU's memory bandwidth, not request concurrency, is the limit.
+- **The 30 real cases** therefore take about 4 hours for coder_A and, with the selective second pass, about 1.5 hours for coder_B on this laptop. Shorter answers would be faster but would change what the benchmark measured, so they were not used.
 - **Page routing for the 30 real cases:** 1,027 pages; 201 docket pages to the parser (procedure entries only), 60 judgment form pages skipped, 766 pages read by the models. Every substantive filing is read.
 - **Rejected: a page prefilter.** On the pilot's real pages (agent-coded), the best keyword prefilter kept 90% of pages with acts while saving only 19% of model pages; the strictest kept 71%. Losing acts to save time is not acceptable, so every non-docket, non-form page is read.
 - **Memory:** a dedicated Ollama server (`models.json` `runtime`) with one model loaded, an 8-bit KV cache, flash attention and an 8k context; the coder pauses while free memory is under 20% instead of swapping.
