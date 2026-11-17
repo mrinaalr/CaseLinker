@@ -48,20 +48,18 @@ python -m state_machines.graphs.release build <release_id>
 python -m state_machines.graphs.release nquads <release_id>
 ```
 
-A release folder `state_machines/data/<release_id>/` holds `cases/` (bundles), `derived/`, `graphs/`, `manifest.json` and the N-Quads file. [`release.py`](release.py) refuses a bundle with a validation error, an unadjudicated event or relation, or an undecided role. `--allow-unreviewed` builds a preview, which the manifest records as `adjudicated: false`.
+A release folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `manifest.json` and `lifecycle.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
 
 The manifest records the schema, codebook, derivation rule, extension and SDK versions, and per case the bundle hash, the source-document hashes, the graph IRIs and hashes, the SHACL result and the review counts. Graph IRIs are stable across releases:
 
 ```
-urn:caselinker:pacer:<case_id>:evidence        served from Oxigraph
-urn:caselinker:pacer:<case_id>:trajectories    kept with the release, not served
+urn:caselinker:pacer:<case_id>:evidence        actions, participants, roles, relations, provenance
+urn:caselinker:pacer:<case_id>:trajectories    derived order and affordance views; every lifecycle and step names its derivation rule and threshold
 ```
-
-Only evidence graphs go to the public store: they are the record. Trajectory graphs are a derived reading at one threshold, rebuilt from the evidence at any time, and served through `/api/lifecycle/analysis`, which states its threshold.
 
 ## Oxigraph
 
-The full corpus is rebuilt into an empty store; PACER evidence graphs come from a release.
+The full corpus is rebuilt into an empty store; PACER graphs come from a release. `--pacer-graphs all` (default) loads evidence and trajectory graphs, `--pacer-graphs evidence` the evidence graphs only. Adjudicated and machine-coded releases load; a preview is refused unless `--allow-preview`, which accepts only a local store.
 
 ```bash
 # build the corpus and PACER N-Quads without touching a store
@@ -73,10 +71,10 @@ OXIGRAPH_URL=http://localhost:7878 python3 scripts/oxigraph/rebuild_oxigraph.py 
 ```
 
 `--verify` checks over SPARQL that:
-- every evidence graph in the manifest is present and non-empty;
-- no other PACER graph is present (trajectory graphs included);
+- exactly the selected graph kinds of the release are present, each non-empty;
+- each evidence graph has one investigation and no derived lifecycles, and no trajectory graph holds an investigation;
+- every trajectory states its derivation rule and threshold;
 - no `urn:pacer:kg:*` graph remains;
-- each evidence graph has exactly one investigation;
 - the store holds at least `--min-case-graphs` press-release case graphs.
 
 **Staging and rollback.**

@@ -153,7 +153,22 @@ def _get(path: str):
         return json.loads(r.read())
 
 
+def candidate_spec(model: str) -> dict:
+    """A local model under evaluation (not a pinned coder): its digest is read now and recorded."""
+    tags = {m["name"]: m for m in _get("/api/tags")["models"]}
+    if model not in tags:
+        raise SystemExit(f"{model} is not pulled")
+    m = tags[model]
+    spec = {"model": model, "digest": "sha256:" + m["digest"], "family": m["details"].get("family"),
+            "parameters": m["details"].get("parameter_size"), "quantization": m["details"].get("quantization_level")}
+    if model.startswith("qwen3"):
+        spec["think"] = False
+    return spec
+
+
 def check_model(coder: str) -> dict:
+    if coder.startswith("model:"):
+        return candidate_spec(coder.split(":", 1)[1])
     spec = MODELS["coders"][coder]
     tags = {m["name"]: m["digest"] for m in _get("/api/tags")["models"]}
     have = tags.get(spec["model"])
@@ -164,42 +179,99 @@ def check_model(coder: str) -> dict:
     return spec
 
 
+def free_memory_percent() -> Optional[int]:
+    """macOS system-wide free memory percentage (None where it cannot be read)."""
+    import subprocess
+    try:
+        out = subprocess.run(["memory_pressure"], capture_output=True, text=True, timeout=20).stdout
+        m = re.search(r"free percentage: (\d+)%", out)
+        return int(m.group(1)) if m else None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def wait_for_memory(minimum: Optional[int] = None, poll: int = 30, limit: int = 3600) -> None:
+    """Pause before a model call while free memory is below the floor, instead of swapping the
+    machine out of disk. Gives up waiting after ``limit`` seconds and proceeds."""
+    floor = minimum if minimum is not None else MODELS["runtime"].get("min_free_memory_percent", 20)
+    waited = 0
+    while waited < limit:
+        free = free_memory_percent()
+        if free is None or free >= floor:
+            return
+        print(f"memory: {free}% free, below {floor}%; waiting", flush=True)
+        time.sleep(poll)
+        waited += poll
+
+
+def unload(coder: str) -> None:
+    """Release a coder's model from memory now (before the other coder's model loads)."""
+    unload_model(MODELS["coders"][coder]["model"])
+
+
+def unload_model(model: str) -> None:
+    body = json.dumps({"model": model, "keep_alive": 0}).encode()
+    try:
+        urllib.request.urlopen(urllib.request.Request(MODELS["runtime"]["base_url"] + "/api/generate", data=body,
+                                                      headers={"Content-Type": "application/json"}), timeout=60).read()
+    except OSError:
+        pass
+
+
 class Cache:
     def __init__(self, path: Path = CACHE):
         path.parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(str(path))
+        import threading
+        self.db = sqlite3.connect(str(path), check_same_thread=False)
+        self.lock = threading.Lock()
         self.db.execute("CREATE TABLE IF NOT EXISTS calls (key TEXT PRIMARY KEY, model TEXT, digest TEXT, prompt_version TEXT,"
                         " response TEXT, seconds REAL)")
+        cols = {r[1] for r in self.db.execute("PRAGMA table_info(calls)")}
+        for col in ("prompt_tokens", "prompt_seconds", "output_tokens", "output_seconds"):
+            if col not in cols:      # timing split, added after the first runs
+                self.db.execute(f"ALTER TABLE calls ADD COLUMN {col} REAL")
 
     def get(self, key: str) -> Optional[str]:
-        row = self.db.execute("SELECT response FROM calls WHERE key=?", (key,)).fetchone()
+        with self.lock:
+            row = self.db.execute("SELECT response FROM calls WHERE key=?", (key,)).fetchone()
         return row[0] if row else None
 
-    def put(self, key: str, spec: dict, response: str, seconds: float) -> None:
-        self.db.execute("INSERT OR REPLACE INTO calls VALUES (?,?,?,?,?,?)",
-                        (key, spec["model"], spec["digest"], PROMPT_VERSION, response, seconds))
+    def put(self, key: str, spec: dict, response: str, seconds: float, timing: Optional[dict] = None) -> None:
+        t = timing or {}
+        with self.lock:
+            self._put(key, spec, response, seconds, t)
+
+    def _put(self, key, spec, response, seconds, t) -> None:
+        self.db.execute("INSERT OR REPLACE INTO calls (key, model, digest, prompt_version, response, seconds, prompt_tokens,"
+                        " prompt_seconds, output_tokens, output_seconds) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                        (key, spec["model"], spec["digest"], PROMPT_VERSION, response, seconds, t.get("prompt_eval_count"),
+                         (t.get("prompt_eval_duration") or 0) / 1e9, t.get("eval_count"), (t.get("eval_duration") or 0) / 1e9))
         self.db.commit()
 
 
 def ask(spec: dict, prompt: str, cache: Cache) -> dict:
-    key = hashlib.sha256(json.dumps([spec["digest"], PROMPT_VERSION, MODELS["options"], prompt]).encode()).hexdigest()
+    env = MODELS["runtime"].get("env") or {}
+    numerics = {k: env[k] for k in ("OLLAMA_FLASH_ATTENTION", "OLLAMA_KV_CACHE_TYPE") if k in env}   # settings that change outputs
+    key = hashlib.sha256(json.dumps([spec["digest"], PROMPT_VERSION, MODELS["options"], numerics, prompt]).encode()).hexdigest()
     hit = cache.get(key)
     if hit is not None:
         return json.loads(hit)
+    wait_for_memory()
     body = {"model": spec["model"], "messages": [{"role": "user", "content": prompt}], "stream": False,
-            "format": SCHEMA, "options": MODELS["options"], "keep_alive": "30m"}
+            "format": SCHEMA, "options": MODELS["options"], "keep_alive": MODELS["runtime"].get("keep_alive", "2m")}
     if spec.get("think") is False:
         body["think"] = False
     req = urllib.request.Request(MODELS["runtime"]["base_url"] + "/api/chat", data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json"})
     t = time.time()
     with urllib.request.urlopen(req, timeout=900) as r:
-        content = json.loads(r.read())["message"]["content"]
+        raw = json.loads(r.read())
+        content = raw["message"]["content"]
     try:
         out = json.loads(content)
     except json.JSONDecodeError:
         out = {"acts": [], "unparsed": True}
-    cache.put(key, spec, json.dumps(out), time.time() - t)
+    cache.put(key, spec, json.dumps(out), time.time() - t, raw)
     return out
 
 
@@ -436,9 +508,11 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             aff = act.get("affordance") or {}
             feat = (aff.get("feature") or "").strip()
             if aff.get("class") in V.AFFORDANCES and feat and E.normalize(feat).lower() in qn.lower() and fam == "offender":
-                e["affordances"].append({"affordance": aff["class"], "basis": "feature_stated", "feature_term": feat[:120],
-                                         "platform_surface": (e["platform_interactions"][0]["platform_surface"] if e["platform_interactions"] else None),
-                                         "status": "DIRECT", "support": [{"passage_id": pid, "facet": "feature", "status": "DIRECT"}]})
+                a = {"affordance": aff["class"], "basis": "feature_stated", "feature_term": feat[:120],
+                     "status": "DIRECT", "support": [{"passage_id": pid, "facet": "feature", "status": "DIRECT"}]}
+                if e["platform_interactions"]:
+                    a["platform_surface"] = e["platform_interactions"][0]["platform_surface"]
+                e["affordances"].append(a)
             harm = act.get("harm")
             victims = [t["participant_ref"] for t in targets if t["role"] == "victim"]
             if harm in V.HARM_CODES and victims and fam == "offender":
@@ -502,6 +576,13 @@ def repair(bundle: dict, text_root: Path, deny: List[str]) -> Tuple[dict, List[s
             return bundle, log
         bad_events = {m.group(1) for f in errs for m in [re.match(r"event:(e\d+)", f.where or "")] if m}
         bad_rel = {m.group(1) for f in errs for m in [re.match(r"relation:(r\d+)", f.where or "")] if m}
+        for f in errs:                        # schema errors name a position: events/<i>/..., relations/<i>/...
+            m = re.match(r"(events|relations)/(\d+)", f.where or "")
+            if m:
+                items = bundle[m.group(1)]
+                i = int(m.group(2))
+                if i < len(items):
+                    (bad_events if m.group(1) == "events" else bad_rel).add(items[i]["event_id" if m.group(1) == "events" else "relation_id"])
         if not bad_events and not bad_rel:
             raise SystemExit("unrepairable bundle: " + "; ".join(f"{f.code} {f.where}: {f.message}" for f in errs[:5]))
         for f in errs:
@@ -526,25 +607,58 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
+def route(doc: dict, text: str) -> str:
+    """How a page is read: "docket" (parser), "boilerplate" (skipped judgment form page) or "model"."""
+    if doc["doc_type"] == "docket":
+        return "docket"
+    if doc["doc_type"] in ("judgment", "amended_judgment") and BOILERPLATE.search(text):
+        return "boilerplate"
+    return "model"
+
+
+def pages_with_acts(log_path: Path) -> set:
+    """(doc_id, page) pairs where a coder's model reported at least one act, read from its coverage log."""
+    out = set()
+    for line in log_path.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"page (\S+) p(\d+): model.*?, (\d+) acts$", line)
+        if m and int(m.group(3)) > 0:
+            out.add((m.group(1), int(m.group(2))))
+    return out
+
+
 def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] = None, deny: Optional[List[str]] = None,
-              progress=None) -> Tuple[dict, Dict[str, str], List[str]]:
+              progress=None, only_pages: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
+    """``only_pages``: model pages to read (others get no acts). With the selective second pass the
+    second coder reads only pages where the first found acts: resolution publishes only acts both
+    coded, so the release is unchanged; reliability is then measured on those pages."""
     spec = check_model(coder)
     cache = cache or Cache()
     codes = "\n".join(f"{a}: {_DEF[a]}" for a in ACTIONS)
-    answers, sources, coverage = [], None, []
+    answers, sources, coverage, jobs = [], None, [], []
     for sources, doc, page_no, full in pages_of(case_id, text_root):
-        if doc["doc_type"] == "docket":
+        kind = route(doc, full)
+        if kind == "docket":
             ans, how = docket_acts(full), "docket parser"
-        elif doc["doc_type"] in ("judgment", "amended_judgment") and BOILERPLATE.search(full):
+        elif kind == "boilerplate":
             ans, how = {"acts": []}, "skipped: judgment form page"
+        elif only_pages is not None and (doc["doc_id"], page_no) not in only_pages:
+            ans, how = {"acts": []}, "skipped: first coder found no act"
         else:
             text = full[:MAX_PAGE_CHARS]
             prompt = render_prompt(codes=codes, doc_type=doc["doc_type"].replace("_", " "), page=str(page_no), text=text)
-            ans, how = ask(spec, prompt, cache), "model" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
+            ans, how = prompt, "model" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
+            jobs.append(len(answers))
+        answers.append([doc, page_no, full, ans, how])
+    # model pages run with up to runtime.parallel requests in flight (the server batches them)
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=max(1, int(MODELS["runtime"].get("parallel", 1)))) as pool:
+        for i, ans in zip(jobs, pool.map(lambda i: ask(spec, answers[i][3], cache), jobs)):
+            answers[i][3] = ans
+    for doc, page_no, full, ans, how in answers:
         coverage.append(f"page {doc['doc_id']} p{page_no}: {how}, {len(ans.get('acts', []))} acts")
-        answers.append((doc, page_no, full, ans))
         if progress:
             progress(doc["doc_id"], page_no, len(ans.get("acts", [])))
+    answers = [tuple(a[:4]) for a in answers]
     bundle, quotes, log = assemble(case_id, sources, answers, coder, spec)
     log = coverage + log
     bundle, rlog = repair(bundle, text_root, deny or [])

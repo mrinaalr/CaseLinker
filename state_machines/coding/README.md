@@ -1,11 +1,32 @@
 # Coding
 
-How a court record becomes an adjudicated bundle. Two coders work from the page text independently; agreement is measured; the author decides every disagreement with the passages in front of them.
+How a court record becomes a coded bundle. Two coders work from the page text independently and their agreement is measured. Then either a fixed rule publishes what both coded (**machine-coded**), or a named reviewer decides every disagreement (**adjudicated**).
 
 **Contents:**
+- [Automated coding](#automated-coding)
 - [Steps](#steps)
 - [Agreement](#agreement)
+- [Machine resolution](#machine-resolution)
 - [Adjudication](#adjudication)
+
+## Automated coding
+
+```bash
+export CASELINKER_PACER_TEXT=local/pacer_text CASELINKER_PACER_SOURCE=<folder of the PDFs>
+python -m state_machines.coding.workflow extract <case> [...]        # page text, local
+python -m state_machines.coding.pipeline code <case> [...]           # coder_A, coder_B → local/auto/
+python -m state_machines.coding.pipeline resolve <case> [...]        # local/auto/resolved, reports
+python -m state_machines.coding.pipeline release pacer-v1 <case> [...]
+```
+
+| Part | What it does |
+|---|---|
+| [`coder.py`](coder.py) | Reads a case page by page. Docket pages go to a deterministic parser (charge, plea, verdict, sentence and arrest entries only). Judgment form pages are skipped and counted. Every other page goes to a local model, which returns, per act, the first words of its sentence and its codes under a JSON schema. Code locates the sentence, maps role names to participants, enforces B0 and I3, writes descriptions from codes, and drops (and logs) every act that breaks a rule. |
+| [`models.json`](models.json) | The two coders, pinned by content digest with their inference settings: **coder_A** `qwen3:8b`, **coder_B** `llama3.1:8b`, two model families so their errors are not shared. A model whose local digest differs is refused. |
+| [`resolve.py`](resolve.py) | Publishes what both coders coded (see [machine resolution](#machine-resolution)). |
+| [`pipeline.py`](pipeline.py) | Runs both coders (cached, resumable, a failed case recorded rather than forced), resolves, scores the [benchmark](../benchmark/README.md), builds the release. |
+
+**Court text never leaves the machine.** The models run in a local Ollama server, and page text, quotes, model answers and the response cache stay in `local/`. People are named by role; the labels exist only in memory and are never stored. The coders can make mistakes a human would not; their reliability is the agreement between them, and their accuracy is measured on the synthetic benchmark.
 
 ## Steps
 
@@ -27,6 +48,18 @@ Page text, quotes and the adjudication packet stay in `local/` (gitignored): the
 ## Agreement
 
 Events are matched across coders by the overlap of the passages they cite, never by action code, so agreement is not inflated by matching like with like. Reported per case: event precision, recall and F1; action κ on matched events; affordance agreement per class; harm agreement; order agreement on matched pairs. The agreed core keeps what both coders coded.
+
+## Machine resolution
+
+[`resolve.py`](resolve.py) turns two codings into one bundle by a fixed rule:
+1. **Events:** published when both coders coded the act (matched by cited passages) with the same action and the same actor. Participants are aligned by the matched events they act in.
+2. **Status, affordances, harms:** the status is the weaker of the two; affordances and harms are kept only where both coders annotated them.
+3. **Dates:** every cited date of either coder is kept, and disjoint dates are flagged as a conflict (T1–T5).
+4. **Relations:** those both coders asserted. Order implied by cited dates is derived later.
+5. **Possible retellings** (same action, overlapping dates) are linked `SAME_ACT`, never merged (R05).
+6. **Open roles** stay open.
+
+Everything else is left out and counted. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
 
 ## Adjudication
 

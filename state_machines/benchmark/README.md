@@ -1,0 +1,65 @@
+# Benchmark
+
+Synthetic gold PACER cases for measuring the automated coder's accuracy on known truth. Each case is written as a gold coding first; its court documents are then rendered from the gold with fixed templates. No model writes any of the text, so no coder is scored on its own wording.
+
+**Contents:**
+- [What is in it](#what-is-in-it)
+- [Splits](#splits)
+- [Scoring](#scoring)
+- [Limits](#limits)
+
+## What is in it
+
+```bash
+python -m state_machines.benchmark.generate            # writes data/ (deterministic: seed 7, 40 cases)
+python -m state_machines.coding.pipeline bench --split dev
+python -m state_machines.benchmark.score local/bench/resolved --split heldout
+```
+
+[`data/`](data/) holds, per case, `sources.json`, the page text (`<doc>/pNNNN.txt`, with court headers, wrapped lines and some hyphenation) and `gold.json`, a schema 2.0 bundle that validates against its own pages. Everything is fictional and clinical: invented platforms, "the defendant", "Minor Victim 1", no real names.
+
+| | |
+|---|---|
+| Cases | 40: sextortion, enticement with a meeting, undercover sting, distribution |
+| Gold events | 470 across 19 action codes |
+| Documents | docket, indictment, statement of offense or factual basis, often a sentencing memorandum |
+
+Every gold event carries tags (in `notes`) for the hard cases built in on purpose:
+
+| Tag | What it tests |
+|---|---|
+| `explicit_order` | order stated only in words ("after that first contact") |
+| `retelling` | the same act told again in an indictment count or a sentencing memo (gold `SAME_ACT`) |
+| `allegation_only` | an act only the indictment alleges |
+| `advocacy` | an act told only in a sentencing memorandum |
+| `mention_only` | a platform named but not used |
+| `level_c` / `no_level_c` | a feature stated and tied to the act, or only a platform name |
+| `undercover`, `interrupted` | an undercover persona as counterparty; an attempt an arrest interrupts |
+| `harm`, `procedure`, `response`, `undated` | child-directed harms; court acts; victim responses; acts with no date |
+
+## Splits
+
+Cases 1–20 are **dev**: prompts and rules may be tuned on them. Cases 21–40 are **heldout**: they are scored once, with the final prompt, and never used for tuning. Held-out cases are written in a register the dev cases never use ("DEFENDANT", "MV-1", "initiated contact with", "on or about", statutory phrasing), so a prompt fitted to the dev wording does not carry over for free.
+
+## Scoring
+
+[`score.py`](score.py) matches coded events to gold events by the overlap of the passages they cite, and participants by the matched events they act in. Every rate is reported with its numerator and denominator.
+
+| Measure | Question |
+|---|---|
+| events | recall, precision, F1 of acts |
+| action, actor | the right code; the right participant |
+| standing | the act's passage has the gold legal standing (an allegation stays an allegation) |
+| dates | the gold date among the coded dates |
+| order | recall and precision of stated order between matched acts |
+| level_c, harms | recall and precision of level-C affordances and H0 harms |
+| same_act | gold retellings the coded bundle links |
+| by_tag | recall per hard-case tag |
+
+## Limits
+
+- **Same generator.** Dev and held-out cases come from one generator; the held-out register changes the wording, not the scenario shapes. Accuracy here is accuracy on these shapes.
+- **Cleaner than real filings.** No OCR errors inside quoted sentences, no tables, no redactions. Real-record accuracy is likely lower.
+- **What it does not measure.** Whether a model would find acts these templates never express.
+
+Report benchmark accuracy beside the real corpus's inter-coder reliability, never as accuracy on the real cases.

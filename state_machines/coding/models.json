@@ -3,7 +3,17 @@
  "runtime": {
   "server": "ollama",
   "version": "0.32.6",
-  "base_url": "http://127.0.0.1:11434"
+  "base_url": "http://127.0.0.1:11435",
+  "keep_alive": "2m",
+  "env": {
+   "OLLAMA_HOST": "127.0.0.1:11435",
+   "OLLAMA_FLASH_ATTENTION": "1",
+   "OLLAMA_KV_CACHE_TYPE": "q8_0",
+   "OLLAMA_MAX_LOADED_MODELS": "1",
+   "OLLAMA_NUM_PARALLEL": "1"
+  },
+  "start": "env $(the env above) ollama serve   # a dedicated server for this pipeline; one model in memory at a time",
+  "min_free_memory_percent": 20
  },
  "coders": {
   "coder_A": {
@@ -29,7 +39,7 @@
  "options": {
   "temperature": 0,
   "seed": 7,
-  "num_ctx": 12288,
+  "num_ctx": 8192,
   "num_predict": 1500
  },
  "prompt": {

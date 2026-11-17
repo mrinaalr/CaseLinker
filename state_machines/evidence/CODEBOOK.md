@@ -337,7 +337,7 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
 - **Quote text lives only in the local store** (`local/pacer_text/<case>/quotes.json`). Bundles and graphs carry hashes.
 - **Normalization:** NFKC, straight quotes, soft hyphens removed, whitespace collapsed, case kept (`evidence.normalize`).
 - **Verified** means the validator re-derived the quote from the page text (T04).
-  - On an OCR page, the page image must also have been checked (`image_checked`, T05).
+  - On an OCR page, the page image must also have been checked (`image_checked`, T05), or the passage says `ocr_text_exact`: the quote matches the OCR text exactly, but nobody checked the image. Machine coding uses it; releases count such passages, and the OCR text can be wrong where the image is right.
   - Struck-through or handwritten text is noted in `limitations`, and is never quoted as the document's content.
 - **No identifiers in coder-written text:** no names, initials, handles, phone numbers, emails or addresses (T14; the deny list comes from the case caption, kept locally).
 
@@ -351,3 +351,4 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
   - harm κ;
   - order agreement on matched pairs.
 - **Adjudication** produces the adjudicated bundle. Each disagreement gets a decision and a note (`review.status = adjudicated`).
+- **Machine resolution** instead publishes only what both coders coded, by a fixed rule (`review.status = agreed`); see [coding](../coding/README.md#machine-resolution).

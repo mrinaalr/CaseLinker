@@ -16,12 +16,13 @@ The underlying event graph serves as the canonical representation from which tra
 
 ```mermaid
 flowchart LR
-  pdf["court records<br/>(local PDFs)"] --> coding["coding/<br/>two coders, agreement,<br/>adjudication"]
+  pdf["court records<br/>(local PDFs)"] --> coding["coding/<br/>two local model coders,<br/>agreement, resolution"]
+  bench["benchmark/<br/>synthetic gold"] -. "accuracy" .-> coding
   coding --> evidence["evidence/<br/>coded bundles<br/>(canonical)"]
   evidence --> traj["trajectories/<br/>order, chains,<br/>affordance levels, AfH sets"]
   evidence --> graphs["graphs/<br/>CASE/UCO/CAC, SHACL,<br/>releases"]
   traj --> graphs
-  graphs --> ox[("Oxigraph<br/>urn:caselinker:pacer:*:evidence")]
+  graphs --> ox[("Oxigraph<br/>urn:caselinker:pacer:*")]
   traj --> ui["/lifecycle, API, MCP"]
   theory["theory/<br/>transition systems"] -. "compatibility checks" .-> traj
 ```
@@ -31,7 +32,8 @@ flowchart LR
 | [`evidence/`](evidence/) | The canonical record: coded events, participants and their event roles, dated assertions, relations, provenance, validation rules | [evidence](evidence/README.md) |
 | [`trajectories/`](trajectories/) | Views derived from it: the documented partial order, maximal chains, affordance levels, the AfH sets, the `/lifecycle` payload | [trajectories](trajectories/README.md) |
 | [`graphs/`](graphs/) | CASE/UCO/CAC emission with the CASE-UCO SDK, SHACL against the full CAC shape set, releases, Oxigraph loading | [graphs](graphs/README.md) |
-| [`coding/`](coding/) | The workflow that produces bundles: page text, coder drafts, agreement, adjudication packets | [coding](coding/README.md) |
+| [`coding/`](coding/) | The workflow that produces bundles: page text, two pinned local model coders, agreement, machine resolution, optional adjudication | [coding](coding/README.md) |
+| [`benchmark/`](benchmark/) | Synthetic gold cases (dev and held-out) and the scorer that measures the coders' accuracy on known truth | [benchmark](benchmark/README.md) |
 | [`theory/`](theory/) | Finite transition systems for feasible pathways (AfH Appendix X) | [theory](theory/README.md) |
 
 ## The documented event graph
@@ -57,9 +59,9 @@ The bundle is the canonical artifact. Everything else is a view of it at an evid
 ## From record to release
 
 1. **Collect.** [`collector/pacer/`](../collector/pacer/) fetches public dockets into `ontology/PACER/` (local, never committed).
-2. **Code.** Two coders read the page text and each write a bundle; [`coding/`](coding/README.md) measures their agreement and builds the adjudication packet.
-3. **Adjudicate.** The author decides every disagreement; events and relations become `adjudicated`.
-4. **Release.** [`graphs/release.py`](graphs/release.py) validates each bundle, derives its views, emits its graphs, runs SHACL, and writes a manifest with hashes. A bundle with any validation error, unadjudicated item or undecided role is refused.
+2. **Code.** Two local models (pinned by digest) read the page text and each write a bundle; [`coding/`](coding/README.md) measures their agreement. Court text never leaves the machine.
+3. **Resolve.** A fixed rule publishes what both coded (`machine`), or a named reviewer decides every disagreement (`adjudicated`).
+4. **Release.** [`graphs/release.py`](graphs/release.py) validates each bundle, derives its views, emits its graphs, runs SHACL, and writes a manifest with hashes and the release's `review_mode`. A bundle with any validation error is refused in every mode.
 5. **Load.** `rebuild_oxigraph.py --pacer-release <id> --verify` loads the release with the rest of the corpus and checks the store against the manifest.
 
 ## What a release establishes
@@ -70,9 +72,15 @@ Three layers of checking, each answering a different question. Passing one says 
 |---|---|---|
 | **Structural** | Is the bundle well formed, and are its views and graphs derived from it deterministically? | JSON Schema, rules T01–T19, CASE-UCO SDK emission, SHACL, `tests/pacer` |
 | **Evidence fidelity** | Does each coded claim say what its cited passage says, with the right standing? | Quote and page hashes (T04), standing per passage (T06), two independent coders and their agreement |
-| **Adjudication** | Are disagreements, open roles and possible retellings of one act resolved for the claims made? | The author's decisions per item; the release gate refuses anything left open |
+| **Resolution** | How were disagreements, open roles and possible retellings settled? | `machine`: a fixed rule publishes only what both coders coded, links possible retellings, keeps open roles open. `adjudicated`: a named reviewer decided each item |
 
-Only a release that clears all three is adjudicated, and only an adjudicated release is served on `/lifecycle`. Level-C affordances are documented instrumental support, not causal effects; $\psi$ is co-occurrence within a case.
+| `review_mode` | Published items | Served on `/lifecycle` and loaded into Oxigraph |
+|---|---|---|
+| `adjudicated` | decided by a named reviewer | yes |
+| `machine` | agreed by two independent coders, resolved by rule | yes, labelled "Machine-coded" |
+| `preview` | anything that validates | no (local stores only) |
+
+A machine-coded release reports reliability (agreement between the coders) and, separately, accuracy on the [synthetic benchmark](benchmark/README.md); neither is accuracy on the real cases. Level-C affordances are documented instrumental support, not causal effects; $\psi$ is co-occurrence within a case.
 
 ## Use it
 

@@ -41,10 +41,13 @@ def _deny(text_root: Path, case_id: str) -> List[str]:
     return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else []
 
 
-def code(cases: List[str], text_root: Path, out: Path) -> dict:
+def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) -> dict:
     status = {}
     cache = C.Cache()
     for coder in ("coder_A", "coder_B"):
+        for other in ("coder_A", "coder_B"):
+            if other != coder:
+                C.unload(other)                 # one model in memory at a time
         d = out / coder
         d.mkdir(parents=True, exist_ok=True)
         for case_id in cases:
@@ -53,7 +56,11 @@ def code(cases: List[str], text_root: Path, out: Path) -> dict:
                 continue
             t = time.time()
             try:
-                bundle, quotes, log = C.code_case(case_id, coder, text_root, cache, _deny(text_root, case_id))
+                only = None
+                if selective and coder == "coder_B":
+                    first_log = out / "coder_A" / f"{case_id}.log"
+                    only = C.pages_with_acts(first_log) if first_log.is_file() else None
+                bundle, quotes, log = C.code_case(case_id, coder, text_root, cache, _deny(text_root, case_id), only_pages=only)
                 target.write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
                 store = E.load_quotes(case_id, text_root)
                 store.update(quotes)
@@ -102,10 +109,10 @@ def resolve_cases(cases: List[str], out: Path) -> dict:
     return summary
 
 
-def bench(split: str = "all", out: Path = E.REPO_ROOT / "local" / "bench") -> dict:
+def bench(split: str = "all", out: Path = E.REPO_ROOT / "local" / "bench", selective: bool = False) -> dict:
     from state_machines.benchmark.score import score_dir, split_of
     cases = [p.parent.name for p in sorted(BENCH.glob("synth_*/gold.json")) if split == "all" or split_of(p.parent.name) == split]
-    code(cases, BENCH, out)
+    code(cases, BENCH, out, selective)
     resolve_cases(cases, out)
     result = {name: score_dir(out / name, split) for name in ("coder_A", "coder_B", "resolved")}
     (out / "reports").mkdir(parents=True, exist_ok=True)
@@ -134,13 +141,15 @@ def main(argv=None) -> int:
     ap.add_argument("--text-root", type=Path, default=E.text_root())
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--split", choices=("dev", "heldout", "all"), default="all")
+    ap.add_argument("--selective", action="store_true", help="coder_B reads only pages where coder_A found acts")
+    ap.add_argument("--bench-out", type=Path, default=E.REPO_ROOT / "local" / "bench")
     a = ap.parse_args(argv)
     if a.cmd == "code":
-        print(json.dumps(code(a.args, a.text_root, a.out), indent=1))
+        print(json.dumps(code(a.args, a.text_root, a.out, a.selective), indent=1))
     elif a.cmd == "resolve":
         print(json.dumps(resolve_cases(a.args, a.out), indent=1))
     elif a.cmd == "bench":
-        r = bench(a.split)
+        r = bench(a.split, a.bench_out, a.selective)
         print(json.dumps({k: v["overall"] for k, v in r.items()}, indent=1))
     else:
         print(json.dumps(release(a.args[0], a.args[1:], a.out, a.text_root), indent=1))

@@ -101,3 +101,14 @@ def test_pins_record_digests_and_inference_settings():
     assert m["coders"]["coder_A"]["family"] != m["coders"]["coder_B"]["family"]
     assert {"temperature", "seed", "num_ctx", "num_predict"} <= set(m["options"]) and m["options"]["temperature"] == 0
     assert m["prompt"]["version"] == C.PROMPT_VERSION
+
+
+def test_repair_drops_only_the_act_with_a_schema_error():
+    import copy
+    gold = json.loads((DATA / "synth_001" / "gold.json").read_text())
+    bad = copy.deepcopy(gold)
+    victim = next(e for e in bad["events"] if e["affordances"])
+    victim["affordances"][0]["platform_surface"] = None          # schema error at events/<i>/affordances/0
+    fixed, log = C.repair(bad, DATA, [])
+    assert victim["event_id"] not in {e["event_id"] for e in fixed["events"]}
+    assert len(fixed["events"]) == len(gold["events"]) - 1 and any("T01" in line for line in log)
