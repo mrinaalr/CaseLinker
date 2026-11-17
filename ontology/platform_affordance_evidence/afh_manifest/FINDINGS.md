@@ -192,7 +192,7 @@ AFH_Q1_SOURCE_DB=/path/to/caselinker.db python ontology/platform_affordance_evid
 Tests:
 
 ```bash
-DATABASE_URL='' python -m pytest -q tests/api tests/privacy tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
+DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
 ```
 
 The expected output hashes are in `outputs/RUN_IDENTITY.json`. Results from the run on this commit are in `HARDY_REVIEW_2.md`.

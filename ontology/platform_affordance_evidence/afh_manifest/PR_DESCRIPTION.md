@@ -115,7 +115,7 @@ Generative synthesis is almost entirely recorded under the "Gen AI" technology l
 | What | Command | Result |
 |---|---|---|
 | Regenerate from a fresh clone (Python 3.12, PyYAML 6.0.3) | `AFH_Q1_SOURCE_DB=… python ontology/platform_affordance_evidence/afh_manifest/run_all.py --export --verify` | snapshot `60f7bfaa…`, `identical` (verified) |
-| Q1 and changed-module tests | `DATABASE_URL='' python -m pytest -q tests/api tests/privacy tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py` | 326 passed, 33 skipped (verified) |
+| Q1 and changed-module tests | `DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py` | 326 passed, 33 skipped (verified) |
 | Full repository | every `tests/**/test_*.py` in its own process | 88 files: 758 passed, 34 skipped, 0 failed (verified) |
 | Privacy gate | `scripts/verify/scan_public_surfaces_for_names.py --sqlite <copy> --cases 500` | PASS, 0 surfaces with a person name: 500 case and 500 assertion responses, 2,643 disagreement items, stats, facet, triage and platform-affordance endpoints, stored entity lists for 10,452 cases. `automated-analysis` returned 503 locally and was not scanned. (verified) |
 | Outputs carry no release text | `test_outputs_hold_no_source_text` | no 25+ character output string appears in any release (verified) |
