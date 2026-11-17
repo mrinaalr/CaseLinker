@@ -49,7 +49,7 @@ def _event(e: dict, passages: Dict[str, dict], docs: Dict[str, dict]) -> dict:
                    for s in e["support"] for p in [passages[s["passage_id"]]]})
     return {
         "id": e["event_id"], "action": e["action"], "label": _label(e["action"]),
-        "family": V.FAMILY_OF[e["action"]], "status": e["status"], "outcome": e["outcome"],
+        "family": V.FAMILY_OF[e["action"]], "group": V.GROUP_OF.get(e["action"]), "status": e["status"], "outcome": e["outcome"],
         "standing": standing, "review": e["review"]["status"],
         "actor": e["actor"], "co_actors": e.get("co_actors", []), "targets": e.get("targets", []),
         "unresolved": [x["participant_ref"] for x in e.get("unresolved_participants", [])],

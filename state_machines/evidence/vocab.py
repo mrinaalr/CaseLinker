@@ -111,6 +111,23 @@ ACTION_FAMILIES = {
     "procedure": ("PROC_CHARGE", "PROC_PLEA", "PROC_VERDICT", "PROC_SENTENCE", "PROC_OTHER"),
 }
 ACTION_CODES = tuple(code for codes in ACTION_FAMILIES.values() for code in codes)
+# Codebook A groups of offender actions, in codebook order. Categories of conduct, not stages:
+# the order between events comes only from the record.
+ACTION_GROUPS = {
+    "access": ("SEEK_TARGETS", "INITIATE_CONTACT", "ACQUIRE_REPRESENTATION", "ACQUIRE_MATERIAL"),
+    "influence": ("COMMUNICATE", "MISREPRESENT_IDENTITY", "BUILD_RAPPORT", "OFFER_INDUCEMENT", "SEXUALIZE_COMMUNICATION",
+                  "SOLICIT_IMAGERY", "DIRECT_CONDUCT", "THREATEN_EXPOSURE", "THREATEN_HARM", "DIRECT_VICTIM_TO_RECRUIT",
+                  "MOVE_CHANNEL", "RECREATE_ACCOUNT", "RECONTACT"),
+    "production": ("RECEIVE_SELF_GENERATED", "RECORD_LIVE_SESSION", "PRODUCE_IN_PERSON", "SYNTHESIZE_OR_ALTER_IMAGERY"),
+    "distribution": ("STORE_MATERIAL", "ORGANIZE_MATERIAL", "DISTRIBUTE_MATERIAL", "ADVERTISE_MATERIAL_OR_ACCESS",
+                     "EXPOSE_TO_VICTIM_NETWORK"),
+    "coordination": ("ADMINISTER_SPACE", "GATEKEEP_MEMBERSHIP", "SET_RULES", "ASSIGN_ROLE", "COORDINATE_CO_OFFENDERS",
+                     "SHARE_TRADECRAFT", "PAY_THIRD_PARTY"),
+    "in_person": ("ARRANGE_MEETING", "TRAVEL_TO_MEET", "IN_PERSON_SEXUAL_ABUSE", "ADVERTISE_COMMERCIAL_SEX",
+                  "ARRANGE_COMMERCIAL_SEX", "COLLECT_PROCEEDS", "CONTROL_VICTIM"),
+    "concealment": ("CONCEAL_OR_DESTROY_EVIDENCE", "EVADE_DETECTION", "OBSTRUCT_OR_TAMPER", "FLEE", "OTHER_OFFENDER_ACTION"),
+}
+GROUP_OF = {code: g for g, codes in ACTION_GROUPS.items() for code in codes}
 FAMILY_OF = {code: fam for fam, codes in ACTION_FAMILIES.items() for code in codes}
 FAMILY_ROLES = {
     "offender": ("offender", "co_offender"),
