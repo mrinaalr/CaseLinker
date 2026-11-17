@@ -69,6 +69,12 @@ def write(out: Path) -> List[Path]:
         v = cov["classes"][c]
         rows.append([CLASS_TEX[c]] + [num(v[l]["distinct_cases"]) for l in LV] +
                     [num(v[LV[3]]["distinct_platform_labels"])])
+    rows_named = []
+    for c in CLASSES:
+        v = cov["classes_named_platforms_only"][c]
+        rows_named.append([CLASS_TEX[c]] + [num(v[l]["distinct_cases"]) for l in LV])
+    put("tab_affordance_coverage_named.tex", tabular("lrrrr", ["Affordance class", "Available", "Relevant conduct", "Inferred facilitation", "Explicit use"], rows_named,
+                                                     note=f"distinct cases among the {cov['analytic_sets']['named_platforms']['cases']:,} named-platform cases; levels nest"))
     put("tab_affordance_coverage.tex", tabular("lrrrrr", ["Affordance class", "Available", "Relevant conduct", "Inferred facilitation", "Explicit use", "Platforms (explicit)"], rows,
                                                note="distinct cases per evidence level; levels nest"))
 

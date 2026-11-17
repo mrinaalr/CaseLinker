@@ -61,7 +61,11 @@ def write(out: Path) -> Path:
            _t(["Class"] + ["A", "B", "I", "C"] + ["C labels", "C families", "review candidates"],
               [[c] + [f"{v[l]['distinct_cases']} ({v[l]['platform_case_observations']})" for l in LV] +
                [v[LV[3]]["distinct_platform_labels"], v[LV[3]]["platform_families"], sum(v["review_candidates"].values())]
-               for c, v in cov["classes"].items()]), "", cov["reading"], ""]
+               for c, v in cov["classes"].items()]), "", cov["reading"], "",
+           f"Named platforms only (the paper's {cov['analytic_sets']['named_platforms']['cases']:,}-case analytic set):", "",
+           _t(["Class", "A", "B", "I", "C"],
+              [[c] + [f"{v[l]['distinct_cases']} ({v[l]['platform_case_observations']})" for l in LV]
+               for c, v in cov["classes_named_platforms_only"].items()]), ""]
 
     md += ["## C. Publication-year eras", "", "Publication year, not offense year. Strict = specific named platform.", ""]
     cols = ["cases", "sources", "ncmec_cases", "strict_named_platform_cases", "strict_use_documented_cases",

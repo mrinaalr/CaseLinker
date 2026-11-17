@@ -220,7 +220,18 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
         row["A_only_cases"] = len({r.case_id for r in pool if r.available[c]} - {r.case_id for r in pool if r.action_relevant[c]})
         row["review_candidates"] = dict(sorted(Counter(r.review[c] for r in pool if r.review.get(c)).items()))
         out[c] = row
+    strict_pool = [r for r in records if r.status == "specific"]
+    strict = {c: {lvl: {"distinct_cases": len({r.case_id for r in strict_pool if getattr(r, attr)[c]}),
+                        "platform_case_observations": sum(1 for r in strict_pool if getattr(r, attr)[c])}
+                  for lvl, attr in LEVELS} for c in pl.CLASSES}
     return {"classes": out, "platform_statuses_assessed": list(ANALYSED_STATUSES), "levels": LEVEL_TEXT,
+            "analytic_sets": {
+                "extended": {"cases": len({r.case_id for r in pool}),
+                             "definition": "named platforms + Gen AI (technology) + ambiguous aliases (Webcam platform, Mega); the `classes` block"},
+                "named_platforms": {"cases": len({r.case_id for r in strict_pool}),
+                                    "definition": "named platforms only; equals the paper's analytic set"},
+            },
+            "classes_named_platforms_only": strict,
             "reading": ("Each level is a subset of the one before. C counts what press releases spell out; "
                         "releases rarely describe mechanisms, so a low C is a property of the record, not "
                         "evidence that a capability played no role.")}
