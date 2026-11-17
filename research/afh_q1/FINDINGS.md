@@ -161,7 +161,7 @@ DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests
 
 Results:
 - **Clean clone:** snapshot `60f7bfaa…` and `identical`. That covers the frozen corpus identity, inventory, registry, six-affordance table, temporal tables, exemplars, LaTeX and every output hash.
-- **Tests:** 226 passed, 23 skipped in the worktree.
+- **Tests:** the documented command in a fresh clone of `5f51344be` gave 322 passed, 33 skipped (corpus-dependent tests skip without `caselinker.db`). No stray database was left behind, and the tree stayed clean.
 - **Privacy:**
   - no output string of 25 or more characters appears in any release;
   - reviewer notes stay in `config/` CSVs only;

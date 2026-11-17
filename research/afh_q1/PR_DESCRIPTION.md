@@ -48,7 +48,7 @@ DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests
 ```
 
 - **Clean clone + Python 3.12 + PyYAML 6.0.3:** snapshot `60f7bfaa…`, outputs `identical`.
-- **Tests:** see `FINDINGS.md` section 7 for the run on this commit.
+- **Tests:** 322 passed, 33 skipped in a fresh clone.
 - **New tests fail without their fixes:**
   - the old tagger fails 6/8 boilerplate tests;
   - removing the undercover guard, setting C to B, dropping the historical date check, or allowing a stale candidate pool each fails its test;
