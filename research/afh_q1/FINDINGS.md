@@ -14,6 +14,8 @@ Every downstream level reads the primary tier (`Record.primary_tier`).
 
 **Where the numbers live.** Every number is read from [outputs/](outputs/), with full tables in [TABLES.md](outputs/TABLES.md). The LaTeX tables are written to `outputs/latex/` when you run the pipeline locally; they are not committed.
 
+**Analytic set.** The paper's set is the 1,863 named-platform cases; `affordance_coverage.json` → `classes_named_platforms_only` gives the six-class table on that set. The extended 1,984-case set adds Gen AI and ambiguous labels; generative synthesis needs it (on named platforms alone, explicit generative use is 2 cases).
+
 **Who checked what.** All case-level validation is by blind AI reviewers on masked passages; the author agent adjudicated disagreements. No row is human-verified. The 25 platform-history claims were checked by an AI agent on fetched, dated pages.
 
 ## Hardy review corrections
