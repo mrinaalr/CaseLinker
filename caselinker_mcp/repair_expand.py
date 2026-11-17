@@ -82,9 +82,14 @@ _MAX_LISTED = 200
 
 def _moved_resolutions(before: Dict[str, List], after: Dict[str, List]) -> Dict[str, Dict[str, Any]]:
     """Status per resolved field that differs. A field one side does not resolve at all (a field
-    the change adds or removes) reads as ``None`` on that side."""
-    return {f: {"before": (before.get(f) or [None])[0], "after": (after.get(f) or [None])[0]}
-            for f in sorted(before.keys() | after.keys()) if before.get(f) != after.get(f)}
+    the change adds or removes) reads as ``None`` on that side; ``None`` against ``empty`` is no
+    change, since a new field that finds nothing says the same as no field."""
+    out = {}
+    for f in sorted(before.keys() | after.keys()):
+        b, a = (before.get(f) or [None])[0], (after.get(f) or [None])[0]
+        if before.get(f) != after.get(f) and {b, a} != {None, "empty"}:
+            out[f] = {"before": b, "after": a}
+    return out
 _MAX_VALUE = 300
 
 

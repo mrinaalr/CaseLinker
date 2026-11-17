@@ -416,4 +416,8 @@ def test_a_resolved_field_the_change_adds_reads_as_none_before():
     moved = R._moved_resolutions({"age": ["resolved", "a"]},
                                  {"age": ["resolved", "a"], "prior_history": ["resolved", "b"]})
     assert moved == {"prior_history": {"before": None, "after": "resolved"}}
-    assert R._moved_resolutions({"x": ["empty", "c"]}, {}) == {"x": {"before": "empty", "after": None}}
+    assert R._moved_resolutions({"x": ["resolved", "c"]}, {}) == {"x": {"before": "resolved", "after": None}}
+
+
+def test_a_new_field_that_finds_nothing_is_not_a_change():
+    assert R._moved_resolutions({}, {"prior_history": ["empty", "x"]}) == {}
