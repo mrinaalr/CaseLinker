@@ -43,11 +43,12 @@ from typing import Dict, List, Optional, Tuple
 from state_machines.evidence import evidence as E
 from state_machines.evidence import vocab as V
 from state_machines.evidence.validate import errors, validate
+from state_machines.coding.enrich import enrich
 
 HERE = Path(__file__).resolve().parent
 MODELS = json.loads((HERE / "models.json").read_text(encoding="utf-8"))
 CACHE = E.REPO_ROOT / "local" / "coder_cache.db"
-PROMPT_VERSION = "coder-prompt-1.2"
+PROMPT_VERSION = "coder-prompt-2.0"
 MAX_PAGE_CHARS = 7000
 BOILERPLATE = re.compile(r"(STANDARD CONDITIONS OF SUPERVISION|CRIMINAL MONETARY PENALTIES|SCHEDULE OF PAYMENTS|"
                          r"SPECIAL CONDITIONS OF SUPERVISION|ADDITIONAL (?:STANDARD|SPECIAL) CONDITIONS|CERTIFICATE OF SERVICE)", re.I)
@@ -104,53 +105,29 @@ _DATE = {"type": "object", "required": ["x", "from", "to"], "properties": {
 SCHEMA = {
     "type": "object", "required": ["acts"],
     "properties": {"acts": {"type": "array", "items": {
-        "type": "object", "required": ["s", "a", "by", "r"],
+        "type": "object", "required": ["s", "a"],
         "properties": {
-            "s": {"type": "string"}, "a": {"type": "string", "enum": ACTIONS},
-            "by": {"type": "string"}, "r": {"type": "string", "enum": list(V.ACTOR_ROLES)},
-            "to": {"type": "array", "items": {"type": "object", "required": ["w", "r"], "properties": {
-                "w": {"type": "string"}, "r": {"type": "string", "enum": list(V.TARGET_ROLES)}}}},
-            "o": {"type": "string", "enum": list(V.OUTCOMES)},
-            "d": _DATE,
-            "pf": {"type": "object", "required": ["n"], "properties": {
-                "n": {"type": "string"}, "m": {"type": "string", "enum": list(V.INTERACTION_MODES)},
-                "au": {"type": "string", "enum": list(V.AUDIENCES)}}},
-            "np": {"type": "string"},
-            "af": {"type": "object", "required": ["c", "f"], "properties": {
-                "c": {"type": "string", "enum": list(V.AFFORDANCES)}, "f": {"type": "string"}}},
-            "h": {"type": "string", "enum": list(V.HARM_CODES)},
-            "after": {"type": "string"},
+            "s": {"type": "string"},
+            "a": {"type": "string", "enum": ACTIONS},
+            "by": {"type": "string"},
         }}}},
 }
 
-PROMPT = """You code a federal court record for a research codebook. Read the ONE page below and list every act it describes.
-Answer in compact JSON. For each act:
-  s  = the first 8 to 12 words of the sentence that states the act, copied exactly from the page
-  a  = the action code (list below)
-  by = who acted, named by ROLE, never by personal name: "the defendant", "co-defendant 1", "co-conspirator 1",
-       "minor victim 1", "adult victim 1", "an undercover agent", "law enforcement", "the court", "other users"
-  r  = the actor's role
-  to = who it was done to: [{"w": role name, "r": victim|recipient|counterparty|subject}]
-  o  = outcome, if not simply completed
-  d  = only if the sentence says when: {"x": those exact words, "from": "YYYY-MM-DD", "to": "YYYY-MM-DD", "p": day|month|year|range}
-  pf = only if the act was done through a named app, site or service: {"n": its name, "m": through|from|to|acted_on, "au": one_to_one|group|public}
-  np = a platform that is only mentioned, not used for the act
-  af = only if the sentence names a platform FEATURE used for the act: {"c": class, "f": the feature's exact words}. A platform name alone is never a feature.
-  h  = a harm code, only if the sentence documents that harm to the victim
-  after = if the sentence says the act came after another act on this page, the first words of that act's sentence
-Leave out a field only when the page says nothing about it. Never guess. Skip legal boilerplate and statutes.
+PROMPT = """You code a federal court record for a research codebook. Read the ONE page below and list every act it describes:
+something a person or agency DID (contact, ask, send, threaten, travel, record, distribute, arrest, plead, sentence, ...).
+Skip legal argument, statutes, guideline calculations and boilerplate.
 
-Rules that are easy to get wrong:
-- The actor of an offender act is always the offender. When a victim sends images at the defendant's request,
-  the act is RECEIVE_SELF_GENERATED, by "the defendant", to "minor victim 1" (victim).
-- An undercover officer's messages are LE_UNDERCOVER_ENGAGE; the defendant's messages to an undercover persona are offender acts
-  whose target is the persona (role counterparty), and no harm is coded for a persona.
-- "after": whenever the sentence says it followed something on this page ("after", "then", "following", "later",
-  "in response"), give the first words of that earlier sentence.
-- h: only these, and only when the sentence documents that harm to a child:
-{harms}
-- af: only when the sentence names the feature and ties it to this act. Classes:
-{affordances}
+For each act answer only:
+  s  = the first 8 to 12 words of the sentence that states it, copied exactly from the page
+  a  = its action code (list below)
+  by = who did it, ONLY if it was not the defendant: "co-defendant 1", "co-conspirator 1", "minor victim 1",
+       "an undercover agent", "law enforcement", "the court" (by role, never a personal name)
+One sentence can hold more than one act; list each.
+
+Easy to get wrong:
+- When a victim sends images at the defendant's request, the act is RECEIVE_SELF_GENERATED and it is the defendant's act.
+- An undercover officer's messages are LE_UNDERCOVER_ENGAGE (by "an undercover agent").
+- Charge, plea, verdict and sentence are PROC_* acts by "the court".
 
 Action codes:
 {codes}
@@ -319,6 +296,18 @@ def locate_sentence(page_text: str, start_words: str) -> Tuple[int, int, str]:
             raise E.QuoteNotFound("first words not on this page")
     if hay.find(needle, i + 1) >= 0:
         raise E.QuoteNotFound("first words occur more than once on this page")
+    # models often give the first words of the main clause: extend back to the sentence's own start
+    begin = i
+    for m in re.finditer(r"[.;!?](?=\s)", page_n[max(0, i - 400):i]):
+        k = max(0, i - 400) + m.end()
+        if not _ABBREV.search(page_n[max(0, k - 8):k]):
+            begin = k
+    if begin == i and i > 0 and i - 400 <= 0:
+        begin = 0
+    while begin < i and page_n[begin] == " ":
+        begin += 1
+    if begin < i and i - begin <= 400:
+        i, sw = begin, page_n[begin:i] + sw
     end = len(page_n)
     for m in re.finditer(r"[.;!?](?=\s|$)", page_n[i + len(sw):]):
         k = i + len(sw) + m.end()
@@ -328,6 +317,13 @@ def locate_sentence(page_text: str, start_words: str) -> Tuple[int, int, str]:
     end = min(end, i + 700)
     return i, end, page_n[i:end]
 
+
+_REFERENTS = [  # what an "after ..." clause refers to, by the earlier act's code
+    (r"first (?:contact|conversation|message|communication)|initial contact", {"INITIATE_CONTACT"}),
+    (r"block", {"RESP_BLOCK"}), (r"report", {"RESP_REPORT"}), (r"refus|declin", {"RESP_REFUSE"}),
+    (r"meeting|arrang", {"ARRANGE_MEETING"}), (r"arrest", {"LE_ARREST"}), (r"threat", {"THREATEN_EXPOSURE", "THREATEN_HARM"}),
+    (r"images|photos|pictures|video", {"RECEIVE_SELF_GENERATED", "SOLICIT_IMAGERY"}),
+]
 
 _KEYS = {"s": "start", "a": "action", "by": "actor", "r": "actor_role", "o": "outcome", "d": "date",
          "np": "named_platform", "h": "harm"}
@@ -471,6 +467,18 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             if action not in _DEF:
                 continue
             fam = V.FAMILY_OF[action]
+            if not act.get("actor"):
+                act["actor"] = {"procedure": "the court", "law_enforcement": "law enforcement",
+                                "response": "minor victim 1"}.get(fam, "the defendant")
+            if fam == "offender" and re.search(r"victim|minor|child|undercover|agent|officer", _label(act["actor"])):
+                act["actor"], act["actor_role"] = "the defendant", None   # an offender act's actor is the offender (codebook A)
+            if not act.get("actor_role"):
+                lab = _label(act["actor"])
+                act["actor_role"] = ({"procedure": "court", "response": "victim" if "victim" in lab else "third_party"}.get(fam)
+                                     or ("undercover" if "undercover" in lab else "law_enforcement" if fam == "law_enforcement"
+                                         else "co_offender" if re.search(r"co (defendant|conspirator)", lab) else "offender"))
+            if not act.get("parser"):
+                act = enrich(act, qn, fam)
             role = act.get("actor_role")
             if role not in _ALLOWED_ROLES[fam]:
                 fixed = {"offender": "offender", "procedure": "court", "law_enforcement": "law_enforcement"}.get(fam)
@@ -551,14 +559,22 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                 if participants[ref]["_first"] is None:
                     participants[ref]["_first"] = pid
             events.append(e)
-            page_events.append((eid, qn))
+            page_events.append((eid, qn, start))
             after = E.normalize(act.get("after") or "").lower()
-            if len(after.split()) >= 3:
-                prior = next((x for x, qx in page_events[:-1] if qx.lower().startswith(after) or after in qx.lower()), None)
-                if prior:
-                    relations.append({"relation_id": f"r{len(relations) + 1:03d}", "type": "BEFORE", "from_event": prior, "to_event": eid,
-                                      "basis": "explicit_sequence_language", "status": "DIRECT",
-                                      "support": [{"passage_id": pid, "facet": "time", "status": "DIRECT"}]})
+            prior = None
+            if after == "__previous__":            # the sentence opens with sequence words: the act it refers to
+                earlier = [(x, qx, st) for x, qx, st in page_events[:-1] if st < start]
+                hint = act.get("after_hint") or ""
+                wanted = next((codes for pat, codes in _REFERENTS if re.search(pat, hint, re.I)), None)
+                named = [t for t in earlier if wanted and next(e["action"] for e in events if e["event_id"] == t[0]) in wanted]
+                pick = named or earlier
+                prior = max(pick, key=lambda t: t[2])[0] if pick else None
+            elif len(after.split()) >= 3:
+                prior = next((x for x, qx, _ in page_events[:-1] if qx.lower().startswith(after) or after in qx.lower()), None)
+            if prior:
+                relations.append({"relation_id": f"r{len(relations) + 1:03d}", "type": "BEFORE", "from_event": prior, "to_event": eid,
+                                  "basis": "explicit_sequence_language", "status": "DIRECT",
+                                  "support": [{"passage_id": pid, "facet": "time", "status": "DIRECT"}]})
     parts = []
     for ref, p in participants.items():
         if p["_first"] is None:

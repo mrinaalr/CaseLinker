@@ -85,7 +85,8 @@ def test_answers_become_a_valid_bundle_and_rule_breaking_parts_are_dropped():
 
 
 def test_a_model_with_a_different_digest_is_refused(monkeypatch):
-    monkeypatch.setattr(C, "_get", lambda path: {"models": [{"name": "qwen3:8b", "digest": "0" * 64}]})
+    pinned = C.MODELS["coders"]["coder_A"]["model"]
+    monkeypatch.setattr(C, "_get", lambda path: {"models": [{"name": pinned, "digest": "0" * 64}]})
     with pytest.raises(SystemExit, match="differs from the pinned"):
         C.check_model("coder_A")
     monkeypatch.setattr(C, "_get", lambda path: {"models": []})

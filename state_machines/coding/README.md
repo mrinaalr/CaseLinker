@@ -7,6 +7,7 @@ How a court record becomes a coded bundle. Two coders work from the page text in
 - [Steps](#steps)
 - [Agreement](#agreement)
 - [Machine resolution](#machine-resolution)
+- [Throughput](#throughput)
 - [Adjudication](#adjudication)
 
 ## Automated coding
@@ -48,6 +49,17 @@ Page text, quotes and the adjudication packet stay in `local/` (gitignored): the
 ## Agreement
 
 Events are matched across coders by the overlap of the passages they cite, never by action code, so agreement is not inflated by matching like with like. Reported per case: event precision, recall and F1; action κ on matched events; affordance agreement per class; harm agreement; order agreement on matched pairs. The agreed core keeps what both coders coded.
+
+## Throughput
+
+Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m state_machines.coding.throughput`).
+
+- **Where the time goes:** writing the answer, not reading the page. Reading the prompt takes about 0.1 s cached and 2–11 s cold; models write 10–21 tokens/s and answers run 300–1,300 tokens. Answers therefore give only the first words of each sentence (code finds the rest) in compact keys, capped at 1,500 tokens.
+- **Page routing for the 30 real cases:** 1,027 pages; 201 docket pages to the parser (procedure entries only), 60 judgment form pages skipped, 766 pages read by the models. Every substantive filing is read.
+- **Rejected: a page prefilter.** On the pilot's real pages (agent-coded), the best keyword prefilter kept 90% of pages with acts while saving only 19% of model pages; the strictest kept 71%. Losing acts to save time is not acceptable, so every non-docket, non-form page is read.
+- **Memory:** a dedicated Ollama server (`models.json` `runtime`) with one model loaded, an 8-bit KV cache, flash attention and an 8k context; the coder pauses while free memory is under 20% instead of swapping.
+- **Selective second pass (`--selective`):** the second coder reads only pages where the first found acts. The release is unchanged (only acts both coded are published); reliability is then reported on those pages.
+- **Scaling:** this laptop codes on the order of a hundred pages an hour per model. Hundreds of cases need a GPU host running the same pinned open models; the code does not change, only `runtime.base_url`.
 
 ## Machine resolution
 
