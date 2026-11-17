@@ -1252,7 +1252,7 @@ async def export_case_graph_ttl(
 
 
 # REST helpers below are public (no trusted-key gate). get_all_cases and
-# get_lifecycle_cases and get_afh_analysis require a trusted CaseLinker-Key (403 without). get_case and
+# get_lifecycle_cases and get_trajectory_analysis require a trusted CaseLinker-Key (403 without). get_case and
 # llm_chat are public but return richer data / skip daily caps when trusted.
 
 
@@ -1281,10 +1281,10 @@ async def get_all_cases(include_raw_data: bool = False) -> dict[str, Any]:
 
 
 @mcp.tool()
-async def get_afh_analysis(case_id: str = "", threshold: str = "INFERRED") -> dict[str, Any]:
-    """AfH quantities over the documented PACER trajectories (trusted key required).
+async def get_trajectory_analysis(case_id: str = "", threshold: str = "INFERRED") -> dict[str, Any]:
+    """Analysis of the documented PACER trajectories (trusted key required).
 
-    Wraps GET /api/lifecycle/afh. For the current release, or one case: Aff(c) (level-C
+    Wraps GET /api/lifecycle/analysis. For the current release, or one case: Aff(c) (level-C
     affordances on derived trajectories), H(c) (minor-directed harm categories h1-h6),
     psi_C(o) (which harms co-occur with each affordance, and in which cases), whether the
     coverage identity holds, and per track the number of derived chains, unordered event
@@ -1295,10 +1295,10 @@ async def get_afh_analysis(case_id: str = "", threshold: str = "INFERRED") -> di
         if err := require_caselinker_key():
             return err
         params = {"threshold": threshold, **({"case_id": case_id} if case_id else {})}
-        result = await api_get("/api/lifecycle/afh", params=params, timeout=DEFAULT_TIMEOUT)
+        result = await api_get("/api/lifecycle/analysis", params=params, timeout=DEFAULT_TIMEOUT)
         return result if isinstance(result, dict) else {"data": result}
     except Exception as e:
-        logger.exception("get_afh_analysis failed")
+        logger.exception("get_trajectory_analysis failed")
         return {"error": str(e)}
 
 

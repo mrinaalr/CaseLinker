@@ -92,7 +92,7 @@ Use `filter_cases_by_tags` for current database cohorts and `get_corpus_stats` f
 |------|---------------------|------------------|
 | `get_all_cases` | **403** (bulk export blocked) | Full corpus via `GET /api/corpus` (every column) |
 | `get_lifecycle_cases` | **403** (lifecycle export blocked) | Documented PACER event graphs and derived trajectories (the `/lifecycle` payload) |
-| `get_afh_analysis` | **403** (lifecycle export blocked) | AfH quantities over the release: Aff(c), minor-directed H(c), ψ, coverage identity |
+| `get_trajectory_analysis` | **403** (lifecycle export blocked) | Trajectory analysis of the release: chains, unordered pairs, Aff(c), minor-directed H(c), ψ, coverage identity |
 | `get_case` | Sanitized case: no `raw_data`; `case_text_redacted` (full release, people masked); features and admission excerpts with people masked | Full case including narratives |
 | `get_case_assertions` | Per-method assertions and resolutions with offsets, no span excerpts, no person names | Includes span excerpts and LLM quotes; still no person names |
 | `llm_chat` | 50 requests/IP/day | Daily cap exempt (slowapi 15/min still applies) |
@@ -346,7 +346,7 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|
 | Public (trusted key irrelevant) | 56 | 41 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
-| Trusted-key sensitive | 6 | 6 | `get_all_cases`, `get_lifecycle_cases`, `get_afh_analysis`, `get_case`, `get_case_assertions`, `llm_chat` |
+| Trusted-key sensitive | 6 | 6 | `get_all_cases`, `get_lifecycle_cases`, `get_trajectory_analysis`, `get_case`, `get_case_assertions`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.
 

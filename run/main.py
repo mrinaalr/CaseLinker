@@ -4060,9 +4060,9 @@ def get_lifecycle_cases(request: Request):
         raise HTTPException(status_code=500, detail=f"Lifecycle data unavailable: {e}") from e
 
 
-@app.get("/api/lifecycle/afh")
+@app.get("/api/lifecycle/analysis")
 @limiter.limit("60/minute")
-def get_lifecycle_afh(request: Request, case_id: str = "", threshold: str = "INFERRED"):
+def get_lifecycle_analysis(request: Request, case_id: str = "", threshold: str = "INFERRED"):
     """
     AfH quantities over the current PACER release: per case Aff(c) and minor-directed H(c),
     psi_C(o) across cases, the coverage identity, and per track the derived chains, unordered
@@ -4077,7 +4077,7 @@ def get_lifecycle_afh(request: Request, case_id: str = "", threshold: str = "INF
     try:
         return release_analysis(threshold=threshold, case_id=case_id)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"AfH analysis unavailable: {e}") from e
+        raise HTTPException(status_code=500, detail=f"Trajectory analysis unavailable: {e}") from e
 
 
 _LIFECYCLE_GONE = (
