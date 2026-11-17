@@ -144,6 +144,9 @@ def _replay(root: Path, payload: Dict) -> Dict:
         cases.append({
             "case_id": doc["case_id"],
             "columns": {k: _digest(v) for k, v in case.items() if k not in _SKIP_KEYS},
+            # Values only when asked: the parent asks again for the few cases that moved.
+            **({"values": {k: json.dumps(v, sort_keys=True, ensure_ascii=False, default=str)
+                           for k, v in case.items() if k not in _SKIP_KEYS}} if payload.get("values") else {}),
             "assertions": sorted(
                 [a["field"], a["method"], str(a.get("role")), a.get("span_start"), a.get("span_end")]
                 for a in assertions

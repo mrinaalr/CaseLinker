@@ -1168,10 +1168,22 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
             return {"ran": False, "reason": f"git archive {base} failed"}
         subprocess.run(["tar", "-x", "-C", tmp], input=archive.stdout, check=True, timeout=300)
         before = _run_child({"mode": "replay", "root": tmp, "docs": payload_docs, "full": full}, timeout=3600)
-    after = _run_child({"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full}, timeout=3600)
-    for side, result in (("base", before), ("checkout", after)):
-        if result.get("failed"):
-            return {"ran": False, "reason": f"{side} replay {result['failed']}"}
+        after = _run_child({"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full},
+                           timeout=3600)
+        for side, result in (("base", before), ("checkout", after)):
+            if result.get("failed"):
+                return {"ran": False, "reason": f"{side} replay {result['failed']}"}
+        # Hashes compare every case; values are fetched again only for the cases that moved.
+        old_hash = {c["case_id"]: c["columns"] for c in before["cases"]}
+        moved_ids = [c["case_id"] for c in after["cases"]
+                     if c["case_id"] in old_hash and c["columns"] != old_hash[c["case_id"]]][:_MAX_LISTED]
+        moved_docs = [d for d in payload_docs if d["case_id"] in set(moved_ids)]
+        values: Dict[str, Dict[str, Dict[str, str]]] = {"base": {}, "checkout": {}}
+        if moved_docs:
+            for side, root in (("base", tmp), ("checkout", str(_REPO_ROOT))):
+                got = _run_child({"mode": "replay", "root": root, "docs": moved_docs, "full": full, "values": True},
+                                 timeout=3600)
+                values[side] = {c["case_id"]: c.get("values", {}) for c in got.get("cases", [])}
     old = {c["case_id"]: c for c in before["cases"]}
     columns, fields, changes = Counter(), Counter(), []
     column_cases: Dict[str, List[str]] = {}
@@ -1191,8 +1203,10 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
             fields.update(f"{f}: {v['before']} -> {v['after']}" for f, v in moved_fields.items())
             changes.append({"case_id": case["case_id"], "columns": moved_columns, "resolutions": moved_fields,
                             "assertions_changed": assertions_changed,
-                            "values": {col: _moved_value(col, prior["columns"].get(col), case["columns"].get(col))
-                                       for col in moved_columns}})
+                            "values": {col: _moved_value(col, values["base"].get(case["case_id"], {}).get(col),
+                                                         values["checkout"].get(case["case_id"], {}).get(col))
+                                       for col in moved_columns}
+                            if case["case_id"] in values["checkout"] else {}})
     return {"ran": True, "base_commit": base[:9], "cases_compared": len(after["cases"]),
             "cases_changed": len(changes), "columns": dict(columns), "resolutions": dict(fields),
             "cases_by_column": column_cases,
