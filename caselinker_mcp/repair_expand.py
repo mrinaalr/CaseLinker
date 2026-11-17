@@ -451,7 +451,9 @@ def describe_pipeline() -> Dict[str, Any]:
         "pattern_layer_fields": {
             "note": ("Set by extract_features with no assertion rows. Repair one by editing its extractor; "
                      "diagnose_case(field=...) replays it on a case and run_gate() measures the edit over "
-                     "the corpus. Compiled rules and extensions do not reach these fields."),
+                     "the corpus. Compiled rules and extensions do not reach these fields. Stanza NER feeds "
+                     "agencies_involved, organizations, locations and their grounds at the merge: a change "
+                     "that acts there moves only with full=true (slow; name the cases or keep the sample small)."),
             "fields": legacy,
         },
         "resolution": {"rule_set_version": res.RULE_SET_VERSION, "families": dict(res.FAMILY),
