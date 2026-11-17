@@ -443,6 +443,7 @@ from ai_extraction_patterns import (
     PRIOR_CONVICTION_RE,
     DATED_CONVICTION_RE,
     PRIOR_CONVICTION_NOT_BEFORE_RE,
+    prior_match_excluded,
     PROJECT_SAFE_CHILDHOOD_TOPIC_RE,
     REGISTERED_SEX_OFFENDER_RE,
     SEXTORTION_TOPIC_RE,
@@ -1633,7 +1634,7 @@ def _states_prior_conviction(text: str, year: Any = None) -> bool:
     the release's year.
     """
     for m in _PRIOR_CONVICTION_RE.finditer(text):
-        if not _PRIOR_CONVICTION_NOT_BEFORE_RE.search(text[max(0, m.start() - 60): m.start()]):
+        if not prior_match_excluded(text, m.start()):
             return True
     try:
         release_year = int(str(year)[:4]) if year else None

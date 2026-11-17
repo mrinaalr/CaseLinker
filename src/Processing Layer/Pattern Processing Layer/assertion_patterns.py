@@ -889,8 +889,7 @@ def _prior_matches(text: str, batch_year) -> List[Tuple[int, int, str, str]]:
                      (_ai.PRIOR_CONVICTION_WORDING_RE, "prior_conviction")):
         for m in rx.finditer(text):
             k = kind or ("registered_offender" if "register" in m.group(0).lower() else "prior_conviction")
-            before = text[max(0, m.start() - 60): m.start()]
-            why = "negated_hypothetical_or_this_case" if _ai.PRIOR_CONVICTION_NOT_BEFORE_RE.search(before) else ""
+            why = _ai.prior_match_excluded(text, m.start())
             found.append((m.start(), m.end(), k, why))
     for m in _ai.DATED_CONVICTION_RE.finditer(text):
         year = int(m.group(1))

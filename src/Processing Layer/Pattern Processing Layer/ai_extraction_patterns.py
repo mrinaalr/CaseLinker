@@ -146,7 +146,7 @@ PRIOR_STATUS_RE = re.compile(
 )
 PRIOR_SUPERVISION_RE = re.compile(
     r"\b(?:while|was|were|is|been|already)\s+(?:on|serving)\s+(?:federal\s+|state\s+)?"
-    r"(?:parole|probation|supervised\s+release)\b",
+    r"(?:parole|probation|supervised\s+release|supervision)\b",
     re.IGNORECASE,
 )
 PRIOR_CONVICTION_RE = re.compile(
@@ -159,15 +159,33 @@ DATED_CONVICTION_RE = re.compile(
     r"\b(?:was|had\s+been|been|were)\s+(?:previously\s+|also\s+)?convicted\s+in\s+((?:19|20)\d\d)\b",
     re.IGNORECASE,
 )
-# Words before a match that make it not this defendant's earlier conviction.
+# Words before a match that make it not this defendant's earlier conviction (#64): a negation
+# ("no prior convictions", "neither defendant has a"), or a generic hypothetical about a class of
+# people ("if he has a prior conviction", "defendants with prior convictions"). The singular
+# "an individual with a previous conviction" is a charge naming this defendant, so it counts.
 PRIOR_CONVICTION_NOT_BEFORE_RE = re.compile(
     r"""
     (?:\b(?:no|without|never\s+had\s+(?:a|any)|not\s+have\s+(?:a|any)|lacks?\s+(?:a|any)
         |neither\s+(?:\w+\s+){0,2}?(?:has|had)\s+(?:a|any)|(?:does|did)\s+not\s+have\s+(?:a|any))\s+(?:\w+\s+){0,2}
      | \bif\s+(?:he|she|they|the\s+defendant)\s+(?:has|had|have)\s+(?:a\s+|any\s+|two\s+or\s+more\s+)?(?:\w+\s+){0,2}
-     | \b(?:defendants?|offenders?|those|anyone|individuals?|people)\s+(?:with|who\s+have)\s+(?:a\s+|any\s+)?(?:\w+\s+){0,2}
-     | \b(?:following|after)\s+(?:his|her|their)\s+
+     | \b(?:defendants|offenders|those|anyone|individuals|people|persons)\s+(?:with|who\s+have)\s+(?:been\s+)?(?:a\s+|any\s+)?(?:\w+\s+){0,2}
     )$
     """,
     re.IGNORECASE | re.VERBOSE,
 )
+# "sentenced … following his previous conviction" is this case's own conviction; "on supervision
+# following his prior conviction" is not. Only a sentencing verb earlier in the sentence makes it own.
+_OWN_CASE_BEFORE_RE = re.compile(r"\b(?:following|after)\s+(?:his|her|their)\s+$", re.IGNORECASE)
+_SENTENCED_RE = re.compile(r"\bsentenc", re.IGNORECASE)
+
+
+def prior_match_excluded(text: str, start: int) -> str:
+    """Why a prior-history match at ``start`` is not this defendant's earlier conviction, or ""."""
+    before = text[max(0, start - 60): start]
+    if PRIOR_CONVICTION_NOT_BEFORE_RE.search(before):
+        return "negated_or_hypothetical"
+    if _OWN_CASE_BEFORE_RE.search(before):
+        cut = max(text.rfind(". ", 0, start), text.rfind(".\n", 0, start), text.rfind("\n\n", 0, start))
+        if _SENTENCED_RE.search(text[cut + 1: start]):
+            return "this_case_conviction"
+    return ""

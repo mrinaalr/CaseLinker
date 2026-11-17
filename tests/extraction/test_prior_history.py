@@ -127,3 +127,24 @@ def test_a_sentence_naming_no_one_keeps_its_record_on_the_case_not_on_a_person()
                                          ner_entities=_persons(TWO, "Reese Thistlewood")), text=TWO)
     persons = {r["person"] for r in res["prior_history"]["final_value"]["records"]}
     assert None in persons  # unattributed phrases stay case-level; the mapper puts them on the case node
+
+
+@pytest.mark.parametrize("text, kind", [
+    # doj_safe_childhood_2024_021: supervision after an earlier conviction, no sentencing verb
+    ("At the time of his arrest he was on supervision following his prior conviction for possession.",
+     {"on_supervision", "prior_conviction"}),
+    # doj_safe_childhood_2024_307: a singular "offender with a previous conviction" is this defendant
+    ("He is a registered sex offender with a previous conviction for possession.",
+     {"registered_offender", "prior_conviction"}),
+    # ncmec_2024_062: the charge names this defendant's earlier conviction
+    ("He faces possession of child pornography by an individual with a previous conviction for possessing it.",
+     {"prior_conviction"}),
+])
+def test_real_prior_history_the_first_exclusions_dropped(text, kind):
+    assert set(_roles(text)) - {"not_prior"} == kind
+
+
+def test_angel_watch_boilerplate_about_people_previously_convicted_is_not_prior():
+    # doj_safe_childhood_2024_406
+    text = "The program identifies individuals who have been previously convicted of sexual crimes against children."
+    assert set(_roles(text)) <= {"not_prior"}
