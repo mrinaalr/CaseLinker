@@ -329,3 +329,14 @@ def test_manifest_use_documented_matches_primary_tier():
     for p in ("Kik", "Snapchat", "Dropbox"):
         want = len({r["case_id"] for r in rows if r["platform"] == p and r["tier_linewrap"] in ("stated", "inferred")})
         assert man[p]["use_documented_cases"] == want, p
+
+
+def test_visualization_named_platform_list_matches_registry():
+    """The map's "named platforms" tile excludes exactly the registry's non-specific labels that occur in the evidence."""
+    import re
+    html = (ROOT / "visualization" / "visualization.html").read_text()
+    js = set(re.findall(r'"([^"]+)"', re.search(r"NON_NAMED_LABELS = new Set\(\[(.*?)\]\)", html).group(1)))
+    ev = json.loads((ROOT / "ontology/platform_affordance_evidence/platform_affordance_evidence.json").read_text())
+    labels = {r["platform"] for r in ev["records"]}
+    non_named = {l for l in labels if pl.platform_info(l, REG).status != "specific"}
+    assert js == non_named

@@ -74,7 +74,7 @@ Blind AI reviewers coded masked passages without seeing classifier labels; the a
 
 ## Effect on the deployed app
 
-No visualization code changes. After deploy:
+One visualization change: the Platforms tile on `/visualization` counts *named* platforms (52) instead of all labels (57); the map still shows every label, and the status line now says "labels shown". After deploy:
 - **Platform & Harm Explorer and Q1 pages:** same layout, corrected counts from the fresh candidate pool. For example, Kik stated 299 → 353; Instagram total 240 → 151, after footer links stopped counting as platform use.
 - **`/api/platform-affordance-evidence` freshness:** stricter. It reports `stale` if production platform tags differ from the snapshot.
 - **The harm-analysis panel:** unchanged.

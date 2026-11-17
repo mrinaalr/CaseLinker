@@ -202,4 +202,5 @@ The expected output hashes are in `outputs/RUN_IDENTITY.json`. Results from the 
 - **Uncertain registry dates.** 38 capability rows have uncertain start dates; 9 are on manuscript example platforms. They underlie 13–17% of Anonymity, Contact and Unmonitored availability counts; 84% of cases are from 2021–26, which limits the effect.
 - **Attribution errors.** A sentence naming two platforms can attribute conduct to the wrong one. Uploads to cloud storage can count as distribution without sharing being shown.
 - **Coverage, not prevalence.** Enforcement-report coverage, a publication-year timeline, and a changing source mix.
+- **Visualization.** The `/visualization` Platforms tile now shows 52 *named* platforms; the map still lists all 57 labels.
 - **Not changed here.** The public API serves raw `evidence_quote` text; stored date roles are unchanged until a re-extraction.

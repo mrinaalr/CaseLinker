@@ -398,22 +398,28 @@
     }
 
     /* ---------- Rendering ---------- */
+    // Labels on the map that are not a specific named platform. Mirrors the non-"specific"
+    // statuses in research/afh_q1/config/platforms.yaml (generic, technology, ambiguous alias);
+    // tests/research/test_afh_q1_pipeline.py keeps the two in sync.
+    const NON_NAMED_LABELS = new Set(["social media", "chat", "Gen AI", "Webcam platform", "Mega.nz"]);
+
     function renderStats() {
       const meta = (state.evidence && state.evidence._meta) || {};
       const analyzed = state.platforms.filter((p) => p.researcherAnalyzed).length;
       const records = (state.evidence && state.evidence.records) || [];
+      const named = state.platforms.filter((p) => !NON_NAMED_LABELS.has(p.platform)).length;
       const strip = document.getElementById("stats");
       strip.innerHTML = "";
       [
         { val: meta.cases_processed, lbl: "Cases processed" },
-        { val: state.platforms.length, lbl: "Platforms" },
+        { val: named, lbl: [el("em", { textContent: "named" }), " platforms"] },
         { val: analyzed, lbl: "Researcher-analysed platforms" },
         { val: records.length, lbl: "Case–platform pairs" },
       ].forEach(({ val, lbl }) => {
         strip.appendChild(
           el("div", { className: "cl-stat" }, [
             el("div", { className: "cl-stat__n", textContent: fmt(val) }),
-            el("div", { className: "cl-stat__l", textContent: lbl }),
+            el("div", { className: "cl-stat__l" }, Array.isArray(lbl) ? lbl : [lbl]),
           ])
         );
       });
@@ -428,7 +434,7 @@
       const maxCount = maxBarCount(list);
       const analysed = list.filter((p) => p.researcherAnalyzed).length;
       document.getElementById("shown-count").textContent =
-        fmt(list.length) + " of " + fmt(state.platforms.length) + " platforms shown · dot = researcher analysis (" + fmt(analysed) + ")";
+        fmt(list.length) + " of " + fmt(state.platforms.length) + " labels shown · dot = researcher analysis (" + fmt(analysed) + ")";
 
       LIFECYCLE_LANES.forEach((lane) => {
         const lanePlatforms = list.filter((p) => p.lane === lane.id);
