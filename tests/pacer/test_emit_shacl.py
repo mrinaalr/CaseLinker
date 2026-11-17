@@ -10,10 +10,11 @@ import rdflib
 from tests.pacer import fixtures as F
 from state_machines.evidence import vocab as V
 from state_machines.trajectories.derive import derive
-from state_machines.graphs.emit import evidence_graph, serialize, trajectory_graph
-from state_machines.graphs.shacl import EXTENSION, validate_jsonld
 
 pytest.importorskip("case_uco")
+
+from state_machines.graphs.emit import evidence_graph, serialize, trajectory_graph  # noqa: E402
+from state_machines.graphs.shacl import EXTENSION, validate_jsonld  # noqa: E402
 
 
 @pytest.fixture(scope="module")
@@ -176,3 +177,24 @@ def test_applicable_skipped_constraint_makes_conformance_partial_and_blocks_rele
     assert r["violations"] == [] and r["conformance"] == "partial"
     assert "https://cacontology.projectvic.org/platforms#PlatformOperatorCrossReferenceShape" in r["applicable_skipped"]
     assert not r["release_ok"] and r["unwaived_applicable_skipped"]
+
+
+def test_emitted_terms_are_declared_upstream_or_in_the_extension(tmp_path):
+    """Every class, predicate and datatype the PACER graphs use is declared by pinned UCO/CASE/CAC
+    or by the clt extension; no placeholder IRIs (#57)."""
+    import sys
+    from pathlib import Path
+    from rdflib import RDF, URIRef
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "ontology" / "pipeline"))
+    from term_resolution import graph_terms, declared_terms, parse_jsonld
+    ext = rdflib.Graph().parse(EXTENSION / "caselinker-trajectory.ttl", format="turtle")
+    known = declared_terms() | {str(s) for s in ext.subjects(RDF.type, None) if isinstance(s, URIRef)}
+    bundle, _ = F.build()
+    for name, g in (("evidence", evidence_graph(bundle)), ("trajectories", trajectory_graph(bundle, derive(bundle, "INFERRED")))):
+        path = tmp_path / f"{name}.jsonld"
+        doc = serialize(g)
+        path.write_text(doc if isinstance(doc, str) else json.dumps(doc), encoding="utf-8")
+        parsed = parse_jsonld(path)
+        missing = {k: sorted(t for t in terms if t not in known) for k, terms in graph_terms(parsed).items()}
+        assert {k: v for k, v in missing.items() if v} == {}, name
+        assert not any("example.org" in str(n) for n in parsed.all_nodes()), name

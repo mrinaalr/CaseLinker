@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import copy
 
+import pytest
+
 from tests.pacer import fixtures as F
 from state_machines.coding.workflow import agreement, compile_draft
-from state_machines.coding.release_report import agreed_core
 from state_machines.evidence.validate import validate
 
 
@@ -16,6 +17,12 @@ def _draft(bundle, quotes):
             p.pop(k, None)
         p["quote"] = quotes[p["passage_id"]]
     return d
+
+
+def _agreed_core():
+    pytest.importorskip("case_uco")   # release_report emits graphs
+    from state_machines.coding.release_report import agreed_core
+    return agreed_core
 
 
 def test_compile_draft_restores_offsets_and_drops_quote_text(tmp_path):
@@ -47,6 +54,7 @@ def test_agreement_and_agreed_core_keep_only_what_both_coders_coded():
     b["events"] = [e for e in b["events"] if e["event_id"] != "e08"]                        # B missed e08
     agree = agreement(a, b)
     assert agree["events"]["matched"] == 7 and agree["action_code"]["exact"] == 6
+    agreed_core = _agreed_core()
     core = agreed_core(a, b, agree["pairs"])
     ids = {e["event_id"] for e in core["events"]}
     assert "e03" not in ids and "e08" not in ids
@@ -62,6 +70,6 @@ def test_agreed_core_keeps_passages_its_mentions_cite(tmp_path):
         {"platform_surface": "messaging application", "passage_ids": ["p11"]}]   # p11 cited only here and by r01
     a["relations"] = [r for r in a["relations"] if r["relation_id"] != "r01"]
     b = copy.deepcopy(a)
-    core = agreed_core(a, b, agreement(a, b)["pairs"])
+    core = _agreed_core()(a, b, agreement(a, b)["pairs"])
     assert "p11" in {p["passage_id"] for p in core["passages"]}
     assert [f for f in validate(core, text_root=tmp_path) if f.severity == "error"] == []
