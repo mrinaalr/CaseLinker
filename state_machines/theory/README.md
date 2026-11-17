@@ -1,6 +1,6 @@
 # Theory: affordance-aware state spaces
 
-Formal models of what is *possible* under stated assumptions. A documented action is evidence that something happened; a model-admitted action sequence is a claim that something is possible in a specified system. This folder works with the second kind of object.
+Finite transition systems for examining how technological affordances shape feasible actions and trajectories. Includes formal constructions, pathway comparisons, and compatibility checks against documented trajectories.
 
 **Contents:**
 - [The construction](#the-construction)

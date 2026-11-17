@@ -392,6 +392,6 @@ def release_errors(bundle: dict, *, text_root: Optional[Path] = None, deny_list:
         if pending:
             out.append(f"{len(pending)} events/relations not adjudicated (first: {', '.join(pending[:5])})")
     unresolved = [e["event_id"] for e in bundle["events"] if e.get("unresolved_participants")]
-    if unresolved:
+    if unresolved and not allow_unreviewed:
         out.append(f"{len(unresolved)} events have participants whose role is not decided: {', '.join(unresolved[:5])}")
     return out

@@ -64,7 +64,8 @@ def test_co_actor_with_an_incompatible_role_is_left_unresolved_not_given_a_role(
     assert not [f for f in findings if f.severity == "error"]
     assert any(f.code == "T17" and f.severity == "warning" for f in findings)
     from state_machines.evidence.validate import release_errors
-    assert any("role is not decided" in p for p in release_errors(new, text_root=tmp_path, allow_unreviewed=True))
+    assert any("role is not decided" in p for p in release_errors(new, text_root=tmp_path))
+    assert not any("role is not decided" in p for p in release_errors(new, text_root=tmp_path, allow_unreviewed=True))
 
 
 def test_schema_2_bundles_pass_through_unchanged():

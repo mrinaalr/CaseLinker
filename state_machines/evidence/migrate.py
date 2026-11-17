@@ -85,7 +85,7 @@ def migrate(bundle: dict) -> Tuple[dict, List[str]]:
                 e.setdefault("unresolved_participants", []).append({
                     "participant_ref": refs[r], "passage_ids": pids,
                     "note": f"coded as co-actor {r} ({roles[r]}) of an {V.FAMILY_OF[e['action']]} action in schema 1"})
-                review.append(f"{e['event_id']}: {refs[r]} ({r}, {roles[r]}) was a co-actor of a {V.FAMILY_OF[e['action']]} action; "
+                review.append(f"{e['event_id']}: {refs[r]} ({r}, {roles[r]}) was a co-actor of an {V.FAMILY_OF[e['action']]} action; "
                               f"role unresolved; read passages {', '.join(pids)} and decide it (R04)")
         for r in [t["participant_ref"] for t in e["targets"]]:
             as_target.setdefault(r, set()).add(e["event_id"])
