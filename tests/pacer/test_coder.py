@@ -113,3 +113,25 @@ def test_repair_drops_only_the_act_with_a_schema_error():
     fixed, log = C.repair(bad, DATA, [])
     assert victim["event_id"] not in {e["event_id"] for e in fixed["events"]}
     assert len(fixed["events"]) == len(gold["events"]) - 1 and any("T01" in line for line in log)
+
+
+def test_docket_parser_reads_both_entry_layouts():
+    two_line = "03/04/2024\n1  INDICTMENT as to the defendant (1).\n"
+    one_line = "03/04/2024 INDICTMENT returned as to the defendant (1).\n"
+    for page in (two_line, one_line):
+        (act,) = C.docket_acts(page)["acts"]
+        assert act["action"] == "PROC_CHARGE" and act["date"]["from"] == "2024-03-04"
+        assert E.locate(page, act["quote"])
+
+
+def test_model_coded_procedure_needs_a_date_and_is_kept_once():
+    case = "synth_001"
+    sources = json.loads((DATA / case / "sources.json").read_text())
+    doc = next(d for d in sources["documents"] if d["doc_id"] == "sof")
+    page = 1
+    text = E.read_page(case, "sof", page, DATA)
+    first = " ".join(E.normalize(text).split(". ")[1].split()[:8])
+    answers = [(doc, page, text, {"acts": [{"s": first, "a": "PROC_PLEA"}]})]
+    bundle, quotes, log = C.assemble(case, sources, answers, "coder_A", C.MODELS["coders"]["coder_A"])
+    assert not any(e["action"] == "PROC_PLEA" for e in bundle["events"])
+    assert any("procedure act without a stated date" in line for line in log)

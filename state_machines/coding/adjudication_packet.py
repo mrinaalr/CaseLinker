@@ -211,7 +211,9 @@ def render_summary(release: str, cases=None) -> Path:
 
 
 if __name__ == "__main__":
-    rel = sys.argv[1] if len(sys.argv) > 1 else "pacer-pilot-v0"
+    if len(sys.argv) < 2:
+        raise SystemExit("usage: python -m state_machines.coding.adjudication_packet <release> [case ...]")
+    rel = sys.argv[1]
     cases = sys.argv[2:] or None
     print(render_packet(rel, cases))
     print(render_summary(rel, cases))

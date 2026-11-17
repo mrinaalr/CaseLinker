@@ -215,6 +215,9 @@ def unload(coder: str) -> None:
 
 
 def unload_model(model: str) -> None:
+    import os
+    if os.environ.get("CASELINKER_KEEP_MODELS"):     # a cache-only rerun beside a live run must not evict its model
+        return
     body = json.dumps({"model": model, "keep_alive": 0}).encode()
     try:
         urllib.request.urlopen(urllib.request.Request(MODELS["runtime"]["base_url"] + "/api/generate", data=body,
@@ -348,7 +351,7 @@ def expand(act: dict) -> dict:
     return out
 
 
-_DOCKET_DATE = re.compile(r"^(\d{2})/(\d{2})/(\d{4})\s*$")
+_DOCKET_DATE = re.compile(r"^(\d{2})/(\d{2})/(\d{4})\s*(.*)$")
 _DOCKET_KINDS = [  # entry text (after the entry number) -> procedure code; first match wins
     (re.compile(r"^\s*\d*\s*(?:SUPERSEDING )?(?:INDICTMENT|INFORMATION|COMPLAINT)\b"), "PROC_CHARGE"),
     (re.compile(r"\b(?:JURY )?VERDICT\b"), "PROC_VERDICT"),
@@ -365,21 +368,24 @@ def docket_acts(text: str) -> dict:
     acts, seen = [], set()
     for i, line in enumerate(lines):
         m = _DOCKET_DATE.match(line.strip())
-        if not m or i + 1 >= len(lines):
+        if not m:
             continue
-        body = lines[i + 1].strip()
+        same_line = m.group(4).strip()                  # "05/13/2023 INDICTMENT ..." or the date alone on its line
+        if not same_line and i + 1 >= len(lines):
+            continue
+        body = same_line or lines[i + 1].strip()
         for pat, code in _DOCKET_KINDS:
             if pat.search(body):
                 day = date(int(m.group(3)), int(m.group(1)), int(m.group(2)))
                 if (code, day) in seen:
                     break
                 seen.add((code, day))
-                quote = E.normalize(line.strip() + " " + body)[:240]
+                quote = E.normalize(line.strip() if same_line else line.strip() + " " + body)[:240]
                 le = code == "LE_ARREST"
                 acts.append({"quote": quote, "action": code, "actor": "law enforcement" if le else "the court",
                              "actor_role": "law_enforcement" if le else "court", "targets": [{"who": "the defendant", "role": "subject"}],
                              "outcome": "completed", "parser": True,
-                             "date": {"x": line.strip(), "from": day.isoformat(), "to": day.isoformat(), "p": "day"}})
+                             "date": {"x": m.group(0)[:10], "from": day.isoformat(), "to": day.isoformat(), "p": "day"}})
                 break
     return {"acts": acts}
 
@@ -452,6 +458,7 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             participants[ref] = {"participant_ref": ref, "kind": kind, "_status": status, "_first": None}
         return labels[lab]
 
+    proc_seen: set = set()
     for doc, page_no, text, ans in answers:
         page_events: List[Tuple[str, str]] = []
         for act in ans.get("acts", []):
@@ -483,6 +490,13 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                                          else "co_offender" if re.search(r"co (defendant|conspirator)", lab) else "offender"))
             if not act.get("parser"):
                 act = enrich(act, qn, fam)
+                if fam == "procedure":         # procedure codes are dated time anchors only (codebook A)
+                    anchor = (action, (act.get("date") or {}).get("from"))
+                    if anchor[1] is None or anchor in proc_seen:
+                        log.append(f"dropped {doc['doc_id']} p{page_no} {action}: procedure act "
+                                   + ("without a stated date" if anchor[1] is None else "repeating a dated anchor"))
+                        continue
+                    proc_seen.add(anchor)
             role = act.get("actor_role")
             if role not in _ALLOWED_ROLES[fam]:
                 fixed = {"offender": "offender", "procedure": "court", "law_enforcement": "law_enforcement"}.get(fam)

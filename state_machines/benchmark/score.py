@@ -121,10 +121,13 @@ def score_dir(coded_dir: Path, split: str = "all", data: Path = DATA) -> dict:
         if split != "all" and split_of(case_id, data) != split:
             continue
         coded_path = coded_dir / f"{case_id}.json"
-        if not coded_path.is_file():
+        gold = json.loads(gold_path.read_text(encoding="utf-8"))
+        if coded_path.is_file():
+            coded = json.loads(coded_path.read_text(encoding="utf-8"))
+        else:                      # no output (e.g. nothing both coders coded): every gold act counts as missed
             missing.append(case_id)
-            continue
-        c = score_case(json.loads(gold_path.read_text(encoding="utf-8")), json.loads(coded_path.read_text(encoding="utf-8")))
+            coded = dict(gold, events=[], relations=[], passages=[], participants=[], tracks=[])
+        c = score_case(gold, coded)
         per_case[case_id] = summarize(c)["events"]
         total += c
     return {"split": split, "cases": len(per_case), "missing": missing, "overall": summarize(total), "per_case": per_case}

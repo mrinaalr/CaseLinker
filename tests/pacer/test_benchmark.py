@@ -63,3 +63,12 @@ def test_scoring_counts_what_a_coder_misses_or_gets_wrong():
     s = summarize(score_case(g, k))
     assert s["events"]["recall"]["n"] == len(g["events"]) - 1
     assert s["action"]["rate"] < 1.0 and s["order"]["recall"]["n"] == 0
+
+
+def test_a_case_without_output_counts_as_missing_all_its_acts(tmp_path):
+    from state_machines.benchmark.score import score_dir
+    (tmp_path / "coded").mkdir()
+    out = score_dir(tmp_path / "coded", "dev")
+    assert out["missing"] and out["overall"]["events"]["recall"]["n"] == 0
+    assert out["overall"]["events"]["recall"]["of"] == sum(len(g["events"]) for g in _golds()
+                                                          if json.loads((DATA / "MANIFEST.json").read_text())["splits"][g["case_id"]] == "dev")
