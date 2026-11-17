@@ -1071,12 +1071,15 @@ def main() -> None:
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     db_rows: Dict[str, str] = {}
     stored_spans: Dict[str, Optional[List[List[int]]]] = {}
+    # Stored person spans live in extracted_features; without them spans are computed from the text.
+    has_features = any(r[1] == "extracted_features" for r in conn.execute("PRAGMA table_info(cases)"))
+    spans_sql = "json_extract(extracted_features, '$.person_spans')" if has_features else "NULL"
     # SQLite's default variable limit is 32766. Chunk so a doubled corpus still fits.
     for start in range(0, len(all_case_ids), 5000):
         chunk = all_case_ids[start : start + 5000]
         placeholders = ",".join("?" * len(chunk))
         rows = conn.execute(
-            f"SELECT id, json_extract(raw_data, '$.case_text'), json_extract(extracted_features, '$.person_spans') "
+            f"SELECT id, json_extract(raw_data, '$.case_text'), {spans_sql} "
             f"FROM cases WHERE id IN ({placeholders})",
             chunk,
         ).fetchall()
