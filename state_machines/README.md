@@ -6,6 +6,7 @@ Federal court records, coded as evidence and read as trajectories. Each case bec
 - [Layers](#layers)
 - [The documented event graph](#the-documented-event-graph)
 - [From record to release](#from-record-to-release)
+- [What a release establishes](#what-a-release-establishes)
 - [Use it](#use-it)
 - [Code map](#code-map)
 
@@ -59,6 +60,18 @@ The bundle is the canonical artifact. Everything else is a view of it at an evid
 4. **Release.** [`graphs/release.py`](graphs/release.py) validates each bundle, derives its views, emits its graphs, runs SHACL, and writes a manifest with hashes. A bundle with any validation error, unadjudicated item or undecided role is refused.
 5. **Load.** `rebuild_oxigraph.py --pacer-release <id> --verify` loads the release with the rest of the corpus and checks the store against the manifest.
 
+## What a release establishes
+
+Three layers of checking, each answering a different question. Passing one says nothing about the next.
+
+| Layer | Question | Checked by |
+|---|---|---|
+| **Structural** | Is the bundle well formed, and are its views and graphs derived from it deterministically? | JSON Schema, rules T01–T19, CASE-UCO SDK emission, SHACL, `tests/pacer` |
+| **Evidence fidelity** | Does each coded claim say what its cited passage says, with the right standing? | Quote and page hashes (T04), standing per passage (T06), two independent coders and their agreement |
+| **Adjudication** | Are disagreements, open roles and possible retellings of one act resolved for the claims made? | The author's decisions per item; the release gate refuses anything left open |
+
+Only a release that clears all three is adjudicated, and only an adjudicated release is served on `/lifecycle`. Level-C affordances are documented instrumental support, not causal effects; $\psi$ is co-occurrence within a case.
+
 ## Use it
 
 ```bash
@@ -79,7 +92,7 @@ DATABASE_URL='' python -m pytest tests/pacer
 
 | Surface | Access | Returns |
 |---|---|---|
-| [`/lifecycle`](https://caselinker.up.railway.app/lifecycle) | public | documented, derived and theory views of the current release |
+| [`/lifecycle`](https://caselinker.up.railway.app/lifecycle) | public | documented and theory views of the current adjudicated release |
 | `GET /api/lifecycle/cases` | trusted key or localhost | the page payload: events, roles, dates, standing, sources (no quotes, no names) |
 | `GET /api/lifecycle/analysis` | trusted key or localhost | chains, unordered pairs, $\operatorname{Aff}(c)$, $H(c)$, $\psi$, coverage identity |
 | `GET /api/ontology/pacer` | public | the release manifest: cases, graph IRIs, SHACL status |

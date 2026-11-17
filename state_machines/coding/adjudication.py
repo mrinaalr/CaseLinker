@@ -168,7 +168,8 @@ def dossier(release: str, case_id: str) -> dict:
                     coder_relations_touching=[r for r in a["relations"] + b["relations"]
                                               if eid in (r["from_event"], r["to_event"]) or amap.get(eid) in (r["from_event"], r["to_event"])][:12])
     for x, y in lookalikes(core):
-        add("possible_same_act", event_a=_event_view(core, qa, core_events[x]), event_b=_event_view(core, qa, core_events[y]),
+        add("possible_same_act", reason=f"same action {core_events[x]['action']}, overlapping dates, no relation between them",
+            event_a=_event_view(core, qa, core_events[x]), event_b=_event_view(core, qa, core_events[y]),
             question="The same act described twice (add SAME_ACT, INFERRED; keep both events), or two distinct acts?")
     counts: Dict[str, int] = {}
     for it in items:
