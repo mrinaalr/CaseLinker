@@ -25,3 +25,19 @@ def test_quoted_and_unquoted_reuse_of_record_wording_is_redacted():
 def test_short_overlap_below_threshold_is_kept():
     grams = _grams("the defendant asked the minor to keep sending pictures")
     assert _redact("the minor said no", grams) == "the minor said no"
+
+
+def test_lookalikes_flag_unlinked_retellings():
+    """Same offender action, overlapping dates, nothing linking them: flagged for adjudication."""
+    import copy
+    from state_machines.coding.adjudication import lookalikes
+    from tests.pacer import fixtures as F
+    bundle, _ = F.build()
+    assert lookalikes(bundle) == []
+    twin = copy.deepcopy(next(e for e in bundle["events"] if e["event_id"] == "e06"))
+    twin["event_id"] = "e09"
+    bundle["events"].append(twin)
+    assert lookalikes(bundle) == [("e06", "e09")]
+    bundle["relations"].append(F._rel("r09", "SAME_ACT", "e06", "e09", [F.S("p06", "time", "INFERRED")],
+                                      basis="coder_inference", status="INFERRED"))
+    assert lookalikes(bundle) == []

@@ -1,6 +1,6 @@
 """Adjudication dossiers: every disagreement between two coders, enumerated in code.
 
-    python -m state_machines.adjudication <release> <case_id> [...]
+    python -m state_machines.coding.adjudication <release> <case_id> [...]
 
 Writes, per case, ``local/adjudication/<release>/<case>.dossier.json`` (internal: contains
 quotes from the court record) listing every item a human must rule on:
@@ -14,6 +14,8 @@ quotes from the court record) listing every item a human must rule on:
   time_mismatch          matched events with different date intervals
   order_only_a/only_b    order relations between matched events asserted by one coder
   single_step            agreed trajectories of one step, with the evidence needed to say why
+  possible_same_act      two agreed events with the same offender action and overlapping dates
+                         that nothing links: one act told twice (add SAME_ACT), or two acts
 
 Nothing here decides anything. Decisions are recorded separately (``decisions`` file) by a
 named human reviewer; agent recommendations are labelled as such.
@@ -27,7 +29,7 @@ from typing import Dict, List, Optional
 
 from state_machines.evidence import evidence as E
 from state_machines.evidence import vocab as V
-from state_machines.trajectories.derive import derive
+from state_machines.trajectories.derive import derive, event_spans
 from state_machines.coding.workflow import agreement
 
 DATA = E.REPO_ROOT / "state_machines" / "data"
@@ -59,6 +61,24 @@ def _event_view(bundle: dict, quotes: Dict[str, str], e: dict) -> dict:
         "notes": e.get("notes", ""),
         "passages": [_cite(bundle, quotes, pid) for pid in pids],
     }
+
+
+def lookalikes(bundle: dict) -> List[tuple]:
+    """Pairs of offender events with the same action and overlapping admitted dates that no
+    relation joins. Often one act described in two documents (a finding and a sentencing memo)."""
+    import itertools
+    linked = {frozenset((r["from_event"], r["to_event"])) for r in bundle["relations"]}
+    admitted = V.ADMISSIBLE["INFERRED"]
+    out = []
+    for a, b in itertools.combinations(sorted(bundle["events"], key=lambda e: e["event_id"]), 2):
+        if a["action"] != b["action"] or V.FAMILY_OF[a["action"]] != "offender":
+            continue
+        if frozenset((a["event_id"], b["event_id"])) in linked:
+            continue
+        sa, sb = event_spans(a, admitted), event_spans(b, admitted)
+        if any(x[0] <= y[1] and y[0] <= x[1] for x in sa for y in sb):
+            out.append((a["event_id"], b["event_id"]))
+    return out
 
 
 def dossier(release: str, case_id: str) -> dict:
@@ -147,6 +167,9 @@ def dossier(release: str, case_id: str) -> dict:
                                      "in_multi_step_trajectory": p in multi} for p in partners],
                     coder_relations_touching=[r for r in a["relations"] + b["relations"]
                                               if eid in (r["from_event"], r["to_event"]) or amap.get(eid) in (r["from_event"], r["to_event"])][:12])
+    for x, y in lookalikes(core):
+        add("possible_same_act", event_a=_event_view(core, qa, core_events[x]), event_b=_event_view(core, qa, core_events[y]),
+            question="The same act described twice (add SAME_ACT, INFERRED; keep both events), or two distinct acts?")
     counts: Dict[str, int] = {}
     for it in items:
         counts[it["kind"]] = counts.get(it["kind"], 0) + 1

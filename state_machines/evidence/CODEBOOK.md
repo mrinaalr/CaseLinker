@@ -1,9 +1,10 @@
-# Trajectory codebook v0.2.0 (proposed; pilot)
+# Trajectory codebook v0.3.0
 
 Codes live in [`vocab.py`](vocab.py); the [schema](schema/case_bundle.schema.json), [validator](validate.py) and [extension shapes](../../ontology/extensions/caselinker-trajectory/0.3.0/) read them. Change both together and bump `CODEBOOK_VERSION`.
 
 **Contents:**
 - [Unit of coding](#unit-of-coding)
+- [Participants and roles](#participants-and-roles)
 - [A. Actions](#a-actions)
 - [B. Affordances: three levels](#b-affordances-three-levels)
 - [C. Candidates](#c-candidate-affordances)
@@ -25,21 +26,34 @@ An **event** is one documented act by one actor, supported by one or more passag
 
 **Merge only** when the source itself describes a continuous course of conduct. In that case, use `repetition.kind = continuous_period` or `repeated_count_*`.
 
-**Never code from:**
-- the June state machines;
-- `_facts.txt`;
-- the audit tables;
-- press releases.
+Code only from the PDF page text: never from press releases, summaries or any derived file.
 
-Code only from the PDF page text.
+## Participants and roles
+
+Every party is a **participant** `P1`, `P2`, … that persists across the case. A participant has a `kind`:
+
+| Kind | Use for |
+|---|---|
+| `person` | One human |
+| `persona` | An undercover identity |
+| `collective` | A group the source treats as one party ("the members", "other users"); it may list `members` and a `count` (`min`, `max`, `stated`), each cited |
+| `organization` | A platform provider, agency or court |
+
+- **Legal status** is kept on the participant, cited, apart from what it does: `charged_defendant`, `uncharged_coconspirator`, `named_victim`, `undercover_persona`, `law_enforcement`, `platform_provider`, `third_party`, `court`.
+- **Roles are per event.** Each event has one `actor` (`participant_ref` + `role`); `co_actors` add a `mode`: `performer`, `directing` (instructed the act) or `assisting`; `targets` have a role: `victim`, `recipient`, `counterparty` or `subject`.
+- **Code only the role the passage supports.** If a party is in the act but the source does not say how, list it in `unresolved_participants` with a short note. A release needs every one decided at adjudication (T17).
+- **No inferred transitions.** A victim who later appears as an offender is two roles on two events, each cited; nothing links them unless the source does.
+- **A collective is never a person,** and a case has no single focal defendant: every charged participant's acts are events.
 
 ## A. Actions
 
 The actor's role decides the family (rule T08). Only **offender** actions become trajectory steps. The other families stay events: they order, interrupt or contextualise steps.
 
+Offender codes fall into seven groups (`vocab.ACTION_GROUPS`, shown as columns on `/lifecycle`). Groups are kinds of act, not stages: they imply no order.
+
 ### Offender actions (`offender`, `co_offender`)
 
-**Access and targeting**
+**Access and targeting** (`access`)
 
 | Code | Definition |
 |---|---|
@@ -48,7 +62,7 @@ The actor's role decides the family (rule T08). Only **offender** actions become
 | `ACQUIRE_REPRESENTATION` | Obtains images of, or identifying information about, an identifiable person (profile, follower list, photos) |
 | `ACQUIRE_MATERIAL` | Receives or downloads existing abuse material not produced in this case's conduct |
 
-**Communication and influence**
+**Communication and influence** (`influence`)
 
 | Code | Definition |
 |---|---|
@@ -66,7 +80,7 @@ The actor's role decides the family (rule T08). Only **offender** actions become
 | `RECREATE_ACCOUNT` | Creates a new account after a block, ban or removal, to resume |
 | `RECONTACT` | Resumes contact after a gap, refusal or block, on the same account |
 
-**Production**
+**Production** (`production`)
 
 | Code | Definition |
 |---|---|
@@ -75,7 +89,7 @@ The actor's role decides the family (rule T08). Only **offender** actions become
 | `PRODUCE_IN_PERSON` | Records abuse in person |
 | `SYNTHESIZE_OR_ALTER_IMAGERY` | Generates or manipulates imagery (AI, morphing, editing) |
 
-**Possession and distribution**
+**Possession and distribution** (`distribution`)
 
 | Code | Definition |
 |---|---|
@@ -85,7 +99,7 @@ The actor's role decides the family (rule T08). Only **offender** actions become
 | `ADVERTISE_MATERIAL_OR_ACCESS` | Advertises availability of material or access |
 | `EXPOSE_TO_VICTIM_NETWORK` | Sends a victim's images to the victim's own contacts |
 
-**Coordination**
+**Coordination** (`coordination`)
 
 | Code | Definition |
 |---|---|
@@ -97,7 +111,7 @@ The actor's role decides the family (rule T08). Only **offender** actions become
 | `SHARE_TRADECRAFT` | Detection-avoidance advice |
 | `PAY_THIRD_PARTY` | Pays a facilitator or producer |
 
-**In person and commercial**
+**In person and commercial** (`in_person`)
 
 | Code | Definition |
 |---|---|
@@ -109,7 +123,7 @@ The actor's role decides the family (rule T08). Only **offender** actions become
 | `COLLECT_PROCEEDS` | Collects payment from commercial sex |
 | `CONTROL_VICTIM` | Harbouring, confiscation, dependency, drugs, weapons used to control |
 
-**Concealment**
+**Concealment** (`concealment`)
 
 | Code | Definition |
 |---|---|
@@ -135,7 +149,7 @@ Compliance is not an event. It is the outcome of the offender's action.
 
 `LE_RECEIVE_TIP`, `LE_UNDERCOVER_ENGAGE`, `LE_SURVEIL`, `LE_LEGAL_PROCESS`, `LE_SEARCH_SEIZE`, `LE_FORENSIC_EXAM`, `LE_INTERVIEW`, `LE_INTERDICT`, `LE_ARREST`.
 
-**An undercover officer's messages are `LE_UNDERCOVER_ENGAGE`, never offender conduct.** The offender's messages *to* the officer are offender actions with `target_refs` pointing at the `UC` actor.
+**An undercover officer's messages are `LE_UNDERCOVER_ENGAGE`, never offender conduct.** The offender's messages *to* the officer are offender actions whose `targets` name the persona participant (role `counterparty`).
 
 ### Procedure (`court`)
 
@@ -154,8 +168,6 @@ Compliance is not an event. It is the outcome of the offender's action.
 
 ## B. Affordances: three levels
 
-**Status: codebook 0.2.0, proposed. Awaits author review**, including the relevance table R and the capability registry.
-
 O holds the six classes of AfH §7. Each maps to the CAC 3.1.0 class of the same meaning (`cac-platforms:*`, all subclasses of `PlatformAffordance`). Affordances are recorded at three levels, and they never merge:
 
 | Level | What it says | Evidence | Where it lives | In O_i? |
@@ -167,14 +179,21 @@ O holds the six classes of AfH §7. Each maps to the CAC 3.1.0 class of the same
 ### Coding the court record
 
 - **`platform_mentions`**: the platform is named in connection with the event. This makes no claim that the act went through it. Example: "the phone contained Kik".
-- **`platform_interactions`**: the passage supports that the act was carried out through the platform. Example: "sent the images to the minor through Kik". It needs a passage on facet `platform` (rule T15). In the graph this is canonical `uco-action:instrument` plus a cited `Carried_Out_Through` relationship.
+- **`platform_interactions`**: the passage supports how the act involved the platform. It needs a passage on facet `platform` (rule T15). Fields:
+  - `mode`: `through` (the act went through it: "sent the images through Kik"), `from` / `to` (contact moved off or onto it), `acted_on` (the act was done to the platform: deleting an account, a report);
+  - `audience`: `one_to_one`, `group`, `public` or `unknown`;
+  - `platform_key`: the registry name, or `unnamed:<description>` when the source does not name it ("a messaging application");
+  - `configuration`: a feature setting the source states (`feature_term`, `setting` `on`/`off`/`default_on`/`default_off`/`unknown`), cited.
+
+  In the graph: `uco-action:instrument` plus a cited `Carried_Out_Through`, `Moved_From`, `Moved_To` or `Acted_On` relationship.
+- **`channels`**: SMS, voice call, email, mail or in person. A channel is not a platform and never reaches the capability registry (T19).
 - **`affordances` (level C)**: the passage names the feature or mechanism and links it to the act. Example: "using a Kik account under a false name to conceal his identity".
 
 **Rule B0. A platform name is never level C.** A level-C annotation needs `basis = feature_stated` or `mechanism_stated`:
 - `DIRECT` needs a passage that names the feature or mechanism and links it to the action (facet `feature`).
 - `INFERRED` needs a named feature or mechanism whose link to this action is interpretive.
 
-A platform name, and a documented interaction, are level A/B material.
+A platform name, and a documented interaction, are level A/B material. Only `through` and `to` interactions with a named platform reach level B. Case-level associations (a press release naming a platform) are never promoted to event-level claims.
 
 ### Worked example: Kik (illustrative only; registry entries are proposed until reviewed)
 
@@ -202,18 +221,17 @@ Messaging through a service that offers pseudonymous accounts does not, by itsel
 | `CONCEAL_OR_DESTROY_EVIDENCE` | `ephemerality` |
 | In-person, storage and payment actions | none |
 
-### Period checks
+### Availability (level A)
 
-A capability counts for an event only if its validity period overlaps the event's cited date interval:
+The registry entry's period is checked against the event's cited dates:
 
-| Check result | Meaning | Reported? |
+| Result | When | Reported? |
 |---|---|---|
-| `in_period` | The event lies wholly inside the period | yes |
-| `period_partial` | The two intervals partly overlap | yes |
-| `period_unchecked` | The event is undated | yes |
-| disjoint | The intervals do not overlap | left out |
+| `supported` | Native capability, documented introduction date, and the event lies wholly inside the period | yes |
+| `uncertain` | Approximate or unknown date, partial feature, undated event, or an event overlapping the period's boundary | yes, marked |
+| `unsupported` | Not native, or the event lies wholly outside the period | left out |
 
-Only `reviewed` registry entries enter released outputs.
+An approximate introduction date never becomes `supported`.
 
 ### Level-C inclusion criteria
 
@@ -258,13 +276,17 @@ Access forms follow AfH H2: `person_physical`, `person_communicative`, `represen
 | `HARM_PHYSICAL_VIOLENCE_OR_CONTROL` | — | Violence, weapons, confinement |
 | `HARM_OTHER` | — | Needs `other_label` |
 
+- Every harm names its victim and `victim_kind` (`minor`, `adult`, `undercover_persona`, `unknown`). $H(c)$ counts minor-directed harms; harm to an adult is recorded but not counted as harm to a child.
 - "—" means outside H0. These feed the closure test; they are never forced into h1–h6.
 - **No harm is coded against an undercover persona.**
 - Harm stated only in a sentencing memorandum carries `ADVOCACY` source status, through its passage.
 
 ## F. Time, order, branching
 
-- **Time** is an interval (`earliest`, `latest`) with a precision and a basis, plus supporting passages.
+- **Time** is a list of `assertions`, one per cited statement of when. Each keeps the source's `expression` ("on or about April 2, 2024"), a `precision` (`day`, `month`, `season`, `year`, `range`), real calendar bounds `earliest` / `latest`, a `basis`, a status and its passages.
+  - `basis`: `explicit_date`, `date_range`, `count_window`, `relative_statement`, or `enclosing_window` (the event falls inside a stated period, such as a charged count's dates). An enclosing window is always `INFERRED`.
+  - Conflicting assertions are all kept, and `conflict_flagged` is set. A conflicted event gives no date order.
+  - No date in the source means an empty `assertions` list.
 - **Relations:**
 
   | Relation | Meaning |
@@ -274,7 +296,9 @@ Access forms follow AfH H2: `person_physical`, `person_communicative`, `represen
   | `OVERLAPS`, `DURING`, `SAME_TIME` | Interval relations |
   | `UNORDERED` | Assessed, and the order is unknown |
   | `REPEATS`, `RESUMES_AFTER`, `RESPONDS_TO`, `BACKED_BY_THREAT`, `INTERRUPTS`, `PART_OF`, `SAME_MATERIAL` | As named |
+  | `SAME_ACT` | Two events, usually from different documents, may describe the same act. Always `INFERRED`, never `DIRECT` (T18): both events are kept and nothing is merged or counted as distinct. |
 
+- **Relative chronology stated in a passage** ("after that first contact") is direct evidence for `BEFORE`, even without dates.
 - **Do not add order you cannot cite.** Two events with no supported relation stay unordered. Derivation then puts them in different chains.
 - **Cycles in `BEFORE` are errors** (T11). Model a resumption or loop as a *new event* linked by `RESUMES_AFTER` / `REPEATS`.
 - **Tracks** group events per victim, per undercover persona, per material set, or per co-offender network. A case may have many tracks. An event may sit in several.
@@ -319,7 +343,7 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
 
 ## I. Double coding and adjudication
 
-- **Two coders code each case independently,** blind to each other and to the June artifacts. Each records `coding.method`: `human`, `agent_assisted` or `agent`. Agent coders are disclosed as agents and are never described as independent human reviewers.
+- **Two coders code each case independently,** blind to each other and to any earlier coding. Each records `coding.method`: `human`, `agent_assisted` or `agent`. Agent coders are disclosed as agents and are never described as independent human reviewers.
 - **Agreement:**
   - event matching by passage overlap → precision, recall and F1;
   - action code κ on matched events;

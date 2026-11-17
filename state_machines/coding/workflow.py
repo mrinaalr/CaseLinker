@@ -1,10 +1,10 @@
-"""Pilot tooling: page text, coding drafts, compilation, agreement, outputs.
+"""Coding tooling: page text, coding drafts, compilation, agreement, outputs.
 
-    python -m state_machines.pilot extract <case_id> [...]      page text + source manifest
-    python -m state_machines.pilot check <draft.json>           compile a coder draft and validate it
-    python -m state_machines.pilot compile <draft.json> <out>   write the committed bundle (no quote text)
-    python -m state_machines.pilot agree <bundle_a> <bundle_b>  agreement between two coders
-    python -m state_machines.pilot outputs <bundle> <outdir>    derive, emit graphs, SHACL, report
+    python -m state_machines.coding.workflow extract <case_id> [...]      page text + source manifest
+    python -m state_machines.coding.workflow check <draft.json>           compile a coder draft and validate it
+    python -m state_machines.coding.workflow compile <draft.json> <out>   write the committed bundle (no quote text)
+    python -m state_machines.coding.workflow agree <bundle_a> <bundle_b>  agreement between two coders
+    python -m state_machines.coding.workflow outputs <bundle> <outdir>    derive, emit graphs, SHACL, report
 
 A coder **draft** is the bundle format with one difference: each passage carries its
 ``quote`` instead of offsets and hashes. Drafts live in the local store (they contain
@@ -249,7 +249,7 @@ def agreement(a: dict, b: dict) -> dict:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
-    ap = argparse.ArgumentParser(prog="python -m state_machines.pilot")
+    ap = argparse.ArgumentParser(prog="python -m state_machines.coding.workflow")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("extract").add_argument("cases", nargs="+")
     sub.add_parser("check").add_argument("draft", type=Path)

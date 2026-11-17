@@ -19,10 +19,17 @@
     ["coordination", "Coordination"], ["in_person", "In person"], ["concealment", "Concealment"],
   ];
   const CASE_COLORS = ["#5fd4a4", "#ff9f5a", "#f5c46b", "#ff7a8a", "#a58cff", "#7cb7ff", "#e6a3d8"];
+  // legal standing of the strongest passage behind an act (short on the node, spelled out in the panel)
   const STANDING = {
-    ALLEGATION: "allegation", SWORN_AFFIDAVIT: "affidavit", ADMITTED: "admitted",
-    ADMITTED_UNDER_OATH: "admitted", JUDICIAL_FINDING: "finding", VERDICT_ELEMENT: "verdict",
-    COURT_RECORD: "record", ADVOCACY: "advocacy", PROCEDURAL: "docket",
+    ALLEGATION: "alleged", SWORN_AFFIDAVIT: "sworn", ADMITTED: "admitted",
+    ADMITTED_UNDER_OATH: "admitted", JUDICIAL_FINDING: "court finding", VERDICT_ELEMENT: "verdict",
+    COURT_RECORD: "court record", ADVOCACY: "argued", PROCEDURAL: "docket",
+  };
+  const STANDING_LONG = {
+    ALLEGATION: "alleged in a charging document", SWORN_AFFIDAVIT: "sworn in an affidavit",
+    ADMITTED: "admitted by the defendant", ADMITTED_UNDER_OATH: "admitted under oath",
+    JUDICIAL_FINDING: "found by the court", VERDICT_ELEMENT: "element of the verdict",
+    COURT_RECORD: "court record", ADVOCACY: "argued by a party (not a finding)", PROCEDURAL: "docket entry",
   };
   const TRACK_KIND = { victim: "victim", undercover: "undercover persona", material: "material",
     co_offender_network: "co-offender network", case_procedure: "case procedure" };
@@ -346,11 +353,12 @@
       ? ev.time.map(a => `${a.earliest === a.latest ? a.earliest : a.earliest + " – " + a.latest} (${a.precision}, ${a.basis.replace(/_/g, " ")}, ${a.status.toLowerCase()})`).join("; ") + (ev.time_conflict ? "; dates conflict" : "")
       : "undated";
     panel.innerHTML = "";
-    panel.append(
+    panel.append(...[
       el("button", { class: "detail-close", type: "button", "aria-label": "Close", text: "×" }),
       el("div", { class: "cl-eyebrow", text: ev.id }),
       el("h3", { class: "detail-title", text: ev.label }),
-      kv("Evidence", `${ev.status.toLowerCase()} · ${STANDING[ev.standing] || "—"} · ${ev.review}`),
+      kv("Evidence", `${ev.status === "DIRECT" ? "stated" : ev.status.toLowerCase()} · ${STANDING_LONG[ev.standing] || "—"}`),
+      kv("Review", ev.review.replace(/_/g, " ")),
       kv("Actor", `${ev.actor.participant_ref} (${ev.actor.role.replace("_", "-")})`),
       ev.co_actors.length ? kv("With", ev.co_actors.map(c => `${c.participant_ref} (${c.role}, ${c.mode})`).join("; ")) : null,
       ev.targets.length ? kv("Targets", ev.targets.map(t => `${t.participant_ref} (${t.role})`).join("; ")) : null,
@@ -362,7 +370,7 @@
       ev.platforms.length ? kv("Platforms", ev.platforms.map(p => `${p.key} (${p.mode}, ${p.audience})`).join("; ")) : null,
       ev.mentions.length ? kv("Named", ev.mentions.join(", ")) : null,
       el("div", { class: "detail-sub", text: "Sources" }),
-      el("ul", { class: "prov" }, ev.provenance.map(p => el("li", { text: `${p.doc_type.replace(/_/g, " ")}, page ${p.page} · ${STANDING[p.standing] || p.standing}` }))));
+      el("ul", { class: "prov" }, ev.provenance.map(p => el("li", { text: `${p.doc_type.replace(/_/g, " ")}, page ${p.page} · ${STANDING_LONG[p.standing] || p.standing}` })))].filter(Boolean));
     panel.setAttribute("aria-hidden", "false");
     panel.classList.add("is-open");
     back.classList.add("is-open");

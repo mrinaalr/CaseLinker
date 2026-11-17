@@ -27,4 +27,4 @@ Events are matched across coders by the overlap of the passages they cite, never
 
 ## Adjudication
 
-Each disagreement becomes an item: events only one coder found, action, status, actor, harm, time and affordance mismatches, platform codings, order relations only one coder found, and one-step trajectories worth a second look. The packet shows both codings, the passages, links to the PDF pages, and records a decision per item. Decisions turn events and relations `adjudicated`; only then can a release include them.
+Each disagreement becomes an item: events only one coder found, action, status, actor, harm, time and affordance mismatches, platform codings, order relations only one coder found, one-step trajectories worth a second look, and pairs of events that may be one act told twice (same action, overlapping dates, nothing linking them). The packet shows both codings, the passages, links to the PDF pages, and records a decision per item. Decisions turn events and relations `adjudicated`; only then can a release include them.
