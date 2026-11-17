@@ -128,6 +128,33 @@ def scan_api(db_path: str, people: Dict[str, Set[str]], case_ids, report: Counte
                 check("/api/automated-analysis triaged case", json.dumps(item), names)
     else:
         report[f"api /api/automated-analysis: not scanned (HTTP {r.status_code})"] += 1
+    # Platform-affordance evidence: every per-platform cohort and the two static files the pages fetch.
+    # Quotes and snippets carry release text: check each item against its own case's people.
+    main.limiter.reset()
+    r = public.get("/api/platform-affordance-evidence")
+    for row in (r.json().get("platforms") or []) if r.status_code == 200 else []:
+        main.limiter.reset()
+        rp = public.get("/api/platform-affordance-evidence", params={"platform": row["platform"]})
+        if rp.status_code != 200:
+            report[f"api /api/platform-affordance-evidence?platform=: not scanned (HTTP {rp.status_code})"] += 1
+            continue
+        for item in rp.json().get("cases") or []:
+            names = people.get(item.get("case_id"))
+            if names:
+                check("/api/platform-affordance-evidence?platform= case", json.dumps(item), names)
+    for name in ("platform_affordance_evidence.json", "platform_affordance_evidence_harm_analysis.json"):
+        r = public.get(f"/ontology/platform-affordance-evidence/{name}")
+        if r.status_code != 200:
+            report[f"static {name}: not scanned (HTTP {r.status_code})"] += 1
+            continue
+        body = r.json()
+        items = [x for k in ("records", "excluded_platforms", "db_gaps") for x in (body.get(k) or [])]
+        for item in items:
+            names = people.get(item.get("case_id")) if isinstance(item, dict) else None
+            if names:
+                check(f"static {name} item", json.dumps(item), names)
+        if not items:
+            check(f"static {name}", r.text)
     for path in ("/api/facet-distinct", "/api/facet-tree", "/api/location-stats", "/api/stats-detailed",
                  "/api/stats", "/api/tags", "/api/platform-affordance-evidence",
                  "/api/triage-eval", "/api/triage-model-corpus"):
