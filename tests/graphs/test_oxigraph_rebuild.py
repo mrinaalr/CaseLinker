@@ -51,23 +51,13 @@ def test_canonical_priority_universe_over_staging_big_bang_analysis(tmp_path: Pa
     assert pool_label_for_path(chosen["only_staging"], graph_root=tmp_path) == "staging"
 
 
-def test_canonical_includes_pacer_pool_without_colliding_press_release(tmp_path: Path):
+def test_legacy_pacer_pool_is_not_a_case_source(tmp_path: Path):
+    # PACER graphs come from a release (urn:caselinker:pacer:*), never from graph_output/pacer
     case_id = "ky_sp_2025_038"
-    _write_ttl(
-        tmp_path / "universe" / f"{case_id}.ttl",
-        "http://ex.org/pr",
-        "press-release",
-    )
-    _write_ttl(
-        tmp_path / "pacer" / f"pacer_{case_id}.ttl",
-        "http://ex.org/pacer",
-        "pacer",
-    )
-
+    _write_ttl(tmp_path / "universe" / f"{case_id}.ttl", "http://ex.org/pr", "press-release")
+    _write_ttl(tmp_path / "pacer" / f"pacer_{case_id}.ttl", "http://ex.org/pacer", "pacer")
     chosen = canonical_ttl_paths(tmp_path)
-    assert chosen[case_id] == tmp_path / "universe" / f"{case_id}.ttl"
-    assert chosen[f"pacer_{case_id}"] == tmp_path / "pacer" / f"pacer_{case_id}.ttl"
-    assert pool_label_for_path(chosen[f"pacer_{case_id}"]) == "pacer"
+    assert chosen == {case_id: tmp_path / "universe" / f"{case_id}.ttl"}
 
 
 def test_build_nquads_uses_per_case_named_graph(tmp_path: Path):
@@ -222,7 +212,7 @@ def test_bulk_load_uses_the_no_transaction_bulk_path_in_slices(tmp_path, lock_en
 
     store = _FakeOxigraph()
     cases = _nq(tmp_path / "cases.nq.gz", 25)
-    pacer = _nq(tmp_path / "pacer.nq", 4, "urn:pacer:kg:1")
+    pacer = _nq(tmp_path / "pacer.nq", 4, "urn:caselinker:pacer:fictional_001:evidence")
     out = bulk_load_nquads([cases, pacer], "http://oxigraph:7878", chunk_lines=10,
                            retry_wait_s=0, client=store.client())
     assert out == {"quads_sent": 29, "store_quads": 29}

@@ -370,3 +370,20 @@ def _reach(bundle: dict) -> dict:
 
 def errors(findings: Iterable[Finding]) -> List[Finding]:
     return [f for f in findings if f.severity == "error"]
+
+
+def release_errors(bundle: dict, *, text_root: Optional[Path] = None, deny_list: Sequence[str] = (),
+                   allow_unreviewed: bool = False) -> List[str]:
+    """Why a bundle cannot be released (empty list = releasable).
+
+    Every validation error blocks. With page text available, passages must verify. Every
+    event and relation must be adjudicated, unless ``allow_unreviewed`` builds a preview,
+    which the release manifest then labels as not adjudicated."""
+    out = [f"{f.code} {f.where}: {f.message}" for f in errors(
+        validate(bundle, text_root=text_root, deny_list=deny_list, require_verified=text_root is not None))]
+    if not allow_unreviewed:
+        pending = [e["event_id"] for e in bundle["events"] if e["review"]["status"] != "adjudicated"]
+        pending += [r["relation_id"] for r in bundle["relations"] if (r.get("review") or {}).get("status", "adjudicated") != "adjudicated"]
+        if pending:
+            out.append(f"{len(pending)} events/relations not adjudicated (first: {', '.join(pending[:5])})")
+    return out
