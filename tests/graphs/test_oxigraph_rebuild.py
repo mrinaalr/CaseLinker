@@ -341,3 +341,29 @@ def test_cli_checks_load_arguments_before_building_and_stops_on_a_bad_graph(tmp_
     assert not out.exists()                                    # no URL: nothing built
     (graphs / "case_b.ttl").write_text("not turtle <", encoding="utf-8")
     assert rebuild_oxigraph.main(["--graph-root", str(graphs), "--output", str(out), "--no-load"]) == 1
+
+
+def _rebuild_script():
+    import importlib.util
+    path = Path(__file__).resolve().parents[2] / "scripts" / "oxigraph" / "rebuild_oxigraph.py"
+    spec = importlib.util.spec_from_file_location("rebuild_oxigraph_script", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+@pytest.mark.parametrize("url,local", [
+    ("http://localhost:7878", True), ("http://127.0.0.1:7899", True), ("http://[::1]:7878", True),
+    ("http://oxigraph.localhost", True), ("http://oxigraph.railway.internal:7878", False),
+    ("https://caselinker-oxigraph.up.railway.app", False), ("http://localhost.evil.example:7878", False),
+])
+def test_preview_loads_only_into_local_stores(url, local, tmp_path, capsys):
+    mod = _rebuild_script()
+    assert mod.is_local_store(url) is local
+    nq = tmp_path / "corpus.nq"
+    nq.write_text("", encoding="utf-8")
+    code = mod.main(["--skip-build", "--output", str(nq), "--allow-preview", "--oxigraph-url", url,
+                     "--pacer-release", "no-such-release"])
+    assert code == 1
+    refused = "loads only into a local store" in capsys.readouterr().err
+    assert refused is (not local)

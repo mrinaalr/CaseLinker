@@ -141,3 +141,18 @@ def test_release_graphs_hold_no_quotes_or_names(tmp_path):
     for p in (root / "test-v1" / "graphs").glob("*.jsonld"):
         text = p.read_text()
         assert not [q for q in quotes.values() if len(q.split()) > 4 and q in text]
+
+
+def test_bundle_folders_are_ignored_on_case_sensitive_filesystems():
+    """cases/ must be ignored by its own rule, not by the case-insensitive match of Cases/."""
+    import subprocess
+    from pathlib import Path
+    repo = Path(__file__).resolve().parents[2]
+
+    def ignored(path):
+        return subprocess.run(["git", "-c", "core.ignorecase=false", "check-ignore", "-q", path], cwd=repo).returncode == 0
+
+    assert ignored("state_machines/data/any-release/cases/case.json")
+    assert not ignored("state_machines/data/any-release/manifest.json")
+    assert not ignored("state_machines/data/any-release/graphs/case.evidence.jsonld")
+    assert not ignored("state_machines/data/any-release/derived/case.direct.json")

@@ -50,26 +50,34 @@ def coverage_identity_holds(cases: List[Tuple[str, Set[str], Set[str]]]) -> bool
     return left == middle and middle <= observed
 
 
+def payload_harms(case: dict, threshold: str = "DIRECT", victim_kinds: Tuple[str, ...] = ("minor",)) -> Set[str]:
+    """H(c) from a case of the /lifecycle payload (a release's lifecycle.json): same rule as case_harms."""
+    ok = V.ADMISSIBLE[threshold]
+    return {h["h0"] for e in case["events"].values() for h in e["harms"]
+            if h["status"] in ok and h["h0"] and h["victim_kind"] in victim_kinds}
+
+
 def release_analysis(root=None, threshold: str = "INFERRED", case_id: str = "") -> dict:
     """AfH quantities over a PACER release: Aff(c), H(c), psi_C and the coverage identity.
 
+    Reads only what a release commits: ``derived/<case>.<threshold>.json`` for the chains and
+    O_i, and ``lifecycle.json`` for the harm codes. The coded bundles (local) are not needed.
     ``root`` is a release folder (default: the release the /lifecycle page shows). H(c) counts
     minor-directed harms (H0). psi_C records co-occurrence within a case, not causation."""
     import json
-    from state_machines.trajectories.derive import derive
     from state_machines.trajectories.payload import release_dir
 
     root = root or release_dir()
     if root is None:
         return {"release": None, "cases": []}
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    page = {c["case_id"]: c for c in json.loads((root / "lifecycle.json").read_text(encoding="utf-8"))["cases"]}
     rows, per_case = [], []
     for c in manifest["cases"]:
         if case_id and c["case_id"] != case_id:
             continue
-        bundle = json.loads((root / "cases" / f"{c['case_id']}.json").read_text(encoding="utf-8"))
-        d = derive(bundle, threshold)
-        affs, harms = case_affordances(d), case_harms(bundle, threshold)
+        d = json.loads((root / "derived" / f"{c['case_id']}.{threshold.lower()}.json").read_text(encoding="utf-8"))
+        affs, harms = case_affordances(d), payload_harms(page[c["case_id"]], threshold)
         rows.append((c["case_id"], affs, harms))
         per_case.append({
             "case_id": c["case_id"], "aff": sorted(affs), "h0": sorted(harms),

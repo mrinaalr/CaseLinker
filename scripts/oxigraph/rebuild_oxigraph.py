@@ -72,11 +72,24 @@ def parse_args(argv=None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+LOCAL_HOSTS = ("localhost", "127.0.0.1", "::1")
+
+
+def is_local_store(url: str) -> bool:
+    """True when the Oxigraph URL points at this machine (a preview may only be loaded there)."""
+    from urllib.parse import urlparse
+    host = (urlparse(url).hostname or "").lower()
+    return host in LOCAL_HOSTS or host.endswith(".localhost")
+
+
 def main(argv=None) -> int:
     args = parse_args(argv)
     if not args.no_load:
         if not args.oxigraph_url:
             print("OXIGRAPH_URL / --oxigraph-url is required to load (or pass --no-load)", file=sys.stderr)
+            return 1
+        if args.allow_preview and not is_local_store(args.oxigraph_url):
+            print(f"--allow-preview loads only into a local store; {args.oxigraph_url} is not localhost", file=sys.stderr)
             return 1
         missing = [p for p in args.extra_nq if not p.is_file()]
         if missing:

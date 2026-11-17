@@ -63,3 +63,22 @@ def test_only_adjudicated_releases_are_served_by_default(tmp_path, monkeypatch):
     assert payload.build_payload() == {"release": None, "cases": []}
     monkeypatch.setenv("CASELINKER_PACER_RELEASE", str(root / "test-v1"))   # an explicit preview
     assert payload.build_payload()["release"]["adjudicated"] is False
+
+
+def test_page_and_analysis_need_only_committed_release_files(tmp_path):
+    """A clean checkout has no cases/ (bundles stay local): the payload and the AfH analysis
+    must come from derived/ and lifecycle.json alone, and agree with the bundles."""
+    import shutil
+    from state_machines.trajectories import afh
+    from state_machines.trajectories.derive import derive
+    from state_machines.trajectories.payload import build_payload
+    root = _release(tmp_path, adjudicated=True) / "test-v1"
+    bundle = json.loads(next((root / "cases").glob("*.json")).read_text(encoding="utf-8"))
+    expected = {thr: (sorted(afh.case_affordances(derive(bundle, thr))), sorted(afh.case_harms(bundle, thr)))
+                for thr in ("DIRECT", "INFERRED")}
+    shutil.rmtree(root / "cases")
+    assert build_payload(root)["cases"][0]["case_id"] == bundle["case_id"]
+    for thr, (affs, harms) in expected.items():
+        (case,) = afh.release_analysis(root, thr)["cases"]
+        assert (case["aff"], case["h0"]) == (affs, harms)
+        assert harms, "the fixture records minor-directed harms"
