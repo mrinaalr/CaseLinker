@@ -391,3 +391,22 @@ def test_pattern_layer_replay_goes_through_the_merge_and_full_adds_ner(agency_co
     replay = full["fields"]["agencies_involved"]["replay"]
     assert any("Riverton" in a for a in replay), replay
     assert len(replay) > len(fast["fields"]["agencies_involved"]["replay"] or [])
+
+
+def test_replay_shards_keep_order_and_a_failed_child_fails_its_side(monkeypatch):
+    calls = []
+
+    def fake_child(payload, timeout):
+        calls.append((payload["root"], [d["case_id"] for d in payload["docs"]]))
+        if payload["root"] == "bad" and "c3" in [d["case_id"] for d in payload["docs"]]:
+            return {"failed": "boom"}
+        return {"cases": [{"case_id": d["case_id"]} for d in payload["docs"]], "errors": []}
+
+    monkeypatch.setattr(R, "_run_child", fake_child)
+    docs = [{"case_id": f"c{i}"} for i in range(7)]
+    out = R._run_replay({"base": {"root": "ok", "docs": docs}, "checkout": {"root": "bad", "docs": docs}},
+                        shards=3, timeout=5)
+    assert [c["case_id"] for c in out["base"]["cases"]] == [f"c{i}" for i in range(7)]
+    assert out["checkout"]["failed"] == "boom"
+    assert len(calls) == 6 and all(len(ids) <= 3 for _, ids in calls)
+    assert R._shards(full=True) == 1 and R._shards(full=False) >= 1

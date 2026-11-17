@@ -221,6 +221,38 @@ def _run_child(payload: Dict[str, Any], timeout: float) -> Dict[str, Any]:
         return {"failed": "did not return JSON"}
 
 
+def _shards(full: bool) -> int:
+    """Replay children per side. Fast replays load ~0.4 GB each; a full one loads Stanza and spaCy."""
+    if full:
+        return 1
+    return max(1, min(4, (os.cpu_count() or 2) // 2))
+
+
+def _run_replay(payloads: Dict[str, Dict[str, Any]], shards: int, timeout: float) -> Dict[str, Dict[str, Any]]:
+    """Each side's replay split over ``shards`` children, every child of both sides at once.
+
+    Cases come back in input order per side; a side fails if any of its children fails.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    jobs = []
+    for side, payload in payloads.items():
+        docs = payload["docs"]
+        size = max(1, -(-len(docs) // shards))
+        for i in range(0, max(len(docs), 1), size):
+            jobs.append((side, {**payload, "docs": docs[i:i + size]}))
+    with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        results = list(pool.map(lambda job: (job[0], _run_child(job[1], timeout=timeout)), jobs))
+    out: Dict[str, Dict[str, Any]] = {side: {"cases": [], "errors": []} for side in payloads}
+    for side, result in results:
+        if result.get("failed"):
+            out[side]["failed"] = result["failed"]
+            continue
+        out[side]["cases"] += result.get("cases", [])
+        out[side]["errors"] += result.get("errors", [])
+    return out
+
+
 def read_manifest(name: str) -> Dict[str, Any]:
     """An extension's declared fields, kinds and detectors, read without importing it."""
     if not _NAME_RE.fullmatch(name or ""):
@@ -1172,10 +1204,13 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
         # A small replay carries values in its first pass; a large one compares hashes and asks
         # again only for the cases that moved, so neither side loads its models twice when it can help it.
         upfront = len(payload_docs) <= _MAX_LISTED
-        before = _run_child({"mode": "replay", "root": tmp, "docs": payload_docs, "full": full,
-                             "values": upfront}, timeout=3600)
-        after = _run_child({"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full,
-                            "values": upfront}, timeout=3600)
+        shards = 1 if upfront else _shards(full)
+        both = _run_replay({
+            "base": {"mode": "replay", "root": tmp, "docs": payload_docs, "full": full, "values": upfront},
+            "checkout": {"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full,
+                         "values": upfront},
+        }, shards=shards, timeout=3600)
+        before, after = both["base"], both["checkout"]
         for side, result in (("base", before), ("checkout", after)):
             if result.get("failed"):
                 return {"ran": False, "reason": f"{side} replay {result['failed']}"}
@@ -1190,10 +1225,12 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
                 values[side] = {c["case_id"]: c.get("values", {}) for c in result["cases"]
                                 if c["case_id"] in set(moved_ids)}
         elif moved_docs:
-            for side, root in (("base", tmp), ("checkout", str(_REPO_ROOT))):
-                got = _run_child({"mode": "replay", "root": root, "docs": moved_docs, "full": full, "values": True},
-                                 timeout=3600)
-                values[side] = {c["case_id"]: c.get("values", {}) for c in got.get("cases", [])}
+            got = _run_replay({
+                "base": {"mode": "replay", "root": tmp, "docs": moved_docs, "full": full, "values": True},
+                "checkout": {"mode": "replay", "root": str(_REPO_ROOT), "docs": moved_docs, "full": full,
+                             "values": True},
+            }, shards=1, timeout=3600)
+            values = {side: {c["case_id"]: c.get("values", {}) for c in got[side]["cases"]} for side in got}
     old = {c["case_id"]: c for c in before["cases"]}
     columns, fields, changes = Counter(), Counter(), []
     column_cases: Dict[str, List[str]] = {}
@@ -1219,7 +1256,7 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
                             if case["case_id"] in values["checkout"] else {}})
     return {"ran": True, "base_commit": base[:9], "cases_compared": len(after["cases"]),
             "cases_changed": len(changes), "columns": dict(columns), "resolutions": dict(fields),
-            "cases_by_column": column_cases,
+            "cases_by_column": column_cases, "children_per_side": shards,
             "changes": changes[:_MAX_LISTED], "changes_truncated": len(changes) > _MAX_LISTED,
             "errors": {"base": before["errors"], "checkout": after["errors"]},
             "full": full,
