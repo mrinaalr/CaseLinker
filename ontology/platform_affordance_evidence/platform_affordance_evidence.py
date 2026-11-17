@@ -279,6 +279,36 @@ _GEN_AI_CONDUCT_RE = re.compile(
 )
 
 
+# Published tier rules. Records carry stated_vs_inferred under these rules unchanged.
+TIER_RULES_VERSION = "tiers-1"
+# Line-wrap repair (Decision 1, 2026-11-17). Press-release PDFs are hard-wrapped, so a
+# sentence like "...communicated with a 15-year-old\nvia Discord..." reaches classify_sentence
+# as two fragments and the verb never meets the platform name. The repair joins a single
+# line break that does not end a sentence (no . ! ? : before it); blank-line paragraph
+# breaks stay. Its tier is reported in stated_vs_inferred_linewrap, beside the published one.
+LINEWRAP_RULES_VERSION = "tiers-1+linewrap-1"
+_LINE_WRAP = re.compile(r"(?<![.!?:\n])[ \t]*\n(?!\n)[ \t]*")
+
+
+def repair_line_wraps(text: str) -> str:
+    """Join mid-sentence hard wraps; keep sentence-final and paragraph line breaks."""
+    return _LINE_WRAP.sub(" ", text or "")
+
+
+def linewrap_tiers(case_id: str, platforms: List[str], case_text: str,
+                   published: List[Dict[str, Any]]) -> Dict[str, str]:
+    """Tier per platform under tiers-1+linewrap-1: the better of the published tier and the
+    tier on repaired text. Additive by design: in a blind review all 10 sampled records the
+    plain repair demoted were real offender use (joined lines trip the comma-list heuristic)."""
+    repaired = {r["platform"]: r["stated_vs_inferred"]
+                for r in process_case(case_id, platforms, repair_line_wraps(case_text))["records"]}
+    out = {}
+    for r in published:
+        a, b = r["stated_vs_inferred"], repaired.get(r["platform"], "named_only")
+        out[r["platform"]] = a if TIER_RANK[a] >= TIER_RANK[b] else b
+    return out
+
+
 def psa_boundary(text: str) -> int:
     tl = text.lower()
     earliest = len(text)
@@ -973,6 +1003,9 @@ def main() -> None:
         if test_mode or i % 200 == 0:
             print(f"  processing {i}/{len(all_case_ids)}: {case_id}", flush=True)
         result = process_case(case_id, case_to_platforms[case_id], db_rows.get(case_id, ""))
+        lw = linewrap_tiers(case_id, case_to_platforms[case_id], db_rows.get(case_id, ""), result["records"])
+        for rec in result["records"]:
+            rec["stated_vs_inferred_linewrap"] = lw.get(rec["platform"], rec["stated_vs_inferred"])
         all_records.extend(result["records"])
         all_exclusions.extend(result["exclusions"])
         for gap in result["db_gaps"]:
@@ -995,6 +1028,10 @@ def main() -> None:
             "db_gaps": len(all_db_gaps),
             "text_cap_hits": text_cap_hits,
             "text_cap": TEXT_CAP,
+            "tier_rules_version": TIER_RULES_VERSION,
+            "linewrap_rules_version": LINEWRAP_RULES_VERSION,
+            "tier_field_note": ("stated_vs_inferred is the published tiers-1 tier; "
+                                "stated_vs_inferred_linewrap adds evidence recovered from hard-wrapped lines"),
             **(
                 {
                     "corpus_case_count": corpus_identity["case_count"],

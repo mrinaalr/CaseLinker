@@ -233,3 +233,29 @@ def test_generative_capability_needs_production_conduct():
     recs, _ = run(HEAD + "He shared child sexual abuse material with other users on Instagram.", ["Instagram"], year=2025)
     assert recs["Instagram"].available["GenerativeSynthesis"] is True
     assert recs["Instagram"].action_relevant["GenerativeSynthesis"] is False
+
+
+# --- Decision 1: line-wrap repair ---------------------------------------------------
+
+def test_additive_linewrap_never_demotes_in_committed_outputs():
+    t = json.loads((OUT / "tier_variants.json").read_text())
+    moves = t["variants"]["Bplus_unwrap_additive"]["record_moves_from_A"]
+    rank = {"dropped": -1, "named_only": 0, "inferred": 1, "stated": 2}
+    assert moves and all(rank[m.split("->")[1]] > rank[m.split("->")[0]] for m in moves), moves
+
+
+def test_published_denominator_is_the_original_rule():
+    inv = json.loads((OUT / "inventory.json").read_text())
+    t = json.loads((OUT / "tier_variants.json").read_text())["variants"]
+    s = inv["tiers"]["strict"]
+    assert s["cases_stated"] + s["cases_inferred"] == t["A_original"]["use_documented_cases"]
+    alt = inv["tiers_linewrap_alternative"]["strict"]
+    assert alt["cases_stated"] + alt["cases_inferred"] == t["Bplus_unwrap_additive"]["use_documented_cases"]
+
+
+def test_record_linewrap_tier_never_below_published():
+    import csv
+    rank = {"named_only": 0, "inferred": 1, "stated": 2}
+    with (OUT / "records.csv").open() as f:
+        for row in csv.DictReader(f):
+            assert rank[row["tier_linewrap"]] >= rank[row["tier"]], row["case_id"]

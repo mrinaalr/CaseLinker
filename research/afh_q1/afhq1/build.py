@@ -100,6 +100,9 @@ def inventory(cases: List[dict], records: List[pl.Record], excluded: List[dict],
     tech_only = {cid for cid, s in by_case_status.items() if "specific" not in s and "technology" in s}
     ambiguous_only = {cid for cid, s in by_case_status.items() if s <= {"ambiguous_alias", "generic"} and "ambiguous_alias" in s}
     broad = pl.tier_counts(records, lambda r: r.status != "excluded")
+    lw = [pl.Record(r.case_id, r.fingerprint, r.source, r.pub_year, r.platform, r.status, r.family,
+                    r.tier_linewrap or r.tier, r.text_found) for r in records]
+    strict_lw = pl.tier_counts(lw, lambda r: r.status == "specific")
     strict_t = pl.tier_counts(records, lambda r: r.status == "specific")
     analysed = pl.tier_counts(records, lambda r: r.status in ANALYSED_STATUSES)
     checks = {}
@@ -136,6 +139,8 @@ def inventory(cases: List[dict], records: List[pl.Record], excluded: List[dict],
             **{f"{k}.{c}": v for k, d in checks.items() for c, v in d.items()},
         },
         "tiers": {"broad": broad, "strict": strict_t, "analysed_for_affordances": analysed},
+        "tiers_linewrap_alternative": {"strict": strict_lw, "rules": "tiers-1+linewrap-1 (additive line-wrap repair); "
+                                       "not the published denominator until the authors adopt it"},
         "tier_definition": "case tier = best record tier (stated > inferred > named_only); tiers are mutually exclusive per case",
         "exclusions": {"platform_case_pairs": dict(sorted(excl_pairs.items())), "distinct_cases": dict(sorted(excl_cases.items()))},
         "labels": {s: sorted({r.platform for r in records if r.status == s}) for s in ("specific", "technology", "ambiguous_alias", "generic")},
@@ -498,6 +503,7 @@ def build(log=print) -> dict:
     dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
     dump("validation_round2.json", validation_round2(records))
+    dump("tier_variants.json", tier_variant_report(cases))
     dump("validation_sample.json", rv.sample_rows(records))
     write_records_csv(records)
     from . import report
@@ -661,4 +667,18 @@ def validation_round2(records: List[pl.Record]) -> dict:
         "strict_cases": len(strict),
         "note": "Estimate applies record-level review rates to case-level tiers; treat as approximate.",
     }
+    return out
+
+
+def tier_variant_report(cases: List[dict]) -> dict:
+    """Decision 1: four tier variants plus the additive repair, with the round-3 blind review."""
+    from . import tier_variants as tv
+    rows = tv.all_variants(cases, pl.platform_registry())
+    out = {"variants": tv.summarize(rows)}
+    sample = _csv("review_round3_tier_variants.csv")
+    if sample:
+        codes = {i: {"case_id": r["case_id"], "code": r["r3_code"]} for i, r in enumerate(sample)}
+        for x in sample:
+            x.update(rows.get((x["case_id"], x["platform"]), {}))
+        out["review"] = tv.review_analysis(sample, codes, rows, wilson)
     return out

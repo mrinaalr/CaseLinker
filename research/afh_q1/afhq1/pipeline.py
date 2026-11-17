@@ -39,8 +39,8 @@ _UNWRAP = re.compile(r"(?<![.!?:\n])\n(?!\n)")
 
 
 def unwrap(text: str) -> str:
-    """Join single line breaks inside sentences; keep paragraph breaks."""
-    return _UNWRAP.sub(" ", text or "")
+    """Join single line breaks inside sentences; keep paragraph breaks (the builder's repair)."""
+    return evidence_module().repair_line_wraps(text)
 
 
 def sensitivity_tiers(case_id: str, platforms: List[str], text: str) -> Dict[str, str]:
@@ -211,6 +211,7 @@ class Record:
     tier: str
     text_found: bool
     tier_sensitivity: str = ""
+    tier_linewrap: str = ""
     conduct: List[str] = field(default_factory=list)
     sentence_spans: List[Tuple[int, int]] = field(default_factory=list)
     available: Dict[str, bool] = field(default_factory=dict)
@@ -227,7 +228,8 @@ class Record:
         out = {
             "case_id": self.case_id, "fingerprint": self.fingerprint, "source": self.source,
             "pub_year": self.pub_year, "platform": self.platform, "status": self.status,
-            "family": self.family, "tier": self.tier, "tier_sensitivity": self.tier_sensitivity,
+            "family": self.family, "tier": self.tier, "tier_linewrap": self.tier_linewrap,
+            "tier_sensitivity": self.tier_sensitivity,
             "text_found": self.text_found,
             "conduct": "|".join(self.conduct),
             "sentence_spans": ";".join(f"{a}-{b}" for a, b in self.sentence_spans),
@@ -269,6 +271,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
                  for e in result["exclusions"]]
     offense, _psa, _cap = pe.offense_lines(case["text"])
     sens = sensitivity_tiers(case["id"], kept, case["text"])
+    linewrap = pe.linewrap_tiers(case["id"], kept, case["text"], result["records"])
     text = case["text"]
     lower_release = text.lower()
     topics = set(case["topics"])
@@ -280,6 +283,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
         rec = Record(case["id"], fingerprint, case["source"], case["pub_year"], p, info.status,
                      info.family, r["stated_vs_inferred"], not r.get("_text_not_found", False),
                      tier_sensitivity=sens.get(p, "dropped"),
+                     tier_linewrap=linewrap.get(p, r["stated_vs_inferred"]),
                      sentence_spans=_spans(text, sentences))
         conduct = []
         for s in sentences:
