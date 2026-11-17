@@ -7,7 +7,9 @@ case-uco-sdk:
   commit: 3455cc10682434fbff4ff95e6b9e887700287632   (what the tag peels to; verified with git ls-remote, 2026-11-16)
   package: case-uco 1.34.0 from the python/ subdirectory; depends on rdflib and cdo-local-uuid (pinned 0.5.0)
   install: requirements-research.txt (offline research build only; not in requirements.txt, not on Railway)
-  used by: trajectories/emit.py (CASEGraph, deterministic_id, Ref, canonical_hex_binary)
+  used by: state_machines/graphs/emit.py (CASEGraph, canonical_hex_binary) for every PACER evidence and
+           trajectory graph. The press-release corpus (ontology/pipeline/features_to_cac.py) is written
+           with rdflib directly, not with the SDK.
   ontologies: the SDK writes CASE/UCO 1.5.0 terms. CaseLinker validates against its own pinned
               copies (CAC_ONTOLOGY_VERSION), not against ontologies bundled in the SDK.
   known gaps: validation.graph.validate_graph_file resolves extensions from the SDK monorepo
