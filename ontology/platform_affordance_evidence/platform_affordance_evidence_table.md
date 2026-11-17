@@ -20,118 +20,118 @@
 | doj_ceos_2025_027 | grooming / soliciting minor | the charge on June 16, 2025, in the U | for Attempting to Coerce and Entice Minors Using WhatsApp... |
 | doj_ceos_2025_038 | distribution of CSAM |  | investigation into a user who was reported to be distribu... |
 | doj_ceos_2026_010 | contact and communication with victim |  | According to court documents and evidence presented at tr... |
-| doj_safe_childhood_2021_016 | contact and communication with victim |  | Autry created a group on Kik, an internet site where pers... |
+| doj_safe_childhood_2021_016 | contact and communication with victim |  | [PERSON] created a group on Kik, an internet site where p... |
 | doj_safe_childhood_2021_036 | distribution of CSAM |  | (28) distributed child pornography images and videos to o... |
 | doj_safe_childhood_2021_049 | contact and communication with victim | one count of receiving child pornography over the in... | pornography within the cell phone’s Kik communications. |
 | doj_safe_childhood_2021_077 | contact and communication with victim | a federal Indictment charging him with two counts of... | For five days in early 2018, the defendant used Kik messe... |
 | doj_safe_childhood_2021_099 | contact and communication with victim |  | in a Kik Messenger chat group that appeared to have an in... |
-| doj_safe_childhood_2022_035 | contact and communication with victim | Receipt and Distribution of Child Pornography was se... | Claire engaged in chat conversations with other KIK users. |
-| doj_safe_childhood_2022_047 | distribution of CSAM |  | his plea, Baca admitted that he had previously shared mat... |
-| doj_safe_childhood_2022_051 | distribution of CSAM | one count of distribution of child of child pornogra... | In May 2019, Laino utilized the Kik platform to upload an... |
+| doj_safe_childhood_2022_035 | contact and communication with victim | Receipt and Distribution of Child Pornography was se... | [PERSON] engaged in chat conversations with other KIK users. |
+| doj_safe_childhood_2022_047 | distribution of CSAM |  | his plea, [PERSON] admitted that he had previously shared... |
+| doj_safe_childhood_2022_051 | distribution of CSAM | one count of distribution of child of child pornogra... | In May 2019, [PERSON] utilized the Kik platform to upload... |
 | doj_safe_childhood_2022_057 | distribution of CSAM |  | Kik, a social media platform, reported that he was sharin... |
 | doj_safe_childhood_2022_082 | contact and communication with victim |  | According to court documents, Kik Messenger, an instant m... |
-| doj_safe_childhood_2022_086 | contact and communication with victim | distributing child pornography over the internet | Andries admitted that he sent a Kik message to an FBI Chi... |
-| doj_safe_childhood_2022_103 | distribution of CSAM | one count of receipt of child pornography | Tilahun also participated in a Kik chatroom where partici... |
-| doj_safe_childhood_2022_142 | contact and communication with victim |  | According to Livingood’s plea agreement, he used the Kik ... |
+| doj_safe_childhood_2022_086 | contact and communication with victim | distributing child pornography over the internet | [PERSON] admitted that he sent a Kik message to an FBI Ch... |
+| doj_safe_childhood_2022_103 | distribution of CSAM | one count of receipt of child pornography | [PERSON] also participated in a Kik chatroom where partic... |
+| doj_safe_childhood_2022_142 | contact and communication with victim |  | According to [PERSON] plea agreement, he used the Kik soc... |
 | doj_safe_childhood_2022_149 | distribution of CSAM | sharing child pornography in two states Publication ... | he started distributing child pornography from his cellph... |
-| doj_safe_childhood_2022_154 | used in offense (specific role unspecified) |  | in Australia also contained images and videos depicting K... |
+| doj_safe_childhood_2022_154 | used in offense (specific role unspecified) |  | in Australia also contained images and videos depicting [... |
 | doj_safe_childhood_2022_156 | distribution of CSAM | April 8, 2021 | MeWe and Kik, to solicit, receive and distribute images o... |
-| doj_safe_childhood_2022_240 | distribution of CSAM |  | Loewen admitted to using Kik Messenger to trade files of ... |
+| doj_safe_childhood_2022_240 | distribution of CSAM |  | [PERSON] admitted to using Kik Messenger to trade files o... |
 | doj_safe_childhood_2022_262 | used in offense (specific role unspecified) |  | were used to send images through the KIK application. |
-| doj_safe_childhood_2022_272 | distribution of CSAM |  | investigation revealed that Jensen received and distribut... |
+| doj_safe_childhood_2022_272 | distribution of CSAM |  | investigation revealed that [PERSON] received and distrib... |
 | doj_safe_childhood_2022_286 | platform-reported CSAM (distribution inferred) |  | This case came to the attention of law enforcement after ... |
 | doj_safe_childhood_2022_290 | contact and communication with victim |  | (“undercover TFO”) was conducting an investigation within... |
-| doj_safe_childhood_2022_330 | contact and communication with victim |  | Wilds messaged with a user of Kik, an online messaging |
+| doj_safe_childhood_2022_330 | contact and communication with victim |  | [PERSON] messaged with a user of Kik, an online messaging |
 | doj_safe_childhood_2022_357 | used in offense (specific role unspecified) |  | of these images, as well as other images and videos of ch... |
 | doj_safe_childhood_2022_367 | contact and communication with victim |  | messages on the Kik Messenger application with a 15-year-... |
 | doj_safe_childhood_2022_382 | contact and communication with victim |  | minor engaged in sexually explicit conduct over the Kik m... |
-| doj_safe_childhood_2022_395 | distribution of CSAM | one count of distribution of child of child pornogra... | In May 2019, Laino utilized the Kik platform to upload an... |
+| doj_safe_childhood_2022_395 | distribution of CSAM | one count of distribution of child of child pornogra... | In May 2019, [PERSON] utilized the Kik platform to upload... |
 | doj_safe_childhood_2022_409 | distribution of CSAM | using a minor to engage in sexually explicit conduct... | Kik social media messaging application to create and dist... |
 | doj_safe_childhood_2022_430 | distribution of CSAM |  | computer in West Virginia to Kik Messenger and shared it ... |
-| doj_safe_childhood_2022_461 | used in offense (specific role unspecified) |  | Santa Fe resident sentenced for receiving child pornograp... |
+| doj_safe_childhood_2022_461 | used in offense (specific role unspecified) |  | [PERSON] Fe resident sentenced for receiving child pornog... |
 | doj_safe_childhood_2022_464 | contact and communication with victim |  | had been chatting online for a number of years including ... |
 | doj_safe_childhood_2022_474 | distribution of CSAM |  | obtained subscriber information and IP login history asso... |
-| doj_safe_childhood_2022_485 | platform-reported CSAM (distribution inferred) |  | Findlay came to the attention of law enforcement when Kik... |
+| doj_safe_childhood_2022_485 | platform-reported CSAM (distribution inferred) |  | [PERSON] came to the attention of law enforcement when Ki... |
 | doj_safe_childhood_2022_507 | distribution of CSAM | a federal child pornography crime | distributed child pornography using Kik, an online messag... |
-| doj_safe_childhood_2022_518 | used in offense (specific role unspecified) | the offense Pickering, who is released on bond while... | pornography through the Kik social media application. |
+| doj_safe_childhood_2022_518 | used in offense (specific role unspecified) | the offense [PERSON], who is released on bond while ... | pornography through the Kik social media application. |
 | doj_safe_childhood_2022_531 | distribution of CSAM |  | Kik Messenger to receive and distribute videos of minors ... |
-| doj_safe_childhood_2023_011 | distribution of CSAM |  | According to court documents, in September 2020, Ramos us... |
+| doj_safe_childhood_2023_011 | distribution of CSAM |  | According to court documents, in September 2020, [PERSON]... |
 | doj_safe_childhood_2023_021 | contact and communication with victim | these charges at trial in August | images of child sexual abuse material on the Kik messagin... |
 | doj_safe_childhood_2023_047 | distribution of CSAM |  | pornography on Kik, an online file sharing service. |
 | doj_safe_childhood_2023_048 | contact and communication with victim | those charges on August 23, 2023 | with a chat group using the “Kik” app on his cellular phone. |
 | doj_safe_childhood_2023_052 | used in offense (specific role unspecified) | distributing child pornography over the internet | division using the Kik application and sent at least two ... |
 | doj_safe_childhood_2023_078 | platform-reported CSAM (distribution inferred) |  | Kik, a free online social media platform, reported that a... |
-| doj_safe_childhood_2023_109 | distribution of CSAM | one count of receipt of child pornography and one co... | Mileikis was identified as the owner of a Kik Messenger a... |
+| doj_safe_childhood_2023_109 | distribution of CSAM | one count of receipt of child pornography and one co... | [PERSON] was identified as the owner of a Kik Messenger a... |
 | doj_safe_childhood_2023_115 | used in offense (specific role unspecified) |  | later sent images containing child sexual abuse material ... |
 | doj_safe_childhood_2023_141 | distribution of CSAM | his offense on June 14, 2023 | The National Center for Missing and Exploited Children (N... |
-| doj_safe_childhood_2023_143 | contact and communication with victim | one count of distributing child pornography and one ... | Investigators also found Kik Messenger chats between John... |
+| doj_safe_childhood_2023_143 | contact and communication with victim | one count of distributing child pornography and one ... | Investigators also found Kik Messenger chats between [PER... |
 | doj_safe_childhood_2023_147 | platform-reported CSAM (distribution inferred) | one count of distributing child pornography | The Western Missouri Cyber Crimes Task Force also investi... |
-| doj_safe_childhood_2023_151 | distribution of CSAM | distribution and possession of child Avrett was iden... | Avrett was identified as the owner of a Kik messenger acc... |
+| doj_safe_childhood_2023_151 | distribution of CSAM | distribution and possession of child [PERSON] was id... | [PERSON] was identified as the owner of a Kik messenger a... |
 | doj_safe_childhood_2023_166 | distribution of CSAM |  | Protocol (IP) address that was used to distribute the vid... |
 | doj_safe_childhood_2023_168 | contact and communication with victim | distribution and transportation of child pornography... | images of child sexual abuse material on the Kik messagin... |
 | doj_safe_childhood_2023_177 | distribution of CSAM | possessing and accessing with intent to view child p... | same Kik Messenger username, indicating that the user had... |
-| doj_safe_childhood_2023_219 | used in offense (specific role unspecified) |  | conversation, Velez admitted to utilizing the username as... |
+| doj_safe_childhood_2023_219 | used in offense (specific role unspecified) |  | conversation, [PERSON] admitted to utilizing the username... |
 | doj_safe_childhood_2023_224 | distribution of CSAM | accessing with intent to view child pornography, an ... | about a Kik user who was distributing videos of child por... |
-| doj_safe_childhood_2023_227 | distribution of CSAM |  | Schoggins also sent child pornography via Kik Messenger a... |
+| doj_safe_childhood_2023_227 | distribution of CSAM |  | [PERSON] also sent child pornography via Kik Messenger an... |
 | doj_safe_childhood_2023_228 | distribution of CSAM |  | Internet-based, peer-to-peer (P2P) networks “Kik” and “Sk... |
 | doj_safe_childhood_2023_230 | contact and communication with victim | two counts of producing child pornography and one co... | victim while communicating with other persons over Kik, a... |
 | doj_safe_childhood_2023_263 | distribution of CSAM | two counts of possession of child pornography and on... | used Kik as well as other applications to distribute, rec... |
-| doj_safe_childhood_2023_278 | distribution of CSAM |  | On September 20, 2020, Stoolman distributed child pornogr... |
+| doj_safe_childhood_2023_278 | distribution of CSAM |  | On September 20, 2020, [PERSON] distributed child pornogr... |
 | doj_safe_childhood_2023_307 | distribution of CSAM | transporting child pornography | concerning the same Kik messenger username, indicating th... |
-| doj_safe_childhood_2023_317 | distribution of CSAM |  | found Wilson after Kik, a social media platform, reported... |
+| doj_safe_childhood_2023_317 | distribution of CSAM |  | found [PERSON] after Kik, a social media platform, report... |
 | doj_safe_childhood_2023_358 | distribution of CSAM |  | According to the report, a Kik user uploaded several vide... |
-| doj_safe_childhood_2023_362 | distribution of CSAM |  | 3, 2020, Ramos used Kik Messenger to distribute multiple |
+| doj_safe_childhood_2023_362 | distribution of CSAM |  | 3, 2020, [PERSON] used Kik Messenger to distribute multiple |
 | doj_safe_childhood_2023_370 | contact and communication with victim |  | to 200 images of child pornography to other individuals u... |
 | doj_safe_childhood_2023_408 | distribution of CSAM |  | Children (NCMEC) received a cybertip from KIK that videos... |
 | doj_safe_childhood_2023_425 | used in offense (specific role unspecified) |  | through the Kik application. |
 | doj_safe_childhood_2023_458 | distribution of CSAM |  | The jury voted to acquit Guard of distributing child porn... |
-| doj_safe_childhood_2023_462 | distribution of CSAM |  | Martin used a smartphone, the internet, and Kik Messenger... |
+| doj_safe_childhood_2023_462 | distribution of CSAM |  | [PERSON] used a smartphone, the internet, and Kik Messeng... |
 | doj_safe_childhood_2023_465 | contact and communication with victim |  | child victim while communicating with other persons over ... |
-| doj_safe_childhood_2023_471 | used in offense (specific role unspecified) |  | The investigation was triggered when Falkner sent six fil... |
+| doj_safe_childhood_2023_471 | used in offense (specific role unspecified) |  | The investigation was triggered when [PERSON] sent six fi... |
 | doj_safe_childhood_2023_472 | distribution of CSAM |  | distributing three child pornography videos via Kik from ... |
-| doj_safe_childhood_2023_498 | distribution of CSAM |  | whom Peterson had been exchanging sexually explicit messa... |
-| doj_safe_childhood_2023_501 | contact and communication with victim | receipt of child pornography | 25, 2019, HSI agents met with Riley who admitted to using... |
-| doj_safe_childhood_2023_508 | distribution of CSAM |  | By pleading guilty today, Gilmore admitted that he viewed... |
+| doj_safe_childhood_2023_498 | distribution of CSAM |  | whom [PERSON] had been exchanging sexually explicit messa... |
+| doj_safe_childhood_2023_501 | contact and communication with victim | receipt of child pornography | 25, 2019, HSI agents met with [PERSON] who admitted to us... |
+| doj_safe_childhood_2023_508 | distribution of CSAM |  | By pleading guilty today, [PERSON] admitted that he viewe... |
 | doj_safe_childhood_2023_513 | contact and communication with victim |  | messaging mobile app Kik to receive and possess the image... |
-| doj_safe_childhood_2023_519 | contact and communication with victim | one count of receipt and one count of possession of ... | that Tilahun used the Kik Messenger platform to receive a... |
+| doj_safe_childhood_2023_519 | contact and communication with victim | one count of receipt and one count of possession of ... | that [PERSON] used the Kik Messenger platform to receive ... |
 | doj_safe_childhood_2023_545 | distribution of CSAM |  | 11, 2020 and shared them with at least one other Kik user... |
 | doj_safe_childhood_2023_548 | contact and communication with victim | the charge on August 30, 2022 | sub-administrator of private chat groups on the Kik Messe... |
-| doj_safe_childhood_2023_553 | distribution of CSAM | distribution of child Eckert, who is released on a $... | MeWe and Kik, to solicit, receive and distribute images o... |
-| doj_safe_childhood_2024_017 | distribution of CSAM |  | uploaded from Johnson’s internet protocol (IP) address to... |
+| doj_safe_childhood_2023_553 | distribution of CSAM | distribution of child [PERSON], who is released on a... | MeWe and Kik, to solicit, receive and distribute images o... |
+| doj_safe_childhood_2024_017 | distribution of CSAM |  | uploaded from [PERSON]’s internet protocol (IP) address t... |
 | doj_safe_childhood_2024_072 | contact and communication with victim |  | engaging in sex acts with a minor on the Kik messaging an... |
 | doj_safe_childhood_2024_087 | distribution of CSAM | one count of distributing child pornography over the... | within one of these Kik groups, and also shared multiple ... |
-| doj_safe_childhood_2024_108 | platform-reported CSAM (distribution inferred) | first-degree sexual abuse involving a child in Kentu... | McAlpin was caught after the social media app Kik submitt... |
-| doj_safe_childhood_2024_149 | contact and communication with victim |  | Wilder participated in an online chat using the Kik appli... |
+| doj_safe_childhood_2024_108 | platform-reported CSAM (distribution inferred) | first-degree sexual abuse involving a child in Kentu... | [PERSON] was caught after the social media app Kik submit... |
+| doj_safe_childhood_2024_149 | contact and communication with victim |  | [PERSON] participated in an online chat using the Kik app... |
 | doj_safe_childhood_2024_162 | contact and communication with victim |  | chatted with others using the Kik application regarding c... |
 | doj_safe_childhood_2024_167 | used in offense (specific role unspecified) |  | admitted that the two close-up nude images that he had se... |
 | doj_safe_childhood_2024_197 | contact and communication with victim |  | were discussing engaging in sex acts with a minor on the ... |
-| doj_safe_childhood_2024_219 | used in offense (specific role unspecified) |  | During one of the Kik conversations, Bodfield sent a pict... |
+| doj_safe_childhood_2024_219 | used in offense (specific role unspecified) |  | During one of the Kik conversations, [PERSON] sent a pict... |
 | doj_safe_childhood_2024_227 | distribution of CSAM |  | been sharing child sex abuse material via a Kik Messenger... |
 | doj_safe_childhood_2024_256 | distribution of CSAM |  | downloading child pornography through Kik and uploading i... |
 | doj_safe_childhood_2024_260 | distribution of CSAM |  | enforcement investigation into an online group sharing im... |
 | doj_safe_childhood_2024_276 | platform-reported CSAM (distribution inferred) |  | Kik made two Cybertipline Reports to the National Center ... |
 | doj_safe_childhood_2024_280 | distribution of CSAM |  | investigation on Kik social media locating individuals tr... |
-| doj_safe_childhood_2024_325 | distribution of CSAM | the charge | a Kik account, later identified as belonging to Moffat, h... |
-| doj_safe_childhood_2024_342 | distribution of CSAM | one count of receipt of child pornography and one co... | Mileikis was identified as the owner of a Kik Messenger a... |
+| doj_safe_childhood_2024_325 | distribution of CSAM | the charge | a Kik account, later identified as belonging to [PERSON],... |
+| doj_safe_childhood_2024_342 | distribution of CSAM | one count of receipt of child pornography and one co... | [PERSON] was identified as the owner of a Kik Messenger a... |
 | doj_safe_childhood_2024_346 | contact and communication with victim | the charge in January of this year | that they did have a Kik account, and he then contacted t... |
-| doj_safe_childhood_2024_349 | distribution of CSAM |  | obtained another tip that Newberry had uploaded child sex... |
+| doj_safe_childhood_2024_349 | distribution of CSAM |  | obtained another tip that [PERSON] had uploaded child sex... |
 | doj_safe_childhood_2024_363 | platform-reported CSAM (distribution inferred) |  | Criminal Investigative Services (NCIS) after Kik social m... |
-| doj_safe_childhood_2024_368 | contact and communication with victim |  | According to court documents, in April 2022, Hauzer engag... |
+| doj_safe_childhood_2024_368 | contact and communication with victim |  | According to court documents, in April 2022, [PERSON] eng... |
 | doj_safe_childhood_2024_379 | platform-reported CSAM (distribution inferred) | one count of conspiracy to produce child pornography... | Kik, a free online social media platform, reported that a... |
 | doj_safe_childhood_2024_380 | distribution of CSAM | producing child pornography | taken pornographic photos of the child victim and traded ... |
 | doj_safe_childhood_2024_387 | distribution of CSAM |  | abuse material and distributed two images to others via K... |
 | doj_safe_childhood_2024_413 | used in offense (specific role unspecified) | distribution of child pornography | According to court documents and today's sentencing heari... |
 | doj_safe_childhood_2024_430 | distribution of CSAM | the charge in November 2023 | Exploited Children (NCMEC) received a CyberTipline Report... |
-| doj_safe_childhood_2024_432 | contact and communication with victim | one count of receiving and distributing child pornog... | An undercover FBI agent made contact with Beam through th... |
+| doj_safe_childhood_2024_432 | contact and communication with victim | one count of receiving and distributing child pornog... | An undercover FBI agent made contact with [PERSON] throug... |
 | doj_safe_childhood_2024_451 | distribution of CSAM |  | uploading child sexual abuse material to Kik. |
 | doj_safe_childhood_2024_460 | used in offense (specific role unspecified) | two counts of that charge in January 2024, and has b... | According to court documents and information disclosed at... |
 | doj_safe_childhood_2024_463 | distribution of CSAM | Receipt and Distribution of Child Pornography | his cellular phone to access the internet, and using his ... |
 | doj_safe_childhood_2024_475 | distribution of CSAM | Possession of Child Pornography | Exploited Children in relation to an upload of child porn... |
-| doj_safe_childhood_2024_478 | distribution of CSAM |  | Perkins, had uploaded files containing child pornography ... |
+| doj_safe_childhood_2024_478 | distribution of CSAM |  | [PERSON], had uploaded files containing child pornography... |
 | doj_safe_childhood_2024_479 | contact and communication with victim |  | online chat site and the agent responded that they did ha... |
 | doj_safe_childhood_2024_486 | distribution of CSAM | accessing with intent to view child pornography | about a Kik user who was distributing videos of child por... |
-| doj_safe_childhood_2024_493 | contact and communication with victim |  | Comstock, 36, was identified by the Federal Bureau of Inv... |
-| doj_safe_childhood_2024_513 | contact and communication with victim | one count of producing child pornography and one cou... | Wirth entered chat rooms on Kik, which provided a forum f... |
+| doj_safe_childhood_2024_493 | contact and communication with victim |  | [PERSON], 36, was identified by the Federal Bureau of Inv... |
+| doj_safe_childhood_2024_513 | contact and communication with victim | one count of producing child pornography and one cou... | [PERSON] entered chat rooms on Kik, which provided a foru... |
 | doj_safe_childhood_2025_017 | distribution of CSAM | failure to register, and an arrest warrant was On Ju... | He admitted using a Kik social media account to download,... |
 | doj_safe_childhood_2025_156 | contact and communication with victim | both counts in May, waiving prosecution by indictment | Kik, an account named “freakyfam69,” was using the app to... |
 | doj_safe_childhood_2025_175 | distribution of CSAM |  | shared with another user or group of users on the Kik pla... |
@@ -139,52 +139,52 @@
 | doj_safe_childhood_2025_256 | contact and communication with victim | one count of distribution of child pornography and o... | engaged in a Kik chat conversation with an undercover age... |
 | doj_safe_childhood_2025_279 | contact and communication with victim | a two-count superseding information charging him wit... | media personas, including several on KIK messenger and Ti... |
 | doj_safe_childhood_2025_290 | distribution of CSAM |  | (NCMEC) regarding two accounts on the Kik messaging app t... |
-| doj_safe_childhood_2025_294 | distribution of CSAM | one count of distribution of child pornography | In June 2021, Hiskey used his account on a messaging app ... |
+| doj_safe_childhood_2025_294 | distribution of CSAM | one count of distribution of child pornography | In June 2021, [PERSON] used his account on a messaging ap... |
 | doj_safe_childhood_2025_308 | distribution of CSAM |  | participation in a chat group on the Kik messaging app of... |
-| doj_safe_childhood_2025_319 | distribution of CSAM | one count of receipt and distribution of child porno... | According to court documents, Collard admitted that he us... |
+| doj_safe_childhood_2025_319 | distribution of CSAM | one count of receipt and distribution of child porno... | According to court documents, [PERSON] admitted that he u... |
 | doj_safe_childhood_2025_346 | distribution of CSAM | one count of possession of child pornography on Octo... | with the username “northernboy35” had used the Kik messen... |
 | doj_safe_childhood_2025_348 | distribution of CSAM |  | Children (NCMEC) indicating a KIK user uploaded a video d... |
 | doj_safe_childhood_2025_388 | distribution of CSAM |  | to the National Center for Exploited & Missing Children r... |
-| doj_safe_childhood_2025_391 | contact and communication with victim | one count of distribution of child pornography and o... | Specifically, Driscoll engaged in a Kik on-line chat conv... |
+| doj_safe_childhood_2025_391 | contact and communication with victim | one count of distribution of child pornography and o... | Specifically, [PERSON] engaged in a Kik on-line chat conv... |
 | doj_safe_childhood_2025_401 | distribution of CSAM | a one-count Information charging him with accessing ... | videos matched the file names from media files shared by ... |
-| doj_safe_childhood_2025_418 | platform-reported CSAM (distribution inferred) |  | on the social media platform Kik and discovered Burton wa... |
-| doj_safe_childhood_2025_419 | contact and communication with victim | receiving child pornography | Clutts also admitted that he engaged in chats with anothe... |
-| doj_safe_childhood_2026_037 | contact and communication with victim |  | While out on pre-trial release in that case, Rice began c... |
+| doj_safe_childhood_2025_418 | platform-reported CSAM (distribution inferred) |  | on the social media platform Kik and discovered [PERSON] ... |
+| doj_safe_childhood_2025_419 | contact and communication with victim | receiving child pornography | [PERSON] also admitted that he engaged in chats with anot... |
+| doj_safe_childhood_2026_037 | contact and communication with victim |  | While out on pre-trial release in that case, [PERSON] beg... |
 | doj_safe_childhood_2026_079 | distribution of CSAM |  | Account data for the Kik application used to distribute t... |
-| doj_safe_childhood_2026_089 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | In August 2023, Myers was identified as the owner of a Ki... |
-| doj_safe_childhood_2026_138 | contact and communication with victim |  | undercover agent with HSI was contacted by KiK user “Loud... |
+| doj_safe_childhood_2026_089 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | In August 2023, [PERSON] was identified as the owner of a... |
+| doj_safe_childhood_2026_138 | contact and communication with victim |  | undercover agent with HSI was contacted by KiK user “[PER... |
 | doj_safe_childhood_2026_140 | distribution of CSAM | distribution of child sexual abuse material after he... | years in federal prison after pleading guilty to distribu... |
-| doj_safe_childhood_2026_141 | distribution of CSAM |  | According to court documents, Cox traded child sexual abu... |
+| doj_safe_childhood_2026_141 | distribution of CSAM |  | According to court documents, [PERSON] traded child sexua... |
 | doj_safe_childhood_2026_160 | distribution of CSAM |  | According to the CyberTip, a Kik user, later identified a... |
 | doj_safe_childhood_2026_207 | distribution of CSAM |  | Carolina, where he uploaded 47 files of child pornography... |
 | doj_safe_childhood_2026_213 | distribution of CSAM |  | cyber tipline report from Kik regarding the uploading of ... |
-| doj_safe_childhood_2026_214 | distribution of CSAM | sharing over 60 videos depicting child pornography u... | Brummond pleaded guilty to sharing over 60 videos depicti... |
+| doj_safe_childhood_2026_214 | distribution of CSAM | sharing over 60 videos depicting child pornography u... | [PERSON] pleaded guilty to sharing over 60 videos depicti... |
 | doj_safe_childhood_2026_218 | distribution of CSAM | distribution and possession of child pornography | A review of the electronic devices revealed child pornogr... |
 | doj_safe_childhood_2026_227 | used in offense (specific role unspecified) | this crime on February 9, 2026 | Children (NCMEC) received tips that Kik accounts associat... |
 | doj_safe_childhood_2026_266 | contact and communication with victim | one count of distribution of child pornography | chat room dedicated to child sexual abuse on the Kik Mess... |
-| doj_safe_childhood_2026_269 | grooming / soliciting minor |  | that through his chats with other KIK users, Smith was in... |
+| doj_safe_childhood_2026_269 | grooming / soliciting minor |  | that through his chats with other KIK users, [PERSON] was... |
 | doj_safe_childhood_2026_279 | used in offense (specific role unspecified) |  | made two videos showing her vagina and sent both videos t... |
-| doj_safe_childhood_2026_296 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | In August 2023, Myers was identified as the owner of a Ki... |
+| doj_safe_childhood_2026_296 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | In August 2023, [PERSON] was identified as the owner of a... |
 | doj_safe_childhood_2026_335 | distribution of CSAM | production of child pornography | video files uploaded to the KIK social media platform on ... |
 | doj_safe_childhood_2026_353 | distribution of CSAM |  | regarding user accounts on the Kik online platform that h... |
 | fresno_so_2014_002 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY AND “SEXTORTION”-REL... | After the exchange of information back and forth via Kik,... |
-| fresno_so_2015_001 | contact and communication with victim | Multiple Sex Abuse & Child Pornography Charges Publi... | Ricardo Carrillo contacted the boy through apps called “W... |
-| ice_2026_006 | contact and communication with victim |  | uncovered Kik messenger chats with Miller containing imag... |
+| fresno_so_2015_001 | contact and communication with victim | Multiple Sex Abuse & Child Pornography Charges Publi... | [PERSON] contacted the boy through apps called “Whisper” ... |
+| ice_2026_006 | contact and communication with victim |  | uncovered Kik messenger chats with [PERSON] containing im... |
 | ncis_2022_001 | CSAM production | receiving and possessing thousands of images and vid... | obtain CSAM from a CSAM trafficker on Kik, who was later ... |
 | ncmec_2022_008 | distribution of CSAM |  | KIK Messenger App to share adult pornography with other K... |
-| ncmec_2022_017 | distribution of CSAM | child VALENTINE — A high school math teacher who had... | was doing so — Ackley admitted that it was him, and that ... |
+| ncmec_2022_017 | distribution of CSAM | child VALENTINE — A high school math teacher who had... | was doing so — [PERSON] admitted that it was him, and tha... |
 | ncmec_2022_020 | platform-reported CSAM (distribution inferred) | suspicion of three counts of sexual exploitation of ... | tip to the Boulder County Sheriff’s Office that an app ca... |
 | ncmec_2022_110 | distribution of CSAM | Thursday, according to the Fort Myers Police Department | Fort Myers police have arrested a man they say was sharin... |
 | ncmec_2022_116 | distribution of CSAM | child pornography," he said | child pornography video files were uploaded to Kik Messen... |
 | ncmec_2022_122 | CSAM production | 10 counts of child exploitation | produced using the Kik messenger app and the cloud storag... |
-| ncmec_2022_151 | distribution of CSAM | an accusation of possessing Curtis Schmitt was appoi... | Exploited Children (NCMEC) was first tipped off about a K... |
-| ncmec_2022_172 | contact and communication with victim | more child porn-related crimes Sanders August 24, 20... | connected Hoppock to messages sent last year on the Kik a... |
+| ncmec_2022_151 | distribution of CSAM | an accusation of possessing [PERSON] was appointed b... | Exploited Children (NCMEC) was first tipped off about a K... |
+| ncmec_2022_172 | contact and communication with victim | more child porn-related crimes Sanders August 24, 20... | connected [PERSON] to messages sent last year on the Kik ... |
 | ncmec_2022_218 | distribution of CSAM | one count promoting a sexual performance by a child ... | shared child pornography on Kik. |
 | ncmec_2022_240 | platform-reported CSAM (distribution inferred) | possession of child pornography, according to the Co... | The center said the information it reported to authoritie... |
-| ncmec_2022_261 | distribution of CSAM | Child Pornography Offenses Thursday, May 12, 2022 Va... | Flewellyn created both Kik accounts and used them to dist... |
+| ncmec_2022_261 | distribution of CSAM | Child Pornography Offenses Thursday, May 12, 2022 [P... | [PERSON] created both Kik accounts and used them to distr... |
 | ncmec_2022_338 | distribution of CSAM |  | Kik, a chat app, reported a user uploaded and shared seve... |
 | ncmec_2022_355 | distribution of CSAM | one count promoting a sexual performance by a child ... | shared child pornography on Kik. |
-| ncmec_2022_365 | platform-reported CSAM (distribution inferred) | child pornography charges Bedord – A Bedford man was... | pornography reported by MediaLab/Kik. |
+| ncmec_2022_365 | platform-reported CSAM (distribution inferred) | child pornography charges [PERSON] – A Bedford man w... | pornography reported by MediaLab/Kik. |
 | ncmec_2022_366 | CSAM production | 18 separate counts of sexual exploitation of a minor... | compelled the owners of Kik Messenger, Medialab AI Inc., ... |
 | ncmec_2022_415 | contact and communication with victim | a dozen counts including pandering obscenity, import... | separate files of child pornography to a messaging platfo... |
 | ncmec_2022_419 | used in offense (specific role unspecified) | child porn By Dakota News Now staff Published: SIOUX... | Kik to confirm that this user sent at least five media fi... |
@@ -199,14 +199,14 @@
 | ncmec_2022_547 | contact and communication with victim |  | home and found KIK accounts, one with several open chats ... |
 | ncmec_2023_036 | used in offense (specific role unspecified) | his crimes | arrested after he allegedly sent child sexual abuse mater... |
 | ncmec_2023_208 | contact and communication with victim | 12 counts of the promotion of obscene material, afte... | messaging platform Kik. |
-| ncmec_2023_222 | contact and communication with victim |  | Daniels began communicating online with a 13-year-old gir... |
+| ncmec_2023_222 | contact and communication with victim |  | [PERSON] began communicating online with a 13-year-old gi... |
 | ncmec_2023_224 | distribution of CSAM |  | material via Kik and stored it on a flash drive for easie... |
 | ncmec_2023_250 | grooming / soliciting minor |  | Kik messages, he solicited and agreed to pay $100 to the ... |
 | ncmec_2023_428 | distribution of CSAM | Production of child pornography | Kik Messenger had uploaded suspected images of child sexu... |
 | ncmec_2023_585 | distribution of CSAM | 25 counts of felony child pornography possession and... | individual uploading 98 files to the messaging platform Kik. |
 | ncmec_2023_656 | used in offense (specific role unspecified) |  | According to the sheriff’s office, the Kik Messenger app ... |
 | ncmec_2024_1018 | contact and communication with victim | SEXUAL EXPLOITATION OF A MINOR https://www | for Missing and Exploited Children about alleged criminal... |
-| ncmec_2024_1023 | contact and communication with victim |  | county/#:~:text=Ricky%20Lane%20Shook%2C%2063%2C%20was,on%... |
+| ncmec_2024_1023 | contact and communication with victim |  | county/#:~:text=Ricky%20Lane%20[PERSON]%2C%2063%2C%20was,... |
 | ncmec_2024_1092 | contact and communication with victim | the three reduced charges and admitted to “knowingly... | user on Kik.com, an online chat platform, admitted to sex... |
 | ncmec_2024_1186 | platform-reported CSAM (distribution inferred) |  | An investigator reported there were more than 200 photos ... |
 | ncmec_2024_1200 | distribution of CSAM |  | Investigators received a tip from Kik to alert them to po... |
@@ -216,21 +216,21 @@
 | ncmec_2024_176 | platform-reported CSAM (distribution inferred) | 15 counts of Possession of an Obscene Sexual Perform... | Authorities said Kik reported the account to NCMEC. |
 | ncmec_2024_218 | used in offense (specific role unspecified) |  | He also stated he used to have a Kik account “a long time... |
 | ncmec_2024_238 | distribution of CSAM |  | exchange different website video links with other Kik use... |
-| ncmec_2024_256 | contact and communication with victim |  | During an interview, Hammond reportedly admitted he had s... |
+| ncmec_2024_256 | contact and communication with victim |  | During an interview, [PERSON] reportedly admitted he had ... |
 | ncmec_2024_289 | distribution of CSAM | 10 COUNTS OF CHILD PORN Post Register Esssential New... | uploaded to the social media platform Kik. |
-| ncmec_2024_344 | used in offense (specific role unspecified) |  | In two days, Cruz allegedly disseminated more than 10 vid... |
+| ncmec_2024_344 | used in offense (specific role unspecified) |  | In two days, [PERSON] allegedly disseminated more than 10... |
 | ncmec_2024_348 | distribution of CSAM |  | sexual assault material of children under 13 were shared ... |
 | ncmec_2024_381 | contact and communication with victim | five counts of child exploitation (a level 4 felony)... | The detective reviewed some 10,000 Kik chats. |
-| ncmec_2024_391 | contact and communication with victim | seven counts of child exploitation (six of which are... | According to police documents, “YuitoKirigaya” also start... |
-| ncmec_2024_408 | distribution of CSAM | child exploitation as a Level 4 felony, child exploi... | Fishel is accused of sharing child porn with other users ... |
+| ncmec_2024_391 | contact and communication with victim | seven counts of child exploitation (six of which are... | According to police documents, “[PERSON]” also started a ... |
+| ncmec_2024_408 | distribution of CSAM | child exploitation as a Level 4 felony, child exploi... | [PERSON] is accused of sharing child porn with other user... |
 | ncmec_2024_416 | distribution of CSAM | the following: Child Exploitation, a Level 5 Felony ... | the suspect may have uploaded nine files of child pornogr... |
 | ncmec_2024_434 | distribution of CSAM | DISTRIBUTING CHILD EXPLOITATION MATERIAL Clinton Cou... | information from KiK Media Labs that indicated that a loc... |
 | ncmec_2024_452 | distribution of CSAM | Wednesday after an Internet Crimes Against Children ... | juveniles in various sexual poses and activities” that we... |
-| ncmec_2024_553 | distribution of CSAM | criminal sexual conduct with a child under 15 pleade... | According to court documents, Jeter told police he was pa... |
+| ncmec_2024_553 | distribution of CSAM | criminal sexual conduct with a child under 15 pleade... | According to court documents, [PERSON] told police he was... |
 | ncmec_2024_582 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY https://www | which indicated someone in Miller County was using the on... |
 | ncmec_2024_587 | contact and communication with victim |  | A singular IP address was tied to accounts on KIK, Snapch... |
-| ncmec_2024_593 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY https://www | Exploited Children that indicated Hare was distributing c... |
-| ncmec_2024_595 | distribution of CSAM |  | that Joseph Seiffert (age not provided) had been using th... |
+| ncmec_2024_593 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY https://www | Exploited Children that indicated [PERSON] was distributi... |
+| ncmec_2024_595 | distribution of CSAM |  | that [PERSON] (age not provided) had been using the messe... |
 | ncmec_2024_597 | distribution of CSAM | PROMOTING CHILD PORNOGRAPHY KOMU 8 Digital Content E... | media app KIK to communicate with other users and to exch... |
 | ncmec_2024_600 | distribution of CSAM |  | sharing child sexual abuse material on the Internet Appli... |
 | ncmec_2024_603 | contact and communication with victim | POSSESSION OF CHILD PORNOGRAPHY Saint Louis County P... | files of child pornography via the Kik private chat message. |
@@ -242,50 +242,50 @@
 | ncmec_2024_736 | contact and communication with victim | DISTRIBUTING CHILD PORNOGRAPHY, FEDERAL OFFICIALS SA... | with an undercover law enforcement officer on the messagi... |
 | ncmec_2024_775 | distribution of CSAM | 10 counts of second-degree sexual exploitation of a ... | A Fuquay-Varina man is accused of distributing child porn... |
 | ncmec_2024_827 | distribution of CSAM | 10 counts of possession of child pornography Thursday | child pornography was being uploaded to Kik, a messaging ... |
-| ncmec_2024_837 | contact and communication with victim | four felony counts, including Promoting or Directing... | They believe Richter had been sending the messages using ... |
+| ncmec_2024_837 | contact and communication with victim | four felony counts, including Promoting or Directing... | They believe [PERSON] had been sending the messages using... |
 | ncmec_2024_842 | distribution of CSAM | multiple counts of child pornography | Investigations section after a report of a person sharing... |
-| ncmec_2024_939 | distribution of CSAM | the distribution of child pornography | Brian Zenszer, 43, is accused of using the Kik app to sha... |
+| ncmec_2024_939 | distribution of CSAM | the distribution of child pornography | [PERSON], 43, is accused of using the Kik app to share im... |
 | ncmec_2024_976 | distribution of CSAM | single counts of disseminating photo/film of child s... | advocacy group alleging an account reporting a user from ... |
 | ncmec_2024_977 | contact and communication with victim |  | received from Kik regarding this account included image a... |
 | ncmec_2024_979 | contact and communication with victim | dozens of crimes related to child pornography, accor... | online via the Kik messaging platform. |
 | ncmec_2025_030 | distribution of CSAM |  | been addicted to child porn for the last four years, and ... |
-| ncmec_2025_043 | platform-reported CSAM (distribution inferred) | UPLOADING AND DOWNLOADING CHILD SEXUAL https://katv | CyberTip reports on Walker from platforms including Kik, ... |
-| ncmec_2025_057 | distribution of CSAM | eight counts of distributing, possessing and viewing... | Urena distributed four videos on the messenger app, Kik, ... |
+| ncmec_2025_043 | platform-reported CSAM (distribution inferred) | UPLOADING AND DOWNLOADING CHILD SEXUAL https://katv | CyberTip reports on [PERSON] from platforms including Kik... |
+| ncmec_2025_057 | distribution of CSAM | eight counts of distributing, possessing and viewing... | [PERSON] distributed four videos on the messenger app, Ki... |
 | ncmec_2025_058 | platform-reported CSAM (distribution inferred) |  | Five other cybertips were reported with similar content c... |
-| ncmec_2025_061 | distribution of CSAM | CHILD SEX CRIME CHARGE ALLOWED ON SPRINGDALE By Loga... | that CSAM was being shared over the mobile app Kik by a u... |
-| ncmec_2025_087 | platform-reported CSAM (distribution inferred) | HOARDING CHILD SEXUAL ABUSE IMAGES USING Community F... | Police reported finding 1,312 CSAM images across Montoya’... |
-| ncmec_2025_1000 | platform-reported CSAM (distribution inferred) | sexual assault of a minor and is a registered sex of... | Cruz reportedly admitted to owning child sex abuse materi... |
-| ncmec_2025_1012 | distribution of CSAM |  | The sheriff’s office said Michael Castagnino uploaded chi... |
+| ncmec_2025_061 | distribution of CSAM | CHILD SEX CRIME CHARGE ALLOWED ON SPRINGDALE By [PER... | that CSAM was being shared over the mobile app Kik by a u... |
+| ncmec_2025_087 | platform-reported CSAM (distribution inferred) | HOARDING CHILD SEXUAL ABUSE IMAGES USING Community F... | Police reported finding 1,312 CSAM images across [PERSON]... |
+| ncmec_2025_1000 | platform-reported CSAM (distribution inferred) | sexual assault of a minor and is a registered sex of... | [PERSON] reportedly admitted to owning child sex abuse ma... |
+| ncmec_2025_1012 | distribution of CSAM |  | The sheriff’s office said [PERSON] uploaded child pornogr... |
 | ncmec_2025_1017 | used in offense (specific role unspecified) | POSSESSION OF CHILD PORNOGRAPHY, COCAINE Washington ... | were sent to a user on the social media app Kik. |
 | ncmec_2025_1024 | distribution of CSAM |  | Kik is a file-sharing and social media platform that nota... |
 | ncmec_2025_1025 | distribution of CSAM |  | infants, toddlers and prepubescent children, some of whic... |
-| ncmec_2025_1032 | contact and communication with victim | eight counts of sexual exploitation of a child — fou... | found messages sent to Hayes on Kik asking him to provide... |
+| ncmec_2025_1032 | contact and communication with victim | eight counts of sexual exploitation of a child — fou... | found messages sent to [PERSON] on Kik asking him to prov... |
 | ncmec_2025_1033 | distribution of CSAM |  | uploaded and shared in a private chat with another user o... |
 | ncmec_2025_137 | contact and communication with victim | possession of child sexual abuse material in the fir... | forwarded a cyber tip to Stamford police outlining that a... |
 | ncmec_2025_156 | contact and communication with victim | FEDERAL CHILD PORN CHARGES AFTER FBI RAIDS https://www | Investigators found the Kik user had participated in grou... |
-| ncmec_2025_157 | platform-reported CSAM (distribution inferred) |  | Curinton admitted that the phone numbers connected to the... |
-| ncmec_2025_161 | contact and communication with victim | 82 charges stemming for an investigation in which de... | year-old Christopher Hayes’ alleged actions on the platfo... |
+| ncmec_2025_157 | platform-reported CSAM (distribution inferred) |  | [PERSON] admitted that the phone numbers connected to the... |
+| ncmec_2025_161 | contact and communication with victim | 82 charges stemming for an investigation in which de... | year-old [PERSON] alleged actions on the platform Kik Mes... |
 | ncmec_2025_170 | distribution of CSAM |  | Children that an unknown suspect uploaded five files of s... |
-| ncmec_2025_180 | used in offense (specific role unspecified) |  | Investigators say Dupree-Turpie confirmed that he had uti... |
+| ncmec_2025_180 | used in offense (specific role unspecified) |  | Investigators say [PERSON] confirmed that he had utilized... |
 | ncmec_2025_197 | distribution of CSAM |  | 28, had uploaded “multiple videos” depicting child sexual... |
 | ncmec_2025_206 | platform-reported CSAM (distribution inferred) | CHILD PORN UPLOADED THROUGH KIK ACCOUNT https://www | social media platform Kik reported a tip about 26 files b... |
 | ncmec_2025_212 | distribution of CSAM |  | https://cbs12.com/news/local/kik-app-maker-reports-jupite... |
-| ncmec_2025_216 | distribution of CSAM | MULTIPLE COUNTS OF CHILD PORNOGRAPHY POSSESSION AND ... | Authorities later confirmed that Recinos distributed at l... |
+| ncmec_2025_216 | distribution of CSAM | MULTIPLE COUNTS OF CHILD PORNOGRAPHY POSSESSION AND ... | Authorities later confirmed that [PERSON] distributed at ... |
 | ncmec_2025_229 | distribution of CSAM |  | Missing and Endangered Children (NCMEC) about a Kik accou... |
 | ncmec_2025_249 | contact and communication with victim | 14 COUNTS OF CHILD https://www | The tips warned of a possible child pornography case from... |
 | ncmec_2025_255 | platform-reported CSAM (distribution inferred) |  | The offender admitted to owning the two Kik Messenger acc... |
-| ncmec_2025_262 | distribution of CSAM | distributing child pornography, and David Martin Gar... | received a tip from Kik /MediaLab, a social media platfor... |
-| ncmec_2025_263 | distribution of CSAM |  | An account allegedly belonging to Forcum on Kik called “B... |
-| ncmec_2025_264 | distribution of CSAM | the following offenses: Seven counts of first-degree... | 5, the FBI used a search warrant to get all of Forcum’s a... |
+| ncmec_2025_262 | distribution of CSAM | distributing child pornography, and [PERSON], 33, wh... | received a tip from Kik /MediaLab, a social media platfor... |
+| ncmec_2025_263 | distribution of CSAM |  | An account allegedly belonging to [PERSON] on Kik called ... |
+| ncmec_2025_264 | distribution of CSAM | the following offenses: Seven counts of first-degree... | 5, the FBI used a search warrant to get all of [PERSON]’s... |
 | ncmec_2025_272 | distribution of CSAM | 13 COUNTS OF POSSESSING CHILD PORNOGRAPHY https://www | The cyber tips detail that two Kik accounts had uploaded ... |
 | ncmec_2025_273 | distribution of CSAM | these crimes, this does not necessarily mean he comm... | messaging platform Kik on April 23, 2025, regarding the u... |
 | ncmec_2025_281 | distribution of CSAM | four counts of felony knowingly distributing child s... | uploaded and distributed multiple files of child pornogra... |
 | ncmec_2025_288 | contact and communication with victim | eight felony counts of possession and two counts of ... | National Center for Missing and Exploited Children that s... |
 | ncmec_2025_298 | contact and communication with victim | disseminating three such files on Sept | Center for Missing and Exploited Children (NCMEC) from th... |
-| ncmec_2025_301 | used in offense (specific role unspecified) | possessing child sexual Libor Ustrnul, 43, of Mundel... | through the Kik website. |
+| ncmec_2025_301 | used in offense (specific role unspecified) | possessing child sexual [PERSON], 43, of Mundelein, ... | through the Kik website. |
 | ncmec_2025_311 | distribution of CSAM | two counts of possession of child pornography (Level... | that images containing child pornography had been shared ... |
 | ncmec_2025_314 | distribution of CSAM |  | Through the investigation, it was determined that the use... |
-| ncmec_2025_335 | platform-reported CSAM (distribution inferred) | a Level 4 felony, Wadsworth could face up to 12 year... | In June 2024, the National Center for Missing and Exploit... |
+| ncmec_2025_335 | platform-reported CSAM (distribution inferred) | a Level 4 felony, [PERSON] could face up to 12 years... | In June 2024, the National Center for Missing and Exploit... |
 | ncmec_2025_341 | distribution of CSAM | CHARGES RELATED TO CHILD https://www | 2024, files of child sex abuse material were uploaded to ... |
 | ncmec_2025_343 | distribution of CSAM |  | that on May 6, 2022, a Kik user was reported to have uplo... |
 | ncmec_2025_348 | platform-reported CSAM (distribution inferred) |  | Kik reported the |
@@ -294,13 +294,13 @@
 | ncmec_2025_547 | used in offense (specific role unspecified) |  | sent the video in question to another KIK user. |
 | ncmec_2025_561 | distribution of CSAM | SEXUAL ABUSE IMAGES WAS INVESTIGATED IN 2022 https:/... | Kik indicated multiple .jpgs and .mp4 videos were uploade... |
 | ncmec_2025_562 | distribution of CSAM |  | accusing him of sharing 10 .jpgs and one .mph4 video on Kik. |
-| ncmec_2025_576 | used in offense (specific role unspecified) | POSSESSION AND DISTRIBUTION OF CHILD PORNOGRAPHY htt... | The Ocean County Prosecutors Office says Mario Calabrese ... |
+| ncmec_2025_576 | used in offense (specific role unspecified) | POSSESSION AND DISTRIBUTION OF CHILD PORNOGRAPHY htt... | The Ocean County Prosecutors Office says [PERSON] receive... |
 | ncmec_2025_582 | used in offense (specific role unspecified) | DISTRIBUTION OF CHILD SEXUAL ABUSE MATERIAL AND POSS... | sending/receiving images of child pornography from the in... |
 | ncmec_2025_583 | distribution of CSAM | CHILD SEXUAL ABUSE MATERIAL IN AUGUST 2025 Office of... | Instagram and Kik accounts used to possess and distribute... |
 | ncmec_2025_584 | distribution of CSAM | crimes are presumed innocent until proven guilty bey... | a Kik account used to possess and distribute CSAM. |
 | ncmec_2025_589 | distribution of CSAM | 6 felonies A Farmington man is facing six child sex ... | flagged the teen’s Kik, Snapchat and X accounts for alleg... |
-| ncmec_2025_683 | distribution of CSAM | 10 COUNTS OF SEX By Ashley Anderson, Ben Bokun https... | of the alleged crimes state that he distributed child por... |
-| ncmec_2025_684 | distribution of CSAM | 10 counts of second-degree exploitation of a minor | Alexander Chay, was viewing and distributing child pornog... |
+| ncmec_2025_683 | distribution of CSAM | 10 COUNTS OF SEX By [PERSON], [PERSON] https://myfox8 | of the alleged crimes state that he distributed child por... |
+| ncmec_2025_684 | distribution of CSAM | 10 counts of second-degree exploitation of a minor | [PERSON], was viewing and distributing child pornography ... |
 | ncmec_2025_697 | distribution of CSAM | exchanging sexual videos of Bismarck police officers... | MAN ARRESTED, CHARGED FOR EXCHANGING CHILD SEXUAL ABUSE M... |
 | ncmec_2025_705 | contact and communication with victim | two counts of promoting or directing a sexual perfor... | received a CyberTip report from a user of the messaging a... |
 | ncmec_2025_713 | contact and communication with victim | promoting or directing an obscene sexual performance... | via the instant messaging app Kik on Nov. |
@@ -316,11 +316,11 @@
 | ncmec_2025_784 | distribution of CSAM | manufacturing and disseminating child sexual abuse m... | The first CyberTip indicated that a user on the messaging... |
 | ncmec_2025_785 | contact and communication with victim | HAVING CHILD SEXUAL ABUSE M | The investigation also found that the Kik user sent messa... |
 | ncmec_2025_788 | distribution of CSAM | one count each of trafficking in individuals, crimin... | purchase children for sex through the Kik application and... |
-| ncmec_2025_794 | used in offense (specific role unspecified) | Sexual Abuse of Children, Possession/Distribution of... | During the interview, Terrel Roane admitted to detectives... |
+| ncmec_2025_794 | used in offense (specific role unspecified) | Sexual Abuse of Children, Possession/Distribution of... | During the interview, [PERSON] admitted to detectives tha... |
 | ncmec_2025_795 | distribution of CSAM |  | The report originated from KIK Messenger, which informed ... |
-| ncmec_2025_819 | distribution of CSAM | DISTRIBUTING CHILD SEXUAL ABUSE MATERIAL, DEPUTIES S... | Deputies say Juntunen knowingly distributed child sexual ... |
+| ncmec_2025_819 | distribution of CSAM | DISTRIBUTING CHILD SEXUAL ABUSE MATERIAL, DEPUTIES S... | Deputies say [PERSON] knowingly distributed child sexual ... |
 | ncmec_2025_835 | platform-reported CSAM (distribution inferred) |  | reported criminal activity on KIK. |
-| ncmec_2025_865 | distribution of CSAM | SEX CRIMES PLEADS NOT GUILTY https://www | “Dustin Joyce stated he used the Kik messenger applicatio... |
+| ncmec_2025_865 | distribution of CSAM | SEX CRIMES PLEADS NOT GUILTY https://www | “[PERSON] stated he used the Kik messenger application to... |
 | ncmec_2025_869 | distribution of CSAM | sexual exploitation of a minor and possession of a S... | about content being shared through Kik. |
 | ncmec_2025_889 | distribution of CSAM | two counts of possession of child pornography with i... | Detectives learned someone had uploaded child pornography... |
 | ncmec_2025_923 | distribution of CSAM |  | and Exploited Children of possible child sex abuse materi... |
@@ -331,31 +331,31 @@
 | ncmec_2025_994 | distribution of CSAM | 20 COUNTS OF CHILD PORN POSSESSION WITH $50,000 CASH... | Detectives obtained a search warrant for an online messag... |
 | ncmec_2025_998 | contact and communication with victim | February 16 | receiving child pornography with numerous individuals on ... |
 | nj_ag_2016_010 | contact and communication with victim | Sexually Assaulting 14-Year-Old Male on Multiple Occ... | engaged in sexually explicit chats with the “teen” on Kik... |
-| nj_ag_2017_022 | contact and communication with victim |  | Chandler allegedly engaged in sexually explicit chats wit... |
+| nj_ag_2017_022 | contact and communication with victim |  | [PERSON] allegedly engaged in sexually explicit chats wit... |
 | nm_ag_2025_001 | contact and communication with victim | two counts of Distribution of Visual Medium of Sexua... | Child Sexual Abuse Material (CSAM) associated with accoun... |
 | ocpo_2022_002 | grooming / soliciting minor | September 5, 2018 as part of Operation Open House – ... | social media applications, Whisper and Kik, to attempt to... |
-| ocpo_2022_003 | used in offense (specific role unspecified) | POSSESSION AND DISTRIBUTION OF CHILD PORNOGRAPHY Pub... | KIK for Tuzzio’s most recently utilized KIK subscriber ac... |
+| ocpo_2022_003 | used in offense (specific role unspecified) | POSSESSION AND DISTRIBUTION OF CHILD PORNOGRAPHY Pub... | KIK for [PERSON] most recently utilized KIK subscriber ac... |
 | ocpo_2026_002 | used in offense (specific role unspecified) | Distribution of Child Sexual Abuse Material and Poss... | sending/receiving images of child pornography from the in... |
 | ocpo_2026_007 | contact and communication with victim |  | images of child pornography from the internet via a Kik m... |
 | pa_ag_2025_017 | distribution of CSAM | multiple felony counts of sexual abuse of children a... | Wilkes-Barre Township and found an email address (linked ... |
-| pa_ag_2026_021 | distribution of CSAM |  | Investigators determined that Warfel was sharing the ille... |
+| pa_ag_2026_021 | distribution of CSAM |  | Investigators determined that [PERSON] was sharing the il... |
 | south_florida_icac_2023_008 | distribution of CSAM |  | Keys man accused of sharing child sexual abuse videos on ... |
-| south_florida_icac_2023_009 | distribution of CSAM |  | Deputies said Morris would use his “binhorny22″ Kik accou... |
+| south_florida_icac_2023_009 | distribution of CSAM |  | Deputies said [PERSON] would use his “binhorny22″ Kik acc... |
 | south_florida_icac_2024_017 | distribution of CSAM |  | Authorities said he used the chat app Kik to share the fi... |
 | south_florida_icac_2025_012 | distribution of CSAM | child pornography charges, police say Publication da... | The tip indicated that an individual using a Kik/Media La... |
-| south_florida_icac_2025_015 | contact and communication with victim |  | According to BSO, a search warrant of the Kik account Pal... |
+| south_florida_icac_2025_015 | contact and communication with victim |  | According to BSO, a search warrant of the Kik account [PE... |
 | south_florida_icac_2025_016 | distribution of CSAM |  | that Kik user “Chris_8.5in” had uploaded images sexually ... |
 | south_florida_icac_2025_019 | distribution of CSAM |  | Missing and Exploited Children received a tip from Kik th... |
-| svicac_2022_009 | contact and communication with victim | conspiracy — an agreement that likely helped him rec... | Garcia-DeLeon admitted he and a co-defendant managed an o... |
-| svicac_2022_010 | contact and communication with victim |  | Phillips was charged in early 2020, after he joined a Kik... |
+| svicac_2022_009 | contact and communication with victim | conspiracy — an agreement that likely helped him rec... | [PERSON] admitted he and a co-defendant managed an online... |
+| svicac_2022_010 | contact and communication with victim |  | [PERSON] was charged in early 2020, after he joined a Kik... |
 | tbi_icac_2022_006 | distribution of CSAM |  | individual had used Kik accounts to distribute child sex ... |
-| tbi_icac_2024_013 | contact and communication with victim | Multiple Counts of Solicitation, Exploitation of a M... | name scofett on the KIK app or Paul Herring (pherring37) ... |
+| tbi_icac_2024_013 | contact and communication with victim | Multiple Counts of Solicitation, Exploitation of a M... | name scofett on the KIK app or [PERSON] (pherring37) on S... |
 | tbi_icac_2025_005 | distribution of CSAM | Violation of the Sex Offender FENTRESS COUNTY – Spec... | sexual abuse material being distributed on Kik. |
 | tbi_icac_2025_010 | distribution of CSAM | sexual exploitation of a minor | had distributed the CSAM on the chat messenger platform KIK. |
-| tbi_icac_2026_004 | contact and communication with victim | Multiple Counts of Aggravated Statutory WILLIAMSON C... | name scofett on the KIK app or Paul Herring, (pherring37)... |
-| usss_2023_005 | distribution of CSAM |  | Hoopingarner used Kik to distribute and receive images an... |
+| tbi_icac_2026_004 | contact and communication with victim | Multiple Counts of Aggravated Statutory WILLIAMSON C... | name scofett on the KIK app or [PERSON], (pherring37) on ... |
+| usss_2023_005 | distribution of CSAM |  | [PERSON] used Kik to distribute and receive images and vi... |
 | vt_ag_2024_004 | grooming / soliciting minor | a crime are legally presumed innocent until their gu... | enticement on the social media platform Kik. |
-| vt_ag_2024_032 | contact and communication with victim | a crime are legally presumed innocent until their gu... | Charbonneau initiated contact online via Kik |
+| vt_ag_2024_032 | contact and communication with victim | a crime are legally presumed innocent until their gu... | [PERSON] initiated contact online via Kik |
 | vt_ag_2025_009 | platform-reported CSAM (distribution inferred) | Possession of Child Sexual Abuse The Attorney Genera... | The tip was reported by Kik concerning |
 | vt_ag_2025_010 | distribution of CSAM | a crime are legally presumed innocent until their gu... | shared online suspected images of CSAM, commonly referred... |
 | vt_ag_2025_011 | contact and communication with victim | a crime are legally presumed innocent until their gu... | The report from the messaging platform Kik concerned chil... |
@@ -371,10 +371,10 @@
 | arkansas_dps_2024_011 | contact and communication with victim | 30 counts of Possession of Matter Depicting Sex... | Children (NCMEC) from the online messaging applicati... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2022_075 | used in offense (specific role unspecified) |  | another Kik user with the username of “dadof2b.” HSI... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2022_133 | used in offense (specific role unspecified) |  | In September 2019 and March 2020, Homeland Security ... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| doj_safe_childhood_2022_317 | used in offense (specific role unspecified) | one count of attempted coercion and enticement ... | undercover FBI employee began interacting with Selle... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| doj_safe_childhood_2022_317 | used in offense (specific role unspecified) | one count of attempted coercion and enticement ... | undercover FBI employee began interacting with [PERS... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2022_458 | used in offense (specific role unspecified) | sexual assault on a child | Homeland Security Investigations received a tip from... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| doj_safe_childhood_2022_492 | distribution of CSAM |  | review of Stidd’s Kik account and digital devices fu... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| doj_safe_childhood_2022_499 | used in offense (specific role unspecified) | one count of attempted coercion and enticement ... | undercover FBI employee began interacting with Selle... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| doj_safe_childhood_2022_492 | distribution of CSAM |  | review of [PERSON]’s Kik account and digital devices... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| doj_safe_childhood_2022_499 | used in offense (specific role unspecified) | one count of attempted coercion and enticement ... | undercover FBI employee began interacting with [PERS... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2022_558 | contact and communication with victim |  | Kik, an online messaging platform. | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2023_165 | used in offense (specific role unspecified) | all three charges by a federal jury sitting in ... | According to testimony and evidence presented at tri... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2023_315 | used in offense (specific role unspecified) |  | undercover employee observed a user of the social me... | Kik and offense language co-occur in the same sentence without instrumental p... |
@@ -388,15 +388,15 @@
 | doj_safe_childhood_2025_427 | distribution of CSAM |  | also distributed images and videos of child pornogra... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2026_057 | distribution of CSAM | Receipt of Child Pornography | Kik users about his sexual abuse of female relatives... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2026_209 | contact and communication with victim | one count of transportation of child pornograph... | material (CSAM) to Snapchat and Kik social media app... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| doj_safe_childhood_2026_223 | distribution of CSAM |  | Million’s Kik account also showed that in 2021, when... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| doj_safe_childhood_2026_223 | distribution of CSAM |  | [PERSON]’s Kik account also showed that in 2021, whe... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | doj_safe_childhood_2026_402 | contact and communication with victim |  | On February 2, 2025, the Nebraska State Patrol began... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | fresno_so_2025_005 | contact and communication with victim |  | Kik is a free messaging app that allows users to sen... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| illinois_ag_2023_005 | contact and communication with victim |  | Raoul’s office charged Eastham after receiving a Cyb... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| illinois_ag_2023_015 | contact and communication with victim |  | Raoul’s office charged Eastham after receiving a Cyb... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| illinois_ag_2023_005 | contact and communication with victim |  | [PERSON] office charged [PERSON] after receiving a C... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| illinois_ag_2023_015 | contact and communication with victim |  | [PERSON] office charged [PERSON] after receiving a C... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | mcao_2025_004 | contact and communication with victim |  | The conversation was moved to a messaging app called... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2022_024 | contact and communication with victim |  | Children that a user of the Kik messaging app had be... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| ncmec_2022_303 | distribution of CSAM |  | Slack used Snapchat and the Kik messaging app to sha... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| ncmec_2022_583 | contact and communication with victim | having child porn By Dave Rogers \| drogers@new... | denied downloading child pornography or using any me... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| ncmec_2022_303 | distribution of CSAM |  | [PERSON] used Snapchat and the Kik messaging app to ... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| ncmec_2022_583 | contact and communication with victim | having child porn By [PERSON] \| [PERSON]@newbu... | denied downloading child pornography or using any me... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2023_068 | used in offense (specific role unspecified) | possession of child The investigation started w... | Through investigation, law enforcement was able to t... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2023_457 | contact and communication with victim |  | Snapchat and Kik accounts, along with information di... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2024_097 | contact and communication with victim | ALLEGEDLY SEXUALLY ASSAULTING AN INFANT, POSSES... | According to an arrest affidavit, Aurora police beca... | Kik and offense language co-occur in the same sentence without instrumental p... |
@@ -405,21 +405,21 @@
 | ncmec_2024_402 | contact and communication with victim | failure to register as a sex of violent offender | activities on a Kik Messenger chat app account. | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2024_514 | used in offense (specific role unspecified) | possessing child pornography and disseminating ... | The investigation began with a tip from the parent c... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2024_592 | contact and communication with victim |  | Missing and Exploited Children received a cyber tip ... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| ncmec_2024_919 | used in offense (specific role unspecified) | two counts of Distribution of Child Pornography... | The investigation into Lucas was initiated in June, ... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| ncmec_2024_919 | used in offense (specific role unspecified) | two counts of Distribution of Child Pornography... | The investigation into [PERSON] was initiated in Jun... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2024_923 | distribution of CSAM | SENDING CHILD PORNOGRAPHY https://kfor | The tip came from MediaLab/KIK that centered around ... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_176 | distribution of CSAM | Thursday at his residence on Barwood Park Lane,... | Kurtz told PBSO investigators he used KIK, a messagi... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_276 | contact and communication with victim | DISTRIBUTING CHILD SEX ABUSE MATERIAL https://k... | police from the messaging app Kik regarding suspecte... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_289 | platform-reported CSAM (distribution infer... | 11 felony counts of possession of child pornogr... | Five additional cybertips were filed, originating fr... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| ncmec_2025_321 | used in offense (specific role unspecified) | CHILD EXPLOITATION CHARGES, POLICE SAY https://www | During the investigation, it was determined that Key... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| ncmec_2025_321 | used in offense (specific role unspecified) | CHILD EXPLOITATION CHARGES, POLICE SAY https://www | During the investigation, it was determined that [PE... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_337 | used in offense (specific role unspecified) | child pornography- related crimes as a forensic... | Kik is a peer-to-peer | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_345 | contact and communication with victim | POSSESSION OF CHILD PORNOGRAPHY https://www | smartphone messaging app Kik. | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_674 | used in offense (specific role unspecified) | CHILD SEXUAL EXPLOITATION IN SEPARATE INCIDENTS... | an investigation into a Kik Messenger user possessin... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_736 | distribution of CSAM |  | KIK account but didn’t remember the images and claim... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| ncmec_2025_946 | distribution of CSAM | CHILD PORNOGRAPHY CHARGES, 10 YEARS AFTER By Ch... | Kik messaging app account tied to a Virginia Beach I... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| ncmec_2025_946 | distribution of CSAM | [PERSON], 10 YEARS AFTER By [PERSON] https://www | Kik messaging app account tied to a Virginia Beach I... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | ncmec_2025_995 | used in offense (specific role unspecified) | CHILD PORN https://www | the Kik app and was arrested for one count of posses... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | south_florida_icac_2023_006 | contact and communication with victim |  | originating from the websites Reddit and Quora as we... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | south_florida_icac_2024_007 | used in offense (specific role unspecified) | two counts of possession of child sexual abuse ... | According to an arrest warrant, the investigation in... | Kik and offense language co-occur in the same sentence without instrumental p... |
-| south_florida_icac_2025_017 | contact and communication with victim |  | Reynaga was also the subject of several tips from Sn... | Kik and offense language co-occur in the same sentence without instrumental p... |
+| south_florida_icac_2025_017 | contact and communication with victim |  | [PERSON] was also the subject of several tips from S... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | south_florida_icac_2025_023 | contact and communication with victim |  | Crimes Against Children Task Force received four tip... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | tbi_icac_2020_012 | contact and communication with victim |  | consistent with child pornography on the mobile mess... | Kik and offense language co-occur in the same sentence without instrumental p... |
 | tbi_icac_2025_009 | contact and communication with victim |  | In 2023, agents received a tip concerning a subject ... | Kik and offense language co-occur in the same sentence without instrumental p... |
@@ -445,11 +445,11 @@
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
 | afp_2019_004 | contact and communication with victim | child exploitation offence \| Australian Federal Pub... | especially personal or private details – any app, game, o... |
-| alert_ice_2017_002 | distribution of CSAM | possessing, accessing, and distributing child pornog... | ICE alleges that Wright was uploading child pornography t... |
+| alert_ice_2017_002 | distribution of CSAM | possessing, accessing, and distributing child pornog... | ICE alleges that [PERSON] was uploading child pornography... |
 | alert_ice_2018_004 | distribution of CSAM | January 4, 2018, with the assistance of Olds RCMP, a... | information about an Alberta-based suspect sharing child ... |
-| anchorage_pd_2023_005 | contact and communication with victim | Attempted Sexual Abuse of a Minor in the Second Degr... | Peronto subsequently contacted the 16-year-old via social... |
+| anchorage_pd_2023_005 | contact and communication with victim | Attempted Sexual Abuse of a Minor in the Second Degr... | [PERSON] subsequently contacted the 16-year-old via socia... |
 | doj_ceos_2026_001 | contact and communication with victim | the production of child pornography and to coercion ... | teenage boy while communicating with the minor victims ov... |
-| doj_safe_childhood_2021_008 | contact and communication with victim | conspiring to produce, producing, receiving, and pos... | In November 2019, Robert Dunn and Tonya Bagley began chat... |
+| doj_safe_childhood_2021_008 | contact and communication with victim | conspiring to produce, producing, receiving, and pos... | In November 2019, [PERSON] and [PERSON] began chatting on... |
 | doj_safe_childhood_2021_053 | distribution of CSAM |  | created a fictious social media account in Minor Victim 1... |
 | doj_safe_childhood_2022_057 | distribution of CSAM |  | Kik, a social media platform, reported that he was sharin... |
 | doj_safe_childhood_2022_122 | distribution of CSAM |  | and Exploited Children, indicating that a social media ac... |
@@ -457,96 +457,96 @@
 | doj_safe_childhood_2022_154 | used in offense (specific role unspecified) |  | Today’s sentence should serve as a warning to those who v... |
 | doj_safe_childhood_2022_169 | distribution of CSAM |  | August 2020 regarding possible child pornography uploaded... |
 | doj_safe_childhood_2022_194 | grooming / soliciting minor | one count of production and attempted production of ... | social media apps to contact and solicit sexually explici... |
-| doj_safe_childhood_2022_248 | distribution of CSAM | one count of distribution of child pornography | agents also found that Torres had shared three of the vid... |
-| doj_safe_childhood_2022_260 | contact and communication with victim | one count of production of child pornography | According to court documents, Jeremy Shawn Lopezieo, 35, ... |
+| doj_safe_childhood_2022_248 | distribution of CSAM | one count of distribution of child pornography | agents also found that [PERSON] had shared three of the v... |
+| doj_safe_childhood_2022_260 | contact and communication with victim | one count of production of child pornography | According to court documents, [PERSON], 35, participated ... |
 | doj_safe_childhood_2022_269 | platform-reported CSAM (distribution inferred) |  | The social media site reported the child pornography imag... |
 | doj_safe_childhood_2022_274 | distribution of CSAM |  | In addition to sharing sexually explicit videos of childr... |
 | doj_safe_childhood_2022_286 | distribution of CSAM |  | social media platforms to communicate and trade child por... |
-| doj_safe_childhood_2022_305 | grooming / soliciting minor |  | According to his guilty plea, Wood used a social media pl... |
-| doj_safe_childhood_2022_329 | contact and communication with victim | soliciting the parent of a child using an online mes... | In November 2019, Robert Dunn and Tonya Bagley began chat... |
-| doj_safe_childhood_2022_394 | contact and communication with victim |  | According to court records, Gangoo contacted his victims ... |
-| doj_safe_childhood_2022_434 | distribution of CSAM |  | Lilley said he was involved with other groups on the soci... |
+| doj_safe_childhood_2022_305 | grooming / soliciting minor |  | According to his guilty plea, [PERSON] used a social medi... |
+| doj_safe_childhood_2022_329 | contact and communication with victim | soliciting the parent of a child using an online mes... | In November 2019, [PERSON] and [PERSON] began chatting on... |
+| doj_safe_childhood_2022_394 | contact and communication with victim |  | According to court records, [PERSON] contacted his victim... |
+| doj_safe_childhood_2022_434 | distribution of CSAM |  | [PERSON] said he was involved with other groups on the so... |
 | doj_safe_childhood_2022_438 | distribution of CSAM |  | social media account and having altered at least one of t... |
 | doj_safe_childhood_2022_459 | grooming / soliciting minor | using social media to produce and attempt to produce... | email and various social media apps to contact and solici... |
-| doj_safe_childhood_2022_465 | grooming / soliciting minor |  | According to his guilty plea, Wood used a social media pl... |
-| doj_safe_childhood_2022_488 | contact and communication with victim | one count of attempted sexual exploitation of a mino... | In January 2018, Winczuk, a Level 3 sex offender, contact... |
+| doj_safe_childhood_2022_465 | grooming / soliciting minor |  | According to his guilty plea, [PERSON] used a social medi... |
+| doj_safe_childhood_2022_488 | contact and communication with victim | one count of attempted sexual exploitation of a mino... | In January 2018, [PERSON], a Level 3 sex offender, contac... |
 | doj_safe_childhood_2023_052 | contact and communication with victim | distributing child pornography over the internet | whom he was communicating on a social media platform, to ... |
 | doj_safe_childhood_2023_061 | platform-reported CSAM (distribution inferred) | one count of possession of child pornography and one... | On March 9, 2021, the social media platform Tumblr report... |
 | doj_safe_childhood_2023_078 | platform-reported CSAM (distribution inferred) |  | Kik, a free online social media platform, reported that a... |
-| doj_safe_childhood_2023_110 | grooming / soliciting minor | five counts of producing, receiving, and distributin... | McLaughlin, 26, created and used multiple social media ac... |
-| doj_safe_childhood_2023_116 | distribution of CSAM | possession and distribution of child pornography | In July 2022, Sorrento was identified as an individual di... |
+| doj_safe_childhood_2023_110 | grooming / soliciting minor | five counts of producing, receiving, and distributin... | [PERSON], 26, created and used multiple social media acco... |
+| doj_safe_childhood_2023_116 | distribution of CSAM | possession and distribution of child pornography | In July 2022, [PERSON] was identified as an individual di... |
 | doj_safe_childhood_2023_121 | grooming / soliciting minor |  | social media accounts to persuade, entice, and coerce ano... |
 | doj_safe_childhood_2023_136 | platform-reported CSAM (distribution inferred) |  | Missing and Exploited Children (NCMEC) received a cyberti... |
 | doj_safe_childhood_2023_188 | platform-reported CSAM (distribution inferred) |  | On March 9, 2021, social media platform Tumblr reported t... |
 | doj_safe_childhood_2023_204 | contact and communication with victim |  | aide to the City of Miami mayor, communicated with the bo... |
 | doj_safe_childhood_2023_212 | platform-reported CSAM (distribution inferred) |  | The cybertip from the MeWe social media platform reported... |
 | doj_safe_childhood_2023_213 | contact and communication with victim |  | pornography was found on the social media platform Snapchat. |
-| doj_safe_childhood_2023_221 | distribution of CSAM | Count 1 before United States District Judge Joe Heaton | child around 2021 to 2022 and distributed them via social... |
+| doj_safe_childhood_2023_221 | distribution of CSAM | Count 1 before United States District Judge [PERSON] | child around 2021 to 2022 and distributed them via social... |
 | doj_safe_childhood_2023_270 | distribution of CSAM |  | conduct between him and the minor and then uploaded the c... |
 | doj_safe_childhood_2023_310 | distribution of CSAM | coercion and enticement of a child and distribution ... | 40, distributed CSAM over a social media platform. |
-| doj_safe_childhood_2023_317 | distribution of CSAM |  | found Wilson after Kik, a social media platform, reported... |
-| doj_safe_childhood_2023_348 | CSAM production |  | Morton’s social media accounts and located a video that M... |
+| doj_safe_childhood_2023_317 | distribution of CSAM |  | found [PERSON] after Kik, a social media platform, report... |
+| doj_safe_childhood_2023_348 | CSAM production |  | [PERSON]’s social media accounts and located a video that... |
 | doj_safe_childhood_2023_397 | distribution of CSAM |  | report that child pornography had been uploaded to a soci... |
-| doj_safe_childhood_2023_404 | distribution of CSAM | distribution and receipt of child pornography | In his plea agreement, Birse admitted to distributing and... |
+| doj_safe_childhood_2023_404 | distribution of CSAM | distribution and receipt of child pornography | In his plea agreement, [PERSON] admitted to distributing ... |
 | doj_safe_childhood_2023_410 | platform-reported CSAM (distribution inferred) |  | the Iowa National Guard, after receiving a cybertip from ... |
 | doj_safe_childhood_2023_439 | contact and communication with victim | one count of distribution of child pornography and o... | communicating with an undercover agent purporting to be a... |
 | doj_safe_childhood_2023_471 | distribution of CSAM |  | who received and distributed child pornography via social... |
 | doj_safe_childhood_2023_520 | distribution of CSAM |  | an online user who had uploaded child sexual abuse materi... |
 | doj_safe_childhood_2023_545 | distribution of CSAM |  | and one-half years in prison for downloading and sharing ... |
-| doj_safe_childhood_2024_062 | contact and communication with victim |  | Ballance then began using a separate social media platfor... |
+| doj_safe_childhood_2024_062 | contact and communication with victim |  | [PERSON] then began using a separate social media platfor... |
 | doj_safe_childhood_2024_069 | distribution of CSAM | charges of attempted inducement of a minor to engage... | individual had uploaded child pornography to a social med... |
-| doj_safe_childhood_2024_103 | grooming / soliciting minor | enticement of a minor after he pleaded guilty on Jul... | “Farneski is a serial predator who used the internet and ... |
-| doj_safe_childhood_2024_108 | platform-reported CSAM (distribution inferred) | first-degree sexual abuse involving a child in Kentu... | McAlpin was caught after the social media app Kik submitt... |
+| doj_safe_childhood_2024_103 | grooming / soliciting minor | enticement of a minor after he pleaded guilty on Jul... | “[PERSON] is a serial predator who used the internet and ... |
+| doj_safe_childhood_2024_108 | platform-reported CSAM (distribution inferred) | first-degree sexual abuse involving a child in Kentu... | [PERSON] was caught after the social media app Kik submit... |
 | doj_safe_childhood_2024_116 | distribution of CSAM |  | admitted using social media platforms to exchange materia... |
 | doj_safe_childhood_2024_157 | contact and communication with victim |  | using Internet-based messaging and social media platforms. |
 | doj_safe_childhood_2024_166 | contact and communication with victim | Count 4 of the Indictment, and admitted he distribut... | maintained contact on a social media app with a Homeland ... |
 | doj_safe_childhood_2024_210 | CSAM production |  | minors to produce and send him sexually explicit photogra... |
 | doj_safe_childhood_2024_244 | platform-reported CSAM (distribution inferred) | their crimes | The victim only learned of the recording after it was pos... |
-| doj_safe_childhood_2024_245 | grooming / soliciting minor | persuading a minor victim to engage in sexually expl... | Simpson portrayed himself as a minor on social media plat... |
+| doj_safe_childhood_2024_245 | grooming / soliciting minor | persuading a minor victim to engage in sexually expl... | [PERSON] portrayed himself as a minor on social media pla... |
 | doj_safe_childhood_2024_315 | used in offense (specific role unspecified) |  | and Exploited Children (NCMEC) that a user of a social me... |
 | doj_safe_childhood_2024_320 | distribution of CSAM |  | admitted he uploaded child pornography on two separate oc... |
 | doj_safe_childhood_2024_337 | distribution of CSAM |  | Missing and Exploited Children as the user of social medi... |
 | doj_safe_childhood_2024_379 | platform-reported CSAM (distribution inferred) | one count of conspiracy to produce child pornography... | Kik, a free online social media platform, reported that a... |
-| doj_safe_childhood_2024_397 | grooming / soliciting minor | two counts of production of child pornography, one c... | McLaughlin, 26, used multiple social media accounts to so... |
-| doj_safe_childhood_2024_505 | distribution of CSAM | possession and distribution of child In July 2022, S... | In July 2022, Sorrento was identified as an individual di... |
+| doj_safe_childhood_2024_397 | grooming / soliciting minor | two counts of production of child pornography, one c... | [PERSON], 26, used multiple social media accounts to soli... |
+| doj_safe_childhood_2024_505 | distribution of CSAM | possession and distribution of child In July 2022, [... | In July 2022, [PERSON] was identified as an individual di... |
 | doj_safe_childhood_2025_001 | used in offense (specific role unspecified) |  | Through the investigation, HSI was able to determine that... |
 | doj_safe_childhood_2025_017 | distribution of CSAM | failure to register, and an arrest warrant was On Ju... | He admitted using a Kik social media account to download,... |
-| doj_safe_childhood_2025_019 | contact and communication with victim |  | conducted of Heard’s social media accounts, and investiga... |
+| doj_safe_childhood_2025_019 | contact and communication with victim |  | conducted of [PERSON]’s social media accounts, and invest... |
 | doj_safe_childhood_2025_034 | contact and communication with victim |  | pornography to a social media platform when sending it to... |
-| doj_safe_childhood_2025_044 | contact and communication with victim |  | Ruggiero also engaged in sexually explicit messages with ... |
+| doj_safe_childhood_2025_044 | contact and communication with victim |  | [PERSON] also engaged in sexually explicit messages with ... |
 | doj_safe_childhood_2025_068 | platform-reported CSAM (distribution inferred) |  | According to court documents, a social media platform rep... |
 | doj_safe_childhood_2025_094 | contact and communication with victim |  | communicating with them via social media. |
 | doj_safe_childhood_2025_095 | contact and communication with victim | Possession of Child Pornography | messaging and social media platforms, including Discord a... |
-| doj_safe_childhood_2025_098 | contact and communication with victim |  | In June 2024, Newton initiated contact with a person on s... |
-| doj_safe_childhood_2025_128 | distribution of CSAM |  | When interviewed by HSI TFO’s, Burns admitted to creating... |
+| doj_safe_childhood_2025_098 | contact and communication with victim |  | In June 2024, [PERSON] initiated contact with a person on... |
+| doj_safe_childhood_2025_128 | distribution of CSAM |  | When interviewed by HSI TFO’s, [PERSON] admitted to creat... |
 | doj_safe_childhood_2025_142 | distribution of CSAM | Promoting the Sexual Performance by a Child in June ... | same month, he possessed and distributed child pornograph... |
 | doj_safe_childhood_2025_163 | used in offense (specific role unspecified) |  | knowledge—by utilizing images from her social media account. |
 | doj_safe_childhood_2025_295 | distribution of CSAM | Promoting the Sexual Performance by a Child in June ... | possessed and distributed child pornography on multiple s... |
 | doj_safe_childhood_2025_365 | distribution of CSAM |  | individual who was exchanging child pornography on social... |
 | doj_safe_childhood_2025_408 | CSAM production |  | child pornography on nine separate occasions and had stre... |
-| doj_safe_childhood_2025_418 | platform-reported CSAM (distribution inferred) |  | on the social media platform Kik and discovered Burton wa... |
+| doj_safe_childhood_2025_418 | platform-reported CSAM (distribution inferred) |  | on the social media platform Kik and discovered [PERSON] ... |
 | doj_safe_childhood_2025_427 | distribution of CSAM |  | also distributed images and videos of child pornography t... |
 | doj_safe_childhood_2026_017 | contact and communication with victim | possessing child pornography on his cellular phone, ... | these children through direct message communications on s... |
 | doj_safe_childhood_2026_019 | used in offense (specific role unspecified) |  | can exploit and manipulate young girls utilizing their so... |
-| doj_safe_childhood_2026_071 | distribution of CSAM | sending and receiving child sexual abuse material (C... | Between July 2021 and September 2022, Jamescupp uploaded ... |
-| doj_safe_childhood_2026_103 | used in offense (specific role unspecified) |  | associated Hale using various social media accounts where... |
+| doj_safe_childhood_2026_071 | distribution of CSAM | sending and receiving child sexual abuse material (C... | Between July 2021 and September 2022, [PERSON] uploaded a... |
+| doj_safe_childhood_2026_103 | used in offense (specific role unspecified) |  | associated [PERSON] using various social media accounts w... |
 | doj_safe_childhood_2026_127 | distribution of CSAM |  | enforcement that he had traded CSAM on social media sites. |
 | doj_safe_childhood_2026_174 | contact and communication with victim |  | the defendant’s illicit communications with the children,... |
 | doj_safe_childhood_2026_188 | contact and communication with victim | possessing child pornography on his cellular phone, ... | communications on social media platforms, sending thousan... |
-| doj_safe_childhood_2026_195 | distribution of CSAM |  | Hughes distributed the produced imagery of the minor on s... |
-| doj_safe_childhood_2026_228 | distribution of CSAM |  | Netzel also used social media apps to trade |
+| doj_safe_childhood_2026_195 | distribution of CSAM |  | [PERSON] distributed the produced imagery of the minor on... |
+| doj_safe_childhood_2026_228 | distribution of CSAM |  | [PERSON] also used social media apps to trade |
 | doj_safe_childhood_2026_230 | contact and communication with victim |  | Through extensive conversations via text messaging and va... |
 | doj_safe_childhood_2026_241 | used in offense (specific role unspecified) |  | victimize children through the internet and social media ... |
 | doj_safe_childhood_2026_245 | used in offense (specific role unspecified) | the indicted charge on Dec | Texas Man Posed as a Minor on Social Media, Sentenced to ... |
-| doj_safe_childhood_2026_282 | grooming / soliciting minor |  | entice buyers, Dickens sent videos and images to users th... |
+| doj_safe_childhood_2026_282 | grooming / soliciting minor |  | entice buyers, [PERSON] sent videos and images to users t... |
 | doj_safe_childhood_2026_285 | platform-reported CSAM (distribution inferred) | federal child pornography violations Publication dat... | According to information presented in court, in September... |
-| doj_safe_childhood_2026_288 | contact and communication with victim | one count of production of child pornography, which ... | A review of Schifferns’ social media account contained co... |
-| doj_safe_childhood_2026_321 | distribution of CSAM | one count of receipt of child pornography | that interview, Batson admitted he had traded child porno... |
+| doj_safe_childhood_2026_288 | contact and communication with victim | one count of production of child pornography, which ... | A review of [PERSON]’ social media account contained comm... |
+| doj_safe_childhood_2026_321 | distribution of CSAM | one count of receipt of child pornography | that interview, [PERSON] admitted he had traded child por... |
 | doj_safe_childhood_2026_323 | contact and communication with victim |  | to a social media platform when sending it to another use... |
 | doj_safe_childhood_2026_335 | distribution of CSAM | production of child pornography | video files uploaded to the KIK social media platform on ... |
 | doj_safe_childhood_2026_356 | distribution of CSAM |  | user of a Skout social media account had uploaded multipl... |
 | doj_safe_childhood_2026_368 | distribution of CSAM |  | used what he thought was a secure social media platform t... |
-| fresno_so_2013_004 | contact and communication with victim |  | messages from Torres via social media. |
+| fresno_so_2013_004 | contact and communication with victim |  | messages from [PERSON] via social media. |
 | fresno_so_2017_002 | grooming / soliciting minor |  | social media site to try and solicit sex from a 15 year o... |
 | fresno_so_2020_001 | grooming / soliciting minor |  | As part of their regular duties, ICAC detectives monitor ... |
 | fresno_so_2020_002 | grooming / soliciting minor |  | As part of their regular duties, ICAC detectives monitor ... |
@@ -561,9 +561,9 @@
 | ky_sp_2025_023 | distribution of CSAM | 20 counts of possessing matter portraying a minor un... | uploading sexually explicit images of juveniles to one of... |
 | ky_sp_2025_024 | distribution of CSAM | 20 counts of distributing matter portraying a minor ... | uploading sexually explicit images of juveniles to one of... |
 | ky_sp_2025_036 | distribution of CSAM | three counts of promoting a minor under the age of 1... | suspect uploading sexually explicit images of juveniles t... |
-| ky_sp_2025_038 | distribution of CSAM |  | digital forensics revealed that Stafford distributed the ... |
+| ky_sp_2025_038 | distribution of CSAM |  | digital forensics revealed that [PERSON] distributed the ... |
 | ky_sp_2025_040 | distribution of CSAM | 20 counts of distributing matter portraying a minor ... | uploading sexually explicit images of juveniles to one of... |
-| la_ag_2025_002 | distribution of CSAM | December 4, 2025, for violations of: Agents initiall... | John was sharing the illicit images and videos via online... |
+| la_ag_2025_002 | distribution of CSAM | December 4, 2025, for violations of: Agents initiall... | [PERSON] was sharing the illicit images and videos via on... |
 | lapd_2023_001 | contact and communication with victim |  | suspects, who sought to prey on our young through social ... |
 | lapd_2023_002 | distribution of CSAM | violation of 311 | Material (CSAM) was uploaded from an unknown address inLo... |
 | lapd_2024_001 | contact and communication with victim |  | suspects, who sought to prey on our young through social ... |
@@ -573,29 +573,29 @@
 | ncis_2026_001 | grooming / soliciting minor |  | underage female on various social media platforms with th... |
 | ncmec_2022_014 | distribution of CSAM |  | he was receiving and sharing child pornography over email... |
 | ncmec_2022_048 | distribution of CSAM | 16 counts of possession of child pornography | in Tampa who was sharing child pornography via social media. |
-| ncmec_2022_055 | contact and communication with victim | felony possession of child pornography, solicitation... | CSAM images and over 100 chats between minors and Banuelo... |
+| ncmec_2022_055 | contact and communication with victim | felony possession of child pornography, solicitation... | CSAM images and over 100 chats between minors and [PERSON... |
 | ncmec_2022_071 | grooming / soliciting minor | Traveling to Meet a Child for an Unlawful Sex Act, E... | information that he was soliciting minors through social ... |
 | ncmec_2022_077 | contact and communication with victim | allegedly receiving and sharing obscene material inv... | violating policy, and used the social media app to access... |
 | ncmec_2022_113 | distribution of CSAM | multiple counts of Sexual Exploitation of a Child By... | including pictures and videos, and distributing the mater... |
-| ncmec_2022_143 | distribution of CSAM | allegedly sharing child pornography Written by Will ... | him sharing child pornography through a social media acco... |
-| ncmec_2022_176 | distribution of CSAM | possession of child pornography, according to a stat... | Prince reportedly told investigators he used social media... |
+| ncmec_2022_143 | distribution of CSAM | allegedly sharing child pornography Written by [PERS... | him sharing child pornography through a social media acco... |
+| ncmec_2022_176 | distribution of CSAM | possession of child pornography, according to a stat... | [PERSON] reportedly told investigators he used social med... |
 | ncmec_2022_198 | contact and communication with victim | DISTRIBUTION AND POSSESSION OF CHILD PORNOGRAPHY, EN... | inappropriate communications from social media accounts u... |
 | ncmec_2022_215 | distribution of CSAM | allegedly possessing child sex material TORRANCE, Calif | unlawful material was uploaded to a social media platform... |
-| ncmec_2022_228 | grooming / soliciting minor |  | through August 2020, Jones used social media accounts to ... |
+| ncmec_2022_228 | grooming / soliciting minor |  | through August 2020, [PERSON] used social media accounts ... |
 | ncmec_2022_252 | distribution of CSAM | felony computer pornography and was released on bond... | was created locally as well as others distributed worldwi... |
 | ncmec_2022_270 | used in offense (specific role unspecified) |  | them through the social media platform, documents said. |
 | ncmec_2022_287 | distribution of CSAM | Monday morning after an investigation into accusatio... | into accusations of child porn being shared through socia... |
-| ncmec_2022_332 | grooming / soliciting minor |  | through August 2020, Jones used social media accounts to ... |
-| ncmec_2022_369 | distribution of CSAM | sharing child pornography through Written by Will Fe... | sharing child pornography through the social media site. |
+| ncmec_2022_332 | grooming / soliciting minor |  | through August 2020, [PERSON] used social media accounts ... |
+| ncmec_2022_369 | distribution of CSAM | sharing child pornography through Written by [PERSON... | sharing child pornography through the social media site. |
 | ncmec_2022_414 | distribution of CSAM | possessing child porn Ridley Park man out on bail af... | allegedly uploaded a file on the social media platform Sn... |
 | ncmec_2022_425 | distribution of CSAM | multiple charges of possession and promotion of chil... | allegedly uploaded child pornography to the social media ... |
-| ncmec_2022_452 | contact and communication with victim | a crime is merely an accusation and the defendant is... | Subsequent investigation determined that Follett communic... |
+| ncmec_2022_452 | contact and communication with victim | a crime is merely an accusation and the defendant is... | Subsequent investigation determined that [PERSON] communi... |
 | ncmec_2022_462 | grooming / soliciting minor | a felony and will be arraigned next month | She says predators often pose as children on social media... |
-| ncmec_2022_464 | distribution of CSAM | transmission of child pornography, possession of chi... | Wallace for allegedly uploading child sex abuse material ... |
+| ncmec_2022_464 | distribution of CSAM | transmission of child pornography, possession of chi... | [PERSON] for allegedly uploading child sex abuse material... |
 | ncmec_2022_466 | used in offense (specific role unspecified) |  | raping a little boy and then sent the footage out on soci... |
 | ncmec_2022_480 | platform-reported CSAM (distribution inferred) | his second offense of possession of child pornography | It was in January when the social media platform, Kik, re... |
 | ncmec_2022_493 | distribution of CSAM | possession following child porn trade investigation ... | investigation into the trading of material on a social me... |
-| ncmec_2022_536 | distribution of CSAM | child pornography Police sources tell CBS2's Lisa Ro... | Telegram is a social media app with instant messaging and... |
+| ncmec_2022_536 | distribution of CSAM | child pornography Police sources tell CBS2's [PERSON... | Telegram is a social media app with instant messaging and... |
 | ncmec_2022_539 | distribution of CSAM | Tuesday, he had two USB drives in his pants pocket | unknown individual through social media "about their shar... |
 | ncmec_2022_548 | distribution of CSAM | four counts of possession of child pornography and s... | also admitted to sharing these images with other users on... |
 | ncmec_2022_556 | contact and communication with victim | second-degree sexual exploitation of a minor after a... | A tip from the social media app Snapchat set in motion a ... |
@@ -604,14 +604,14 @@
 | ncmec_2022_600 | distribution of CSAM | multiple counts of sexual exploitation of a child af... | of a child after sharing videos on social media. |
 | ncmec_2023_043 | distribution of CSAM | one count of endangering the welfare of a child (pos... | Morris Man Shared Child Porn On Social Media |
 | ncmec_2023_059 | platform-reported CSAM (distribution inferred) | distributing child porn ELLETTSVILLE, Ind | State police reportedly connected the social media accoun... |
-| ncmec_2023_075 | CSAM production | four counts of second-degree sexual exploitation of ... | Janice Limon Social Media Executive Producer |
+| ncmec_2023_075 | CSAM production | four counts of second-degree sexual exploitation of ... | [PERSON] Social Media Executive Producer |
 | ncmec_2023_117 | contact and communication with victim | pandering sexually-oriented material involving a min... | accused of using a fake identity to message with children... |
 | ncmec_2023_147 | distribution of CSAM | possession, distribution of CRISFIELD, Md | were reportedly being distributed via social media. |
 | ncmec_2023_150 | platform-reported CSAM (distribution inferred) | child exploitation and three counts of child pornogr... | Children reported videos and photos from one of his socia... |
 | ncmec_2023_164 | distribution of CSAM | distributing child porn A 48-year-old Gainesville ma... | had been uploaded to a social media platform. |
-| ncmec_2023_182 | used in offense (specific role unspecified) | CHILD BSO Case Number: 90-2302-006096 Suspect: Dylan... | possessing and transmitting images of child pornography o... |
-| ncmec_2023_343 | used in offense (specific role unspecified) | MULTIPLE SEX CRIMES On Thursday, October 26, 2023, I... | included an email address Mackey used to register with th... |
-| ncmec_2023_364 | CSAM production | 10 counts of third- degree sexual exploitation of mi... | Janice Limon Social Media Executive Produce |
+| ncmec_2023_182 | used in offense (specific role unspecified) | CHILD BSO Case Number: 90-2302-006096 Suspect: [PERS... | possessing and transmitting images of child pornography o... |
+| ncmec_2023_343 | used in offense (specific role unspecified) | MULTIPLE SEX CRIMES On Thursday, October 26, 2023, [... | included an email address [PERSON] used to register with ... |
+| ncmec_2023_364 | CSAM production | 10 counts of third- degree sexual exploitation of mi... | [PERSON] Social Media Executive Produce |
 | ncmec_2023_569 | contact and communication with victim | allegedly possessing thousands of images of child po... | been communicating with an underage girl on social media. |
 | ncmec_2023_628 | distribution of CSAM |  | social media site for exchange of adult pornography, but ... |
 | ncmec_2023_631 | distribution of CSAM | more than 2 dozen child pornography charges after a ... | Children, which alerted detectives to a file uploaded to ... |
@@ -620,7 +620,7 @@
 | ncmec_2024_1016 | distribution of CSAM |  | A Pickens County, South Carolina, man was arrested this w... |
 | ncmec_2024_102 | distribution of CSAM |  | accused of uploading child sexual abuse material to socia... |
 | ncmec_2024_1051 | platform-reported CSAM (distribution inferred) |  | The case unfolded when the TBI received a cybertip back i... |
-| ncmec_2024_1117 | distribution of CSAM | POSSESSION OF CHILD PORN By Stephanie Johnson, Tamon... | According to the complaint, Palomares shared sexually exp... |
+| ncmec_2024_1117 | distribution of CSAM | POSSESSION OF CHILD PORN By [PERSON], [PERSON] https... | According to the complaint, [PERSON] shared sexually expl... |
 | ncmec_2024_1119 | contact and communication with victim | one count of first offense possession of child porno... | private chats on social media. |
 | ncmec_2024_1145 | contact and communication with victim |  | contact with a minor through social media. |
 | ncmec_2024_1158 | contact and communication with victim | possession of child pornography | messaging area of a social media site, according to a cri... |
@@ -630,17 +630,17 @@
 | ncmec_2024_156 | distribution of CSAM |  | Discord social media platform to exchange and view child ... |
 | ncmec_2024_157 | used in offense (specific role unspecified) | 6 counts of possession of child porn, 58 counts of t... | (NCMEC), regarding a social media app user transmitting f... |
 | ncmec_2024_198 | distribution of CSAM | possession of child sexual abuse material, use of a ... | material being uploaded to a social media platform. |
-| ncmec_2024_226 | distribution of CSAM |  | tips it had received from a social media platform that Ki... |
+| ncmec_2024_226 | distribution of CSAM |  | tips it had received from a social media platform that [P... |
 | ncmec_2024_253 | distribution of CSAM |  | and Exploited Children (NCMEC) alerting agents to a socia... |
 | ncmec_2024_278 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY Hernando County Sher... | account and uploading/sharing the initial file on the soc... |
 | ncmec_2024_289 | platform-reported CSAM (distribution inferred) | 10 COUNTS OF CHILD PORN Post Register Esssential New... | A cybertip from a social media platform led to the arrest... |
-| ncmec_2024_306 | distribution of CSAM | POSSESSION OF HUNDREDS OF CHILD PORNOGRAPHY IMAGES I... | evidence existed Chavez shared pornographic images of chi... |
+| ncmec_2024_306 | distribution of CSAM | POSSESSION OF HUNDREDS OF CHILD PORNOGRAPHY IMAGES I... | evidence existed [PERSON] shared pornographic images of c... |
 | ncmec_2024_335 | distribution of CSAM |  | A Kingston man is being accused of uploading child pornog... |
 | ncmec_2024_383 | distribution of CSAM | SEXUAL EXPLOITATION OF CHILDREN IN PERSON AND ONLINE... | suspected files of child sexual abuse material that had b... |
-| ncmec_2024_410 | contact and communication with victim | the following: Three (3) counts of Distribution of C... | Discord is an instant messaging social media platform tha... |
+| ncmec_2024_410 | contact and communication with victim | the following: [PERSON] (3) counts of Distribution o... | Discord is an instant messaging social media platform tha... |
 | ncmec_2024_418 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY https://www | contained child pornography uploaded to a social media ac... |
 | ncmec_2024_422 | distribution of CSAM | a crime is merely an accusation, and the defendant i... | Earlier this year, detectives received a cyber tip after ... |
-| ncmec_2024_438 | contact and communication with victim | CHARGES OF SENDING OBSCENE MATERIAL TO MINOR https:/... | During an interview, Keith admitted to contacting minors ... |
+| ncmec_2024_438 | contact and communication with victim | CHARGES OF SENDING OBSCENE MATERIAL TO MINOR https:/... | During an interview, [PERSON] admitted to contacting mino... |
 | ncmec_2024_476 | platform-reported CSAM (distribution inferred) |  | During the investigation, detectives identified social me... |
 | ncmec_2024_519 | distribution of CSAM | possession of child pornography, distributing materi... | social media account owned and distributed child sexual a... |
 | ncmec_2024_563 | distribution of CSAM | one county of felony dissemination of pornography in... | possessing, publishing, distributing or producing child s... |
@@ -650,7 +650,7 @@
 | ncmec_2024_698 | distribution of CSAM | PRODUCTION, DISTRIBUTION, AND POSSESSION OF CHILD Un... | performing heinous sex acts against her and other minors ... |
 | ncmec_2024_714 | distribution of CSAM | a child pornography charge in May 2021 in Genesee Co... | contents of the social media account that uploaded the im... |
 | ncmec_2024_742 | distribution of CSAM | the following: • (3) counts of Promoting a Sexual Pe... | The arrest is the result of the defendant utilizing vario... |
-| ncmec_2024_752 | distribution of CSAM | PROMOTION OF A SEXUAL PERFORMANCE BY A CHILD New Yor... | Exploited Children alleging Viskovich had uploaded child ... |
+| ncmec_2024_752 | distribution of CSAM | PROMOTION OF A SEXUAL PERFORMANCE BY A CHILD New Yor... | Exploited Children alleging [PERSON] had uploaded child e... |
 | ncmec_2024_911 | contact and communication with victim | Soliciting Sexual Conduct or Communication with a Mi... | In April, an administrator for the social media platform ... |
 | ncmec_2024_934 | platform-reported CSAM (distribution inferred) | child pornography offenses in Lycoming County faces ... | when the social media platforms Facebook and Instagram re... |
 | ncmec_2024_936 | distribution of CSAM | POSSESSING OVER 1,200 CSAM FILES Daily Voice Lebanon... | that a user uploaded 18 CSAM files to the social media pl... |
@@ -672,30 +672,30 @@
 | ncmec_2025_212 | distribution of CSAM |  | distributing it to people who would message him via a soc... |
 | ncmec_2025_215 | distribution of CSAM | MULTIPLE CHILD EXPLOITATION CHARGES https://www | content, through various social media platforms in exchan... |
 | ncmec_2025_249 | contact and communication with victim | 14 COUNTS OF CHILD https://www | The tips warned of a possible child pornography case from... |
-| ncmec_2025_262 | distribution of CSAM | distributing child pornography, and David Martin Gar... | received a tip from Kik /MediaLab, a social media platfor... |
-| ncmec_2025_285 | distribution of CSAM |  | CyberTip that a social media account belonging to Tanaka ... |
+| ncmec_2025_262 | distribution of CSAM | distributing child pornography, and [PERSON], 33, wh... | received a tip from Kik /MediaLab, a social media platfor... |
+| ncmec_2025_285 | distribution of CSAM |  | CyberTip that a social media account belonging to [PERSON... |
 | ncmec_2025_289 | platform-reported CSAM (distribution inferred) | 11 felony counts of possession of child pornography ... | Five additional cybertips were filed, originating from Go... |
 | ncmec_2025_291 | distribution of CSAM | multiple charges of dissemination of child pornograp... | Center for Missing and Exploited Children about a social ... |
 | ncmec_2025_344 | distribution of CSAM |  | Police say a Dubuque man shared child pornography on soci... |
 | ncmec_2025_357 | used in offense (specific role unspecified) |  | transmitted via a social media platform. |
-| ncmec_2025_368 | used in offense (specific role unspecified) | distribution of matter portraying a sexual performan... | According to an arrest citation, Braden Sweney utilized a... |
+| ncmec_2025_368 | used in offense (specific role unspecified) | distribution of matter portraying a sexual performan... | According to an arrest citation, [PERSON] utilized an acc... |
 | ncmec_2025_370 | distribution of CSAM | four counts of distribution of matter portraying a s... | uploading child sexual abuse material (CSAM) using social... |
 | ncmec_2025_374 | distribution of CSAM | distributing matter portraying a sexual performance ... | The investigation uncovered child sexual abuse material (... |
 | ncmec_2025_375 | distribution of CSAM | 20 counts of possessing matter portraying a minor un... | uploading sexually explicit images of juveniles to one of... |
 | ncmec_2025_391 | distribution of CSAM | 60 COUNTS OF CHILD PORNOGRAPHY https://www | Force received information about explicit images and vide... |
 | ncmec_2025_413 | distribution of CSAM | five counts of LA RS 14:81 | social media account containing and distributing multiple... |
-| ncmec_2025_493 | contact and communication with victim | criminal sexual misconduct-penetration or contact un... | The criminal complaint alleges that Peacock initiated con... |
+| ncmec_2025_493 | contact and communication with victim | criminal sexual misconduct-penetration or contact un... | The criminal complaint alleges that [PERSON] initiated co... |
 | ncmec_2025_577 | used in offense (specific role unspecified) | DISTRIBUTION OF CHILD SEXUAL ABUSE MATERIAL Gloucest... | the seized devices revealed evidence that the devices had... |
-| ncmec_2025_578 | distribution of CSAM | possession and distribution of child pornography | Serwedes is accused of possessing and distributing child ... |
-| ncmec_2025_711 | used in offense (specific role unspecified) | promoting or directing an obscene sexual performance... | Miller said he had viewed and sent child pornography on s... |
+| ncmec_2025_578 | distribution of CSAM | possession and distribution of child pornography | [PERSON] is accused of possessing and distributing child ... |
+| ncmec_2025_711 | used in offense (specific role unspecified) | promoting or directing an obscene sexual performance... | [PERSON] said he had viewed and sent child pornography on... |
 | ncmec_2025_738 | platform-reported CSAM (distribution inferred) | felony counts of buying/possessing/procuring child s... | A Lawton man is in jail after a CyberTip led to his socia... |
 | ncmec_2025_743 | distribution of CSAM |  | uploaded child pornography to the social media platform KiK. |
-| ncmec_2025_753 | contact and communication with victim | SEXUAL ABUSE CHARGES INVOLVING CHILDREN By Rogue Val... | Bowen allegedly communicated with at least five underage ... |
+| ncmec_2025_753 | contact and communication with victim | SEXUAL ABUSE CHARGES INVOLVING CHILDREN By Rogue Val... | [PERSON] allegedly communicated with at least five undera... |
 | ncmec_2025_774 | distribution of CSAM | POSSESSING, SHARING CHILD PORNOGRAPHY ON SOCIAL MEDI... | communication device, for allegedly possessing and sharin... |
 | ncmec_2025_775 | platform-reported CSAM (distribution inferred) | Dissemination of Child Pornography and Possession of... | series of social media accounts that were flagged by the ... |
 | ncmec_2025_777 | used in offense (specific role unspecified) |  | DA: CHILD SEXUAL ABUSE MATERIAL SENT THROUGH SOCIAL MEDIA... |
 | ncmec_2025_798 | distribution of CSAM | five felony counts of child pornography Wednesday du... | Investigators found what was described as lewd materials ... |
-| ncmec_2025_832 | distribution of CSAM |  | Macleod allegedly exchanged explicit messages through a s... |
+| ncmec_2025_832 | distribution of CSAM |  | [PERSON] allegedly exchanged explicit messages through a ... |
 | ncmec_2025_889 | distribution of CSAM | two counts of possession of child pornography with i... | Detectives learned someone had uploaded child pornography... |
 | ncmec_2025_913 | distribution of CSAM | several felony charges for allegedly sharing explici... | Material being shared on a social media platform. |
 | ncmec_2025_925 | used in offense (specific role unspecified) |  | The tip indicated that someone using a social media platf... |
@@ -705,12 +705,12 @@
 | nj_ag_2015_010 | contact and communication with victim |  | would contact and befriend teenage girls on the Internet ... |
 | nj_ag_2016_015 | used in offense (specific role unspecified) | a first-degree charge of manufacturing child pornogr... | social media accounts, which he then used to blackmail th... |
 | nj_ag_2016_016 | used in offense (specific role unspecified) |  | social media accounts, which he then used to blackmail th... |
-| nj_ag_2016_020 | distribution of CSAM | second-degree distribution of child pornography and ... | “Despite the shutdown of his social media accounts, Jimen... |
+| nj_ag_2016_020 | distribution of CSAM | second-degree distribution of child pornography and ... | “Despite the shutdown of his social media accounts, [PERS... |
 | nj_ag_2017_006 | contact and communication with victim | Charges He Possessed Child Pornography & Solicited a... | allegedly targeted underage girls on social media sites, ... |
-| nj_ag_2017_022 | grooming / soliciting minor |  | predators like Chandler continue to use social media site... |
+| nj_ag_2017_022 | grooming / soliciting minor |  | predators like [PERSON] continue to use social media site... |
 | nj_ag_2018_001 | grooming / soliciting minor |  | “It is a frightening reality that sexual predators are lu... |
 | nj_ag_2018_008 | grooming / soliciting minor | Allegedly Attempting to Arrange Sexual Encounter wit... | for allegedly attempting to lure a 14-year-old boy he met... |
-| nj_ag_2018_009 | contact and communication with victim | Allegedly Attempting to Lure Boy, 14, for Sexual Enc... | Force routinely conduct undercover chat investigations on... |
+| nj_ag_2018_009 | contact and communication with victim | Allegedly Attempting to [PERSON], 14, for Sexual Enc... | Force routinely conduct undercover chat investigations on... |
 | nj_ag_2018_013 | contact and communication with victim |  | Detectives also conducted undercover chat investigations ... |
 | nj_ag_2019_007 | contact and communication with victim |  | Force routinely conduct undercover chat investigations on... |
 | nj_ag_2020_004 | contact and communication with victim |  | New Jersey Regional ICAC Task Force routinely conduct und... |
@@ -725,7 +725,7 @@
 | nj_ag_2021_004 | contact and communication with victim | March 18, 2020 by detectives of the New Jersey State... | routinely conduct undercover chat investigations on socia... |
 | nj_ag_2021_006 | contact and communication with victim |  | New Jersey Regional ICAC Task Force routinely conduct und... |
 | nj_ag_2021_008 | distribution of CSAM | luring a child (2nd degree), showing obscene materia... | investigations on social media platforms and peer-to-peer... |
-| nj_ag_2021_009 | grooming / soliciting minor | April 13, 2019 in Operation Home Alone | “We want online predators like Smith to know that the vul... |
+| nj_ag_2021_009 | grooming / soliciting minor | April 13, 2019 in Operation Home Alone | “We want online predators like [PERSON] to know that the ... |
 | nj_ag_2021_010 | grooming / soliciting minor | second-degree luring on July 1, 2021 | prison today for attempting to lure an underage boy he me... |
 | nj_ag_2022_001 | used in offense (specific role unspecified) | first-degree aggravated sexual assault on November 2... | Burlington County was sentenced to state prison today aft... |
 | nj_ag_2023_002 | contact and communication with victim | first-degree endangering the welfare of a child for ... | Children He Contacted on Social Media - New Jersey Office... |
@@ -735,15 +735,15 @@
 | nz_dia_2018_003 | distribution of CSAM |  | charge being the distribution of 102 objectionable files ... |
 | nz_dia_2019_005 | distribution of CSAM |  | The defendant used social media platforms to distribute 1... |
 | nz_dia_2021_004 | distribution of CSAM |  | was found to be viewing and distributing material via a n... |
-| nz_dia_2022_002 | distribution of CSAM |  | Pickering used various social media platforms to distribu... |
+| nz_dia_2022_002 | distribution of CSAM |  | [PERSON] used various social media platforms to distribut... |
 | pa_ag_2025_030 | contact and communication with victim |  | five to 15 years in prison for contacting a girl, via soc... |
 | qps_2025_002 | contact and communication with victim | multiple offences including, three counts each of st... | sexualised messages to a number of victims on various soc... |
 | scag_icac_2021_050 | distribution of CSAM |  | A social media site reported that a user uploaded files o... |
-| scag_icac_2022_036 | distribution of CSAM | two counts of sexual exploitation of a minor, second... | Investigators received Cybertips about the uploading of C... |
-| sdpd_2024_001 | used in offense (specific role unspecified) | Child Porn Charges Detectives are Searching for Addi... | indicated that De Freitas had sent and requested illicit ... |
+| scag_icac_2022_036 | distribution of CSAM | two counts of sexual exploitation of a minor, second... | Investigators received [PERSON] about the uploading of Ch... |
+| sdpd_2024_001 | used in offense (specific role unspecified) | Child Porn Charges Detectives are Searching for Addi... | indicated that [PERSON] had sent and requested illicit im... |
 | south_florida_icac_2024_001 | contact and communication with victim |  | Most of those cases started with messages on social media... |
 | south_florida_icac_2025_012 | used in offense (specific role unspecified) | child pornography charges, police say Publication da... | through the Kik social media platform. |
-| south_florida_icac_2025_036 | platform-reported CSAM (distribution inferred) |  | and Pearl sent through social media and reported them to ... |
+| south_florida_icac_2025_036 | platform-reported CSAM (distribution inferred) |  | and [PERSON] sent through social media and reported them ... |
 | spd_2020_001 | grooming / soliciting minor |  | social media app who had been grooming her. |
 | spd_2025_004 | used in offense (specific role unspecified) |  | which suggested that Child Sexual Abuse Material (CSAM) b... |
 | spd_2025_008 | distribution of CSAM | Creating, Sharing Child Sex Abuse Material After Sea... | admitted to taking illegal images of the 7-year-old girl ... |
@@ -756,15 +756,15 @@
 | tbi_icac_2024_017 | distribution of CSAM | Sexual Exploitation of Children and other related of... | brand-new sexual exploitation content being created by th... |
 | tbi_icac_2024_021 | distribution of CSAM | sexual exploitation of a minor | Children) from a social media app, that reported an accou... |
 | tbi_icac_2026_003 | contact and communication with victim | Solicitation of a Minor MARSHALL COUNTY – An investi... | someone using the name blakjiren on social media or on ga... |
-| texas_ag_2019_007 | distribution of CSAM |  | uploaded on social media and led CEU investigators to Sic... |
+| texas_ag_2019_007 | distribution of CSAM |  | uploaded on social media and led CEU investigators to [PE... |
 | us_marshals_2022_013 | contact and communication with victim |  | away on 07/10/2022 and was believed to be in contact with... |
-| usss_2019_003 | contact and communication with victim | the charge on August 16, 2019 | Mitchell used a social media platform to communicate with... |
+| usss_2019_003 | contact and communication with victim | the charge on August 16, 2019 | [PERSON] used a social media platform to communicate with... |
 | usss_2021_017 | platform-reported CSAM (distribution inferred) |  | received a call from a grandparent who reported that at l... |
 | ut_ag_2019_002 | distribution of CSAM | multiple counts of child exploitation of a minor aft... | Children after an image was uploaded to the social media ... |
 | ut_ag_2026_002 | contact and communication with victim |  | agents also conducted undercover chat investigations on v... |
 | vt_ag_2024_004 | grooming / soliciting minor | a crime are legally presumed innocent until their gu... | enticement on the social media platform Kik. |
 | vt_ag_2026_003 | platform-reported CSAM (distribution inferred) | Use of a Child in a Sexual The Attorney General’s Of... | The tip was reported by social media platform KIK, after an |
-| wcso_2022_002 | contact and communication with victim |  | Preliminary investigative findings determined Bhardwaj ma... |
+| wcso_2022_002 | contact and communication with victim |  | Preliminary investigative findings determined [PERSON] ma... |
 | wcso_2022_004 | distribution of CSAM | the following charges: – Possession of visual presen... | It was reported a user of the social media platform Kik w... |
 
 **Inferred evidence** (36 cases):
@@ -776,16 +776,16 @@
 | doj_safe_childhood_2023_315 | used in offense (specific role unspecified) |  | undercover employee observed a user of the social me... | social media and offense language co-occur in the same sentence without instr... |
 | doj_safe_childhood_2023_365 | contact and communication with victim | Possessing or Viewing Child Pornography and was... | numerous images of child sexual abuse material (CSAM... | social media and offense language co-occur in the same sentence without instr... |
 | doj_safe_childhood_2023_474 | contact and communication with victim |  | image containing child pornography using the Snapcha... | social media and offense language co-occur in the same sentence without instr... |
-| doj_safe_childhood_2024_110 | used in offense (specific role unspecified) |  | evidence presented at trial showed that Glatz used D... | social media and offense language co-occur in the same sentence without instr... |
-| doj_safe_childhood_2024_415 | contact and communication with victim | Production of Child Pornography | Wolf used the social media app Snapchat | social media and offense language co-occur in the same sentence without instr... |
+| doj_safe_childhood_2024_110 | used in offense (specific role unspecified) |  | evidence presented at trial showed that [PERSON] use... | social media and offense language co-occur in the same sentence without instr... |
+| doj_safe_childhood_2024_415 | contact and communication with victim | Production of Child Pornography | [PERSON] used the social media app Snapchat | social media and offense language co-occur in the same sentence without instr... |
 | doj_safe_childhood_2025_058 | used in offense (specific role unspecified) |  | undercover online persona on a social media site pos... | social media and offense language co-occur in the same sentence without instr... |
 | doj_safe_childhood_2025_206 | used in offense (specific role unspecified) | 2 counts of distribution of child pornography | undercover online persona on a social media site pos... | social media and offense language co-occur in the same sentence without instr... |
-| doj_safe_childhood_2025_338 | used in offense (specific role unspecified) |  | An investigation revealed that Stafford was using a ... | social media and offense language co-occur in the same sentence without instr... |
+| doj_safe_childhood_2025_338 | used in offense (specific role unspecified) |  | An investigation revealed that [PERSON] was using a ... | social media and offense language co-occur in the same sentence without instr... |
 | doj_safe_childhood_2026_105 | used in offense (specific role unspecified) |  | According to court records, agents were conducting i... | social media and offense language co-occur in the same sentence without instr... |
-| gbi_2025_005 | distribution of CSAM | 3 counts of Sexual Exploitation of Children | Berkovich was found to be distributing child sexual ... | social media and offense language co-occur in the same sentence without instr... |
+| gbi_2025_005 | distribution of CSAM | 3 counts of Sexual Exploitation of Children | [PERSON] was found to be distributing child sexual a... | social media and offense language co-occur in the same sentence without instr... |
 | mt_doj_2025_001 | CSAM production |  | social media account and used AI to create manipulat... | social media and offense language co-occur in the same sentence without instr... |
 | nbi_2026_001 | used in offense (specific role unspecified) |  | The investigation used open-source intelligence, dig... | social media and offense language co-occur in the same sentence without instr... |
-| nca_2026_008 | contact and communication with victim |  | Swaddle was active across social media platforms inc... | social media and offense language co-occur in the same sentence without instr... |
+| nca_2026_008 | contact and communication with victim |  | [PERSON] was active across social media platforms in... | social media and offense language co-occur in the same sentence without instr... |
 | ncis_2024_001 | used in offense (specific role unspecified) |  | of the undercover agents, who was posing as a 14-yea... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2022_263 | contact and communication with victim | Possession of Child November 8, 2022 - by MyChe... | social media platforms Tumblr, Dropbox, and Snapchat. | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2023_356 | contact and communication with victim | Thursday | partnership with ICAC, including a case involving th... | social media and offense language co-occur in the same sentence without instr... |
@@ -793,14 +793,14 @@
 | ncmec_2023_558 | used in offense (specific role unspecified) | oral copulation with a minor, possessing obscen... | someone downloaded child pornography through social ... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2023_601 | used in offense (specific role unspecified) | oral copulation with a minor, possessing obscen... | someone downloaded child pornography through social ... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2024_078 | used in offense (specific role unspecified) | suspicion of possession of a stolen vehicle | Officials say the investigation began when social me... | social media and offense language co-occur in the same sentence without instr... |
-| ncmec_2024_212 | used in offense (specific role unspecified) | 73 COUNTS OF CHILD PORN: DEPUTIES https://www | On Wednesday, Groves was arrested at his Brooksville... | social media and offense language co-occur in the same sentence without instr... |
-| ncmec_2024_407 | used in offense (specific role unspecified) |  | The Indiana State Police investigation revealed Carl... | social media and offense language co-occur in the same sentence without instr... |
+| ncmec_2024_212 | used in offense (specific role unspecified) | 73 COUNTS OF CHILD PORN: DEPUTIES https://www | On Wednesday, [PERSON] was arrested at his Brooksvil... | social media and offense language co-occur in the same sentence without instr... |
+| ncmec_2024_407 | used in offense (specific role unspecified) |  | The Indiana State Police investigation revealed [PER... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2025_177 | used in offense (specific role unspecified) |  | Deputies arrested him after he admitted to posting e... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2025_322 | used in offense (specific role unspecified) | 1 count of Promotion of Child Sexual Traffickin... | Detectives with the Hamilton County Metro ICAC Task ... | social media and offense language co-occur in the same sentence without instr... |
-| ncmec_2025_325 | used in offense (specific role unspecified) | the following: 10 counts of Possession of Child... | Detectives with the task force searched through Knig... | social media and offense language co-occur in the same sentence without instr... |
+| ncmec_2025_325 | used in offense (specific role unspecified) | the following: 10 counts of Possession of Child... | Detectives with the task force searched through [PER... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2025_334 | used in offense (specific role unspecified) |  | Detectives from the task force served search warrant... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2025_537 | used in offense (specific role unspecified) | MULTIPLE SEX CRIMES TheSalemNewsonline | Against Children Task Force from a social media plat... | social media and offense language co-occur in the same sentence without instr... |
-| ncmec_2025_745 | contact and communication with victim | distributing child porn and violating Oklahoma ... | The detective used search warrants to get ahold of S... | social media and offense language co-occur in the same sentence without instr... |
+| ncmec_2025_745 | contact and communication with victim | distributing child porn and violating Oklahoma ... | The detective used search warrants to get ahold of [... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2025_750 | contact and communication with victim | buying, possessing, and procuring the material | In 2024 the social media app Snapchat alerted The Na... | social media and offense language co-occur in the same sentence without instr... |
 | ncmec_2025_834 | used in offense (specific role unspecified) |  | The indictment alleges that from at least June 2023 ... | social media and offense language co-occur in the same sentence without instr... |
 | nj_ag_2018_024 | used in offense (specific role unspecified) | Sending Sexually Explicit Photos and Video of H... | County has been arrested on charges that he used soc... | social media and offense language co-occur in the same sentence without instr... |
@@ -829,117 +829,117 @@
 |---|---|---|---|
 | arkansas_dps_2024_012 | contact and communication with victim |  | through the online messaging applications Snapchat and Kik. |
 | cspd_2021_003 | contact and communication with victim | multiple counts of Sexual Assault on a Child by One ... | reported sexual assault on a child in which the suspect w... |
-| doj_ceos_2025_003 | contact and communication with victim |  | According to court documents, Donald Ramirez, 40, of Sali... |
+| doj_ceos_2025_003 | contact and communication with victim |  | According to court documents, [PERSON], 40, of Salinas, C... |
 | doj_ceos_2025_026 | contact and communication with victim | the charge on Nov | the victim through Snapchat, convincing her to send him e... |
-| doj_safe_childhood_2021_029 | distribution of CSAM | federal child pornography violations in the Eastern ... | Pieper admitted to uploading the videos and images he cap... |
-| doj_safe_childhood_2021_033 | grooming / soliciting minor |  | Ary used a different Snapchat account to solicit and rece... |
-| doj_safe_childhood_2021_048 | contact and communication with victim |  | Ahmed then communicated with the minor over Facebook and ... |
+| doj_safe_childhood_2021_029 | distribution of CSAM | federal child pornography violations in the Eastern ... | [PERSON] admitted to uploading the videos and images he c... |
+| doj_safe_childhood_2021_033 | grooming / soliciting minor |  | [PERSON] used a different Snapchat account to solicit and... |
+| doj_safe_childhood_2021_048 | contact and communication with victim |  | [PERSON] then communicated with the minor over Facebook a... |
 | doj_safe_childhood_2021_068 | contact and communication with victim |  | girl on Snapchat into creating sexually explicit images a... |
-| doj_safe_childhood_2022_013 | contact and communication with victim | receiving and distributing child pornography | Jane Doe told investigators she sent nude images to Steph... |
+| doj_safe_childhood_2022_013 | contact and communication with victim | receiving and distributing child pornography | [PERSON] told investigators she sent nude images to [PERS... |
 | doj_safe_childhood_2022_020 | contact and communication with victim |  | According to court documents and evidence presented at tr... |
-| doj_safe_childhood_2022_044 | distribution of CSAM |  | Harper communicated with others on Snapchat and the Omegl... |
-| doj_safe_childhood_2022_059 | distribution of CSAM |  | Pieper admitted to uploading the videos and images he cap... |
+| doj_safe_childhood_2022_044 | distribution of CSAM |  | [PERSON] communicated with others on Snapchat and the Ome... |
+| doj_safe_childhood_2022_059 | distribution of CSAM |  | [PERSON] admitted to uploading the videos and images he c... |
 | doj_safe_childhood_2022_070 | contact and communication with victim | the charge on August 8, 2022 | and Exploited Children (NCMEC) received eight reports of ... |
 | doj_safe_childhood_2022_130 | grooming / soliciting minor |  | induced, enticed, or coerced to send sexually explicit im... |
 | doj_safe_childhood_2022_134 | contact and communication with victim |  | individual reported finding sexually explicit Snapchat me... |
-| doj_safe_childhood_2022_207 | contact and communication with victim |  | that Slater sent videos of child pornography using Snapch... |
+| doj_safe_childhood_2022_207 | contact and communication with victim |  | that [PERSON] sent videos of child pornography using Snap... |
 | doj_safe_childhood_2022_228 | contact and communication with victim | the charge in April 2022 | minor victims via Snapchat, persuaded them to produce vis... |
-| doj_safe_childhood_2022_252 | contact and communication with victim |  | The investigation revealed that McCall-Teigen communicate... |
+| doj_safe_childhood_2022_252 | contact and communication with victim |  | The investigation revealed that [PERSON] communicated thr... |
 | doj_safe_childhood_2022_293 | contact and communication with victim |  | 1, 2019 via Snapchat, and being |
 | doj_safe_childhood_2022_323 | distribution of CSAM |  | of the assault which he then distributed to others via th... |
 | doj_safe_childhood_2022_346 | distribution of CSAM |  | Center for Missing and Exploited Children (NCMEC) regardi... |
-| doj_safe_childhood_2022_356 | contact and communication with victim |  | In the plea agreement, Fosler admitted that he used snapc... |
-| doj_safe_childhood_2022_398 | distribution of CSAM | transportation of child pornography | individual, later identified as McGee, using Snapchat to ... |
+| doj_safe_childhood_2022_356 | contact and communication with victim |  | In the plea agreement, [PERSON] admitted that he used sna... |
+| doj_safe_childhood_2022_398 | distribution of CSAM | transportation of child pornography | individual, later identified as [PERSON], using Snapchat ... |
 | doj_safe_childhood_2022_414 | contact and communication with victim | the charge in October 2021 | victim via Snapchat. |
 | doj_safe_childhood_2022_422 | contact and communication with victim | one count of producing sexually explicit images and ... | instant messaging and texting services, including Snapcha... |
 | doj_safe_childhood_2022_472 | contact and communication with victim |  | communicate with children on the internet, including via ... |
 | doj_safe_childhood_2022_548 | contact and communication with victim |  | minor victim to make several pornographic videos and then... |
-| doj_safe_childhood_2023_004 | contact and communication with victim |  | As part of his guilty plea, Demars admitted that he commu... |
+| doj_safe_childhood_2023_004 | contact and communication with victim |  | As part of his guilty plea, [PERSON] admitted that he com... |
 | doj_safe_childhood_2023_054 | distribution of CSAM | three counts of receipt of child pornography | messaging applications like Snapchat and other online pla... |
-| doj_safe_childhood_2023_103 | contact and communication with victim |  | Beckman admitted that he began communicating with the oth... |
+| doj_safe_childhood_2023_103 | contact and communication with victim |  | [PERSON] admitted that he began communicating with the ot... |
 | doj_safe_childhood_2023_115 | contact and communication with victim |  | that someone had used Snapchat to send images containing ... |
 | doj_safe_childhood_2023_176 | distribution of CSAM |  | images and uploaded them to the social media application ... |
 | doj_safe_childhood_2023_197 | contact and communication with victim |  | chats sent via a SnapChat App that corresponded to multip... |
-| doj_safe_childhood_2023_227 | contact and communication with victim |  | After Schoggins accessed child pornography on his Snapcha... |
-| doj_safe_childhood_2023_232 | contact and communication with victim | rape in Garvin County, “Our collective efforts to pr... | Mahoney claimed he exclusively used the Snapchat messaging |
+| doj_safe_childhood_2023_227 | contact and communication with victim |  | After [PERSON] accessed child pornography on his Snapchat... |
+| doj_safe_childhood_2023_232 | contact and communication with victim | rape in Garvin County, “Our collective efforts to pr... | [PERSON] claimed he exclusively used the Snapchat messaging |
 | doj_safe_childhood_2023_243 | distribution of CSAM |  | distributing images containing child pornography using mu... |
-| doj_safe_childhood_2023_268 | contact and communication with victim |  | describing Nicozisin as a “sexual predator.” Nicozisin re... |
+| doj_safe_childhood_2023_268 | contact and communication with victim |  | describing [PERSON] as a “sexual predator.” [PERSON] reac... |
 | doj_safe_childhood_2023_304 | contact and communication with victim |  | produce very specific images of child pornography and to ... |
 | doj_safe_childhood_2023_334 | contact and communication with victim |  | communicating with the victim via Snapchat. |
-| doj_safe_childhood_2023_335 | contact and communication with victim | one count of possession of child pornography and one... | Irons also had a Snapchat account, which Irons used to |
+| doj_safe_childhood_2023_335 | contact and communication with victim | one count of possession of child pornography and one... | [PERSON] also had a Snapchat account, which [PERSON] used to |
 | doj_safe_childhood_2023_357 | contact and communication with victim |  | coerced minors online via Facebook and Snapchat to take s... |
 | doj_safe_childhood_2023_372 | contact and communication with victim |  | chats sent via a SnapChat App that corresponded to multip... |
-| doj_safe_childhood_2023_412 | distribution of CSAM | distribution of child pornography | 2021, Burney used Snapchat to coerce a minor male victim ... |
+| doj_safe_childhood_2023_412 | distribution of CSAM | distribution of child pornography | 2021, [PERSON] used Snapchat to coerce a minor male victi... |
 | doj_safe_childhood_2023_417 | contact and communication with victim |  | business, introduction from other minors, or through Snap... |
 | doj_safe_childhood_2023_426 | contact and communication with victim |  | recordings of the child pornography he had received via S... |
-| doj_safe_childhood_2023_457 | distribution of CSAM |  | Harper communicated with others on Snapchat and the Omegl... |
+| doj_safe_childhood_2023_457 | distribution of CSAM |  | [PERSON] communicated with others on Snapchat and the Ome... |
 | doj_safe_childhood_2023_474 | distribution of CSAM |  | distributing images containing child pornography using mu... |
-| doj_safe_childhood_2023_493 | contact and communication with victim |  | Preuschl had communicated with several other minor female... |
-| doj_safe_childhood_2023_498 | distribution of CSAM |  | whom Peterson had been exchanging sexually explicit messa... |
+| doj_safe_childhood_2023_493 | contact and communication with victim |  | [PERSON] had communicated with several other minor female... |
+| doj_safe_childhood_2023_498 | distribution of CSAM |  | whom [PERSON] had been exchanging sexually explicit messa... |
 | doj_safe_childhood_2023_554 | contact and communication with victim |  | Exploited Children (NCMEC) that the user had received thr... |
-| doj_safe_childhood_2024_012 | contact and communication with victim | producing child pornography on April 4, 2024, is req... | Knecht was using the Snapchat account to portray himself ... |
-| doj_safe_childhood_2024_019 | contact and communication with victim | their crimes | learned of the recording after James sent it to her via S... |
+| doj_safe_childhood_2024_012 | contact and communication with victim | producing child pornography on April 4, 2024, is req... | [PERSON] was using the Snapchat account to portray himsel... |
+| doj_safe_childhood_2024_019 | contact and communication with victim | their crimes | learned of the recording after [PERSON] sent it to her vi... |
 | doj_safe_childhood_2024_050 | contact and communication with victim |  | pornography to a user on Snapchat on at least five differ... |
-| doj_safe_childhood_2024_079 | contact and communication with victim |  | Potts recorded that sexual contact and used Snapchat to s... |
-| doj_safe_childhood_2024_080 | contact and communication with victim |  | Sisk admitted to using the Snapchat username |
-| doj_safe_childhood_2024_091 | contact and communication with victim |  | As part of his previous guilty plea, Futrell admitted tha... |
-| doj_safe_childhood_2024_097 | contact and communication with victim |  | Sisk admitted to using the Snapchat username |
+| doj_safe_childhood_2024_079 | contact and communication with victim |  | [PERSON] recorded that sexual contact and used Snapchat t... |
+| doj_safe_childhood_2024_080 | contact and communication with victim |  | [PERSON] admitted to using the Snapchat username |
+| doj_safe_childhood_2024_091 | contact and communication with victim |  | As part of his previous guilty plea, [PERSON] admitted th... |
+| doj_safe_childhood_2024_097 | contact and communication with victim |  | [PERSON] admitted to using the Snapchat username |
 | doj_safe_childhood_2024_175 | contact and communication with victim |  | the Nicholas County Sheriff’s Department had been used to... |
-| doj_safe_childhood_2024_183 | contact and communication with victim |  | As part of his prior guilty plea, Demars admitted that he... |
-| doj_safe_childhood_2024_213 | contact and communication with victim | two counts of producing child pornography, one count... | Redding, using a fake female persona on the Snapchat appl... |
+| doj_safe_childhood_2024_183 | contact and communication with victim |  | As part of his prior guilty plea, [PERSON] admitted that ... |
+| doj_safe_childhood_2024_213 | contact and communication with victim | two counts of producing child pornography, one count... | [PERSON], using a fake female persona on the Snapchat app... |
 | doj_safe_childhood_2024_232 | distribution of CSAM |  | Snapchat and Instagram, which involved child pornography ... |
-| doj_safe_childhood_2024_234 | contact and communication with victim |  | sent by Miller via Snapchat to other minors. |
+| doj_safe_childhood_2024_234 | contact and communication with victim |  | sent by [PERSON] via Snapchat to other minors. |
 | doj_safe_childhood_2024_242 | contact and communication with victim |  | multiple phones and Yahoo, Snapchat, and Instagram accoun... |
 | doj_safe_childhood_2024_248 | grooming / soliciting minor |  | that he used and enticed a second minor victim to produce... |
-| doj_safe_childhood_2024_265 | contact and communication with victim |  | February 2022, Lemus Ramos contacted a 13-year-old girl t... |
+| doj_safe_childhood_2024_265 | contact and communication with victim |  | February 2022, [PERSON] contacted a 13-year-old girl thro... |
 | doj_safe_childhood_2024_274 | contact and communication with victim | the statutory rape of a 13-year-old victim in 2007 | to him over Snapchat. |
-| doj_safe_childhood_2024_306 | grooming / soliciting minor | receiving child pornography | Willard used the internet-based application Snapchat and ... |
-| doj_safe_childhood_2024_307 | contact and communication with victim |  | As part of his guilty plea, Futrell admitted that he used... |
-| doj_safe_childhood_2024_319 | grooming / soliciting minor | violating, the U | Cota admitted that he used SnapChat to solicit three chil... |
+| doj_safe_childhood_2024_306 | grooming / soliciting minor | receiving child pornography | [PERSON] used the internet-based application Snapchat and... |
+| doj_safe_childhood_2024_307 | contact and communication with victim |  | As part of his guilty plea, [PERSON] admitted that he use... |
+| doj_safe_childhood_2024_319 | grooming / soliciting minor | violating, the U | [PERSON] admitted that he used SnapChat to solicit three ... |
 | doj_safe_childhood_2024_323 | distribution of CSAM |  | Law enforcement received multiple reports from MeWe, Drop... |
 | doj_safe_childhood_2024_367 | distribution of CSAM | this charge on January 16, 2024 | After exchanging nude photos, the Snapchat user began to ... |
-| doj_safe_childhood_2024_408 | contact and communication with victim | coercing minors to produce sexually explicit images,... | According to court documents, Shawn Norbert Kulzer, 32, b... |
-| doj_safe_childhood_2024_411 | contact and communication with victim |  | inappropriate messages between a minor and Eric Alan Star... |
-| doj_safe_childhood_2024_418 | contact and communication with victim |  | Bennett further admitted to saving the videos to his Snap... |
-| doj_safe_childhood_2024_428 | distribution of CSAM | using a minor to engage in sexually explicit conduct... | Seabolt, using Snapchat to distribute files depicting the... |
+| doj_safe_childhood_2024_408 | contact and communication with victim | coercing minors to produce sexually explicit images,... | According to court documents, [PERSON], 32, began chattin... |
+| doj_safe_childhood_2024_411 | contact and communication with victim |  | inappropriate messages between a minor and [PERSON], 45, ... |
+| doj_safe_childhood_2024_418 | contact and communication with victim |  | [PERSON] further admitted to saving the videos to his Sna... |
+| doj_safe_childhood_2024_428 | distribution of CSAM | using a minor to engage in sexually explicit conduct... | [PERSON], using Snapchat to distribute files depicting th... |
 | doj_safe_childhood_2024_441 | contact and communication with victim | one count of online enticement of a minor and one co... | victim to make several pornographic videos and then send ... |
 | doj_safe_childhood_2024_461 | contact and communication with victim |  | communicating through the Snapchat multimedia instant mes... |
-| doj_safe_childhood_2025_004 | contact and communication with victim |  | According to public court records, Nicklas Ray Stanley, 2... |
-| doj_safe_childhood_2025_014 | contact and communication with victim |  | According to public court records, Nicklas Ray Stanley, 2... |
-| doj_safe_childhood_2025_022 | contact and communication with victim |  | According to court documents, Donald Ramirez, 40, of Sali... |
-| doj_safe_childhood_2025_045 | contact and communication with victim |  | Hager admitted that the images and videos of child pornog... |
-| doj_safe_childhood_2025_052 | grooming / soliciting minor | four counts of Production of Child Pornography, thre... | personas on SnapChat and TikTok, Preuschl targeted and se... |
+| doj_safe_childhood_2025_004 | contact and communication with victim |  | According to public court records, [PERSON], 28, exploite... |
+| doj_safe_childhood_2025_014 | contact and communication with victim |  | According to public court records, [PERSON], 28, exploite... |
+| doj_safe_childhood_2025_022 | contact and communication with victim |  | According to court documents, [PERSON], 40, of Salinas, C... |
+| doj_safe_childhood_2025_045 | contact and communication with victim |  | [PERSON] admitted that the images and videos of child por... |
+| doj_safe_childhood_2025_052 | grooming / soliciting minor | four counts of Production of Child Pornography, thre... | personas on SnapChat and TikTok, [PERSON] targeted and se... |
 | doj_safe_childhood_2025_065 | contact and communication with victim |  | with multiple minors via Snapchat. |
 | doj_safe_childhood_2025_084 | contact and communication with victim | Production of Child Pornography | targeted through applications like Snapchat and pressured... |
-| doj_safe_childhood_2025_087 | contact and communication with victim |  | Jones used Snapchat to communicate with the |
+| doj_safe_childhood_2025_087 | contact and communication with victim |  | [PERSON] used Snapchat to communicate with the |
 | doj_safe_childhood_2025_113 | distribution of CSAM |  | The Sioux City Police Department received two CyberTips a... |
 | doj_safe_childhood_2025_119 | contact and communication with victim | Production of Child Pornography | Snapchat to meet and coerce a 14-year-old female living i... |
-| doj_safe_childhood_2025_134 | contact and communication with victim |  | Snapchat reported Mitchell Jr.’s account to the |
+| doj_safe_childhood_2025_134 | contact and communication with victim |  | Snapchat reported [PERSON] account to the |
 | doj_safe_childhood_2025_145 | contact and communication with victim | Production of Child Pornography and Cyberstalking | These communications took place through Snapchat. |
 | doj_safe_childhood_2025_214 | contact and communication with victim | Distribution of Child Pornography | “This is yet another case in which a bad actor utilized S... |
 | doj_safe_childhood_2025_219 | distribution of CSAM | that offense by indictment in March 2023 and pleaded... | Pa., had used their Snapchat account to distribute child ... |
 | doj_safe_childhood_2025_222 | grooming / soliciting minor |  | He enticed minor children via Snapchat and bought them |
-| doj_safe_childhood_2025_254 | grooming / soliciting minor |  | Cota previously admitted that he used SnapChat to solicit... |
+| doj_safe_childhood_2025_254 | grooming / soliciting minor |  | [PERSON] previously admitted that he used SnapChat to sol... |
 | doj_safe_childhood_2025_270 | distribution of CSAM |  | The devices had all previously logged into the Snapchat a... |
 | doj_safe_childhood_2025_282 | distribution of CSAM |  | the National Center for Missing and Exploited Children ab... |
-| doj_safe_childhood_2025_285 | contact and communication with victim |  | Snapchat reported Mitchell’s account to the National Center |
-| doj_safe_childhood_2025_302 | contact and communication with victim |  | received the remaining contents of Salazar’s Snapchat acc... |
+| doj_safe_childhood_2025_285 | contact and communication with victim |  | Snapchat reported [PERSON]’s account to the National Center |
+| doj_safe_childhood_2025_302 | contact and communication with victim |  | received the remaining contents of [PERSON]’s Snapchat ac... |
 | doj_safe_childhood_2025_324 | contact and communication with victim |  | met the victim on Snapchat, where he initially claimed he... |
-| doj_safe_childhood_2025_336 | distribution of CSAM | three counts in an indictment charging him with prod... | minors Anderson solicited for sex or for sexually explici... |
+| doj_safe_childhood_2025_336 | distribution of CSAM | three counts in an indictment charging him with prod... | minors [PERSON] solicited for sex or for sexually explici... |
 | doj_safe_childhood_2025_339 | contact and communication with victim |  | conducted primarily via Snapchat, and persuading her to c... |
 | doj_safe_childhood_2026_004 | distribution of CSAM |  | LOUIS – A man who possessed child sexual abuse material a... |
-| doj_safe_childhood_2026_019 | contact and communication with victim |  | herself to Solis through Snapchat. |
-| doj_safe_childhood_2026_027 | grooming / soliciting minor | one count of producing child pornography and one cou... | The government alleged in court documents Powell used Sna... |
-| doj_safe_childhood_2026_042 | distribution of CSAM | Child Pornography Charges Sentenced to 5 Years in Fe... | Cybertip from Snapchat that Jesse Jaso was distributing c... |
+| doj_safe_childhood_2026_019 | contact and communication with victim |  | herself to [PERSON] through Snapchat. |
+| doj_safe_childhood_2026_027 | grooming / soliciting minor | one count of producing child pornography and one cou... | The government alleged in court documents [PERSON] used S... |
+| doj_safe_childhood_2026_042 | distribution of CSAM | Child Pornography Charges Sentenced to 5 Years in Fe... | Cybertip from Snapchat that [PERSON] was distributing chi... |
 | doj_safe_childhood_2026_080 | contact and communication with victim |  | APD officers responded and found a Snapchat video, which ... |
 | doj_safe_childhood_2026_100 | contact and communication with victim |  | parties on Snapchat, and in at least one instance, back t... |
-| doj_safe_childhood_2026_123 | contact and communication with victim |  | Beginning in October 2023, Hecht contacted Victim 1 over ... |
+| doj_safe_childhood_2026_123 | contact and communication with victim |  | Beginning in October 2023, [PERSON] contacted Victim 1 ov... |
 | doj_safe_childhood_2026_156 | contact and communication with victim | one count of sexual exploitation of a child: attempt... | sexually explicit pictures on Snapchat. |
-| doj_safe_childhood_2026_157 | contact and communication with victim |  | According to the plea agreement, Rehman admitted that he ... |
-| doj_safe_childhood_2026_173 | contact and communication with victim |  | Hager admitted that the images and videos of child pornog... |
-| doj_safe_childhood_2026_182 | grooming / soliciting minor | sexually extorting minors, the defendant preyed on y... | law enforcement identified Ranaglia-Nelson after he used ... |
+| doj_safe_childhood_2026_157 | contact and communication with victim |  | According to the plea agreement, [PERSON] admitted that h... |
+| doj_safe_childhood_2026_173 | contact and communication with victim |  | [PERSON] admitted that the images and videos of child por... |
+| doj_safe_childhood_2026_182 | grooming / soliciting minor | sexually extorting minors, the defendant preyed on y... | law enforcement identified [PERSON] after he used Snapcha... |
 | doj_safe_childhood_2026_196 | distribution of CSAM |  | exchanged child sexual abuse material on Snapchat and rap... |
-| doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on Oct | The third minor victim began receiving messages from Nung... |
+| doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on Oct | The third minor victim began receiving messages from [PER... |
 | doj_safe_childhood_2026_326 | contact and communication with victim | a one-count Superseding Information charging him wit... | messages on Snapchat to the victim apologizing for “what ... |
 | doj_safe_childhood_2026_365 | distribution of CSAM | violating, the U | through Snapchat and then threatening to distribute that ... |
 | doj_safe_childhood_2026_374 | contact and communication with victim |  | The parents discovered inappropriate messages on Snapchat |
@@ -955,7 +955,7 @@
 | ncmec_2022_111 | contact and communication with victim | dissemination of photos of child sex acts, possessin... | In July 2020, state police also received a cybertip repor... |
 | ncmec_2022_139 | contact and communication with victim | possession of certain materials prohibited and distr... | https://www.kfyrtv.com/2022/01/05/bismarck-man-custody-af... |
 | ncmec_2022_141 | distribution of CSAM | two counts of third-degree sexual exploitation of a ... | County Police say he uploaded child pornography using Sna... |
-| ncmec_2022_143 | distribution of CSAM | allegedly sharing child pornography Written by Will ... | used a Snapchat group to exchange a video, depicting a yo... |
+| ncmec_2022_143 | distribution of CSAM | allegedly sharing child pornography Written by [PERS... | used a Snapchat group to exchange a video, depicting a yo... |
 | ncmec_2022_146 | contact and communication with victim |  | Missing and Exploited children submitted by Snapchat that... |
 | ncmec_2022_201 | distribution of CSAM |  | “uglybeardgod” who had uploaded two videos to Snapchat be... |
 | ncmec_2022_204 | contact and communication with victim | Two Counts Of Possession Of Child Pornography Origin... | Detectives received information originating from SnapChat... |
@@ -969,7 +969,7 @@
 | ncmec_2022_466 | contact and communication with victim |  | Court records say a similar series of events were flagged... |
 | ncmec_2022_469 | contact and communication with victim | 25 plus counts of possession of child By NBC2 News 2... | The National Center for Missing and Exploited Children re... |
 | ncmec_2022_497 | contact and communication with victim |  | Snapchat and then transmitted the material. |
-| ncmec_2022_505 | contact and communication with victim | exploitation of a child | Sheriff Hawkins says McGee was using Snapchat to contact ... |
+| ncmec_2022_505 | contact and communication with victim | exploitation of a child | Sheriff [PERSON] says [PERSON] was using Snapchat to cont... |
 | ncmec_2022_543 | contact and communication with victim |  | tip, from Snapchat, from the same date as the third, with... |
 | ncmec_2022_556 | contact and communication with victim | second-degree sexual exploitation of a minor after a... | The tip originated from Snapchat, which |
 | ncmec_2022_572 | distribution of CSAM | Distributing Child Porn Lives Half Of A Mile From El... | Uploaded Child Porn To Snapchat and |
@@ -986,26 +986,26 @@
 | ncmec_2023_358 | contact and communication with victim |  | Snapchat sent records of the username and IP address of w... |
 | ncmec_2023_457 | contact and communication with victim |  | In review of the content from Snapchat and Kik accounts a... |
 | ncmec_2023_478 | contact and communication with victim |  | Missing and Exploited Children, who was alerted from Snap... |
-| ncmec_2023_557 | distribution of CSAM | sharing child porn on Nick Watson The Times Publishe... | https://www.gainesvilletimes.com/news/badge-bar/flowery-b... |
-| ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court documents said | Holland is also accused of uploading similar content to X... |
+| ncmec_2023_557 | distribution of CSAM | sharing child porn on [PERSON] The Times Published: ... | https://www.gainesvilletimes.com/news/badge-bar/flowery-b... |
+| ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court documents said | [PERSON] is also accused of uploading similar content to ... |
 | ncmec_2024_033 | contact and communication with victim |  | A digital search warrant of the Snapchat account belongin... |
 | ncmec_2024_068 | contact and communication with victim |  | During an interview, the suspect allegedly admitted to se... |
 | ncmec_2024_095 | contact and communication with victim | SELLING CHILD PORN https://www | The boy sent pictures of him masturbating and posing sexu... |
 | ncmec_2024_096 | contact and communication with victim |  | under a “menu” on Snapchat for personal profit, according... |
-| ncmec_2024_1033 | contact and communication with victim | sexual exploitation of a minor back in October | basis statement in the case, Martinez-Olson admitted to c... |
+| ncmec_2024_1033 | contact and communication with victim | sexual exploitation of a minor back in October | basis statement in the case, [PERSON] admitted to communi... |
 | ncmec_2024_1052 | contact and communication with victim | possession of child pornography Thursday after inves... | Thursday after investigators say they found him posing as... |
 | ncmec_2024_1055 | contact and communication with victim | possession of child pornography, less than 100 visua... | a video of child pornography was posted on Snapchat in Oc... |
-| ncmec_2024_1100 | contact and communication with victim | SUSPICION OF SHARING CHILD By Alexander Campbell htt... | VanWagoner was said to have communicated with Cantwell pr... |
-| ncmec_2024_1117 | contact and communication with victim | POSSESSION OF CHILD PORN By Stephanie Johnson, Tamon... | Court records say Snapchat reported the images to the Nat... |
-| ncmec_2024_1152 | contact and communication with victim | one count Possession of a Controlled Substance | Harper asked him about the image sent that same date that... |
-| ncmec_2024_168 | contact and communication with victim | four counts of possessing child pornography | The report led them to Sciacchitano, who court records sh... |
+| ncmec_2024_1100 | contact and communication with victim | SUSPICION OF SHARING CHILD By [PERSON] https://ksltv | [PERSON] was said to have communicated with [PERSON] prim... |
+| ncmec_2024_1117 | contact and communication with victim | POSSESSION OF CHILD PORN By [PERSON], [PERSON] https... | Court records say Snapchat reported the images to the Nat... |
+| ncmec_2024_1152 | contact and communication with victim | one count Possession of a Controlled Substance | [PERSON] asked him about the image sent that same date th... |
+| ncmec_2024_168 | contact and communication with victim | four counts of possessing child pornography | The report led them to [PERSON], who court records show w... |
 | ncmec_2024_178 | contact and communication with victim |  | filled it with videos of the girl and promoted the conten... |
 | ncmec_2024_184 | contact and communication with victim | Wednesday for possessing and transmitting child porn... | According to his arrest report, Lake City Police investig... |
 | ncmec_2024_220 | distribution of CSAM |  | They also learned that numerous child sexual abuse files ... |
 | ncmec_2024_241 | distribution of CSAM | POSSESSION OF CHILD PORN https://www | According to a Martin County Sheriff's Office probable ca... |
-| ncmec_2024_288 | distribution of CSAM | allegedly possessing child pornography | allegedly determined that Kittell shared seven files of c... |
-| ncmec_2024_290 | distribution of CSAM | producing videos but is accused of exchanging messag... | I obtained the court documents in the case that say Ray u... |
-| ncmec_2024_298 | distribution of CSAM | these crimes, it does not necessarily mean he commit... | Snapchat reported that a man, identified as Allan, had up... |
+| ncmec_2024_288 | distribution of CSAM | allegedly possessing child pornography | allegedly determined that [PERSON] shared seven files of ... |
+| ncmec_2024_290 | distribution of CSAM | producing videos but is accused of exchanging messag... | I obtained the court documents in the case that say [PERS... |
+| ncmec_2024_298 | distribution of CSAM | these crimes, it does not necessarily mean he commit... | Snapchat reported that a man, identified as [PERSON], had... |
 | ncmec_2024_316 | contact and communication with victim |  | The Quincy Police Department reported an investigation st... |
 | ncmec_2024_352 | distribution of CSAM | SHARING CHILD PORNOGRAPHY ON SNAPCHAT https://www | DEKALB MAN CHARGED WITH SHARING CHILD PORNOGRAPHY ON SNAP... |
 | ncmec_2024_354 | contact and communication with victim | three counts of manufacturing/distributing harmful m... | QUINCY MAN ARRESTED AFTER ALLEGEDLY SENDING NUDE IMAGES T... |
@@ -1013,37 +1013,37 @@
 | ncmec_2024_473 | contact and communication with victim | Failure to Register and Notify as a Sex Offender or ... | Through the course of the investigation the material was ... |
 | ncmec_2024_511 | contact and communication with victim | RAPE OF MINOR AFTER SNAPCHAT MEETING, FACES EXTRADIT... | meeting the victim through Snapchat and then driving to a... |
 | ncmec_2024_559 | contact and communication with victim |  | A criminal complaint says Snapchat had flagged two photos... |
-| ncmec_2024_565 | contact and communication with victim |  | Court documents allege Eklund communicated by Snapchat wi... |
-| ncmec_2024_611 | contact and communication with victim | distribution of child pornography and receipt of chi... | found that Salazar’s communications with other parties on... |
+| ncmec_2024_565 | contact and communication with victim |  | Court documents allege [PERSON] communicated by Snapchat ... |
+| ncmec_2024_611 | contact and communication with victim | distribution of child pornography and receipt of chi... | found that [PERSON]’s communications with other parties o... |
 | ncmec_2024_620 | distribution of CSAM | 10 counts of Sexual Exploitation of a Minor | upload of CASM to Snapchat. |
 | ncmec_2024_630 | contact and communication with victim | CHILD SEX CRIMES, MORE VICTIMS POSSIBLE https://www | allegedly using Snapchat to have contact with a child und... |
 | ncmec_2024_658 | contact and communication with victim | CHILD ENDANGERMENT AFTER TIP OF SNAPCHAT SAVES https... | images allegedly portraying children being sexually explo... |
 | ncmec_2024_708 | distribution of CSAM | ILLICIT IMAGES https://suncommunitynews | images of child sexual abuse material (CSAM) and shared t... |
 | ncmec_2024_823 | contact and communication with victim | SEX CRIMES WAS ALLEGEDLY SHARING PHOTOS WITH FORMER ... | having sexual conversations on Snapchat, but denied that ... |
-| ncmec_2024_835 | contact and communication with victim | five felony counts of "possession of certain materia... | Court documents allege that Baron, in February of 2023, w... |
+| ncmec_2024_835 | contact and communication with victim | five felony counts of "possession of certain materia... | Court documents allege that [PERSON], in February of 2023... |
 | ncmec_2024_851 | distribution of CSAM | more than 30 charges of child sexual abuse material ... | “Officers served a search warrant and determined he was d... |
-| ncmec_2024_921 | contact and communication with victim | charges of possessing, producing, or distributing ju... | Pendergraft was interviewed on January 30th by OSBI agent... |
+| ncmec_2024_921 | contact and communication with victim | charges of possessing, producing, or distributing ju... | [PERSON] was interviewed on January 30th by OSBI agents a... |
 | ncmec_2024_933 | contact and communication with victim | 10 FELONY COUNTS OF POSSESSING CHILD PORNOGRAPHY htt... | flagged by Snapchat and two were flagged by Google. |
 | ncmec_2024_940 | contact and communication with victim | 15 felony counts of child pornography and one count ... | The Attorney General’s Office initially received a tip fr... |
 | ncmec_2024_945 | distribution of CSAM | 25 counts each of sexual abuse of children for posse... | A Lansdowne man who allegedly uploaded three files contai... |
 | ncmec_2024_946 | distribution of CSAM | HAVING CHILD SEXUAL ABUSE MATERIALS https://www | including the three files uploaded to Snapchat, according... |
-| ncmec_2025_077 | contact and communication with victim | the following charges: 4 counts of sending harmful m... | Battle was found to have an account on Snapchat where he ... |
+| ncmec_2025_077 | contact and communication with victim | the following charges: 4 counts of sending harmful m... | [PERSON] was found to have an account on Snapchat where h... |
 | ncmec_2025_128 | distribution of CSAM |  | investigation into uploading images of child sexual abuse... |
-| ncmec_2025_152 | contact and communication with victim |  | Through digging through Poignant's, 19, Snapchat chats, d... |
+| ncmec_2025_152 | contact and communication with victim |  | Through digging through [PERSON]'s, 19, Snapchat chats, d... |
 | ncmec_2025_163 | distribution of CSAM | the following: Possession of child sexual abuse imag... | Investigators went through his Snapchat and Google accoun... |
 | ncmec_2025_167 | distribution of CSAM | two counts of possession of 10 or more images of chi... | uploaded child sexual abuse material to Discord in 2023 a... |
 | ncmec_2025_208 | contact and communication with victim | eight counts of possession of child sexual abuse mat... | A Snapchat user reported the illegal content was sent to ... |
 | ncmec_2025_218 | contact and communication with victim |  | after agents said he coerced a 13-year-old Broward girl t... |
-| ncmec_2025_220 | contact and communication with victim | 11 felony charges related to the sharing of child se... | In one message on Snapchat, Kwoka is accused of saying “I... |
+| ncmec_2025_220 | contact and communication with victim | 11 felony charges related to the sharing of child se... | In one message on Snapchat, [PERSON] is accused of saying... |
 | ncmec_2025_300 | contact and communication with victim | CHILD PORNOGRAPHY Roscoe man arrested for child porn... | after the two communicated on Snapchat. |
 | ncmec_2025_302 | contact and communication with victim | POSSESSION OF CHILD PORN Rockford woman charged with... | 11, 2024, officials received a tip from Snapchat that a u... |
 | ncmec_2025_344 | distribution of CSAM |  | from the social media company Snapchat that a user later ... |
-| ncmec_2025_349 | contact and communication with victim | FELONY CRIMES IN CHILD EXPLOITATION CASE https://www | Snapchat flagged Sauer’s account due to child sexual abus... |
-| ncmec_2025_374 | distribution of CSAM | distributing matter portraying a sexual performance ... | Investigators reportedly found that Reed was the owner of... |
+| ncmec_2025_349 | contact and communication with victim | FELONY CRIMES IN CHILD EXPLOITATION CASE https://www | Snapchat flagged [PERSON]’s account due to child sexual a... |
+| ncmec_2025_374 | distribution of CSAM | distributing matter portraying a sexual performance ... | Investigators reportedly found that [PERSON] was the owne... |
 | ncmec_2025_507 | distribution of CSAM | four counts of possession of child pornography and i... | three video files involving children were uploaded from a... |
-| ncmec_2025_511 | contact and communication with victim |  | said Stowell lied about his age on Snapchat, telling the ... |
+| ncmec_2025_511 | contact and communication with victim |  | said [PERSON] lied about his age on Snapchat, telling the... |
 | ncmec_2025_517 | contact and communication with victim | SIX FELONY COUNTS OF CHILD PORNOGRAPHY https://www | These tips reportedly linked CSAM-related activity to a p... |
-| ncmec_2025_522 | distribution of CSAM | PROMOTION AND POSSESSION OF CHILD By Lisa Brotherton... | Wigger further admitted to uploading the images into his ... |
+| ncmec_2025_522 | distribution of CSAM | PROMOTION AND POSSESSION OF CHILD By [PERSON] https:... | [PERSON] further admitted to uploading the images into hi... |
 | ncmec_2025_539 | grooming / soliciting minor | RECEIVING SEXUALLY EXPLICIT MATERIAL FROM https://nb... | developed information that Snapchat user “smokeweed5468” ... |
 | ncmec_2025_568 | contact and communication with victim | criminal sexual contact involving a victim between t... | also allegedly chatted with children via Snapchat, “ultim... |
 | ncmec_2025_580 | distribution of CSAM | possession of CSAM and is awaiting a June 13 sentenc... | messaging application Snapchat to upload child pornograph... |
@@ -1051,23 +1051,23 @@
 | ncmec_2025_589 | distribution of CSAM | 6 felonies A Farmington man is facing six child sex ... | flagged the teen’s Kik, Snapchat and X accounts for alleg... |
 | ncmec_2025_678 | distribution of CSAM | felony first-degree sexual exploitation of a minor, ... | A California man was recently extradited to North Carolin... |
 | ncmec_2025_702 | contact and communication with victim | gross sexual imposition (victim under 15), child neg... | from Facebook/Meta, MeetMe and Snapchat. |
-| ncmec_2025_718 | contact and communication with victim | multiple counts of encouraging child sexual abuse, u... | on Snapchat using a local IP address, Bend Police Communi... |
-| ncmec_2025_731 | distribution of CSAM | two counts of aggravated possession of child pornogr... | linked Forrester's Snapchat account with uploading images... |
-| ncmec_2025_742 | distribution of CSAM | failing to provide electronic mail address informati... | Jerame Todd Smith, 57, of Stillwater, has been accused of... |
-| ncmec_2025_745 | distribution of CSAM | distributing child porn and violating Oklahoma state... | A probable cause affidavit shows Cobbs admitted to sharin... |
+| ncmec_2025_718 | contact and communication with victim | multiple counts of encouraging child sexual abuse, u... | on Snapchat using a local IP address, Bend Police [PERSON... |
+| ncmec_2025_731 | distribution of CSAM | two counts of aggravated possession of child pornogr... | linked [PERSON]'s Snapchat account with uploading images ... |
+| ncmec_2025_742 | distribution of CSAM | failing to provide electronic mail address informati... | [PERSON], 57, of Stillwater, has been accused of distribu... |
+| ncmec_2025_745 | distribution of CSAM | distributing child porn and violating Oklahoma state... | A probable cause affidavit shows [PERSON] admitted to sha... |
 | ncmec_2025_760 | distribution of CSAM | possessing and sharing child pornography, authoritie... | According to police, the NCMEC received a cyber tip from ... |
 | ncmec_2025_778 | contact and communication with victim | sexual abuse of children – child pornography | “We received a tip via Snapchat,” Lt. |
 | ncmec_2025_782 | distribution of CSAM | prohibited possession of a firearm, possession with ... | residence was uploading suspected child pornography via S... |
 | ncmec_2025_784 | distribution of CSAM | manufacturing and disseminating child sexual abuse m... | that a Snapchat user shared obscene files on Aug. |
 | ncmec_2025_793 | contact and communication with victim |  | felony charges related to the dissemination of child sexu... |
-| ncmec_2025_858 | contact and communication with victim |  | Authorities said Nuchols is accused of sending inappropri... |
+| ncmec_2025_858 | contact and communication with victim |  | Authorities said [PERSON] is accused of sending inappropr... |
 | ncmec_2025_877 | contact and communication with victim | CHILD PORN CHARGES https://www | The message data also reportedly led to the discovery tha... |
 | ncmec_2025_882 | distribution of CSAM | warrants for Possession of Child Pornography last week | uploading child pornography to Snapchat. |
 | ncmec_2025_885 | distribution of CSAM | warrants for Possession of Child Pornography last week | uploading child pornography to Snapchat. |
 | ncmec_2025_893 | contact and communication with victim | two counts of Possession of Child Pornography (first... | of them on Snapchat - with him portraying himself as a ch... |
 | ncmec_2025_896 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY By KLTV Digital Medi... | 25, 2025, he uploaded to Snapchat a video involving a chi... |
 | ncmec_2025_915 | contact and communication with victim |  | “It was confirmed that he was using the Snapchat account ... |
-| ncmec_2025_919 | contact and communication with victim |  | Snapchat, Reddit, and X all reported Sherbahn had sent ch... |
+| ncmec_2025_919 | contact and communication with victim |  | Snapchat, Reddit, and X all reported [PERSON] had sent ch... |
 | ncmec_2025_929 | contact and communication with victim | possessing child sexual abuse materials | An initial tip from Snapchat was sent to the Utah Attorne... |
 | newyork_sp_2024_008 | contact and communication with victim | Promoting a Sexual Performance by a Child and Posses... | (CSAM) sending CSAM via SnapChat in support of the ICAC C... |
 | newyork_sp_2025_022 | contact and communication with victim | 3 counts of Disseminating Indecent Material to Minor... | Any parent or guardian who believes that their child rece... |
@@ -1077,39 +1077,39 @@
 | pa_ag_2026_012 | contact and communication with victim | seven felony offenses, and was recently arraigned wh... | materials on SnapChat, and traced the materials to an IP ... |
 | south_florida_icac_2023_010 | distribution of CSAM | eight counts of possession of child pornography and ... | A 20-year-old was arrested for allegedly distributing chi... |
 | south_florida_icac_2024_001 | contact and communication with victim |  | Most of those cases started with messages on social media... |
-| south_florida_icac_2025_001 | contact and communication with victim | 24 felony counts, including the following charges: T... | According to an arrest report, Taylor and the girl were i... |
+| south_florida_icac_2025_001 | contact and communication with victim | 24 felony counts, including the following charges: [... | According to an arrest report, [PERSON] and the girl were... |
 | south_florida_icac_2025_009 | distribution of CSAM | November 21 after Coral Springs Police and members o... | The tips were submitted by Snapchat and Discord, which re... |
-| south_florida_icac_2025_017 | contact and communication with victim |  | Reynaga was also the subject of several tips from Snapcha... |
-| south_florida_icac_2025_036 | contact and communication with victim |  | "Maybe U will send me more selfies now, U deleted?" Pearl... |
-| south_florida_icac_2026_002 | contact and communication with victim | child pornography charges GAINESVILLE, Fla | Post Miranda, Lewis reportedly said he no longer had Snap... |
+| south_florida_icac_2025_017 | contact and communication with victim |  | [PERSON] was also the subject of several tips from Snapch... |
+| south_florida_icac_2025_036 | contact and communication with victim |  | "Maybe U will send me more selfies now, U deleted?" [PERS... |
+| south_florida_icac_2026_002 | contact and communication with victim | child pornography charges GAINESVILLE, Fla | Post Miranda, [PERSON] reportedly said he no longer had S... |
 | south_florida_icac_2026_006 | distribution of CSAM | eleven felonies, including numerous counts of posses... | media platforms Snapchat, Discord, and X reported the upl... |
-| south_florida_icac_2026_007 | distribution of CSAM |  | Further subpoenas revealed that Ryan’s Snapchat account s... |
+| south_florida_icac_2026_007 | distribution of CSAM |  | Further subpoenas revealed that [PERSON]’s Snapchat accou... |
 | svicac_2023_007 | distribution of CSAM | child pornography and sexual acts with a MONTEREY CO... | California uploaded pictures to Snapchat the contained ch... |
 | tbi_icac_2021_008 | distribution of CSAM | Sexual Exploitation of a Publication date: 2021-10-2... | indicating that an individual had uploaded an image to hi... |
 | tbi_icac_2023_003 | contact and communication with victim | Sexual Exploitation of a Minor WARREN COUNTY – An in... | Anyone who may have had communication with the username o... |
 | tbi_icac_2023_006 | contact and communication with victim | Sexual Exploitation of a Minor GRUNDY COUNTY – An in... | communication with Snapchat account t_rexbaby21 is asked ... |
 | tbi_icac_2024_001 | distribution of CSAM |  | child sexual abuse material being uploaded by a Snapchat ... |
-| tbi_icac_2024_013 | contact and communication with victim | Multiple Counts of Solicitation, Exploitation of a M... | name scofett on the KIK app or Paul Herring (pherring37) ... |
+| tbi_icac_2024_013 | contact and communication with victim | Multiple Counts of Solicitation, Exploitation of a M... | name scofett on the KIK app or [PERSON] (pherring37) on S... |
 | tbi_icac_2025_007 | contact and communication with victim |  | child sex abuse material to an adult male via Snapchat. |
 | tbi_icac_2025_011 | contact and communication with victim |  | (NCMEC) concerning child sexual abuse material being sent... |
 | tbi_icac_2025_014 | contact and communication with victim | one count of Sexual Exploitation of a Minor (over 10... | PICKETT COUNTY – A cybertip that child sexual abuse mater... |
-| tbi_icac_2026_004 | contact and communication with victim | Multiple Counts of Aggravated Statutory WILLIAMSON C... | name scofett on the KIK app or Paul Herring, (pherring37)... |
+| tbi_icac_2026_004 | contact and communication with victim | Multiple Counts of Aggravated Statutory WILLIAMSON C... | name scofett on the KIK app or [PERSON], (pherring37) on ... |
 | tbi_icac_2026_005 | distribution of CSAM |  | distributed through accounts on X, Discord, and Snapchat. |
-| tbi_icac_2026_006 | distribution of CSAM | two counts of Sexual Exploitation of a Minor, two co... | learned that Christopher John Gertsch (DOB 04/18/1979) up... |
+| tbi_icac_2026_006 | distribution of CSAM | two counts of Sexual Exploitation of a Minor, two co... | learned that [PERSON] (DOB 04/18/1979) uploaded CSAM onto... |
 | us_marshals_2025_010 | contact and communication with victim | the 32 charges earlier this year, however, a Florida... | was a male juvenile befriended them on Snapchat. |
 | usss_2021_008 | contact and communication with victim |  | via Snapchat. |
 | usss_2022_014 | contact and communication with victim | the charge in October 2021 | victim via Snapchat. |
-| usss_2023_001 | contact and communication with victim | child exploitation in Marion County, Indiana in a ca... | Bevington used Snapchat to send sexually explicit videos ... |
+| usss_2023_001 | contact and communication with victim | child exploitation in Marion County, Indiana in a ca... | [PERSON] used Snapchat to send sexually explicit videos i... |
 | usss_2024_004 | contact and communication with victim |  | DALLAS - A Mansfield, Texas, man who used Snapchat to ina... |
 | ut_ag_2019_001 | contact and communication with victim | 15 counts of sexual exploitation of a minor, a secon... | a 16-year-old girl from Arizona who reported she had been... |
-| ut_ag_2026_006 | contact and communication with victim |  | Organista also admitted to using Snapchat to make contact |
+| ut_ag_2026_006 | contact and communication with victim |  | [PERSON] also admitted to using Snapchat to make contact |
 | ut_ag_2026_019 | grooming / soliciting minor | raping a child after luring her to his apartment usi... | Deseret News : Northern Utah man uses Snapchat to lure te... |
 | ut_ag_2026_020 | grooming / soliciting minor | attempting to meet minors for sex in Washington Coun... | KUTV : Police: North Logan man raped minor, lured her by ... |
 | vt_ag_2022_004 | contact and communication with victim | a crime are legally presumed innocent until their gu... | images of child sexual abuse material, commonly referred ... |
 | vt_ag_2022_008 | contact and communication with victim | a crime are legally presumed innocent until their gu... | containing child sexual abuse material, commonly referred... |
 | vt_ag_2024_001 | distribution of CSAM | a crime are legally presumed innocent until their gu... | uploading a file of child sexual abuse material to Snapchat. |
 | vt_ag_2025_041 | contact and communication with victim | a crime are legally presumed innocent until their gu... | to be a minor on the Snapchat and Facebook platforms. |
-| wcso_2022_002 | grooming / soliciting minor |  | Using Snapchat direct messages, Bhardwaj lured the girl t... |
+| wcso_2022_002 | grooming / soliciting minor |  | Using Snapchat direct messages, [PERSON] lured the girl t... |
 | wcso_2024_003 | distribution of CSAM |  | (NCMEC) regarding the upload of CSAM to Snapchat, traced ... |
 | wi_doj_2024_001 | contact and communication with victim |  | between the ages of 13 and 15 years old on Snapchat when ... |
 | wy_dci_2023_003 | distribution of CSAM | 11 counts of sexual exploitation of a child -- five ... | Children Task Force received a cyber tip from Snapchat sa... |
@@ -1119,18 +1119,18 @@
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
 | anchorage_pd_2022_001 | contact and communication with victim | drug trafficking and firearms offenses, and he ... | pornography in his Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| anchorage_pd_2022_004 | contact and communication with victim | drug trafficking and firearms offenses, and he ... | Moore possessed two videos of child pornography in h... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| anchorage_pd_2022_004 | contact and communication with victim | drug trafficking and firearms offenses, and he ... | [PERSON] possessed two videos of child pornography i... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | anchorage_pd_2022_005 | contact and communication with victim |  | Snapchat, Tagged and Whisper and would meet minor fe... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| anchorage_pd_2022_007 | contact and communication with victim |  | According to federal court documents, Amin used the ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| anchorage_pd_2022_007 | contact and communication with victim |  | According to federal court documents, [PERSON] used ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | arkansas_dps_2024_011 | contact and communication with victim | 30 counts of Possession of Matter Depicting Sex... | Children (NCMEC) from the online messaging applicati... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_ceos_2025_014 | contact and communication with victim | one count of sexual exploitation of children an... | attracted to children on Wickr, Snapchat, and Telegram. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2021_014 | contact and communication with victim | possession of child pornography and using a min... | proceedings, from July 2019 to April 2020, Miguel us... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2021_014 | contact and communication with victim | possession of child pornography and using a min... | proceedings, from July 2019 to April 2020, [PERSON] ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2022_374 | contact and communication with victim | drug trafficking and firearms offenses, and he ... | pornography in his Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2022_475 | contact and communication with victim |  | According to the evidence presented at Hall’s trial,... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2022_475 | contact and communication with victim |  | According to the evidence presented at [PERSON]’s tr... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_015 | grooming / soliciting minor | attempted production and production of child po... | used Snapchat and other messaging apps to solicit se... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2023_110 | contact and communication with victim | five counts of producing, receiving, and distri... | McLaughlin used a variety of aliases and Snapchat ID... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2023_110 | contact and communication with victim | five counts of producing, receiving, and distri... | [PERSON] used a variety of aliases and Snapchat IDs ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_213 | contact and communication with victim |  | pornography was found on the social media platform S... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2023_309 | contact and communication with victim | receiving child pornography on his cell phone f... | screen activated, the trooper noticed Puckett had Fa... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2023_309 | contact and communication with victim | receiving child pornography on his cell phone f... | screen activated, the trooper noticed [PERSON] had F... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_322 | contact and communication with victim |  | social media application SnapChat and used those acc... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_347 | contact and communication with victim |  | Snapchat images and videos of child pornography depi... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_365 | contact and communication with victim | Possessing or Viewing Child Pornography and was... | numerous images of child sexual abuse material (CSAM... | Snapchat and offense language co-occur in the same sentence without instrumen... |
@@ -1142,10 +1142,10 @@
 | doj_safe_childhood_2024_208 | contact and communication with victim | Attempted Production of Child Pornography | After an undercover agent took over the minor’s Snap... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2024_362 | contact and communication with victim | one count of transporting child pornography | Instagram, Snapchat, and Discord. | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2024_372 | contact and communication with victim | violating, the U | social media applications, including Snapchat, while... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2024_397 | contact and communication with victim | two counts of production of child pornography, ... | McLaughlin used a variety of aliases and Snapchat ID... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2024_415 | contact and communication with victim | Production of Child Pornography | Wolf used the social media app Snapchat | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2024_473 | contact and communication with victim |  | screen activated, the trooper noticed Puckett had Fa... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2025_020 | contact and communication with victim |  | Specifically, a search of Maynard’s phone revealed a... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2024_397 | contact and communication with victim | two counts of production of child pornography, ... | [PERSON] used a variety of aliases and Snapchat IDs ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2024_415 | contact and communication with victim | Production of Child Pornography | [PERSON] used the social media app Snapchat | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2024_473 | contact and communication with victim |  | screen activated, the trooper noticed [PERSON] had F... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2025_020 | contact and communication with victim |  | Specifically, a search of [PERSON]’s phone revealed ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2025_076 | contact and communication with victim | possession of According to the plea agreement, ... | On June 15, 2022, Snapchat | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2025_089 | contact and communication with victim |  | received from a minor on his Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2025_106 | contact and communication with victim |  | Snapchat account and the discovery of his interest i... | Snapchat and offense language co-occur in the same sentence without instrumen... |
@@ -1157,38 +1157,38 @@
 | doj_safe_childhood_2026_177 | contact and communication with victim | sexual exploitation of a child and possession o... | videos of minors and young women using deceptive mea... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2026_209 | contact and communication with victim | one count of transportation of child pornograph... | material (CSAM) to Snapchat and Kik social media app... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2026_245 | contact and communication with victim | the indicted charge on Dec | and Snapchat where he pretended to be a 15-year-old ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2026_248 | contact and communication with victim | Attempting to Produce Child Pornography, Posses... | In the Spring of 2022, Keitges used the online platf... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2026_391 | contact and communication with victim |  | led to a search warrant of Scott’s Snapchat account ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ice_2026_007 | contact and communication with victim |  | special agents reviewed Shannon’s Snapchat account a... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2026_248 | contact and communication with victim | Attempting to Produce Child Pornography, Posses... | In the Spring of 2022, [PERSON] used the online plat... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2026_391 | contact and communication with victim |  | led to a search warrant of [PERSON]’s Snapchat accou... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ice_2026_007 | contact and communication with victim |  | special agents reviewed [PERSON]’s Snapchat account ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | idaho_icac_2025_033 | contact and communication with victim | 6 counts of production of child sexual exploita... | The report, submitted by Snapchat, indicated “newly | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | nca_2026_008 | contact and communication with victim |  | moving to Snapchat where conversations escalated to ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2022_112 | grooming / soliciting minor | a prosecutor’s bill of information containing a... | Investigators traced the Snapchat account back to Mc... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2022_112 | grooming / soliciting minor | a prosecutor’s bill of information containing a... | Investigators traced the Snapchat account back to [P... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_244 | contact and communication with victim |  | Snapchat and Instagram, some of which included infants. | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_263 | contact and communication with victim | Possession of Child November 8, 2022 - by MyChe... | social media platforms Tumblr, Dropbox, and Snapchat. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2022_297 | contact and communication with victim |  | Gutierrez’s Snapchat and Twitter accounts ranged fro... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2022_303 | distribution of CSAM |  | Slack used Snapchat and the Kik messaging app to sha... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2022_297 | contact and communication with victim |  | [PERSON]’s Snapchat and Twitter accounts ranged from... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2022_303 | distribution of CSAM |  | [PERSON] used Snapchat and the Kik messaging app to ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_316 | contact and communication with victim | bestiality, sexual exploitation of a child, and... | According to a warrant, the investigators came acros... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_362 | contact and communication with victim | Tuesday | According to court paperwork, the investigation bega... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2022_403 | contact and communication with victim |  | A search warrant was issued for Cantera’s Snapchat a... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2022_403 | contact and communication with victim |  | A search warrant was issued for [PERSON]’s Snapchat ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_452 | contact and communication with victim | a crime is merely an accusation and the defenda... | including Snapchat, with multiple minor girls. | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_464 | contact and communication with victim | transmission of child pornography, possession o... | SnapChat: yolowasup1234 | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2023_115 | contact and communication with victim | possession of child ByStaff Report October 19, ... | An investigation into Mason’s activities began last ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2023_115 | contact and communication with victim | possession of child ByStaff Report October 19, ... | An investigation into [PERSON]’s activities began la... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2023_165 | contact and communication with victim | child pornography charges August 30, 2023 5:06 ... | initiated in January 2022 when Snapchat officials fi... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2023_333 | contact and communication with victim | Possession of Child Pornography and Sexual Perf... | Begeny says when he tried to send one of the images ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2023_333 | contact and communication with victim | Possession of Child Pornography and Sexual Perf... | [PERSON] says when he tried to send one of the image... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2023_356 | contact and communication with victim | Thursday | partnership with ICAC, including a case involving th... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2023_422 | contact and communication with victim | Tuesday at his home in Naples | Snapchat and Instagram at his home. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2023_560 | contact and communication with victim | sharing child pornography Mary Schenk, The News... | 19 using a Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2023_560 | contact and communication with victim | sharing child pornography [PERSON], The News-Ga... | 19 using a Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_035 | contact and communication with victim |  | from the National Center for Missing and Exploited C... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_286 | contact and communication with victim |  | social networking site Snapchat, according to a fede... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_331 | contact and communication with victim | one count of child pornography (a Class X felon... | to his Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2024_409 | contact and communication with victim |  | Carey Huls, “The tip indicated an unknown person use... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2024_409 | contact and communication with victim |  | [PERSON], “The tip indicated an unknown person used ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_424 | contact and communication with victim | March 22 at his home on Seren Drive in Lebanon | According to court documents, Snapchat tipped off th... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_619 | contact and communication with victim | SEXUAL EXPLOITATION OF A MINOR https://www | Snapchat detects the presence of CSAM on their platf... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_941 | contact and communication with victim | 15 counts of possessing child pornography | He also admitted to using both Snapchat and Twitter ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_039 | contact and communication with victim | exposing himself to his then 8- or 9-year-old s... | linked to a SnapChat account belonging to Harvey. | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_1011 | contact and communication with victim |  | Deavers admitted to owning a Snapchat account where ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_1023 | contact and communication with victim |  | Deavers admitted to owning a Snapchat account where ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_320 | contact and communication with victim | POSSESSION OF CHILD SEX ABUSE MATERIAL https://www | On Hornek’s cell phone and Snapchat account, however... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_039 | contact and communication with victim | exposing himself to his then 8- or 9-year-old s... | linked to a SnapChat account belonging to [PERSON]. | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_1011 | contact and communication with victim |  | [PERSON] admitted to owning a Snapchat account where... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_1023 | contact and communication with victim |  | [PERSON] admitted to owning a Snapchat account where... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_320 | contact and communication with victim | POSSESSION OF CHILD SEX ABUSE MATERIAL https://www | On [PERSON]’s cell phone and Snapchat account, howev... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_342 | contact and communication with victim |  | Evidence at sentencing showed that on multiple occas... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_506 | contact and communication with victim | POSSESSION OF CHILD SEX ABUSE https://krcgtv | under 18 years old saved to his Snapchat and persona... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_540 | contact and communication with victim |  | Investigators learned the Snapchat account was alleg... | Snapchat and offense language co-occur in the same sentence without instrumen... |
@@ -1196,8 +1196,8 @@
 | ncmec_2025_738 | contact and communication with victim | felony counts of buying/possessing/procuring ch... | Missing and Exploited Children that included several... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_750 | contact and communication with victim | buying, possessing, and procuring the material | In 2024 the social media app Snapchat alerted The Na... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_785 | contact and communication with victim | HAVING CHILD SEXUAL ABUSE M | The handwritten documents also contained instruction... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_873 | contact and communication with victim |  | Police obtained a warrant to search Mosley’s Snapcha... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_878 | contact and communication with victim | HAVING CHILD SEX ABUSE MATERIAL, DEPUTIES SAY h... | Andrade reportedly said in an interview with the inv... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_873 | contact and communication with victim |  | Police obtained a warrant to search [PERSON]’s Snapc... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_878 | contact and communication with victim | HAVING CHILD SEX ABUSE MATERIAL, DEPUTIES SAY h... | [PERSON] reportedly said in an interview with the in... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_998 | contact and communication with victim | February 16 | child pornography on his Snapchat account. | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_999 | contact and communication with victim | Tuesday, Feb | his Snapchat account, and they obtained a search war... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | pa_ag_2025_030 | contact and communication with victim |  | with the girl on Facebook and Snapchat, sending her ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
@@ -1207,7 +1207,7 @@
 | tbi_icac_2025_017 | contact and communication with victim |  | In January, special agents began investigating a tip... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | usss_2022_009 | contact and communication with victim | engaging in sexual acts with a child and taking... | The National Center for Missing and Exploited Childr... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 | vt_ag_2021_001 | contact and communication with victim | a crime are legally presumed innocent until the... | source of the suspected content on the identified Sn... | Snapchat and offense language co-occur in the same sentence without instrumen... |
-| wcso_2021_005 | contact and communication with victim | possession of child pornography Publication dat... | Cannel has been under investigation since May 2020, ... | Snapchat and offense language co-occur in the same sentence without instrumen... |
+| wcso_2021_005 | contact and communication with victim | possession of child pornography Publication dat... | [PERSON] has been under investigation since May 2020... | Snapchat and offense language co-occur in the same sentence without instrumen... |
 
 **Named only** (40 cases): anchorage_pd_2025_003, doj_safe_childhood_2021_004, doj_safe_childhood_2021_018, doj_safe_childhood_2023_237, doj_safe_childhood_2024_163, doj_safe_childhood_2024_275, doj_safe_childhood_2024_509, doj_safe_childhood_2025_321, doj_safe_childhood_2025_344, doj_safe_childhood_2026_068, doj_safe_childhood_2026_114, fresno_so_2022_001, fresno_so_2023_001, fresno_so_2024_002, fresno_so_2024_003, fresno_so_2024_004, fresno_so_2024_005, fresno_so_2024_008, fresno_so_2025_002, fresno_so_2025_003, ncmec_2022_049, ncmec_2022_209, ncmec_2022_328, ncmec_2022_585, ncmec_2024_003, ncmec_2024_069, ncmec_2024_1056, ncmec_2024_1151, ncmec_2024_1180, ncmec_2024_587, ncmec_2024_881, ncmec_2024_902, ncmec_2024_910, ncmec_2025_051, ncmec_2025_1019, ncmec_2025_248, ncmec_2025_357, ncmec_2025_753, scotland_police_2023_015, svicac_2023_001
 
@@ -1228,7 +1228,7 @@
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
 | anchorage_pd_2024_002 | contact and communication with victim |  | individual to chat with him on Kik, an encrypted chat pla... |
-| arkansas_dps_2024_005 | distribution of CSAM | 50 counts of Possession of CSAM, one count of Comput... | During the chat, Perkuhn exchanged nude images of two min... |
+| arkansas_dps_2024_005 | distribution of CSAM | 50 counts of Possession of CSAM, one count of Comput... | During the chat, [PERSON] exchanged nude images of two mi... |
 | azicac_2011_007 | contact and communication with victim |  | proactively in Internet chat rooms posing as a 13 |
 | azicac_2011_008 | contact and communication with victim | aggravated luring a minor for sexual exploitation an... | chat rooms, posing as a 13 year old child when |
 | azicac_2011_010 | contact and communication with victim |  | was posing online in chat rooms as a 14 year old |
@@ -1237,36 +1237,36 @@
 | de_ag_2012_015 | contact and communication with victim | four counts of sexual solicitation of a child under 18 | to meet with who he thought was a 13-year-old girl he had... |
 | de_ag_2013_018 | contact and communication with victim | dealing in child pornography and the arrest of two D... | online chat room. |
 | de_ag_2016_001 | distribution of CSAM |  | A public internet chat room reported that one of its user... |
-| doj_archives_2006_021 | contact and communication with victim |  | Internet user, developed a relationship with Thomas Evere... |
+| doj_archives_2006_021 | contact and communication with victim |  | Internet user, developed a relationship with [PERSON], a ... |
 | doj_archives_2006_022 | contact and communication with victim |  | internet chat room. |
 | doj_archives_2007_020 | contact and communication with victim |  | chat rooms. |
 | doj_archives_2008_047 | contact and communication with victim | one count of conspiracy to produce child pornography | ring between 2005 and 2007 to use instant messaging, vide... |
 | doj_archives_2008_062 | contact and communication with victim | one count of conspiracy to produce child pornography... | 2005 and 2007 to use instant messaging, video messaging, ... |
 | doj_ceos_2013_019 | contact and communication with victim |  | accounts, contacted the victims, and threatened that if t... |
 | doj_ceos_2013_023 | contact and communication with victim | December 20, 2012, by agents from Homeland Security ... | He also admitted to recording video chat sessions, includ... |
-| doj_ceos_2013_075 | contact and communication with victim |  | Cottle admitted that on some occasions he used video chat to |
-| doj_ceos_2013_112 | contact and communication with victim |  | Cottle admitted that on some occasions he used video chat to |
-| doj_ceos_2013_146 | contact and communication with victim | the criminal complaint on September 3, 2013 and rema... | the chat, Gazafi allegedly sent seven images to the under... |
+| doj_ceos_2013_075 | contact and communication with victim |  | [PERSON] admitted that on some occasions he used video ch... |
+| doj_ceos_2013_112 | contact and communication with victim |  | [PERSON] admitted that on some occasions he used video ch... |
+| doj_ceos_2013_146 | contact and communication with victim | the criminal complaint on September 3, 2013 and rema... | the chat, [PERSON] allegedly sent seven images to the und... |
 | doj_ceos_2013_155 | contact and communication with victim |  | The defendant and the UCO discussed via chat that the UCO... |
 | doj_safe_childhood_2021_066 | contact and communication with victim | one count of sexual exploitation of children and one... | video chat website to contact multiple prepubescent child... |
 | doj_safe_childhood_2021_067 | contact and communication with victim | one count of sexual exploitation of children and one... | anonymous video chat website to contact multiple prepubes... |
 | doj_safe_childhood_2021_079 | contact and communication with victim | one count of possession of child pornography | chat platform who befriended a 10-year-old minor in anoth... |
 | doj_safe_childhood_2021_099 | contact and communication with victim |  | subsequently posted a link to the chat group that contain... |
-| doj_safe_childhood_2022_004 | contact and communication with victim | the charge in January 2022 | That person had been talking on a video chat with Grimes |
-| doj_safe_childhood_2022_053 | contact and communication with victim |  | According to his guilty plea, in 2018 Bickling visited a ... |
+| doj_safe_childhood_2022_004 | contact and communication with victim | the charge in January 2022 | That person had been talking on a video chat with [PERSON] |
+| doj_safe_childhood_2022_053 | contact and communication with victim |  | According to his guilty plea, in 2018 [PERSON] visited a ... |
 | doj_safe_childhood_2022_069 | contact and communication with victim | federal child pornography violations in the Eastern ... | in an online chat room dedicated to the sexual abuse of c... |
-| doj_safe_childhood_2022_084 | contact and communication with victim | the charge in November 2020 | In addition, in the chat room he operated, Bertsch instru... |
+| doj_safe_childhood_2022_084 | contact and communication with victim | the charge in November 2020 | In addition, in the chat room he operated, [PERSON] instr... |
 | doj_safe_childhood_2022_091 | contact and communication with victim |  | in addition to the chat with the UC, he possessed images ... |
-| doj_safe_childhood_2022_117 | contact and communication with victim |  | Dickhans told deputies that he’d met someone in a chat room |
+| doj_safe_childhood_2022_117 | contact and communication with victim |  | [PERSON] told deputies that he’d met someone in a chat room |
 | doj_safe_childhood_2022_185 | contact and communication with victim |  | agent working undercover in a chat room observed an indiv... |
 | doj_safe_childhood_2022_194 | distribution of CSAM | one count of production and attempted production of ... | joined online chat rooms and platforms to discuss and tra... |
-| doj_safe_childhood_2022_206 | distribution of CSAM |  | username, Johansson was observed in the chat room uploadi... |
+| doj_safe_childhood_2022_206 | distribution of CSAM |  | username, [PERSON] was observed in the chat room uploadin... |
 | doj_safe_childhood_2022_242 | contact and communication with victim |  | anonymous online chat service. |
-| doj_safe_childhood_2022_256 | contact and communication with victim | one count of receipt of child According to court rec... | contained screenshots of an apparent video chat with Cyr ... |
+| doj_safe_childhood_2022_256 | contact and communication with victim | one count of receipt of child According to court rec... | contained screenshots of an apparent video chat with [PER... |
 | doj_safe_childhood_2022_260 | contact and communication with victim | one count of production of child pornography | During the chat he live streamed the sexual abuse of a ch... |
 | doj_safe_childhood_2022_290 | contact and communication with victim |  | (“undercover TFO”) was conducting an investigation within... |
 | doj_safe_childhood_2022_330 | contact and communication with victim |  | child pornography using online chat rooms. |
-| doj_safe_childhood_2022_431 | contact and communication with victim | one count of the sexual exploitation of minors and o... | Mark Millman’s email was identified among the registered ... |
+| doj_safe_childhood_2022_431 | contact and communication with victim | one count of the sexual exploitation of minors and o... | [PERSON] email was identified among the registered users ... |
 | doj_safe_childhood_2022_459 | distribution of CSAM | using social media to produce and attempt to produce... | used online chat rooms and platforms to discuss and trade... |
 | doj_safe_childhood_2022_474 | distribution of CSAM |  | pornography material was being traded by the members of t... |
 | doj_safe_childhood_2022_496 | contact and communication with victim |  | he watched via livestream over the chat website Omegle. |
@@ -1274,58 +1274,58 @@
 | doj_safe_childhood_2022_538 | contact and communication with victim |  | screenshots taken during a livestream video chat. |
 | doj_safe_childhood_2023_063 | contact and communication with victim | one count each of distribution of child pornography,... | In the chat, the two discussed plans for |
 | doj_safe_childhood_2023_067 | contact and communication with victim |  | pornography, meaning he moderated the chat and was able t... |
-| doj_safe_childhood_2023_107 | contact and communication with victim |  | Ibarra communicated with undercover federal agents in cha... |
+| doj_safe_childhood_2023_107 | contact and communication with victim |  | [PERSON] communicated with undercover federal agents in c... |
 | doj_safe_childhood_2023_112 | contact and communication with victim | a child pornography offense provides for a sentence ... | conduct over video chat. |
 | doj_safe_childhood_2023_131 | contact and communication with victim | two counts of distributing child pornography and was... | in an online chat room dedicated to the sexual abuse of c... |
 | doj_safe_childhood_2023_189 | contact and communication with victim |  | In the chat, the two discussed plans for |
 | doj_safe_childhood_2023_219 | contact and communication with victim |  | of a female infant in a chat room on the messaging platfo... |
-| doj_safe_childhood_2023_250 | contact and communication with victim |  | Gruebbel also participated in chat rooms devoted to “bait... |
+| doj_safe_childhood_2023_250 | contact and communication with victim |  | [PERSON] also participated in chat rooms devoted to “bait... |
 | doj_safe_childhood_2023_434 | contact and communication with victim |  | I’ve done it.” Homeland Security officers traced the chat... |
-| doj_safe_childhood_2023_498 | contact and communication with victim |  | According to court documents, in January 2020, Peterson u... |
+| doj_safe_childhood_2023_498 | contact and communication with victim |  | According to court documents, in January 2020, [PERSON] u... |
 | doj_safe_childhood_2023_516 | contact and communication with victim |  | image of child pornography to a 72-member Internet group ... |
 | doj_safe_childhood_2023_532 | distribution of CSAM |  | Man Apprehended After Trading Child Sex Abuse Material in... |
 | doj_safe_childhood_2024_070 | contact and communication with victim |  | Using an internet chat platform for |
 | doj_safe_childhood_2024_078 | contact and communication with victim | Aiding and Abetting the Distribution of Child Pornog... | victim’s temporary guardian, repeatedly typed messages to... |
 | doj_safe_childhood_2024_202 | contact and communication with victim | one count of possession of child pornography and one... | young as six years old, were found within the chat platfo... |
-| doj_safe_childhood_2024_267 | contact and communication with victim |  | Hardy King (29), met a child through the anonymous online... |
+| doj_safe_childhood_2024_267 | contact and communication with victim |  | [PERSON] (29), met a child through the anonymous online c... |
 | doj_safe_childhood_2024_291 | distribution of CSAM |  | as “Anything Goes.” The chat was used exclusively to exch... |
 | doj_safe_childhood_2024_312 | distribution of CSAM | one count of possession of child pornography and one... | distribution of CSAM on an online chat platform. |
 | doj_safe_childhood_2024_319 | contact and communication with victim | violating, the U | pornography, including screenshots of a video chat betwee... |
 | doj_safe_childhood_2024_322 | contact and communication with victim |  | repeatedly asked her to video chat and to meet him in per... |
-| doj_safe_childhood_2024_346 | contact and communication with victim | the charge in January of this year | days later, Cardona asked the user if they had an account... |
-| doj_safe_childhood_2024_374 | contact and communication with victim | investigating and bringing federal charges against i... | During the chat, Dandridge sent |
-| doj_safe_childhood_2024_401 | distribution of CSAM | receipt of child pornography | In April 2023, law enforcement was notified that Benson p... |
-| doj_safe_childhood_2024_429 | contact and communication with victim |  | According to court documents, in 2021, Caraballo met a 13... |
+| doj_safe_childhood_2024_346 | contact and communication with victim | the charge in January of this year | days later, [PERSON] asked the user if they had an accoun... |
+| doj_safe_childhood_2024_374 | contact and communication with victim | investigating and bringing federal charges against i... | During the chat, [PERSON] sent |
+| doj_safe_childhood_2024_401 | distribution of CSAM | receipt of child pornography | In April 2023, law enforcement was notified that [PERSON]... |
+| doj_safe_childhood_2024_429 | contact and communication with victim |  | According to court documents, in 2021, [PERSON] met a 13-... |
 | doj_safe_childhood_2024_468 | contact and communication with victim |  | Within minutes, the chat became sexual. |
 | doj_safe_childhood_2024_479 | contact and communication with victim |  | online chat site and the agent responded that they did ha... |
 | doj_safe_childhood_2024_487 | contact and communication with victim |  | drive full of child pornography and asked the agent to jo... |
 | doj_safe_childhood_2024_500 | contact and communication with victim |  | abuse of children in various chat rooms. |
-| doj_safe_childhood_2024_513 | contact and communication with victim | one count of producing child pornography and one cou... | Wirth entered chat rooms on Kik, which provided a forum f... |
+| doj_safe_childhood_2024_513 | contact and communication with victim | one count of producing child pornography and one cou... | [PERSON] entered chat rooms on Kik, which provided a foru... |
 | doj_safe_childhood_2025_029 | distribution of CSAM | investigating and bringing federal charges against i... | months in prison for posting photographs and videos to a ... |
 | doj_safe_childhood_2025_048 | contact and communication with victim | September Assistant U | messages to a chat room in one such application in June 2... |
 | doj_safe_childhood_2025_061 | contact and communication with victim |  | “BeFree” (233733), or live chat at HumanTraffickingHotlin... |
 | doj_safe_childhood_2025_112 | contact and communication with victim |  | videos of child pornography via an encrypted chat messeng... |
-| doj_safe_childhood_2025_130 | contact and communication with victim |  | Bock admitted to utilizing an app called Anonymous Chat t... |
+| doj_safe_childhood_2025_130 | contact and communication with victim |  | [PERSON] admitted to utilizing an app called Anonymous Ch... |
 | doj_safe_childhood_2025_194 | contact and communication with victim | one count of production of child pornography and one... | messages to a chat room in one such application in June 2... |
 | doj_safe_childhood_2025_202 | contact and communication with victim | three counts of distribution of child pornography | Their conversations moved from the chat forum to text mes... |
-| doj_safe_childhood_2025_215 | contact and communication with victim | Possessing Child Pornography | Between August and November of 2022, Weimer used a social... |
-| doj_safe_childhood_2025_254 | contact and communication with victim |  | of a video chat between Cota and a naked child. |
+| doj_safe_childhood_2025_215 | contact and communication with victim | Possessing Child Pornography | Between August and November of 2022, [PERSON] used a soci... |
+| doj_safe_childhood_2025_254 | contact and communication with victim |  | of a video chat between [PERSON] and a naked child. |
 | doj_safe_childhood_2025_255 | contact and communication with victim |  | online chat room. |
-| doj_safe_childhood_2025_275 | contact and communication with victim |  | During the chat, White agreed to meet the undercover offi... |
-| doj_safe_childhood_2025_279 | contact and communication with victim | a two-count superseding information charging him wit... | Smith also engaged in a video chat with the child while p... |
+| doj_safe_childhood_2025_275 | contact and communication with victim |  | During the chat, [PERSON] agreed to meet the undercover o... |
+| doj_safe_childhood_2025_279 | contact and communication with victim | a two-count superseding information charging him wit... | [PERSON] also engaged in a video chat with the child whil... |
 | doj_safe_childhood_2025_284 | grooming / soliciting minor |  | In or around June 2022, while communicating via an online... |
 | doj_safe_childhood_2025_308 | contact and communication with victim |  | agent who had joined the chat group received numerous ima... |
 | doj_safe_childhood_2025_358 | contact and communication with victim | the distribution of child pornography on May 29, 2024 | He created a chat room on Nov. |
-| doj_safe_childhood_2025_373 | distribution of CSAM | receipt of child pornography | In April 2023, law enforcement was notified that Benson p... |
+| doj_safe_childhood_2025_373 | distribution of CSAM | receipt of child pornography | In April 2023, law enforcement was notified that [PERSON]... |
 | doj_safe_childhood_2025_385 | distribution of CSAM | all three charges in October of last year | As presented in court filings, on September 1, 2020, a us... |
-| doj_safe_childhood_2025_388 | contact and communication with victim |  | Louis office learned of Larkin’s chat room |
+| doj_safe_childhood_2025_388 | contact and communication with victim |  | Louis office learned of [PERSON]’s chat room |
 | doj_safe_childhood_2026_016 | contact and communication with victim |  | the chat continued, the individual explained that he had ... |
 | doj_safe_childhood_2026_123 | contact and communication with victim |  | depictions of sexually explicit conduct over Snapchat vid... |
 | doj_safe_childhood_2026_124 | contact and communication with victim |  | videos depicting sexual abuse of children through the cha... |
 | doj_safe_childhood_2026_168 | contact and communication with victim | one count of possession of child pornography and one... | While in the chat |
 | doj_safe_childhood_2026_207 | distribution of CSAM |  | He also distributed this content he morphed to others in ... |
 | doj_safe_childhood_2026_266 | contact and communication with victim | one count of distribution of child pornography | chat room dedicated to child sexual abuse on the Kik Mess... |
-| doj_safe_childhood_2026_347 | contact and communication with victim | one count of possession of child pornography and one... | While in the chat group Bendall posted at least 17 videos... |
+| doj_safe_childhood_2026_347 | contact and communication with victim | one count of possession of child pornography and one... | While in the chat group [PERSON] posted at least 17 video... |
 | doj_safe_childhood_2026_361 | contact and communication with victim |  | several chat rooms discussing the sexual abuse of children. |
 | europol_2017_007 | contact and communication with victim |  | arrested under the suspicion of being the moderator of th... |
 | europol_2019_003 | distribution of CSAM |  | Operation Chemosh: how encrypted chat groups exchanged emoji |
@@ -1345,49 +1345,49 @@
 | idaho_icac_2025_042 | contact and communication with victim | (1) count each of enticing a child through use of th... | offenders communicating with children via text, social me... |
 | idaho_icac_2026_004 | contact and communication with victim | crimes against children | admitted to knowingly seeking out images of children bein... |
 | illinois_ag_2007_001 | contact and communication with victim |  | child in an online chat room and then set up a face-to-fa... |
-| illinois_ag_2007_003 | contact and communication with victim | one count of Indecent Solicitation of a Child, a Cla... | Davis met the child in an online chat room and then trave... |
-| illinois_ag_2026_013 | contact and communication with victim | one count of Indecent Solicitation of a Child, a cla... | Waclawski met the child online in a chat room. |
+| illinois_ag_2007_003 | contact and communication with victim | one count of Indecent Solicitation of a Child, a Cla... | [PERSON] met the child in an online chat room and then tr... |
+| illinois_ag_2026_013 | contact and communication with victim | one count of Indecent Solicitation of a Child, a cla... | [PERSON] met the child online in a chat room. |
 | nca_2026_013 | contact and communication with victim |  | Investigators were able to prove that the chat room user ... |
-| ncis_2023_001 | contact and communication with victim |  | conversation with an app username “dAddi” who posted a no... |
+| ncis_2023_001 | contact and communication with victim |  | conversation with an app username “d[PERSON]” who posted ... |
 | ncmec_2022_043 | contact and communication with victim | Trafficking Child Porn A 25-year-old Clifton man who... | child sexual abuse material using Internet chat platforms... |
 | ncmec_2022_102 | distribution of CSAM | possessing child pornography | that an image file was shared by a Discord user on its ch... |
 | ncmec_2022_129 | contact and communication with victim | sharing child sexual DENNISON TWP | into chat rooms and likely performed self-sex acts only l... |
 | ncmec_2022_338 | distribution of CSAM |  | Kik, a chat app, reported a user uploaded and shared seve... |
 | ncmec_2022_394 | distribution of CSAM | three counts each of possession of child pornography... | to share the content in a chat room to get the material h... |
-| ncmec_2022_502 | distribution of CSAM |  | Ripley stated, “Yummy,” and then shared the images with t... |
-| ncmec_2022_536 | contact and communication with victim | child pornography Police sources tell CBS2's Lisa Ro... | I got it from Telegram in different chat rooms." |
+| ncmec_2022_502 | distribution of CSAM |  | [PERSON] stated, “Yummy,” and then shared the images with... |
+| ncmec_2022_536 | contact and communication with victim | child pornography Police sources tell CBS2's [PERSON... | I got it from Telegram in different chat rooms." |
 | ncmec_2023_016 | grooming / soliciting minor | possessing, disseminating Published: Mar | through chat rooms and soliciting original videos from ju... |
-| ncmec_2023_056 | contact and communication with victim | possession and receipt of child pornography | notified that Benson allegedly participated in Zoom video... |
-| ncmec_2023_112 | contact and communication with victim | a child pornography charge during Wednesday’s appear... | While in a private chat room, Laforce |
+| ncmec_2023_056 | contact and communication with victim | possession and receipt of child pornography | notified that [PERSON] allegedly participated in Zoom vid... |
+| ncmec_2023_112 | contact and communication with victim | a child pornography charge during Wednesday’s appear... | While in a private chat room, [PERSON] |
 | ncmec_2023_127 | contact and communication with victim | 20 counts of child pornography, met victims on Omegl... | connect strangers through video chat, observing them perf... |
-| ncmec_2023_137 | contact and communication with victim | trafficking persons for labor or 45-year-old Jose A | Child predators visit online chat rooms and |
+| ncmec_2023_137 | contact and communication with victim | trafficking persons for labor or 45-year-old [PERSON] A | Child predators visit online chat rooms and |
 | ncmec_2023_301 | contact and communication with victim | 16 counts of possession of certain materials prohibi... | the chat feature from December 9 to December 16, 2022. |
 | ncmec_2023_353 | contact and communication with victim | charges receiving/distributing child pornography, a ... | one of the members of the chat committing sexual acts wit... |
-| ncmec_2023_368 | contact and communication with victim | three counts of endangering the welfare of a child, ... | Campbell allegedly used an online chat platform to sexual... |
+| ncmec_2023_368 | contact and communication with victim | three counts of endangering the welfare of a child, ... | [PERSON] allegedly used an online chat platform to sexual... |
 | ncmec_2023_479 | contact and communication with victim | the charge on July 7, 2020 | also admitted to receiving child pornography from other u... |
-| ncmec_2023_516 | contact and communication with victim | Having Child Richard John Anderson, 37, of Levittown... | people in the chat room. |
-| ncmec_2024_023 | contact and communication with victim |  | and what kind of chat rooms they are in,” said Franklin. |
+| ncmec_2023_516 | contact and communication with victim | [PERSON], 37, of Levittown, downloaded images of under | people in the chat room. |
+| ncmec_2024_023 | contact and communication with victim |  | and what kind of chat rooms they are in,” said [PERSON]. |
 | ncmec_2024_046 | distribution of CSAM | child pornography charges according to Prosecuting A... | several email addresses, was a part of multiple chat room... |
 | ncmec_2024_1092 | contact and communication with victim | the three reduced charges and admitted to “knowingly... | user on Kik.com, an online chat platform, admitted to sex... |
-| ncmec_2024_1113 | contact and communication with victim | POSSESSING CHILD SEXUAL ABUSE IMAGES | During the chat, Seestedt expressed a sexual interest in ... |
+| ncmec_2024_1113 | contact and communication with victim | POSSESSING CHILD SEXUAL ABUSE IMAGES | During the chat, [PERSON] expressed a sexual interest in ... |
 | ncmec_2024_184 | contact and communication with victim | Wednesday for possessing and transmitting child porn... | in a chat room as a joke. |
-| ncmec_2024_616 | contact and communication with victim |  | During the chat, Bush sent the undercover officer an imag... |
+| ncmec_2024_616 | contact and communication with victim |  | During the chat, [PERSON] sent the undercover officer an ... |
 | ncmec_2024_621 | contact and communication with victim |  | Further investigation revealed that the suspect’s chat ac... |
-| ncmec_2024_673 | contact and communication with victim | SEXTORTION OF MINOR MET ON GAMING APP, COPS SAY http... | Officials said Romero met an underage boy online in the c... |
+| ncmec_2024_673 | contact and communication with victim | SEXTORTION OF MINOR MET ON GAMING APP, COPS SAY http... | Officials said [PERSON] met an underage boy online in the... |
 | ncmec_2025_036 | contact and communication with victim | nine counts of sexual exploitation of a minor, with ... | In some of the chat logs, the accused "openly [requested] |
-| ncmec_2025_181 | distribution of CSAM | Seven Counts of Possession of Child Pornography, Add... | Boutwell confirmed he uploaded the videos and images to v... |
-| ncmec_2025_305 | contact and communication with victim |  | Trevon Jackson, a 27-year-old teacher, allegedly used Goo... |
+| ncmec_2025_181 | distribution of CSAM | Seven Counts of Possession of Child Pornography, Add... | [PERSON] confirmed he uploaded the videos and images to v... |
+| ncmec_2025_305 | contact and communication with victim |  | [PERSON], a 27-year-old teacher, allegedly used Google Me... |
 | ncmec_2025_306 | contact and communication with victim |  | that he used the chat feature to tell her he wanted to ha... |
-| ncmec_2025_344 | contact and communication with victim |  | Moore later admitted to police he received the files on a... |
+| ncmec_2025_344 | contact and communication with victim |  | [PERSON] later admitted to police he received the files o... |
 | ncmec_2025_403 | distribution of CSAM | three counts of pornography involving juveniles unde... | shared through an online chat platform, according to the ... |
-| ncmec_2025_570 | distribution of CSAM | multiple offenses related to child pornography | They say their work, "revealed that Hunt was sharing CSAM... |
+| ncmec_2025_570 | distribution of CSAM | multiple offenses related to child pornography | They say their work, "revealed that [PERSON] was sharing ... |
 | ncmec_2025_763 | contact and communication with victim | CHILD ABUSE OFFENSES https://fox56 | sending the video of child child pornography so he would ... |
 | ncmec_2025_792 | contact and communication with victim | 97 felony counts of possession of child sexual abuse... | seen child sexual abuse material through an online chat r... |
 | ncmec_2025_888 | distribution of CSAM | March 18 for a charge of possession of child pornogr... | The document says the 34 videos were uploaded to the chat... |
 | ncmec_2025_926 | contact and communication with victim |  | He then told investigators that he had a conversation wit... |
-| ncmec_2025_930 | grooming / soliciting minor | seven felony sex crimes involving children and obstr... | Christensen is accused of sexually enticing minors via a ... |
+| ncmec_2025_930 | grooming / soliciting minor | seven felony sex crimes involving children and obstr... | [PERSON] is accused of sexually enticing minors via a cha... |
 | ncmec_2025_960 | contact and communication with victim | ALLEGED POSSESSION OF CHILD SEXUAL https://www | to others in the chat. |
-| ncmec_2025_984 | contact and communication with victim | distribution and possession of The charges follow an... | The documents state Bragg indicated in one of the chat lo... |
+| ncmec_2025_984 | contact and communication with victim | distribution and possession of The charges follow an... | The documents state [PERSON] indicated in one of the chat... |
 | nj_ag_2015_008 | contact and communication with victim | third-degree possession of child pornography | encountered a federal agent in that chat room and not a l... |
 | nj_ag_2015_010 | contact and communication with victim |  | would contact and befriend teenage girls on the Internet ... |
 | nj_ag_2016_010 | contact and communication with victim | Sexually Assaulting 14-Year-Old Male on Multiple Occ... | investigation by the New Jersey State Police, in which th... |
@@ -1396,12 +1396,12 @@
 | nj_ag_2016_017 | distribution of CSAM |  | these offenders to know that we’re on their file-sharing ... |
 | nj_ag_2016_018 | contact and communication with victim |  | for him online after he met them through the anonymous on... |
 | nj_ag_2016_025 | distribution of CSAM | second-degree distribution of child pornography, whi... | file-sharing networks and chat rooms, and we will trace t... |
-| nj_ag_2017_006 | contact and communication with victim | Charges He Possessed Child Pornography & Solicited a... | whom Rose allegedly directed to engage in sexual acts dur... |
+| nj_ag_2017_006 | contact and communication with victim | Charges He Possessed Child Pornography & Solicited a... | whom [PERSON] allegedly directed to engage in sexual acts... |
 | nj_ag_2017_007 | contact and communication with victim |  | similar methods with those victims, meeting them on chat ... |
 | nj_ag_2017_009 | contact and communication with victim | two counts of manufacturing child pornography (2nd d... | those victims, meeting them on chat sites and posing as a... |
-| nj_ag_2017_022 | contact and communication with victim |  | Chandler allegedly asked the “13-year-old” to communicate... |
+| nj_ag_2017_022 | contact and communication with victim |  | [PERSON] allegedly asked the “13-year-old” to communicate... |
 | nj_ag_2018_010 | contact and communication with victim |  | those victims, meeting them on chat sites and posing as a... |
-| nj_ag_2018_024 | contact and communication with victim | Sending Sexually Explicit Photos and Video of Himsel... | “The allegations against Graber reveal a serial sexual pr... |
+| nj_ag_2018_024 | contact and communication with victim | Sending Sexually Explicit Photos and Video of Himsel... | “The allegations against [PERSON] reveal a serial sexual ... |
 | nj_ag_2019_002 | contact and communication with victim |  | who might also be targeted by predators on chat apps and ... |
 | nj_ag_2020_006 | contact and communication with victim | sexual assault of a minor and impairing or debauchin... | sexual assault on a minor was sentenced to prison today f... |
 | nj_ag_2020_010 | grooming / soliciting minor | sexual assault of a minor and impairing or debauchin... | Soliciting Sexually Explicit Photos of Underage Girl via ... |
@@ -1411,31 +1411,31 @@
 | nj_ag_2025_007 | contact and communication with victim | Sexual Crimes Against Children - New Jersey Office o... | In the chat logs, the suspect allegedly mentioned childre... |
 | nm_ag_2024_004 | contact and communication with victim |  | The chat concluded on Tuesday, April 22, 2024. |
 | nz_dia_2009_011 | contact and communication with victim |  | on an Internet chat room. |
-| nz_dia_2016_002 | contact and communication with victim |  | Webb’s laptop and mobile phone in August 2014 after an on... |
-| nz_dia_2017_004 | contact and communication with victim | one representative charge of possessing objectionabl... | An Internal Affairs inspector identified Turner after an ... |
+| nz_dia_2016_002 | contact and communication with victim |  | [PERSON]’s laptop and mobile phone in August 2014 after a... |
+| nz_dia_2017_004 | contact and communication with victim | one representative charge of possessing objectionabl... | An Internal Affairs inspector identified [PERSON] after a... |
 | pa_ag_2026_005 | contact and communication with victim | felony counts of unlawful contact with a minor (rape... | Office, for devoting resources to rooting out predators w... |
 | pa_ag_2026_015 | contact and communication with victim | 12 offenses (ten felonies), including criminal solic... | ”This defendant believed he had found a middle school-age... |
 | pa_ag_2026_016 | contact and communication with victim | four felonies, including multiple counts of unlawful... | An Office of Attorney General agent posed as an adult in ... |
 | scag_icac_2021_050 | contact and communication with victim |  | media site and obtained the chat threads between the mino... |
-| scag_icac_2025_104 | contact and communication with victim | Child Sexual Abuse Material* charges | sexual abuse videos of Miller assaulting the girl, as wel... |
+| scag_icac_2025_104 | contact and communication with victim | Child Sexual Abuse Material* charges | sexual abuse videos of [PERSON] assaulting the girl, as w... |
 | scag_icac_2025_130 | distribution of CSAM | Dissemination of Obscene Material to a Person under ... | investigation revealed that the minor had met a man named... |
 | south_florida_icac_2024_017 | distribution of CSAM |  | Authorities said he used the chat app Kik to share the fi... |
 | south_florida_icac_2025_015 | distribution of CSAM |  | he was caught sharing child sexual abuse material through... |
 | south_florida_icac_2025_023 | contact and communication with victim |  | Investigators said a file on one of those devices include... |
-| svicac_2019_008 | contact and communication with victim |  | Reached at his accounting office in Larkspur, Blecka said... |
+| svicac_2019_008 | contact and communication with victim |  | Reached at his accounting office in Larkspur, [PERSON] sa... |
 | svicac_2020_009 | contact and communication with victim |  | sucked into the netherworld of internet chat rooms. |
-| svicac_2022_009 | contact and communication with victim | conspiracy — an agreement that likely helped him rec... | Garcia-DeLeon admitted he and a co-defendant managed an o... |
+| svicac_2022_009 | contact and communication with victim | conspiracy — an agreement that likely helped him rec... | [PERSON] admitted he and a co-defendant managed an online... |
 | tbi_icac_2022_003 | contact and communication with victim |  | Cookeville, took over the chat, posed as the girl, and ul... |
 | tbi_icac_2025_010 | distribution of CSAM | sexual exploitation of a minor | had distributed the CSAM on the chat messenger platform KIK. |
-| usss_2017_009 | contact and communication with victim |  | Turner had utilized the chat function within the Marvel "... |
+| usss_2017_009 | contact and communication with victim |  | [PERSON] had utilized the chat function within the Marvel... |
 | usss_2021_001 | contact and communication with victim |  | sixteen years old, and convinced the minor to contact him... |
 | usss_2026_001 | distribution of CSAM | the offense | video chat to preserve it, and uploaded the video to his ... |
 | ut_ag_2020_001 | contact and communication with victim |  | to chatting with the victim for over a year, almost every... |
 | ut_ag_2026_004 | contact and communication with victim |  | offenders communicating with children via text, social me... |
 | ut_ag_2026_006 | grooming / soliciting minor |  | with minor children and soliciting them to perform sexual... |
-| ut_ag_2026_014 | contact and communication with victim | 10 counts of Sexual Exploitation of a Minor, however... | In an interview with investigators, Adams admitted to bei... |
+| ut_ag_2026_014 | contact and communication with victim | 10 counts of Sexual Exploitation of a Minor, however... | In an interview with investigators, [PERSON] admitted to ... |
 | wcso_2024_002 | contact and communication with victim |  | Further investigation revealed that the suspect’s chat ac... |
-| wy_dci_2024_004 | distribution of CSAM | 24 counts of possession, manufacturing and delivery ... | The agent had found Phillips in a chat room distributing ... |
+| wy_dci_2024_004 | distribution of CSAM | 24 counts of possession, manufacturing and delivery ... | The agent had found [PERSON] in a chat room distributing ... |
 
 **Inferred evidence** (15 cases):
 | case_id | platform_role | harm | quote | reasoning |
@@ -1443,18 +1443,18 @@
 | doj_safe_childhood_2023_173 | contact and communication with victim |  | agency about an individual who was using an encrypte... | chat and offense language co-occur in the same sentence without instrumental ... |
 | doj_safe_childhood_2023_341 | contact and communication with victim |  | located in Australia about their sexual interest in ... | chat and offense language co-occur in the same sentence without instrumental ... |
 | doj_safe_childhood_2023_342 | contact and communication with victim |  | Ontario, used the online messaging chat sites Omegle... | chat and offense language co-occur in the same sentence without instrumental ... |
-| doj_safe_childhood_2023_499 | contact and communication with victim |  | well as a video in which McCoy and Victim-1 are mast... | chat and offense language co-occur in the same sentence without instrumental ... |
+| doj_safe_childhood_2023_499 | contact and communication with victim |  | well as a video in which [PERSON] and [PERSON] are m... | chat and offense language co-occur in the same sentence without instrumental ... |
 | doj_safe_childhood_2024_065 | contact and communication with victim |  | that he used a video chat application and a screen-r... | chat and offense language co-occur in the same sentence without instrumental ... |
 | doj_safe_childhood_2024_072 | contact and communication with victim |  | engaging in sex acts with a minor on the Kik messagi... | chat and offense language co-occur in the same sentence without instrumental ... |
 | doj_safe_childhood_2024_197 | contact and communication with victim |  | were discussing engaging in sex acts with a minor on... | chat and offense language co-occur in the same sentence without instrumental ... |
-| doj_safe_childhood_2026_132 | contact and communication with victim |  | Aranda-Martinez admitted he used several chat apps | chat and offense language co-occur in the same sentence without instrumental ... |
+| doj_safe_childhood_2026_132 | contact and communication with victim |  | [PERSON] admitted he used several chat apps | chat and offense language co-occur in the same sentence without instrumental ... |
 | ncmec_2024_1177 | contact and communication with victim |  | apparent child pornography that were found on a chat... | chat and offense language co-occur in the same sentence without instrumental ... |
 | ncmec_2024_136 | contact and communication with victim |  | This time, authorities said the chat app Kik reporte... | chat and offense language co-occur in the same sentence without instrumental ... |
 | ncmec_2024_402 | contact and communication with victim | failure to register as a sex of violent offender | activities on a Kik Messenger chat app account. | chat and offense language co-occur in the same sentence without instrumental ... |
-| ncmec_2024_426 | contact and communication with victim |  | Sigler reportedly said he would find links that woul... | chat and offense language co-occur in the same sentence without instrumental ... |
-| nj_ag_2020_005 | contact and communication with victim |  | like Rose who use social media and chat apps to mani... | chat and offense language co-occur in the same sentence without instrumental ... |
+| ncmec_2024_426 | contact and communication with victim |  | [PERSON] reportedly said he would find links that wo... | chat and offense language co-occur in the same sentence without instrumental ... |
+| nj_ag_2020_005 | contact and communication with victim |  | like [PERSON] who use social media and chat apps to ... | chat and offense language co-occur in the same sentence without instrumental ... |
 | nj_ag_2022_001 | contact and communication with victim | first-degree aggravated sexual assault on Novem... | He also requested that the “girl” send him “sexy vid... | chat and offense language co-occur in the same sentence without instrumental ... |
-| south_florida_icac_2023_005 | contact and communication with victim |  | Authorities said video chat app Bam Bam tipped off t... | chat and offense language co-occur in the same sentence without instrumental ... |
+| south_florida_icac_2023_005 | contact and communication with victim |  | Authorities said video chat app [PERSON] tipped off ... | chat and offense language co-occur in the same sentence without instrumental ... |
 
 **Named only** (602 cases): afp_2019_004, afp_2026_001, alert_ice_2017_001, alert_ice_2017_003, alert_ice_2017_004, alert_ice_2019_007, alert_ice_2020_002, alert_ice_2021_005, anchorage_pd_2022_003, arkansas_dps_2024_014, azicac_2011_004, azicac_2013_007, azicac_2014_011, brazil_pf_2026_039, de_ag_2011_003, de_ag_2012_005, de_ag_2012_009, de_ag_2012_023, de_ag_2012_026, de_ag_2015_001, de_ag_2016_005, doj_archives_2003_006, doj_archives_2006_005, doj_archives_2007_021, doj_archives_2007_027, doj_archives_2008_016, doj_archives_2008_017, doj_archives_2008_028, doj_archives_2008_037, doj_archives_2008_053, doj_ceos_2009_015, doj_ceos_2009_026, doj_ceos_2010_003, doj_ceos_2010_012, doj_ceos_2010_019, doj_ceos_2011_004, doj_ceos_2012_005, doj_ceos_2013_032, doj_ceos_2013_033, doj_ceos_2013_049, doj_ceos_2013_057, doj_ceos_2013_063, doj_ceos_2013_067, doj_ceos_2013_073, doj_ceos_2013_087, doj_ceos_2013_093, doj_ceos_2013_115, doj_ceos_2013_124, doj_ceos_2013_143, doj_ceos_2013_167, doj_ceos_2013_168, doj_ceos_2013_170, doj_ceos_2013_173, doj_ceos_2025_034, doj_ceos_2025_038, doj_ceos_2026_001, doj_safe_childhood_2021_008, doj_safe_childhood_2021_033, doj_safe_childhood_2021_059, doj_safe_childhood_2021_064, doj_safe_childhood_2021_065, doj_safe_childhood_2021_077, doj_safe_childhood_2021_092, doj_safe_childhood_2022_016, doj_safe_childhood_2022_018, doj_safe_childhood_2022_027, doj_safe_childhood_2022_030, doj_safe_childhood_2022_031, doj_safe_childhood_2022_035, doj_safe_childhood_2022_044, doj_safe_childhood_2022_051, doj_safe_childhood_2022_070, doj_safe_childhood_2022_093, doj_safe_childhood_2022_099, doj_safe_childhood_2022_108, doj_safe_childhood_2022_113, doj_safe_childhood_2022_130, doj_safe_childhood_2022_147, doj_safe_childhood_2022_154, doj_safe_childhood_2022_182, doj_safe_childhood_2022_186, doj_safe_childhood_2022_207, doj_safe_childhood_2022_243, doj_safe_childhood_2022_262, doj_safe_childhood_2022_281, doj_safe_childhood_2022_305, doj_safe_childhood_2022_317, doj_safe_childhood_2022_326, doj_safe_childhood_2022_329, doj_safe_childhood_2022_333, doj_safe_childhood_2022_351, doj_safe_childhood_2022_361, doj_safe_childhood_2022_362, doj_safe_childhood_2022_388, doj_safe_childhood_2022_392, doj_safe_childhood_2022_394, doj_safe_childhood_2022_395, doj_safe_childhood_2022_399, doj_safe_childhood_2022_401, doj_safe_childhood_2022_403, doj_safe_childhood_2022_413, doj_safe_childhood_2022_437, doj_safe_childhood_2022_441, doj_safe_childhood_2022_456, doj_safe_childhood_2022_458, doj_safe_childhood_2022_464, doj_safe_childhood_2022_465, doj_safe_childhood_2022_473, doj_safe_childhood_2022_478, doj_safe_childhood_2022_486, doj_safe_childhood_2022_495, doj_safe_childhood_2022_499, doj_safe_childhood_2022_509, doj_safe_childhood_2022_513, doj_safe_childhood_2022_514, doj_safe_childhood_2022_519, doj_safe_childhood_2022_542, doj_safe_childhood_2022_555, doj_safe_childhood_2023_006, doj_safe_childhood_2023_008, doj_safe_childhood_2023_022, doj_safe_childhood_2023_031, doj_safe_childhood_2023_048, doj_safe_childhood_2023_050, doj_safe_childhood_2023_052, doj_safe_childhood_2023_068, doj_safe_childhood_2023_072, doj_safe_childhood_2023_078, doj_safe_childhood_2023_081, doj_safe_childhood_2023_113, doj_safe_childhood_2023_124, doj_safe_childhood_2023_135, doj_safe_childhood_2023_143, doj_safe_childhood_2023_159, doj_safe_childhood_2023_160, doj_safe_childhood_2023_177, doj_safe_childhood_2023_197, doj_safe_childhood_2023_215, doj_safe_childhood_2023_230, doj_safe_childhood_2023_256, doj_safe_childhood_2023_259, doj_safe_childhood_2023_285, doj_safe_childhood_2023_290, doj_safe_childhood_2023_298, doj_safe_childhood_2023_305, doj_safe_childhood_2023_307, doj_safe_childhood_2023_312, doj_safe_childhood_2023_313, doj_safe_childhood_2023_325, doj_safe_childhood_2023_335, doj_safe_childhood_2023_344, doj_safe_childhood_2023_346, doj_safe_childhood_2023_350, doj_safe_childhood_2023_352, doj_safe_childhood_2023_356, doj_safe_childhood_2023_372, doj_safe_childhood_2023_407, doj_safe_childhood_2023_410, doj_safe_childhood_2023_413, doj_safe_childhood_2023_414, doj_safe_childhood_2023_444, doj_safe_childhood_2023_452, doj_safe_childhood_2023_453, doj_safe_childhood_2023_457, doj_safe_childhood_2023_463, doj_safe_childhood_2023_465, doj_safe_childhood_2023_470, doj_safe_childhood_2023_475, doj_safe_childhood_2023_511, doj_safe_childhood_2023_536, doj_safe_childhood_2023_547, doj_safe_childhood_2023_548, doj_safe_childhood_2024_005, doj_safe_childhood_2024_016, doj_safe_childhood_2024_025, doj_safe_childhood_2024_030, doj_safe_childhood_2024_045, doj_safe_childhood_2024_050, doj_safe_childhood_2024_051, doj_safe_childhood_2024_059, doj_safe_childhood_2024_066, doj_safe_childhood_2024_068, doj_safe_childhood_2024_103, doj_safe_childhood_2024_108, doj_safe_childhood_2024_115, doj_safe_childhood_2024_126, doj_safe_childhood_2024_131, doj_safe_childhood_2024_145, doj_safe_childhood_2024_147, doj_safe_childhood_2024_149, doj_safe_childhood_2024_162, doj_safe_childhood_2024_172, doj_safe_childhood_2024_182, doj_safe_childhood_2024_185, doj_safe_childhood_2024_190, doj_safe_childhood_2024_233, doj_safe_childhood_2024_241, doj_safe_childhood_2024_248, doj_safe_childhood_2024_264, doj_safe_childhood_2024_278, doj_safe_childhood_2024_280, doj_safe_childhood_2024_283, doj_safe_childhood_2024_294, doj_safe_childhood_2024_305, doj_safe_childhood_2024_315, doj_safe_childhood_2024_331, doj_safe_childhood_2024_344, doj_safe_childhood_2024_350, doj_safe_childhood_2024_361, doj_safe_childhood_2024_363, doj_safe_childhood_2024_366, doj_safe_childhood_2024_368, doj_safe_childhood_2024_369, doj_safe_childhood_2024_375, doj_safe_childhood_2024_376, doj_safe_childhood_2024_379, doj_safe_childhood_2024_381, doj_safe_childhood_2024_387, doj_safe_childhood_2024_388, doj_safe_childhood_2024_407, doj_safe_childhood_2024_408, doj_safe_childhood_2024_410, doj_safe_childhood_2024_411, doj_safe_childhood_2024_413, doj_safe_childhood_2024_421, doj_safe_childhood_2024_422, doj_safe_childhood_2024_434, doj_safe_childhood_2024_465, doj_safe_childhood_2024_471, doj_safe_childhood_2024_478, doj_safe_childhood_2024_493, doj_safe_childhood_2024_496, doj_safe_childhood_2025_001, doj_safe_childhood_2025_006, doj_safe_childhood_2025_015, doj_safe_childhood_2025_019, doj_safe_childhood_2025_028, doj_safe_childhood_2025_032, doj_safe_childhood_2025_034, doj_safe_childhood_2025_038, doj_safe_childhood_2025_068, doj_safe_childhood_2025_086, doj_safe_childhood_2025_098, doj_safe_childhood_2025_106, doj_safe_childhood_2025_109, doj_safe_childhood_2025_125, doj_safe_childhood_2025_131, doj_safe_childhood_2025_141, doj_safe_childhood_2025_158, doj_safe_childhood_2025_167, doj_safe_childhood_2025_172, doj_safe_childhood_2025_180, doj_safe_childhood_2025_208, doj_safe_childhood_2025_219, doj_safe_childhood_2025_224, doj_safe_childhood_2025_236, doj_safe_childhood_2025_238, doj_safe_childhood_2025_256, doj_safe_childhood_2025_273, doj_safe_childhood_2025_293, doj_safe_childhood_2025_312, doj_safe_childhood_2025_344, doj_safe_childhood_2025_345, doj_safe_childhood_2025_346, doj_safe_childhood_2025_352, doj_safe_childhood_2025_370, doj_safe_childhood_2025_371, doj_safe_childhood_2025_377, doj_safe_childhood_2025_391, doj_safe_childhood_2025_394, doj_safe_childhood_2025_396, doj_safe_childhood_2025_401, doj_safe_childhood_2025_419, doj_safe_childhood_2026_019, doj_safe_childhood_2026_027, doj_safe_childhood_2026_035, doj_safe_childhood_2026_055, doj_safe_childhood_2026_064, doj_safe_childhood_2026_069, doj_safe_childhood_2026_087, doj_safe_childhood_2026_089, doj_safe_childhood_2026_094, doj_safe_childhood_2026_095, doj_safe_childhood_2026_129, doj_safe_childhood_2026_139, doj_safe_childhood_2026_142, doj_safe_childhood_2026_155, doj_safe_childhood_2026_166, doj_safe_childhood_2026_175, doj_safe_childhood_2026_176, doj_safe_childhood_2026_178, doj_safe_childhood_2026_180, doj_safe_childhood_2026_192, doj_safe_childhood_2026_195, doj_safe_childhood_2026_211, doj_safe_childhood_2026_228, doj_safe_childhood_2026_231, doj_safe_childhood_2026_259, doj_safe_childhood_2026_269, doj_safe_childhood_2026_273, doj_safe_childhood_2026_296, doj_safe_childhood_2026_299, doj_safe_childhood_2026_306, doj_safe_childhood_2026_323, doj_safe_childhood_2026_327, doj_safe_childhood_2026_338, doj_safe_childhood_2026_342, doj_safe_childhood_2026_343, doj_safe_childhood_2026_344, doj_safe_childhood_2026_373, doj_safe_childhood_2026_376, doj_safe_childhood_2026_391, doj_safe_childhood_2026_402, doj_safe_childhood_2026_411, europol_2021_002, europol_2024_003, fresno_so_2015_001, fresno_so_2015_002, fresno_so_2017_002, fresno_so_2017_003, fresno_so_2020_001, fresno_so_2020_002, fresno_so_2020_003, fresno_so_2020_004, fresno_so_2020_005, fresno_so_2020_008, fresno_so_2020_013, fresno_so_2022_001, fresno_so_2023_001, fresno_so_2024_002, fresno_so_2024_003, fresno_so_2024_004, fresno_so_2024_005, fresno_so_2024_008, fresno_so_2025_001, fresno_so_2025_002, fresno_so_2025_003, gbi_2022_001, gbi_2023_003, gbi_2023_005, gbi_2024_004, gbi_2025_002, ice_2013_011, ice_2013_013, ice_2017_009, ice_2023_002, ice_2026_006, idaho_icac_2025_002, idaho_icac_2025_004, idaho_icac_2025_011, idaho_icac_2025_013, idaho_icac_2025_038, illinois_ag_2006_002, illinois_ag_2006_003, illinois_ag_2008_004, illinois_ag_2011_007, illinois_ag_2025_008, lapd_2007_001, lapd_2010_002, lapd_2013_003, lapd_2023_001, lapd_2024_001, mcao_2011_001, mn_bca_2022_001, nbi_2021_003, nbi_2025_002, nbi_2025_003, nbi_2025_013, nbi_2026_005, nca_2021_001, nca_2026_001, nca_2026_003, nca_2026_007, ncis_2022_002, ncis_2026_001, ncmec_2022_004, ncmec_2022_051, ncmec_2022_055, ncmec_2022_067, ncmec_2022_077, ncmec_2022_154, ncmec_2022_157, ncmec_2022_190, ncmec_2022_204, ncmec_2022_216, ncmec_2022_232, ncmec_2022_252, ncmec_2022_275, ncmec_2022_290, ncmec_2022_301, ncmec_2022_313, ncmec_2022_407, ncmec_2022_440, ncmec_2022_547, ncmec_2022_557, ncmec_2022_574, ncmec_2022_589, ncmec_2022_596, ncmec_2023_055, ncmec_2023_072, ncmec_2023_073, ncmec_2023_081, ncmec_2023_126, ncmec_2023_149, ncmec_2023_187, ncmec_2023_236, ncmec_2023_265, ncmec_2023_278, ncmec_2023_283, ncmec_2023_398, ncmec_2023_421, ncmec_2023_434, ncmec_2023_484, ncmec_2023_595, ncmec_2023_635, ncmec_2024_003, ncmec_2024_036, ncmec_2024_044, ncmec_2024_069, ncmec_2024_082, ncmec_2024_097, ncmec_2024_1016, ncmec_2024_1052, ncmec_2024_1089, ncmec_2024_1098, ncmec_2024_1117, ncmec_2024_1119, ncmec_2024_1129, ncmec_2024_138, ncmec_2024_156, ncmec_2024_175, ncmec_2024_207, ncmec_2024_218, ncmec_2024_227, ncmec_2024_238, ncmec_2024_278, ncmec_2024_289, ncmec_2024_352, ncmec_2024_381, ncmec_2024_391, ncmec_2024_561, ncmec_2024_588, ncmec_2024_593, ncmec_2024_603, ncmec_2024_622, ncmec_2024_644, ncmec_2024_682, ncmec_2024_714, ncmec_2024_731, ncmec_2024_782, ncmec_2024_804, ncmec_2024_809, ncmec_2024_834, ncmec_2024_882, ncmec_2024_910, ncmec_2024_977, ncmec_2025_030, ncmec_2025_083, ncmec_2025_1032, ncmec_2025_1033, ncmec_2025_1034, ncmec_2025_117, ncmec_2025_152, ncmec_2025_156, ncmec_2025_172, ncmec_2025_207, ncmec_2025_213, ncmec_2025_216, ncmec_2025_220, ncmec_2025_231, ncmec_2025_232, ncmec_2025_249, ncmec_2025_263, ncmec_2025_267, ncmec_2025_270, ncmec_2025_271, ncmec_2025_273, ncmec_2025_280, ncmec_2025_281, ncmec_2025_288, ncmec_2025_310, ncmec_2025_322, ncmec_2025_334, ncmec_2025_353, ncmec_2025_402, ncmec_2025_546, ncmec_2025_566, ncmec_2025_568, ncmec_2025_575, ncmec_2025_701, ncmec_2025_738, ncmec_2025_742, ncmec_2025_745, ncmec_2025_747, ncmec_2025_751, ncmec_2025_776, ncmec_2025_785, ncmec_2025_788, ncmec_2025_827, ncmec_2025_863, ncmec_2025_874, ncmec_2025_891, ncmec_2025_893, ncmec_2025_922, ncmec_2025_931, ncmec_2025_964, ncmec_2025_965, ncmec_2025_975, ncmec_2025_977, newyork_sp_2025_022, nj_ag_2014_009, nj_ag_2015_005, nj_ag_2015_006, nj_ag_2015_012, nj_ag_2016_014, nj_ag_2017_001, nj_ag_2017_008, nj_ag_2018_001, nj_ag_2018_008, nj_ag_2018_009, nj_ag_2018_013, nj_ag_2019_007, nj_ag_2020_001, nj_ag_2020_004, nj_ag_2020_008, nj_ag_2020_013, nj_ag_2020_015, nj_ag_2021_001, nj_ag_2021_002, nj_ag_2021_003, nj_ag_2021_004, nj_ag_2021_008, nj_ag_2021_009, nj_ag_2021_010, nj_ag_2025_001, nj_ag_2025_004, nm_ag_2024_001, nz_dia_2004_001, nz_dia_2008_003, nz_dia_2009_005, nz_dia_2022_005, nz_dia_2025_010, nz_dia_2026_005, nz_dia_2026_008, ocpo_2022_002, ocpo_2026_006, ohio_ag_2018_004, ohio_ag_2022_001, osceola_so_2025_002, pa_ag_2026_029, qps_2024_001, qps_2026_003, qps_2026_004, scag_icac_2025_102, sjpd_2024_002, sjpd_2025_004, sjpd_2026_002, sjpd_2026_005, south_florida_icac_2023_006, south_florida_icac_2024_002, south_florida_icac_2024_007, south_florida_icac_2024_012, south_florida_icac_2024_019, south_florida_icac_2025_009, south_florida_icac_2025_012, south_florida_icac_2025_017, south_florida_icac_2025_019, south_florida_icac_2025_032, south_florida_icac_2026_002, spd_2023_001, spd_2025_008, svicac_2019_005, svicac_2019_006, svicac_2019_012, svicac_2022_001, svicac_2022_010, svicac_2023_001, svicac_2026_006, svicac_2026_015, svicac_2026_017, tbi_icac_2014_011, tbi_icac_2018_003, tbi_icac_2020_004, tbi_icac_2022_001, tbi_icac_2023_001, tbi_icac_2023_002, tbi_icac_2023_012, tbi_icac_2024_013, tbi_icac_2026_004, usss_2017_002, usss_2017_006, usss_2018_008, usss_2021_017, ut_ag_2023_001, ut_ag_2026_002, ut_ag_2026_007, vt_ag_2020_011, wy_dci_2024_003, wy_dci_2025_003, wy_dci_2025_004, wy_dci_2026_001, wy_dci_2026_005
 
@@ -1464,10 +1464,10 @@
 - `ut_ag_2022_001`: PSA-only — 'chat' appears only after PSA boundary. Sample: "such as virtual reality platforms. Virtu
 
 **DB gaps flagged** (386 cases):
-- `anchorage_pd_2022_001`: `chat` — "pornography in his Snapchat account. In the spring of 2019 M"
-- `anchorage_pd_2022_004`: `chat` — "were saved on social media. Moore possessed two videos of ch"
+- `anchorage_pd_2022_001`: `chat` — "pornography in his Snapchat account. In the spring of 2019 ["
+- `anchorage_pd_2022_004`: `chat` — "were saved on social media. [PERSON] possessed two videos of"
 - `anchorage_pd_2022_005`: `chat` — "Snapchat, Tagged and Whisper and would meet minor females th"
-- `anchorage_pd_2022_007`: `chat` — "According to federal court documents, Amin used the Snapchat"
+- `anchorage_pd_2022_007`: `chat` — "According to federal court documents, [PERSON] used the Snap"
 - `anchorage_pd_2025_003`: `chat` — "social media platforms such as Snapchat. It is possible that"
 - `arkansas_dps_2024_011`: `chat` — "Children (NCMEC) from the online messaging applications Goog"
 - `arkansas_dps_2024_012`: `chat` — "through the online messaging applications Snapchat and Kik."
@@ -1480,10 +1480,10 @@
 - `doj_archives_2005_014`: `chat` — "that computer, and by advertising on specified Internet Rela"
 - `doj_archives_2005_017`: `chat` — "public to upload files to that computer, and by advertising "
 - `doj_archives_2005_025`: `chat` — "and by advertising on specified Internet Relay Chat (IRC) ch"
-- `doj_archives_2006_007`: `chat` — "configured and operated. DECKER distributed the images in an"
+- `doj_archives_2006_007`: `chat` — "configured and operated. [PERSON] distributed the images in "
 - `doj_archives_2006_014`: `chat` — "through a file server set up in an Internet Relay Chat chann"
 - `doj_ceos_2025_002`: `chat` — "years, beginning in 2021. He also allegedly used artificial "
-- `doj_ceos_2025_003`: `chat` — "According to court documents, Donald Ramirez, 40, of Salinas"
+- `doj_ceos_2025_003`: `chat` — "According to court documents, [PERSON], 40, of Salinas, Cali"
 
 ---
 
@@ -1496,70 +1496,70 @@
 |---|---|---|---|
 | azicac_2012_011 | grooming / soliciting minor |  | fake Facebook accounts and lured young teenage |
 | azicac_2014_012 | grooming / soliciting minor | that image and interviews will be conducted of the c... | several fake Facebook accounts and lured a |
-| doj_ceos_2011_012 | contact and communication with victim |  | Lewis,” he repeatedly contacted a girl he knew to be 14 y... |
-| doj_ceos_2012_005 | contact and communication with victim | the federal indictment on Sept | she learned of the contact with Pedersen after receiving ... |
+| doj_ceos_2011_012 | contact and communication with victim |  | [PERSON],” he repeatedly contacted a girl he knew to be 1... |
+| doj_ceos_2012_005 | contact and communication with victim | the federal indictment on Sept | she learned of the contact with [PERSON] after receiving ... |
 | doj_ceos_2013_076 | contact and communication with victim |  | 13-year-old girl through communicating with her on Facebo... |
 | doj_ceos_2013_193 | grooming / soliciting minor | Federal Charges Of Child Pornography And Enticement ... | female on Facebook in order to lure and recruit another m... |
 | doj_ceos_2013_196 | contact and communication with victim | distribution of child pornography | communicated with the undercover detective through Facebo... |
-| doj_ceos_2026_008 | grooming / soliciting minor |  | According to court documents, Juan Carlos Puente, 48, of ... |
-| doj_safe_childhood_2021_001 | distribution of CSAM | the offense on August 11, 2021 | McKie came to law enforcement’s attention after receiving... |
+| doj_ceos_2026_008 | grooming / soliciting minor |  | According to court documents, [PERSON], 48, of Clinton, M... |
+| doj_safe_childhood_2021_001 | distribution of CSAM | the offense on August 11, 2021 | [PERSON] came to law enforcement’s attention after receiv... |
 | doj_safe_childhood_2021_009 | distribution of CSAM | child pornography offenses, to send him photos depic... | and Using Facebook to Distribute Child Pornography |
 | doj_safe_childhood_2021_010 | distribution of CSAM | child pornography offenses, to send him photos depic... | and Using Facebook to Distribute Child Pornography |
-| doj_safe_childhood_2021_048 | contact and communication with victim |  | Ahmed then communicated with the minor over Facebook and ... |
+| doj_safe_childhood_2021_048 | contact and communication with victim |  | [PERSON] then communicated with the minor over Facebook a... |
 | doj_safe_childhood_2021_049 | used in offense (specific role unspecified) | one count of receiving child pornography over the in... | years old, then reconnected with the child victim through... |
 | doj_safe_childhood_2022_016 | platform-reported CSAM (distribution inferred) |  | In September 2019, law enforcement began investigating Cy... |
-| doj_safe_childhood_2022_031 | used in offense (specific role unspecified) | attempting to use a minor to produce a visual depict... | According to court documents, on April 25, 2021, Adams se... |
-| doj_safe_childhood_2022_099 | contact and communication with victim |  | Johnson further admitted that between 2020 and 2021, he u... |
+| doj_safe_childhood_2022_031 | used in offense (specific role unspecified) | attempting to use a minor to produce a visual depict... | According to court documents, on April 25, 2021, [PERSON]... |
+| doj_safe_childhood_2022_099 | contact and communication with victim |  | [PERSON] further admitted that between 2020 and 2021, he ... |
 | doj_safe_childhood_2022_208 | contact and communication with victim |  | Force and stationed at Beale Air Force Base in California... |
 | doj_safe_childhood_2022_270 | distribution of CSAM |  | investigation determined that the Facebook Messenger acco... |
 | doj_safe_childhood_2022_281 | contact and communication with victim | Production of Child Publication date: 2022-06-14 Ear... | Facebook records, including his messenger communications ... |
 | doj_safe_childhood_2022_290 | contact and communication with victim |  | While privately chatting with the undercover TFO via Face... |
-| doj_safe_childhood_2022_388 | contact and communication with victim | receiving child pornography | admitted to using Facebook to chat with Gonzalez and that... |
+| doj_safe_childhood_2022_388 | contact and communication with victim | receiving child pornography | admitted to using Facebook to chat with [PERSON] and that... |
 | doj_safe_childhood_2022_393 | platform-reported CSAM (distribution inferred) |  | Internet Crimes Against Children (ICAC) section received ... |
 | doj_safe_childhood_2022_403 | contact and communication with victim | production of child pornography before U | material communicated between two Facebook users—a middle... |
 | doj_safe_childhood_2022_426 | platform-reported CSAM (distribution inferred) |  | CyberTipline reports alleging that a Facebook and Yahoo u... |
-| doj_safe_childhood_2022_455 | contact and communication with victim | charges in federal court on September 16, 2021 | 2020, Flanagan used fake profiles pretending to be a teen... |
+| doj_safe_childhood_2022_455 | contact and communication with victim | charges in federal court on September 16, 2021 | 2020, [PERSON] used fake profiles pretending to be a teen... |
 | doj_safe_childhood_2022_489 | grooming / soliciting minor |  | as teenage boys on Facebook and used aggressive and manip... |
-| doj_safe_childhood_2022_533 | distribution of CSAM |  | Facebook user “Shane Smith” had attempted to share a vide... |
+| doj_safe_childhood_2022_533 | distribution of CSAM |  | Facebook user “[PERSON]” had attempted to share a video o... |
 | doj_safe_childhood_2023_008 | distribution of CSAM |  | The video they shared resulted in a tip from Facebook to the |
 | doj_safe_childhood_2023_031 | contact and communication with victim |  | On multiple occasions, he used Facebook and Gmail to dire... |
-| doj_safe_childhood_2023_055 | used in offense (specific role unspecified) |  | Children that Briggs’s Facebook account had been used to ... |
-| doj_safe_childhood_2023_203 | distribution of CSAM |  | Smith first came to the attention of law enforcement beca... |
+| doj_safe_childhood_2023_055 | used in offense (specific role unspecified) |  | Children that [PERSON]’s Facebook account had been used t... |
+| doj_safe_childhood_2023_203 | distribution of CSAM |  | [PERSON] first came to the attention of law enforcement b... |
 | doj_safe_childhood_2023_215 | platform-reported CSAM (distribution inferred) |  | began investigating CyberTip reports from Google, Instagr... |
-| doj_safe_childhood_2023_264 | used in offense (specific role unspecified) |  | Children that Briggs’s Facebook account had been used to ... |
-| doj_safe_childhood_2023_306 | grooming / soliciting minor | receiving child pornography | of 2021, Fulsom solicited and received pornographic image... |
+| doj_safe_childhood_2023_264 | used in offense (specific role unspecified) |  | Children that [PERSON]’s Facebook account had been used t... |
+| doj_safe_childhood_2023_306 | grooming / soliciting minor | receiving child pornography | of 2021, [PERSON] solicited and received pornographic ima... |
 | doj_safe_childhood_2023_357 | contact and communication with victim |  | coerced minors online via Facebook and Snapchat to take s... |
 | doj_safe_childhood_2023_531 | used in offense (specific role unspecified) |  | Facebook submitted a tip to authorities was sentenced tod... |
-| doj_safe_childhood_2023_536 | contact and communication with victim |  | Johnson further admitted that between 2020 and 2021, he u... |
+| doj_safe_childhood_2023_536 | contact and communication with victim |  | [PERSON] further admitted that between 2020 and 2021, he ... |
 | doj_safe_childhood_2024_172 | contact and communication with victim |  | chats on Facebook. |
 | doj_safe_childhood_2024_187 | contact and communication with victim |  | all over Facebook google snapchat twitch and everywhere,”... |
 | doj_safe_childhood_2024_229 | contact and communication with victim | Production of Child Pornography | teenage male on Facebook and contacted a teenage minor fe... |
-| doj_safe_childhood_2024_262 | distribution of CSAM |  | According to court documents, in 2022 and 2023, Taylor us... |
+| doj_safe_childhood_2024_262 | distribution of CSAM |  | According to court documents, in 2022 and 2023, [PERSON] ... |
 | doj_safe_childhood_2024_322 | contact and communication with victim |  | 2019, when he began using Facebook messenger to communica... |
 | doj_safe_childhood_2024_344 | distribution of CSAM |  | proposed they create a group on Facebook in order to shar... |
-| doj_safe_childhood_2024_350 | contact and communication with victim |  | Hamer also joined Facebook Messenger group chats that wer... |
+| doj_safe_childhood_2024_350 | contact and communication with victim |  | [PERSON] also joined Facebook Messenger group chats that ... |
 | doj_safe_childhood_2024_387 | contact and communication with victim |  | Facebook Messenger account as attachments to messages. |
-| doj_safe_childhood_2024_425 | contact and communication with victim | one count of enticing a minor to engage in illegal s... | Marshall also contacted her through his Facebook |
+| doj_safe_childhood_2024_425 | contact and communication with victim | one count of enticing a minor to engage in illegal s... | [PERSON] also contacted her through his Facebook |
 | doj_safe_childhood_2024_494 | distribution of CSAM | possession child pornography | related to child exploitation material distributed by a F... |
-| doj_safe_childhood_2025_167 | contact and communication with victim |  | A subsequent forensic review of Leonard’s phone uncovered... |
+| doj_safe_childhood_2025_167 | contact and communication with victim |  | A subsequent forensic review of [PERSON]’s phone uncovere... |
 | doj_safe_childhood_2025_168 | contact and communication with victim |  | According to court documents, in September 2024, law enfo... |
-| doj_safe_childhood_2025_181 | contact and communication with victim |  | with Brown after Brown contacted minor victim via Facebook. |
+| doj_safe_childhood_2025_181 | contact and communication with victim |  | with [PERSON] after [PERSON] contacted minor victim via F... |
 | doj_safe_childhood_2025_186 | distribution of CSAM |  | and videos of both minor victims, which he uploaded to Fa... |
 | doj_safe_childhood_2025_338 | contact and communication with victim |  | a minor victim’s father seeing a group message on Faceboo... |
 | doj_safe_childhood_2025_351 | distribution of CSAM |  | a Facebook user in Davidson County was suspected of uploa... |
 | doj_safe_childhood_2025_366 | contact and communication with victim |  | all over Facebook google snapchat twitch and everywhere,”... |
 | doj_safe_childhood_2026_176 | used in offense (specific role unspecified) |  | On October 20, 2020, Facebook, Inc., sent four files to t... |
 | doj_safe_childhood_2026_204 | used in offense (specific role unspecified) |  | minor engaging in sexually explicit conduct through the p... |
-| doj_safe_childhood_2026_257 | contact and communication with victim |  | In May 2025, Granados Baltazar began Facebook messaging w... |
-| doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on Oct | The third minor victim began receiving messages from Nung... |
-| doj_safe_childhood_2026_342 | contact and communication with victim |  | A subsequent forensic review of Leonard’s phone uncovered... |
+| doj_safe_childhood_2026_257 | contact and communication with victim |  | In May 2025, [PERSON] began Facebook messaging with someo... |
+| doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on Oct | The third minor victim began receiving messages from [PER... |
+| doj_safe_childhood_2026_342 | contact and communication with victim |  | A subsequent forensic review of [PERSON]’s phone uncovere... |
 | fl_ag_2025_002 | contact and communication with victim |  | media platforms, including Facebook and Snapchat, to comm... |
 | illinois_ag_2021_008 | contact and communication with victim | two counts of dissemination of child pornography, Cl... | by calling 618-283-1986 or contacting the Fayette County ... |
-| mcao_2014_002 | contact and communication with victim |  | Ross was also found to be communicating with teenage vict... |
+| mcao_2014_002 | contact and communication with victim |  | [PERSON] was also found to be communicating with teenage ... |
 | nbi_2020_001 | distribution of CSAM |  | through Facebook Messenger One Million Pesos from the cou... |
 | nbi_2025_009 | platform-reported CSAM (distribution inferred) |  | Facebook had reported at least thirteen (13) instances of... |
 | ncmec_2022_250 | distribution of CSAM | manufacturing child pornography, leader of a child p... | https://patersontimes.com/2022/04/13/paterson-man-was-dis... |
-| ncmec_2022_287 | distribution of CSAM | Monday morning after an investigation into accusatio... | about Potts sharing child pornography files through Faceb... |
+| ncmec_2022_287 | distribution of CSAM | Monday morning after an investigation into accusatio... | about [PERSON] sharing child pornography files through Fa... |
 | ncmec_2022_309 | platform-reported CSAM (distribution inferred) | possession of child pornography as a Level 5 felon | On April 3, 2020, Facebook reported to the National Cente... |
 | ncmec_2022_328 | contact and communication with victim |  | contacted through Facebook by a person who identified him... |
 | ncmec_2022_425 | distribution of CSAM | multiple charges of possession and promotion of chil... | https://www.villages-news.com/2022/09/10/facebook-reports... |
@@ -1568,20 +1568,20 @@
 | ncmec_2023_018 | distribution of CSAM | possession of child sexual abuse material (about 600... | Facebook reported that a user had distributed two files w... |
 | ncmec_2023_265 | platform-reported CSAM (distribution inferred) |  | In response to the violations, Facebook reported the user... |
 | ncmec_2023_408 | used in offense (specific role unspecified) | a multitude of charges connected to child pornograph... | someone allegedly sent pictures from her Facebook account... |
-| ncmec_2024_088 | distribution of CSAM |  | According to court documents, in 2022 and 2023, Taylor us... |
+| ncmec_2024_088 | distribution of CSAM |  | According to court documents, in 2022 and 2023, [PERSON] ... |
 | ncmec_2024_1136 | distribution of CSAM | A SECOND TIME IN A CHILD SEX STING OPERATION https:/... | A cybertip from Facebook also aided police in their arres... |
 | ncmec_2024_1154 | contact and communication with victim |  | https://www.facebook.com/LakeGenevaPD/posts/press-release... |
 | ncmec_2024_1158 | platform-reported CSAM (distribution inferred) | possession of child pornography | Facebook and reported to NCMEC) noted the dates of the of... |
-| ncmec_2024_1174 | contact and communication with victim | 22 counts of possession of child pornography, use of... | In one text message thread, Deschler told “EM” that his F... |
+| ncmec_2024_1174 | contact and communication with victim | 22 counts of possession of child pornography, use of... | In one text message thread, [PERSON] told “EM” that his F... |
 | ncmec_2024_227 | contact and communication with victim | POSSESSION OF VIDEOS OF SEXUAL ABUSE OF CHILDREN Edi... | A Facebook alert about materialchild sexual abuse and chi... |
 | ncmec_2024_242 | distribution of CSAM |  | “If you are a child predator in our community,” shared Oc... |
 | ncmec_2024_266 | distribution of CSAM | UPLOADING ABUSE MATERIAL TO FACEBOOK https://www | discovered he uploaded child sexual abuse and bestiality ... |
-| ncmec_2024_902 | contact and communication with victim |  | According to the criminal complaint, Swihart began commun... |
+| ncmec_2024_902 | contact and communication with victim |  | According to the criminal complaint, [PERSON] began commu... |
 | ncmec_2024_934 | platform-reported CSAM (distribution inferred) | child pornography offenses in Lycoming County faces ... | when the social media platforms Facebook and Instagram re... |
-| ncmec_2024_977 | contact and communication with victim |  | Facebook chats obtained by police recorded Johnson messag... |
-| ncmec_2025_096 | distribution of CSAM | possessing child pornography, but allegedly told pol... | The investigation into Temple started with a tip from Fac... |
+| ncmec_2024_977 | contact and communication with victim |  | Facebook chats obtained by police recorded [PERSON] messa... |
+| ncmec_2025_096 | distribution of CSAM | possessing child pornography, but allegedly told pol... | The investigation into [PERSON] started with a tip from F... |
 | ncmec_2025_1034 | platform-reported CSAM (distribution inferred) |  | “It was reported by Facebook to the National Center of Mi... |
-| ncmec_2025_168 | distribution of CSAM | eight counts of possessing pornographic images or vi... | Facebook indicating that a user, identified as David Alle... |
+| ncmec_2025_168 | distribution of CSAM | eight counts of possessing pornographic images or vi... | Facebook indicating that a user, identified as [PERSON], ... |
 | ncmec_2025_326 | platform-reported CSAM (distribution inferred) | multiple counts of child exploitation, a Level 4 fel... | Nearly 160 files were flagged by Facebook, which investig... |
 | ncmec_2025_591 | distribution of CSAM | Sexual Exploitation of Children (Possession) and boo... | uploaded via Facebook Messenger. |
 | ncmec_2025_594 | platform-reported CSAM (distribution inferred) |  | 13, 2023, when “Facebook flagged a |
@@ -1589,45 +1589,45 @@
 | ncmec_2025_676 | used in offense (specific role unspecified) | Second-Degree Exploitation of a Minor in Buncombe Co... | https://www.facebook.com/mcdowellsheriff/posts/convicted-... |
 | ncmec_2025_702 | contact and communication with victim | gross sexual imposition (victim under 15), child neg... | from Facebook/Meta, MeetMe and Snapchat. |
 | nj_ag_2015_009 | contact and communication with victim | Stalking Young Girls on Facebook - New Jersey Office... | stalking other girls on Facebook and sending them threate... |
-| nova_icac_2018_002 | grooming / soliciting minor | the computer solicitation charge, so Iden amended th... | Facebook and text messages soliciting sex from what he th... |
+| nova_icac_2018_002 | grooming / soliciting minor | the computer solicitation charge, so [PERSON] amende... | Facebook and text messages soliciting sex from what he th... |
 | nz_dia_2012_002 | platform-reported CSAM (distribution inferred) |  | United States’ authorities reported the posting of multip... |
 | pa_ag_2025_023 | distribution of CSAM | unlawful contact with a minor, indecent assault, dis... | assault of a child with whom he exchanged thousands of Fa... |
 | pa_ag_2025_030 | contact and communication with victim |  | with the girl on Facebook and Snapchat, sending her lewd ... |
-| pa_ag_2026_021 | distribution of CSAM |  | Investigators determined that Warfel was sharing the ille... |
+| pa_ag_2026_021 | distribution of CSAM |  | Investigators determined that [PERSON] was sharing the il... |
 | south_florida_icac_2026_006 | distribution of CSAM | eleven felonies, including numerous counts of posses... | Facebook Twitter LinkedIn Reddit WhatsApp 91 Shares |
 | spd_2012_001 | contact and communication with victim |  | The suspect, posing as a 15-year-old girl, contacted seve... |
 | tbi_icac_2014_011 | contact and communication with victim | Soliciting Statutory Rape of a Minor Publication dat... | with a 14-year old through Facebook Chat. |
 | tbi_icac_2021_003 | grooming / soliciting minor |  | solicited and exploited a minor victim on Facebook, the T... |
 | tbi_icac_2024_019 | distribution of CSAM |  | distributed multiple files of child sexual abuse material... |
 | us_marshals_2023_011 | distribution of CSAM |  | On May 31, the Shawano County Sheriff’s Office uploaded a... |
-| usss_2017_007 | platform-reported CSAM (distribution inferred) | Production of Child Pornography and Cyberstalking Pu... | enforcement agents began investigating Ridder after a min... |
+| usss_2017_007 | platform-reported CSAM (distribution inferred) | Production of Child Pornography and Cyberstalking Pu... | enforcement agents began investigating [PERSON] after a m... |
 | usss_2019_005 | distribution of CSAM |  | calls that his Facebook Messenger account was distributin... |
 | ut_ag_2020_001 | contact and communication with victim |  | to chatting with the victim for over a year, almost every... |
 | ut_ag_2026_016 | distribution of CSAM | Sexually Abusing Child During the COVID-19 pandemic,... | pornography being distributed between Facebook accounts. |
 | vt_ag_2022_001 | distribution of CSAM | Possession of Child Sex Abuse Materials Contact: Cha... | suspected content shared through Facebook. |
-| vt_ag_2024_035 | contact and communication with victim | Attempted Luring a Child The Attorney General’s Offi... | Lavallee communicated online via Facebook with a Henderso... |
+| vt_ag_2024_035 | contact and communication with victim | Attempted Luring a Child The Attorney General’s Offi... | [PERSON] communicated online via Facebook with a Henderso... |
 
 **Inferred evidence** (20 cases):
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
-| doj_safe_childhood_2023_072 | used in offense (specific role unspecified) |  | An investigation determined that in December 2021, I... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2023_072 | used in offense (specific role unspecified) |  | An investigation determined that in December 2021, [... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_243 | distribution of CSAM |  | distributing images containing child pornography usi... | Facebook and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2023_309 | contact and communication with victim | receiving child pornography on his cell phone f... | screen activated, the trooper noticed Puckett had Fa... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2023_309 | contact and communication with victim | receiving child pornography on his cell phone f... | screen activated, the trooper noticed [PERSON] had F... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2023_474 | distribution of CSAM |  | distributing images containing child pornography usi... | Facebook and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2024_385 | used in offense (specific role unspecified) |  | also determined that Schlemme represented himself as... | Facebook and offense language co-occur in the same sentence without instrumen... |
-| doj_safe_childhood_2024_473 | contact and communication with victim |  | screen activated, the trooper noticed Puckett had Fa... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2024_385 | used in offense (specific role unspecified) |  | also determined that [PERSON] represented himself as... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| doj_safe_childhood_2024_473 | contact and communication with victim |  | screen activated, the trooper noticed [PERSON] had F... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_029 | used in offense (specific role unspecified) |  | facebook/#:~:text=Detectives%20arrested%20Andrew%20J... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_042 | used in offense (specific role unspecified) | child pornography (photo via SCH Facebook page)... | by the FBI and charged with child pornography (photo... | Facebook and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2023_507 | CSAM production |  | Against Children Task Force, alleged Fisher created ... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2023_507 | CSAM production |  | Against Children Task Force, alleged [PERSON] create... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_044 | used in offense (specific role unspecified) | CHILD PORN CHARGE FOLLOWING FACEBOOK LIVE https... | https://www.kait8.com/2024/04/15/man-arrested-child-... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_211 | used in offense (specific role unspecified) | CHILD PORNOGRAPHY On October 24, 2024, detectiv... | https://www.facebook.com/SheriffCitrus/posts/inverne... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_286 | platform-reported CSAM (distribution infer... |  | https://www.facebook.com/staradvertiser/posts/in-aug... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_602 | used in offense (specific role unspecified) | CHILD SEX ABUSE MATERIAL POSSESSION IN CALLAWAY... | The Boone County Sheriff’s Office posted on their Fa... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2024_848 | used in offense (specific role unspecified) |  | Chillicothe police opened an investigation in 2023 a... | Facebook and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_094 | used in offense (specific role unspecified) | alleged possession of child sexual abuse materi... | Facebook, Google and Reddit, detectives arrested Spa... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_094 | used in offense (specific role unspecified) | alleged possession of child sexual abuse materi... | Facebook, Google and Reddit, detectives arrested [PE... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_379 | used in offense (specific role unspecified) | POSSESSION OF CHILD PORNOGRAPHY AND MULTIPLE OF... | https://www.facebook.com/paducahpoliceky/posts/paduc... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_722 | used in offense (specific role unspecified) | a second-degree felony charge of pandering sexu... | According to a Geauga County Sheriff’s Office Facebo... | Facebook and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2025_991 | used in offense (specific role unspecified) |  | A Facebook post states Sheriff Dale McCullick announ... | Facebook and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2025_991 | used in offense (specific role unspecified) |  | A Facebook post states Sheriff [PERSON] announced a ... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | south_florida_icac_2025_006 | used in offense (specific role unspecified) | exchanging explicit messages with 10-year-old o... | when we can; however, this is still an active invest... | Facebook and offense language co-occur in the same sentence without instrumen... |
 | vt_ag_2025_041 | contact and communication with victim | a crime are legally presumed innocent until the... | to be a minor on the Snapchat and Facebook platforms. | Facebook and offense language co-occur in the same sentence without instrumen... |
 
@@ -1635,7 +1635,7 @@
 
 **PSA exclusions** (3 cases):
 - `doj_safe_childhood_2023_148`: PSA-only — 'Facebook' appears only after PSA boundary. Sample: "Facebook, Instagram, Tik Tok, Snapch
-- `lapd_2017_004`: PSA-only — 'Facebook' appears only after PSA boundary. Sample: "under-aged boys who appear within Wa
+- `lapd_2017_004`: PSA-only — 'Facebook' appears only after PSA boundary. Sample: "under-aged boys who appear within [P
 - `sdpd_2018_002`: PSA-only — 'Facebook' appears only after PSA boundary. Sample: "Task Force also launched a Facebook 
 
 **DB gaps flagged** (16 cases):
@@ -1667,20 +1667,20 @@
 |---|---|---|---|
 | doj_safe_childhood_2021_078 | distribution of CSAM |  | (NCMEC) CyberTipline that child pornography images were u... |
 | doj_safe_childhood_2022_173 | platform-reported CSAM (distribution inferred) |  | The National Center for Missing and Exploited Children (N... |
-| doj_safe_childhood_2022_249 | distribution of CSAM |  | On December 14, 2015, Long uploaded child pornography fro... |
+| doj_safe_childhood_2022_249 | distribution of CSAM |  | On December 14, 2015, [PERSON] uploaded child pornography... |
 | doj_safe_childhood_2022_278 | distribution of CSAM |  | regarding child pornography being uploaded to a Dropbox a... |
-| doj_safe_childhood_2022_309 | distribution of CSAM |  | On that date, Taylor uploaded 51 videos containing child ... |
+| doj_safe_childhood_2022_309 | distribution of CSAM |  | On that date, [PERSON] uploaded 51 videos containing chil... |
 | doj_safe_childhood_2022_333 | platform-reported CSAM (distribution inferred) |  | In May 2019, the Douglas County Sheriff’s Office began in... |
 | doj_safe_childhood_2022_450 | distribution of CSAM |  | child pornography to Dropbox, an online file sharing webs... |
 | doj_safe_childhood_2022_467 | distribution of CSAM |  | investigating after receiving a Cyber Tipline Report stat... |
-| doj_safe_childhood_2022_539 | distribution of CSAM |  | Between January and June of 2018, Gonzalez uploaded thirt... |
-| doj_safe_childhood_2023_150 | distribution of CSAM | possession of a visual medium of sexual exploitation... | Missing and Exploited Children that Taylor had uploaded 5... |
+| doj_safe_childhood_2022_539 | distribution of CSAM |  | Between January and June of 2018, [PERSON] uploaded thirt... |
+| doj_safe_childhood_2023_150 | distribution of CSAM | possession of a visual medium of sexual exploitation... | Missing and Exploited Children that [PERSON] had uploaded... |
 | doj_safe_childhood_2023_191 | platform-reported CSAM (distribution inferred) |  | In December 2021, law enforcement began investigating aft... |
 | doj_safe_childhood_2023_251 | used in offense (specific role unspecified) |  | child pornography to Dropbox through the internet. |
 | doj_safe_childhood_2023_262 | distribution of CSAM |  | and admitted uploading files containing child pornography... |
 | doj_safe_childhood_2023_367 | platform-reported CSAM (distribution inferred) |  | In November 2021, federal agents began investigating afte... |
 | doj_safe_childhood_2023_370 | distribution of CSAM |  | (NCIS) special agents received a NCMEC CyberTip from Drop... |
-| doj_safe_childhood_2023_508 | distribution of CSAM |  | Cyber Tips from Kik and one from Dropbox when Gilmore upl... |
+| doj_safe_childhood_2023_508 | distribution of CSAM |  | Cyber Tips from Kik and one from Dropbox when [PERSON] up... |
 | doj_safe_childhood_2023_546 | distribution of CSAM |  | The cybertips were generated by DropBox, a file sharing s... |
 | doj_safe_childhood_2024_014 | distribution of CSAM | Transportation of Child Pornography | Dropbox account in 2017 and used the online platform to t... |
 | doj_safe_childhood_2024_136 | platform-reported CSAM (distribution inferred) |  | In court documents, the government alleged that in Septem... |
@@ -1690,29 +1690,29 @@
 | doj_safe_childhood_2024_323 | distribution of CSAM |  | Law enforcement received multiple reports from MeWe, Drop... |
 | doj_safe_childhood_2024_401 | distribution of CSAM | receipt of child pornography | identified as an online user who had uploaded two files c... |
 | doj_safe_childhood_2024_438 | platform-reported CSAM (distribution inferred) | one count of possession of child pornography on Augu... | In 2022, the National Center for Missing and Exploited Ch... |
-| doj_safe_childhood_2024_444 | distribution of CSAM |  | Ochoa repeatedly uploaded child pornography to his Dropbo... |
+| doj_safe_childhood_2024_444 | distribution of CSAM |  | [PERSON] repeatedly uploaded child pornography to his Dro... |
 | doj_safe_childhood_2025_117 | distribution of CSAM | one count of receipt and distribution of child porno... | CyberTipline Report after the file sharing service Dropbo... |
-| doj_safe_childhood_2025_196 | distribution of CSAM |  | Bernard Ray Mennemeier uploaded five videos containing ch... |
+| doj_safe_childhood_2025_196 | distribution of CSAM |  | [PERSON] uploaded five videos containing child sexual abu... |
 | doj_safe_childhood_2025_373 | distribution of CSAM | receipt of child pornography | identified as an online user who had uploaded two files c... |
 | doj_safe_childhood_2026_054 | distribution of CSAM | possession of child pornography | the owner of a Dropbox account uploading child sexual abu... |
 | ncmec_2022_004 | distribution of CSAM | possessing, dealing in child DONALD W | Dropbox account that was publicly shared, according to co... |
 | ncmec_2022_049 | platform-reported CSAM (distribution inferred) |  | investigating a Cybertip which reported a Dropbox contain... |
-| ncmec_2022_087 | used in offense (specific role unspecified) | having obscene material Michael Wetzel, The Decatur ... | Dropbox provided the IP address used to open the |
-| ncmec_2022_088 | platform-reported CSAM (distribution inferred) | possession of child By: George Stockburger CHAMBERSB... | were reported by Dropbox in the user’s account. |
+| ncmec_2022_087 | used in offense (specific role unspecified) | having obscene material [PERSON], The Decatur Daily,... | Dropbox provided the IP address used to open the |
+| ncmec_2022_088 | platform-reported CSAM (distribution inferred) | possession of child By: [PERSON] CHAMBERSBURG, Pa | were reported by Dropbox in the user’s account. |
 | ncmec_2022_345 | distribution of CSAM | child pornography charges BELLINGHAM, Wash | sexually explicit files uploaded to DropBox. |
 | ncmec_2022_528 | distribution of CSAM |  | a Girard police report, the IP address had been used to u... |
 | ncmec_2023_338 | distribution of CSAM | violating, the U | uploaded child pornography to Dropbox. |
-| ncmec_2023_342 | distribution of CSAM | possession of child by Bradly Gill \| June 16, 2023 ... | The report stated that a Dropbox user "Joshua Hooks" uplo... |
+| ncmec_2023_342 | distribution of CSAM | possession of child by [PERSON] \| June 16, 2023 An ... | The report stated that a Dropbox user "[PERSON]" uploaded... |
 | ncmec_2023_381 | distribution of CSAM | 10 counts of possessing child pornography | to an affidavit, Dropbox flagged a user for uploading two... |
-| ncmec_2024_1073 | used in offense (specific role unspecified) |  | Investigators were also able to determine Premeaux's phon... |
-| ncmec_2024_1142 | used in offense (specific role unspecified) | CHILD PORNOGRAPHY Williamson DAILY NEWS https://www | Dropbox provided multiple IP addresses used to access the... |
+| ncmec_2024_1073 | used in offense (specific role unspecified) |  | Investigators were also able to determine [PERSON]'s phon... |
+| ncmec_2024_1142 | used in offense (specific role unspecified) | CHILD PORNOGRAPHY [PERSON] DAILY NEWS https://www | Dropbox provided multiple IP addresses used to access the... |
 | ncmec_2024_130 | distribution of CSAM | first-degree possession of child pornography | The tip was regarding a video depicting child sexual abus... |
 | ncmec_2024_206 | distribution of CSAM | 50 counts of possession of child pornography after a... | According to his arrest affidavit, Dropbox reported the u... |
 | ncmec_2024_221 | distribution of CSAM | 10 separate counts of Possession of Child Pornograph... | said he uploaded 103 videos showing child rape and sexual... |
 | ncmec_2024_287 | distribution of CSAM | six counts of sexual exploitation by possession of s... | service Dropbox reported that a user, later identified as... |
-| ncmec_2024_617 | distribution of CSAM | CHILD PORNOGRAPHY AFTER POLICE SEARCH https://nebraska | Exploited Children that Castillo uploaded a sexually expl... |
+| ncmec_2024_617 | distribution of CSAM | CHILD PORNOGRAPHY AFTER POLICE SEARCH https://nebraska | Exploited Children that [PERSON] uploaded a sexually expl... |
 | ncmec_2024_846 | distribution of CSAM |  | uploaded explicit videos to a dropbox account. |
-| ncmec_2025_043 | platform-reported CSAM (distribution inferred) | UPLOADING AND DOWNLOADING CHILD SEXUAL https://katv | CyberTip reports on Walker from platforms including Kik, ... |
+| ncmec_2025_043 | platform-reported CSAM (distribution inferred) | UPLOADING AND DOWNLOADING CHILD SEXUAL https://katv | CyberTip reports on [PERSON] from platforms including Kik... |
 | ncmec_2025_058 | platform-reported CSAM (distribution inferred) |  | Dropbox reported the videos coming from a Gmail account, ... |
 | ncmec_2025_059 | distribution of CSAM | one count of possession or use of child sexual abuse... | regarding child sexual abuse material uploaded to Dropbox. |
 | ncmec_2025_1022 | platform-reported CSAM (distribution inferred) | five counts of possession of According to the crimin... | Service Provider, Dropbox, reported to the National Cente... |
@@ -1722,8 +1722,8 @@
 | ncmec_2025_690 | distribution of CSAM | possession and access with intent to view child porn... | (NCMEC) referred a tip to law enforcement that a Dropbox ... |
 | ncmec_2025_715 | distribution of CSAM | pandering sexually oriented matter involving a minor | Children (ICAC) reporting that apparent child sexual abus... |
 | ncmec_2025_793 | distribution of CSAM |  | A Dropbox user uploaded four |
-| ncmec_2025_882 | distribution of CSAM | warrants for Possession of Child Pornography last week | Center for Missing and Exploited Children that Gomez had ... |
-| ncmec_2025_885 | distribution of CSAM | warrants for Possession of Child Pornography last week | Center for Missing and Exploited Children that Gomez had ... |
+| ncmec_2025_882 | distribution of CSAM | warrants for Possession of Child Pornography last week | Center for Missing and Exploited Children that [PERSON] h... |
+| ncmec_2025_885 | distribution of CSAM | warrants for Possession of Child Pornography last week | Center for Missing and Exploited Children that [PERSON] h... |
 | oregon_doj_2026_003 | platform-reported CSAM (distribution inferred) |  | The investigation began after ODOJ’s ICAC unit received a... |
 | south_florida_icac_2023_010 | distribution of CSAM | eight counts of possession of child pornography and ... | Dropbox and Mega accounts he used to distribute the porno... |
 | usss_2019_004 | platform-reported CSAM (distribution inferred) |  | After Dropbox reported |
@@ -1733,7 +1733,7 @@
 |---|---|---|---|---|
 | doj_safe_childhood_2022_235 | distribution of CSAM |  | used Dropbox and Instagram to transport child pornog... | Dropbox and offense language co-occur in the same sentence without instrument... |
 | doj_safe_childhood_2022_255 | platform-reported CSAM (distribution infer... |  | cybertip from the National Center for Missing and Ex... | Dropbox and offense language co-occur in the same sentence without instrument... |
-| doj_safe_childhood_2025_414 | distribution of CSAM |  | victim was uploaded from Baustian’s residential Inte... | Dropbox and offense language co-occur in the same sentence without instrument... |
+| doj_safe_childhood_2025_414 | distribution of CSAM |  | victim was uploaded from [PERSON]’s residential Inte... | Dropbox and offense language co-occur in the same sentence without instrument... |
 | ncmec_2022_263 | contact and communication with victim | Possession of Child November 8, 2022 - by MyChe... | social media platforms Tumblr, Dropbox, and Snapchat. | Dropbox and offense language co-occur in the same sentence without instrument... |
 | ncmec_2022_572 | contact and communication with victim | Distributing Child Porn Lives Half Of A Mile Fr... | Snapchat and Dropbox. | Dropbox and offense language co-occur in the same sentence without instrument... |
 | ncmec_2024_843 | used in offense (specific role unspecified) |  | Against Children Task Force accusing him of having c... | Dropbox and offense language co-occur in the same sentence without instrument... |
@@ -1756,31 +1756,31 @@
 **Stated evidence** (59 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_ai_csam_2026_005 | CSAM production | possession of child pornography in a 2010 case | Kerbrat was a member of a Discord group where members dis... |
+| doj_ai_csam_2026_005 | CSAM production | possession of child pornography in a 2010 case | [PERSON] was a member of a Discord group where members di... |
 | doj_ceos_2025_007 | distribution of CSAM | Sexually Exploiting Children on the Internet Publica... | explicit conduct and shared it to other Discord servers a... |
 | doj_safe_childhood_2022_016 | platform-reported CSAM (distribution inferred) |  | In September 2019, law enforcement began investigating Cy... |
 | doj_safe_childhood_2023_143 | contact and communication with victim | one count of distributing child pornography and one ... | separate Cybertipline reports from Discord, they contacte... |
-| doj_safe_childhood_2023_413 | contact and communication with victim |  | The Discord account contained chat messages between Andre... |
+| doj_safe_childhood_2023_413 | contact and communication with victim |  | The Discord account contained chat messages between [PERS... |
 | doj_safe_childhood_2023_554 | platform-reported CSAM (distribution inferred) |  | 12, 2021, NCMEC received numerous Cybertips regarding CSA... |
 | doj_safe_childhood_2024_039 | used in offense (specific role unspecified) | Production of Child Pornography | 10-year-old female for months through the online applicat... |
-| doj_safe_childhood_2024_147 | contact and communication with victim |  | Investigation later revealed that Murphy-Johnson had met ... |
+| doj_safe_childhood_2024_147 | contact and communication with victim |  | Investigation later revealed that [PERSON] had met the ch... |
 | doj_safe_childhood_2024_261 | distribution of CSAM |  | platform Discord to upload and obtain child pornography. |
 | doj_safe_childhood_2024_294 | distribution of CSAM |  | with the screenname JessicaLovesYou#1816 was using Discor... |
-| doj_safe_childhood_2024_402 | distribution of CSAM | one count of distribution of child pornography on Oc... | search warrant on a Discord account associated with CUTLE... |
+| doj_safe_childhood_2024_402 | distribution of CSAM | one count of distribution of child pornography on Oc... | search warrant on a Discord account associated with [PERS... |
 | doj_safe_childhood_2025_095 | contact and communication with victim | Possession of Child Pornography | messaging and social media platforms, including Discord a... |
 | doj_safe_childhood_2025_211 | distribution of CSAM |  | (NCMEC) indicating a Discord user uploaded images depicti... |
 | doj_safe_childhood_2025_267 | used in offense (specific role unspecified) |  | Investigators also found a conversation on Discord where ... |
 | doj_safe_childhood_2026_185 | contact and communication with victim | this crime on February 17, 2026 | During his contact with the minor, he received pornograph... |
 | doj_safe_childhood_2026_238 | distribution of CSAM |  | distributed, received, and possessed child pornography in... |
 | doj_safe_childhood_2026_264 | distribution of CSAM | all four charges on Aug | (NCMEC) cybertip reporting that five images of alleged CS... |
-| mcao_2025_005 | contact and communication with victim |  | victims in Maricopa County whom Lozano messaged on Discor... |
+| mcao_2025_005 | contact and communication with victim |  | victims in Maricopa County whom [PERSON] messaged on Disc... |
 | mcao_2026_001 | distribution of CSAM | one count of Sexual Exploitation of Minor, a Class T... | Children regarding a user who had uploaded child sexual a... |
 | nashville_pd_2026_002 | distribution of CSAM | aggravated sexual exploitation of a minor with addit... | who was found to have uploaded an AI generated child sex ... |
 | ncmec_2022_102 | distribution of CSAM | possessing child pornography | that an image file was shared by a Discord user on its ch... |
 | ncmec_2022_520 | distribution of CSAM |  | The images were uploaded and disseminated on the messagin... |
 | ncmec_2023_059 | distribution of CSAM | distributing child porn ELLETTSVILLE, Ind | tips advised of an unknown individual distributing child ... |
 | ncmec_2023_581 | contact and communication with victim |  | pornography that were reported by Discord, Inc., an insta... |
-| ncmec_2023_598 | contact and communication with victim | circulating child porn, meth Published: Jul | 4, Garrison used the messaging platform Discord to post v... |
+| ncmec_2023_598 | contact and communication with victim | circulating child porn, meth Published: Jul | 4, [PERSON] used the messaging platform Discord to post v... |
 | ncmec_2024_046 | distribution of CSAM | child pornography charges according to Prosecuting A... | 1 regarding images of child exploitation being uploaded t... |
 | ncmec_2024_156 | contact and communication with victim |  | Investigators say a search warrant executed on the Discor... |
 | ncmec_2024_332 | grooming / soliciting minor |  | toddlers through X application and Discord, admitting to ... |
@@ -1788,8 +1788,8 @@
 | ncmec_2024_388 | distribution of CSAM | POSSESSION OF CHILD PORN, WAS ALSO DATING A https://www | Department were given a tip about possible child sex abus... |
 | ncmec_2024_405 | distribution of CSAM | possession of child pornography and child solicitati... | After verifying Discord Inc.’s tip about the inappropriat... |
 | ncmec_2024_406 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY https://www | username attached to the inappropriate uploads Discord Inc. |
-| ncmec_2024_410 | contact and communication with victim | the following: Three (3) counts of Distribution of C... | Discord is an instant messaging social media platform tha... |
-| ncmec_2024_561 | grooming / soliciting minor | multiple counts related to the production of child s... | “Kitten Server Name.” Direct messages obtained from Snell... |
+| ncmec_2024_410 | contact and communication with victim | the following: [PERSON] (3) counts of Distribution o... | Discord is an instant messaging social media platform tha... |
+| ncmec_2024_561 | grooming / soliciting minor | multiple counts related to the production of child s... | “Kitten Server Name.” Direct messages obtained from [PERS... |
 | ncmec_2024_667 | distribution of CSAM | one count of Endangering the Welfare of a Child (Pos... | allegedly uploaded to Discord, an internet-based social p... |
 | ncmec_2024_911 | contact and communication with victim | Soliciting Sexual Conduct or Communication with a Mi... | In April, an administrator for the social media platform ... |
 | ncmec_2024_918 | distribution of CSAM | preparing or distributing obscene material or child ... | The suspect was using Discord to share illegal photos of ... |
@@ -1804,7 +1804,7 @@
 | ncmec_2025_698 | contact and communication with victim | POSSESSING CHILD SEXUAL ABUSE MATERIALS https://www | Police are still investigating Pay Pay’s Discord message ... |
 | ncmec_2025_731 | contact and communication with victim | two counts of aggravated possession of child pornogr... | pornography-possession-university-of-central-oklahoma-edm... |
 | ncmec_2025_751 | platform-reported CSAM (distribution inferred) | distributing child sexual abuse material through Dis... | the National Center for Missing and Exploited Children,” ... |
-| ncmec_2025_765 | platform-reported CSAM (distribution inferred) | thirty-one (31) counts of Possession of Child Pornog... | McMorrow, the investigation began after Discord, Inc and ... |
+| ncmec_2025_765 | platform-reported CSAM (distribution inferred) | thirty-one (31) counts of Possession of Child Pornog... | [PERSON], the investigation began after Discord, Inc and ... |
 | ncmec_2025_891 | distribution of CSAM | allegedly producing child sexual abuse material whil... | Children (NCMEC) indicating that seven suspected child po... |
 | ncmec_2025_918 | contact and communication with victim |  | Discord is an application used to communicate |
 | ncmec_2025_922 | distribution of CSAM | ALLEGEDLY USING GAMING APP TO SHARE CHILD SEXUAL htt... | 4, claiming a local resident had uploaded three images of... |
@@ -1822,12 +1822,12 @@
 | doj_safe_childhood_2022_070 | contact and communication with victim | the charge on August 8, 2022 | and Exploited Children (NCMEC) received eight report... | Discord and offense language co-occur in the same sentence without instrument... |
 | doj_safe_childhood_2023_093 | contact and communication with victim | the possession of child pornography charge on M... | with a minor in another state over the messaging app... | Discord and offense language co-occur in the same sentence without instrument... |
 | doj_safe_childhood_2024_362 | contact and communication with victim | one count of transporting child pornography | Instagram, Snapchat, and Discord. | Discord and offense language co-occur in the same sentence without instrument... |
-| ncmec_2022_486 | contact and communication with victim | possession and distribution of According to cou... | investigating Whitfield’s use of Discord, an online ... | Discord and offense language co-occur in the same sentence without instrument... |
-| ncmec_2023_316 | contact and communication with victim | nearly 1,200 counts of child By Bob D'Angelo, C... | his Discord account, an instant messaging applicatio... | Discord and offense language co-occur in the same sentence without instrument... |
+| ncmec_2022_486 | contact and communication with victim | possession and distribution of According to cou... | investigating [PERSON] use of Discord, an online ins... | Discord and offense language co-occur in the same sentence without instrument... |
+| ncmec_2023_316 | contact and communication with victim | nearly 1,200 counts of child By [PERSON], Cox M... | his Discord account, an instant messaging applicatio... | Discord and offense language co-occur in the same sentence without instrument... |
 | ncmec_2024_1177 | contact and communication with victim |  | apparent child pornography that were found on a chat... | Discord and offense language co-occur in the same sentence without instrument... |
 | ncmec_2024_178 | contact and communication with victim |  | filled it with videos of the girl and promoted the c... | Discord and offense language co-occur in the same sentence without instrument... |
 | ncmec_2024_610 | distribution of CSAM | POSSESSION OF CHILD PORNOGRAPHY LINCOLN UNIVERS... | Discord messaging app to possess and distribute chil... | Discord and offense language co-occur in the same sentence without instrument... |
-| ncmec_2025_043 | platform-reported CSAM (distribution infer... | UPLOADING AND DOWNLOADING CHILD SEXUAL https://... | CyberTip reports on Walker from platforms including ... | Discord and offense language co-occur in the same sentence without instrument... |
+| ncmec_2025_043 | platform-reported CSAM (distribution infer... | UPLOADING AND DOWNLOADING CHILD SEXUAL https://... | CyberTip reports on [PERSON] from platforms includin... | Discord and offense language co-occur in the same sentence without instrument... |
 | ncmec_2025_152 | contact and communication with victim |  | Through the investigation, deputies uncovered that o... | Discord and offense language co-occur in the same sentence without instrument... |
 | ncmec_2025_738 | contact and communication with victim | felony counts of buying/possessing/procuring ch... | Missing and Exploited Children that included several... | Discord and offense language co-occur in the same sentence without instrument... |
 
@@ -1848,7 +1848,7 @@
 **Stated evidence** (53 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_ai_csam_2024_003 | distribution of CSAM | all four counts alleged in the indictment, he faces ... | Children (NCMEC) after Instagram reported Anderegg’s acco... |
+| doj_ai_csam_2024_003 | distribution of CSAM | all four counts alleged in the indictment, he faces ... | Children (NCMEC) after Instagram reported [PERSON]’s acco... |
 | doj_safe_childhood_2021_033 | platform-reported CSAM (distribution inferred) |  | According to court documents, Instagram initiated a Cyber... |
 | doj_safe_childhood_2022_046 | platform-reported CSAM (distribution inferred) |  | An investigation began in October 2019 when Instagram rep... |
 | doj_safe_childhood_2022_061 | CSAM production |  | “The materials this defendant produced through his Instag... |
@@ -1858,17 +1858,17 @@
 | doj_safe_childhood_2023_159 | contact and communication with victim |  | Instagram to communicate with a fifteen-year-old child. |
 | doj_safe_childhood_2023_215 | platform-reported CSAM (distribution inferred) |  | began investigating CyberTip reports from Google, Instagr... |
 | doj_safe_childhood_2023_333 | used in offense (specific role unspecified) |  | control of the Instagram accounts used to extort the mino... |
-| doj_safe_childhood_2023_498 | contact and communication with victim |  | According to court documents, in January 2020, Peterson u... |
+| doj_safe_childhood_2023_498 | contact and communication with victim |  | According to court documents, in January 2020, [PERSON] u... |
 | doj_safe_childhood_2023_546 | distribution of CSAM |  | The cybertips were generated by DropBox, a file sharing s... |
-| doj_safe_childhood_2024_035 | distribution of CSAM |  | interview, Brown admitted to law enforcement that he used... |
-| doj_safe_childhood_2024_131 | distribution of CSAM | sexual exploitation of children after he pleaded gui... | between 2020 and 2022, Ian Alicea Prewett uploaded sexual... |
+| doj_safe_childhood_2024_035 | distribution of CSAM |  | interview, [PERSON] admitted to law enforcement that he u... |
+| doj_safe_childhood_2024_131 | distribution of CSAM | sexual exploitation of children after he pleaded gui... | between 2020 and 2022, [PERSON] uploaded sexually explici... |
 | doj_safe_childhood_2024_232 | distribution of CSAM |  | Snapchat and Instagram, which involved child pornography ... |
 | doj_safe_childhood_2024_242 | contact and communication with victim |  | multiple phones and Yahoo, Snapchat, and Instagram accoun... |
 | doj_safe_childhood_2024_331 | contact and communication with victim | sexual exploitation of a child | chatting with a 14-year-old girl on Instagram, asking her... |
-| doj_safe_childhood_2024_349 | used in offense (specific role unspecified) |  | During the investigation, officers found that Newberry ha... |
-| doj_safe_childhood_2024_352 | contact and communication with victim |  | In 2020, Garcia sent Instagram messages to the same victi... |
+| doj_safe_childhood_2024_349 | used in offense (specific role unspecified) |  | During the investigation, officers found that [PERSON] ha... |
+| doj_safe_childhood_2024_352 | contact and communication with victim |  | In 2020, [PERSON] sent Instagram messages to the same vic... |
 | doj_safe_childhood_2025_065 | contact and communication with victim |  | communicated with a 14-year-old child via Instagram. |
-| doj_safe_childhood_2025_169 | contact and communication with victim | one count of distributing child pornography and two ... | Ollila also messaged victims on platforms like TikTok and... |
+| doj_safe_childhood_2025_169 | contact and communication with victim | one count of distributing child pornography and two ... | [PERSON] also messaged victims on platforms like TikTok a... |
 | doj_safe_childhood_2025_264 | contact and communication with victim |  | communications with the two minor boys in Florida whom he... |
 | doj_safe_childhood_2025_296 | used in offense (specific role unspecified) | production of child pornography | sent an image containing CSAM to someone on Instagram, hi... |
 | doj_safe_childhood_2026_107 | grooming / soliciting minor |  | learning that he had been communicating with underage gir... |
@@ -1876,8 +1876,8 @@
 | ncmec_2022_393 | contact and communication with victim | multiple charges of sex crimes against a minor | CPSO says the suspect was messaging the minor through Ins... |
 | ncmec_2023_194 | contact and communication with victim | attempted child porn production | The Instagram and email accounts used to contact the boy ... |
 | ncmec_2023_422 | used in offense (specific role unspecified) | Tuesday at his home in Naples | her Instagram account and used her identity to transmit p... |
-| ncmec_2024_1044 | distribution of CSAM | child neglect | The reported images were uploaded to Moss’ Instagram acco... |
-| ncmec_2024_1180 | distribution of CSAM | felony charges of possession of child pornography an... | In addition, Wilhite stated he shared an Instagram accoun... |
+| ncmec_2024_1044 | distribution of CSAM | child neglect | The reported images were uploaded to [PERSON]’ Instagram ... |
+| ncmec_2024_1180 | distribution of CSAM | felony charges of possession of child pornography an... | In addition, [PERSON] stated he shared an Instagram accou... |
 | ncmec_2024_332 | contact and communication with victim |  | he was communicating with via Instagram,” the petition co... |
 | ncmec_2024_383 | contact and communication with victim | SEXUAL EXPLOITATION OF CHILDREN IN PERSON AND ONLINE... | VIA INSTAGRAM, SNAPCHAT, AND X (TWITTER) ACCOUNT “MAPS.SYB” |
 | ncmec_2024_427 | platform-reported CSAM (distribution inferred) | six counts of possession or distribution of child po... | 133 files being sent via Instagram messenger with some re... |
@@ -1885,7 +1885,7 @@
 | ncmec_2024_787 | distribution of CSAM |  | The charge reflects the transmission of child pornography... |
 | ncmec_2024_934 | platform-reported CSAM (distribution inferred) | child pornography offenses in Lycoming County faces ... | when the social media platforms Facebook and Instagram re... |
 | ncmec_2024_952 | distribution of CSAM | POSSESSION OF CHILD PORN AFTER HUNDREDS OF IMAGES ht... | The tip alleged an Instagram user had uploaded multiple v... |
-| ncmec_2025_069 | contact and communication with victim | SEXUALLY EXTORTING A 17-YEAR-OLD By Talya Holgate-Al... | According to an affidavit, Zane Lee Barritt contacted the... |
+| ncmec_2025_069 | contact and communication with victim | SEXUALLY EXTORTING A 17-YEAR-OLD By [PERSON]-Allen h... | According to an affidavit, [PERSON] contacted the teen vi... |
 | ncmec_2025_102 | contact and communication with victim | allegedly engaging in online sexual communication wi... | The tip identified an Instagram account that had engaged ... |
 | ncmec_2025_149 | distribution of CSAM | 10 counts of possession of child pornography | pornography had been uploaded to Instagram by the same in... |
 | ncmec_2025_583 | distribution of CSAM | CHILD SEXUAL ABUSE MATERIAL IN AUGUST 2025 Office of... | Instagram and Kik accounts used to possess and distribute... |
@@ -1894,27 +1894,27 @@
 | ncmec_2025_909 | distribution of CSAM | possession of child pornography and sexual performan... | cybertip in May 2025 regarding reports of child pornograp... |
 | ocpo_2026_006 | contact and communication with victim | AGGRAVATED SEXUAL ASSAULT, SEXUAL ASSAULT, POSSESSIO... | Tik Tok, and Instagram – to communicate with minor victim... |
 | pa_ag_2026_004 | contact and communication with victim | sexual abuse and numerous other crimes against a 15-... | using various social media platforms through 2025, includ... |
-| pa_ag_2026_021 | distribution of CSAM |  | Investigators determined that Warfel was sharing the ille... |
-| south_florida_icac_2023_002 | contact and communication with victim |  | DeMay was a popular teenager who received a message on In... |
-| south_florida_icac_2023_003 | contact and communication with victim |  | DeMay was a popular teenager who received a message on In... |
+| pa_ag_2026_021 | distribution of CSAM |  | Investigators determined that [PERSON] was sharing the il... |
+| south_florida_icac_2023_002 | contact and communication with victim |  | [PERSON] was a popular teenager who received a message on... |
+| south_florida_icac_2023_003 | contact and communication with victim |  | [PERSON] was a popular teenager who received a message on... |
 | south_florida_icac_2024_001 | contact and communication with victim |  | Most of those cases started with messages on social media... |
 | svicac_2026_020 | grooming / soliciting minor |  | online as a teenage girl on Instagram to solicit sexual p... |
-| ut_ag_2026_014 | contact and communication with victim | 10 counts of Sexual Exploitation of a Minor, however... | In an interview with investigators, Adams admitted to bei... |
+| ut_ag_2026_014 | contact and communication with victim | 10 counts of Sexual Exploitation of a Minor, however... | In an interview with investigators, [PERSON] admitted to ... |
 | vt_ag_2025_016 | distribution of CSAM | Possession of Child Sexual Abuse The Attorney Genera... | The tip was reported by Instagram after an individual upl... |
 
 **Inferred evidence** (13 cases):
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
 | arkansas_dps_2025_009 | CSAM production | 30 counts of possession or use of CSAM | the suspect’s Instagram account, led to the discover... | Instagram and offense language co-occur in the same sentence without instrume... |
-| doj_safe_childhood_2022_191 | used in offense (specific role unspecified) |  | during the investigation that Dykeman used Instagram... | Instagram and offense language co-occur in the same sentence without instrume... |
+| doj_safe_childhood_2022_191 | used in offense (specific role unspecified) |  | during the investigation that [PERSON] used Instagra... | Instagram and offense language co-occur in the same sentence without instrume... |
 | doj_safe_childhood_2024_210 | CSAM production |  | minors to produce and send him sexually explicit pho... | Instagram and offense language co-occur in the same sentence without instrume... |
 | doj_safe_childhood_2024_362 | contact and communication with victim | one count of transporting child pornography | Instagram, Snapchat, and Discord. | Instagram and offense language co-occur in the same sentence without instrume... |
 | doj_safe_childhood_2025_004 | contact and communication with victim |  | Sexually Exploiting Minors on Snapchat and Instagram... | Instagram and offense language co-occur in the same sentence without instrume... |
 | doj_safe_childhood_2025_014 | contact and communication with victim |  | Sexually Exploiting Minors on Snapchat and Instagram... | Instagram and offense language co-occur in the same sentence without instrume... |
 | doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on... | Instagram and Snapchat and requested nude images of ... | Instagram and offense language co-occur in the same sentence without instrume... |
 | ncmec_2022_244 | contact and communication with victim |  | Snapchat and Instagram, some of which included infants. | Instagram and offense language co-occur in the same sentence without instrume... |
-| ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court document... | Holland is also accused of uploading similar content... | Instagram and offense language co-occur in the same sentence without instrume... |
-| ncmec_2025_220 | used in offense (specific role unspecified) | 11 felony charges related to the sharing of chi... | Police said the investigation into Steven Kwoka, 38,... | Instagram and offense language co-occur in the same sentence without instrume... |
+| ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court document... | [PERSON] is also accused of uploading similar conten... | Instagram and offense language co-occur in the same sentence without instrume... |
+| ncmec_2025_220 | used in offense (specific role unspecified) | 11 felony charges related to the sharing of chi... | Police said the investigation into [PERSON], 38, beg... | Instagram and offense language co-occur in the same sentence without instrume... |
 | ncmec_2025_678 | contact and communication with victim | felony first-degree sexual exploitation of a mi... | including applications like Instagram, Snapchat, and... | Instagram and offense language co-occur in the same sentence without instrume... |
 | tbi_icac_2024_004 | contact and communication with victim | various internet crimes against children | Instagram and Snapchat. | Instagram and offense language co-occur in the same sentence without instrume... |
 | tbi_icac_2024_017 | contact and communication with victim | Sexual Exploitation of Children and other relat... | including Snapchat and Instagram. | Instagram and offense language co-occur in the same sentence without instrume... |
@@ -1961,13 +1961,13 @@
 | doj_ai_csam_2025_002 | used in offense (specific role unspecified) |  | Topeka Man Sentenced to 25 Years for Artificial Intellige... |
 | doj_ai_csam_2025_003 | CSAM production |  | CSAM and approximately 8,500 artificial intelligence-gene... |
 | doj_ai_csam_2025_004 | CSAM production | possession and access with intent to view child porn... | guilty to possessing AI-generated images of minors engage... |
-| doj_ai_csam_2026_001 | CSAM production |  | Strahler also posted online AI-generated obscenities he c... |
+| doj_ai_csam_2026_001 | CSAM production |  | [PERSON] also posted online AI-generated obscenities he c... |
 | doj_ai_csam_2026_002 | distribution of CSAM | distributing obscene AI-generated images depicting m... | TOPEKA, KAN – A Kansas man pleaded guilty to distributing... |
 | doj_ai_csam_2026_003 | distribution of CSAM | one count of receipt of child pornography | “Possessing and exchanging CSAM, including AI-generated i... |
-| doj_ai_csam_2026_004 | CSAM production |  | Strahler also posted online AI-generated obscenities he c... |
+| doj_ai_csam_2026_004 | CSAM production |  | [PERSON] also posted online AI-generated obscenities he c... |
 | doj_ai_csam_2026_005 | CSAM production | possession of child pornography in a 2010 case | media accounts that he used to promote AI-generated child... |
 | doj_ai_csam_2026_006 | distribution of CSAM |  | captured in traditional imagery or generated with emergin... |
-| doj_ai_csam_2026_007 | CSAM production | possession and access with intent to view child porn... | Charlotte Man Sentenced To 6 ½ Years For Possessing AI-Ge... |
+| doj_ai_csam_2026_007 | CSAM production | possession and access with intent to view child porn... | [PERSON] Sentenced To 6 ½ Years For Possessing AI-Generated |
 | doj_ai_csam_2026_008 | CSAM production |  | Possessing Child Sexual Abuse Material And AI-Generated C... |
 | doj_ai_csam_2026_012 | CSAM production |  | Missouri Man Who Possessed AI-Generated Child Sexual Abuse |
 | doj_ai_csam_2026_013 | used in offense (specific role unspecified) |  | Bowling Green, KY – A Bowling Green man was sentenced on ... |
@@ -1983,7 +1983,7 @@
 | idaho_icac_2024_032 | CSAM production |  | exploitation material and 2 counts of possession of gener... |
 | idaho_icac_2026_001 | CSAM production | two (2) counts of Sexual Exploitation of a Child by ... | Material (Child Pornography) and one (1) count of Possess... |
 | idaho_icac_2026_012 | CSAM production | 6 counts of possession of child sexual exploitation ... | generative artificial intelligence child exploitation mat... |
-| lapd_2025_002 | CSAM production |  | Perez created artificial intelligence-generated Child Sex... |
+| lapd_2025_002 | CSAM production |  | [PERSON] created artificial intelligence-generated Child ... |
 | mt_doj_2025_001 | CSAM production |  | social media account and used AI to create manipulated co... |
 | ncmec_2024_1037 | CSAM production | six counts of Possessing Child Pornography where eac... | computer-generated child pornography, including those ima... |
 | ncmec_2024_1204 | CSAM production | CHILD PORNOGRAPHY POSSESSION Stevens Point Journal h... | They also found hundreds of AI-generated images that depi... |
@@ -1993,9 +1993,9 @@
 | ncmec_2025_201 | CSAM production | possessing multiple images of ai-generated child por... | — A Stuart man has been arrested for possessing multiple ... |
 | ncmec_2025_313 | CSAM production | child molesting was recently arrested after he repor... | recently arrested after he reportedly made child pornogra... |
 | ncmec_2025_314 | CSAM production |  | several files with names attached to them, some of these ... |
-| ncmec_2025_864 | CSAM production | 8 COUNTS OF AGGRAVATED SEXUAL EXPLOITATION OF A Blou... | In May, Tennessee Governor Bill Lee signed a law criminal... |
-| qps_2026_002 | CSAM production |  | Detective Senior Sergeant Greg Aubort said the misuse of ... |
-| scag_icac_2025_019 | CSAM production | two counts of possession of a visual depiction or re... | I nvestigators state Kelton possessed files of artificial... |
+| ncmec_2025_864 | CSAM production | 8 COUNTS OF AGGRAVATED SEXUAL EXPLOITATION OF A Blou... | In May, Tennessee Governor [PERSON] signed a law criminal... |
+| qps_2026_002 | CSAM production |  | Detective Senior Sergeant [PERSON] said the misuse of art... |
+| scag_icac_2025_019 | CSAM production | two counts of possession of a visual depiction or re... | I nvestigators state [PERSON] possessed files of artifici... |
 | scag_icac_2026_013 | CSAM production | five counts of sexual exploitation of a minor, third... | possessed files of artificial intelligence-generated chil... |
 
 **Inferred evidence** (11 cases):
@@ -2045,28 +2045,28 @@
 | brazil_pf_2026_102 | contact and communication with victim |  | Social Communication of the Federal Police in Paraíba Wha... |
 | brazil_pf_2026_104 | contact and communication with victim |  | Federal Police Social Communication in Bahia WhatsApp: (7... |
 | doj_ceos_2025_027 | grooming / soliciting minor | the charge on June 16, 2025, in the U | for Attempting to Coerce and Entice Minors Using WhatsApp... |
-| doj_safe_childhood_2022_411 | contact and communication with victim |  | According to court records, in September 2018, Fiore, loc... |
-| doj_safe_childhood_2023_081 | contact and communication with victim |  | videos of Pollock and the victim were found within "Whats... |
-| doj_safe_childhood_2023_090 | contact and communication with victim |  | Rosado used his cell phone via the WhatsApp messaging app... |
+| doj_safe_childhood_2022_411 | contact and communication with victim |  | According to court records, in September 2018, [PERSON], ... |
+| doj_safe_childhood_2023_081 | contact and communication with victim |  | videos of [PERSON] and the victim were found within "What... |
+| doj_safe_childhood_2023_090 | contact and communication with victim |  | [PERSON] used his cell phone via the WhatsApp messaging a... |
 | doj_safe_childhood_2023_113 | contact and communication with victim |  | Investigators also found thousands of WhatsApp chats betw... |
-| doj_safe_childhood_2023_227 | distribution of CSAM |  | Claiming to be a 17-year-old male, Schoggins contacted a ... |
-| doj_safe_childhood_2023_341 | distribution of CSAM |  | abuse material that Burgos had shared using the WhatsApp ... |
-| doj_safe_childhood_2024_201 | distribution of CSAM |  | Hall later distributed the video to others using WhatsApp. |
-| doj_safe_childhood_2024_305 | CSAM production | possession of child pornography | According to court documents, in April and May of 2023, K... |
+| doj_safe_childhood_2023_227 | distribution of CSAM |  | Claiming to be a 17-year-old male, [PERSON] contacted a 1... |
+| doj_safe_childhood_2023_341 | distribution of CSAM |  | abuse material that [PERSON] had shared using the WhatsAp... |
+| doj_safe_childhood_2024_201 | distribution of CSAM |  | [PERSON] later distributed the video to others using What... |
+| doj_safe_childhood_2024_305 | CSAM production | possession of child pornography | According to court documents, in April and May of 2023, [... |
 | doj_safe_childhood_2024_369 | contact and communication with victim | one count of attempting to distribute child pornogra... | Investigators also found thousands of WhatsApp chats betw... |
 | doj_safe_childhood_2026_175 | contact and communication with victim |  | WhatsApp group chat and automatically downloaded to his p... |
-| doj_safe_childhood_2026_176 | contact and communication with victim |  | Morales stated he would typically receive the child porno... |
+| doj_safe_childhood_2026_176 | contact and communication with victim |  | [PERSON] stated he would typically receive the child porn... |
 | doj_safe_childhood_2026_231 | distribution of CSAM |  | images were shared via applications like WhatsApp and Tel... |
-| doj_safe_childhood_2026_304 | distribution of CSAM | sexual exploitation of children and receipt of child... | Flores Ramirez used WhatsApp and Telegram chatrooms devot... |
+| doj_safe_childhood_2026_304 | distribution of CSAM | sexual exploitation of children and receipt of child... | [PERSON] used WhatsApp and Telegram chatrooms devoted to ... |
 | ice_2023_002 | contact and communication with victim |  | victim were found within WhatsApp chats; there was also a... |
 | ncmec_2022_466 | used in offense (specific role unspecified) |  | showed that he also sent the video to someone using Whats... |
-| ncmec_2024_220 | used in offense (specific role unspecified) |  | Patel informed deputies he obtained the files from a What... |
-| ncmec_2024_510 | contact and communication with victim |  | The images, DeCiero said, were sent via WhatsApp, a popul... |
+| ncmec_2024_220 | used in offense (specific role unspecified) |  | [PERSON] informed deputies he obtained the files from a W... |
+| ncmec_2024_510 | contact and communication with victim |  | The images, [PERSON] said, were sent via WhatsApp, a popu... |
 | ncmec_2025_028 | distribution of CSAM | in 2021, was changed to “child sexual abuse material... | that began in November about a photo uploaded to a WhatsA... |
 | ncmec_2025_1001 | used in offense (specific role unspecified) | April 14 – after the execution of a search warrant a... | who stated he only searched for adult pornography while o... |
 | ocpo_2026_008 | distribution of CSAM | DISTRIBUTION OF CHILD SEXUAL ABUSE MATERIAL AND POSS... | had distributed images of child sexual abuse material to ... |
 | south_florida_icac_2026_006 | distribution of CSAM | eleven felonies, including numerous counts of posses... | Facebook Twitter LinkedIn Reddit WhatsApp 91 Shares |
-| vt_ag_2024_034 | contact and communication with victim | Luring a Child The Attorney General’s Office announc... | Lane communicated online via Meeff and WhatsApp with a De... |
+| vt_ag_2024_034 | contact and communication with victim | Luring a Child The Attorney General’s Office announc... | [PERSON] communicated online via Meeff and WhatsApp with ... |
 
 **Inferred evidence** (4 cases):
 | case_id | platform_role | harm | quote | reasoning |
@@ -2096,36 +2096,36 @@
 | doj_safe_childhood_2023_245 | contact and communication with victim | the charge in the indictment on Feb | prepubescent children, via the instant messaging applicat... |
 | doj_safe_childhood_2023_246 | distribution of CSAM | sexual exploitation of children and faces additional... | CSAM that he then distributed to other offenders over Tel... |
 | doj_safe_childhood_2023_247 | distribution of CSAM | sexual exploitation of children and faces additional... | CSAM that he then distributed to other offenders over Tel... |
-| doj_safe_childhood_2023_256 | contact and communication with victim |  | Specifically, Warne used a social media application calle... |
-| doj_safe_childhood_2024_035 | distribution of CSAM |  | interview, Brown admitted to law enforcement that he used... |
+| doj_safe_childhood_2023_256 | contact and communication with victim |  | Specifically, [PERSON] used a social media application ca... |
+| doj_safe_childhood_2024_035 | distribution of CSAM |  | interview, [PERSON] admitted to law enforcement that he u... |
 | doj_safe_childhood_2024_050 | distribution of CSAM |  | least one group chat on Telegram that was sharing child p... |
 | doj_safe_childhood_2024_302 | contact and communication with victim |  | agent through the website’s messaging feature, as well as... |
-| doj_safe_childhood_2025_065 | distribution of CSAM |  | children, Stout distributed child sexual abuse material t... |
+| doj_safe_childhood_2025_065 | distribution of CSAM |  | children, [PERSON] distributed child sexual abuse materia... |
 | doj_safe_childhood_2025_073 | used in offense (specific role unspecified) | a criminal complaint and warrant in August of this y... | Specifically, on May 26, 2025, the “Steve Jobs” @perv_94 ... |
-| doj_safe_childhood_2025_076 | distribution of CSAM | possession of According to the plea agreement, on Ju... | Telegram messages on Dillard’s cell phone, including a co... |
+| doj_safe_childhood_2025_076 | distribution of CSAM | possession of According to the plea agreement, on Ju... | Telegram messages on [PERSON]’s cell phone, including a c... |
 | doj_safe_childhood_2025_105 | distribution of CSAM |  | The cell phone also contained Telegram Messenger communic... |
-| doj_safe_childhood_2025_111 | distribution of CSAM |  | pornography, Heck distributed child pornography via Teleg... |
+| doj_safe_childhood_2025_111 | distribution of CSAM |  | pornography, [PERSON] distributed child pornography via T... |
 | doj_safe_childhood_2025_116 | distribution of CSAM |  | someone sent him via Telegram and then uploaded the image... |
 | doj_safe_childhood_2025_219 | contact and communication with victim | that offense by indictment in March 2023 and pleaded... | pornography via Telegram, an online messaging application... |
-| doj_safe_childhood_2025_321 | distribution of CSAM | federal child pornography charges and violating the ... | Sparks was openly offering to trade and advertising child... |
+| doj_safe_childhood_2025_321 | distribution of CSAM | federal child pornography charges and violating the ... | [PERSON] was openly offering to trade and advertising chi... |
 | doj_safe_childhood_2026_051 | contact and communication with victim |  | he was interviewed, he admitted that he was the individua... |
 | doj_safe_childhood_2026_087 | distribution of CSAM | distribution of child pornography, based on this con... | he had been chatting with and sharing child pornography w... |
 | doj_safe_childhood_2026_095 | distribution of CSAM |  | and Telegram – to distribute and receive child sexual abu... |
 | doj_safe_childhood_2026_211 | contact and communication with victim |  | chats on Telegram with a man in Colorado who sent her sev... |
 | doj_safe_childhood_2026_231 | distribution of CSAM |  | images were shared via applications like WhatsApp and Tel... |
-| doj_safe_childhood_2026_304 | distribution of CSAM | sexual exploitation of children and receipt of child... | Flores Ramirez used WhatsApp and Telegram chatrooms devot... |
-| nca_2026_008 | contact and communication with victim |  | Telegram messages recovered from Swaddle's device showed ... |
-| ncmec_2022_536 | distribution of CSAM | child pornography Police sources tell CBS2's Lisa Ro... | Telegram is a social media app with instant messaging and... |
-| ncmec_2023_213 | contact and communication with victim |  | Assistant Prosecutor said Impellizzeri admitted in a chat... |
+| doj_safe_childhood_2026_304 | distribution of CSAM | sexual exploitation of children and receipt of child... | [PERSON] used WhatsApp and Telegram chatrooms devoted to ... |
+| nca_2026_008 | contact and communication with victim |  | Telegram messages recovered from [PERSON]'s device showed... |
+| ncmec_2022_536 | distribution of CSAM | child pornography Police sources tell CBS2's [PERSON... | Telegram is a social media app with instant messaging and... |
+| ncmec_2023_213 | contact and communication with victim |  | Assistant Prosecutor said [PERSON] admitted in a chatroom... |
 | ncmec_2023_333 | contact and communication with victim | Possession of Child Pornography and Sexual Performan... | through Telegram chatrooms, where he discovered children ... |
 | ncmec_2024_959 | used in offense (specific role unspecified) |  | videos through the Telegram app. |
 | ncmec_2025_326 | distribution of CSAM | multiple counts of child exploitation, a Level 4 fel... | A search of his Telegram account allegedly uncovered that... |
 | ncmec_2025_427 | contact and communication with victim |  | The cell phone also contained Telegram Messenger communic... |
-| ncmec_2025_583 | used in offense (specific role unspecified) | CHILD SEXUAL ABUSE MATERIAL IN AUGUST 2025 Office of... | Magee as the user of a Telegram account used to possess C... |
-| ncmec_2025_592 | contact and communication with victim | charges of possessing child sexual abuse materials f... | Police allege Romero Flores admitted to downloading the v... |
+| ncmec_2025_583 | used in offense (specific role unspecified) | CHILD SEXUAL ABUSE MATERIAL IN AUGUST 2025 Office of... | [PERSON] as the user of a Telegram account used to posses... |
+| ncmec_2025_592 | contact and communication with victim | charges of possessing child sexual abuse materials f... | Police allege [PERSON] admitted to downloading the videos... |
 | ncmec_2025_644 | distribution of CSAM | EXPLOITING MINOR AFTER WARSAW POLICE RAID HOME IN IC... | Telegram, screen recording the material, and sharing it t... |
-| south_florida_icac_2024_007 | contact and communication with victim | two counts of possession of child sexual abuse mater... | Authorities would later find two videos on Rembiszewski’s... |
-| wy_dci_2026_001 | contact and communication with victim |  | Going by the username “Bob,” Wilkison used an application... |
+| south_florida_icac_2024_007 | contact and communication with victim | two counts of possession of child sexual abuse mater... | Authorities would later find two videos on [PERSON]’s iPh... |
+| wy_dci_2026_001 | contact and communication with victim |  | Going by the username “[PERSON],” [PERSON] used an applic... |
 | wy_dci_2026_005 | distribution of CSAM | sexual abuse of a minor in 1989 | report notes Telegram is commonly used by people involved... |
 
 **Inferred evidence** (8 cases):
@@ -2135,9 +2135,9 @@
 | doj_safe_childhood_2025_078 | contact and communication with victim | Possession of Child Pornography | Telegram, an encrypted messaging application. | Telegram and offense language co-occur in the same sentence without instrumen... |
 | doj_safe_childhood_2025_208 | contact and communication with victim |  | A separate device revealed chats on the messaging ap... | Telegram and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2022_289 | distribution of CSAM | 186 counts of possession of child pornography, ... | Telegram, a messaging app, to trade the files. | Telegram and offense language co-occur in the same sentence without instrumen... |
-| ncmec_2024_1160 | contact and communication with victim | 10 COUNTS OF POSSESSION OF CHILD PORNOGRAPHY ht... | Guppy told detectives his online searches led him to... | Telegram and offense language co-occur in the same sentence without instrumen... |
+| ncmec_2024_1160 | contact and communication with victim | 10 COUNTS OF POSSESSION OF CHILD PORNOGRAPHY ht... | [PERSON] told detectives his online searches led him... | Telegram and offense language co-occur in the same sentence without instrumen... |
 | ncmec_2025_202 | contact and communication with victim |  | They said he also admitted to joining groups on mess... | Telegram and offense language co-occur in the same sentence without instrumen... |
-| svicac_2022_001 | contact and communication with victim | molesting a 12-year-old girl, giving her the ha... | Shepard, who allegedly reached out to her last May a... | Telegram and offense language co-occur in the same sentence without instrumen... |
+| svicac_2022_001 | contact and communication with victim | molesting a 12-year-old girl, giving her the ha... | [PERSON], who allegedly reached out to her last May ... | Telegram and offense language co-occur in the same sentence without instrumen... |
 | vt_ag_2023_005 | contact and communication with victim | Possession of Child Sexual Abuse Material The A... | online messaging platform Telegram Messenger. | Telegram and offense language co-occur in the same sentence without instrumen... |
 
 **Named only** (41 cases): doj_ceos_2025_003, doj_safe_childhood_2023_493, doj_safe_childhood_2024_080, doj_safe_childhood_2024_097, doj_safe_childhood_2025_022, doj_safe_childhood_2025_113, doj_safe_childhood_2025_282, doj_safe_childhood_2025_297, doj_safe_childhood_2025_326, doj_safe_childhood_2025_344, doj_safe_childhood_2025_358, doj_safe_childhood_2025_408, doj_safe_childhood_2026_013, doj_safe_childhood_2026_106, doj_safe_childhood_2026_199, doj_safe_childhood_2026_232, doj_safe_childhood_2026_267, doj_safe_childhood_2026_345, nbi_2024_004, nbi_2025_015, nbi_2026_003, nbi_2026_015, ncmec_2022_157, ncmec_2022_501, ncmec_2022_574, ncmec_2024_207, ncmec_2024_387, ncmec_2024_610, ncmec_2024_833, ncmec_2024_898, ncmec_2024_941, ncmec_2025_1019, ncmec_2025_200, ncmec_2025_310, ncmec_2025_312, ncmec_2025_333, ncmec_2025_458, ncmec_2025_580, ncmec_2025_710, ncmec_2025_973, south_florida_icac_2025_025
@@ -2159,7 +2159,7 @@
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
 | doj_safe_childhood_2022_326 | distribution of CSAM | the charges on February 15, 2022 | distributed child pornography videos through this Twitter... |
-| doj_safe_childhood_2022_444 | distribution of CSAM | the charges on September 29, 2021 | Neil Curran, 27, was using Twitter to distribute child po... |
+| doj_safe_childhood_2022_444 | distribution of CSAM | the charges on September 29, 2021 | [PERSON], 27, was using Twitter to distribute child porno... |
 | doj_safe_childhood_2023_398 | platform-reported CSAM (distribution inferred) |  | In October 2021, law enforcement began investigating afte... |
 | doj_safe_childhood_2023_441 | contact and communication with victim | child pornography-related offenses | series of direct messages with another user on his Twitte... |
 | doj_safe_childhood_2024_294 | contact and communication with victim |  | also used Twitter to communicate with minors and to recei... |
@@ -2167,7 +2167,7 @@
 | doj_safe_childhood_2025_358 | distribution of CSAM | the distribution of child pornography on May 29, 2024 | (formerly known as Twitter) to distribute child sexual ab... |
 | ncmec_2022_534 | distribution of CSAM | possession of child pornography WILKES-BARRE — A cyb... | WILKES-BARRE — A cybertip on a reported upload of a child... |
 | ncmec_2023_384 | distribution of CSAM | possession and distribution of child pornography on ... | distribution of child pornography on Twitter after an ext... |
-| ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court documents said | Holland is also accused of uploading similar content to X... |
+| ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court documents said | [PERSON] is also accused of uploading similar content to ... |
 | ncmec_2024_1039 | distribution of CSAM | especially aggravated sexual exploitation of a minor... | Records obtained from X, formerly known as Twitter, revea... |
 | ncmec_2024_1177 | distribution of CSAM |  | A second tip came from X (formerly known as Twitter) rega... |
 | ncmec_2024_331 | grooming / soliciting minor | one count of child pornography (a Class X felony) an... | solicitation of a child after disseminating child porn an... |
@@ -2190,7 +2190,7 @@
 |---|---|---|---|---|
 | de_ag_2011_003 | contact and communication with victim | 18 counts of dealing in child pornography | “tweets” on his Twitter account, none of which relat... | Twitter / X and offense language co-occur in the same sentence without instru... |
 | doj_safe_childhood_2022_070 | contact and communication with victim | the charge on August 8, 2022 | and Exploited Children (NCMEC) received eight report... | Twitter / X and offense language co-occur in the same sentence without instru... |
-| ncmec_2022_297 | contact and communication with victim |  | Gutierrez’s Snapchat and Twitter accounts ranged fro... | Twitter / X and offense language co-occur in the same sentence without instru... |
+| ncmec_2022_297 | contact and communication with victim |  | [PERSON]’s Snapchat and Twitter accounts ranged from... | Twitter / X and offense language co-occur in the same sentence without instru... |
 | ncmec_2023_301 | used in offense (specific role unspecified) | 16 counts of possession of certain materials pr... | of the Twitter account and the email address associa... | Twitter / X and offense language co-occur in the same sentence without instru... |
 | ncmec_2023_333 | contact and communication with victim | Possession of Child Pornography and Sexual Perf... | child pornography that was downloaded using his Snap... | Twitter / X and offense language co-occur in the same sentence without instru... |
 | ncmec_2024_383 | contact and communication with victim | SEXUAL EXPLOITATION OF CHILDREN IN PERSON AND O... | Instagram, Snapchat, and X (formerly Twitter) by a u... | Twitter / X and offense language co-occur in the same sentence without instru... |
@@ -2217,26 +2217,26 @@
 | doj_ceos_2025_016 | distribution of CSAM |  | Child Sexual Abuse Material from the BitTorrent File-Shar... |
 | doj_ceos_2026_002 | distribution of CSAM | receipt of CSAM on Dec | the BitTorrent peer-to-peer file sharing network, which i... |
 | doj_safe_childhood_2021_045 | contact and communication with victim |  | BitTorrent is a communication protocol for peer-to-peer file |
-| doj_safe_childhood_2021_068 | distribution of CSAM |  | According to court documents, in June 2016, Richard Fred ... |
+| doj_safe_childhood_2021_068 | distribution of CSAM |  | According to court documents, in June 2016, [PERSON] (25)... |
 | doj_safe_childhood_2022_140 | distribution of CSAM |  | investigated the receipt and distribution of child pornog... |
 | doj_safe_childhood_2022_385 | distribution of CSAM |  | numerous child pornography files on a BitTorrent file-sha... |
 | doj_safe_childhood_2023_007 | distribution of CSAM |  | investigation on the BitTorrent network for offenders pos... |
 | doj_safe_childhood_2023_046 | distribution of CSAM | two counts of production of child pornography, distr... | been uploaded to the BitTorrent network, from an IP addre... |
 | doj_safe_childhood_2023_137 | distribution of CSAM |  | minors—using BitTorrent, a peer-to-peer file sharing netw... |
-| doj_safe_childhood_2023_175 | distribution of CSAM |  | home and found that Zappa used peer-to-peer software to r... |
+| doj_safe_childhood_2023_175 | distribution of CSAM |  | home and found that [PERSON] used peer-to-peer software t... |
 | doj_safe_childhood_2023_276 | distribution of CSAM |  | minors—using BitTorrent, a peer-to-peer file sharing netw... |
 | doj_safe_childhood_2023_338 | distribution of CSAM |  | address downloaded and shared child pornographic files on... |
-| doj_safe_childhood_2024_040 | CSAM production | Distribution of Child Pornography and Assaulting, Re... | conviction stemmed from Hicks creating an account through... |
+| doj_safe_childhood_2024_040 | CSAM production | Distribution of Child Pornography and Assaulting, Re... | conviction stemmed from [PERSON] creating an account thro... |
 | doj_safe_childhood_2024_065 | distribution of CSAM |  | distributed files of child pornography using BitTorrent, ... |
 | doj_safe_childhood_2024_220 | distribution of CSAM |  | investigation as being a user on the BitTorrent network f... |
 | doj_safe_childhood_2024_470 | distribution of CSAM |  | identified his computer’s IP address as exchanging CSAM o... |
 | doj_safe_childhood_2024_495 | distribution of CSAM | ten counts of possession of child pornography in Leo... | Enforcement for using BitTorrent to possess and share chi... |
-| doj_safe_childhood_2025_143 | distribution of CSAM |  | into the BitTorrent network, law enforcement discovered H... |
+| doj_safe_childhood_2025_143 | distribution of CSAM |  | into the BitTorrent network, law enforcement discovered [... |
 | doj_safe_childhood_2025_209 | distribution of CSAM |  | (IP) address that was sharing a collection of child porno... |
 | doj_safe_childhood_2025_283 | distribution of CSAM |  | BitTorrent network for offenders sharing child pornography. |
 | doj_safe_childhood_2026_020 | distribution of CSAM | August 12, 2025, after law enforcement executed a se... | BitTorrent file-sharing network. |
-| doj_safe_childhood_2026_236 | distribution of CSAM | Distribution of Child Pornography on Oct | Porter was detected in the BitTorrent file sharing networ... |
-| ncmec_2024_859 | distribution of CSAM |  | Authorities said Walker exchanged the files through BitTo... |
+| doj_safe_childhood_2026_236 | distribution of CSAM | Distribution of Child Pornography on Oct | [PERSON] was detected in the BitTorrent file sharing netw... |
+| ncmec_2024_859 | distribution of CSAM |  | Authorities said [PERSON] exchanged the files through Bit... |
 | ocpo_2023_002 | distribution of CSAM | Distribution of Child Pornography, Possession of Chi... | images of child pornography to the internet using bittorr... |
 
 **Inferred evidence** (5 cases):
@@ -2265,22 +2265,22 @@
 **Stated evidence** (20 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_safe_childhood_2023_442 | distribution of CSAM |  | Durtschi utilized the internet to upload some of the phot... |
+| doj_safe_childhood_2023_442 | distribution of CSAM |  | [PERSON] utilized the internet to upload some of the phot... |
 | doj_safe_childhood_2024_253 | distribution of CSAM |  | minor female and adult male engaged in sexually explicit ... |
-| doj_safe_childhood_2024_365 | distribution of CSAM |  | Johnson uploaded hundreds of child pornography files to h... |
+| doj_safe_childhood_2024_365 | distribution of CSAM |  | [PERSON] uploaded hundreds of child pornography files to ... |
 | doj_safe_childhood_2025_088 | distribution of CSAM | violating, the U | internet to upload images of child pornography to his Goo... |
 | doj_safe_childhood_2025_116 | distribution of CSAM |  | someone sent him via Telegram and then uploaded the image... |
 | ncmec_2022_276 | distribution of CSAM | 10 counts of possession of child By TAMPA BAY NEWSPA... | had uploaded more than 200 files into Google Drive, inclu... |
 | ncmec_2023_216 | distribution of CSAM |  | apparent child sexual abuse material uploaded to a Google... |
 | ncmec_2023_403 | distribution of CSAM | child porn possession, By MACKENZIE WITT THE (SHAMOK... | depicting child pornography being uploaded to their Googl... |
-| ncmec_2024_120 | distribution of CSAM | the sexual exploitation allegations April 10 | This report alleged Bradford uploaded child pornography t... |
+| ncmec_2024_120 | distribution of CSAM | the sexual exploitation allegations April 10 | This report alleged [PERSON] uploaded child pornography t... |
 | ncmec_2024_245 | distribution of CSAM |  | Center of Missing and Exploited Children regarding a Goog... |
-| ncmec_2024_974 | platform-reported CSAM (distribution inferred) | POSSESSING CHILD SEX IMAGES https://www | Ballantyne explained to him that the six Cybertips were f... |
+| ncmec_2024_974 | platform-reported CSAM (distribution inferred) | POSSESSING CHILD SEX IMAGES https://www | [PERSON] explained to him that the six Cybertips were fro... |
 | ncmec_2025_055 | distribution of CSAM | possession of child sexual abuse materials after an ... | The tip alleged that a Google subscriber had uploaded chi... |
 | ncmec_2025_201 | platform-reported CSAM (distribution inferred) | possessing multiple images of ai-generated child por... | According to officials the files were being saved in a go... |
 | ncmec_2025_490 | platform-reported CSAM (distribution inferred) |  | According to court documents, the cybertip concerned a Go... |
 | ncmec_2025_898 | platform-reported CSAM (distribution inferred) | possession of child pornography | files of suspected child pornography” were reportedly tra... |
-| south_florida_icac_2024_016 | distribution of CSAM |  | Google reported that Jean uploaded a lewd photo collage o... |
+| south_florida_icac_2024_016 | distribution of CSAM |  | Google reported that [PERSON] uploaded a lewd photo colla... |
 | south_florida_icac_2025_025 | distribution of CSAM |  | subscribers uploaded eight files depicting child pornogra... |
 | usss_2021_010 | distribution of CSAM | Possession of Child Pornography in April 2021 | child pornography had been uploaded to a Google drive acc... |
 | usss_2022_004 | distribution of CSAM | one count of possession of child pornography | uploaded into Google Drive. |
@@ -2289,7 +2289,7 @@
 **Inferred evidence** (1 cases):
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
-| usss_2022_010 | used in offense (specific role unspecified) |  | investigation, Castillo Martinez downloaded 12 child... | Google Drive and offense language co-occur in the same sentence without instr... |
+| usss_2022_010 | used in offense (specific role unspecified) |  | investigation, [PERSON] downloaded 12 child pornogra... | Google Drive and offense language co-occur in the same sentence without instr... |
 
 **Named only** (33 cases): doj_safe_childhood_2023_018, doj_safe_childhood_2023_152, doj_safe_childhood_2023_245, doj_safe_childhood_2023_251, doj_safe_childhood_2023_417, doj_safe_childhood_2023_472, doj_safe_childhood_2024_262, doj_safe_childhood_2024_279, doj_safe_childhood_2025_003, doj_safe_childhood_2025_053, doj_safe_childhood_2026_175, ncmec_2022_153, ncmec_2022_166, ncmec_2022_506, ncmec_2023_003, ncmec_2023_080, ncmec_2023_406, ncmec_2023_408, ncmec_2023_463, ncmec_2023_473, ncmec_2024_088, ncmec_2024_1160, ncmec_2024_1168, ncmec_2024_222, ncmec_2024_454, ncmec_2024_499, ncmec_2024_938, ncmec_2024_973, ncmec_2025_706, ncmec_2025_745, ncmec_2025_974, ncmec_2025_992, vt_ag_2023_008
 
@@ -2310,16 +2310,16 @@
 |---|---|---|---|
 | doj_ceos_2013_019 | contact and communication with victim |  | accounts, contacted the victims, and threatened that if t... |
 | doj_ceos_2013_033 | contact and communication with victim |  | These communications involved both text messages and Skyp... |
-| doj_ceos_2013_115 | contact and communication with victim | a two-count criminal information charging production... | over Skype chats, which Calderon Velasquez recorded and k... |
-| doj_ceos_2013_170 | contact and communication with victim |  | Skype chats, which Calderon Velasquez recorded and kept o... |
-| doj_safe_childhood_2022_313 | distribution of CSAM | Possession of Child Pornography in the U | Nicks admitted trading, sharing, and receiving images of ... |
+| doj_ceos_2013_115 | contact and communication with victim | a two-count criminal information charging production... | over Skype chats, which [PERSON] recorded and kept on his... |
+| doj_ceos_2013_170 | contact and communication with victim |  | Skype chats, which [PERSON] recorded and kept on his comp... |
+| doj_safe_childhood_2022_313 | distribution of CSAM | Possession of Child Pornography in the U | [PERSON] admitted trading, sharing, and receiving images ... |
 | doj_safe_childhood_2022_387 | contact and communication with victim |  | Investigators determined that Skype communications were t... |
 | doj_safe_childhood_2022_458 | distribution of CSAM | sexual assault on a child | pornography being traded over Skype. |
-| doj_safe_childhood_2025_165 | contact and communication with victim | use of an electronic communication system to procure... | requirements, Brock used Skype to begin communication wit... |
+| doj_safe_childhood_2025_165 | contact and communication with victim | use of an electronic communication system to procure... | requirements, [PERSON] used Skype to begin communication ... |
 | doj_safe_childhood_2025_421 | contact and communication with victim |  | text messages and Skype video calls and paid money throug... |
-| doj_safe_childhood_2026_155 | contact and communication with victim | child sexual abuse | Blythe also communicated with a minor child via Skype and... |
+| doj_safe_childhood_2026_155 | contact and communication with victim | child sexual abuse | [PERSON] also communicated with a minor child via Skype a... |
 | europol_2018_001 | distribution of CSAM | distribution of child sexual abuse material through ... | distribution of child sexual exploitation material throug... |
-| illinois_ag_2021_006 | distribution of CSAM |  | these inexcusable crimes.” Prosecutors alleged that Polja... |
+| illinois_ag_2021_006 | distribution of CSAM |  | these inexcusable crimes.” Prosecutors alleged that [PERS... |
 | nbi_2025_006 | contact and communication with victim |  | investigators reviewed the Canadian national’s device and... |
 | nbi_2025_011 | contact and communication with victim |  | Police discovered communications, between the Belgian nat... |
 | nca_2026_003 | contact and communication with victim | all charges in February 2026 at Leicester Crown Court | used online communication platform Skype to contact five ... |
@@ -2351,27 +2351,27 @@
 | doj_safe_childhood_2021_049 | used in offense (specific role unspecified) | one count of receiving child pornography over the in... | years old, then reconnected with the child victim through... |
 | doj_safe_childhood_2022_208 | contact and communication with victim |  | Force and stationed at Beale Air Force Base in California... |
 | doj_safe_childhood_2022_270 | distribution of CSAM |  | investigation determined that the Facebook Messenger acco... |
-| doj_safe_childhood_2023_031 | contact and communication with victim |  | Hamer also joined Facebook Messenger group chats that wer... |
-| doj_safe_childhood_2024_262 | distribution of CSAM |  | According to court documents, in 2022 and 2023, Taylor us... |
+| doj_safe_childhood_2023_031 | contact and communication with victim |  | [PERSON] also joined Facebook Messenger group chats that ... |
+| doj_safe_childhood_2024_262 | distribution of CSAM |  | According to court documents, in 2022 and 2023, [PERSON] ... |
 | doj_safe_childhood_2024_322 | contact and communication with victim |  | 2019, when he began using Facebook messenger to communica... |
-| doj_safe_childhood_2024_350 | contact and communication with victim |  | Hamer also joined Facebook Messenger group chats that wer... |
+| doj_safe_childhood_2024_350 | contact and communication with victim |  | [PERSON] also joined Facebook Messenger group chats that ... |
 | doj_safe_childhood_2024_387 | contact and communication with victim |  | Facebook Messenger account as attachments to messages. |
 | doj_safe_childhood_2025_338 | contact and communication with victim |  | a minor victim’s father seeing a group message on Faceboo... |
 | doj_safe_childhood_2026_204 | used in offense (specific role unspecified) |  | minor engaging in sexually explicit conduct through the p... |
-| doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on Oct | The third minor victim began receiving messages from Nung... |
+| doj_safe_childhood_2026_262 | contact and communication with victim | one count of production of child pornography on Oct | The third minor victim began receiving messages from [PER... |
 | nbi_2020_001 | distribution of CSAM |  | through Facebook Messenger One Million Pesos from the cou... |
 | nbi_2025_009 | distribution of CSAM |  | and distributing these materials via Facebook Messenger. |
-| ncmec_2024_088 | distribution of CSAM |  | According to court documents, in 2022 and 2023, Taylor us... |
+| ncmec_2024_088 | distribution of CSAM |  | According to court documents, in 2022 and 2023, [PERSON] ... |
 | ncmec_2024_227 | contact and communication with victim | POSSESSION OF VIDEOS OF SEXUAL ABUSE OF CHILDREN Edi... | Authorities also revealed that in a chat on Facebook Mess... |
 | ncmec_2025_591 | distribution of CSAM | Sexual Exploitation of Children (Possession) and boo... | uploaded via Facebook Messenger. |
-| pa_ag_2025_023 | contact and communication with victim | unlawful contact with a minor, indecent assault, dis... | Between 2023 and 2024, Christian communicated constantly ... |
+| pa_ag_2025_023 | contact and communication with victim | unlawful contact with a minor, indecent assault, dis... | Between 2023 and 2024, [PERSON] communicated constantly w... |
 | usss_2019_005 | distribution of CSAM |  | calls that his Facebook Messenger account was distributin... |
 | ut_ag_2020_001 | contact and communication with victim |  | to chatting with the victim for over a year, almost every... |
 
 **Inferred evidence** (1 cases):
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
-| ncmec_2023_507 | CSAM production |  | Against Children Task Force, alleged Fisher created ... | Facebook Messenger and offense language co-occur in the same sentence without... |
+| ncmec_2023_507 | CSAM production |  | Against Children Task Force, alleged [PERSON] create... | Facebook Messenger and offense language co-occur in the same sentence without... |
 
 **Named only** (25 cases): doj_safe_childhood_2022_031, doj_safe_childhood_2022_242, doj_safe_childhood_2022_290, doj_safe_childhood_2022_437, doj_safe_childhood_2023_499, doj_safe_childhood_2024_191, doj_safe_childhood_2024_259, doj_safe_childhood_2024_442, doj_safe_childhood_2026_355, doj_safe_childhood_2026_411, nbi_2026_015, ncmec_2022_250, ncmec_2022_460, ncmec_2022_485, ncmec_2022_546, ncmec_2022_592, ncmec_2023_265, ncmec_2024_1042, ncmec_2024_1057, ncmec_2024_333, ncmec_2024_977, ncmec_2025_264, nm_ag_2024_004, svicac_2026_025, vt_ag_2022_001
 
@@ -2391,30 +2391,30 @@
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
 | doj_safe_childhood_2024_025 | platform-reported CSAM (distribution inferred) |  | According to his plea agreement, a cyber tip led law enfo... |
-| doj_safe_childhood_2024_262 | distribution of CSAM |  | According to court documents, in 2022 and 2023, Taylor us... |
-| doj_safe_childhood_2026_089 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | Separately, in April 2024, Myers was identified as the ow... |
-| doj_safe_childhood_2026_144 | contact and communication with victim | Attempted Production of Child Pornography | DiOrio started a conversation on Reddit, a popular commun... |
+| doj_safe_childhood_2024_262 | distribution of CSAM |  | According to court documents, in 2022 and 2023, [PERSON] ... |
+| doj_safe_childhood_2026_089 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | Separately, in April 2024, [PERSON] was identified as the... |
+| doj_safe_childhood_2026_144 | contact and communication with victim | Attempted Production of Child Pornography | [PERSON] started a conversation on Reddit, a popular comm... |
 | doj_safe_childhood_2026_154 | contact and communication with victim |  | In online communications with another Reddit user, the de... |
-| doj_safe_childhood_2026_296 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | Separately, in April 2024, Myers was identified as the ow... |
-| ncmec_2023_043 | distribution of CSAM | one count of endangering the welfare of a child (pos... | Morris Plains resident Antonino LaRosa uploaded child por... |
+| doj_safe_childhood_2026_296 | used in offense (specific role unspecified) | possession of CSAM, for which he was sentenced to tw... | Separately, in April 2024, [PERSON] was identified as the... |
+| ncmec_2023_043 | distribution of CSAM | one count of endangering the welfare of a child (pos... | Morris Plains resident [PERSON] uploaded child porn to Re... |
 | ncmec_2024_022 | distribution of CSAM | similar crimes in December 2023, court documents said | Reddit gave officers the registered IP address and the up... |
-| ncmec_2024_088 | distribution of CSAM |  | According to court documents, in 2022 and 2023, Taylor us... |
-| ncmec_2024_1117 | platform-reported CSAM (distribution inferred) | POSSESSION OF CHILD PORN By Stephanie Johnson, Tamon... | There were also 19 other Cybertips reported by Reddit in ... |
+| ncmec_2024_088 | distribution of CSAM |  | According to court documents, in 2022 and 2023, [PERSON] ... |
+| ncmec_2024_1117 | platform-reported CSAM (distribution inferred) | POSSESSION OF CHILD PORN By [PERSON], [PERSON] https... | There were also 19 other Cybertips reported by Reddit in ... |
 | ncmec_2024_930 | contact and communication with victim |  | had met the child on Reddit, a popular online forum, and ... |
 | ncmec_2024_958 | distribution of CSAM | 20 files found in his possession on July 24 | regarding images of child pornography uploaded to Reddit. |
 | ncmec_2025_202 | distribution of CSAM |  | DANIA BEACH MAN ACCUSED OF UPLOADING CHILD SEXUAL ABUSE I... |
-| ncmec_2025_919 | contact and communication with victim |  | Snapchat, Reddit, and X all reported Sherbahn had sent ch... |
+| ncmec_2025_919 | contact and communication with victim |  | Snapchat, Reddit, and X all reported [PERSON] had sent ch... |
 | south_florida_icac_2026_006 | distribution of CSAM | eleven felonies, including numerous counts of posses... | Facebook Twitter LinkedIn Reddit WhatsApp 91 Shares |
 
 **Inferred evidence** (7 cases):
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
 | doj_safe_childhood_2024_109 | used in offense (specific role unspecified) | Attempted Receipt of Child Pornography | application Reddit, attempted to receive images of c... | Reddit and offense language co-occur in the same sentence without instrumenta... |
-| doj_safe_childhood_2025_056 | used in offense (specific role unspecified) | Attempted Enticement of a Minor Using the Inter... | During the operation, Williams used his Reddit accou... | Reddit and offense language co-occur in the same sentence without instrumenta... |
-| ncmec_2024_050 | distribution of CSAM | child Second Judicial Circuit Judge Melissa Ric... | One tip led detectives to Haynes’ Reddit account, wh... | Reddit and offense language co-occur in the same sentence without instrumenta... |
-| ncmec_2024_913 | used in offense (specific role unspecified) | CHILD PORNOGRAPHY CHARGES https://kfor | Officials say the investigation into Williams starte... | Reddit and offense language co-occur in the same sentence without instrumenta... |
-| ncmec_2025_094 | used in offense (specific role unspecified) | alleged possession of child sexual abuse materi... | Facebook, Google and Reddit, detectives arrested Spa... | Reddit and offense language co-occur in the same sentence without instrumenta... |
-| ncmec_2025_1000 | platform-reported CSAM (distribution infer... | sexual assault of a minor and is a registered s... | Cruz reportedly admitted to owning child sex abuse m... | Reddit and offense language co-occur in the same sentence without instrumenta... |
+| doj_safe_childhood_2025_056 | used in offense (specific role unspecified) | Attempted Enticement of a Minor Using the Inter... | During the operation, [PERSON] used his Reddit accou... | Reddit and offense language co-occur in the same sentence without instrumenta... |
+| ncmec_2024_050 | distribution of CSAM | child Second Judicial Circuit Judge Melissa [PE... | One tip led detectives to [PERSON]’ Reddit account, ... | Reddit and offense language co-occur in the same sentence without instrumenta... |
+| ncmec_2024_913 | used in offense (specific role unspecified) | CHILD PORNOGRAPHY CHARGES https://kfor | [PERSON] say the investigation into [PERSON] started... | Reddit and offense language co-occur in the same sentence without instrumenta... |
+| ncmec_2025_094 | used in offense (specific role unspecified) | alleged possession of child sexual abuse materi... | Facebook, Google and Reddit, detectives arrested [PE... | Reddit and offense language co-occur in the same sentence without instrumenta... |
+| ncmec_2025_1000 | platform-reported CSAM (distribution infer... | sexual assault of a minor and is a registered s... | [PERSON] reportedly admitted to owning child sex abu... | Reddit and offense language co-occur in the same sentence without instrumenta... |
 | south_florida_icac_2023_006 | contact and communication with victim |  | originating from the websites Reddit and Quora as we... | Reddit and offense language co-occur in the same sentence without instrumenta... |
 
 **Named only** (10 cases): doj_safe_childhood_2023_418, doj_safe_childhood_2026_178, doj_safe_childhood_2026_338, ncmec_2023_119, ncmec_2023_595, ncmec_2024_095, ncmec_2024_910, ncmec_2025_085, ncmec_2025_095, ncmec_2025_967
@@ -2438,7 +2438,7 @@
 | doj_ceos_2012_002 | CSAM production |  | produced more images and/or webcam videos for him, he wou... |
 | doj_ceos_2013_012 | CSAM production |  | of producing a visual depiction of such conduct, includin... |
 | doj_ceos_2013_155 | contact and communication with victim |  | The defendant and the UCO discussed via chat that the UCO... |
-| doj_safe_childhood_2022_375 | CSAM production |  | According to court documents, Lee repeatedly used a webca... |
+| doj_safe_childhood_2022_375 | CSAM production |  | According to court documents, [PERSON] repeatedly used a ... |
 | doj_safe_childhood_2023_342 | contact and communication with victim |  | their webcam on after chatting with him. |
 | doj_safe_childhood_2023_344 | contact and communication with victim |  | of the minor victims changing in their bedrooms after the... |
 | nbi_2025_012 | CSAM production |  | live-streamed webcam shows depicting the sexual abuse of ... |
@@ -2453,7 +2453,7 @@
 |---|---|---|---|---|
 | de_ag_2012_023 | contact and communication with victim | five counts of attempted online sexual solicita... | addition, during two chat sessions, the target expos... | Webcam platform and offense language co-occur in the same sentence without in... |
 | de_ag_2012_026 | contact and communication with victim | five counts of attempted online sexual solicita... | addition, during two chat sessions, the target expos... | Webcam platform and offense language co-occur in the same sentence without in... |
-| de_ag_2013_012 | used in offense (specific role unspecified) | child pornography charges earlier this year fol... | The ongoing investigation after Fort’s arrest reveal... | Webcam platform and offense language co-occur in the same sentence without in... |
+| de_ag_2013_012 | used in offense (specific role unspecified) | child pornography charges earlier this year fol... | The ongoing investigation after [PERSON]’s arrest re... | Webcam platform and offense language co-occur in the same sentence without in... |
 | nj_ag_2014_009 | used in offense (specific role unspecified) |  | webcam to an undercover detective from the Burlingto... | Webcam platform and offense language co-occur in the same sentence without in... |
 | nj_ag_2015_012 | used in offense (specific role unspecified) |  | webcam to an undercover detective from the Burlingto... | Webcam platform and offense language co-occur in the same sentence without in... |
 
@@ -2477,14 +2477,14 @@
 | doj_safe_childhood_2022_291 | used in offense (specific role unspecified) | both charges | user who sent two MEGA links to child pornography. |
 | doj_safe_childhood_2022_474 | distribution of CSAM |  | obtained subscriber information and IP login history asso... |
 | doj_safe_childhood_2023_052 | used in offense (specific role unspecified) | distributing child pornography over the internet | division using the Kik application and sent at least two ... |
-| doj_safe_childhood_2024_073 | distribution of CSAM | one count of receipt of child pornography | Between December 2023 and January 2024, Vigil also distri... |
-| doj_safe_childhood_2024_300 | distribution of CSAM |  | Caswell admitted that he used file-hosting service Mega t... |
+| doj_safe_childhood_2024_073 | distribution of CSAM | one count of receipt of child pornography | Between December 2023 and January 2024, [PERSON] also dis... |
+| doj_safe_childhood_2024_300 | distribution of CSAM |  | [PERSON] admitted that he used file-hosting service Mega ... |
 | doj_safe_childhood_2024_469 | distribution of CSAM | receiving and distributing child pornography | During a law enforcement investigation, the FBI discovere... |
 | doj_safe_childhood_2025_073 | used in offense (specific role unspecified) | a criminal complaint and warrant in August of this y... | additionally sent a MEGA link, which contained approximat... |
 | doj_safe_childhood_2025_419 | used in offense (specific role unspecified) | receiving child pornography | of files of child pornography utilizing the MEGA applicat... |
 | doj_safe_childhood_2026_329 | distribution of CSAM | one count of possession of child pornography and one... | distributed CSAM to him via the online cloud storage plat... |
 | ncmec_2022_204 | distribution of CSAM | Two Counts Of Possession Of Child Pornography Origin... | shared a link with him and told him to download Mega to g... |
-| ncmec_2024_616 | used in offense (specific role unspecified) |  | with the undercover officer, Bush also sent a Mega link c... |
+| ncmec_2024_616 | used in offense (specific role unspecified) |  | with the undercover officer, [PERSON] also sent a Mega li... |
 | south_florida_icac_2023_010 | distribution of CSAM | eight counts of possession of child pornography and ... | Dropbox and Mega accounts he used to distribute the porno... |
 
 **Inferred evidence** (3 cases):
@@ -2511,22 +2511,22 @@
 **Stated evidence** (10 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_safe_childhood_2022_044 | distribution of CSAM |  | Harper communicated with others on Snapchat and the Omegl... |
+| doj_safe_childhood_2022_044 | distribution of CSAM |  | [PERSON] communicated with others on Snapchat and the Ome... |
 | doj_safe_childhood_2022_207 | contact and communication with victim |  | Snapchat and Omegle, to engage in sexual chats with child... |
 | doj_safe_childhood_2022_496 | contact and communication with victim |  | he watched via livestream over the chat website Omegle. |
-| doj_safe_childhood_2023_457 | distribution of CSAM |  | Harper communicated with others on Snapchat and the Omegl... |
+| doj_safe_childhood_2023_457 | distribution of CSAM |  | [PERSON] communicated with others on Snapchat and the Ome... |
 | doj_safe_childhood_2023_546 | platform-reported CSAM (distribution inferred) |  | The Nebraska State Patrol began its investigation based o... |
-| doj_safe_childhood_2024_194 | contact and communication with victim |  | separate communications, Albaba contacted two minor boys ... |
-| doj_safe_childhood_2024_267 | contact and communication with victim |  | Hardy King (29), met a child through the anonymous online... |
+| doj_safe_childhood_2024_194 | contact and communication with victim |  | separate communications, [PERSON] contacted two minor boy... |
+| doj_safe_childhood_2024_267 | contact and communication with victim |  | [PERSON] (29), met a child through the anonymous online c... |
 | doj_safe_childhood_2025_385 | distribution of CSAM | all three charges in October of last year | As presented in court filings, on September 1, 2020, a us... |
-| ncmec_2023_127 | used in offense (specific role unspecified) | 20 counts of child pornography, met victims on Omegl... | Haglund told deputies he met young boys on Omegle, a webs... |
+| ncmec_2023_127 | used in offense (specific role unspecified) | 20 counts of child pornography, met victims on Omegl... | [PERSON] told deputies he met young boys on Omegle, a web... |
 | ncmec_2023_233 | distribution of CSAM |  | He also admitted to sharing links to get links to child p... |
 
 **Inferred evidence** (2 cases):
 | case_id | platform_role | harm | quote | reasoning |
 |---|---|---|---|---|
 | doj_safe_childhood_2023_342 | contact and communication with victim |  | Ontario, used the online messaging chat sites Omegle... | Omegle and offense language co-occur in the same sentence without instrumenta... |
-| doj_safe_childhood_2026_248 | contact and communication with victim | Attempting to Produce Child Pornography, Posses... | In the Spring of 2022, Keitges used the online platf... | Omegle and offense language co-occur in the same sentence without instrumenta... |
+| doj_safe_childhood_2026_248 | contact and communication with victim | Attempting to Produce Child Pornography, Posses... | In the Spring of 2022, [PERSON] used the online plat... | Omegle and offense language co-occur in the same sentence without instrumenta... |
 
 **Named only** (7 cases): doj_safe_childhood_2022_242, doj_safe_childhood_2026_136, ncmec_2022_440, nj_ag_2018_001, nj_ag_2019_002, nj_ag_2020_001, nj_ag_2021_002
 
@@ -2550,10 +2550,10 @@
 | doj_safe_childhood_2022_156 | distribution of CSAM | April 8, 2021 | MeWe and Kik, to solicit, receive and distribute images o... |
 | doj_safe_childhood_2022_169 | distribution of CSAM |  | August 2020 regarding possible child pornography uploaded... |
 | doj_safe_childhood_2023_212 | platform-reported CSAM (distribution inferred) |  | The cybertip from the MeWe social media platform reported... |
-| doj_safe_childhood_2023_553 | distribution of CSAM | distribution of child Eckert, who is released on a $... | MeWe and Kik, to solicit, receive and distribute images o... |
+| doj_safe_childhood_2023_553 | distribution of CSAM | distribution of child [PERSON], who is released on a... | MeWe and Kik, to solicit, receive and distribute images o... |
 | doj_safe_childhood_2024_323 | distribution of CSAM |  | Law enforcement received multiple reports from MeWe, Drop... |
 | doj_safe_childhood_2026_201 | distribution of CSAM |  | Sheriff’s Office, traded child sexual abuse material with... |
-| ncmec_2022_232 | distribution of CSAM |  | Federal prosecutors said Goodwin used the social networki... |
+| ncmec_2022_232 | distribution of CSAM |  | Federal prosecutors said [PERSON] used the social network... |
 
 **Inferred evidence** (0 cases):
 *(none)*
@@ -2576,9 +2576,9 @@
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
 | doj_safe_childhood_2023_010 | contact and communication with victim |  | utilizing the private message function on Whisper. |
-| doj_safe_childhood_2024_346 | contact and communication with victim | the charge in January of this year | June 2023, Cardona began communicating through Whisper, a... |
+| doj_safe_childhood_2024_346 | contact and communication with victim | the charge in January of this year | June 2023, [PERSON] began communicating through Whisper, ... |
 | doj_safe_childhood_2024_479 | contact and communication with victim |  | According to information presented in court, in June 2023... |
-| fresno_so_2015_001 | contact and communication with victim | Multiple Sex Abuse & Child Pornography Charges Publi... | Ricardo Carrillo contacted the boy through apps called “W... |
+| fresno_so_2015_001 | contact and communication with victim | Multiple Sex Abuse & Child Pornography Charges Publi... | [PERSON] contacted the boy through apps called “Whisper” ... |
 | ncmec_2023_621 | contact and communication with victim | one count of possession of child pornography | on the Whisper app and by text message. |
 | ncmec_2024_736 | contact and communication with victim | DISTRIBUTING CHILD PORNOGRAPHY, FEDERAL OFFICIALS SA... | with an undercover law enforcement officer on the messagi... |
 | ocpo_2022_002 | grooming / soliciting minor | September 5, 2018 as part of Operation Open House – ... | social media applications, Whisper and Kik, to attempt to... |
@@ -2607,11 +2607,11 @@
 **Stated evidence** (8 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_ai_csam_2026_002 | contact and communication with victim | distributing obscene AI-generated images depicting m... | Between March 2023 and April 2023, Podrybau used the onli... |
+| doj_ai_csam_2026_002 | contact and communication with victim | distributing obscene AI-generated images depicting m... | Between March 2023 and April 2023, [PERSON] used the onli... |
 | doj_ceos_2025_003 | distribution of CSAM |  | Wickr, to distribute child sexual abuse material includin... |
 | doj_ceos_2025_014 | contact and communication with victim | one count of sexual exploitation of children and one... | attracted to children on Wickr, Snapchat, and Telegram. |
 | doj_safe_childhood_2023_115 | used in offense (specific role unspecified) |  | later sent images containing child sexual abuse material ... |
-| doj_safe_childhood_2023_143 | contact and communication with victim | one count of distributing child pornography and one ... | the undercover officer communicated with Johnson via the ... |
+| doj_safe_childhood_2023_143 | contact and communication with victim | one count of distributing child pornography and one ... | the undercover officer communicated with [PERSON] via the... |
 | doj_safe_childhood_2023_505 | distribution of CSAM |  | Wickr, an encrypted messaging service, to distribute chil... |
 | doj_safe_childhood_2025_022 | distribution of CSAM |  | Wickr, to distribute child sexual abuse material includin... |
 | doj_safe_childhood_2025_095 | contact and communication with victim | Possession of Child Pornography | messaging and social media platforms, including Discord a... |
@@ -2669,11 +2669,11 @@
 **Stated evidence** (8 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_safe_childhood_2023_112 | grooming / soliciting minor | a child pornography offense provides for a sentence ... | While on state probation, Acevedo solicited a minor via T... |
-| doj_safe_childhood_2025_052 | grooming / soliciting minor | four counts of Production of Child Pornography, thre... | personas on SnapChat and TikTok, Preuschl targeted and se... |
-| doj_safe_childhood_2025_169 | contact and communication with victim | one count of distributing child pornography and two ... | Ollila also messaged victims on platforms like TikTok and... |
+| doj_safe_childhood_2023_112 | grooming / soliciting minor | a child pornography offense provides for a sentence ... | While on state probation, [PERSON] solicited a minor via ... |
+| doj_safe_childhood_2025_052 | grooming / soliciting minor | four counts of Production of Child Pornography, thre... | personas on SnapChat and TikTok, [PERSON] targeted and se... |
+| doj_safe_childhood_2025_169 | contact and communication with victim | one count of distributing child pornography and two ... | [PERSON] also messaged victims on platforms like TikTok a... |
 | doj_safe_childhood_2025_279 | contact and communication with victim | a two-count superseding information charging him wit... | media personas, including several on KIK messenger and Ti... |
-| pa_ag_2026_004 | contact and communication with victim | sexual abuse and numerous other crimes against a 15-... | The investigation revealed that Bowles and the victim met... |
+| pa_ag_2026_004 | contact and communication with victim | sexual abuse and numerous other crimes against a 15-... | The investigation revealed that [PERSON] and the victim m... |
 | south_florida_icac_2024_001 | contact and communication with victim |  | Most of those cases started with messages on social media... |
 | south_florida_icac_2025_006 | contact and communication with victim | exchanging explicit messages with 10-year-old on Tik... | messages with a 10-year-old girl in Texas through TikTok. |
 | tbi_icac_2023_003 | contact and communication with victim | Sexual Exploitation of a Minor WARREN COUNTY – An in... | Anyone who may have had communication with the username o... |
@@ -2721,15 +2721,15 @@
 - `doj_ai_csam_2026_004`: `IRC` — "and circulating this disturbing content.”"
 - `doj_archives_2006_005`: `IRC` — "White Birch Drive, Worcester, Massachusetts, was sentenced b"
 - `doj_ceos_2013_098`: `IRC` — "captured the abuse on film for the purpose of circulating it"
-- `doj_safe_childhood_2021_045`: `IRC` — "Eikenberg previously entered a guilty plea to distribution o"
-- `doj_safe_childhood_2022_062`: `IRC` — "monikers “Random Hipster#2429” and “Sircoolbeans,” McGalem a"
+- `doj_safe_childhood_2021_045`: `IRC` — "[PERSON] previously entered a guilty plea to distribution of"
+- `doj_safe_childhood_2022_062`: `IRC` — "monikers “Random Hipster#2429” and “Sircoolbeans,” [PERSON] "
 - `doj_safe_childhood_2022_082`: `IRC` — "Circuit Court for second degree sexual abuse and sentenced t"
 - `doj_safe_childhood_2022_166`: `IRC` — "previous 2016 conviction in Carroll County, Maryland Circuit"
-- `doj_safe_childhood_2022_240`: `IRC` — "Senior Ninth Circuit Judge Richard Tallman, sitting as a U.S"
+- `doj_safe_childhood_2022_240`: `IRC` — "Senior Ninth Circuit Judge [PERSON], sitting as a U.S. Distr"
 - `doj_safe_childhood_2022_243`: `IRC` — "in Howard County Circuit Court. As a result of that convicti"
 - `doj_safe_childhood_2022_287`: `IRC` — "of another prepubescent female minor in Kanawha County Circu"
 - `doj_safe_childhood_2022_493`: `IRC` — "another prepubescent female in Kanawha County Circuit Court."
-- `doj_safe_childhood_2022_511`: `IRC` — "Caylor was previously convicted of first-degree Sexual Abuse"
+- `doj_safe_childhood_2022_511`: `IRC` — "[PERSON] was previously convicted of first-degree Sexual Abu"
 - `doj_safe_childhood_2022_548`: `IRC` — "including the nature, circumstances and seriousness of the o"
 - `doj_safe_childhood_2023_148`: `IRC` — "circulation on social media of sexually explicit videos of a"
 - `doj_safe_childhood_2023_243`: `IRC` — "depicting minors engaged in sexually explicit conduct in Kan"
@@ -2748,7 +2748,7 @@
 | doj_safe_childhood_2024_080 | distribution of CSAM |  | “JAKESMOOT2021” and to paying over $450 through Cash App ... |
 | doj_safe_childhood_2024_097 | distribution of CSAM |  | “JAKESMOOT2021” and to paying over $450 through Cash App ... |
 | doj_safe_childhood_2026_056 | distribution of CSAM |  | which she distributed online for Cash App payments. |
-| doj_safe_childhood_2026_199 | used in offense (specific role unspecified) |  | According to court records, Wood-Peterson sent a payment ... |
+| doj_safe_childhood_2026_199 | used in offense (specific role unspecified) |  | According to court records, [PERSON] sent a payment on Ca... |
 | ncmec_2024_036 | distribution of CSAM | ALLEGEDLY SOLICITING, PURCHASING CHILD PORN https://www | in graphic detail and the exchange of money through a cas... |
 | ncmec_2024_1210 | distribution of CSAM |  | no longer had, and to exchanging screenshots and paying $... |
 | ncmec_2025_834 | grooming / soliciting minor |  | defendant paid money through Cash App, PayPal, and Meta P... |
@@ -2775,8 +2775,8 @@
 |---|---|---|---|
 | doj_archives_2007_028 | contact and communication with victim | traveling in interstate commerce with intent to enga... | been communicating with via the website “Craigslist” to a... |
 | doj_ceos_2013_126 | contact and communication with victim |  | were contacted by a person who saw a Craigslist advertise... |
-| nj_ag_2016_010 | grooming / soliciting minor | Sexually Assaulting 14-Year-Old Male on Multiple Occ... | allegedly placed by Chandler on Craigslist soliciting ora... |
-| nj_ag_2017_022 | grooming / soliciting minor |  | detectives spotted an ad allegedly placed by Chandler on ... |
+| nj_ag_2016_010 | grooming / soliciting minor | Sexually Assaulting 14-Year-Old Male on Multiple Occ... | allegedly placed by [PERSON] on Craigslist soliciting ora... |
+| nj_ag_2017_022 | grooming / soliciting minor |  | detectives spotted an ad allegedly placed by [PERSON] on ... |
 | nj_ag_2018_013 | grooming / soliciting minor |  | He had placed an ad on Craigslist soliciting |
 
 **Inferred evidence** (2 cases):
@@ -2823,7 +2823,7 @@
 - `afp_2019_004`: `Tor` — "NSW Police’s Child Exploitation Internet Unit Manager, Detec"
 - `afp_2026_001`: `Tor` — "Editors Note: Images of the arrest available via Hightail."
 - `afp_2026_002`: `Tor` — "Editor’s note: Search vision is available via Hightail."
-- `alea_2018_001`: `Tor` — "ALEA NEWS RELEASE U.S. Attorney’s Office Charges Millbrook M"
+- `alea_2018_001`: `Tor` — "ALEA NEWS RELEASE U.S. Attorney’s Office Charges [PERSON]"
 - `alert_ice_2016_001`: `Tor` — "Investigators also seized three unsecured firearms from the "
 - `alert_ice_2016_002`: `Tor` — "the risks that a child predator will take to victimize a chi"
 - `alert_ice_2016_003`: `Tor` — "Investigators were able to identify the suspect as 45 year o"
@@ -2837,7 +2837,7 @@
 - `alert_ice_2023_002`: `Tor` — "Investigators were led to the home after receiving informati"
 - `anchorage_pd_2022_001`: `Tor` — "From the District Attorney’s Office:"
 - `anchorage_pd_2022_003`: `Tor` — "From the U.S. Attorney’s Office:"
-- `anchorage_pd_2022_004`: `Tor` — "U.S. Attorney S. Lane Tucker of the District of Alaska and S"
+- `anchorage_pd_2022_004`: `Tor` — "U.S. Attorney [PERSON] of the District of Alaska and Special"
 - `anchorage_pd_2022_005`: `Tor` — "From the US Attorney’s Office:"
 
 ---
@@ -2851,9 +2851,9 @@
 |---|---|---|---|
 | doj_safe_childhood_2023_115 | distribution of CSAM |  | distribute child pornography in 2020 when someone contact... |
 | doj_safe_childhood_2025_193 | contact and communication with victim |  | also admitted travelling to Illinois to engage in sexual ... |
-| mcao_2025_004 | contact and communication with victim |  | In 2022, Yohannes contacted a profile on Grindr belonging... |
-| svicac_2026_004 | distribution of CSAM | child Former cannabis entrepreneur Robert Jacob plea... | that he met Jacob on the Grindr dating app, and that the ... |
-| vt_ag_2024_031 | contact and communication with victim | a crime are legally presumed innocent until their gu... | Beam initiated contact online via the Grindr |
+| mcao_2025_004 | contact and communication with victim |  | In 2022, [PERSON] contacted a profile on Grindr belonging... |
+| svicac_2026_004 | distribution of CSAM | child Former cannabis entrepreneur [PERSON] pleaded ... | that he met [PERSON] on the Grindr dating app, and that t... |
+| vt_ag_2024_031 | contact and communication with victim | a crime are legally presumed innocent until their gu... | [PERSON] initiated contact online via the Grindr |
 
 **Inferred evidence** (1 cases):
 | case_id | platform_role | harm | quote | reasoning |
@@ -2877,9 +2877,9 @@
 **Stated evidence** (5 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_safe_childhood_2022_287 | contact and communication with victim | first-degree sexual assault of another prepubescent ... | it to another individual who Shaffer had been communicati... |
-| doj_safe_childhood_2022_493 | contact and communication with victim | first degree sexual assault of another prepubescent ... | sent it to another individual who Shaffer had been commun... |
-| lapd_2017_001 | distribution of CSAM | Child Pornography NR17140aj Los Angeles: On May 10, ... | Warren uploaded YouTube videos to entice minor victims in... |
+| doj_safe_childhood_2022_287 | contact and communication with victim | first-degree sexual assault of another prepubescent ... | it to another individual who [PERSON] had been communicat... |
+| doj_safe_childhood_2022_493 | contact and communication with victim | first degree sexual assault of another prepubescent ... | sent it to another individual who [PERSON] had been commu... |
+| lapd_2017_001 | distribution of CSAM | Child Pornography NR17140aj Los Angeles: On May 10, ... | [PERSON] uploaded YouTube videos to entice minor victims ... |
 | nbi_2025_009 | distribution of CSAM |  | location and revealed that Subject, victim’s mother, had ... |
 | ncmec_2024_934 | distribution of CSAM | child pornography offenses in Lycoming County faces ... | admitted the reported Android device was his, but said he... |
 
@@ -2921,7 +2921,7 @@
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
 | doj_safe_childhood_2024_349 | distribution of CSAM |  | 29, had shared files containing child sexual abuse materi... |
-| doj_safe_childhood_2026_033 | distribution of CSAM |  | Pickett also admitted to sharing an iCloud link that cont... |
+| doj_safe_childhood_2026_033 | distribution of CSAM |  | [PERSON] also admitted to sharing an iCloud link that con... |
 | ncmec_2024_505 | distribution of CSAM |  | and Exploited Children (NCMEC) for images containing chil... |
 | ncmec_2024_654 | distribution of CSAM | Tuesday and is being held at the Cape May County Cor... | possessed and distributed various images of child sexual ... |
 
@@ -2930,7 +2930,7 @@
 |---|---|---|---|---|
 | doj_safe_childhood_2021_015 | used in offense (specific role unspecified) |  | agent with Homeland Security Investigations in Idaho... | iCloud and offense language co-occur in the same sentence without instrumenta... |
 | nj_ag_2020_014 | used in offense (specific role unspecified) | Official Misconduct and Child Pornography Charg... | Further investigation of that iCloud account reveale... | iCloud and offense language co-occur in the same sentence without instrumenta... |
-| nj_ag_2021_012 | used in offense (specific role unspecified) | attempted tampering with evidence because Knox ... | Further investigation of that iCloud account reveale... | iCloud and offense language co-occur in the same sentence without instrumenta... |
+| nj_ag_2021_012 | used in offense (specific role unspecified) | attempted tampering with evidence because [PERS... | Further investigation of that iCloud account reveale... | iCloud and offense language co-occur in the same sentence without instrumenta... |
 
 **Named only** (11 cases): doj_safe_childhood_2023_047, doj_safe_childhood_2023_253, doj_safe_childhood_2023_387, doj_safe_childhood_2024_112, doj_safe_childhood_2024_174, doj_safe_childhood_2024_193, doj_safe_childhood_2025_258, doj_safe_childhood_2026_191, ncmec_2023_411, ncmec_2025_946, nj_ag_2018_027
 
@@ -3020,7 +3020,7 @@
 **Stated evidence** (2 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| doj_ceos_2009_018 | distribution of CSAM |  | established that Pires was using Limewire, a file share p... |
+| doj_ceos_2009_018 | distribution of CSAM |  | established that [PERSON] was using Limewire, a file shar... |
 | doj_ceos_2010_004 | distribution of CSAM |  | Limewire, which allows users to exchange image and video ... |
 
 **Inferred evidence** (0 cases):
@@ -3043,8 +3043,8 @@
 **Stated evidence** (2 cases):
 | case_id | platform_role | harm | quote |
 |---|---|---|---|
-| usss_2017_006 | contact and communication with victim |  | The boy ultimately relented and texted Saucedo, who then ... |
-| usss_2018_008 | contact and communication with victim |  | The boy ultimately relented and texted Saucedo, who then ... |
+| usss_2017_006 | contact and communication with victim |  | The boy ultimately relented and texted [PERSON], who then... |
+| usss_2018_008 | contact and communication with victim |  | The boy ultimately relented and texted [PERSON], who then... |
 
 **Inferred evidence** (0 cases):
 *(none)*
@@ -3055,7 +3055,7 @@
 *(none)*
 
 **DB gaps flagged** (1 cases):
-- `south_florida_icac_2025_032`: `FaceTime` — "PlayStation5. They even FaceTimed on two occasions, where Wi"
+- `south_florida_icac_2025_032`: `FaceTime` — "PlayStation5. They even FaceTimed on two occasions, where [P"
 
 ---
 
@@ -3455,7 +3455,7 @@
 *(none)*
 
 **DB gaps flagged** (1 cases):
-- `ncmec_2024_316`: `Steam` — "Scott is also a mentor at STEAM Genius. The program brings r"
+- `ncmec_2024_316`: `Steam` — "[PERSON] is also a mentor at STEAM Genius. The program bring"
 
 ---
 

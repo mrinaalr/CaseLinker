@@ -852,6 +852,87 @@ def process_case(case_id: str, platforms: List[str], case_text: str) -> Dict[str
     }
 
 
+_QUOTED = re.compile(r'"(.+?)"')
+
+
+def _people_mask():
+    """The app's person-masking module (``src/Processing Layer/field_assertions/people_mask.py``)."""
+    layer = str(Path(__file__).resolve().parents[2] / "src" / "Processing Layer")
+    if layer not in sys.path:
+        sys.path.insert(0, layer)
+    from field_assertions import people_mask
+
+    return people_mask
+
+
+def person_name_patterns(case_text: str, spans: List[List[int]]) -> List["re.Pattern[str]"]:
+    """The case's stored person names (span text), longest first, as whole-word patterns."""
+    names = {" ".join(case_text[int(s):int(e)].split()) for s, e in spans or ()}
+    names = {n for n in names if len(n) >= 3}
+    return [re.compile(r"(?<![A-Za-z])" + r"\s+".join(map(re.escape, n.split())) + r"(?![A-Za-z])")
+            for n in sorted(names, key=len, reverse=True)]
+
+
+def mask_fragment(fragment: str, case_text: str, spans: List[List[int]], pm: Any,
+                  names: Optional[List["re.Pattern[str]"]] = None) -> str:
+    """``fragment`` (a piece of ``case_text``) with the case's people replaced by ``[PERSON]``.
+
+    First by stored span (``redact_excerpt``, as on case pages). Then any stored name still present is
+    replaced by string: ``harm`` and reasoning previews are cut from lines joined after short lines are
+    dropped, so they are not always a substring the spans can be placed on. A trailing ``...`` from
+    ``extract_quote`` is kept.
+    """
+    if not fragment:
+        return fragment
+    tail = "..." if fragment.endswith("...") else ""
+    core = fragment[: -len(tail)] if tail else fragment
+    out = pm.redact_excerpt(core, case_text, spans)
+    for pat in names if names is not None else person_name_patterns(case_text, spans):
+        out = pat.sub(pm.PERSON_MASK, out)
+    return out + tail
+
+
+def _platform_terms() -> Set[str]:
+    terms = {p.lower() for p in KNOWN_PLATFORM_NAMES}
+    for aliases in ALIASES.values():
+        terms.update(a.strip().lower() for a in aliases)
+    return terms
+
+
+def drop_platform_spans(case_text: str, spans: List[List[int]]) -> List[List[int]]:
+    """Stored spans minus those whose text is exactly a platform name ("Grindr", "Skout" and others
+    are sometimes stored as people). Masking them would hide the evidence and protect no one."""
+    terms = _platform_terms()
+    return [[s, e] for s, e in spans or () if " ".join(case_text[int(s):int(e)].split()).lower() not in terms]
+
+
+def mask_case_strings(result: Dict[str, Any], case_text: str, spans: List[List[int]], pm: Any) -> None:
+    """Mask every string copied from the release, in place. Tiers are computed before this, on the
+    unmasked text, so masking never changes a classification."""
+    spans = drop_platform_spans(case_text, spans)
+    names = person_name_patterns(case_text, spans)
+
+    def frag(s: str) -> str:
+        return mask_fragment(s, case_text, spans, pm, names)
+
+    def quoted(s: str) -> str:
+        # The preview can itself hold a '"', so the name pass also runs over the whole string.
+        out = _QUOTED.sub(lambda m: '"' + frag(m.group(1)) + '"', s or "")
+        for pat in names:
+            out = pat.sub(pm.PERSON_MASK, out)
+        return out
+
+    for rec in result["records"]:
+        rec["evidence_quote"] = frag(rec.get("evidence_quote") or "")
+        rec["harm"] = frag(rec.get("harm") or "")
+        rec["your_reasoning"] = quoted(rec.get("your_reasoning") or "")
+    for exc in result["exclusions"]:
+        exc["exclusion_reason"] = quoted(exc.get("exclusion_reason") or "")
+    for gap in result["db_gaps"]:
+        if gap.get("found_in") and gap["found_in"] != "(found in text)":
+            gap["found_in"] = frag(gap["found_in"])
+
+
 def md_cell(value: str, max_len: int = 60) -> str:
     v = str(value).replace("|", "\\|").replace("\n", " ")
     if len(v) > max_len:
@@ -989,17 +1070,19 @@ def main() -> None:
     print("Loading case texts from DB...", flush=True)
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     db_rows: Dict[str, str] = {}
+    stored_spans: Dict[str, Optional[List[List[int]]]] = {}
     # SQLite's default variable limit is 32766. Chunk so a doubled corpus still fits.
     for start in range(0, len(all_case_ids), 5000):
         chunk = all_case_ids[start : start + 5000]
         placeholders = ",".join("?" * len(chunk))
         rows = conn.execute(
-            f"SELECT id, json_extract(raw_data, '$.case_text') "
+            f"SELECT id, json_extract(raw_data, '$.case_text'), json_extract(extracted_features, '$.person_spans') "
             f"FROM cases WHERE id IN ({placeholders})",
             chunk,
         ).fetchall()
         for row in rows:
             db_rows[row[0]] = row[1] or ""
+            stored_spans[row[0]] = json.loads(row[2]) if row[2] else None
     corpus_identity = None
     try:
         run_dir = Path(__file__).resolve().parents[2] / "run"
@@ -1014,6 +1097,7 @@ def main() -> None:
     conn.close()
     print(f"Loaded {len(db_rows)} case texts.", flush=True)
 
+    pm = _people_mask()
     all_records: List[Dict[str, Any]] = []
     all_exclusions: List[Dict[str, str]] = []
     all_db_gaps: List[Dict[str, Any]] = []
@@ -1026,6 +1110,9 @@ def main() -> None:
         lw = linewrap_tiers(case_id, case_to_platforms[case_id], db_rows.get(case_id, ""), result["records"])
         for rec in result["records"]:
             rec["stated_vs_inferred_linewrap"] = lw.get(rec["platform"], rec["stated_vs_inferred"])
+        text = db_rows.get(case_id, "")
+        spans = pm.spans_for({"person_spans": stored_spans[case_id]} if stored_spans.get(case_id) is not None else {}, text)
+        mask_case_strings(result, text, spans, pm)
         all_records.extend(result["records"])
         all_exclusions.extend(result["exclusions"])
         for gap in result["db_gaps"]:

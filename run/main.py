@@ -4674,14 +4674,21 @@ if _question_data.is_dir():
         name="question_data",
     )
 
-# Platform affordance evidence: platform_affordance_evidence.json and the manual harm-vector file.
+# Platform affordance evidence: only the two files the pages fetch. The directory also holds the
+# builder, candidates and the AfH manifest (with a local corpus snapshot), which are not served.
 _platform_affordance_evidence_data = Path(__file__).resolve().parent.parent / "ontology" / "platform_affordance_evidence"
-if _platform_affordance_evidence_data.is_dir():
-    app.mount(
-        "/ontology/platform-affordance-evidence",
-        StaticFiles(directory=str(_platform_affordance_evidence_data)),
-        name="platform_affordance_evidence_data",
-    )
+_PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES = frozenset({
+    "platform_affordance_evidence.json",
+    "platform_affordance_evidence_harm_analysis.json",
+})
+
+
+@app.api_route("/ontology/platform-affordance-evidence/{name}", methods=["GET", "HEAD"], include_in_schema=False)
+def platform_affordance_evidence_file(name: str):
+    path = _platform_affordance_evidence_data / name
+    if name not in _PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES or not path.is_file():
+        raise HTTPException(status_code=404, detail="Not Found")
+    return FileResponse(str(path), media_type="application/json")
 
 # Q02 lifecycle table: q2_evidence.json, q2_lifecycle.json (manual pathway synthesis).
 _q2_data = Path(__file__).resolve().parent.parent / "ontology" / "q2"
