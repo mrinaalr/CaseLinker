@@ -32,6 +32,19 @@ AFH1_PSI = {
     "GenerativeSynthesis": ["h6_likeness_synthesized"],
 }
 ANALYSED_STATUSES = ("specific", "technology", "ambiguous_alias")  # platforms the six classes are assessed on
+# Evidence levels, each a subset of the one before (A > B > I > C).
+LEVELS = (
+    ("A_available_capability", "available"),
+    ("B_capability_relevant_conduct", "action_relevant"),
+    ("I_inferred_facilitation", "inferred"),
+    ("C_explicit_instrumental_use", "instrumental"),
+)
+LEVEL_TEXT = {
+    "A_available_capability": "the platform offered the capability natively in the case's publication year",
+    "B_capability_relevant_conduct": "documented use of the platform for conduct of the kind the capability bears on",
+    "I_inferred_facilitation": "B on a platform where the capability is on for every use by design (registry default_on), or C",
+    "C_explicit_instrumental_use": "the release states the capability-specific behaviour in a sentence naming the platform",
+}
 
 
 def era_of(year: Optional[int]) -> str:
@@ -182,7 +195,7 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
     pool = [r for r in records if r.status in ANALYSED_STATUSES]
     for c in pl.CLASSES:
         row = {}
-        for level, attr in (("A_available", "available"), ("B_action_relevant", "action_relevant"), ("C_instrumental", "instrumental")):
+        for level, attr in LEVELS:
             rs = [r for r in pool if getattr(r, attr)[c]]
             tiers = pl.case_tiers(rs)
             row[level] = {
@@ -194,12 +207,13 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
                 "top_platforms": Counter(r.platform for r in rs).most_common(5),
                 "period_uncertain_observations": sum(r.period_uncertain[c] for r in rs),
             }
-        cap_only = {r.case_id for r in pool if r.available[c]} - {r.case_id for r in pool if r.instrumental[c]}
-        row["capability_only_cases"] = len(cap_only)
+        row["A_only_cases"] = len({r.case_id for r in pool if r.available[c]} - {r.case_id for r in pool if r.action_relevant[c]})
         row["review_candidates"] = dict(sorted(Counter(r.review[c] for r in pool if r.review.get(c)).items()))
         out[c] = row
-    return {"classes": out, "platform_statuses_assessed": list(ANALYSED_STATUSES),
-            "levels": "A available (platform had it natively in publication year) > B action-relevant (documented conduct of the matching kind on that platform, stated/inferred) > C instrumental (platform sentence states the capability-specific behaviour)"}
+    return {"classes": out, "platform_statuses_assessed": list(ANALYSED_STATUSES), "levels": LEVEL_TEXT,
+            "reading": ("Each level is a subset of the one before. C counts what press releases spell out; "
+                        "releases rarely describe mechanisms, so a low C is a property of the record, not "
+                        "evidence that a capability played no role.")}
 
 
 def temporal_tables(cases: List[dict], records: List[pl.Record]) -> dict:
@@ -223,7 +237,7 @@ def temporal_tables(cases: List[dict], records: List[pl.Record]) -> dict:
         }
         for cl in pl.CLASSES:
             rs = [r for c in group for r in by_case.get(c["id"], []) if r.status in ANALYSED_STATUSES]
-            for lvl, attr in (("A", "available"), ("B", "action_relevant"), ("C", "instrumental")):
+            for lvl, attr in (("A", "available"), ("B", "action_relevant"), ("I", "inferred"), ("C", "instrumental")):
                 row[f"{cl}.{lvl}"] = len({r.case_id for r in rs if getattr(r, attr)[cl]})
         return row
     annual = {str(y): summarize(c for c in cases if c["pub_year"] == y) for y in sorted({c["pub_year"] for c in cases if c["pub_year"]})}
@@ -238,71 +252,91 @@ def temporal_tables(cases: List[dict], records: List[pl.Record]) -> dict:
             "caution": "Counts are enforcement-report coverage, not offense prevalence. Source mix changes by year."}
 
 
+def _spread(rs: List[pl.Record]) -> dict:
+    cases = {r.case_id for r in rs}
+    fam = Counter(r.family for r in rs)
+    plats = Counter(r.platform for r in rs)
+    first = {}
+    for r in rs:
+        first.setdefault(r.case_id, r)
+    srcs = Counter(first[c].source for c in cases)
+    era_cases = Counter(era_of(first[c].pub_year) for c in cases)
+    fam_cases = Counter()
+    for f in fam:
+        fam_cases[f] = len({r.case_id for r in rs if r.family == f})
+    top_p, top_s = plats.most_common(1), srcs.most_common(1)
+    return {
+        "cases": len(cases), "platforms": len(plats), "families": dict(sorted(fam_cases.items())),
+        "eras_with_cases": dict(sorted(era_cases.items())),
+        "top_platform": top_p[0][0] if top_p else None,
+        "top_platform_share_of_observations": round(top_p[0][1] / len(rs), 3) if rs else None,
+        "top_source": top_s[0][0] if top_s else None,
+        "top_source_share_of_cases": round(top_s[0][1] / len(cases), 3) if cases else None,
+        "families_with_2plus_cases": sum(1 for v in fam_cases.values() if v >= 2),
+        "eras_with_2plus_cases": sum(1 for v in era_cases.values() if v >= 2),
+    }
+
+
+def _recurs(x: dict) -> bool:
+    return x["cases"] >= 20 and x["families_with_2plus_cases"] >= 3 and x["eras_with_2plus_cases"] >= 2
+
+
 def recurrence(records: List[pl.Record]) -> dict:
     out = {}
+    pool = [r for r in records if r.status in ANALYSED_STATUSES]
     for c in pl.CLASSES:
-        row = {}
-        for lvl, attr in (("A_available", "available"), ("C_instrumental", "instrumental")):
-            rs = [r for r in records if r.status in ANALYSED_STATUSES and getattr(r, attr)[c]]
-            cases = {r.case_id for r in rs}
-            fam = Counter(r.family for r in rs)
-            plats = Counter(r.platform for r in rs)
-            srcs = Counter()
-            for cid in cases:
-                srcs[next(r.source for r in rs if r.case_id == cid)] += 1
-            era_cases = Counter(era_of(next(r.pub_year for r in rs if r.case_id == cid)) for cid in cases)
-            top_p = plats.most_common(1)
-            top_s = srcs.most_common(1)
-            row[lvl] = {
-                "cases": len(cases), "platforms": len(plats), "families": sorted(fam),
-                "eras_with_cases": dict(sorted(era_cases.items())),
-                "top_platform": top_p[0][0] if top_p else None,
-                "top_platform_share_of_observations": round(top_p[0][1] / len(rs), 3) if rs else None,
-                "top_source": top_s[0][0] if top_s else None,
-                "top_source_share_of_cases": round(top_s[0][1] / len(cases), 3) if cases else None,
-                "families_with_2plus_cases": sum(1 for f in fam if len({r.case_id for r in rs if r.family == f}) >= 2),
-                "eras_with_2plus_cases": sum(1 for v in era_cases.values() if v >= 2),
-            }
-        ci = row["C_instrumental"]
-        if ci["cases"] >= 20 and ci["families_with_2plus_cases"] >= 3 and ci["eras_with_2plus_cases"] >= 2:
-            verdict = "documented misuse recurs across platform families and periods"
-        elif ci["cases"] >= 5 and ci["families_with_2plus_cases"] >= 2:
-            verdict = "documented misuse recurs across families; too sparse to compare periods"
-        elif ci["cases"] > 0:
-            verdict = "documented misuse is sparse or concentrated in one platform"
-        else:
-            verdict = "no documented misuse; capability recurrence only"
-        row["verdict"] = verdict
+        row = {lvl: _spread([r for r in pool if getattr(r, attr)[c]]) for lvl, attr in LEVELS}
+        row["recurs_across_families_and_eras"] = {lvl: _recurs(row[lvl]) for lvl, _ in LEVELS}
         out[c] = row
-    return out
+    return {"classes": out,
+            "rule": "recurs = at least 20 cases, 3+ platform families with 2+ cases each, 2+ publication eras with 2+ cases each",
+            "reading": "Report the strongest level at which a class recurs; absence at C reflects what releases spell out."}
 
 
 def harm_tables(records: List[pl.Record], codebook: pl.Codebook) -> dict:
+    """Potential harm = AfH psi(a) pathway open in a case (class at B or I). Documented harm = harm cue
+    in the release (direct: in a platform sentence; case-level: anywhere or case topic)."""
     harms = sorted(codebook.harms)
-    empirical = {}
+    pool = [r for r in records if r.status in ANALYSED_STATUSES]
+    by_level = {}
     for c in pl.CLASSES:
-        rs = [r for r in records if r.status in ANALYSED_STATUSES and r.instrumental[c]]
-        empirical[c] = {h: {"direct_cases": len({r.case_id for r in rs if r.harm_direct[h]}),
-                            "case_level_cases": len({r.case_id for r in rs if r.harm_case[h]}),
-                            "of_cases": len({r.case_id for r in rs})} for h in harms}
+        by_level[c] = {}
+        for lvl, attr in LEVELS[1:]:
+            rs = [r for r in pool if getattr(r, attr)[c]]
+            n = len({r.case_id for r in rs})
+            by_level[c][lvl] = {"of_cases": n, **{h: {
+                "documented_direct": len({r.case_id for r in rs if r.harm_direct[h]}),
+                "documented_case_level": len({r.case_id for r in rs if r.harm_case[h]}),
+                "potential_per_afh_psi": h in AFH1_PSI[c]} for h in harms}}
     conceptual = {}
     for c, hs in AFH1_PSI.items():
-        conceptual[c] = {h: {"afh1_claims": True,
-                             "observed_direct_cases_given_C": empirical[c][h]["direct_cases"],
-                             "support": ("direct" if empirical[c][h]["direct_cases"] >= 5 else
-                                         "thin" if empirical[c][h]["direct_cases"] > 0 else
-                                         "case_level_only" if empirical[c][h]["case_level_cases"] > 0 else "none")}
-                         for h in hs}
+        conceptual[c] = {}
+        for h in hs:
+            b = by_level[c]["B_capability_relevant_conduct"][h]
+            i = by_level[c]["I_inferred_facilitation"][h]
+            cc = by_level[c]["C_explicit_instrumental_use"][h]
+            conceptual[c][h] = {
+                "potential_pathway_cases_B": by_level[c]["B_capability_relevant_conduct"]["of_cases"],
+                "documented_case_level_given_B": b["documented_case_level"],
+                "documented_direct_given_B": b["documented_direct"],
+                "documented_direct_given_I": i["documented_direct"],
+                "documented_direct_given_C": cc["documented_direct"],
+                "label": ("documented example available" if cc["documented_direct"] or i["documented_direct"] >= 3 else
+                          "documented in cases where the pathway is open" if b["documented_case_level"] else
+                          "conceptual; label as such"),
+            }
     by_platform = {}
-    used = [r for r in records if r.status in ANALYSED_STATUSES and r.tier in USED]
+    used = [r for r in pool if r.tier in USED]
     for p in sorted({r.platform for r in used}):
         rs = [r for r in used if r.platform == p]
         by_platform[p] = {h: len({r.case_id for r in rs if r.harm_direct[h]}) for h in harms}
         by_platform[p]["use_documented_cases"] = len({r.case_id for r in rs})
-    return {"empirical_given_instrumental_class": empirical, "afh1_conceptual_psi_checked": conceptual,
+    return {"by_class_and_level": by_level, "afh1_psi_pathways": conceptual,
             "platform_by_harm_direct": by_platform,
             "support_levels": "direct = harm cue in a platform sentence of a stated/inferred record; case_level = case_topics or cue anywhere in release",
-            "caution": "Co-occurrence in enforcement releases. Not causal, not prevalence."}
+            "shared_trigger_warning": ("DistributionInfrastructure C and h3, GenerativeSynthesis C and h6 share trigger verbs; "
+                                       "treat those pairs as one observation, not as independent confirmation."),
+            "caution": "Co-occurrence in enforcement releases. Not causal, not prevalence. A potential harm is a conceptual pathway, not an observed outcome."}
 
 
 def pick(rs: List[pl.Record], key: str, n: int = EXEMPLARS_PER_CELL) -> List[pl.Record]:
@@ -331,7 +365,7 @@ def manifest(records: List[pl.Record], codebook: pl.Codebook) -> Tuple[dict, Lis
         }
         for c in pl.CLASSES:
             row["classes"][c] = {lvl: len({r.case_id for r in rs if getattr(r, attr)[c]})
-                                 for lvl, attr in (("A", "available"), ("B", "action_relevant"), ("C", "instrumental"))}
+                                 for lvl, attr in (("A", "available"), ("B", "action_relevant"), ("I", "inferred"), ("C", "instrumental"))}
             for r in pick([r for r in rs if r.instrumental[c]], f"{p}|{c}"):
                 purpose = f"manifest:{p}:instrumental:{c}"
                 cites.append(cit.Citation(r.case_id, r.fingerprint, purpose, p))
@@ -463,6 +497,7 @@ def build(log=print) -> dict:
     cit.dump(cites, OUT / "citations.json")
     dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
+    dump("validation_round2.json", validation_round2(records))
     dump("validation_sample.json", rv.sample_rows(records))
     write_records_csv(records)
     from . import report
@@ -481,3 +516,149 @@ def build(log=print) -> dict:
     }
     dump("RUN_IDENTITY.json", identity)
     return identity
+
+
+# ------------------------------------------------------- 2026-11-17 validation
+
+def _csv(name: str) -> List[dict]:
+    path = RESEARCH / "config" / name
+    if not path.is_file():
+        return []
+    with path.open(encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def kappa(pairs: List[Tuple[bool, bool]]) -> Optional[float]:
+    n = len(pairs)
+    if not n:
+        return None
+    po = sum(a == b for a, b in pairs) / n
+    pa = sum(a for a, _ in pairs) / n
+    pb = sum(b for _, b in pairs) / n
+    pe = pa * pb + (1 - pa) * (1 - pb)
+    return round((po - pe) / (1 - pe), 3) if pe < 1 else 1.0
+
+
+def _r1_holds(item: str, tier: str, verdict: str) -> bool:
+    kind = item.split(":")[0]
+    if kind == "tier":
+        return verdict == "correct" if tier == "stated" else verdict == "use_documented"
+    if kind == "C":
+        return verdict == "correct"
+    if kind == "review":
+        return verdict in ("missed_instrumental", "missed_generic_label")
+    return verdict == "alias_correct"
+
+
+def _r2_holds(item: str, answer: str) -> bool:
+    kind = item.split(":")[0]
+    if kind == "tier":
+        return answer in ("explicit_use", "implied_use")
+    if kind in ("C", "review"):
+        return answer == "explicit"
+    return answer.split("|")[0] == "yes"
+
+
+def validation_round2(records: List[pl.Record]) -> dict:
+    r1 = {(r["item"], r["case_id"], r["platform"]): r for r in _csv("validation_reviews.csv")}
+    r2 = _csv("review_round2_classification.csv")
+    adj = {(r["item"], r["case_id"], r["platform"]): r for r in _csv("validation_adjudication.csv")}
+    out: Dict[str, Any] = {}
+    # 1. classification sample: two independent reviewers + adjudication
+    by_kind: Dict[str, List[Tuple[bool, bool]]] = defaultdict(list)
+    final: Dict[str, Counter] = defaultdict(Counter)
+    inferable: Counter = Counter()
+    for row in r2:
+        key = (row["item"], row["case_id"], row["platform"])
+        a = _r1_holds(row["item"], r1[key]["tier"], r1[key]["verdict"])
+        b = _r2_holds(row["item"], row["r2_answer"])
+        by_kind[row["item"].split(":")[0]].append((a, b))
+        if row["r2_answer"] == "analytically_inferable":
+            inferable[row["item"]] += 1
+        verdict = a if a == b else adj.get(key, {}).get("adjudicated", "") in ("correct", "explicit", "explicit_generic_label")
+        final[row["item"]]["holds" if verdict else "fails"] += 1
+    out["classification_sample"] = {
+        "rows": len(r2),
+        "agreement": {k: {"n": len(v), "agree": sum(a == b for a, b in v), "kappa": kappa(v)} for k, v in sorted(by_kind.items())},
+        "adjudicated": {k: {"n": sum(c.values()), "holds": c["holds"], "wilson95": wilson(c["holds"], sum(c.values()))}
+                        for k, c in sorted(final.items())},
+        "reviewer2_analytically_inferable": dict(sorted(inferable.items())),
+        "adjudication_rows": len(adj),
+    }
+    # 2. harm sample
+    harm_rows = _csv("review_round2_harm.csv")
+    harm: Dict[str, Counter] = defaultdict(Counter)
+    basis: Counter = Counter()
+    for row in harm_rows:
+        group = row["item"].split(":")[-1] if row["item"].startswith("harm:") else "shared_trigger"
+        harm[f"{row['harm']}|{group}"][row["r2_answer"]] += 1
+        basis[row["r2_basis"]] += 1
+    summary = {}
+    for k, c in sorted(harm.items()):
+        n = sum(c.values())
+        tied = c.get("documented_with_platform", 0)
+        summary[k] = {"n": n, **dict(c), "share_documented_with_platform": round(tied / n, 3), "wilson95": wilson(tied, n)}
+    out["harm_sample"] = {"rows": len(harm_rows), "by_harm_and_group": summary, "basis": dict(basis),
+                          "groups": "direct = cue in platform sentence; case_level_only = cue elsewhere/topic only; negative = no cue; shared_trigger = class C and harm fired by the same verbs"}
+    # 3. tier sample
+    tier_rows = _csv("review_round2_tiers.csv")
+    current = {(r.case_id, r.platform): r for r in records}
+    by_tier: Dict[str, Counter] = defaultdict(Counter)
+    by_gate: Dict[str, Counter] = defaultdict(Counter)
+    sens: Counter = Counter()
+    for row in tier_rows:
+        use = row["r2_answer"] in ("explicit_use", "implied_use")
+        by_tier[row["tier"]][row["r2_answer"]] += 1
+        if row["tier"] == "named_only":
+            by_gate[row["gate"]]["use" if use else "no_use"] += 1
+            rec = current.get((row["case_id"], row["platform"]))
+            up = bool(rec and rec.tier_sensitivity in USED)
+            sens[("reviewer_use" if use else "reviewer_no_use", "sensitivity_use" if up else "sensitivity_named_only")] += 1
+    rates = {}
+    for t, c in by_tier.items():
+        n = sum(c.values())
+        k = c.get("explicit_use", 0) + c.get("implied_use", 0)
+        rates[t] = (k, n)
+    out["tier_sample"] = {
+        "rows": len(tier_rows),
+        "by_published_tier": {t: {"n": n, "use": k, "share_use": round(k / n, 3), "wilson95": wilson(k, n), **dict(by_tier[t])}
+                              for t, (k, n) in sorted(rates.items())},
+        "named_only_by_gate": {g: dict(c) for g, c in sorted(by_gate.items())},
+        "sensitivity_tier_vs_reviewer_named_only": {f"{a}|{b}": v for (a, b), v in sorted(sens.items())},
+    }
+    # 3b. inferred-facilitation sample (I but not C)
+    inf_rows = _csv("review_round2_inferred.csv")
+    inf: Dict[str, Counter] = defaultdict(Counter)
+    for row in inf_rows:
+        inf[row["item"]][row["r2_answer"]] += 1
+    out["inferred_sample"] = {
+        "rows": len(inf_rows),
+        "by_class": {k: {"n": sum(c.values()), **dict(c),
+                         "share_reasonable": round(c.get("reasonable_inference", 0) / sum(c.values()), 3),
+                         "wilson95": wilson(c.get("reasonable_inference", 0), sum(c.values()))}
+                     for k, c in sorted(inf.items())},
+        "question": "given the platform's by-design feature and the documented conduct, is the facilitation inference reasonable",
+    }
+    # 4. estimated strict use-documented cases (record-level rates applied to case tiers)
+    strict = pl.case_tiers(records, lambda r: r.status == "specific")
+    counts = Counter(strict.values())
+    est = lo = hi = 0.0
+    for t in pl.TIERS:
+        k, n = rates.get(t, (0, 0))
+        if not n:
+            continue
+        w = wilson(k, n)
+        est += counts[t] * k / n
+        lo += counts[t] * w[0]
+        hi += counts[t] * w[1]
+    sens_cases = pl.case_tiers([pl.Record(r.case_id, r.fingerprint, r.source, r.pub_year, r.platform, r.status, r.family,
+                                          r.tier_sensitivity if r.tier_sensitivity in pl.TIERS else "named_only", r.text_found)
+                                for r in records if r.status == "specific"])
+    out["use_documented_strict_cases"] = {
+        "published_rules_stated_or_inferred": counts["stated"] + counts["inferred"],
+        "sensitivity_rules_stated_or_inferred": sum(1 for t in sens_cases.values() if t in USED),
+        "sample_weighted_estimate": round(est), "estimate_bounds_wilson": [round(lo), round(hi)],
+        "strict_cases": len(strict),
+        "note": "Estimate applies record-level review rates to case-level tiers; treat as approximate.",
+    }
+    return out

@@ -176,3 +176,60 @@ def _walk(obj):
             yield from _walk(v)
     else:
         yield obj
+
+
+# --- 2026-11-17: five levels and dated registry ----------------------------------
+
+def test_levels_nest():
+    recs, _ = run(HEAD + "He contacted the 14-year-old girl on Kik and asked her for nude photos.", ["Kik"])
+    r = recs["Kik"]
+    for c in pl.CLASSES:
+        assert r.instrumental[c] <= r.inferred[c] <= r.action_relevant[c] <= r.available[c], c
+
+
+def test_by_design_feature_gives_inferred_not_explicit():
+    recs, _ = run(HEAD + "He contacted the 14-year-old girl on Kik and asked her for nude photos.", ["Kik"])
+    r = recs["Kik"]
+    assert r.action_relevant["Anonymity"] and r.inferred["Anonymity"]
+    assert r.instrumental["Anonymity"] is False
+
+
+def test_opt_in_feature_does_not_give_inferred():
+    # WhatsApp disappearing messages are opt-in: conduct there is B, not I.
+    recs, _ = run(HEAD + "He used WhatsApp to solicit nude images from a 13-year-old girl.", ["WhatsApp"], year=2024)
+    r = recs["WhatsApp"]
+    assert r.action_relevant["Ephemerality"] and not r.inferred["Ephemerality"]
+
+
+def test_named_only_never_reaches_b_or_i():
+    recs, _ = run(HEAD + "Tips came from several companies including Snapchat.", ["Snapchat"])
+    r = recs["Snapchat"]
+    assert not any(r.action_relevant.values()) and not any(r.inferred.values())
+
+
+def test_registry_rows_are_dated_and_sourced():
+    import yaml
+    cfg = yaml.safe_load((ROOT / "research/afh_q1/config/platforms.yaml").read_text())
+    assert cfg["version"] == "platforms-2"
+    for label, row in cfg["platforms"].items():
+        for key, cap in (row.get("capabilities") or {}).items():
+            assert isinstance(cap, dict) and cap["since"] and cap["confidence"], (label, key)
+            assert row.get("basis"), label
+
+
+def test_live_voice_and_expiring_links_are_not_ephemerality():
+    for label in ("Roblox", "Xbox Live", "Dropbox", "Omegle"):
+        assert "ephemerality" not in REG[label].capabilities, label
+    assert REG["Snapchat"].default_on["ephemerality"] is True
+    assert REG["WhatsApp"].default_on["ephemerality"] is False
+
+
+def test_contact_discovery_default_only_for_stranger_meeting_platforms():
+    assert REG["Omegle"].default_on.get("contact_discovery") is True
+    assert REG["Facebook"].default_on.get("contact_discovery", False) is False
+
+
+def test_generative_capability_needs_production_conduct():
+    recs, _ = run(HEAD + "He shared child sexual abuse material with other users on Instagram.", ["Instagram"], year=2025)
+    assert recs["Instagram"].available["GenerativeSynthesis"] is True
+    assert recs["Instagram"].action_relevant["GenerativeSynthesis"] is False

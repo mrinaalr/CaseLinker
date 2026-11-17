@@ -38,13 +38,13 @@ def write(out: Path) -> Path:
                 june["inferred_only"], june["named_only"], june["candidate_cases_non_generic"], june["candidate_cases_specific_only"]]]),
            "", june["note"], ""]
 
+    LV = ["A_available_capability", "B_capability_relevant_conduct", "I_inferred_facilitation", "C_explicit_instrumental_use"]
     md += ["## B. Affordance coverage (specific + technology + alias labels)", "",
-           _t(["Class", "A cases", "A obs", "B cases", "C cases", "C obs", "C labels", "C families", "capability-only cases", "review candidates"],
-              [[c, v["A_available"]["distinct_cases"], v["A_available"]["platform_case_observations"],
-                v["B_action_relevant"]["distinct_cases"], v["C_instrumental"]["distinct_cases"],
-                v["C_instrumental"]["platform_case_observations"], v["C_instrumental"]["distinct_platform_labels"],
-                v["C_instrumental"]["platform_families"], v["capability_only_cases"], sum(v["review_candidates"].values())]
-               for c, v in cov["classes"].items()]), ""]
+           "Levels nest: A available capability > B documented capability-relevant conduct > I analytically inferred facilitation > C explicit instrumental use. Distinct cases (platform-case observations).", "",
+           _t(["Class"] + ["A", "B", "I", "C"] + ["C labels", "C families", "review candidates"],
+              [[c] + [f"{v[l]['distinct_cases']} ({v[l]['platform_case_observations']})" for l in LV] +
+               [v[LV[3]]["distinct_platform_labels"], v[LV[3]]["platform_families"], sum(v["review_candidates"].values())]
+               for c, v in cov["classes"].items()]), "", cov["reading"], ""]
 
     md += ["## C. Publication-year eras", "", "Publication year, not offense year. Strict = specific named platform.", ""]
     cols = ["cases", "sources", "ncmec_cases", "strict_named_platform_cases", "strict_use_documented_cases",
@@ -57,27 +57,27 @@ def write(out: Path) -> Path:
     md += ["**Annual, all sources**", "",
            _t(["year"] + cols, [[y] + [r[k] for k in cols] for y, r in tmp["annual"].items()]), ""]
 
-    md += ["## D. Recurrence", "",
-           _t(["Class", "C cases", "C platforms", "families (2+ cases)", "eras (2+ cases)", "top platform", "share", "top source", "share", "verdict"],
-              [[c, r["C_instrumental"]["cases"], r["C_instrumental"]["platforms"], r["C_instrumental"]["families_with_2plus_cases"],
-                r["C_instrumental"]["eras_with_2plus_cases"], r["C_instrumental"]["top_platform"],
-                r["C_instrumental"]["top_platform_share_of_observations"], r["C_instrumental"]["top_source"],
-                r["C_instrumental"]["top_source_share_of_cases"], r["verdict"]] for c, r in rec.items()]), ""]
-
-    harms = sorted(next(iter(harm["empirical_given_instrumental_class"].values())))
-    md += ["## E. Affordance x harm", "", "Empirical: cases with class C, by harm cue in the platform sentence (direct) / anywhere (case-level).", "",
-           _t(["Class", "of cases"] + harms,
-              [[c, next(iter(v.values()))["of_cases"]] + [f"{v[h]['direct_cases']} / {v[h]['case_level_cases']}" for h in harms]
-               for c, v in harm["empirical_given_instrumental_class"].items()]), "",
-           "AfH 1.0 conceptual psi(a), checked:", "",
-           _t(["Class", "Harm", "observed direct cases", "support"],
-              [[c, h, v["observed_direct_cases_given_C"], v["support"]] for c, hs in harm["afh1_conceptual_psi_checked"].items() for h, v in hs.items()]), ""]
+    md += ["## D. Recurrence", "", rec["rule"], "",
+           _t(["Class"] + [f"{l.split('_')[0]} cases / families / eras" for l in LV] + ["recurs at"],
+              [[c] + [f"{r[l]['cases']} / {r[l]['families_with_2plus_cases']} / {r[l]['eras_with_2plus_cases']}" for l in LV] +
+               [", ".join(l.split("_")[0] for l in LV if r["recurs_across_families_and_eras"][l]) or "none"]
+               for c, r in rec["classes"].items()]), "", rec["reading"], ""]
+    harms = ["h1_groomed_toward_in_person", "h2_coerced_self_generated", "h3_material_distributed", "h4_sextorted", "h6_likeness_synthesized"]
+    md += ["## E. Affordance x harm", "", harm["caution"], "", harm["shared_trigger_warning"], "",
+           "Documented harm (direct / case-level) by class and level; * marks a potential pathway in AfH psi(a).", ""]
+    for l in LV[1:]:
+        md += [f"**{l}**", "", _t(["Class", "cases"] + harms,
+               [[c, v[l]["of_cases"]] + [f"{v[l][h]['documented_direct']} / {v[l][h]['documented_case_level']}{'*' if v[l][h]['potential_per_afh_psi'] else ''}" for h in harms]
+                for c, v in harm["by_class_and_level"].items()]), ""]
+    md += ["AfH psi(a) pathways:", "", _t(["Class", "Harm", "pathway open (B cases)", "doc. case-level | B", "doc. direct | B", "| I", "| C", "label"],
+           [[c, h, v["potential_pathway_cases_B"], v["documented_case_level_given_B"], v["documented_direct_given_B"], v["documented_direct_given_I"], v["documented_direct_given_C"], v["label"]]
+            for c, hs in harm["afh1_psi_pathways"].items() for h, v in hs.items()]), ""]
 
     md += ["## F. Manifest", "", f"Platforms with at least {man['min_use_documented_cases']} use-documented cases. Citation check: {man['citation_check']}", "",
-           _t(["Platform", "family", "cases", "use-documented", "years", "capabilities (since)"] + [f"{c[:6]} A/B/C" for c in CLASSES],
+           _t(["Platform", "family", "cases", "use-documented", "years", "capabilities (since)"] + [f"{c[:6]} A/B/I/C" for c in CLASSES],
               [[p, e["family"], e["cases"], e["use_documented_cases"], "-".join(map(str, e["pub_year_range_use_documented"])),
-                ", ".join(f"{k} {v}" for k, v in e["capability_profile"].items())] +
-               ["/".join(str(e["classes"][c][x]) for x in "ABC") for c in CLASSES]
+                ", ".join(f"{k} {v['since'] if isinstance(v, dict) else v}" for k, v in e["capability_profile"].items())] +
+               ["/".join(str(e["classes"][c][x]) for x in "ABIC") for c in CLASSES]
                for p, e in sorted(man["platforms"].items(), key=lambda kv: -kv[1]["use_documented_cases"])]), ""]
 
     md += ["## G. AfH 1.0 harm-vector exemplars", "", f"{leg['citations']} citations: {leg['tally']}", ""]
@@ -87,6 +87,27 @@ def write(out: Path) -> Path:
               [[k, v["n"], v["verdicts"], v.get("precision", v.get("share_actually_documenting_use", "")), v.get("wilson95", "")]
                for k, v in val["by_item"].items()]), "",
            f"C rows after codebook-2: {val['C_rows_under_current_codebook']}", ""]
+    v2 = j("validation_round2.json")
+    cs = v2["classification_sample"]
+    md += ["## Validation, round 2 (independent blind reviewer + adjudication)", "",
+           "Reviewer agreement on the 107-row sample (binary: claim holds):", "",
+           _t(["item group", "n", "agree", "kappa"], [[k, v["n"], v["agree"], v["kappa"]] for k, v in cs["agreement"].items()]), "",
+           "After adjudication:", "",
+           _t(["item", "n", "holds", "95% Wilson"], [[k, v["n"], v["holds"], v["wilson95"]] for k, v in cs["adjudicated"].items()]), "",
+           "Evidence tiers (new 70-row sample, blind):", "",
+           _t(["published tier", "n", "use documented", "share", "95% Wilson"],
+              [[k, v["n"], v["use"], v["share_use"], v["wilson95"]] for k, v in v2["tier_sample"]["by_published_tier"].items()]), "",
+           "Named-only rows by the rule that kept them there: " + "; ".join(f"{g} {c}" for g, c in v2["tier_sample"]["named_only_by_gate"].items()), "",
+           "Sensitivity tier vs reviewer (named-only rows): " + str(v2["tier_sample"]["sensitivity_tier_vs_reviewer_named_only"]), "",
+           "Strict use-documented cases: " + ", ".join(f"{k} {v}" for k, v in v2["use_documented_strict_cases"].items() if k != "note"), "",
+           "Harm cues (74-row blind sample): share the reviewer judged documented and tied to the platform:", "",
+           _t(["harm | group", "n", "share", "95% Wilson"],
+              [[k, v["n"], v["share_documented_with_platform"], v["wilson95"]] for k, v in v2["harm_sample"]["by_harm_and_group"].items()]), ""]
+    if v2["inferred_sample"]["rows"]:
+        md += ["Inferred facilitation (I, not C), blind plausibility check:", "",
+               _t(["class", "n", "reasonable", "weak", "not reasonable", "share reasonable", "95% Wilson"],
+                  [[k, v["n"], v.get("reasonable_inference", 0), v.get("weak_inference", 0), v.get("not_reasonable", 0), v["share_reasonable"], v["wilson95"]]
+                   for k, v in v2["inferred_sample"]["by_class"].items()]), ""]
     path = out / "TABLES.md"
     path.write_text("\n".join(md) + "\n", encoding="utf-8")
     return path

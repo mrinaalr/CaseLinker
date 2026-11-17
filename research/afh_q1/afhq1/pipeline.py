@@ -28,6 +28,31 @@ CLASSES = ("Anonymity", "Ephemerality", "ContactDiscovery", "UnmonitoredCommunic
 TIERS = ("stated", "inferred", "named_only")
 PERIOD_UNCERTAIN_YEARS = 2
 
+# Sensitivity tier (not the published tier). The 2026-11-17 blind tier review found 25 of 40
+# named_only records describe use; most failed the published rules because releases are
+# line-wrapped (verb and platform land on different lines) or use storage/receipt verbs the
+# keyword list lacks. The sensitivity tier reruns the same rules on unwrapped text with these
+# verbs added. Reported beside the published tier, never instead of it.
+SENSITIVITY_EXTRA_VERBS = ("stor", "sav", "receiv", "request", "purchas", "possess", "download",
+                           "account contain", "member of", "joined", "post")
+_UNWRAP = re.compile(r"(?<![.!?:\n])\n(?!\n)")
+
+
+def unwrap(text: str) -> str:
+    """Join single line breaks inside sentences; keep paragraph breaks."""
+    return _UNWRAP.sub(" ", text or "")
+
+
+def sensitivity_tiers(case_id: str, platforms: List[str], text: str) -> Dict[str, str]:
+    pe = evidence_module()
+    original = pe.OFFENSE_KEYWORDS
+    pe.OFFENSE_KEYWORDS = original + SENSITIVITY_EXTRA_VERBS
+    try:
+        result = pe.process_case(case_id, platforms, unwrap(text))
+    finally:
+        pe.OFFENSE_KEYWORDS = original
+    return {r["platform"]: r["stated_vs_inferred"] for r in result["records"]}
+
 
 def _load_module(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -61,8 +86,10 @@ class PlatformInfo:
     label: str
     status: str
     family: str
-    capabilities: Dict[str, int]
+    capabilities: Dict[str, int]          # class key -> first year natively available
     until: Optional[int]
+    default_on: Dict[str, bool] = field(default_factory=dict)   # every use passes through it by design
+    cap_meta: Dict[str, dict] = field(default_factory=dict)     # confidence, native, ended, sources
 
     @property
     def strict(self) -> bool:
@@ -73,12 +100,25 @@ class PlatformInfo:
         return self.status != "excluded"
 
 
+def _cap(value) -> dict:
+    """A capability row is either a bare first year (platforms-1) or a mapping (platforms-2)."""
+    if isinstance(value, dict):
+        return value
+    return {"since": value, "default_on": False, "confidence": "needs_author_check"}
+
+
 def platform_registry(cfg: Optional[dict] = None) -> Dict[str, PlatformInfo]:
     cfg = cfg or load_yaml("platforms.yaml")
     out = {}
     for label, row in cfg["platforms"].items():
-        out[label] = PlatformInfo(label, row["status"], row.get("family", "none"),
-                                  dict(row.get("capabilities") or {}), row.get("until"))
+        caps = {k: _cap(v) for k, v in (row.get("capabilities") or {}).items()}
+        caps = {k: v for k, v in caps.items() if v.get("since") is not None and v.get("native", "yes") != "no"}
+        out[label] = PlatformInfo(
+            label, row["status"], row.get("family", "none"),
+            {k: int(v["since"]) for k, v in caps.items()}, row.get("until"),
+            {k: bool(v.get("default_on")) for k, v in caps.items()},
+            caps,
+        )
     return out
 
 
@@ -170,11 +210,13 @@ class Record:
     family: str
     tier: str
     text_found: bool
+    tier_sensitivity: str = ""
     conduct: List[str] = field(default_factory=list)
     sentence_spans: List[Tuple[int, int]] = field(default_factory=list)
     available: Dict[str, bool] = field(default_factory=dict)
     period_uncertain: Dict[str, bool] = field(default_factory=dict)
     action_relevant: Dict[str, bool] = field(default_factory=dict)
+    inferred: Dict[str, bool] = field(default_factory=dict)
     instrumental: Dict[str, bool] = field(default_factory=dict)
     instrumental_span: Dict[str, Tuple[int, int]] = field(default_factory=dict)
     review: Dict[str, str] = field(default_factory=dict)
@@ -185,13 +227,15 @@ class Record:
         out = {
             "case_id": self.case_id, "fingerprint": self.fingerprint, "source": self.source,
             "pub_year": self.pub_year, "platform": self.platform, "status": self.status,
-            "family": self.family, "tier": self.tier, "text_found": self.text_found,
+            "family": self.family, "tier": self.tier, "tier_sensitivity": self.tier_sensitivity,
+            "text_found": self.text_found,
             "conduct": "|".join(self.conduct),
             "sentence_spans": ";".join(f"{a}-{b}" for a, b in self.sentence_spans),
         }
         for c in CLASSES:
             out[f"{c}.A"] = int(self.available.get(c, False))
             out[f"{c}.B"] = int(self.action_relevant.get(c, False))
+            out[f"{c}.I"] = int(self.inferred.get(c, False))
             out[f"{c}.C"] = int(self.instrumental.get(c, False))
             out[f"{c}.period_uncertain"] = int(self.period_uncertain.get(c, False))
             out[f"{c}.review"] = self.review.get(c, "")
@@ -224,6 +268,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
                   "reason": "psa_only" if e["exclusion_reason"].startswith("PSA") else "gen_ai_scrape_noise"}
                  for e in result["exclusions"]]
     offense, _psa, _cap = pe.offense_lines(case["text"])
+    sens = sensitivity_tiers(case["id"], kept, case["text"])
     text = case["text"]
     lower_release = text.lower()
     topics = set(case["topics"])
@@ -234,6 +279,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
         sentences = pe.sentences_with_platform(offense, p) if not r.get("_text_not_found") else []
         rec = Record(case["id"], fingerprint, case["source"], case["pub_year"], p, info.status,
                      info.family, r["stated_vs_inferred"], not r.get("_text_not_found", False),
+                     tier_sensitivity=sens.get(p, "dropped"),
                      sentence_spans=_spans(text, sentences))
         conduct = []
         for s in sentences:
@@ -260,6 +306,11 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
                         hit_span = (a, b)
                         break
             rec.instrumental[cname] = hit_span is not None
+            # Analytically inferred: the documented conduct of the relevant kind happened on a
+            # platform where this capability is on for every use by design (registry default_on),
+            # or the release states it outright (C).
+            rec.inferred[cname] = bool(rec.instrumental[cname] or (
+                rec.action_relevant[cname] and info.default_on.get(spec["capability"], False)))
             if hit_span:
                 rec.instrumental_span[cname] = hit_span
             # Review candidates: cue present but not admitted to C.
