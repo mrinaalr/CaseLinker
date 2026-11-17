@@ -1,4 +1,4 @@
-"""Affordance-aware state-space construction (AfH 2.0, Appendix X). THEORETICAL.
+"""Affordance-aware state-space construction (AfH, Appendix X). THEORETICAL.
 
     M_P = (S, A, O(P), T_P, s0),   T_P ⊆ S × A × 2^O(P) × S
 

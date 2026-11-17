@@ -1,894 +1,429 @@
-/**
- * Lifecycle swimlane — D3 visualization of PACER CAC state machines (L*_{g,A}).
- */
+/* /lifecycle: documented PACER event graphs, derived trajectories, and the formal model.
+   Data: <script id="lifecycle-payload"> embedded server-side (state_machines/trajectories/payload.py).
+   Columns follow documented order only; nothing here is a probability, phase or estimated path. */
 (function () {
   "use strict";
 
-  const GROOMING = "https://cacontology.projectvic.org/grooming#";
-  const SEXTORTION = "https://cacontology.projectvic.org/sextortion#";
-  const PLATFORMS = "https://cacontology.projectvic.org/platforms#";
-  const UNDERCOVER = "https://cacontology.projectvic.org/undercover#";
-  const CAC = "https://cacontology.projectvic.org#";
-
-  const ANCHOR_ROWS = [
-    { id: "enticement", color: "#6ee7b7", bg: "#0d1f16", label: "Enticement", short: "ENT" },
-    { id: "production", color: "#f97316", bg: "#1a1008", label: "Production", short: "PRD" },
-    { id: "sextortion", color: "#fbbf24", bg: "#1a1608", label: "Sextortion", short: "EXT" },
-    { id: "enterprise", color: "#f87171", bg: "#1a0d0d", label: "Enterprise", short: "ENP" },
-    { id: "trafficking", color: "#c084fc", bg: "#140d1a", label: "Trafficking", short: "TRF" },
-  ];
-
-  const MODALITY_STYLE = {
-    enticement: { color: "#6ee7b7", bg: "#0d1f16" },
-    production: { color: "#f97316", bg: "#1a1008" },
-    sextortion: { color: "#fbbf24", bg: "#1a1608" },
-    enterprise: { color: "#f87171", bg: "#1a0d0d" },
-    trafficking: { color: "#c084fc", bg: "#140d1a" },
-    unknown: { color: "#9ca3af", bg: "#141414" },
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const REPO = "https://github.com/mrinaalr/CaseLinker/blob/main/";
+  const AFF = {
+    anonymity: { color: "#c4a1ff", label: "Anonymity" },
+    ephemerality: { color: "#f5c46b", label: "Ephemerality" },
+    contact_discovery: { color: "#7cb7ff", label: "Contact discovery" },
+    unmonitored_communication: { color: "#5fd4a4", label: "Unmonitored comm." },
+    distribution_infrastructure: { color: "#ff8a7a", label: "Distribution infra." },
+    generative_synthesis: { color: "#f39ac7", label: "Generative synthesis" },
   };
-
-  const COLUMNS = [
-    { key: "initial", type: GROOMING + "InitialContactPhase", label: "InitialContact" },
-    { key: "conditioning", type: GROOMING + "ConditioningPhase", label: "Conditioning" },
-    { key: "sexualization", type: GROOMING + "SexualizationPhase", label: "Sexualization" },
-    { key: "migration", type: PLATFORMS + "ChannelMigrationEvent", label: "ChannelMigration" },
-    { key: "exploitation", type: GROOMING + "ExploitationPhase", terminal: false, label: "Exploitation" },
-    { key: "threat", type: SEXTORTION + "ThreatMechanism", label: "ThreatMechanism" },
-    { key: "coercion", type: SEXTORTION + "CoercionCycle", label: "CoercionCycle" },
-    { key: "maintenance", type: GROOMING + "MaintenancePhase", label: "Maintenance" },
-    { key: "intervention", type: UNDERCOVER + "StingOperation", label: "Intervention" },
-    { key: "terminal", type: GROOMING + "ExploitationPhase", terminal: true, label: "Terminal" },
-  ];
-
-  const AFFORDANCE_COLORS = {
-    Anonymity: "#6ee7b7",
-    Ephemerality: "#fbbf24",
-    UnmonitoredCommunication: "#a78bfa",
-    ContactDiscovery: "#34d399",
-    DistributionInfrastructure: "#60a5fa",
-    Coordination: "#fb923c",
-    CoercionLeverage: "#f87171",
+  const STANDING = {
+    ALLEGATION: "allegation", SWORN_AFFIDAVIT: "affidavit", ADMITTED: "admitted",
+    ADMITTED_UNDER_OATH: "admitted", JUDICIAL_FINDING: "finding", VERDICT_ELEMENT: "verdict",
+    COURT_RECORD: "record", ADVOCACY: "advocacy", PROCEDURAL: "docket",
   };
+  const TRACK_KIND = { victim: "Victim track", undercover: "Undercover persona", material: "Material",
+    co_offender_network: "Co-offender network", case_procedure: "Case procedure" };
+  const NODE = { w: 190, h: 64, hc: 40, col: 226, row: 80, pad: 22, head: 70 };
 
-  const AFFORDANCE_LABELS = {
-    Anonymity: "Anonymity",
-    Ephemerality: "Ephemerality",
-    UnmonitoredCommunication: "Unmonitored comm.",
-    ContactDiscovery: "Contact discovery",
-    DistributionInfrastructure: "Distribution infra",
-    Coordination: "Coordination",
-    CoercionLeverage: "Coercion leverage",
-  };
+  const state = { payload: null, caseIdx: 0, view: "documented", threshold: "INFERRED", context: true };
 
-  // Enticement victim-exit gate diamonds removed intentionally — do not restore ENTICEMENT_GATES.
-
-  const NODE_W = 200;
-  const NODE_H = 100;
-  const COL_W = 240;
-  const ROW_H = 200;
-  const LEFT_PAD = 168;
-  const TOP_PAD = 56;
-  const HEADER_H = 28;
-
-  function shortType(iri) {
-    if (!iri) return "";
-    const h = iri.indexOf("#");
-    return h >= 0 ? iri.slice(h + 1) : iri.split("/").pop();
-  }
-
-  /** Local name for full IRIs or CURIEs like cacontology-grooming:SexualizationPhase. */
-  function typeLocal(s) {
-    if (!s) return "";
-    const str = String(s);
-    if (str.indexOf("#") >= 0) return str.slice(str.indexOf("#") + 1);
-    if (str.indexOf(":") >= 0 && !str.startsWith("http")) {
-      return str.slice(str.lastIndexOf(":") + 1);
+  // ---------- helpers ----------
+  const el = (tag, attrs = {}, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v);
     }
-    return shortType(str);
-  }
+    kids.flat().forEach(k => k != null && n.append(k));
+    return n;
+  };
+  const sv = (tag, attrs = {}) => {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    return n;
+  };
+  const svText = (attrs, text) => { const t = sv("text", attrs); t.textContent = text; return t; };
+  const tex = (src, display = false) => {
+    const span = el("span", { class: display ? "eq" : "m" });
+    if (window.katex) window.katex.render(src, span, { displayMode: display, throwOnError: false });
+    else span.textContent = src;
+    return span;
+  };
+  const admissible = s => (state.threshold === "DIRECT" ? s === "DIRECT" : s === "DIRECT" || s === "INFERRED");
+  const shortDate = ev => {
+    const t = ev.time.filter(a => admissible(a.status));
+    if (!t.length) return ev.time.length ? "date inferred" : "undated";
+    const a = t[0];
+    const d = a.precision === "day" ? a.earliest : a.precision === "month" ? a.earliest.slice(0, 7)
+      : a.precision === "year" ? a.earliest.slice(0, 4) : `${a.earliest.slice(0, 7)}…${a.latest.slice(0, 7)}`;
+    return (a.basis === "enclosing_window" ? "≈" : "") + d + (ev.time_conflict ? " ⚠" : "");
+  };
+  const roleLine = ev => {
+    const t = ev.targets.map(x => `${x.participant_ref} ${x.role}`).join(", ");
+    return `${ev.actor.participant_ref} ${ev.actor.role.replace("_", "-")}` + (t ? ` → ${t}` : "");
+  };
+  const clip = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
 
-  function isGenericCorePhase(t) {
-    const loc = typeLocal(t);
-    // Parent-class rows from SPARQL double-count specific phase transitions.
-    return loc === "Phase";
-  }
-
-  function samePhaseType(annotationType, phaseType) {
-    return typeLocal(annotationType) === typeLocal(phaseType);
-  }
-
-  function lifecycleCases() {
-    return [...(payload.anchor_cases || payload.cases || []), ...(payload.expansion_cases || [])];
-  }
-
-  function lifecycleDenom() {
-    return (
-      payload.n_lifecycle
-      || payload.n_cases
-      || lifecycleCases().length
-      || 0
-    );
-  }
-
-  /**
-   * Affordance transitions at this phase across all lifecycle cases (anchor +
-   * expansion). Aggregates by affordance with unique case counts — not the
-   * SPARQL annotation dump (parent-class duplicates, /5 denominators).
-   */
-  function transitionsForPhase(phase, direction) {
-    const endpoint = direction === "in" ? "to_type" : "from_type";
-    const peerKey = direction === "in" ? "from_type" : "to_type";
-    const byAffordance = new Map();
-
-    for (const caseData of lifecycleCases()) {
-      for (const edge of caseData.transitions || []) {
-        if (!edge || !samePhaseType(edge[endpoint], phase.type)) continue;
-        if (isGenericCorePhase(edge.from_type) || isGenericCorePhase(edge.to_type)) continue;
-        const aff = edge.affordance_name || typeLocal(edge.affordance) || "—";
-        const peer = typeLocal(edge[peerKey]) || "—";
-        if (isGenericCorePhase(peer)) continue;
-        let group = byAffordance.get(aff);
-        if (!group) {
-          group = { affordance: aff, caseIds: new Set(), peers: new Map() };
-          byAffordance.set(aff, group);
-        }
-        group.caseIds.add(caseData.id);
-        if (!group.peers.has(peer)) group.peers.set(peer, new Set());
-        group.peers.get(peer).add(caseData.id);
+  // ---------- documented order within one track ----------
+  function trackOrder(cs, track, shown) {
+    const ids = new Set(track.events);
+    const adj = new Map(track.events.map(e => [e, new Set()]));
+    const kinds = new Map();
+    for (const r of cs.relations) {
+      if ((r.type === "BEFORE" || r.type === "MEETS") && admissible(r.status) && ids.has(r.from) && ids.has(r.to)) {
+        adj.get(r.from).add(r.to);
+        kinds.set(r.from + ">" + r.to, r.type === "MEETS" ? "meets" : r.status === "DIRECT" ? "direct" : "inferred");
       }
     }
-
-    return Array.from(byAffordance.values())
-      .map((g) => {
-        const peers = Array.from(g.peers.entries())
-          .map(([label, ids]) => ({ label, count: ids.size }))
-          .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
-        return {
-          affordance: g.affordance,
-          case_count: g.caseIds.size,
-          peers,
-          peer_summary: peers.map((p) => p.label).join(", "),
-        };
-      })
-      .sort((a, b) => b.case_count - a.case_count || a.affordance.localeCompare(b.affordance));
-  }
-
-  function columnIndex(phase) {
-    const t = phase.type;
-    if (phase.is_terminal && t === GROOMING + "ExploitationPhase") {
-      return COLUMNS.length - 1;
+    for (const [a, b] of (track.views[state.threshold] || {}).date_order || []) {
+      if (!adj.get(a).has(b)) { adj.get(a).add(b); kinds.set(a + ">" + b, "date"); }
     }
-    for (let i = 0; i < COLUMNS.length; i++) {
-      const col = COLUMNS[i];
-      if (col.terminal) continue;
-      if (col.type === t) return i;
-    }
-    return 4;
-  }
-
-  function layoutRow(phases) {
-    const used = {};
-    return phases.map((phase) => {
-      let col = columnIndex(phase);
-      const key = col + (phase.is_terminal ? "-t" : "");
-      used[key] = (used[key] || 0) + 1;
-      const bump = (used[key] - 1) * (NODE_W * 0.45);
-      const x = LEFT_PAD + col * COL_W + bump;
-      return { phase, x, col };
-    });
-  }
-
-  function affordanceColor(name) {
-    return AFFORDANCE_COLORS[name] || "#9ca3af";
-  }
-
-  function arrowPath(x1, y1, x2, y2) {
-    const mx = (x1 + x2) / 2;
-    return `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
-  }
-
-  function addFlowDots(parent, pathD, color) {
-    const g = parent.append("g").attr("class", "flow-dots");
-    const svgNs = "http://www.w3.org/2000/svg";
-    [0, 1.4].forEach((begin) => {
-      const circle = g.append("circle").attr("r", 3).attr("fill", color).attr("class", "flow-dot");
-      const motion = document.createElementNS(svgNs, "animateMotion");
-      motion.setAttribute("dur", "2.8s");
-      motion.setAttribute("repeatCount", "indefinite");
-      motion.setAttribute("begin", `${begin}s`);
-      motion.setAttribute("path", pathD);
-      circle.node().appendChild(motion);
-    });
-  }
-
-  function maintenanceColumnX() {
-    const col = COLUMNS.findIndex((c) => c.key === "maintenance");
-    return LEFT_PAD + col * COL_W + NODE_W / 2;
-  }
-
-  function renderDisruptionEdge(edgesG, x1, y1, x2, y2, markerId, label) {
-    const pathD = arrowPath(x1, y1, x2, y2);
-    edgesG
-      .append("path")
-      .attr("d", pathD)
-      .attr("class", "edge-disrupted")
-      .attr("fill", "none")
-      .attr("stroke", "#f87171")
-      .attr("stroke-width", 2.5)
-      .attr("stroke-dasharray", "8,5")
-      .attr("marker-end", `url(#${markerId})`);
-
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2;
-    const xg = edgesG.append("g").attr("class", "disruption-x").attr("transform", `translate(${mx},${my})`);
-    xg.append("circle").attr("r", 14).attr("class", "disruption-x-bg");
-    xg.append("line").attr("x1", -7).attr("y1", -7).attr("x2", 7).attr("y2", 7).attr("class", "disruption-x-stroke");
-    xg.append("line").attr("x1", 7).attr("y1", -7).attr("x2", -7).attr("y2", 7).attr("class", "disruption-x-stroke");
-
-    if (label) {
-      edgesG
-        .append("text")
-        .attr("class", "edge-label disruption-edge-label")
-        .attr("x", mx)
-        .attr("y", my - 22)
-        .attr("text-anchor", "middle")
-        .text(label);
-    }
-
-    const ghostX = maintenanceColumnX();
-    const ghostY = y2;
-    const ghostStart = x2 + NODE_W * 0.35;
-    if (ghostX > ghostStart + 24) {
-      const ghostD = `M${ghostStart},${ghostY} L${ghostX},${ghostY}`;
-      edgesG.append("path").attr("d", ghostD).attr("class", "edge-blocked-ghost");
-      const gx = edgesG
-        .append("g")
-        .attr("class", "disruption-x ghost-x")
-        .attr("transform", `translate(${ghostX},${ghostY})`);
-      gx.append("circle").attr("r", 10).attr("class", "disruption-x-bg ghost");
-      gx.append("line").attr("x1", -5).attr("y1", -5).attr("x2", 5).attr("y2", 5).attr("class", "disruption-x-stroke");
-      gx.append("line").attr("x1", 5).attr("y1", -5).attr("x2", -5).attr("y2", 5).attr("class", "disruption-x-stroke");
-    }
-  }
-
-  let panelEl, backdropEl, payload;
-  let selectedOffenseTypes = new Set(ANCHOR_ROWS.map((r) => r.id));
-  let offenseFilterOpen = false;
-
-  function caseOffenseType(caseData) {
-    return caseData.modality || caseData.id;
-  }
-
-  function filteredAnchorCases() {
-    const cases = payload.anchor_cases || payload.cases || [];
-    return cases.filter((c) => selectedOffenseTypes.has(caseOffenseType(c)));
-  }
-
-  function filteredAnchorRows() {
-    return ANCHOR_ROWS.filter((r) => selectedOffenseTypes.has(r.id));
-  }
-
-  function filteredExpansionCases() {
-    return (payload.expansion_cases || []).filter((c) => selectedOffenseTypes.has(caseOffenseType(c)));
-  }
-
-  function updateOffenseSummary() {
-    const summaryEl = document.getElementById("offense-filter-summary");
-    if (!summaryEl) return;
-    const allSelected = selectedOffenseTypes.size === ANCHOR_ROWS.length;
-    if (allSelected) {
-      summaryEl.innerHTML = '<span class="offense-filter-summary-all">All</span>';
-      return;
-    }
-    summaryEl.innerHTML = ANCHOR_ROWS.filter((r) => selectedOffenseTypes.has(r.id))
-      .map(
-        (r) =>
-          `<span class="offense-filter-chip" style="background:${r.color}" title="${escapeHtml(r.label)}"></span>`
-      )
-      .join("");
-  }
-
-  function syncOffenseOptionButtons() {
-    document.querySelectorAll(".offense-filter-option").forEach((btn) => {
-      const on = selectedOffenseTypes.has(btn.dataset.type);
-      btn.classList.toggle("is-on", on);
-      btn.classList.toggle("is-off", !on);
-      btn.setAttribute("aria-pressed", on ? "true" : "false");
-    });
-  }
-
-  function applyOffenseFilter() {
-    updateOffenseSummary();
-    syncOffenseOptionButtons();
-    renderSwimlanes();
-    renderExpansionSection();
-  }
-
-  function setOffenseFilterOpen(open) {
-    offenseFilterOpen = open;
-    const root = document.getElementById("offense-filter");
-    const panel = document.getElementById("offense-filter-panel");
-    const trigger = document.getElementById("offense-filter-trigger");
-    if (!root || !panel || !trigger) return;
-    root.classList.toggle("open", open);
-    panel.hidden = !open;
-    trigger.setAttribute("aria-expanded", open ? "true" : "false");
-  }
-
-  function toggleOffenseType(typeId) {
-    if (selectedOffenseTypes.has(typeId)) {
-      if (selectedOffenseTypes.size <= 1) return;
-      selectedOffenseTypes.delete(typeId);
-    } else {
-      selectedOffenseTypes.add(typeId);
-    }
-    applyOffenseFilter();
-  }
-
-  function toggleAllOffenseTypes() {
-    const allSelected = selectedOffenseTypes.size === ANCHOR_ROWS.length;
-    selectedOffenseTypes = allSelected ? new Set(["enticement"]) : new Set(ANCHOR_ROWS.map((r) => r.id));
-    applyOffenseFilter();
-  }
-
-  function renderOffenseFilter() {
-    const optionsEl = document.getElementById("offense-filter-options");
-    const trigger = document.getElementById("offense-filter-trigger");
-    const allBtn = document.getElementById("offense-filter-all");
-    if (!optionsEl) return;
-
-    optionsEl.innerHTML = ANCHOR_ROWS.map(
-      (row) =>
-        `<button type="button" class="offense-filter-option cl-chip is-on" data-type="${row.id}" style="--chip-color:${row.color}" aria-pressed="true" title="${escapeHtml(row.label)}">${escapeHtml(row.label)}</button>`
-    ).join("");
-
-    optionsEl.querySelectorAll(".offense-filter-option").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleOffenseType(btn.dataset.type);
-      });
-    });
-
-    if (trigger) {
-      trigger.addEventListener("click", (e) => {
-        e.stopPropagation();
-        setOffenseFilterOpen(!offenseFilterOpen);
-      });
-    }
-
-    if (allBtn) {
-      allBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleAllOffenseTypes();
-      });
-    }
-
-    document.addEventListener("click", (e) => {
-      const root = document.getElementById("offense-filter");
-      if (offenseFilterOpen && root && !root.contains(e.target)) {
-        setOffenseFilterOpen(false);
+    const reach = new Map();
+    const visit = (n, seen) => { for (const m of adj.get(n)) if (!seen.has(m)) { seen.add(m); visit(m, seen); } return seen; };
+    track.events.forEach(e => reach.set(e, visit(e, new Set())));
+    const less = (a, b) => reach.get(a).has(b);
+    const vis = track.events.filter(e => shown.has(e));
+    const ordered = vis.filter(a => vis.some(b => b !== a && (less(a, b) || less(b, a))));
+    const loose = vis.filter(a => !ordered.includes(a));
+    const cover = [];   // covering pairs among shown events: a < b with no shown c between
+    for (const a of ordered) for (const b of ordered) {
+      if (a !== b && less(a, b) && !ordered.some(c => c !== a && c !== b && less(a, c) && less(c, b))) {
+        cover.push({ from: a, to: b, kind: kinds.get(a + ">" + b) || "transitive" });
       }
-    });
-
-    updateOffenseSummary();
+    }
+    const rank = new Map();
+    const rk = a => {
+      if (rank.has(a)) return rank.get(a);
+      const preds = ordered.filter(p => less(p, a));
+      const r = preds.length ? 1 + Math.max(...preds.map(rk)) : 0;
+      rank.set(a, r);
+      return r;
+    };
+    ordered.forEach(rk);
+    return { ordered, loose, cover, rank };
   }
 
-  function formatTransitionRow(t, denom, direction) {
-    const aff = AFFORDANCE_LABELS[t.affordance] || t.affordance;
-    const prep = direction === "in" ? "from" : "to";
-    const peers = t.peer_summary ? ` ${prep} ${t.peer_summary}` : "";
-    return `<li><strong>${escapeHtml(aff)}</strong> (${t.case_count}/${denom})${
-      peers ? `<span class="panel-transition-peers">${escapeHtml(peers)}</span>` : ""
-    }</li>`;
-  }
-
-  function openPanel(phase, caseData) {
-    const crossAll = (payload.cross_case_all || {})[phase.type] || { count: 0, cases: [] };
-    const denom = lifecycleDenom();
-    const coverageCount = crossAll.count ?? 0;
-    const offenseTypes = crossAll.offense_types || [];
-    const ins = transitionsForPhase(phase, "in");
-    const outs = transitionsForPhase(phase, "out");
-
-    panelEl.innerHTML = `
-      <h3>${escapeHtml(phase.label || shortType(phase.type))}</h3>
-      <div class="panel-type" title="${escapeHtml(phase.type)}">${
-        /^https?:\/\//.test(String(phase.type || ""))
-          ? `<a href="${escapeHtml(phase.type)}" target="_blank" rel="noopener noreferrer">${escapeHtml(phase.type_display || phase.type)}</a>`
-          : escapeHtml(phase.type_display || phase.type)
-      }</div>
-      <div class="panel-section">
-        <h4>Description</h4>
-        <p>${escapeHtml(phase.comment || "—")}</p>
-      </div>
-      ${
-        phase.disrupts_chain
-          ? `<div class="panel-section panel-disruption">
-        <h4>Chain disruption</h4>
-        <p>Law enforcement intervention terminates the offender trajectory before ${
-          escapeHtml(phase.disrupted_target || "downstream hands-on exploitation")
-        }.</p>
-      </div>`
-          : ""
-      }
-      <div class="panel-section">
-        <h4>Coverage</h4>
-        <p>${coverageCount}/${denom} cases: ${offenseTypes.join(", ") || "—"}</p>
-        ${phase.is_fundamental ? "<p><strong>Appears in all 5 anchor offence types</strong> (fundamental)</p>" : ""}
-      </div>
-      <div class="panel-section">
-        <h4>Transitions in</h4>
-        <p class="panel-section-note">Affordances used to reach this stage (${denom} lifecycle cases)</p>
-        <ul>${
-          ins.length
-            ? ins.map((t) => formatTransitionRow(t, denom, "in")).join("")
-            : "<li>—</li>"
-        }</ul>
-      </div>
-      <div class="panel-section">
-        <h4>Transitions out</h4>
-        <p class="panel-section-note">Affordances used leaving this stage (${denom} lifecycle cases)</p>
-        <ul>${
-          outs.length
-            ? outs.map((t) => formatTransitionRow(t, denom, "out")).join("")
-            : "<li>—</li>"
-        }</ul>
-      </div>
-      <div class="panel-section">
-        <h4>Case</h4>
-        <p>${escapeHtml(caseCaption(caseData))}</p>
-      </div>
-    `;
-    panelEl.classList.add("open");
-    backdropEl.classList.add("open");
-  }
-
-  function closePanel() {
-    panelEl.classList.remove("open");
-    backdropEl.classList.remove("open");
-  }
-
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  /** Federal caption for row labels and panel — never corpus_id. */
-  function caseCaption(caseData) {
-    return caseData.citation || caseData.case_name || caseData.id || "";
-  }
-
-  const AFH_PDF = "https://mrinaalr.github.io/website/Affordance%2C%20Misuse%2C%20Harm%2C%20Kill%20Chain.pdf";
-  const SM_EQUATIONS = [
-    { label: "Machine", tex: String.raw`\mathcal{M} = \left( S,\ A,\ T,\ R_G,\ s_0,\ F \right)` },
-    { label: "Affordances", tex: String.raw`A = \{\, \text{Anonymity},\ \text{Ephemerality},\ \text{UnmonitoredCommunication},\ \text{ContactDiscovery},\ \text{DistributionInfrastructure},\ \text{Coordination},\ \text{CoercionLeverage} \,\}` },
-    { label: "Transitions", tex: String.raw`T : S \times A \to \Delta(S)` },
-    { label: "Estimate", tex: String.raw`\hat{T}(s_j \mid s_i, a) = \frac{\left|\{\, c \in C : s_i \xrightarrow{\,a\,} s_j \text{ in } c \,\}\right|}{\left|\{\, c \in C : s_i \xrightarrow{\,a\,} \cdot \text{ in } c \,\}\right|}` },
-  ];
-
-  function renderFundamentalEquation() {
-    if (typeof katex === "undefined") return;
-    document.querySelectorAll(".sm-eq__tex[data-i]").forEach((host) => {
-      try {
-        katex.render(SM_EQUATIONS[+host.dataset.i].tex, host, { displayMode: true, throwOnError: false });
-      } catch (_) { /* aria-label on the row keeps the meaning */ }
-    });
-  }
-
-  function renderFundamentalSection() {
-    const el = document.getElementById("fundamental-section");
-    if (!el) return;
-    const names = (payload.fundamental_display || []).map(shortType);
-    const ordered = ["InitialContactPhase", "ConditioningPhase", "ExploitationPhase", "MaintenancePhase"].filter(
-      (n) => names.includes(n) || (payload.fundamental || []).some((iri) => iri.endsWith(n))
-    );
-    el.innerHTML = `
-      <div class="sm-math">
-        ${SM_EQUATIONS.map((e, i) => `
-          <div class="sm-eq" aria-label="${e.label}">
-            <div class="sm-eq__k">${e.label}</div>
-            <div class="sm-eq__tex" data-i="${i}"></div>
-          </div>`).join("")}
-      </div>
-      <p class="sm-where">
-        <i>S</i> CAC phase types &middot; <i>A</i> affordances &middot; <i>T</i> transitions <i>S</i>&thinsp;&times;&thinsp;<i>A</i> &rarr; &Delta;(<i>S</i>), a distribution over next phases, estimated from the cases that used <i>a</i> at <i>s<sub>i</sub></i> &middot; <i>R<sub>G</sub></i> goal rewards &middot; <i>s</i><sub>0</sub> InitialContactPhase &middot; <i>F</i> terminal phases &middot; <i>C</i> the case graphs (30 PACER cases)
-      </p>
-      <div class="sm-refs">
-        <a class="fundamental-paper-link" href="https://github.com/mrinaalr/CaseLinker/blob/main/state_machines/README.md" target="_blank" rel="noopener noreferrer">State machines README</a>
-      </div>
-    `;
-    renderFundamentalEquation();
-  }
-
-  function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-  }
-
-  function renderStats() {
-    const nTotal = payload.n_cases
-      || (payload.anchor_cases || payload.cases || []).length
-      + (payload.expansion_cases || []).length
-      || 5;
-    setText("stat-cases", nTotal);
-    setText("stat-cases", nTotal);
-    setText("stat-stages", payload.anchor_stage_count || "—");
-    setText("stat-transitions", payload.shared_transition_count || "—");
-  }
-
-  function expansionRows(cases) {
-    return cases.map((caseData) => {
-      const style = MODALITY_STYLE[caseData.modality] || MODALITY_STYLE.unknown;
-      return {
-        id: caseData.id,
-        color: style.color,
-        bg: style.bg,
-        expansion: true,
-      };
-    });
-  }
-
-  function fundamentalColumns() {
-    const fundamentalCols = new Set();
-    (payload.fundamental || []).forEach((iri) => {
-      COLUMNS.forEach((col, i) => {
-        if (col.type === iri && !col.terminal) fundamentalCols.add(i);
-        if (iri === GROOMING + "ExploitationPhase" && col.terminal) fundamentalCols.add(i);
-      });
-    });
-    ["InitialContactPhase", "ConditioningPhase", "ExploitationPhase", "MaintenancePhase"].forEach((name) => {
-      COLUMNS.forEach((col, i) => {
-        if (col.label.replace(/Phase$/, "") === name.replace(/Phase$/, "") || col.type.endsWith(name)) {
-          if (name === "ExploitationPhase" && col.terminal) fundamentalCols.add(i);
-          else if (name !== "ExploitationPhase" || !col.terminal) {
-            if (col.type.endsWith(name)) fundamentalCols.add(i);
-          }
-        }
-      });
-    });
-    return fundamentalCols;
-  }
-
-  function renderSwimlaneCanvas(hostId, rows, caseList, options) {
-    const opts = options || {};
-    const markerId = opts.markerId || "arrow";
-    const showDecorations = opts.showDecorations !== false;
-    const nAnchor = payload.n_anchor || 5;
-
-    const caseMap = {};
-    caseList.forEach((c) => {
-      caseMap[c.id] = c;
-    });
-
-    const fundamentalCols = fundamentalColumns();
-    const width = LEFT_PAD + COLUMNS.length * COL_W + 80;
-    const height = TOP_PAD + rows.length * ROW_H + 40;
-    const host = document.getElementById(hostId);
-    if (!host) return;
+  // ---------- documented view ----------
+  function renderDocumented() {
+    const cs = state.payload.cases[state.caseIdx];
+    const host = document.getElementById("doc-canvas");
     host.innerHTML = "";
-
-    const svg = d3
-      .select(host)
-      .append("svg")
-      .attr("class", "lifecycle-svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", `0 0 ${width} ${height}`);
-
-    svg
-      .append("defs")
-      .append("marker")
-      .attr("id", markerId)
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 8)
-      .attr("refY", 0)
-      .attr("markerWidth", 6)
-      .attr("markerHeight", 6)
-      .attr("orient", "auto")
-      .append("path")
-      .attr("d", "M0,-5L10,0L0,5")
-      .attr("fill", "context-stroke");
-
-    const fundamentalG = svg.append("g").attr("class", "fundamental-columns");
-    fundamentalCols.forEach((col) => {
-      rows.forEach((_, ri) => {
-        fundamentalG
-          .append("rect")
-          .attr("class", "fundamental-col")
-          .attr("x", LEFT_PAD + col * COL_W - 12)
-          .attr("y", TOP_PAD + ri * ROW_H - 8)
-          .attr("width", COL_W)
-          .attr("height", ROW_H)
-          .attr("rx", 6);
-      });
-    });
-
-    COLUMNS.forEach((col, i) => {
-      svg
-        .append("text")
-        .attr("class", "col-header")
-        .attr("x", LEFT_PAD + i * COL_W + NODE_W / 2)
-        .attr("y", TOP_PAD - 12)
-        .text(col.label);
-    });
-
-    rows.forEach((row, ri) => {
-      const caseData = caseMap[row.id];
-      if (!caseData) return;
-
-      const y0 = TOP_PAD + ri * ROW_H;
-      const cy = y0 + ROW_H / 2;
-      const gRow = svg.append("g").attr("class", "row").attr("data-case", row.id);
-
-      gRow
-        .append("rect")
-        .attr("x", 8)
-        .attr("y", y0 + 20)
-        .attr("width", 4)
-        .attr("height", ROW_H - 40)
-        .attr("fill", row.color)
-        .attr("rx", 2);
-
-      if (row.expansion) {
-        gRow
-          .append("text")
-          .attr("class", "row-label")
-          .attr("x", 20)
-          .attr("y", cy - 8)
-          .attr("fill", row.color)
-          .text(caseData.modality_label || caseData.offense_type || row.id.toUpperCase());
-        gRow
-          .append("text")
-          .attr("class", "row-citation")
-          .attr("x", 20)
-          .attr("y", cy + 10)
-          .text(caseCaption(caseData));
-      } else {
-        gRow
-          .append("text")
-          .attr("class", "row-label")
-          .attr("x", 20)
-          .attr("y", cy - 8)
-          .attr("fill", row.color)
-          .text(caseData.offense_type || row.id.toUpperCase());
-        gRow
-          .append("text")
-          .attr("class", "row-citation")
-          .attr("x", 20)
-          .attr("y", cy + 10)
-          .text(caseData.citation || "");
-      }
-
-      const laid = layoutRow(caseData.phases || []);
-      const edgesG = gRow.append("g").attr("class", "edges");
-
-      for (let i = 0; i < laid.length - 1; i++) {
-        const a = laid[i];
-        const b = laid[i + 1];
-        const x1 = a.x + NODE_W;
-        const y1 = cy;
-        const x2 = b.x;
-        const y2 = cy;
-        const trans = (caseData.transitions || [])[i] || {};
-        const aff = trans.affordance_name || "Anonymity";
-        const color = affordanceColor(aff);
-        const disrupted = trans.disrupts_chain || b.phase.disrupts_chain;
-
-        if (disrupted) {
-          renderDisruptionEdge(
-            edgesG,
-            x1,
-            y1,
-            x2,
-            y2,
-            markerId,
-            "chain disrupted"
-          );
-        } else {
-          const pathD = arrowPath(x1, y1, x2, y2);
-
-          edgesG
-            .append("path")
-            .attr("d", pathD)
-            .attr("fill", "none")
-            .attr("stroke", color)
-            .attr("stroke-width", 2)
-            .attr("marker-end", `url(#${markerId})`);
-
-          const lx = (x1 + x2) / 2;
-          const ly = cy - 10;
-          edgesG
-            .append("text")
-            .attr("class", "edge-label")
-            .attr("x", lx)
-            .attr("y", ly)
-            .attr("text-anchor", "middle")
-            .text(AFFORDANCE_LABELS[aff] || aff);
-
-          addFlowDots(edgesG, pathD, color);
-        }
-      }
-
-      if (showDecorations && row.id === "sextortion") {
-        const threat = laid.find((l) => l.phase.type === SEXTORTION + "ThreatMechanism");
-        const cycle = laid.find((l) => l.phase.type === SEXTORTION + "CoercionCycle");
-        if (threat && cycle) {
-          const tx = threat.x + NODE_W / 2;
-          const ty = cy + NODE_H / 2 + 8;
-          const cx = cycle.x + NODE_W / 2;
-          const cy2 = cy + NODE_H / 2 + 8;
-          const arcD = `M${cx},${cy2 + 4} Q${(tx + cx) / 2},${cy + NODE_H + 52} ${tx},${ty + 4}`;
-          gRow.append("path").attr("class", "coercion-arc").attr("d", arcD);
-          addFlowDots(gRow, arcD, "#f87171");
-        }
-      }
-
-      const nodesG = gRow.append("g").attr("class", "nodes");
-      laid.forEach((item) => {
-        const { phase, x } = item;
-        const nx = x;
-        const ny = cy - NODE_H / 2;
-
-        const ng = nodesG
-          .append("g")
-          .attr("class", "stage-node")
-          .attr("transform", `translate(${nx},${ny})`)
-          .on("click", (event) => {
-            event.stopPropagation();
-            openPanel(phase, caseData);
-          });
-
-        ng
-          .append("rect")
-          .attr("width", NODE_W)
-          .attr("height", NODE_H)
-          .attr("rx", 10)
-          .attr("fill", row.bg)
-          .attr("stroke", phase.disrupts_chain ? "#f87171" : row.color)
-          .attr("stroke-width", phase.disrupts_chain ? 2 : 1.5)
-          .attr("stroke-dasharray", phase.disrupts_chain ? "6,3" : null);
-
-        ng
-          .append("text")
-          .attr("class", "node-class")
-          .attr("x", 12)
-          .attr("y", 22)
-          .attr("fill", row.color)
-          .text(phase.short_type || shortType(phase.type));
-
-        if (phase.is_fundamental || phase.coverage === nAnchor) {
-          ng
-            .append("text")
-            .attr("class", "coverage-badge")
-            .attr("x", NODE_W - 10)
-            .attr("y", 20)
-            .attr("text-anchor", "end")
-            .text(`${nAnchor}/${nAnchor}`);
-        } else if (phase.coverage) {
-          ng
-            .append("text")
-            .attr("class", "coverage-badge")
-            .attr("x", NODE_W - 10)
-            .attr("y", 20)
-            .attr("text-anchor", "end")
-            .text(`${phase.coverage}/${nAnchor}`);
-        }
-
-        const label = phase.label || "";
-        const words = label.split(" ");
-        let line1 = label;
-        let line2 = "";
-        if (label.length > 28) {
-          line1 = words.slice(0, Math.ceil(words.length / 2)).join(" ");
-          line2 = words.slice(Math.ceil(words.length / 2)).join(" ");
-        }
-        ng
-          .append("text")
-          .attr("class", "node-label")
-          .attr("x", 12)
-          .attr("y", 52)
-          .attr("fill", "#e8f0ea")
-          .text(line1);
-        if (line2) {
-          ng
-            .append("text")
-            .attr("class", "node-label")
-            .attr("x", 12)
-            .attr("y", 68)
-            .attr("fill", "#e8f0ea")
-            .text(line2);
-        }
-
-        if (phase.disrupts_chain) {
-          ng
-            .append("text")
-            .attr("class", "disruption-badge")
-            .attr("x", NODE_W - 10)
-            .attr("y", NODE_H - 10)
-            .attr("text-anchor", "end")
-            .text("DISRUPTED");
-        }
-      });
-    });
-  }
-
-  function renderSwimlanes() {
-    const anchorCases = filteredAnchorCases();
-    const rows = filteredAnchorRows();
-    renderSwimlaneCanvas("lifecycle-canvas", rows, anchorCases, {
-      markerId: "arrow-anchor",
-      showDecorations: selectedOffenseTypes.has("sextortion"),
-    });
-  }
-
-  function renderExpansionSection() {
-    const expansionCases = filteredExpansionCases();
-    const section = document.getElementById("expansion-section");
-    if (!section || expansionCases.length === 0) {
-      if (section) section.hidden = true;
-      return;
+    if (!cs) { host.append(el("div", { class: "lifecycle-loading", text: "No PACER release is published yet." })); return; }
+    const lanes = [];
+    let width = 0, y = 0;
+    for (const track of cs.tracks) {
+      const shown = new Set(track.events.filter(id => state.context || cs.events[id].family === "offender"));
+      if (!shown.size) continue;
+      const o = trackOrder(cs, track, shown);
+      const cols = new Map();
+      o.ordered.forEach(id => { const r = o.rank.get(id); if (!cols.has(r)) cols.set(r, []); cols.get(r).push(id); });
+      const key = id => (cs.events[id].time[0] || {}).earliest || "9999";
+      cols.forEach(list => list.sort((a, b) => key(a).localeCompare(key(b)) || a.localeCompare(b)));
+      const nCols = cols.size ? Math.max(...cols.keys()) + 1 : 0;
+      const looseRows = Math.min(3, o.loose.length);
+      const looseCols = Math.ceil(o.loose.length / Math.max(1, looseRows));
+      const rows = Math.max(1, looseRows, ...[...cols.values()].map(l => l.length));
+      const h = NODE.head + rows * NODE.row + 6;
+      const looseX = NODE.pad + nCols * NODE.col + (nCols ? 40 : 0);
+      width = Math.max(width, looseX + looseCols * NODE.col + NODE.pad);
+      lanes.push({ track, o, cols, y, h, looseX, looseRows });
+      y += h + 14;
     }
+    width = Math.max(width, 760);
+    const svg = sv("svg", { class: "lifecycle-svg", width, height: y + 2 });
+    const defs = sv("defs");
+    for (const [id, color] of [["arr", "#c9d2cc"], ["arr-dim", "#7f8a82"], ["arr-int", "#ff8a7a"]]) {
+      const m = sv("marker", { id, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" });
+      m.append(sv("path", { d: "M0,0 L10,5 L0,10 z", fill: color }));
+      defs.append(m);
+    }
+    svg.append(defs);
+    for (const lane of lanes) drawLane(svg, cs, lane, width);
+    host.append(svg);
+  }
 
-    section.hidden = false;
-
-    renderSwimlaneCanvas(
-      "lifecycle-canvas-expansion",
-      expansionRows(expansionCases),
-      expansionCases,
-      {
-        markerId: "arrow-expansion",
-        showDecorations: expansionCases.some((c) => c.chain_disrupted),
+  function drawLane(svg, cs, lane, width) {
+    const { track, o, cols, y, h, looseX, looseRows } = lane;
+    const g = sv("g", { transform: `translate(0,${y})` });
+    g.append(sv("rect", { x: 0, y: 0, width, height: h, rx: 10, class: "lane-bg" }));
+    const view = track.views[state.threshold] || {};
+    g.append(svText({ x: 16, y: 22, class: "lane-title" }, `${TRACK_KIND[track.kind] || track.kind}${track.anchor ? " · " + track.anchor : ""}`));
+    g.append(svText({ x: 16, y: 38, class: "lane-meta" }, `${track.events.length} events`));
+    const pos = new Map();
+    cols.forEach((list, r) => list.forEach((id, i) => pos.set(id, { x: NODE.pad + r * NODE.col, y: NODE.head + i * NODE.row })));
+    o.loose.forEach((id, i) => pos.set(id, { x: looseX + Math.floor(i / looseRows) * NODE.col, y: NODE.head + (i % looseRows) * NODE.row }));
+    if (o.loose.length) {
+      g.append(sv("rect", { x: looseX - 12, y: NODE.head - 24, width: width - looseX + 2, height: h - NODE.head + 18, rx: 8, class: "loose-zone" }));
+      g.append(svText({ x: looseX, y: NODE.head - 9, class: "loose-label" }, "ORDER NOT DOCUMENTED"));
+    }
+    const nh = id => (cs.events[id].family === "offender" ? NODE.h : NODE.hc);
+    const edges = sv("g", { class: "edges" });
+    for (const e of o.cover) {
+      const a = pos.get(e.from), b = pos.get(e.to);
+      const x1 = a.x + NODE.w, y1 = a.y + nh(e.from) / 2, x2 = b.x - 3, y2 = b.y + nh(e.to) / 2;
+      const mx = (x1 + x2) / 2;
+      edges.append(sv("path", { d: `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`, class: `edge edge-${e.kind}`,
+        "marker-end": e.kind === "date" || e.kind === "transitive" ? "url(#arr-dim)" : "url(#arr)" }));
+    }
+    for (const r of cs.relations) {
+      const a = pos.get(r.from), b = pos.get(r.to);
+      if (!a || !b || !admissible(r.status)) continue;
+      if (r.type === "INTERRUPTS") {
+        const ax = a.x + NODE.w / 2, bx = b.x + NODE.w / 2, low = Math.max(a.y + nh(r.from), b.y + nh(r.to)) + 14;
+        edges.append(sv("path", { d: `M${ax},${a.y + nh(r.from)} C${ax},${low} ${bx},${low} ${bx},${b.y + nh(r.to) + 3}`,
+          class: "edge edge-interrupt", "marker-end": "url(#arr-int)" }));
+      } else if (r.type === "SAME_ACT" && r.status === "INFERRED") {
+        edges.append(sv("line", { x1: a.x + NODE.w / 2, y1: a.y + nh(r.from) / 2, x2: b.x + NODE.w / 2, y2: b.y + nh(r.to) / 2, class: "edge edge-same" }));
       }
-    );
+    }
+    g.append(edges);
+    for (const [id, p] of pos) g.append(drawNode(cs.events[id], p));
+    svg.append(g);
+  }
+
+  function drawNode(ev, p) {
+    const ctx = ev.family !== "offender";
+    const h = ctx ? NODE.hc : NODE.h;
+    const g = sv("g", { class: `node${ctx ? " node-ctx" : ""} node-${ev.status.toLowerCase()}`, transform: `translate(${p.x},${p.y})`, tabindex: 0, role: "button" });
+    g.setAttribute("aria-label", `${ev.label}. ${roleLine(ev)}. Select for sources.`);
+    g.append(sv("rect", { width: NODE.w, height: h, rx: 7, class: "node-box" }));
+    const affs = ev.affordances.filter(a => admissible(a.status));
+    g.append(svText({ x: 10, y: 17, class: "node-action" }, clip(ev.label.toUpperCase(), affs.length ? 22 - affs.length : 24)));
+    affs.forEach((a, i) => g.append(sv("circle", { cx: NODE.w - 12 - i * 12, cy: 13, r: 4.5, fill: AFF[a.class].color,
+      class: a.status === "DIRECT" ? "aff-dot" : "aff-dot aff-inferred" })));
+    g.append(svText({ x: 10, y: 32, class: "node-roles" }, clip(roleLine(ev), 30)));
+    if (!ctx) {
+      const h0 = [...new Set(ev.harms.filter(x => x.h0 && x.victim_kind === "minor" && admissible(x.status)).map(x => x.h0))];
+      const room = Math.floor((NODE.w - 18 - 24 * h0.length - (ev.unresolved.length ? 58 : 0)) / 6.2);  // 10px mono ≈ 6px/char
+      g.append(svText({ x: 10, y: 53, class: "node-meta" }, clip(`${STANDING[ev.standing] || "—"} · ${shortDate(ev)}`, room)));
+      let x = NODE.w - 8 - (ev.unresolved.length ? 54 : 0);
+      for (const hm of h0.map(h => ({ h0: h }))) {
+        x -= 22;
+        g.append(sv("rect", { x, y: 42, width: 20, height: 14, rx: 3, class: "harm-tag" }));
+        g.append(svText({ x: x + 10, y: 52.5, class: "harm-text", "text-anchor": "middle" }, hm.h0));
+      }
+    }
+    if (ev.outcome !== "completed") {
+      g.append(svText({ x: NODE.w - 8, y: ctx ? 32 : 32, class: "node-outcome", "text-anchor": "end" },
+        ev.outcome.replace("_not_completed", "").replace(/_/g, " ")));
+    }
+    if (ev.unresolved.length) {
+      g.append(svText({ x: NODE.w - 8, y: ctx ? h - 6 : 53, class: "node-unresolved", "text-anchor": "end" }, "role open"));
+    }
+    const open = () => showDetail(ev);
+    g.addEventListener("click", open);
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    return g;
   }
 
   function renderLegend() {
-    const el = document.getElementById("affordance-legend");
-    if (!el) return;
-    const items = Object.keys(AFFORDANCE_COLORS)
-      .map(
-        (k) =>
-          `<span class="legend-item"><span class="dot" style="background:${AFFORDANCE_COLORS[k]}"></span>${AFFORDANCE_LABELS[k] || k}</span>`
-      )
-      .join("");
-    el.innerHTML = `<span class="legend-title">Affordance classes →</span>${items}
-      <span class="legend-item legend-disruption"><span class="dot disruption-dot"></span>Chain disruption (LE sting)</span>`;
+    const host = document.getElementById("legend");
+    host.innerHTML = "";
+    const item = (sym, label) => el("span", { class: "legend-item" }, sym, label);
+    host.append(
+      el("div", { class: "legend-row" }, el("span", { class: "legend-head", text: "Event" }),
+        item(el("i", { class: "box box-direct" }), "stated directly"),
+        item(el("i", { class: "box box-inferred" }), "inferred"),
+        item(el("i", { class: "box box-ctx" }), "response, law enforcement, court"),
+        item(el("i", { class: "box box-harm", text: "h2" }), "harm to a minor (H₀)"),
+        item(el("span", { class: "legend-mono", text: "admitted" }), "strongest legal standing of the cited passages")),
+      el("div", { class: "legend-row" }, el("span", { class: "legend-head", text: "Order" }),
+        [["direct", "stated in a passage"], ["inferred", "inferred"], ["meets", "immediately after"],
+          ["date", "from cited dates"], ["interrupt", "interrupts"], ["same", "possibly the same act"]]
+          .map(([k, l]) => item(el("i", { class: `line line-${k}` }), l))),
+      el("div", { class: "legend-row" }, el("span", { class: "legend-head", text: "Affordance" }),
+        Object.values(AFF).map(a => item(el("i", { class: "dot", style: `background:${a.color}` }), a.label))));
   }
 
-  function init() {
-    panelEl = document.getElementById("detail-panel");
-    backdropEl = document.getElementById("detail-backdrop");
-    backdropEl.addEventListener("click", closePanel);
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        if (offenseFilterOpen) setOffenseFilterOpen(false);
-        else closePanel();
-      }
-    });
-
-    try {
-      const embedded = document.getElementById("lifecycle-payload");
-      if (!embedded || !embedded.textContent.trim()) {
-        throw new Error("Lifecycle payload missing — open /lifecycle via the CaseLinker server.");
-      }
-      payload = JSON.parse(embedded.textContent);
-      renderOffenseFilter();
-      renderStats();
-      renderSwimlanes();
-      renderFundamentalSection();
-      renderExpansionSection();
-      renderLegend();
-    } catch (err) {
-      document.getElementById("lifecycle-canvas").innerHTML = `<div class="lifecycle-error">Failed to load lifecycle data: ${escapeHtml(err.message)}</div>`;
+  // ---------- derived view ----------
+  function renderDerived() {
+    const cs = state.payload.cases[state.caseIdx];
+    const host = document.getElementById("derived");
+    host.innerHTML = "";
+    if (!cs) return;
+    const affCase = new Set(), hCase = new Set();
+    cs.tracks.forEach(t => ((t.views[state.threshold] || {}).aff || []).forEach(a => affCase.add(a)));
+    Object.values(cs.events).forEach(e => e.harms.forEach(h => { if (h.h0 && h.victim_kind === "minor" && admissible(h.status)) hCase.add(h.h0); }));
+    const pills = (xs, f) => (xs.length ? xs.map(f) : [el("span", { class: "cl-muted", text: "∅" })]);
+    host.append(el("div", { class: "cl-card cl-card--pad sets" },
+      el("div", { class: "set" }, tex("\\operatorname{Aff}(c)"),
+        el("div", { class: "set-values" }, pills([...affCase].sort(), a => el("span", { class: "pill", style: `--c:${AFF[a].color}` }, AFF[a].label)))),
+      el("div", { class: "set" }, tex("H(c)\\subseteq\\mathcal{H}_{0}"),
+        el("div", { class: "set-values" }, pills([...hCase].sort(), x => el("span", { class: "pill pill-harm", text: x }))))));
+    for (const t of cs.tracks) {
+      const v = t.views[state.threshold];
+      if (!v || !v.chains.length) continue;
+      const body = el("div", { class: "cl-card__body" });
+      v.chains.slice(0, 10).forEach((chain, i) => {
+        const steps = chain.map(id => {
+          const ev = cs.events[id];
+          return el("span", { class: "step" }, ev.label, ev.affordances.filter(a => admissible(a.status))
+            .map(a => el("i", { class: "dot", style: `background:${AFF[a.class].color}`, title: AFF[a.class].label })));
+        });
+        const aff = new Set(chain.flatMap(id => cs.events[id].affordances.filter(a => admissible(a.status)).map(a => a.class)));
+        body.append(el("div", { class: "chain" }, el("span", { class: "chain-id", text: `L${i + 1}` }),
+          el("div", { class: "chain-steps" }, steps.flatMap((s, k) => (k ? [el("span", { class: "chain-arrow", text: "→" }), s] : [s]))),
+          el("span", { class: "chain-aff", text: aff.size ? [...aff].map(a => AFF[a].label).join(" · ") : "∅" })));
+      });
+      if (v.chains.length > 10) body.append(el("div", { class: "cl-muted cl-small more", text: `+ ${v.chains.length - 10} more chains` }));
+      host.append(el("div", { class: "cl-card chain-card" },
+        el("div", { class: "cl-card__head" },
+          el("div", { class: "cl-card__title", text: `${TRACK_KIND[t.kind] || t.kind}${t.anchor ? " · " + t.anchor : ""}` }),
+          el("span", { class: "cl-muted cl-small", text: `${v.chains.length} chains${v.truncated ? " (truncated)" : ""} · ${v.unordered_pairs} unordered pairs` })),
+        body));
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
+  // ---------- theory view ----------
+  function renderTheory() {
+    const host = document.getElementById("theory");
+    if (host.dataset.done) return;
+    host.dataset.done = "1";
+    const row = (label, src, note) => el("div", { class: "eq-row" }, el("div", { class: "eq-label", text: label }), tex(src, true),
+      note ? el("p", { class: "eq-note", text: note }) : null);
+    host.append(
+      el("div", { class: "cl-card cl-card--pad" },
+        el("div", { class: "cl-eyebrow", text: "TRAJECTORIES AND HARMS · COMPUTED FROM THE RECORD" }),
+        row("Trajectory", "L=((a_{1},O_{1}),\\ldots,(a_{n},O_{n})),\\quad a_{i}\\in\\mathcal{A},\\; O_{i}\\subseteq\\mathcal{O}(P)",
+          "On this page: a maximal chain of the documented order, with Oᵢ the affordances the record ties to the act."),
+        row("Associated affordances", "\\operatorname{Aff}(L)=\\bigcup_{i=1}^{n} O_{i}"),
+        row("Affordance–harm association", "\\psi_{\\mathcal{C}}(o)=\\{h\\in\\mathcal{H}_{0}:\\exists c\\in\\mathcal{C},\\; o\\in\\operatorname{Aff}(c)\\wedge h\\in H(c)\\}",
+          "Co-occurrence within a case."),
+        row("Coverage identity", "\\bigcup_{o\\in\\mathcal{O}}\\psi_{\\mathcal{C}}(o)=\\bigcup_{c\\in\\mathcal{C},\\,\\operatorname{Aff}(c)\\neq\\varnothing} H(c)\\subseteq\\mathcal{H}_{\\mathcal{C}}")),
+      el("div", { class: "cl-card cl-card--pad" },
+        el("div", { class: "cl-eyebrow", text: "STATE-SPACE CONSTRUCTION · APPENDIX X" }),
+        row("Model", "M_{P}=(S,\\mathcal{A},\\mathcal{O}(P),T_{P},s_{0}),\\qquad T_{P}\\subseteq S\\times\\mathcal{A}\\times 2^{\\mathcal{O}(P)}\\times S",
+          "Transitions are possibilities under stated assumptions; they carry no probabilities."),
+        row("Feasible trajectories", "\\mathcal{L}(P)=\\{\\varepsilon(r): r\\text{ a finite run of }M_{P}\\text{ from }s_{0}\\}"),
+        row("New pathways", "\\Delta_{\\mathrm{path}}(o;P)=\\pi(\\mathcal{L}(P\\oplus o))\\setminus\\pi(\\mathcal{L}(P))"),
+        row("New support", "\\Delta_{\\mathrm{supp}}(o;P)=\\{L\\in\\mathcal{L}(P\\oplus o):\\pi(L)\\in\\pi(\\mathcal{L}(P)),\\; o\\in\\operatorname{Aff}(L)\\}"),
+        toyDiagram(),
+        el("p", { class: "eq-note" }, "The worked comparison from Appendix X. Adding ephemerality to the request gives existing sequences new support, ",
+          tex("\\Delta_{\\mathrm{path}}(e;P)=\\varnothing"), "; adding generative synthesis opens a sequence with no contact, ",
+          tex("(\\text{synthesize})\\in\\Delta_{\\mathrm{path}}(g;P)"), ". Documented trajectories are checked for compatibility with a specified model.")),
+      el("div", { class: "theory-links" },
+        el("a", { href: REPO + "state_machines/README.md", target: "_blank", rel: "noopener", text: "State machines README" }),
+        el("a", { href: REPO + "state_machines/theory/README.md", target: "_blank", rel: "noopener", text: "Theory README" }),
+        el("a", { href: REPO + "state_machines/evidence/CODEBOOK.md", target: "_blank", rel: "noopener", text: "Codebook" })));
   }
+
+  function toyDiagram() {
+    const svg = sv("svg", { viewBox: "0 0 660 250", class: "toy", role: "img", "aria-label": "Appendix X toy transition system" });
+    const defs = sv("defs");
+    const m = sv("marker", { id: "toyarr", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto" });
+    m.append(sv("path", { d: "M0,0 L10,5 L0,10 z", class: "toy-head" }));
+    defs.append(m);
+    svg.append(defs);
+    const edge = (d, cls) => svg.append(sv("path", { d, class: `toy-edge ${cls}`, "marker-end": "url(#toyarr)" }));
+    const label = (x, y, text, cls, anchor = "middle") => svg.append(svText({ x, y, class: `toy-label ${cls}`, "text-anchor": anchor }, text));
+    edge("M84,170 L274,170", "");
+    edge("M324,162 L534,114", "");
+    edge("M324,178 L534,220", "");
+    edge("M314,150 C370,92 470,88 536,102", "toy-e");
+    edge("M76,150 C170,28 460,22 540,94", "toy-g");
+    label(180, 160, "contact · contact discovery", "");
+    label(422, 120, "request · private messaging", "");
+    label(410, 224, "request refused", "");
+    label(430, 84, "request · + ephemerality", "toy-e");
+    label(312, 40, "synthesize · generative synthesis", "toy-g");
+    for (const [id, x, y, desc] of [["s₀", 60, 170, "image accessible"], ["s₁", 300, 170, "channel"], ["s₂", 560, 106, "material obtained"], ["s₃", 560, 226, "refused"]]) {
+      svg.append(sv("circle", { cx: x, cy: y, r: 22, class: "toy-state" }));
+      svg.append(svText({ x, y: y + 5, class: "toy-id", "text-anchor": "middle" }, id));
+      svg.append(svText({ x, y: y + (y > 200 ? -30 : 38), class: "toy-desc", "text-anchor": "middle" }, desc));
+    }
+    return svg;
+  }
+
+  // ---------- detail panel ----------
+  function showDetail(ev) {
+    const panel = document.getElementById("detail-panel");
+    const back = document.getElementById("detail-backdrop");
+    const kv = (k, v) => el("div", { class: "kv" }, el("span", { class: "k", text: k }), el("span", { class: "v", text: v }));
+    const when = ev.time.length
+      ? ev.time.map(a => `${a.earliest === a.latest ? a.earliest : a.earliest + " – " + a.latest} (${a.precision}, ${a.basis.replace(/_/g, " ")}, ${a.status.toLowerCase()})`).join("; ") + (ev.time_conflict ? "; dates conflict" : "")
+      : "undated";
+    panel.innerHTML = "";
+    panel.append(
+      el("button", { class: "detail-close", type: "button", "aria-label": "Close", text: "×" }),
+      el("div", { class: "cl-eyebrow", text: `${ev.id} · ${ev.family} action` }),
+      el("h3", { class: "detail-title", text: ev.label }),
+      kv("Evidence", `${ev.status.toLowerCase()} · strongest standing ${STANDING[ev.standing] || "—"} · ${ev.review}`),
+      kv("Actor", `${ev.actor.participant_ref} (${ev.actor.role})`),
+      ev.co_actors.length ? kv("With", ev.co_actors.map(c => `${c.participant_ref} (${c.role}, ${c.mode})`).join("; ")) : null,
+      ev.targets.length ? kv("Targets", ev.targets.map(t => `${t.participant_ref} (${t.role})`).join("; ")) : null,
+      ev.unresolved.length ? kv("Role open", `${ev.unresolved.join(", ")}: decided in adjudication`) : null,
+      kv("Outcome", ev.outcome.replace(/_/g, " ")),
+      kv("When", when),
+      ev.affordances.length ? kv("Affordances", ev.affordances.map(a => `${AFF[a.class].label} (${a.basis.replace("_", " ")}, ${a.status.toLowerCase()})`).join("; ")) : null,
+      ev.harms.length ? kv("Harms", ev.harms.map(h => `${h.code.replace("HARM_", "").replace(/_/g, " ").toLowerCase()}${h.h0 ? " · " + h.h0 : ""} (${h.victim_kind}, ${h.status.toLowerCase()})`).join("; ")) : null,
+      ev.platforms.length ? kv("Platforms", ev.platforms.map(p => `${p.key} (${p.mode}, ${p.audience})`).join("; ")) : null,
+      ev.mentions.length ? kv("Named", ev.mentions.join(", ")) : null,
+      el("div", { class: "detail-sub", text: "Sources" }),
+      el("ul", { class: "prov" }, ev.provenance.map(p => el("li", { text: `${p.doc_type.replace(/_/g, " ")}, page ${p.page} · ${STANDING[p.standing] || p.standing} · ${p.verification.toLowerCase()}` }))));
+    panel.setAttribute("aria-hidden", "false");
+    panel.classList.add("is-open");
+    back.classList.add("is-open");
+    const close = () => { panel.classList.remove("is-open"); back.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); };
+    panel.querySelector(".detail-close").addEventListener("click", close);
+    back.onclick = close;
+    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); }, { once: true });
+  }
+
+  // ---------- shell ----------
+  function renderStats() {
+    const p = state.payload;
+    const cs = p.cases;
+    const sum = k => cs.reduce((n, c) => n + c.summary[k], 0);
+    document.getElementById("lede").textContent = cs.length ? `${cs.length} federal cases · ${sum("events")} documented events` : "";
+    const banner = document.getElementById("release-banner");
+    if (p.release) {
+      banner.hidden = false;
+      banner.className = "release-banner " + (p.release.adjudicated ? "is-ok" : "is-preview");
+      banner.textContent = p.release.adjudicated ? "Adjudicated" : "Preview · not yet adjudicated";
+      banner.title = `${p.release.id} · schema ${p.release.schema_version} · codebook ${p.release.codebook_version}`;
+    }
+  }
+
+  function renderChips() {
+    const host = document.getElementById("case-chips");
+    host.innerHTML = "";
+    state.payload.cases.forEach((c, i) => {
+      const b = el("button", { type: "button", class: "case-chip", "aria-pressed": String(i === state.caseIdx), text: c.case_id });
+      b.addEventListener("click", () => { state.caseIdx = i; renderChips(); render(); });
+      host.append(b);
+    });
+  }
+
+  function render() {
+    for (const v of ["documented", "derived", "theory"]) document.getElementById("view-" + v).hidden = state.view !== v;
+    document.getElementById("threshold").hidden = state.view === "theory";
+    document.getElementById("case-chips").parentElement.classList.toggle("is-theory", state.view === "theory");
+    if (state.view === "documented") renderDocumented();
+    if (state.view === "derived") renderDerived();
+    if (state.view === "theory") renderTheory();
+  }
+
+  function wire() {
+    document.querySelectorAll("#view-tabs button").forEach(b => b.addEventListener("click", () => {
+      state.view = b.dataset.view;
+      document.querySelectorAll("#view-tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+      render();
+    }));
+    document.querySelectorAll("#threshold button").forEach(b => b.addEventListener("click", () => {
+      state.threshold = b.dataset.threshold;
+      document.querySelectorAll("#threshold button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      render();
+    }));
+    document.getElementById("show-context").addEventListener("change", e => { state.context = e.target.checked; render(); });
+    document.querySelectorAll(".m[data-tex]").forEach(n => n.replaceWith(tex(n.dataset.tex)));
+  }
+
+  function boot() {
+    const tag = document.getElementById("lifecycle-payload");
+    try { state.payload = tag ? JSON.parse(tag.textContent) : { release: null, cases: [] }; } catch (e) { state.payload = { release: null, cases: [] }; }
+    wire();
+    renderStats();
+    renderChips();
+    renderLegend();
+    render();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();

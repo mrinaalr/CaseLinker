@@ -11,7 +11,7 @@ Finite transition systems for examining how technological affordances shape feas
 
 ## The construction
 
-AfH 2.0, Appendix X. A model fixes states, actions and the affordances available in an environment $P$:
+AfH, Appendix X. A model fixes states, actions and the affordances available in an environment $P$:
 
 $$
 M_{P} = (S,\ \mathcal A,\ \mathcal O(P),\ T_{P},\ s_{0}), \qquad T_{P} \subseteq S \times \mathcal A \times 2^{\mathcal O(P)} \times S

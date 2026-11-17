@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lifecycle · CaseLinker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>State machines · CaseLinker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
   <script src="/viz-assets/v4.js?v=4.2" defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="/viz-assets/lifecycle.css?v=4.2">
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="/viz-assets/lifecycle.css?v=5.0">
 </head>
 <body class="lifecycle-page">
   <div id="cl-nav" data-active="lifecycle"></div>
@@ -18,54 +17,62 @@
   <div class="cl-page cl-page--wide">
     <header class="cl-head">
       <h1 class="cl-title">State machines</h1>
+      <span class="cl-lede" id="lede"></span>
+      <span class="cl-head__spacer"></span>
+      <span id="release-banner" class="release-banner" hidden></span>
     </header>
 
-    <div class="cl-stats lifecycle-stats">
-      <div class="cl-stat"><div class="cl-stat__n" id="stat-cases">—</div><div class="cl-stat__l">cases</div></div>
-      <div class="cl-stat"><div class="cl-stat__n">5</div><div class="cl-stat__l">offence types</div></div>
-    </div>
-
-    <div class="cl-toolbar lifecycle-toolbar offense-filter" id="offense-filter">
-      <span class="cl-label">Offence type</span>
-      <div class="offense-filter-options" id="offense-filter-options" role="group" aria-label="Offence types"></div>
-      <button type="button" class="cl-btn cl-btn--ghost cl-btn--xs offense-filter-all" id="offense-filter-all">All</button>
-    </div>
-
-    <section class="lifecycle-section" aria-labelledby="anchor-heading">
-      <header class="lifecycle-section-head">
-        <div class="cl-eyebrow">ANCHOR · 5 PACER CASES</div>
-        <h2 class="lifecycle-h2" id="anchor-heading">One trajectory per offence</h2>
-      </header>
-      <div id="lifecycle-canvas" class="cl-canvas lifecycle-canvas" role="img" aria-label="Canonical PACER case lifecycle swimlanes">
-        <div class="lifecycle-loading">Rendering lifecycle swimlanes…</div>
+    <div class="cl-toolbar lifecycle-toolbar">
+      <span class="cl-label">Case</span>
+      <div class="case-chips" id="case-chips" role="group" aria-label="Cases"></div>
+      <span class="cl-head__spacer"></span>
+      <div class="seg" id="view-tabs" role="tablist" aria-label="View">
+        <button type="button" role="tab" data-view="documented" aria-selected="true">Documented</button>
+        <button type="button" role="tab" data-view="derived" aria-selected="false">Derived</button>
+        <button type="button" role="tab" data-view="theory" aria-selected="false">Theory</button>
       </div>
-      <div id="affordance-legend" class="affordance-legend" aria-label="Affordance legend"></div>
-    </section>
+      <div class="seg" id="threshold" role="group" aria-label="Evidence threshold">
+        <button type="button" data-threshold="DIRECT" aria-pressed="false" title="Only what passages state directly">Direct</button>
+        <button type="button" data-threshold="INFERRED" aria-pressed="true" title="Direct plus plausible readings of the passages">+ Inferred</button>
+      </div>
+      <label class="context-toggle" title="Responses, law-enforcement and court events"><input type="checkbox" id="show-context" checked> context</label>
+    </div>
 
-    <section class="lifecycle-section" aria-labelledby="fundamental-heading">
+    <section class="lifecycle-section" id="view-documented" aria-labelledby="doc-heading">
       <header class="lifecycle-section-head">
-        <div class="cl-eyebrow">STATE MACHINE · 30 PACER CASES</div>
-        <h2 class="lifecycle-h2" id="fundamental-heading">State machine</h2>
+        <div class="cl-eyebrow">DOCUMENTED · EVENT GRAPH</div>
+        <h2 class="lifecycle-h2" id="doc-heading">What the record shows</h2>
+        <p class="lifecycle-sub">Columns follow documented order. Select an event for its sources.</p>
       </header>
-      <section id="fundamental-section" class="fundamental-section cl-card cl-card--pad" aria-label="State machine backbone and equations"></section>
+      <div id="doc-canvas" class="cl-canvas lifecycle-canvas" role="img" aria-label="Documented event graph swimlanes">
+        <div class="lifecycle-loading">Loading documented trajectories…</div>
+      </div>
+      <details class="legend-wrap"><summary>Key</summary><div class="legend" id="legend"></div></details>
     </section>
 
-    <section id="expansion-section" class="lifecycle-section expansion-section" hidden aria-label="Expansion cases from federal dockets">
-      <header class="lifecycle-section-head expansion-header">
-        <div class="cl-eyebrow expansion-eyebrow">EXPANSION · PACER DOCKETS</div>
-        <h2 class="lifecycle-h2 expansion-title">Expansion</h2>
-        <p class="lifecycle-sub expansion-subtitle" id="expansion-subtitle">
-          Additional cases inferred by most-severe charge and plotted on the same CAC phase grid.
-        </p>
+    <section class="lifecycle-section" id="view-derived" aria-labelledby="der-heading" hidden>
+      <header class="lifecycle-section-head">
+        <div class="cl-eyebrow">DERIVED · TRAJECTORIES</div>
+        <h2 class="lifecycle-h2" id="der-heading">Trajectories read from the order</h2>
+        <p class="lifecycle-sub">Maximal chains of the documented order, <span class="m" data-tex="L=((a_{1},O_{1}),\ldots,(a_{n},O_{n}))"></span>.</p>
       </header>
-      <div id="lifecycle-canvas-expansion" class="cl-canvas lifecycle-canvas" role="img" aria-label="Expansion case lifecycle swimlanes"></div>
+      <div id="derived" class="derived"></div>
+    </section>
+
+    <section class="lifecycle-section" id="view-theory" aria-labelledby="th-heading" hidden>
+      <header class="lifecycle-section-head">
+        <div class="cl-eyebrow">THEORY · AFFORDANCES FOR HARM</div>
+        <h2 class="lifecycle-h2" id="th-heading">The formal model</h2>
+        <p class="lifecycle-sub"><em>Affordances for Harm</em>, §7.2 and Appendix X.</p>
+      </header>
+      <div id="theory" class="theory"></div>
     </section>
   </div>
 
   <div id="detail-backdrop" class="detail-backdrop" aria-hidden="true"></div>
-  <aside id="detail-panel" class="detail-panel cl-card" aria-label="Stage detail"></aside>
+  <aside id="detail-panel" class="detail-panel cl-card" aria-label="Event detail" aria-hidden="true"></aside>
 
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script src="/viz-assets/lifecycle.js?v=4.7"></script>
+  <script src="/viz-assets/lifecycle.js?v=5.0"></script>
 </body>
 </html>

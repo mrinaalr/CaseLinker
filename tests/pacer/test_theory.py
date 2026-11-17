@@ -1,4 +1,4 @@
-"""Theory layer: AfH 2.0 Appendix X, reproduced on the paper's own worked example."""
+"""Theory layer: AfH Appendix X, reproduced on the paper's own worked example."""
 from __future__ import annotations
 
 import ast
