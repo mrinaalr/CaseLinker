@@ -392,11 +392,12 @@
     const p = state.payload;
     const events = p.cases.reduce((n, c) => n + c.summary.events, 0);
     document.getElementById("lede").textContent = p.cases.length ? `${p.cases.length} federal cases · ${events} documented events` : "";
-    if (p.release && !p.release.adjudicated) {   // only a local preview build is flagged; a shipped release is adjudicated
+    const mode = p.release && (p.release.review_mode || (p.release.adjudicated ? "adjudicated" : "preview"));
+    if (mode === "preview" || mode === "machine") {   // an adjudicated release needs no label
       const b = document.getElementById("release-banner");
       b.hidden = false;
-      b.className = "release-banner is-preview";
-      b.textContent = "Preview · not yet adjudicated";
+      b.className = "release-banner " + (mode === "preview" ? "is-preview" : "is-machine");
+      b.textContent = mode === "preview" ? "Preview · not reviewed" : "Machine-coded · two independent coders";
       b.title = `${p.release.id} · schema ${p.release.schema_version} · codebook ${p.release.codebook_version}`;
     }
     document.querySelectorAll("#view-tabs button").forEach(b => b.addEventListener("click", () => {

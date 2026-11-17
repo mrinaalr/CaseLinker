@@ -156,3 +156,8 @@ def test_bundle_folders_are_ignored_on_case_sensitive_filesystems():
     assert not ignored("state_machines/data/any-release/manifest.json")
     assert not ignored("state_machines/data/any-release/graphs/case.evidence.jsonld")
     assert not ignored("state_machines/data/any-release/derived/case.direct.json")
+    # files the pipeline needs from a clean checkout
+    assert not ignored("state_machines/coding/models.json")
+    assert not ignored("state_machines/benchmark/data/synth_001/gold.json")
+    assert not ignored("state_machines/benchmark/data/MANIFEST.json")
+    assert ignored("local/coder_cache.db") and ignored("local/auto/coder_A/case.json")

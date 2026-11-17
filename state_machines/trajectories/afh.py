@@ -85,7 +85,9 @@ def release_analysis(root=None, threshold: str = "INFERRED", case_id: str = "") 
                         "unordered_pairs": len(t["unordered_pairs"]), "possible_same_act": t["possible_same_act"],
                         "aff_by_chain": [sorted(aff(L)) for L in t["trajectories"]]} for t in d["tracks"]],
         })
-    return {"release": manifest["release_id"], "adjudicated": manifest["adjudicated"], "threshold": threshold,
+    from state_machines.trajectories.payload import review_mode
+    return {"release": manifest["release_id"], "adjudicated": manifest["adjudicated"], "review_mode": review_mode(manifest),
+            "threshold": threshold,
             "cases": per_case,
             "psi": {o: [{"harm": h, "cases": ids} for h, ids in pairs] for o, pairs in psi(rows).items()},
             "coverage_identity_holds": coverage_identity_holds(rows),

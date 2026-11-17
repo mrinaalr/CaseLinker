@@ -4924,6 +4924,7 @@ def api_ontology_pacer():
               "shacl": c["shacl"]["conformance"], "review": c["review"]} for c in manifest["cases"]]
     return JSONResponse(
         content={"release": manifest["release_id"], "adjudicated": manifest["adjudicated"],
+                 "review_mode": manifest.get("review_mode") or ("adjudicated" if manifest["adjudicated"] else "preview"),
                  "schema_version": manifest["schema_version"], "cases": cases, "n": len(cases),
                  "note": "Query these named graphs through /sparql."},
         headers={"Cache-Control": "public, max-age=600"},

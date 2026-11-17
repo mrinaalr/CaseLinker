@@ -1,0 +1,39 @@
+{
+ "note": "Local coder models for PACER coding. Court text never leaves the machine: models run through a local Ollama server and are pinned by content digest; the coder refuses a model whose digest differs. Pull with `ollama pull <name>`; weights live in Ollama's store (~/.ollama), not in the repository.",
+ "runtime": {
+  "server": "ollama",
+  "version": "0.32.6",
+  "base_url": "http://127.0.0.1:11434"
+ },
+ "coders": {
+  "coder_A": {
+   "model": "qwen3:8b",
+   "digest": "sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+   "family": "qwen3",
+   "parameters": "8.2B",
+   "quantization": "Q4_K_M",
+   "size_bytes": 5225388164,
+   "why": "also CaseLinker's local extraction model (CASELINKER_LLM_MODEL default)",
+   "think": false
+  },
+  "coder_B": {
+   "model": "llama3.1:8b",
+   "digest": "sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+   "family": "llama",
+   "parameters": "8.0B",
+   "quantization": "Q4_K_M",
+   "size_bytes": 4920753328,
+   "why": "a second model family, so the two coders' errors are not shared and their agreement measures reliability"
+  }
+ },
+ "options": {
+  "temperature": 0,
+  "seed": 7,
+  "num_ctx": 12288,
+  "num_predict": 1500
+ },
+ "prompt": {
+  "version": "coder-prompt-1.1",
+  "file": "state_machines/coding/coder.py (PROMPT, SCHEMA)"
+ }
+}

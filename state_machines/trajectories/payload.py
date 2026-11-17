@@ -6,7 +6,7 @@ codes, roles, statuses, dates and document/page provenance. It carries no quotes
 coder-written descriptions, and no names: participants appear as P1, P2, ...
 
 Which release is shown: ``CASELINKER_PACER_RELEASE`` (a release id under
-state_machines/data/ or a path to a release folder); otherwise the newest adjudicated
+state_machines/data/ or a path to a release folder); otherwise the newest servable (adjudicated or machine-coded)
 release under state_machines/data/; otherwise an empty payload.
 """
 from __future__ import annotations
@@ -25,6 +25,16 @@ STANDING_RANK = {s: i for i, s in enumerate((
     "ADMITTED_UNDER_OATH", "JUDICIAL_FINDING", "VERDICT_ELEMENT"))}
 
 
+def review_mode(manifest: dict) -> str:
+    """adjudicated | machine | preview (manifests before review modes: adjudicated or preview)."""
+    return manifest.get("review_mode") or ("adjudicated" if manifest.get("adjudicated") else "preview")
+
+
+def servable(manifest: dict) -> bool:
+    """Adjudicated and machine-coded releases may be served; previews never are."""
+    return review_mode(manifest) in ("adjudicated", "machine")
+
+
 def release_dir() -> Optional[Path]:
     env = os.environ.get("CASELINKER_PACER_RELEASE", "").strip()
     if env:
@@ -34,7 +44,7 @@ def release_dir() -> Optional[Path]:
     candidates = []
     for m in sorted(DATA.glob("*/manifest.json")):
         doc = json.loads(m.read_text(encoding="utf-8"))
-        if doc.get("adjudicated"):
+        if servable(doc):
             candidates.append(m.parent)
     return candidates[-1] if candidates else None
 
@@ -124,6 +134,7 @@ def build_payload(root: Optional[Path] = None, *, from_bundles: bool = False) ->
         cp["shacl"] = c["shacl"]["conformance"]
         cases.append(cp)
     return {"release": {"id": manifest["release_id"], "adjudicated": manifest["adjudicated"],
+                        "review_mode": review_mode(manifest),
                         "schema_version": manifest["schema_version"], "codebook_version": manifest["codebook_version"],
                         "derivation_rule": manifest["derivation_rule"], "cases": len(cases)},
             "cases": cases}

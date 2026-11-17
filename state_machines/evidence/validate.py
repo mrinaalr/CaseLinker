@@ -196,8 +196,9 @@ def validate(bundle: dict, *, text_root: Optional[Path] = None, deny_list: Seque
             (err if require_verified else warn)("T04", w, check.reason)
         if p["verification"]["status"] == "VERIFIED" and check.status == "FAILED":
             err("T04", w, "marked VERIFIED but the text does not verify")
-        if page["text_method"] == "ocr" and p["verification"]["status"] == "VERIFIED" and not page.get("image_checked"):
-            err("T05", w, "OCR page: a VERIFIED passage needs the page image checked")
+        if page["text_method"] == "ocr" and p["verification"]["status"] == "VERIFIED" and not page.get("image_checked") \
+                and p["verification"]["method"] != "ocr_text_exact":
+            err("T05", w, "OCR page: a VERIFIED passage needs the page image checked (or method ocr_text_exact)")
         if p["verification"]["status"] == "VERIFIED" and page["text_method"] == "ocr" \
                 and p["verification"]["method"] == "text_layer_exact":
             err("T05", w, "OCR page cannot be verified by text_layer_exact")
@@ -377,21 +378,33 @@ def errors(findings: Iterable[Finding]) -> List[Finding]:
     return [f for f in findings if f.severity == "error"]
 
 
+REVIEW_MODES = ("adjudicated", "machine", "preview")
+
+
 def release_errors(bundle: dict, *, text_root: Optional[Path] = None, deny_list: Sequence[str] = (),
-                   allow_unreviewed: bool = False) -> List[str]:
+                   allow_unreviewed: bool = False, mode: str = "adjudicated") -> List[str]:
     """Why a bundle cannot be released (empty list = releasable).
 
-    Every validation error blocks. With page text available, passages must verify. Every
-    event and relation must be adjudicated, unless ``allow_unreviewed`` builds a preview,
-    which the release manifest then labels as not adjudicated."""
+    Every validation error blocks, in every mode. With page text available, passages must verify.
+
+    - ``adjudicated``: every event and relation adjudicated by a named reviewer; no open roles.
+    - ``machine``: every event and relation agreed by two independent coders (or adjudicated);
+      open roles stay open and are reported, not blocked.
+    - ``preview`` (or ``allow_unreviewed``): anything that validates; never served publicly.
+    """
+    mode = "preview" if allow_unreviewed else mode
+    if mode not in REVIEW_MODES:
+        raise ValueError(mode)
     out = [f"{f.code} {f.where}: {f.message}" for f in errors(
         validate(bundle, text_root=text_root, deny_list=deny_list, require_verified=text_root is not None))]
-    if not allow_unreviewed:
-        pending = [e["event_id"] for e in bundle["events"] if e["review"]["status"] != "adjudicated"]
-        pending += [r["relation_id"] for r in bundle["relations"] if (r.get("review") or {}).get("status", "adjudicated") != "adjudicated"]
-        if pending:
-            out.append(f"{len(pending)} events/relations not adjudicated (first: {', '.join(pending[:5])})")
+    if mode == "preview":
+        return out
+    ok = ("adjudicated",) if mode == "adjudicated" else ("adjudicated", "agreed")
+    pending = [e["event_id"] for e in bundle["events"] if e["review"]["status"] not in ok]
+    pending += [r["relation_id"] for r in bundle["relations"] if (r.get("review") or {}).get("status", "adjudicated") not in ok]
+    if pending:
+        out.append(f"{len(pending)} events/relations not {' or '.join(ok)} (first: {', '.join(pending[:5])})")
     unresolved = [e["event_id"] for e in bundle["events"] if e.get("unresolved_participants")]
-    if unresolved and not allow_unreviewed:
+    if unresolved and mode == "adjudicated":
         out.append(f"{len(unresolved)} events have participants whose role is not decided: {', '.join(unresolved[:5])}")
     return out

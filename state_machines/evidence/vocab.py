@@ -53,7 +53,8 @@ DOC_TYPES = {
 }
 
 VERIFICATION_STATUS = ("VERIFIED", "UNVERIFIED", "FAILED")
-VERIFICATION_METHOD = ("text_layer_exact", "ocr_plus_page_image", "manual_page_image")
+# ocr_text_exact: the quote matches the OCR text exactly, but nobody checked the page image (machine coding)
+VERIFICATION_METHOD = ("text_layer_exact", "ocr_plus_page_image", "manual_page_image", "ocr_text_exact")
 TEXT_METHOD = ("text_layer", "ocr", "manual_transcription", "none")
 PAGE_LIMITATIONS = (
     "strikethrough", "handwriting", "redaction", "stamp_overlap", "low_contrast",

@@ -82,3 +82,20 @@ def test_page_and_analysis_need_only_committed_release_files(tmp_path):
         (case,) = afh.release_analysis(root, thr)["cases"]
         assert (case["aff"], case["h0"]) == (affs, harms)
         assert harms, "the fixture records minor-directed harms"
+
+
+def test_machine_coded_releases_are_served_and_labelled(tmp_path, monkeypatch):
+    pytest.importorskip("case_uco")
+    from state_machines.graphs.release import build
+    from state_machines.trajectories import payload
+    from tests.pacer.test_release import _release as stage
+    bundle = F.build()[0]
+    for e in bundle["events"]:
+        e["review"] = {"status": "agreed", "coders": ["coder_A", "coder_B"], "adjudicator": None}
+    root = stage(tmp_path, bundle)
+    m = build("test-v1", data_root=root, text_root=tmp_path / "text", mode="machine")
+    assert m["review_mode"] == "machine" and m["adjudicated"] is False
+    monkeypatch.delenv("CASELINKER_PACER_RELEASE", raising=False)
+    monkeypatch.setattr(payload, "DATA", root)
+    assert payload.release_dir() == root / "test-v1"
+    assert payload.build_payload()["release"]["review_mode"] == "machine"

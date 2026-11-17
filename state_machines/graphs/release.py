@@ -22,7 +22,8 @@ that exactly the selected kinds are present and that each graph is of its kind.
 
 ``build`` refuses a bundle with validation errors and records each case's SHACL result
 (full, partial or fails, upstream defects apart) and its review status, so a release can
-never present unadjudicated coding as adjudicated. ``verify_store`` compares a loaded
+never present unadjudicated coding as adjudicated: its ``review_mode`` is adjudicated, machine
+(two independent coders agreed on everything published) or preview. ``verify_store`` compares a loaded
 store with the manifest through SPARQL.
 
     python -m state_machines.graphs.release build <release_id> [--allow-unreviewed]
@@ -69,7 +70,8 @@ def _review_summary(bundle: dict) -> Dict[str, int]:
 
 
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
-          deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False) -> dict:
+          deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
+          mode: str = "adjudicated") -> dict:
     """Validate, derive, emit and SHACL-check every bundle of a release; write the manifest."""
     from state_machines.evidence.validate import release_errors
     from state_machines.graphs.emit import evidence_graph, serialize, trajectory_graph
@@ -87,7 +89,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         bundle = json.loads(path.read_text(encoding="utf-8"))
         case_id = bundle["case_id"]
         problems = release_errors(bundle, text_root=text_root, deny_list=(deny_lists or {}).get(case_id, ()),
-                                  allow_unreviewed=allow_unreviewed)
+                                  mode="preview" if allow_unreviewed else mode)
         if problems:
             raise SystemExit(f"{case_id}: not releasable:\n  " + "\n  ".join(problems[:20]))
         for threshold in ("DIRECT", "INFERRED"):
@@ -102,6 +104,8 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "bundle_sha256": _sha(path.read_bytes()),
             "source_documents": sorted({d["sha256"] for d in bundle["documents"]}),
             "review": _review_summary(bundle),
+            "passages": {"total": len(bundle["passages"]),
+                         "ocr_text_only": sum(p["verification"].get("method") == "ocr_text_exact" for p in bundle["passages"])},
             "graphs": {"evidence": {"iri": graph_iri(case_id, "evidence"), "sha256": _sha(ev)},
                        "trajectories": {"iri": graph_iri(case_id, "trajectories"), "sha256": _sha(tr)}},
             "shacl": {"conformance": shacl["conformance"], "violations": len(shacl["violations"]),
@@ -114,6 +118,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         "schema_version": V.SCHEMA_VERSION, "codebook_version": V.CODEBOOK_VERSION,
         "derivation_rule": RULE_VERSION, "extension": EXTENSION.name,
         "sdk": (REPO / "ontology" / "SDK_VERSION").read_text(encoding="utf-8").split("\n")[0] if (REPO / "ontology" / "SDK_VERSION").is_file() else None,
+        "review_mode": "preview" if allow_unreviewed else mode,
         "adjudicated": all(set(c["review"]) <= {"adjudicated"} for c in cases),
         "cases": cases,
     }
@@ -192,15 +197,17 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("build")
     b.add_argument("release_id")
-    b.add_argument("--allow-unreviewed", action="store_true",
-                   help="build a preview from unadjudicated bundles; the manifest says adjudicated=false")
+    b.add_argument("--mode", choices=("adjudicated", "machine", "preview"), default="adjudicated",
+                   help="adjudicated: a named reviewer decided every item; machine: two independent coders agreed "
+                        "on everything published; preview: anything that validates, local only")
+    b.add_argument("--allow-unreviewed", action="store_true", help="same as --mode preview")
     n = sub.add_parser("nquads")
     n.add_argument("release_id")
     n.add_argument("--graphs", choices=sorted(SELECTIONS), default="all", help="evidence only, or evidence plus trajectories")
     args = ap.parse_args(argv)
     if args.cmd == "build":
-        m = build(args.release_id, allow_unreviewed=args.allow_unreviewed)
-        print(json.dumps({"release": m["release_id"], "cases": len(m["cases"]), "adjudicated": m["adjudicated"]}))
+        m = build(args.release_id, allow_unreviewed=args.allow_unreviewed, mode=args.mode)
+        print(json.dumps({"release": m["release_id"], "cases": len(m["cases"]), "review_mode": m["review_mode"]}))
     else:
         print(nquads(args.release_id, select=args.graphs))
     return 0
