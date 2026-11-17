@@ -106,7 +106,7 @@ At record level the comparable figure is 1,953 offender-use records (95% CI 1,69
 |---|---|---|
 | `repair_line_wraps`, `linewrap_tiers` (additive) and versions `tiers-1` / `tiers-1+linewrap-1` | `ontology/platform_affordance_evidence/platform_affordance_evidence.py` | `tests/api/test_platform_affordance_evidence_linewrap.py`: wraps join and paragraphs stay; a wrapped sentence goes from named-only to stated; idempotent; additive under a lower repaired tier; published version unchanged |
 | Records carry `stated_vs_inferred_linewrap`; `_meta` records both rule versions | evidence JSON rebuilt. The published tier is identical for all 4,680 records (checked). | freshness gate flagged the builder change and forced the rebuild |
-| Research outputs carry `tier_linewrap`; the inventory shows the B+ strict row as an alternative, not the denominator | `afhq1/pipeline.py`, `afhq1/build.py`, `outputs/tier_variants.json` | `tests/research/test_afh_q1_pipeline.py`: B+ never demotes; published denominator equals A; record line-wrap tier ≥ published tier |
+| Research outputs carry `tier_linewrap`; the inventory shows the B+ strict row as an alternative, not the denominator | `afhq1/pipeline.py`, `afhq1/build.py`, `outputs/tier_variants.json` | `tests/api/test_afh_q1_pipeline.py`: B+ never demotes; published denominator equals A; record line-wrap tier ≥ published tier |
 
 ## If you adopt B+
 

@@ -9,7 +9,7 @@ ended, confidence (documented / approximate / uncertain) and dated evidence. Mer
 - first_available null with native yes/partial: since = platform launch year, date_confidence uncertain.
 - labels the research did not cover keep their platforms-1 row, marked needs_author_check.
 
-Run: python -m afhq1.registry  (from research/afh_q1)
+Run: python -m afhq1.registry  (from ontology/platform_affordance_evidence/afh_manifest)
 """
 from __future__ import annotations
 

@@ -43,13 +43,13 @@ Commit `2cc50804c` (code clean) on `research/afh-q1-reconstruction`, local only.
 Regenerate and verify every output (Python 3.12, PyYAML 6.0.3):
 
 ```bash
-AFH_Q1_SOURCE_DB=/path/to/caselinker.db python research/afh_q1/run_all.py --export --verify
+AFH_Q1_SOURCE_DB=/path/to/caselinker.db python ontology/platform_affordance_evidence/afh_manifest/run_all.py --export --verify
 ```
 
 Run the tests:
 
 ```bash
-DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
+DATABASE_URL='' python -m pytest -q tests/api tests/privacy tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
 ```
 
 Results on `2cc50804c`:
@@ -79,7 +79,7 @@ Results on `2cc50804c`:
 | `registry_checks.json` | `6483b8121a043918…` |
 | `records.csv` | `a3407979005ff1a0…` |
 
-Full hashes for every output are in `research/afh_q1/outputs/RUN_IDENTITY.json`.
+Full hashes for every output are in `ontology/platform_affordance_evidence/afh_manifest/outputs/RUN_IDENTITY.json`.
 
 ## Unresolved
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Regenerate every AfH 2.0 Q1 output.
 
-  python research/afh_q1/run_all.py --export   # refresh the pinned snapshot from a CaseLinker DB (read-only)
-  python research/afh_q1/run_all.py            # build outputs/ from the snapshot
-  python research/afh_q1/run_all.py --verify   # rebuild into a temp dir and compare with outputs/
+  python ontology/platform_affordance_evidence/afh_manifest/run_all.py --export   # refresh the pinned snapshot from a CaseLinker DB (read-only)
+  python ontology/platform_affordance_evidence/afh_manifest/run_all.py            # build outputs/ from the snapshot
+  python ontology/platform_affordance_evidence/afh_manifest/run_all.py --verify   # rebuild into a temp dir and compare with outputs/
 
 The source DB defaults to ../CaseLinker/caselinker.db; set AFH_Q1_SOURCE_DB to override.
 """

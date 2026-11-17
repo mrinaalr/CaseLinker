@@ -1,7 +1,7 @@
 """Pinned, read-only corpus snapshot for the Q1 reconstruction.
 
 ``export_snapshot`` copies the columns the analysis needs from a CaseLinker
-SQLite database, opened read-only, into ``research/afh_q1/data/snapshot.sqlite``
+SQLite database, opened read-only, into ``ontology/platform_affordance_evidence/afh_manifest/data/snapshot.sqlite``
 (gitignored: it holds source text). Every later step reads only the snapshot,
 so a rerun against the same snapshot is byte-identical. The live corpus is not
 touched.
@@ -21,7 +21,7 @@ from typing import Any, Dict, Iterator, Optional
 
 HERE = Path(__file__).resolve().parent
 RESEARCH = HERE.parent
-REPO = RESEARCH.parents[1]
+REPO = RESEARCH.parents[2]
 DATA = RESEARCH / "data"
 SNAPSHOT = DATA / "snapshot.sqlite"
 
@@ -132,7 +132,7 @@ def dataset_identity(conn: sqlite3.Connection) -> Dict[str, Any]:
 def connect(path: Path = SNAPSHOT) -> sqlite3.Connection:
     if not path.is_file():
         raise FileNotFoundError(
-            f"{path} missing. Run: python research/afh_q1/run_all.py --export"
+            f"{path} missing. Run: python ontology/platform_affordance_evidence/afh_manifest/run_all.py --export"
         )
     return open_readonly(path)
 

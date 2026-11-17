@@ -19,14 +19,14 @@ flowchart LR
 Needs Python 3.12 with PyYAML 6.0.3 (nothing else: verified in a fresh virtualenv) and a CaseLinker SQLite corpus. Tests need pytest; the LaTeX check needs pdflatex and skips without it.
 
 ```bash
-python research/afh_q1/run_all.py --export
+python ontology/platform_affordance_evidence/afh_manifest/run_all.py --export
 ```
 
 ```bash
-python research/afh_q1/run_all.py --verify
+python ontology/platform_affordance_evidence/afh_manifest/run_all.py --verify
 ```
 
-`--export` copies the columns the analysis reads from `../CaseLinker/caselinker.db` (or `AFH_Q1_SOURCE_DB=/path/to/caselinker.db`), opened read-only, into `research/afh_q1/data/snapshot.sqlite`. `--verify` refuses to run unless that snapshot's `dataset_identity` equals the one in [outputs/RUN_IDENTITY.json](outputs/RUN_IDENTITY.json), rebuilds every output in a temp directory and prints `identical` or the files that differ. A plain `run_all.py` rewrites `outputs/`.
+`--export` copies the columns the analysis reads from `../CaseLinker/caselinker.db` (or `AFH_Q1_SOURCE_DB=/path/to/caselinker.db`), opened read-only, into `ontology/platform_affordance_evidence/afh_manifest/data/snapshot.sqlite`. `--verify` refuses to run unless that snapshot's `dataset_identity` equals the one in [outputs/RUN_IDENTITY.json](outputs/RUN_IDENTITY.json), rebuilds every output in a temp directory and prints `identical` or the files that differ. A plain `run_all.py` rewrites `outputs/`.
 
 | Pin | Where | Value for the committed outputs |
 |---|---|---|
@@ -38,10 +38,10 @@ python research/afh_q1/run_all.py --verify
 Tests (pytest and the repo requirements; corpus-dependent tests skip without `caselinker.db`):
 
 ```bash
-DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
+DATABASE_URL='' python -m pytest -q tests/api tests/privacy tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
 ```
 
-A different corpus gives a different `dataset_identity`; the outputs are then a new release, not a reproduction. Someone without the corpus DB can still check the committed numbers reconcile (`pytest tests/research/test_afh_q1_pipeline.py`); the snapshot-dependent tests skip.
+A different corpus gives a different `dataset_identity`; the outputs are then a new release, not a reproduction. Someone without the corpus DB can still check the committed numbers reconcile (`pytest tests/api/test_afh_q1_pipeline.py`); the snapshot-dependent tests skip.
 
 The snapshot holds source text and stays out of git. Share it only under the same access rules as `caselinker.db`.
 

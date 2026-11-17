@@ -77,8 +77,8 @@ def sha_file(path: Path) -> str:
 
 def git_head() -> Dict[str, Any]:
     head = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
-    dirty = subprocess.run(["git", "-C", str(REPO), "status", "--porcelain", "--", "research/afh_q1/afhq1",
-                            "research/afh_q1/config", "ontology/platform_affordance_evidence/platform_affordance_evidence.py",
+    dirty = subprocess.run(["git", "-C", str(REPO), "status", "--porcelain", "--", "ontology/platform_affordance_evidence/afh_manifest/afhq1",
+                            "ontology/platform_affordance_evidence/afh_manifest/config", "ontology/platform_affordance_evidence/platform_affordance_evidence.py",
                             "ontology/platform_affordance_evidence/build_candidates.py",
                             "src/Processing Layer/Pattern Processing Layer/temporal_tags.py"],
                            capture_output=True, text=True).stdout.strip()

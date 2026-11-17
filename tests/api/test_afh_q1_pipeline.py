@@ -8,14 +8,14 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "research" / "afh_q1"))
+sys.path.insert(0, str(ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest"))
 
 from afhq1 import citations, pipeline as pl  # noqa: E402
 from afhq1 import snapshot  # noqa: E402
 
 REG = pl.platform_registry()
 CB = pl.Codebook.load()
-OUT = ROOT / "research" / "afh_q1" / "outputs"
+OUT = ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "outputs"
 
 
 def run(text: str, platforms, year=2024, topics=()):
@@ -142,7 +142,7 @@ def test_committed_outputs_match_the_snapshot_they_name():
     if have != want:
         pytest.skip("local snapshot is a different corpus than the committed outputs")
     import subprocess
-    res = subprocess.run([sys.executable, str(ROOT / "research/afh_q1/run_all.py"), "--verify"], capture_output=True, text=True)
+    res = subprocess.run([sys.executable, str(ROOT / "ontology/platform_affordance_evidence/afh_manifest/run_all.py"), "--verify"], capture_output=True, text=True)
     assert res.stdout.strip() == "identical", res.stdout + res.stderr
 
 
@@ -209,7 +209,7 @@ def test_named_only_never_reaches_b_or_i():
 
 def test_registry_rows_are_dated_and_sourced():
     import yaml
-    cfg = yaml.safe_load((ROOT / "research/afh_q1/config/platforms.yaml").read_text())
+    cfg = yaml.safe_load((ROOT / "ontology/platform_affordance_evidence/afh_manifest/config/platforms.yaml").read_text())
     assert cfg["version"] == "platforms-2"
     for label, row in cfg["platforms"].items():
         for key, cap in (row.get("capabilities") or {}).items():
@@ -288,7 +288,7 @@ def test_latex_tables_compile():
         pytest.skip("pdflatex not installed")
     tables = sorted((OUT / "latex").glob("*.tex"))
     if not tables:
-        pytest.skip("LaTeX tables are local-only; run research/afh_q1/run_all.py to generate them")
+        pytest.skip("LaTeX tables are local-only; run ontology/platform_affordance_evidence/afh_manifest/run_all.py to generate them")
     with tempfile.TemporaryDirectory() as d:
         doc = Path(d) / "check.tex"
         doc.write_text("\\documentclass{article}\\usepackage{booktabs}\\usepackage[margin=1in]{geometry}\\begin{document}\n"

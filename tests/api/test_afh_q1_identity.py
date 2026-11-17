@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "research" / "afh_q1"))
+sys.path.insert(0, str(ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest"))
 
 from afhq1 import citations, identity  # noqa: E402
 

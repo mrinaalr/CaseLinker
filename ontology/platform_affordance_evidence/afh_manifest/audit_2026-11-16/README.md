@@ -15,4 +15,4 @@ reproducible from git: `git show 24b31e9cd:ontology/q1/candidates.json`,
 `git show be7bb8f02:ontology/platform_affordance_evidence/candidates.json`.
 
 The cue probe in `analyze.py` is an unvalidated regex scan. Its counts are superseded by
-`research/afh_q1/` outputs and must not be cited as prevalence.
+`ontology/platform_affordance_evidence/afh_manifest/` outputs and must not be cited as prevalence.
