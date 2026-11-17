@@ -192,6 +192,36 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     return problems
 
 
+COMMITTED = ("graphs/*", "derived/*", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
+
+
+def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) -> dict:
+    """Committed release files checked against each case's deny list (names from the caption) and
+    every stored quote of six or more words. Returns counts and the files with hits (no hit text)."""
+    import re
+    root = data_root / release_id
+    files = sorted({p for pat in COMMITTED for p in root.glob(pat) if p.is_file()})
+    texts = {p: p.read_text(encoding="utf-8", errors="replace") for p in files}
+    lowered = {p: t.lower() for p, t in texts.items()}
+    hits, checked_terms, checked_quotes = [], 0, 0
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    for case in sorted(c["case_id"] for c in manifest["cases"]):
+        deny_path, quote_path = text_root / case / "deny.json", text_root / case / "quotes.json"
+        deny = json.loads(deny_path.read_text(encoding="utf-8")) if deny_path.is_file() else []
+        quotes = json.loads(quote_path.read_text(encoding="utf-8")) if quote_path.is_file() else {}
+        for term in deny:
+            checked_terms += 1
+            pat = re.compile(r"\b" + re.escape(term.lower()) + r"\b")
+            hits += [{"case": case, "kind": "deny", "file": str(p.relative_to(root))} for p, t in lowered.items() if pat.search(t)]
+        for q in quotes.values():
+            q = q if isinstance(q, str) else ""
+            if len(q.split()) >= 6:
+                checked_quotes += 1
+                probe = q[:60]
+                hits += [{"case": case, "kind": "quote", "file": str(p.relative_to(root))} for p, t in texts.items() if probe in t]
+    return {"files": len(files), "deny_terms": checked_terms, "quotes": checked_quotes, "hits": hits}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)

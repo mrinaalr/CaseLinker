@@ -161,3 +161,19 @@ def test_bundle_folders_are_ignored_on_case_sensitive_filesystems():
     assert not ignored("state_machines/benchmark/data/synth_001/gold.json")
     assert not ignored("state_machines/benchmark/data/MANIFEST.json")
     assert ignored("local/coder_cache.db") and ignored("local/auto/coder_A/case.json")
+
+
+def test_privacy_scan_finds_a_name_or_quote_in_committed_files(tmp_path):
+    from state_machines.graphs.release import privacy_scan
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    build("test-v1", data_root=root, text_root=tmp_path / "text")
+    (tmp_path / "text" / F.CASE / "deny.json").write_text(json.dumps(["Jordan Example"]), encoding="utf-8")
+    _, quotes = F.build()
+    (tmp_path / "text" / F.CASE / "quotes.json").write_text(json.dumps({f"coder_A:{k}": v for k, v in quotes.items()}), encoding="utf-8")
+    clean = privacy_scan("test-v1", tmp_path / "text", data_root=root)
+    assert clean["hits"] == [] and clean["files"] > 0 and clean["quotes"] > 0
+    g = root / "test-v1" / "graphs" / f"{F.CASE}.evidence.jsonld"
+    g.write_text(g.read_text() + "\n// Jordan Example " + next(iter(quotes.values())), encoding="utf-8")
+    kinds = {h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]}
+    assert kinds == {"deny", "quote"}

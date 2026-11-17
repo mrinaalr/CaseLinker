@@ -86,7 +86,10 @@ def build(release_id: str, auto: Path, bench: Path) -> dict:
     }
     bench_path = bench / "reports" / "benchmark.heldout.json"
     benchmark = {k: v["overall"] for k, v in json.loads(bench_path.read_text(encoding="utf-8")).items()} if bench_path.is_file() else None
+    from state_machines.graphs.release import privacy_scan
+    privacy = privacy_scan(release_id, E.text_root())
     return {"release": release_id, "review_mode": manifest.get("review_mode"), "models": C.MODELS,
+            "privacy_scan": {k: (len(v) if k == "hits" else v) for k, v in privacy.items()},
             "runtime_per_model": model_stats(), "totals": dict(sorted(totals.items())), "reliability_real_cases": reliability,
             "benchmark_heldout": benchmark, "cases": cases}
 
@@ -120,6 +123,9 @@ def markdown(r: dict) -> str:
                      f"action {s['action']['rate']}; actor {s['actor']['rate']}; dates {s['dates']['rate']}; order recall {s['order']['recall']['rate']}; "
                      f"level C recall {s['level_c']['recall']['rate']}; harms recall {s['harms']['recall']['rate']}; standing {s['standing']['rate']}")
         L.append("")
+    ps = r["privacy_scan"]
+    L += ["## Privacy", "", f"{ps['files']} committed files checked against {ps['deny_terms']} deny-list terms and {ps['quotes']} stored quotes: "
+          f"**{ps['hits']} hits**.", ""]
     L += ["## Runtime", "", f"```json\n{json.dumps(r['runtime_per_model'], indent=1)}\n```", ""]
     return "\n".join(L)
 
