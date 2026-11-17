@@ -10,7 +10,7 @@ CaseLinker maps each extracted case into a **CASE / UCO / CAC** knowledge graph:
 | Graph explorer | [`/patterns`](https://caselinker.up.railway.app/patterns) (nav: **Ontology & Graphs**; alias `/patterns/graph`) |
 | SDK MCP consumer | [CASE/UCO SDK v1.25.0](https://github.com/vulnmaster/CASE-UCO-SDK/releases/tag/v1.25.0) `execute_sparql_query` |
 | Mapping spec | [MAPPING_PLAN.md](MAPPING_PLAN.md) |
-| Mapper | [features_to_cac.py](features_to_cac.py) |
+| Mapper | [features_to_cac.py](pipeline/features_to_cac.py) |
 
 The repo README keeps the one-page method summary. This file is the working documentation for the graphs.
 
@@ -18,7 +18,7 @@ The repo README keeps the one-page method summary. This file is the working docu
 
 The [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children, Project VIC) is the investigation vocabulary. It sits on the Linux Foundation [Cyber Domain Ontology](https://cyberdomainontology.org/) stack: [UCO](https://unifiedcyberontology.org/) (identity, role, core) and [CASE](https://caseontology.org/). CaseLinker does not invent predicates; it binds extracted features to CAC classes and UCO types so the same SPARQL and SHACL tools used in forensic workflows apply here.
 
-All 97 CAC v3.1.0 modules and shapes, UCO 1.5.0, CASE 1.5.0, gUFO 1.0.0 and the W3C Web Annotation vocabulary are vendored byte-for-byte in [`vendor/`](vendor/); the pins are recorded in [`CAC_ONTOLOGY_VERSION`](CAC_ONTOLOGY_VERSION). Every term a graph uses must be declared there or in `caselinker-provenance.ttl` (`term_resolution.py`, `tests/test_term_resolution.py`). Override the search path with `CAC_ONTOLOGY_DIR` (directory containing `cacontology-core-shapes.ttl`); otherwise the mapper uses these pinned files. Missing or empty shapes raise; validation never reports `conforms=True` with zero shapes loaded. Bindings and class lookup: [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) with `CASE_UCO_EXTENSIONS=cac`.
+All 97 CAC v3.1.0 modules and shapes, UCO 1.5.0, CASE 1.5.0, gUFO 1.0.0 and the W3C Web Annotation vocabulary are vendored byte-for-byte in [`vendor/`](vendor/); the pins are recorded in [`CAC_ONTOLOGY_VERSION`](CAC_ONTOLOGY_VERSION). Every term a graph uses must be declared there or in `caselinker-provenance.ttl` (`term_resolution.py`, `tests/graphs/test_term_resolution.py`). Override the search path with `CAC_ONTOLOGY_DIR` (directory containing `cacontology-core-shapes.ttl`); otherwise the mapper uses these pinned files. Missing or empty shapes raise; validation never reports `conforms=True` with zero shapes loaded. Bindings and class lookup: [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) with `CASE_UCO_EXTENSIONS=cac`.
 
 **Prefixes used in instance graphs** (full list and SPARQL preamble: [docs/SPARQL.md](docs/SPARQL.md#namespaces)):
 
@@ -66,7 +66,7 @@ flowchart LR
   inv -->|hasStep| proc
 ```
 
-Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's people and platforms as `uco-core:object` of the investigation (`cac:usesChannel` and `cac:participatesInEvent` only when the case has one event), victim/offender/defendant roles played by those `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
+Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's people and platforms as `uco-core:object` of the investigation (`cac:usesChannel` and `cac:participatesInEvent` only when the case has one event), victim/offender/defendant roles played by those `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/graphs/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
 
 Example files: [`graph_output/nj_ag_2017_001.ttl`](graph_output/nj_ag_2017_001.ttl) (Turtle) and the matching `.jsonld`.
 
@@ -93,10 +93,10 @@ flowchart TD
 ```
 
 1. **Features** — already extracted (platforms, topics, investigation signals, prosecution outcomes).
-2. **Map** — [`features_to_cac.py`](features_to_cac.py) (`CaseToCAC.map_case`). Batch wrapper: [`graph_generate.py`](graph_generate.py).
+2. **Map** — [`features_to_cac.py`](pipeline/features_to_cac.py) (`CaseToCAC.map_case`). Batch wrapper: [`graph_generate.py`](pipeline/graph_generate.py).
 3. **Emit** — `{case_id}.ttl` + `{case_id}.jsonld` under [`graph_output/`](graph_output/).
 4. **Validate** — SHACL; non-conformant graphs are reported (`validate()` / `validate_shacl=True`).
-5. **Serve** — Oxigraph bulk reload into an empty store ([`oxigraph_rebuild.py`](oxigraph_rebuild.py), [`scripts/rebuild_oxigraph.py`](../scripts/rebuild_oxigraph.py)). Query policy (LIMIT / Update / SERVICE): [`run/sparql_proxy.py`](../run/sparql_proxy.py). HTTP route: [`run/main.py`](../run/main.py) `GET|POST /sparql`.
+5. **Serve** — Oxigraph bulk reload into an empty store ([`oxigraph_rebuild.py`](pipeline/oxigraph_rebuild.py), [`scripts/oxigraph/rebuild_oxigraph.py`](../scripts/oxigraph/rebuild_oxigraph.py)). Query policy (LIMIT / Update / SERVICE): [`run/sparql_proxy.py`](../run/sparql_proxy.py). HTTP route: [`run/main.py`](../run/main.py) `GET|POST /sparql`.
 
 Rebuild is remap-and-overwrite, not incremental. Platform/agency extra facts can vary by batch order ([issue #10](https://github.com/mrinaalr/CaseLinker/issues/10)).
 
@@ -109,12 +109,12 @@ The live Oxigraph store holds **10,802** press-release case graphs (`cac:CACInve
 | Pool | ID list | Folder | Used by |
 |---|---|---|---|
 | Full mapped corpus | all sqlite IDs | `graph_output/*.ttl` (staging) | Oxigraph / SPARQL + `/patterns` Find/load (`pool=full`, max 2000 merge) |
-| Universe | [`universe_ids.txt`](universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` secret Universe |
-| Big Bang | [`big_bang_ids.txt`](big_bang_ids.txt) (968) | `graph_output/big_bang/` | `/patterns` Big Bang |
-| Analysis | [`analysis_ids.txt`](analysis_ids.txt) (124) | `graph_output/analysis/` | MCP / research cohorts |
-| Compare | [`selected_200_ids.txt`](selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
+| Universe | [`universe_ids.txt`](pools/universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` secret Universe |
+| Big Bang | [`big_bang_ids.txt`](pools/big_bang_ids.txt) (968) | `graph_output/big_bang/` | `/patterns` Big Bang |
+| Analysis | [`analysis_ids.txt`](pools/analysis_ids.txt) (124) | `graph_output/analysis/` | MCP / research cohorts |
+| Compare | [`selected_200_ids.txt`](pools/selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
 
-Canonical TTL for Oxigraph: **universe > staging > big_bang > analysis** (first match wins). Merged viz JSON: [`merge_graph_cache.py`](merge_graph_cache.py) (`GET /api/ontology/merged?pool=…`).
+Canonical TTL for Oxigraph: **universe > staging > big_bang > analysis** (first match wins). Merged viz JSON: [`merge_graph_cache.py`](pipeline/merge_graph_cache.py) (`GET /api/ontology/merged?pool=…`).
 
 Static files are public: `/ontology/graph_output/{pool}/{case_id}.ttl|.jsonld`.
 
@@ -122,14 +122,14 @@ Static files are public: `/ontology/graph_output/{pool}/{case_id}.ttl|.jsonld`.
 
 | Path | Role |
 |---|---|
-| [`features_to_cac.py`](features_to_cac.py) | Feature dict → rdflib graph; SHACL validate; CLI for one case |
-| [`graph_generate.py`](graph_generate.py) | Batch generate TTL/JSON-LD |
-| [`graph_utils.py`](graph_utils.py) | Shared RDF helpers |
-| [`oxigraph_rebuild.py`](oxigraph_rebuild.py) | Canonical TTL → named-graph N-Quads |
-| [`merge_graph_cache.py`](merge_graph_cache.py) | Merged node lists for Patterns |
-| [`select_cases.py`](select_cases.py) | Stratified / compare-set selection |
-| [`big_bang.py`](big_bang.py) / [`eval_big_bang_graphs.py`](eval_big_bang_graphs.py) | Bridge-dense subset + SHACL eval |
-| [`noise_filter.py`](noise_filter.py) | Noise / false-positive filter used by mapping |
+| [`features_to_cac.py`](pipeline/features_to_cac.py) | Feature dict → rdflib graph; SHACL validate; CLI for one case |
+| [`graph_generate.py`](pipeline/graph_generate.py) | Batch generate TTL/JSON-LD |
+| [`graph_utils.py`](pipeline/graph_utils.py) | Shared RDF helpers |
+| [`oxigraph_rebuild.py`](pipeline/oxigraph_rebuild.py) | Canonical TTL → named-graph N-Quads |
+| [`merge_graph_cache.py`](pipeline/merge_graph_cache.py) | Merged node lists for Patterns |
+| [`select_cases.py`](pools/select_cases.py) | Stratified / compare-set selection |
+| [`big_bang.py`](pools/big_bang.py) / [`eval_big_bang_graphs.py`](pools/eval_big_bang_graphs.py) | Bridge-dense subset + SHACL eval |
+| [`noise_filter.py`](pipeline/noise_filter.py) | Noise / false-positive filter used by mapping |
 | [`platform_affordance_evidence/`](platform_affordance_evidence/) [`q2/`](q2/) [`q3/`](q3/) | Research evidence (see below) |
 | [`PACER/`](PACER/) | PACER docket → lifecycle facts (feeds `/lifecycle`) |
 | [`docs/SPARQL.md`](docs/SPARQL.md) | Public SPARQL 1.1 API |
@@ -151,7 +151,7 @@ Rebuild tables: `python3 ontology/platform_affordance_evidence/platform_affordan
 
 ## PACER and lifecycle
 
-[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/load_pacer_jsonld.py`](../scripts/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 10,802 press-release case graphs.
+[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/oxigraph/load_pacer_jsonld.py`](../scripts/oxigraph/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 10,802 press-release case graphs.
 
 ## MCP (on-demand cohorts)
 
@@ -165,13 +165,13 @@ See [`caselinker_mcp/README.md`](../caselinker_mcp/README.md). To run SPARQL aga
 
 ```bash
 # Map all DB ids → graph_output/*.ttl + *.jsonld (SHACL on)
-python3 -c "from ontology.graph_generate import generate_graphs; ..."  # or use features_to_cac CLI
+python3 -c "from ontology.pipeline.graph_generate import generate_graphs; ..."  # or use features_to_cac CLI
 
 # Build the N-Quads for a reload; the load runs in the web service after a volume wipe (docs/SPARQL.md#reloading-the-store)
-python3 scripts/rebuild_oxigraph.py --output caselinker.nq.gz --no-load
+python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load
 ```
 
-One-off: `python3 ontology/features_to_cac.py <case_id>`. Live SPARQL tests: `CASELINKER_SPARQL_LIVE=1 pytest tests/test_sparql_live.py -q`. Proxy unit tests: `pytest tests/test_sparql_proxy.py tests/test_oxigraph_rebuild.py -q`.
+One-off: `python3 ontology/pipeline/features_to_cac.py <case_id>`. Live SPARQL tests: `CASELINKER_SPARQL_LIVE=1 pytest tests/api/test_sparql_live.py -q`. Proxy unit tests: `pytest tests/api/test_sparql_proxy.py tests/graphs/test_oxigraph_rebuild.py -q`.
 
 ## External references
 

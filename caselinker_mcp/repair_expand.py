@@ -46,10 +46,10 @@ VALUE_TYPES = ("number", "money", "duration", "literal")
 # What the gate will not grade a change to: itself and the fixed tests.
 GRADER = ("caselinker_mcp/repair_expand.py", "caselinker_mcp/proposal_runner.py")
 TEST_TIER = (
-    "tests/test_field_assertions.py",
-    "tests/test_no_direct_identifiers.py",
-    "tests/test_public_assertion_names.py",
-    "tests/test_repair_expand.py",
+    "tests/extraction/test_field_assertions.py",
+    "tests/privacy/test_no_direct_identifiers.py",
+    "tests/privacy/test_public_assertion_names.py",
+    "tests/mcp/test_repair_expand.py",
 )
 # Readers a replay does not run. Their stored rows are kept as stored.
 NOT_REPLAYED = ("ner_stanza", "llm", "human")
@@ -348,13 +348,13 @@ _LAYERS = (
     ("ingestion", "src/Ingestion Layer/ingestion.py", "ordinary",
      "a new source is a branch in detect_source_from_content, a split rule in src/Processing Layer/batching.py, "
      "a state in location_grounding.SOURCE_TO_STATE, a card in visualization/sources.html and a test "
-     "(tests/test_new_agency_sources.py is the pattern); profile_new_source shows which of these a file still needs"),
+     "(tests/collection/test_new_agency_sources.py is the pattern); profile_new_source shows which of these a file still needs"),
     ("extraction", "src/Processing Layer/field_assertions", "ordinary",
      "a compiled rule (one regex) or a detector registered for a document kind; both are proposed, "
      "measured by run_gate and admitted by a commit"),
     ("storage", "src/Storage Layer", "maintainer",
      "cases columns and every write to the corpus"),
-    ("knowledge graphs", "ontology/features_to_cac.py", "maintainer",
+    ("knowledge graphs", "ontology/pipeline/features_to_cac.py", "maintainer",
      "the mapping to CAC, UCO and CASE terms and the pinned ontology versions"),
     ("interfaces", "caselinker_mcp/server.py", "ordinary",
      "a new endpoint or MCP tool is ordinary; changing what an existing one returns is the maintainer's"),

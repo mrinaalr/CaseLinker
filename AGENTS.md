@@ -67,7 +67,7 @@ tool, graph property, export, call to an external model) goes through it: `publi
 **Victims:** never extract or infer anything that identifies one (name, initials, school, address, a
 relationship that points to one person). Ages and relationship types are fine.
 
-**Tests use made-up people** (`FICTIONAL_SURNAMES` in `tests/test_no_direct_identifiers.py`). Checks against
+**Tests use made-up people** (`FICTIONAL_SURNAMES` in `tests/privacy/test_no_direct_identifiers.py`). Checks against
 real text belong in `scripts/verify/`.
 
 **Report with counts and `case_id`s**, never by quoting a name, anywhere.
