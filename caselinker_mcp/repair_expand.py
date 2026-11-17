@@ -80,6 +80,16 @@ _EXCERPT = 70
 _MAX_LISTED = 200
 
 
+def _base_archive_cmd(base: str) -> List[str]:
+    """The base tree the replay runs: every tracked file but the generated graphs.
+
+    Extraction reads files outside ``src`` (``scripts/verify/extraction/hint_source_policy.json``
+    sets which location hints are demoted), so a base tree of ``src`` and ``data`` alone replays
+    different behaviour than the base commit had.
+    """
+    return ["git", "archive", base, "--", ".", ":!ontology/graph_output"]
+
+
 def _moved_resolutions(before: Dict[str, List], after: Dict[str, List]) -> Dict[str, Dict[str, Any]]:
     """Status per resolved field that differs. A field one side does not resolve at all (a field
     the change adds or removes) reads as ``None`` on that side; ``None`` against ``empty`` is no
@@ -1244,8 +1254,7 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
     """
     payload_docs = [{"case_id": d["case_id"], "text": d["text"], "raw": d["raw"]} for d in docs]
     with tempfile.TemporaryDirectory(prefix="caselinker_gate_") as tmp:
-        archive = subprocess.run(["git", "archive", base, "src", "data", "config.py"], cwd=_REPO_ROOT,
-                                 capture_output=True, timeout=300)
+        archive = subprocess.run(_base_archive_cmd(base), cwd=_REPO_ROOT, capture_output=True, timeout=300)
         if archive.returncode != 0:
             return {"ran": False, "reason": f"git archive {base} failed"}
         subprocess.run(["tar", "-x", "-C", tmp], input=archive.stdout, check=True, timeout=300)

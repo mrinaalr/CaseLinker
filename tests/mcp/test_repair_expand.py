@@ -421,3 +421,14 @@ def test_a_resolved_field_the_change_adds_reads_as_none_before():
 
 def test_a_new_field_that_finds_nothing_is_not_a_change():
     assert R._moved_resolutions({}, {"prior_history": ["empty", "x"]}) == {}
+
+
+def test_the_base_replay_tree_holds_files_extraction_reads_outside_src():
+    cmd = R._base_archive_cmd("HEAD")
+    listed = subprocess.run(cmd[:3] + ["--format=tar", "--", *cmd[4:]], capture_output=True,
+                            cwd=R._REPO_ROOT, check=True).stdout
+    import io
+    import tarfile
+    names = tarfile.open(fileobj=io.BytesIO(listed)).getnames()
+    assert "scripts/verify/extraction/hint_source_policy.json" in names
+    assert not any(n.startswith("ontology/graph_output/") for n in names)
