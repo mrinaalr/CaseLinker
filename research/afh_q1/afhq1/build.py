@@ -139,8 +139,9 @@ def inventory(cases: List[dict], records: List[pl.Record], excluded: List[dict],
             **{f"{k}.{c}": v for k, d in checks.items() for c, v in d.items()},
         },
         "tiers": {"broad": broad, "strict": strict_t, "analysed_for_affordances": analysed},
-        "tiers_linewrap_alternative": {"strict": strict_lw, "rules": "tiers-1+linewrap-1 (additive line-wrap repair); "
-                                       "not the published denominator until the authors adopt it"},
+        "tiers_linewrap_alternative": {"strict": strict_lw, "rules": "tiers-1+linewrap-2 (additive line-wrap repair with agency social-media guard)",
+                                       "status": "primary documented-use count (Decision 1, adopted on validation); "
+                                                 "tiers-1 strict row is the original-rule baseline"},
         "tier_definition": "case tier = best record tier (stated > inferred > named_only); tiers are mutually exclusive per case",
         "exclusions": {"platform_case_pairs": dict(sorted(excl_pairs.items())), "distinct_cases": dict(sorted(excl_cases.items()))},
         "labels": {s: sorted({r.platform for r in records if r.status == s}) for s in ("specific", "technology", "ambiguous_alias", "generic")},
@@ -503,7 +504,7 @@ def build(log=print) -> dict:
     man["citation_check"] = dict(Counter(v.status for v in verdicts))
     dump("manifest.json", man)
     dump("exemplar_inventory.json", exemplar_inventory(man))
-    dump("registry_checks.json", registry_checks())
+    dump("registry_checks.json", {**registry_checks(), "uncertain_impact": uncertain_registry_impact(records)})
     cit.dump(cites, OUT / "citations.json")
     dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
@@ -726,3 +727,35 @@ def registry_checks() -> dict:
         "manuscript_claims_fetched": sum(r["fetched_ok"] == "yes" for r in claims),
         "corrections": [{"claim_id": r["claim_id"], "date_found": r["date_found"]} for r in claims if r["verdict"] != "confirmed"],
     }
+
+
+MANUSCRIPT_PLATFORMS = ("Kik", "Snapchat", "Discord", "Facebook", "Instagram", "Reddit", "TikTok", "Dropbox",
+                        "Mega.nz", "Whisper", "Omegle", "Telegram", "BitTorrent", "Gen AI", "Webcam platform",
+                        "Roblox", "Minecraft", "Fortnite", "Xbox Live")  # named in AfH 1.0 Table 1 / Fig. 2
+CLASS_OF = {"anonymity": "Anonymity", "ephemerality": "Ephemerality", "contact_discovery": "ContactDiscovery",
+            "unmonitored_communication": "UnmonitoredCommunication",
+            "distribution_infrastructure": "DistributionInfrastructure", "generative_synthesis": "GenerativeSynthesis"}
+
+
+def uncertain_registry_impact(records: List[pl.Record]) -> dict:
+    """Each uncertain capability row: how many A cases it supplies, and whether the platform is a manuscript example."""
+    cfg = pl.load_yaml("platforms.yaml")["platforms"]
+    rows = []
+    for label, row in sorted(cfg.items()):
+        for key, cap in (row.get("capabilities") or {}).items():
+            if cap.get("confidence") != "uncertain":
+                continue
+            c = CLASS_OF[key]
+            rs = [r for r in records if r.platform == label and r.status in ANALYSED_STATUSES]
+            rows.append({"platform": label, "capability": key, "since": cap["since"],
+                         "A_cases": len({r.case_id for r in rs if r.available[c]}),
+                         "B_cases": len({r.case_id for r in rs if r.action_relevant[c]}),
+                         "I_cases": len({r.case_id for r in rs if r.inferred[c]}),
+                         "manuscript_platform": label in MANUSCRIPT_PLATFORMS})
+    total_a = {c: len({r.case_id for r in records if r.status in ANALYSED_STATUSES and r.available[c]}) for c in pl.CLASSES}
+    by_class = defaultdict(int)
+    for x in rows:
+        by_class[CLASS_OF[x["capability"]]] += x["A_cases"]
+    return {"uncertain_rows": len(rows), "rows": rows,
+            "A_cases_resting_on_uncertain_rows_by_class": {c: {"cases": by_class.get(c, 0), "of_A": total_a[c]} for c in pl.CLASSES},
+            "manuscript_platform_rows": [f"{x['platform']}:{x['capability']}" for x in rows if x["manuscript_platform"]]}

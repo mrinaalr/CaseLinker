@@ -15,7 +15,7 @@ from typing import Dict, List, Tuple
 
 from . import pipeline as pl
 
-VARIANTS = ("A_original", "B_unwrap", "C_verbs", "D_combined", "Bplus_unwrap_additive")
+VARIANTS = ("A_original", "B_unwrap", "C_verbs", "D_combined", "Bplus_unwrap_additive", "Bplus_guarded")
 _RANK = {"dropped": -1, "named_only": 0, "inferred": 1, "stated": 2}
 RULES = {
     "A_original": "published rules (platform_affordance_evidence.py classify_sentence) on stored case text",
@@ -23,6 +23,7 @@ RULES = {
     "C_verbs": "published rules on stored text; OFFENSE_KEYWORDS + " + ", ".join(pl.SENSITIVITY_EXTRA_VERBS),
     "D_combined": "B and C together",
     "Bplus_unwrap_additive": "max(A, B) per record: the repair can add evidence a hard wrap hid, never remove a tier the stored text earns",
+    "Bplus_guarded": "Bplus, but a promotion earned only by agency social-media boilerplate is refused (builder linewrap_tiers, tiers-1+linewrap-2); the primary rule",
 }
 
 
@@ -50,10 +51,14 @@ def all_variants(cases: List[dict], registry) -> Dict[Tuple[str, str], Dict[str,
         for v in VARIANTS[:4]:
             for p, t in tiers_for(case, kept, v).items():
                 out[(case["id"], p)][v] = t
+        pe = pl.evidence_module()
+        published = pe.process_case(case["id"], kept, case["text"])["records"]
+        guarded = pe.linewrap_tiers(case["id"], kept, case["text"], published)
         for p in kept:
             row = out[(case["id"], p)]
             a, b = row.get("A_original", "dropped"), row.get("B_unwrap", "dropped")
             row["Bplus_unwrap_additive"] = a if _RANK[a] >= _RANK[b] else b
+            row["Bplus_guarded"] = guarded.get(p, a)
     return out
 
 

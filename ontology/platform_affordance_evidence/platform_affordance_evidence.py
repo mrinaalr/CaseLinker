@@ -286,7 +286,20 @@ TIER_RULES_VERSION = "tiers-1"
 # as two fragments and the verb never meets the platform name. The repair joins a single
 # line break that does not end a sentence (no . ! ? : before it); blank-line paragraph
 # breaks stay. Its tier is reported in stated_vs_inferred_linewrap, beside the published one.
-LINEWRAP_RULES_VERSION = "tiers-1+linewrap-1"
+LINEWRAP_RULES_VERSION = "tiers-1+linewrap-2"
+# linewrap-2: a promotion is refused when the sentence that earned it is agency social-media
+# boilerplate (an agency's own page, post, footer links or post URL). In a blind review of 45
+# of 269 promoted cases, all 6 non-use promotions were of this kind.
+AGENCY_SOCIAL_BOILERPLATE = re.compile(
+    r"(?:posted|shared|announced|published|available)\b[^.]{0,80}\bon\s+(?:its|their|our|the\s+[\w.' ’]{0,60}?)\s*(?:official\s+)?"
+    r"(?:facebook|twitter|x|instagram|youtube|tiktok)\s+(?:page|account|feed|channel|profile)"
+    r"|(?:sheriff|police|department|office|attorney\s+general|agency|county|troop|bureau)\W{0,3}(?:\w+\W+){0,4}?"
+    r"(?:facebook|twitter|instagram|youtube)\s+(?:page|account|feed|channel|post)"
+    r"|(?:facebook|twitter|x|youtube|instagram)\.com/\S*"
+    r"|\bfacebook\s+x\s*\(formerly\s+twitter\)"
+    r"|\b(?:follow|like|find)\s+us\s+on\b",
+    re.IGNORECASE,
+)
 _LINE_WRAP = re.compile(r"(?<![.!?:\n])[ \t]*\n(?!\n)[ \t]*")
 
 
@@ -297,14 +310,21 @@ def repair_line_wraps(text: str) -> str:
 
 def linewrap_tiers(case_id: str, platforms: List[str], case_text: str,
                    published: List[Dict[str, Any]]) -> Dict[str, str]:
-    """Tier per platform under tiers-1+linewrap-1: the better of the published tier and the
+    """Tier per platform under tiers-1+linewrap-2: the better of the published tier and the
     tier on repaired text. Additive by design: in a blind review all 10 sampled records the
-    plain repair demoted were real offender use (joined lines trip the comma-list heuristic)."""
+    plain repair demoted were real offender use (joined lines trip the comma-list heuristic).
+    A promotion earned only by agency social-media boilerplate is refused."""
+    repaired_text = repair_line_wraps(case_text)
     repaired = {r["platform"]: r["stated_vs_inferred"]
-                for r in process_case(case_id, platforms, repair_line_wraps(case_text))["records"]}
+                for r in process_case(case_id, platforms, repaired_text)["records"]}
+    offense = offense_lines(repaired_text)[0] if repaired_text else []
     out = {}
     for r in published:
         a, b = r["stated_vs_inferred"], repaired.get(r["platform"], "named_only")
+        if TIER_RANK[b] > TIER_RANK[a]:
+            _tier, sentence = best_sentence(lines_with_platform(offense, r["platform"]), r["platform"])
+            if sentence and AGENCY_SOCIAL_BOILERPLATE.search(sentence):
+                b = a
         out[r["platform"]] = a if TIER_RANK[a] >= TIER_RANK[b] else b
     return out
 

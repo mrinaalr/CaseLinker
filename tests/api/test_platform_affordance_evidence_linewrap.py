@@ -61,3 +61,16 @@ def test_linewrap_tier_is_additive(monkeypatch):
 def test_linewrap_tier_recovers_wrapped_use():
     published = pe.process_case("synthetic_2024_001", ["Discord"], WRAPPED)["records"]
     assert pe.linewrap_tiers("synthetic_2024_001", ["Discord"], WRAPPED, published)["Discord"] == "stated"
+
+
+def test_agency_social_boilerplate_cannot_earn_a_promotion():
+    text = ("Synthetic Man Arrested\n\n"
+            "The man was arrested for possession of child sexual abuse material, the sheriff's office\n"
+            "posted on its Facebook page.\n")
+    published = pe.process_case("synthetic_2024_003", ["Facebook"], text)["records"]
+    assert published[0]["stated_vs_inferred"] == "named_only"
+    assert pe.linewrap_tiers("synthetic_2024_003", ["Facebook"], text, published)["Facebook"] == "named_only"
+    for footer in ("Troop F Headquarters Facebook X (formerly Twitter) YouTube",
+                   "Source: facebook.com/somecounty/posts/123", "Mugshots are available on the Attorney General's Twitter page"):
+        assert pe.AGENCY_SOCIAL_BOILERPLATE.search(footer), footer
+    assert not pe.AGENCY_SOCIAL_BOILERPLATE.search("He messaged the girl on Facebook and asked for photos.")

@@ -239,7 +239,7 @@ def test_generative_capability_needs_production_conduct():
 
 def test_additive_linewrap_never_demotes_in_committed_outputs():
     t = json.loads((OUT / "tier_variants.json").read_text())
-    moves = t["variants"]["Bplus_unwrap_additive"]["record_moves_from_A"]
+    moves = t["variants"]["Bplus_guarded"]["record_moves_from_A"]
     rank = {"dropped": -1, "named_only": 0, "inferred": 1, "stated": 2}
     assert moves and all(rank[m.split("->")[1]] > rank[m.split("->")[0]] for m in moves), moves
 
@@ -250,7 +250,7 @@ def test_published_denominator_is_the_original_rule():
     s = inv["tiers"]["strict"]
     assert s["cases_stated"] + s["cases_inferred"] == t["A_original"]["use_documented_cases"]
     alt = inv["tiers_linewrap_alternative"]["strict"]
-    assert alt["cases_stated"] + alt["cases_inferred"] == t["Bplus_unwrap_additive"]["use_documented_cases"]
+    assert alt["cases_stated"] + alt["cases_inferred"] == t["Bplus_guarded"]["use_documented_cases"]
 
 
 def test_record_linewrap_tier_never_below_published():

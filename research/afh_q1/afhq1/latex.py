@@ -56,11 +56,11 @@ def write(out: Path) -> List[Path]:
         ["Corpus", num(d["corpus_cases"]), "--"],
         ["Any platform label (broad)", num(b["cases"]), num(b["records"])],
         ["Specific named platform (strict)", num(s["cases"]), num(s["records"])],
-        [r"\quad stated", num(s["cases_stated"]), num(s["records_stated"])],
-        [r"\quad inferred only", num(s["cases_inferred"]), num(s["records_inferred"])],
-        [r"\quad named only", num(s["cases_named_only"]), num(s["records_named_only"])],
-        [r"Documented use, original rules (stated + inferred)", num(s["cases_stated"] + s["cases_inferred"]), num(s["records_stated"] + s["records_inferred"])],
-        [r"Documented use, with line-wrap repair", num(lw["cases_stated"] + lw["cases_inferred"]), num(lw["records_stated"] + lw["records_inferred"])],
+        [r"\quad stated (primary / baseline)", f"{num(lw['cases_stated'])} / {num(s['cases_stated'])}", f"{num(lw['records_stated'])} / {num(s['records_stated'])}"],
+        [r"\quad inferred only", f"{num(lw['cases_inferred'])} / {num(s['cases_inferred'])}", f"{num(lw['records_inferred'])} / {num(s['records_inferred'])}"],
+        [r"\quad named only", f"{num(lw['cases_named_only'])} / {num(s['cases_named_only'])}", f"{num(lw['records_named_only'])} / {num(s['records_named_only'])}"],
+        [r"\textbf{Documented use (primary: line-wrap repair)}", num(lw["cases_stated"] + lw["cases_inferred"]), num(lw["records_stated"] + lw["records_inferred"])],
+        [r"Documented use (original-rule baseline)", num(s["cases_stated"] + s["cases_inferred"]), num(s["records_stated"] + s["records_inferred"])],
         ["Generic category only", num(d["generic_category_only_cases"]), "--"],
     ], note=f"{d['corpus_cases']} cases, {d['sources']} sources"))
 
@@ -93,7 +93,9 @@ def write(out: Path) -> List[Path]:
     v = tv["variants"]
     put("tab_tier_variants.tex", tabular("lr", ["Tier rule", "Documented-use cases"], [
         ["Original rules", num(v["A_original"]["use_documented_cases"])],
-        ["Line-wrap repair (additive)", num(v["Bplus_unwrap_additive"]["use_documented_cases"])],
+        ["Line-wrap repair, additive, boilerplate guard (primary)", num(v["Bplus_guarded"]["use_documented_cases"])],
+        ["Line-wrap repair, additive, no guard", num(v["Bplus_unwrap_additive"]["use_documented_cases"])],
+        ["Line-wrap repair, plain", num(v["B_unwrap"]["use_documented_cases"])],
         ["Expanded verbs only", num(v["C_verbs"]["use_documented_cases"])],
         ["Line-wrap + verbs", num(v["D_combined"]["use_documented_cases"])],
     ], note="strict cases"))
