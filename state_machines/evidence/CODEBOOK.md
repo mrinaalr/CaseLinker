@@ -160,7 +160,7 @@ O holds the six classes of AfH §7. Each maps to the CAC 3.1.0 class of the same
 
 | Level | What it says | Evidence | Where it lives | In O_i? |
 |---|---|---|---|---|
-| **A. Available** | The platform provided the capability during the period | Cited public platform documentation (help pages, archived product pages). Not the court record. | [`capabilities/platform_capabilities.json`](capabilities/platform_capabilities.json): platform-level, with `valid_from`/`valid_to`, sources and review status | no |
+| **A. Available** | The platform provided the capability during the period | Cited public platform documentation (help pages, archived product pages). Not the court record. | the shared capability registry ([trajectories README](../trajectories/README.md#affordance-levels)): platform-level, dated, sourced | no |
 | **B. Action-relevant** | A documented action was carried out *through* that platform, and the capability is relevant to that kind of action | Derived: a `platform_interactions` entry (court record) × registry entry valid at the event's time × R(action) | Derived step fields `action_relevant_affordances`, with the registry entries they rest on | no |
 | **C. Instrumental** | The court record supports that the capability was *used* to carry out the action | Coded per event, with passage and status (rule B0) | Event `affordances` | **yes** |
 
