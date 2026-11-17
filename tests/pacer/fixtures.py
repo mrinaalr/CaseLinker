@@ -64,11 +64,27 @@ def S(pid: str, facet: str = "action", status: str = "DIRECT") -> dict:
     return {"passage_id": pid, "facet": facet, "status": status}
 
 
-def _event(eid, actor, action, desc, support, *, targets=("V1",), affordances=(), harms=(), time=None,
+ROLE = {"P1": "offender", "P2": "victim", "P3": "law_enforcement"}
+
+
+def _when(day_or_month: str, pid: str, precision: str, expression: str, basis: str = "explicit_date",
+          status: str = "DIRECT") -> dict:
+    import calendar
+    if precision == "month":
+        y, m = map(int, day_or_month.split("-"))
+        lo, hi = f"{day_or_month}-01", f"{day_or_month}-{calendar.monthrange(y, m)[1]:02d}"
+    else:
+        lo = hi = day_or_month
+    return {"assertions": [{"expression": expression, "precision": precision, "earliest": lo, "latest": hi,
+                            "basis": basis, "status": status, "passage_ids": [pid]}]}
+
+
+def _event(eid, actor, action, desc, support, *, targets=(("P2", "victim"),), affordances=(), harms=(), time=None,
            status="DIRECT", outcome="completed") -> dict:
-    return {"event_id": eid, "actor_ref": actor, "co_actor_refs": [], "target_refs": list(targets), "action": action,
+    return {"event_id": eid, "actor": {"participant_ref": actor, "role": ROLE[actor]}, "co_actors": [],
+            "targets": [{"participant_ref": r, "role": role} for r, role in targets], "action": action,
             "outcome": outcome, "description": desc, "support": list(support), "status": status,
-            "time": time or {"precision": "none", "basis": "none", "passage_ids": []},
+            "time": time or {"assertions": []},
             "repetition": {"kind": "single"}, "platform_mentions": [], "affordances": list(affordances),
             "candidate_affordances": [], "access": [], "harms": list(harms),
             "review": {"status": "single_coder", "coders": ["coder_A"]}}
@@ -105,24 +121,24 @@ def build() -> Tuple[dict, Dict[str, str]]:
         passages.append(p)
         quotes[pid] = q
     events = [
-        _event("e01", "D1", "INITIATE_CONTACT", "Defendant first contacts the minor in a public group.", [S("p01")],
+        _event("e01", "P1", "INITIATE_CONTACT", "Defendant first contacts the minor in a public group.", [S("p01")],
                affordances=[_aff("contact_discovery", "p01", term="public group")],
-               time={"earliest": "2024-03", "latest": "2024-03", "precision": "month", "basis": "explicit_date", "passage_ids": ["p09"]}),
-        _event("e02", "D1", "MOVE_CHANNEL", "Defendant moves the conversation to private direct messages.", [S("p02")],
+               time=_when("2024-03", "p09", "month", "March 2024")),
+        _event("e02", "P1", "MOVE_CHANNEL", "Defendant moves the conversation to private direct messages.", [S("p02")],
                affordances=[_aff("unmonitored_communication", "p02", term="private direct messages")]),
-        _event("e03", "D1", "SOLICIT_IMAGERY", "Defendant asks for explicit images; two are sent.", [S("p03")],
-               harms=[{"harm": "HARM_COERCED_SELF_GENERATED_IMAGERY", "victim_ref": "V1", "status": "DIRECT", "support": [S("p03")]}]),
-        _event("e04", "V1", "RESP_BLOCK", "Minor blocks the defendant's account.", [S("p04")], targets=("D1",)),
-        _event("e05", "D1", "RECREATE_ACCOUNT", "Defendant creates a new account and recontacts the minor.", [S("p05")],
+        _event("e03", "P1", "SOLICIT_IMAGERY", "Defendant asks for explicit images; two are sent.", [S("p03")],
+               harms=[{"harm": "HARM_COERCED_SELF_GENERATED_IMAGERY", "victim_ref": "P2", "victim_kind": "minor", "status": "DIRECT", "support": [S("p03")]}]),
+        _event("e04", "P2", "RESP_BLOCK", "Minor blocks the defendant's account.", [S("p04")], targets=(("P1", "subject"),)),
+        _event("e05", "P1", "RECREATE_ACCOUNT", "Defendant creates a new account and recontacts the minor.", [S("p05")],
                affordances=[_aff("anonymity", "p05", term="new account under a different name")]),
-        _event("e06", "D1", "THREATEN_EXPOSURE", "Alleged threat to send the images to the minor's friends.", [S("p06")],
-               harms=[{"harm": "HARM_EXPOSURE_THREAT", "victim_ref": "V1", "status": "DIRECT", "support": [S("p06")]}],
-               time={"earliest": "2024-04-02", "latest": "2024-04-02", "precision": "day", "basis": "explicit_date", "passage_ids": ["p10"]}),
-        _event("e07", "LE1", "LE_ARREST", "Defendant is arrested.", [S("p07")], targets=("D1",),
-               time={"earliest": "2024-04-03", "latest": "2024-04-03", "precision": "day", "basis": "explicit_date", "passage_ids": ["p07"]}),
-        _event("e08", "D1", "DISTRIBUTE_MATERIAL", "Defendant sends the images to other users.", [S("p08")],
+        _event("e06", "P1", "THREATEN_EXPOSURE", "Alleged threat to send the images to the minor's friends.", [S("p06")],
+               harms=[{"harm": "HARM_EXPOSURE_THREAT", "victim_ref": "P2", "victim_kind": "minor", "status": "DIRECT", "support": [S("p06")]}],
+               time=_when("2024-04-02", "p10", "day", "on or about April 2, 2024")),
+        _event("e07", "P3", "LE_ARREST", "Defendant is arrested.", [S("p07")], targets=(("P1", "subject"),),
+               time=_when("2024-04-03", "p07", "day", "April 3, 2024")),
+        _event("e08", "P1", "DISTRIBUTE_MATERIAL", "Defendant sends the images to other users.", [S("p08")],
                affordances=[_aff("distribution_infrastructure", "p08", status="INFERRED", term="sent to other users")],
-               harms=[{"harm": "HARM_DISTRIBUTION_RECIRCULATION", "victim_ref": "V1", "status": "DIRECT", "support": [S("p08")]}]),
+               harms=[{"harm": "HARM_DISTRIBUTION_RECIRCULATION", "victim_ref": "P2", "victim_kind": "minor", "status": "DIRECT", "support": [S("p08")]}]),
     ]
     events[7]["affordances"][0]["support"] = [S("p08", "feature", "INFERRED")]
     relations = [
@@ -140,10 +156,15 @@ def build() -> Tuple[dict, Dict[str, str]]:
         "coding": {"coder_id": "coder_A", "method": "human", "model": None, "coded_on": "2026-11-16", "blind_to": [], "note": "fictional"},
         "documents": [_doc("sof", "statement_of_facts", 2), _doc("ind", "indictment", 1), _doc("jdg", "judgment", 1, "ocr")],
         "passages": passages,
-        "actors": [{"actor_ref": "D1", "role": "offender"}, {"actor_ref": "V1", "role": "victim", "victim_kind": "minor", "age_band": "13-15"},
-                   {"actor_ref": "LE1", "role": "law_enforcement", "victim_kind": None, "age_band": None}],
+        "participants": [
+            {"participant_ref": "P1", "kind": "person",
+             "legal_status": [{"status": "charged_defendant", "support": [S("p06", "legal_status")]}]},
+            {"participant_ref": "P2", "kind": "person", "age_band": "13-15",
+             "legal_status": [{"status": "named_victim", "support": [S("p01", "legal_status")]}]},
+            {"participant_ref": "P3", "kind": "person",
+             "legal_status": [{"status": "law_enforcement", "support": [S("p07", "legal_status")]}]}],
         "events": events, "relations": relations,
-        "tracks": [{"track_id": "v1", "kind": "victim", "anchor_ref": "V1", "event_ids": [e["event_id"] for e in events]}],
+        "tracks": [{"track_id": "v1", "kind": "victim", "anchor_ref": "P2", "event_ids": [e["event_id"] for e in events]}],
     }
     return bundle, quotes
 

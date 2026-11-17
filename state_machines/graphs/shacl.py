@@ -3,7 +3,7 @@
 Shape set (pinned; ontology/CAC_ONTOLOGY_VERSION): every vendored file. UCO 1.5.0 and
 CASE 1.5.0 (with their class shapes), legalproc (SDK v1.34.0, byte-identical to the
 v1.31.2 vendored copy), gUFO 1.0.0, W3C oa, ALL 97 files of CAC 3.1.0 (every module and
-every *-shapes.ttl), and the experimental caselinker-trajectory 0.2.0 extension.
+every *-shapes.ttl), and the experimental caselinker-trajectory 0.3.0 extension.
 
 Vendored files are never edited. Two kinds of upstream content cannot run as published
 and are reported, never silently dropped:
@@ -32,7 +32,7 @@ import rdflib
 
 REPO = Path(__file__).resolve().parents[2]
 VENDOR = REPO / "ontology" / "vendor"
-EXTENSION = REPO / "ontology" / "extensions" / "caselinker-trajectory" / "0.2.0"
+EXTENSION = REPO / "ontology" / "extensions" / "caselinker-trajectory" / "0.3.0"
 
 
 def shape_files() -> List[Path]:

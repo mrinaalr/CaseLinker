@@ -114,7 +114,13 @@ def test_extension_value_lists_match_vocab():
     assert lists["assertionStatus"] == set(V.ASSERTION_STATUS)
     assert lists["sourceStatus"] == set(V.SOURCE_STATUS)
     assert lists["affordanceBasis"] == set(V.AFFORDANCE_BASIS)
-    assert lists["capabilityReview"] == set(V.CAPABILITY_REVIEW)
+    assert lists["capabilityConfidence"] == {"documented", "approximate", "uncertain"}
+    assert lists["legalStatus"] == set(V.LEGAL_STATUS)
+    assert lists["timeBasis"] == set(V.TIME_BASIS)
+    assert lists["interactionMode"] == set(V.INTERACTION_MODES)
+    assert lists["audience"] == set(V.AUDIENCES)
+    assert lists["countStated"] == set(V.COUNT_STATED)
+    assert lists["victimKind"] == set(V.VICTIM_KIND)
     assert lists["h0Category"] == set(V.H0)
 
 
@@ -122,7 +128,12 @@ def test_no_canonical_namespace_is_redefined_by_the_extension():
     g = rdflib.Graph().parse(EXTENSION / "caselinker-trajectory.ttl")
     subjects = {str(s) for s in g.subjects() if isinstance(s, rdflib.URIRef)}
     assert all(s.startswith("https://w3id.org/caselinker/trajectory") for s in subjects)
-    assert not list(g.subjects(rdflib.RDF.type, rdflib.OWL.Class))
+    # exactly the two documented classes, both under uco-core:UcoObject
+    classes = set(g.subjects(rdflib.RDF.type, rdflib.OWL.Class))
+    assert {str(c) for c in classes} == {"https://w3id.org/caselinker/trajectory#Collective",
+                                         "https://w3id.org/caselinker/trajectory#TimeAssertion"}
+    uco_object = rdflib.URIRef("https://ontology.unifiedcyberontology.org/uco/core/UcoObject")
+    assert all((c, rdflib.RDFS.subClassOf, uco_object) in g for c in classes)
 
 
 def test_full_cac_shape_set_is_loaded():
@@ -144,8 +155,13 @@ def test_report_separates_full_from_partial_conformance(outputs, monkeypatch):
     F.with_synthesis_fix(monkeypatch)
     _, _, ev, tr = outputs
     r = validation_report(ev, tr)
-    # the pilot graphs contain no CAC platform-class nodes, so no skipped constraint applies
-    assert r["conformance"] == "full" and r["applicable_skipped"] == [] and r["release_ok"]
+    # participants are uco-identity nodes, which two unrunnable upstream CAC 3.1.0 constraints
+    # target (custodial, detection: undeclared prefixes, upstream U1); the report must say
+    # partial, list them, and block the release check until they run or are waived
+    assert r["violations"] == []
+    assert set(r["applicable_skipped"]) == {"https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+                                            "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"}
+    assert r["conformance"] == "partial" and not r["release_ok"]
     assert len(r["skipped_constraints"]) > 6    # the complete CAC 3.1.0 shape set is loaded
 
 

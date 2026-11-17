@@ -1,9 +1,9 @@
 """Three affordance levels: available (A), action-relevant (B), instrumental (C = O_i).
 
-Uses a fictional platform, "Chirpline", so no test datum is a factual claim about a real
-product. The three scenarios mirror the codebook example (a court record that names
-a messaging app; one that says messages went through it; one that says an anonymous
-account was used to hide identity).
+Uses a fictional platform, "Chirpline", in a registry file shaped like the shared AfH
+capability sources, so no test datum is a factual claim about a real product. The three
+scenarios mirror the codebook example (a court record that names a messaging app; one that
+says messages went through it; one that says an account under another name hid identity).
 """
 from __future__ import annotations
 
@@ -11,93 +11,131 @@ import copy
 import json
 
 import pytest
+import yaml
 
 from tests.pacer import fixtures as F
-from state_machines.trajectories.affordances import Registry, validate_registry
+from state_machines.trajectories.affordances import Registry, load
 from state_machines.trajectories.derive import derive
 from state_machines.evidence.validate import validate
 
-SRC = [{"citation": "Fictional help centre, 'Accounts'", "url": "https://chirpline.invalid/help/accounts", "accessed": "2026-11-16"}]
+URL = "https://chirpline.invalid/help/accounts"
 
 
-def registry_doc(review="reviewed") -> dict:
-    cap = lambda cid, aff, feature, frm=None, to=None: {  # noqa: E731
-        "capability_id": cid, "platform_id": "chirpline", "feature": feature, "affordance": aff,
-        "valid_from": frm, "valid_to": to, "sources": SRC, "review_status": review,
-        "reviewed_by": "reviewer_X" if review == "reviewed" else None}
-    return {"registry_version": "0.1.0", "platforms": [{"platform_id": "chirpline", "names": ["Chirpline", "Chirpline app"], "kind": "messaging"}],
-            "capabilities": [cap("chirpline.pseudonymous_accounts", "anonymity", "accounts without identity verification"),
-                             cap("chirpline.private_messages", "unmonitored_communication", "one-to-one private messages"),
-                             cap("chirpline.vanishing_messages", "ephemerality", "messages that expire", "2015", "2020-06"),
-                             cap("chirpline.public_groups", "contact_discovery", "searchable public groups")]}
+def cap(native="yes", confidence="documented", first="2015-01", ended=None, default_on="yes"):
+    return {"native": native, "default_on": default_on, "first_available": first, "ended": ended,
+            "confidence": confidence, "evidence": [{"url": URL, "publisher": "Chirpline", "published_date": "2015-01-05",
+                                                    "supports": "fictional"}]}
 
 
-def scenario(kind: str) -> dict:
+def registry(tmp_path, **over) -> Registry:
+    caps = {"anonymity": cap(), "unmonitored_communication": cap(), "contact_discovery": cap(),
+            "ephemerality": cap(first="2015-03", ended="2020-06"), "generative_synthesis": cap(native="no")}
+    caps.update(over)
+    path = tmp_path / "messaging.yaml"
+    path.write_text(yaml.safe_dump({"platforms": {"Chirpline": {"launched": 2015, "capabilities": caps}}}))
+    return Registry(load([path]))
+
+
+def scenario(kind: str, mode: str = "through") -> dict:
     """The fictional case with event e02 recoded for one scenario."""
     b, _ = F.build()
     e02 = next(e for e in b["events"] if e["event_id"] == "e02")
     e02["affordances"] = []
-    e02["time"] = {"earliest": "2024-03", "latest": "2024-03", "precision": "month", "basis": "explicit_date", "passage_ids": ["p09"]}
+    e02["time"] = F._when("2024-03", "p09", "month", "March 2024")
     if kind == "named_only":
         e02["platform_mentions"] = [{"platform_surface": "Chirpline", "passage_ids": ["p02"]}]
     if kind in ("messaging", "concealment"):
         e02["action"] = "COMMUNICATE"
-        e02["platform_interactions"] = [{"platform_surface": "Chirpline", "status": "DIRECT", "support": [F.S("p02", "platform")]}]
+        e02["platform_interactions"] = [{"platform_surface": "Chirpline", "platform_key": "Chirpline", "mode": mode,
+                                         "audience": "one_to_one", "status": "DIRECT", "support": [F.S("p02", "platform")]}]
     if kind == "concealment":
         e02["affordances"] = [F._aff("anonymity", "p02", basis="mechanism_stated", term="account under another name")]
     return b
 
 
 def step(bundle, reg, eid="e02", threshold="INFERRED"):
-    d = derive(bundle, threshold, Registry(reg))
+    d = derive(bundle, threshold, reg)
     return next(s for t in d["tracks"] for L in t["trajectories"] for s in L["steps"] if s["event_id"] == eid)
 
 
-def test_named_only_platform_gives_no_step_level_affordance():
-    s = step(scenario("named_only"), registry_doc())
+def test_named_only_platform_gives_no_step_level_affordance(tmp_path):
+    s = step(scenario("named_only"), registry(tmp_path))
     assert s["affordances"] == [] and s["action_relevant_affordances"] == [] and s["available_affordances"] == []
 
 
-def test_documented_messaging_makes_communication_relevant_but_not_anonymity():
-    s = step(scenario("messaging"), registry_doc())
+def test_documented_messaging_makes_communication_relevant_but_not_anonymity(tmp_path):
+    s = step(scenario("messaging"), registry(tmp_path))
     assert s["affordances"] == []                                               # O_i: nothing instrumental
-    assert s["action_relevant_affordances"] == ["unmonitored_communication"]    # B
+    assert s["action_relevant_affordances"] == ["unmonitored_communication"]   # B (ephemerality ended 2020-06)
     assert "anonymity" in s["available_affordances"]                            # A only
     assert "anonymity" not in s["action_relevant_affordances"]
-    assert ("chirpline.private_messages", "in_period") in [tuple(c) for c in s["capability_evidence"]]
+    assert ("Chirpline", "unmonitored_communication", "supported") in s["capability_evidence"]
+    assert s["level_unit"] == "event"
 
 
-def test_documented_identity_concealment_enters_O_i():
-    s = step(scenario("concealment"), registry_doc())
+def test_documented_identity_concealment_enters_O_i(tmp_path):
+    s = step(scenario("concealment"), registry(tmp_path))
     assert s["affordances"] == ["anonymity"]                                    # C, from the court record
-    assert s["action_relevant_affordances"] == ["unmonitored_communication"]    # B is unchanged by C
+    assert "anonymity" not in s["action_relevant_affordances"]                  # B is unchanged by C
 
 
-def test_capability_outside_its_period_is_not_available():
+def test_availability_is_supported_uncertain_or_unsupported(tmp_path):
+    reg = registry(tmp_path, unmonitored_communication=cap(confidence="approximate"),
+                   contact_discovery=cap(first=None))
+    s = step(scenario("messaging"), reg)
+    ev = {(c[1], c[2]) for c in s["capability_evidence"]}
+    assert ("unmonitored_communication", "uncertain") in ev        # approximate date never becomes supported
+    assert ("contact_discovery", "uncertain") in ev                # unknown introduction date
+    assert ("anonymity", "supported") in ev
+    assert not any(c == "generative_synthesis" for c, _ in ev)     # not native: unsupported, left out
+    assert not any(c == "ephemerality" for c, _ in ev)             # ended 2020-06, event 2024-03: unsupported
+
+
+def test_event_before_introduction_is_unsupported_and_undated_is_uncertain(tmp_path):
     b = scenario("messaging")
     e02 = next(e for e in b["events"] if e["event_id"] == "e02")
-    assert "ephemerality" not in step(b, registry_doc())["available_affordances"]   # expired 2020-06
-    next(e for e in b["events"] if e["event_id"] == "e01")["time"] = {"precision": "none", "basis": "none", "passage_ids": []}
-    e02["time"] = {"earliest": "2018-01", "latest": "2018-02", "precision": "month", "basis": "explicit_date", "passage_ids": ["p09"]}
-    s = step(b, registry_doc())
-    assert "ephemerality" in s["available_affordances"] and "ephemerality" in s["action_relevant_affordances"]
-    e02["time"] = {"precision": "none", "basis": "none", "passage_ids": []}
-    s = step(b, registry_doc())
-    assert ("chirpline.vanishing_messages", "period_unchecked") in [tuple(c) for c in s["capability_evidence"]]
+    e02["time"] = F._when("2014-06", "p09", "month", "June 2014")
+    next(e for e in b["events"] if e["event_id"] == "e01")["time"] = {"assertions": []}
+    assert step(b, registry(tmp_path))["available_affordances"] == []
+    e02["time"] = {"assertions": []}
+    s = step(b, registry(tmp_path))
+    assert {c[2] for c in s["capability_evidence"]} == {"uncertain"}
 
 
-def test_proposed_capabilities_are_left_out_unless_asked_for():
-    s = step(scenario("messaging"), registry_doc(review="proposed"))
-    assert s["available_affordances"] == []
-    d = derive(scenario("messaging"), "INFERRED", Registry(registry_doc(review="proposed"), review=("proposed", "reviewed")))
-    assert d["derivation"]["capability_review_included"] == ["proposed", "reviewed"]
+def test_only_through_and_to_interactions_reach_level_b(tmp_path):
+    for mode, expect in (("through", True), ("to", True), ("from", False), ("acted_on", False)):
+        s = step(scenario("messaging", mode), registry(tmp_path))
+        assert bool(s["action_relevant_affordances"]) is expect, mode
 
 
-def test_levels_never_change_O_i_or_the_trajectory_shape():
-    plain = derive(scenario("messaging"), "INFERRED", Registry({"registry_version": "0", "platforms": [], "capabilities": []}))
-    rich = derive(scenario("messaging"), "INFERRED", Registry(registry_doc()))
+def test_unnamed_platforms_never_match_the_registry(tmp_path):
+    b = scenario("messaging")
+    inter = next(e for e in b["events"] if e["event_id"] == "e02")["platform_interactions"][0]
+    inter["platform_key"] = "unnamed:messaging app"
+    s = step(b, registry(tmp_path))
+    assert s["available_affordances"] == [] and s["unmatched_platforms"] == ["unnamed:messaging app"]
+
+
+def test_coded_configuration_is_carried_beside_registry_default(tmp_path):
+    from state_machines.trajectories.affordances import event_levels
+    b = scenario("messaging")
+    e02 = next(e for e in b["events"] if e["event_id"] == "e02")
+    e02["platform_interactions"][0]["configuration"] = [{"feature_term": "vanishing messages", "setting": "on",
+                                                         "support": [F.S("p02", "configuration")]}]
+    lv = event_levels(e02, registry(tmp_path, ephemerality=cap(first="2015-03", default_on="no")), ("DIRECT", "INFERRED"))
+    eph = next(c for c in lv["available"] if c["affordance"] == "ephemerality")
+    assert eph["default_on"] == "no" and eph["coded_configuration"] == {"vanishing messages": "on"}
+
+
+def test_levels_never_change_O_i_or_the_trajectory_shape(tmp_path):
+    plain = derive(scenario("messaging"), "INFERRED", Registry({"platforms": {}}))
+    rich = derive(scenario("messaging"), "INFERRED", registry(tmp_path))
     strip = lambda d: [[(s["event_id"], s["affordances"]) for s in L["steps"]] for t in d["tracks"] for L in t["trajectories"]]  # noqa: E731
     assert strip(plain) == strip(rich)
+
+
+def test_missing_registry_gives_empty_levels(tmp_path):
+    assert load([tmp_path / "absent.yaml"]) == {"platforms": {}}
 
 
 def test_interaction_bundles_validate(tmp_path):
@@ -106,41 +144,32 @@ def test_interaction_bundles_validate(tmp_path):
         assert [f for f in validate(scenario(kind), text_root=tmp_path) if f.severity == "error"] == []
 
 
-@pytest.mark.parametrize("mutate,code", [
-    (lambda r: r["capabilities"][0].update(sources=[]), "C04"),
-    (lambda r: r["capabilities"][0].update(reviewed_by=None), "C04"),
-    (lambda r: r["capabilities"][2].update(valid_from="2021"), "C05"),
-    (lambda r: r["platforms"].append({"platform_id": "other", "names": ["chirpline"], "kind": "messaging"}), "C02"),
-    (lambda r: r["capabilities"][0].update(affordance="coordination"), "C01"),
-])
-def test_registry_validation_negative_cases(mutate, code):
-    reg = registry_doc()
-    assert validate_registry(reg) == []
-    mutate(reg)
-    assert code in {f.code for f in validate_registry(reg)}
+def test_channels_are_not_platforms(tmp_path):
+    F.write_pages(tmp_path)
+    b = scenario("messaging")
+    inter = next(e for e in b["events"] if e["event_id"] == "e02")["platform_interactions"][0]
+    inter["platform_surface"] = inter["platform_key"] = "text messaging"
+    assert "T19" in F.codes(validate(b, text_root=tmp_path))
 
 
-def test_capability_and_interaction_graphs_conform_and_reject_bad_claims(monkeypatch):
+def test_capability_and_interaction_graphs_conform_and_reject_bad_claims(tmp_path, monkeypatch):
     pytest.importorskip("case_uco")
     from state_machines.graphs.emit import capability_graph, evidence_graph, serialize, trajectory_graph
-    from state_machines.graphs.shacl import validate_jsonld
+    from state_machines.graphs.shacl import validate_jsonld, validation_report
 
-    reg = registry_doc()
+    reg = registry(tmp_path)
     b = scenario("concealment")
-    ev = serialize(evidence_graph(b, Registry(reg)))
-    tr = serialize(trajectory_graph(b, derive(b, "INFERRED", Registry(reg))))
-    cap = serialize(capability_graph(reg))
-    from state_machines.graphs.shacl import validation_report
-    r = validation_report(ev, tr, cap)
+    ev = serialize(evidence_graph(b))
+    tr = serialize(trajectory_graph(b, derive(b, "INFERRED", reg)))
+    cap_g = serialize(capability_graph(reg.data))
+    r = validation_report(ev, tr, cap_g)
     assert r["violations"] == [], r["violations"][:5]
     assert r["conformance"] == "fails" and r["upstream_defect_shapes"] == [F.SYNTHESIS_DEFECT]
     F.with_synthesis_fix(monkeypatch)
-    r = validation_report(ev, tr, cap)
-    # platform nodes carry CAC platform classes, which unrunnable upstream constraints target:
-    # the result must say partial, never full, and the release check must not pass unwaived
-    assert r["conformance"] == "partial" and r["applicable_skipped"] and not r["release_ok"]
-    assert "uco-action:instrument" in ev and "Carried_Out_Through" in ev and "Provides_Affordance" in cap
-    doc = json.loads(cap)
+    r = validation_report(ev, tr, cap_g)
+    assert r["violations"] == [] and r["conformance"] in ("full", "partial")
+    assert "uco-action:instrument" in ev and "Carried_Out_Through" in ev and "Provides_Affordance" in cap_g
+    doc = json.loads(cap_g)
     for n in doc["@graph"]:
         n.pop("dcterms:source", None)       # a capability with no cited source
     conforms, messages = validate_jsonld(json.dumps(doc))

@@ -108,7 +108,7 @@ def test_cited_dates_order_events_and_overlapping_dates_do_not(bundle):
     assert ("e06", "e07") in pairs            # 2024-04-02 before 2024-04-03
     assert not any("e02" in p for p in pairs) # undated events get no order from dates
     ev = next(e for e in b["events"] if e["event_id"] == "e06")
-    ev["time"].update({"earliest": "2024-03", "latest": "2024-04-02"})
+    ev["time"]["assertions"][0].update({"earliest": "2024-03-01", "latest": "2024-04-02"})
     assert ("e01", "e06") not in date_order(b, ("DIRECT", "INFERRED"))   # overlapping intervals stay unordered
 
 

@@ -93,12 +93,12 @@ cltsh:InteractionShape a sh:NodeShape ;
 
 # Available capability (level A): a platform provided an affordance, per cited public sources.
 cltsh:ProvidesAffordanceShape a sh:NodeShape ;
-    sh:targetSubjectsOf clt:capabilityReview ;
+    sh:targetSubjectsOf clt:capabilityConfidence ;
     sh:class uco-core:Relationship ;
     sh:property [ sh:path uco-core:kindOfRelationship ; sh:hasValue "Provides_Affordance" ] ;
     sh:property [ sh:path uco-core:target ; sh:class cac-platforms:PlatformAffordance ] ;
     sh:property [ sh:path dcterms:source ; sh:minCount 1 ; sh:message "A capability needs at least one cited source." ] ;
-    sh:property [ sh:path clt:capabilityReview ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "proposed" "reviewed" "rejected" ) ] .
+    sh:property [ sh:path clt:capabilityConfidence ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "documented" "approximate" "uncertain" ) ] .
 
 # Harm: canonical uco-core:Relationship from an action to a victim identity.
 cltsh:HarmShape a sh:NodeShape ;
@@ -150,3 +150,60 @@ cltsh:NoPhaseInstances a sh:NodeShape ;
     sh:targetClass cac-core:Phase ;
     sh:property [ sh:path rdf:type ; sh:maxCount 0 ;
         sh:message "Phase instances are not allowed in evidence or trajectory graphs." ] .
+
+# Event roles (R04): event-specific, from a participant to an action, with an evidence annotation.
+cltsh:EventRoleShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:eventRole ;
+    sh:class uco-core:Relationship ;
+    sh:property [ sh:path clt:eventRole ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "co_offender" "counterparty" "court" "guardian" "law_enforcement" "offender" "platform" "recipient" "subject" "third_party" "undercover" "victim" ) ] ;
+    sh:property [ sh:path clt:participationMode ; sh:maxCount 1 ; sh:in ( "performer" "directing" "assisting" ) ] ;
+    sh:property [ sh:path uco-core:target ; sh:minCount 1 ; sh:class uco-action:Action ] .
+
+# Legal status (R04): a sourced record on the participant, separate from event roles.
+cltsh:LegalStatusShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:legalStatus ;
+    sh:class uco-core:Relationship ;
+    sh:property [ sh:path clt:legalStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "charged_defendant" "uncharged_coconspirator" "named_victim" "undercover_persona" "law_enforcement" "platform_provider" "third_party" "court" ) ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "A legal-status record must rest on at least one evidence annotation." ;
+        sh:prefixes cltsh:prefixes ;
+        sh:select """SELECT $this WHERE { FILTER NOT EXISTS { ?ann oa:hasBody $this } }""" ] .
+
+# Collectives (R10): a group described collectively; count bounds and how the source states them.
+cltsh:CollectiveShape a sh:NodeShape ;
+    sh:targetClass clt:Collective ;
+    sh:property [ sh:path clt:countStated ; sh:maxCount 1 ; sh:in ( "exact" "at_least" "at_most" "approximate" "unknown" ) ] ;
+    sh:property [ sh:path clt:countMin ; sh:maxCount 1 ; sh:datatype xsd:nonNegativeInteger ] ;
+    sh:property [ sh:path clt:countMax ; sh:maxCount 1 ; sh:datatype xsd:nonNegativeInteger ] .
+
+# Time assertions (T1-T3): normalized bounds, basis, status; enclosing windows are never DIRECT.
+cltsh:TimeAssertionShape a sh:NodeShape ;
+    sh:targetClass clt:TimeAssertion ;
+    sh:property [ sh:path clt:timeEarliest ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^\\d{4}-\\d{2}-\\d{2}$" ] ;
+    sh:property [ sh:path clt:timeLatest ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^\\d{4}-\\d{2}-\\d{2}$" ] ;
+    sh:property [ sh:path clt:timePrecision ; sh:minCount 1 ; sh:in ( "day" "month" "season" "year" "range" ) ] ;
+    sh:property [ sh:path clt:timeBasis ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "explicit_date" "date_range" "count_window" "enclosing_window" "relative_statement" ) ] ;
+    sh:property [ sh:path clt:assertionStatus ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "A date taken from an enclosing window is an inferred constraint, never DIRECT." ;
+        sh:prefixes cltsh:prefixes ;
+        sh:select """SELECT $this WHERE { $this clt:timeBasis "enclosing_window" ; clt:assertionStatus "DIRECT" . }""" ] .
+
+# Possible identity (R05): never DIRECT; confirmed identity is one action citing every passage.
+cltsh:PossiblySameActShape a sh:NodeShape ;
+    sh:targetSubjectsOf uco-core:kindOfRelationship ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "Possibly_Same_Act cannot be DIRECT: merge confirmed identity into one action." ;
+        sh:prefixes cltsh:prefixes ;
+        sh:select """SELECT $this WHERE { $this uco-core:kindOfRelationship "Possibly_Same_Act" ; clt:assertionStatus "DIRECT" . }""" ] .
+
+# Platform interactions (I1, I2): mode and audience values.
+cltsh:InteractionModeShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:interactionMode ;
+    sh:property [ sh:path clt:interactionMode ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "through" "from" "to" "acted_on" ) ] ;
+    sh:property [ sh:path clt:audience ; sh:maxCount 1 ; sh:in ( "one_to_one" "group" "public" "unknown" ) ] .
+
+# Harm victim kind (R04): H0 counts minor-directed harms by default.
+cltsh:HarmVictimKindShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:harmCode ;
+    sh:property [ sh:path clt:victimKind ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "minor" "adult" "undercover_persona" "unknown" ) ] .

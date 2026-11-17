@@ -120,7 +120,9 @@ def test_T09_instrumental_affordance_needs_feature_evidence(tmp_path):
 
 def test_T15_documented_interaction_needs_a_platform_passage(tmp_path):
     b = F.fresh(tmp_path)
-    ev(b, "e02")["platform_interactions"] = [{"platform_surface": "messaging application", "status": "DIRECT",
+    ev(b, "e02")["platform_interactions"] = [{"platform_surface": "messaging application",
+                                              "platform_key": "unnamed:messaging application", "mode": "through",
+                                              "audience": "one_to_one", "status": "DIRECT",
                                               "support": [F.S("p02", "action")]}]
     assert run(b, tmp_path) == ["T15"]
     ev(b, "e02")["platform_interactions"][0]["support"] = [F.S("p02", "platform")]
@@ -129,7 +131,16 @@ def test_T15_documented_interaction_needs_a_platform_passage(tmp_path):
 
 def test_T10_harm_on_undercover_persona_is_rejected(tmp_path):
     b = F.fresh(tmp_path)
-    b["actors"][1]["victim_kind"] = "undercover_persona"
+    ev(b, "e03")["harms"][0]["victim_kind"] = "undercover_persona"
+    assert run(b, tmp_path) == ["T10"]
+    b = F.fresh(tmp_path)
+    b["participants"][1]["kind"] = "persona"
+    assert "T10" in run(b, tmp_path)
+
+
+def test_T10_harm_needs_the_victim_as_a_victim_target_of_the_event(tmp_path):
+    b = F.fresh(tmp_path)
+    ev(b, "e03")["targets"] = [{"participant_ref": "P2", "role": "recipient"}]
     assert run(b, tmp_path) == ["T10"]
 
 
@@ -155,8 +166,125 @@ def test_T16_transitive_conflict_between_order_and_dates(tmp_path):
 
 def test_T13_dates_need_a_passage(tmp_path):
     b = F.fresh(tmp_path)
-    ev(b, "e06")["time"]["passage_ids"] = []
-    assert run(b, tmp_path) == ["T13"]
+    ev(b, "e06")["time"]["assertions"][0]["passage_ids"] = []
+    assert run(b, tmp_path) == ["T01"]
+
+
+def test_T13_real_calendar_dates(tmp_path):
+    b = F.fresh(tmp_path)
+    ev(b, "e06")["time"]["assertions"][0].update(earliest="2024-02-30", latest="2024-02-30")
+    assert "T13" in run(b, tmp_path)
+
+
+def test_T13_enclosing_window_is_an_inferred_constraint(tmp_path):
+    b = F.fresh(tmp_path)
+    a = ev(b, "e02")["time"] = F._when("2024-03", "p09", "month", "the count window", basis="enclosing_window")
+    assert run(b, tmp_path) == ["T13"]                      # DIRECT window: rejected
+    a["assertions"][0]["status"] = "INFERRED"
+    assert run(b, tmp_path) == []
+
+
+def test_T13_contradictory_dates_must_be_flagged_and_kept(tmp_path):
+    b = F.fresh(tmp_path)
+    t = ev(b, "e06")["time"]
+    t["assertions"].append({"expression": "May 2024", "precision": "month", "earliest": "2024-05-01",
+                            "latest": "2024-05-31", "basis": "explicit_date", "status": "DIRECT", "passage_ids": ["p10"]})
+    assert "T13" in run(b, tmp_path)
+    t["conflict_flagged"] = True
+    assert "T13" not in run(b, tmp_path)
+
+
+def test_contradicted_event_gives_no_date_order(tmp_path):
+    from state_machines.trajectories.derive import date_order
+    b = F.fresh(tmp_path)
+    b["relations"] = []
+    assert ("e06", "e07") in date_order(b, ("DIRECT", "INFERRED"))
+    t = ev(b, "e06")["time"]
+    t["assertions"].append({"precision": "day", "earliest": "2024-05-09", "latest": "2024-05-09",
+                            "basis": "explicit_date", "status": "DIRECT", "passage_ids": ["p10"]})
+    t["conflict_flagged"] = True
+    assert not any("e06" in p for p in date_order(b, ("DIRECT", "INFERRED")))
+
+
+def test_enclosing_window_orders_only_at_the_inferred_threshold(tmp_path):
+    from state_machines.trajectories.derive import date_order
+    b = F.fresh(tmp_path)
+    b["relations"] = []
+    ev(b, "e02")["time"] = F._when("2024-02", "p09", "month", "the count window", basis="enclosing_window", status="INFERRED")
+    assert ("e02", "e06") in date_order(b, ("DIRECT", "INFERRED"))
+    assert ("e02", "e06") not in date_order(b, ("DIRECT",))
+
+
+def test_T17_one_person_can_hold_different_roles_in_different_events(tmp_path):
+    b = F.fresh(tmp_path)
+    # P3 is a co-offender in e05 and the target of the defendant's threat in e06 (R04)
+    ev(b, "e05")["co_actors"] = [{"participant_ref": "P3", "role": "co_offender", "mode": "assisting"}]
+    ev(b, "e06")["targets"].append({"participant_ref": "P3", "role": "victim"})
+    ev(b, "e06")["harms"].append({"harm": "HARM_EXPOSURE_THREAT", "victim_ref": "P3", "victim_kind": "adult",
+                                  "status": "DIRECT", "support": [F.S("p06")]})
+    assert run(b, tmp_path) == []
+
+
+def test_adult_directed_harm_is_not_counted_in_H0(tmp_path):
+    from state_machines.trajectories.afh import case_harms
+    b = F.fresh(tmp_path)
+    for h in ev(b, "e06")["harms"]:
+        h["victim_kind"] = "adult"
+    assert "h4" not in case_harms(b, "INFERRED")
+    assert "h4" in case_harms(b, "INFERRED", victim_kinds=("minor", "adult"))
+
+
+def test_T17_collectives(tmp_path):
+    b = F.fresh(tmp_path)
+    b["participants"].append({"participant_ref": "P4", "kind": "collective",
+                              "count": {"min": 3, "max": None, "stated": "at_least", "support": [F.S("p08", "count")]},
+                              "members": [{"participant_ref": "P1", "status": "INFERRED", "support": [F.S("p08", "membership", "INFERRED")]}]})
+    ev(b, "e08")["targets"].append({"participant_ref": "P4", "role": "recipient"})
+    assert run(b, tmp_path) == []
+    b["participants"][-1]["count"]["support"] = []
+    assert run(b, tmp_path) == ["T17"]
+    b["participants"][-1]["count"]["support"] = [F.S("p08", "count")]
+    b["participants"][0]["members"] = [{"participant_ref": "P2", "status": "DIRECT", "support": [F.S("p01", "membership")]}]
+    assert run(b, tmp_path) == ["T17"]               # only a collective has members
+
+
+def test_T17_persona_only_acts_as_undercover(tmp_path):
+    b = F.fresh(tmp_path)
+    b["participants"].append({"participant_ref": "P5", "kind": "persona"})
+    ev(b, "e07")["actor"] = {"participant_ref": "P5", "role": "law_enforcement"}
+    assert "T17" in run(b, tmp_path)
+
+
+def test_T08_directing_co_actor_is_not_held_to_the_action_family(tmp_path):
+    b = F.fresh(tmp_path)
+    ev(b, "e08")["co_actors"] = [{"participant_ref": "P3", "role": "law_enforcement", "mode": "assisting"}]
+    assert "T08" in run(b, tmp_path)
+    ev(b, "e08")["co_actors"][0]["mode"] = "directing"
+    assert "T08" not in run(b, tmp_path)
+
+
+def test_T18_possible_identity_never_direct_and_never_merges(tmp_path):
+    from state_machines.trajectories.derive import derive
+    b = F.fresh(tmp_path)
+    base = derive(b, "INFERRED")
+    b["relations"].append(F._rel("r20", "SAME_ACT", "e06", "e08", [F.S("p08", "action", "INFERRED")],
+                                 basis="coder_inference", status="INFERRED"))
+    assert run(b, tmp_path) == []
+    d = derive(b, "INFERRED")
+    strip = lambda d: [[s["event_id"] for s in L["steps"]] for t in d["tracks"] for L in t["trajectories"]]  # noqa: E731
+    assert strip(d) == strip(base)                       # no merge, no new order, same chains
+    assert d["tracks"][0]["possible_same_act"] == [["e06", "e08"]]
+    b["relations"][-1]["status"] = "DIRECT"
+    assert "T18" in run(b, tmp_path)
+
+
+def test_T18_possible_identity_between_ordered_events_warns(tmp_path):
+    b = F.fresh(tmp_path)
+    b["relations"].append(F._rel("r21", "SAME_ACT", "e01", "e03", [F.S("p03", "action", "INFERRED")],
+                                 basis="coder_inference", status="INFERRED"))
+    findings = validate(b, text_root=tmp_path)
+    assert not [f for f in findings if f.severity == "error"]
+    assert any(f.code == "T18" and f.severity == "warning" for f in findings)
 
 
 @pytest.mark.parametrize("text", [

@@ -10,14 +10,19 @@
 # uco-core:Relationship, uco-core:Grouping, cac-platforms:* affordance classes and W3C oa:Annotation.
 # This file only adds what those cannot say: the evidence and source status of an assertion,
 # the coded action/harm/outcome code, partial dates, and the step index of a derived trajectory.
-# No classes are declared. Values of the *Status/*Code properties are constrained by
-# caselinker-trajectory-shapes.ttl; their definitions are in trajectories/CODEBOOK.md.
+# Two classes are declared, because no canonical term fits (checked against UCO 1.5.0 and CAC 3.1.0):
+# clt:Collective (a group the source describes collectively, with uncertain membership and count:
+# not an Identity, which UCO defines as one individual or organization, and not an Organization,
+# which requires people working together in an organized way) and clt:TimeAssertion (one dated
+# statement about when an act happened, kept beside any conflicting one). Values of the
+# *Status/*Code properties are constrained by caselinker-trajectory-shapes.ttl; their definitions
+# are in state_machines/evidence/CODEBOOK.md.
 
 <https://w3id.org/caselinker/trajectory>
     a owl:Ontology ;
     rdfs:label "CaseLinker trajectory evidence extension (experimental)" ;
-    owl:versionInfo "0.2.0" ;
-    owl:versionIRI <https://w3id.org/caselinker/trajectory/0.2.0> ;
+    owl:versionInfo "0.3.0" ;
+    owl:versionIRI <https://w3id.org/caselinker/trajectory/0.3.0> ;
     dcterms:description "Evidence-status and coding properties for source-grounded action trajectories. Experimental; subject to change; never presented as CAC, CASE or UCO." .
 
 clt:assertionStatus a owl:DatatypeProperty ;
@@ -53,11 +58,6 @@ clt:actionCode a owl:DatatypeProperty ;
 clt:outcome a owl:DatatypeProperty ;
     rdfs:label "outcome" ;
     rdfs:comment "What became of the attempted action: completed, attempted_not_completed, refused, blocked, interrupted or unknown." ;
-    rdfs:range xsd:string .
-
-clt:actorRole a owl:DatatypeProperty ;
-    rdfs:label "actor role" ;
-    rdfs:comment "Role of a pseudonymous actor in the case (offender, victim, undercover, law_enforcement, ...)." ;
     rdfs:range xsd:string .
 
 clt:affordanceBasis a owl:DatatypeProperty ;
@@ -131,11 +131,6 @@ clt:capabilityEntry a owl:DatatypeProperty ;
     rdfs:comment "Identifier of the capability registry entry a level A or B statement rests on." ;
     rdfs:range xsd:string .
 
-clt:capabilityReview a owl:DatatypeProperty ;
-    rdfs:label "capability review status" ;
-    rdfs:comment "Review status of a capability registry entry: proposed, reviewed or rejected." ;
-    rdfs:range xsd:string .
-
 clt:affordanceThreshold a owl:DatatypeProperty ;
     rdfs:label "affordance threshold" ;
     rdfs:comment "Lowest assertion status admitted when a trajectory was derived (DIRECT or INFERRED)." ;
@@ -149,3 +144,103 @@ clt:derivationRule a owl:DatatypeProperty ;
 clt:trackKind a owl:DatatypeProperty ;
     rdfs:label "track kind" ;
     rdfs:range xsd:string .
+
+clt:Collective a owl:Class ;
+    rdfs:subClassOf <https://ontology.unifiedcyberontology.org/uco/core/UcoObject> ;
+    rdfs:label "collective" ;
+    rdfs:comment "A group of people a source describes collectively (e.g. at least ten chat members). Membership and count may be uncertain and are sourced separately. Not a person and not an organization." .
+
+clt:TimeAssertion a owl:Class ;
+    rdfs:subClassOf <https://ontology.unifiedcyberontology.org/uco/core/UcoObject> ;
+    rdfs:label "time assertion" ;
+    rdfs:comment "One dated statement about when an act happened: the source expression, its precision and its normalized calendar bounds, with evidence status. Conflicting assertions are kept side by side." .
+
+clt:participantKind a owl:DatatypeProperty ;
+    rdfs:label "participant kind" ;
+    rdfs:comment "person, persona (undercover), collective or organization." ;
+    rdfs:range xsd:string .
+
+clt:legalStatus a owl:DatatypeProperty ;
+    rdfs:label "legal status" ;
+    rdfs:comment "A sourced legal-status record of a participant (e.g. charged_defendant). Separate from the roles the participant holds in events." ;
+    rdfs:range xsd:string .
+
+clt:eventRole a owl:DatatypeProperty ;
+    rdfs:label "event role" ;
+    rdfs:comment "The role a participant holds in one event (actor role or target role). Roles are event-specific; no role transition is ever inferred." ;
+    rdfs:range xsd:string .
+
+clt:participationMode a owl:DatatypeProperty ;
+    rdfs:label "participation mode" ;
+    rdfs:comment "performer, directing (instructed the act) or assisting." ;
+    rdfs:range xsd:string .
+
+clt:countMin a owl:DatatypeProperty ;
+    rdfs:label "count minimum" ;
+    rdfs:comment "Smallest number of members the source supports." ;
+    rdfs:range xsd:nonNegativeInteger .
+
+clt:countMax a owl:DatatypeProperty ;
+    rdfs:label "count maximum" ;
+    rdfs:comment "Largest number of members the source supports." ;
+    rdfs:range xsd:nonNegativeInteger .
+
+clt:countStated a owl:DatatypeProperty ;
+    rdfs:label "count stated as" ;
+    rdfs:comment "exact, at_least, at_most, approximate or unknown." ;
+    rdfs:range xsd:string .
+
+clt:timeAssertion a owl:ObjectProperty ;
+    rdfs:label "time assertion" ;
+    rdfs:comment "Links an action to one of its dated assertions (clt:TimeAssertion)." .
+
+clt:timeBasis a owl:DatatypeProperty ;
+    rdfs:label "time basis" ;
+    rdfs:comment "explicit_date, date_range, count_window, enclosing_window (an inferred constraint) or relative_statement." ;
+    rdfs:range xsd:string .
+
+clt:timeExpression a owl:DatatypeProperty ;
+    rdfs:label "time expression" ;
+    rdfs:comment "The date expression as the source states it." ;
+    rdfs:range xsd:string .
+
+clt:timeConflict a owl:DatatypeProperty ;
+    rdfs:label "time conflict" ;
+    rdfs:comment "True when the action has dated assertions that contradict each other. Both are kept; neither is chosen." ;
+    rdfs:range xsd:boolean .
+
+clt:interactionMode a owl:DatatypeProperty ;
+    rdfs:label "interaction mode" ;
+    rdfs:comment "The act went through the platform, moved from or to it, or was done to it (acted_on)." ;
+    rdfs:range xsd:string .
+
+clt:audience a owl:DatatypeProperty ;
+    rdfs:label "audience" ;
+    rdfs:comment "one_to_one, group, public or unknown, as the source states it." ;
+    rdfs:range xsd:string .
+
+clt:featureSetting a owl:DatatypeProperty ;
+    rdfs:label "feature setting" ;
+    rdfs:comment "Coded configuration evidence for the interaction, as feature=setting." ;
+    rdfs:range xsd:string .
+
+clt:channel a owl:DatatypeProperty ;
+    rdfs:label "channel" ;
+    rdfs:comment "A non-platform channel (sms, voice_call, email, mail, in_person)." ;
+    rdfs:range xsd:string .
+
+clt:victimKind a owl:DatatypeProperty ;
+    rdfs:label "victim kind" ;
+    rdfs:comment "minor, adult, undercover_persona or unknown. H0 counts minor-directed harms by default." ;
+    rdfs:range xsd:string .
+
+clt:capabilityConfidence a owl:DatatypeProperty ;
+    rdfs:label "capability confidence" ;
+    rdfs:comment "Confidence of a registry capability entry: documented, approximate or uncertain." ;
+    rdfs:range xsd:string .
+
+clt:availability a owl:DatatypeProperty ;
+    rdfs:label "availability" ;
+    rdfs:comment "Level-A availability of a capability at an event: supported, uncertain or unsupported." ;
+    rdfs:range xsd:string .
+
