@@ -86,7 +86,7 @@ flowchart TD
 
   subgraph SERVE["Serving · run/ · caselinker_mcp/"]
     API["FastAPI<br/>18 pages · REST · /sparql · /resource"]
-    MCP["MCP server · 61 tools"]
+    MCP["MCP server · 62 tools"]
   end
 
   NEWS --> URLS
@@ -481,7 +481,7 @@ Runtime details worth knowing: slowapi rate limits per route; GZip and proxy-hea
 | Repair and expand (local) | 5 | 0 | `describe_pipeline`, `diagnose_case`, `profile_new_source`, `scaffold_extension`, `run_gate` |
 | **Total** | **62** | **47** | |
 
-Five tools are trusted-key sensitive: `get_all_cases` and `get_lifecycle_cases` return 403 without one; `get_case` and `get_case_assertions` return sanitized payloads; `llm_chat` keeps the daily cap.
+Six tools are trusted-key sensitive: `get_all_cases`, `get_lifecycle_cases` and `get_afh_analysis` return 403 without one; `get_case` and `get_case_assertions` return sanitized payloads; `llm_chat` keeps the daily cap.
 
 | Transport | Where | Auth |
 |---|---|---|

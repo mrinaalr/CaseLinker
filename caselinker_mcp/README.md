@@ -12,8 +12,8 @@ The CaseLinker MCP (Model Context Protocol) server exposes structured tools to a
 - **2** local-DB analysis tools (`get_sentencing_stats`, `filter_cases_by_jurisdiction`)
 - **5** repair and expand tools (`describe_pipeline`, `diagnose_case`, `profile_new_source`, `scaffold_extension`, `run_gate`) — local MCP only, see [Repair and expand](#repair-and-expand)
 
-**Local stdio / local FastAPI mount:** **61 tools** (full READ + WRITE).
-**Railway hosted MCP:** **46 tools** (collector WRITE, local-disk duplicate and repair-and-expand tools omitted).
+**Local stdio / local FastAPI mount:** **62 tools** (full READ + WRITE).
+**Railway hosted MCP:** **47 tools** (collector WRITE, local-disk duplicate and repair-and-expand tools omitted).
 
 Corpus and analysis tools are read-only against the database. Collector WRITE tools write local JSON/PDFs only; they do not ingest into sqlite.
 
@@ -64,8 +64,8 @@ Set `CASELINKER_KEY` to a value listed in `CASELINKER_TRUSTED_KEYS` on Railway o
 
 ## Tool tiers
 
-**56 public** + **5 trusted-key sensitive** = **61 tools** on local MCP.
-On Railway hosted MCP the eight collector WRITE tools, the two local-disk duplicate tools and the five repair-and-expand tools are omitted → **41 public** + **5 trusted** = **46 tools**.
+**56 public** + **6 trusted-key sensitive** = **62 tools** on local MCP.
+On Railway hosted MCP the eight collector WRITE tools, the two local-disk duplicate tools and the five repair-and-expand tools are omitted → **41 public** + **6 trusted** = **47 tools**.
 
 ### Public tier
 
@@ -92,6 +92,7 @@ Use `filter_cases_by_tags` for current database cohorts and `get_corpus_stats` f
 |------|---------------------|------------------|
 | `get_all_cases` | **403** (bulk export blocked) | Full corpus via `GET /api/corpus` (every column) |
 | `get_lifecycle_cases` | **403** (lifecycle export blocked) | Documented PACER event graphs and derived trajectories (the `/lifecycle` payload) |
+| `get_afh_analysis` | **403** (lifecycle export blocked) | AfH quantities over the release: Aff(c), minor-directed H(c), ψ, coverage identity |
 | `get_case` | Sanitized case: no `raw_data`; `case_text_redacted` (full release, people masked); features and admission excerpts with people masked | Full case including narratives |
 | `get_case_assertions` | Per-method assertions and resolutions with offsets, no span excerpts, no person names | Includes span excerpts and LLM quotes; still no person names |
 | `llm_chat` | 50 requests/IP/day | Daily cap exempt (slowapi 15/min still applies) |
@@ -126,7 +127,7 @@ Fill in `CASELINKER_KEY` locally only if you need bulk export, full case narrati
 
 ## Hosted (Railway)
 
-CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **46 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
+CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **47 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
 
 | Transport | Client URL | How messages flow |
 |-----------|------------|-------------------|
@@ -340,12 +341,12 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 
 ## Tools
 
-**61 tools locally / 46 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
+**62 tools locally / 47 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
 
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|
 | Public (trusted key irrelevant) | 56 | 41 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
-| Trusted-key sensitive | 5 | 5 | `get_all_cases`, `get_lifecycle_cases`, `get_case`, `get_case_assertions`, `llm_chat` |
+| Trusted-key sensitive | 6 | 6 | `get_all_cases`, `get_lifecycle_cases`, `get_afh_analysis`, `get_case`, `get_case_assertions`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.
 
