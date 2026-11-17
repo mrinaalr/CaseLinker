@@ -1167,9 +1167,13 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
         if archive.returncode != 0:
             return {"ran": False, "reason": f"git archive {base} failed"}
         subprocess.run(["tar", "-x", "-C", tmp], input=archive.stdout, check=True, timeout=300)
-        before = _run_child({"mode": "replay", "root": tmp, "docs": payload_docs, "full": full}, timeout=3600)
-        after = _run_child({"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full},
-                           timeout=3600)
+        # A small replay carries values in its first pass; a large one compares hashes and asks
+        # again only for the cases that moved, so neither side loads its models twice when it can help it.
+        upfront = len(payload_docs) <= _MAX_LISTED
+        before = _run_child({"mode": "replay", "root": tmp, "docs": payload_docs, "full": full,
+                             "values": upfront}, timeout=3600)
+        after = _run_child({"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full,
+                            "values": upfront}, timeout=3600)
         for side, result in (("base", before), ("checkout", after)):
             if result.get("failed"):
                 return {"ran": False, "reason": f"{side} replay {result['failed']}"}
@@ -1179,7 +1183,11 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
                      if c["case_id"] in old_hash and c["columns"] != old_hash[c["case_id"]]][:_MAX_LISTED]
         moved_docs = [d for d in payload_docs if d["case_id"] in set(moved_ids)]
         values: Dict[str, Dict[str, Dict[str, str]]] = {"base": {}, "checkout": {}}
-        if moved_docs:
+        if upfront:
+            for side, result in (("base", before), ("checkout", after)):
+                values[side] = {c["case_id"]: c.get("values", {}) for c in result["cases"]
+                                if c["case_id"] in set(moved_ids)}
+        elif moved_docs:
             for side, root in (("base", tmp), ("checkout", str(_REPO_ROOT))):
                 got = _run_child({"mode": "replay", "root": root, "docs": moved_docs, "full": full, "values": True},
                                  timeout=3600)
