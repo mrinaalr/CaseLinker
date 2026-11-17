@@ -81,11 +81,29 @@ _MAX_LISTED = 200
 _MAX_VALUE = 300
 
 
+_MAX_ITEMS = 25
+
+
 def _moved_value(column: str, before: Optional[str], after: Optional[str]) -> Dict[str, Any]:
-    """Before and after of one moved column, short. Columns that can carry release text are not shown."""
+    """What moved in one column. Lists give removed and added items, dicts the keys that changed,
+    anything else a short before and after. Columns that can carry release text are not shown."""
     if any(part in column for part in _SKIP_VALUE_KEYS):
         return {"shown": False, "reason": "may hold release text; read it with diagnose_case"}
     cut = lambda v: v if v is None or len(v) <= _MAX_VALUE else v[:_MAX_VALUE] + "…"
+    try:
+        old, new = (json.loads(v) if v is not None else None for v in (before, after))
+    except ValueError:
+        return {"before": cut(before), "after": cut(after)}
+    if isinstance(old, list) and isinstance(new, list):
+        key = lambda x: json.dumps(x, sort_keys=True, default=str)
+        was, now = {key(x): x for x in old}, {key(x): x for x in new}
+        return {"removed": [was[k] for k in was if k not in now][:_MAX_ITEMS],
+                "added": [now[k] for k in now if k not in was][:_MAX_ITEMS],
+                "count": [len(old), len(new)]}
+    if isinstance(old, dict) and isinstance(new, dict):
+        keys = sorted(k for k in old.keys() | new.keys() if old.get(k) != new.get(k))
+        return {"keys": {k: {"before": cut(json.dumps(old.get(k), default=str)),
+                             "after": cut(json.dumps(new.get(k), default=str))} for k in keys[:_MAX_ITEMS]}}
     return {"before": cut(before), "after": cut(after)}
 
 _pipeline_module = None

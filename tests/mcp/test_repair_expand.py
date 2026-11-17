@@ -350,8 +350,20 @@ def test_replay_values_are_short_and_never_release_text():
     assert R._moved_value("admissions", '"he said"', '"she said"') == {
         "shown": False, "reason": "may hold release text; read it with diagnose_case"}
     long = '"' + "x" * 1000 + '"'
-    shown = R._moved_value("previous_conviction", None, long)
+    shown = R._moved_value("relationship_to_victim", None, long)
     assert shown["before"] is None and len(shown["after"]) == R._MAX_VALUE + 1
+
+
+def test_replay_values_say_what_moved_in_lists_and_dicts():
+    moved = R._moved_value("agencies_involved", json.dumps(["Sheriff's Office", "FBI"]),
+                           json.dumps(["Camden County Sheriff's Office", "FBI"]))
+    assert moved == {"removed": ["Sheriff's Office"], "added": ["Camden County Sheriff's Office"], "count": [2, 2]}
+    moved = R._moved_value("previous_conviction", json.dumps(None),
+                           json.dumps({"is_registered": False, "has_prior_conviction": True}))
+    assert moved == {"before": "null", "after": '{"is_registered": false, "has_prior_conviction": true}'}
+    moved = R._moved_value("previous_conviction", json.dumps({"is_registered": True, "has_prior_conviction": False}),
+                           json.dumps({"is_registered": True, "has_prior_conviction": True}))
+    assert moved == {"keys": {"has_prior_conviction": {"before": "false", "after": "true"}}}
 
 
 AGENCIES = ("Detectives with the Riverton Police Department and the Kentucky State Police arrested "
