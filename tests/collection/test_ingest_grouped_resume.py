@@ -18,13 +18,15 @@ def _load():
     return mod
 
 
-def _run(monkeypatch, tmp_path, list_file, done_file, fail_on=None):
+def _run(monkeypatch, tmp_path, list_file, done_file, fail_on=None, short_on=None):
     seen = []
 
     def run_pipeline(group):
         if fail_on and fail_on in group:
             raise RuntimeError("hang")
         seen.extend(group)
+        stored = 1 if short_on and short_on in group else 2
+        return {"parsed": 2, "attempted": 2, "stored": stored}
 
     monkeypatch.setitem(sys.modules, "main", types.SimpleNamespace(run_pipeline=run_pipeline))
     monkeypatch.setattr(sys, "argv", ["ingest_grouped.py", "--list", str(list_file), "--done-file", str(done_file)])
@@ -61,3 +63,17 @@ def test_nothing_left_returns_zero_without_loading_the_pipeline(monkeypatch, tmp
     code, seen = _run(monkeypatch, tmp_path, list_file, done_file)
     assert code == 0
     assert seen == []
+
+
+def test_a_pdf_whose_cases_were_not_all_stored_is_retried(monkeypatch, tmp_path):
+    pdfs = [str(tmp_path / f"{n}.pdf") for n in ("a", "b")]
+    list_file = tmp_path / "pdfs.txt"
+    list_file.write_text("\n".join(pdfs) + "\n", encoding="utf-8")
+    done_file = tmp_path / "done.txt"
+
+    code, seen = _run(monkeypatch, tmp_path, list_file, done_file, short_on=pdfs[1])
+    assert code == 0 and seen == pdfs
+    assert done_file.read_text(encoding="utf-8").split() == pdfs[:1]  # b stored 1 of 2: not done
+
+    code, seen = _run(monkeypatch, tmp_path, list_file, done_file)
+    assert seen == pdfs[1:]

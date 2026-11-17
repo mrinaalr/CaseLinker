@@ -95,7 +95,7 @@ def main() -> int:
         print(f"\n>>> [{n}/{total_groups}] {names}", flush=True)
         t0 = time.perf_counter()
         try:
-            run_pipeline(group)
+            result = run_pipeline(group) or {}
         except Exception as exc:
             print(f"!!! [{n}/{total_groups}] FAILED: {exc}", flush=True)
             import traceback
@@ -105,9 +105,16 @@ def main() -> int:
             f"<<< [{n}/{total_groups}] done in {time.perf_counter() - t0:.1f}s",
             flush=True,
         )
-        if done_path:
+        # Done only when every case the group yielded was stored: a dropped connection
+        # can leave stored < attempted, and the next run must retry that group. A group
+        # that yielded no cases is retried too (a parse failure must not be skipped).
+        complete = bool(result.get("parsed")) and result.get("stored") == result.get("attempted")
+        if done_path and complete:
             with done_path.open("a", encoding="utf-8") as handle:
                 handle.writelines(f"{p}\n" for p in group)
+        elif done_path:
+            print(f"!!! [{n}/{total_groups}] not marked done: stored {result.get('stored')} of "
+                  f"{result.get('attempted')} attempted ({result.get('parsed')} parsed)", flush=True)
 
     print(
         f"\n✓ All finished in one process ({time.perf_counter() - t_all:.1f}s wall)",
