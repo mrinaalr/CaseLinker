@@ -1,197 +1,104 @@
-<!-- Proposed PR, for review before anyone opens it. Branch: research/afh-q1-reconstruction. Do not open until authorised. -->
-
 **Title:** rebuild AfH 2.0 Q1 platform-affordance manifest from a pinned corpus snapshot
 
 ## Summary
 
-- Adds `research/afh_q1/`: a reproducible pipeline from a pinned, read-only snapshot of the 10,802-case corpus to the AfH 2.0 Section 3–4 manifest. It produces:
-  - platform presence: 1,863 strict cases / 2,487 platform-case observations;
-  - documented use: **1,513 primary** (line-wrap repair) and 1,257 original-rule baseline;
-  - six-class coverage at four nested evidence levels;
-  - recurrence, and observed vs potential harm pathways;
-  - an exemplar inventory blind-reviewed by AI reviewers;
-  - booktabs LaTeX tables.
-- Replaces hand-entered platform capability years with dated, sourced research: 216 capability rows, and 25 manuscript claims checked on fetched pages (23 confirmed, 2 corrected).
-- Fixes upstream defects found by the audit:
-  - the Q1 freshness gate missed a stale candidate list;
-  - program-launch boilerplate was tagged as case event dates;
-  - hard-wrapped releases hid documented platform use from the tier rules;
-  - importing `run/main.py` in tests left an empty `caselinker.db`, which broke later test runs.
+Adds `research/afh_q1/`, which builds the AfH 2.0 Section 3–4 manifest from a pinned, read-only snapshot of the 10,802-case corpus. Results:
+
+| Measure | Value |
+|---|---|
+| Cases naming a specific platform | 1,863 (2,487 platform-case observations) |
+| Cases documenting platform use | **1,513** with the line-wrap repair (primary); 1,257 under the original rules (baseline) |
+| Six CAC affordance classes | Counted at four nested levels: available capability, capability-relevant conduct, inferred facilitation, explicit use |
+| Harm pathways | Observed and potential, reported separately |
+| Platform registry | 216 capability rows with dated sources |
+| Exemplars | 184 fingerprint-bound; each blind-reviewed |
+| LaTeX tables | 6, booktabs |
+
+Also fixes four defects in the existing pipeline that the Q1 audit found.
 
 ## Root cause
 
-1. **Stale snapshot.** `platform_affordance_evidence.py` read `candidates.json` from disk. Freshness compared only the corpus count and the extraction-run fingerprint, so the 2026-11-12 snapshot passed while built from a 23-day-old candidate list (3,183 listed vs 3,083 live).
-2. **Case ids.** Ids before #38 were positional: 924 of 976 content-matched June NCMEC ids now name different releases. Manifest citations by bare id broke (51 of 118).
-3. **Dates.** `temporal_tags` tagged "Project Safe Childhood, a nationwide initiative launched in May 2006" as an event in 2,358 cases.
-4. **Tiers.** Press-release PDFs are hard-wrapped, so verb and platform reached `classify_sentence` as separate fragments.
-5. **Capabilities.** Platform affordance years were unsourced, and classes were assigned per case only in hand-coded PACER graphs.
-6. **Tests.** `run/main.py` builds `CaseStorage()` on the default relative path at import.
+| Defect | Cause | Effect |
+|---|---|---|
+| Stale evidence snapshot | The builder read `candidates.json` from disk; freshness compared only case count and extraction-run fingerprint | The 2026-11-12 snapshot passed while built from a 23-day-old candidate list (3,183 vs 3,083 live) |
+| Program boilerplate as case dates | `temporal_tags` had no rule for program-history sentences | "launched in May 2006" was an event date in 2,358 cases |
+| Undercounted platform use | Press releases are hard-wrapped; verb and platform reached `classify_sentence` as separate fragments | 25 of 40 sampled named-only records document use |
+| Test-order failures | Importing `run/main.py` creates an empty `caselinker.db` | Later runs fail the DB-dependent extraction tests instead of skipping them |
 
 ## Fix
 
-| Area | Change |
-|---|---|
-| Freshness | The builder recomputes candidates on every run. `_meta` records platform-pair, candidate-pool and code hashes; `identity_matches` requires all of them (portable to Postgres; used by the API). |
-| Tiers | `repair_line_wraps` and `linewrap_tiers`: additive (never demotes), refusing promotions earned only by agency social-media boilerplate. Records carry `stated_vs_inferred_linewrap` (`tiers-1+linewrap-2`) beside the unchanged `stated_vs_inferred` (`tiers-1`). |
-| Dates | `temporal_tags` 1.1.0: role `program_boilerplate`, and `extras.event_kind` for events |
-| Tests | `tests/conftest.py` removes an empty `caselinker.db` at session end, only if the session created it and it has no cases |
-| Research | `afhq1/`: snapshot export and identity, June-id content crosswalk, fingerprint-bound citations, registry (`platforms-2`), codebook (`codebook-6`), A/B/I/C levels, harm pathways, validation, LaTeX |
+- **Freshness** (`run/platform_affordance_evidence_freshness.py`, `platform_affordance_evidence.py`, `build_candidates.py`, `rebuild_platform_affordance_evidence.py`, `run/main.py`):
+  - candidates are recomputed from the DB on every build;
+  - a snapshot is current only if corpus identity, every `(case, platform)` pair and the builder code hashes all match;
+  - the API uses the same check.
+- **Tiers** (`platform_affordance_evidence.py`):
+  - `repair_line_wraps` joins mid-sentence wraps;
+  - `linewrap_tiers` takes the better of the original and repaired tier, and refuses promotions earned only by agency social-media boilerplate;
+  - records keep `stated_vs_inferred` (`tiers-1`, unchanged) and add `stated_vs_inferred_linewrap` (`tiers-1+linewrap-2`).
+- **Dates** (`temporal_tags.py` 1.1.0): adds role `program_boilerplate`, and gives event dates `extras.event_kind` (offense, investigation, arrest, prosecution, unknown).
+- **Tests** (`tests/conftest.py`): at session end, removes a `caselinker.db` that the session created and that holds no cases.
+- **Research package** (`research/afh_q1/`):
+  - snapshot export and identity;
+  - content crosswalk for June 2026 case ids;
+  - fingerprint-bound citations;
+  - platform registry (`platforms-2`, generated from `config/capability_sources/`);
+  - codebook (`codebook-6`);
+  - classification, harm, validation, LaTeX;
+  - docs: `FINDINGS.md`, `DECISION_1_TIERS.md`, `README.md`.
 
 ## Test plan
+
+Regenerate and verify every output against `RUN_IDENTITY.json` (Python 3.12 and PyYAML 6.0.3 only):
 
 ```bash
 AFH_Q1_SOURCE_DB=/path/to/caselinker.db python research/afh_q1/run_all.py --export --verify
 ```
 
+Run the tests:
+
 ```bash
 DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
 ```
 
-- **Clean clone + Python 3.12 + PyYAML 6.0.3:** snapshot `60f7bfaa…`, outputs `identical`.
-- **Tests:** 322 passed, 33 skipped in a fresh clone.
-- **New tests fail without their fixes:**
+- **Fresh clone:** snapshot `60f7bfaa…`, outputs `identical`; 322 passed, 33 skipped.
+- **Tests that fail without their fix:**
   - the old tagger fails 6/8 boilerplate tests;
-  - removing the undercover guard, setting C to B, dropping the historical date check, or allowing a stale candidate pool each fails its test;
+  - a candidate pool changed in place is reported stale;
+  - removing the undercover guard, setting explicit use equal to conduct, or dropping the historical date check each fails its test;
   - the line-wrap tests fail without the repair or the guard.
 
 | | Before | After |
 |---|---|---|
-| Freshness check on the 2026-11-12 snapshot | `current` | `rebuild` (platform pairs, code) |
-| May-2006 boilerplate as event dates | 2,358 cases | moved to `program_boilerplate` (3,183 dates) |
-| Documented-use strict cases | 1,257 | 1,513 primary; 1,257 baseline |
-| Manifest exemplar citations | 51/118 pointed at a case without that platform | 184 fingerprint-bound, all resolve; each AI-reviewed blind (136 supported) |
-| Running `tests/api` then `test_field_assertions` | 10 failed | 88 passed, 10 skipped |
+| Freshness check on the 2026-11-12 snapshot | `current` | `rebuild` |
+| Program-history dates | tagged as events (May 2006 in 2,358 cases) | 3,183 dates moved to `program_boilerplate` |
+| Strict cases documenting use | 1,257 | 1,513 primary, 1,257 baseline |
+| Manifest exemplar citations | 51 of 118 pointed at a case without that platform (bare ids) | 184 bound to content fingerprints, all resolve |
+| `tests/api`, then `test_field_assertions` | 10 failed | 88 passed, 10 skipped |
 
-**Validation.** Blind AI reviewers saw masked passages and no labels. No human adjudication yet. They covered:
-- 107 classification rows (κ 0.78 / 0.84 against round 1);
-- 74 harm rows;
-- 70 tier rows;
-- 120 tier-variant rows;
-- 36 inferred-facilitation rows;
-- 45 promoted cases;
-- all 184 manifest exemplars.
+**Validation.** Blind AI reviewers saw masked passages and no labels. The promoted-case sample reached about 96% estimated precision after the guard (14/16 social, 25/25 other; conservative lower bound 80%).
+
+| Sample | Rows |
+|---|---|
+| Classification (κ 0.78 / 0.84 against round 1) | 107 |
+| Harm | 74 |
+| Evidence tiers | 70 |
+| Tier variants | 120 |
+| Inferred facilitation | 36 |
+| Promoted cases | 45 |
+| Manifest exemplars | 184 |
 
 ## Stored data
 
-- `ontology/platform_affordance_evidence/platform_affordance_evidence.json` is regenerated. Its published tier is identical for all 4,680 records; it adds the line-wrap field and rule versions.
-- Stored date assertions in `caselinker.db` and production keep the old roles until a re-extraction, which this PR does not run.
+- `ontology/platform_affordance_evidence/platform_affordance_evidence.json` is regenerated. `stated_vs_inferred` is identical for all 4,680 records; it adds `stated_vs_inferred_linewrap` and rule versions in `_meta`.
+- Date assertions already stored in `caselinker.db` and production keep their old roles until the next extraction run. This PR does not re-extract.
 
 ## Residual gaps
 
-- No human adjudication of AI-reviewed rows.
-- AI cells are small: 19 explicit generative cases (2/3 exemplars supported) and 19 likeness-synthesis cases (1/2).
-- 38 registry rows have uncertain start dates. 9 concern manuscript example platforms.
-- About a third of named-only records still hide offender use.
-- A sentence naming two platforms can attribute conduct to the wrong one.
-- The public API serves raw `evidence_quote` text (unchanged).
+- **No human adjudication yet.** All validation is AI review; per-cell samples are 3–45 rows.
+- **AI cells are small.** 19 explicit generative-use cases and 19 likeness-synthesis cases; exemplars are 2/3 and 1/2 supported.
+- **Uncertain registry dates.** 38 capability rows have an uncertain start date; 9 are on platforms the manuscript uses as examples. They underlie 13–17% of Anonymity, Contact discovery and Unmonitored availability counts.
+- **Remaining undercount.** About a third of named-only records still describe offender use the rules miss.
+- **Platform attribution.** A sentence naming two platforms can attribute conduct to the wrong one.
+- **Public API.** It still serves raw `evidence_quote` text.
 
-No linked issue. Author decisions and full results are in `research/afh_q1/FINDINGS.md`.
-
-## Files changed against origin/main
-
-81 files changed, 49657 insertions(+), 19744 deletions(-)
-
-**Upstream code (CaseLinker pipeline, API)** (6)
-
-- `M` ontology/platform_affordance_evidence/build_candidates.py
-- `M` ontology/platform_affordance_evidence/platform_affordance_evidence.py
-- `M` run/main.py
-- `M` run/platform_affordance_evidence_freshness.py
-- `M` scripts/run/rebuild_platform_affordance_evidence.py
-- `M` src/Processing Layer/Pattern Processing Layer/temporal_tags.py
-
-**Upstream derived data (regenerated)** (3)
-
-- `M` ontology/platform_affordance_evidence/candidates.json
-- `M` ontology/platform_affordance_evidence/platform_affordance_evidence.json
-- `M` ontology/platform_affordance_evidence/platform_affordance_evidence_table.md
-
-**Tests** (7)
-
-- `A` tests/api/test_platform_affordance_evidence_build_inputs.py
-- `M` tests/api/test_platform_affordance_evidence_freshness.py
-- `A` tests/api/test_platform_affordance_evidence_linewrap.py
-- `M` tests/conftest.py
-- `A` tests/extraction/test_program_boilerplate_dates.py
-- `A` tests/research/test_afh_q1_identity.py
-- `A` tests/research/test_afh_q1_pipeline.py
-
-**Research package code** (13)
-
-- `A` research/afh_q1/afhq1/__init__.py
-- `A` research/afh_q1/afhq1/build.py
-- `A` research/afh_q1/afhq1/citations.py
-- `A` research/afh_q1/afhq1/identity.py
-- `A` research/afh_q1/afhq1/latex.py
-- `A` research/afh_q1/afhq1/pipeline.py
-- `A` research/afh_q1/afhq1/registry.py
-- `A` research/afh_q1/afhq1/report.py
-- `A` research/afh_q1/afhq1/review.py
-- `A` research/afh_q1/afhq1/snapshot.py
-- `A` research/afh_q1/afhq1/temporal.py
-- `A` research/afh_q1/afhq1/tier_variants.py
-- `A` research/afh_q1/run_all.py
-
-**Research config (registry, codebook, reviews, sources)** (17)
-
-- `A` research/afh_q1/config/capability_sources/games.yaml
-- `A` research/afh_q1/config/capability_sources/manuscript_claims_verified.csv
-- `A` research/afh_q1/config/capability_sources/messaging.yaml
-- `A` research/afh_q1/config/capability_sources/social.yaml
-- `A` research/afh_q1/config/capability_sources/storage_video_ai.yaml
-- `A` research/afh_q1/config/capability_sources/url_check.json
-- `A` research/afh_q1/config/codebook.yaml
-- `A` research/afh_q1/config/platforms.yaml
-- `A` research/afh_q1/config/review_exemplars.csv
-- `A` research/afh_q1/config/review_round2_classification.csv
-- `A` research/afh_q1/config/review_round2_harm.csv
-- `A` research/afh_q1/config/review_round2_inferred.csv
-- `A` research/afh_q1/config/review_round2_tiers.csv
-- `A` research/afh_q1/config/review_round3_tier_variants.csv
-- `A` research/afh_q1/config/review_round4_promoted_cases.csv
-- `A` research/afh_q1/config/validation_adjudication.csv
-- `A` research/afh_q1/config/validation_reviews.csv
-
-**Research outputs (generated)** (24)
-
-- `A` research/afh_q1/outputs/RUN_IDENTITY.json
-- `A` research/afh_q1/outputs/TABLES.md
-- `A` research/afh_q1/outputs/affordance_coverage.json
-- `A` research/afh_q1/outputs/citations.json
-- `A` research/afh_q1/outputs/exemplar_inventory.json
-- `A` research/afh_q1/outputs/harm.json
-- `A` research/afh_q1/outputs/inventory.json
-- `A` research/afh_q1/outputs/june_2026_reconciliation.json
-- `A` research/afh_q1/outputs/latex/tab_affordance_coverage.tex
-- `A` research/afh_q1/outputs/latex/tab_inventory.tex
-- `A` research/afh_q1/outputs/latex/tab_platform_manifest.tex
-- `A` research/afh_q1/outputs/latex/tab_recurrence.tex
-- `A` research/afh_q1/outputs/latex/tab_tier_variants.tex
-- `A` research/afh_q1/outputs/latex/tab_verified_exemplars.tex
-- `A` research/afh_q1/outputs/legacy_afh1_exemplars.json
-- `A` research/afh_q1/outputs/manifest.json
-- `A` research/afh_q1/outputs/records.csv
-- `A` research/afh_q1/outputs/recurrence.json
-- `A` research/afh_q1/outputs/registry_checks.json
-- `A` research/afh_q1/outputs/temporal.json
-- `A` research/afh_q1/outputs/tier_variants.json
-- `A` research/afh_q1/outputs/validation.json
-- `A` research/afh_q1/outputs/validation_round2.json
-- `A` research/afh_q1/outputs/validation_sample.json
-
-**Research docs** (10)
-
-- `A` research/afh_q1/.gitignore
-- `A` research/afh_q1/DECISION_1_TIERS.md
-- `A` research/afh_q1/FINDINGS.md
-- `A` research/afh_q1/PR_DESCRIPTION.md
-- `A` research/afh_q1/README.md
-- `A` research/afh_q1/audit_2026-11-16/README.md
-- `A` research/afh_q1/audit_2026-11-16/afh-q1-audit.html
-- `A` research/afh_q1/audit_2026-11-16/analyze.py
-- `A` research/afh_q1/audit_2026-11-16/compare.py
-- `A` research/afh_q1/audit_2026-11-16/rebuild.py
-
-**Other** (1)
-
-- `M` .gitignore
+Files changed: 81 (`git diff --stat origin/main`), 0 under `ontology/graph_output/`.
