@@ -22,8 +22,10 @@ python -m state_machines.coding.pipeline release pacer-v1 <case> [...]
 
 | Part | What it does |
 |---|---|
-| [`coder.py`](coder.py) | Reads a case page by page. Docket pages go to a deterministic parser (charge, plea, verdict, sentence and arrest entries only). Judgment form pages are skipped and counted. Every other page goes to a local model, which returns, per act, the first words of its sentence and its codes under a JSON schema. Code locates the sentence, maps role names to participants, enforces B0 and I3, writes descriptions from codes, and drops (and logs) every act that breaks a rule. |
-| [`models.json`](models.json) | The two coders, pinned by content digest with their inference settings: **coder_A** `qwen3:8b`, **coder_B** `llama3.1:8b`, two model families so their errors are not shared. A model whose local digest differs is refused. |
+| [`coder.py`](coder.py) | Reads a case page by page. Docket pages go to a deterministic parser (charge, plea, verdict, sentence and arrest entries only). Judgment form pages are skipped and counted. Every other page goes to a local model, which names each act's sentence (its first words) and action code, and the actor when it is not the defendant. Code locates the whole sentence, applies the sentence rules, maps role names to participants, writes descriptions from codes, and drops (and logs) every act that breaks a rule. |
+| [`enrich.py`](enrich.py) | Sentence rules for what the model is not asked: targets (victim, persona, recipient mentions), dates (exact words, real bounds), platforms and channels, level-C features (a fixed phrase list per class, so B0 holds by construction), harms that follow from the act code with a minor target, order from sequence words ("after that first contact" → the contact act). Identical for both coders, so reliability is reported on acts and action codes only. |
+| [`models.json`](models.json) | The two coders, pinned by content digest with every inference setting: **coder_A** `qwen3:4b`, **coder_B** `llama3.2:3b` (two model families, so their errors are not shared), chosen on dev cases (`selection`). A model whose local digest differs is refused. |
+| [`select_models.py`](select_models.py) | Scores candidate models on dev benchmark cases (accuracy and seconds per page); held-out cases are never used. |
 | [`resolve.py`](resolve.py) | Publishes what both coders coded (see [machine resolution](#machine-resolution)). |
 | [`pipeline.py`](pipeline.py) | Runs both coders (cached, resumable, a failed case recorded rather than forced), resolves, scores the [benchmark](../benchmark/README.md), builds the release. |
 
@@ -54,7 +56,17 @@ Events are matched across coders by the overlap of the passages they cite, never
 
 Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m state_machines.coding.throughput`).
 
-- **Where the time goes:** writing the answer, not reading the page. Reading the prompt takes about 0.1 s cached and 2–11 s cold; models write 10–21 tokens/s and answers run 300–1,300 tokens. Answers therefore give only the first words of each sentence (code finds the rest) in compact keys, capped at 1,500 tokens.
+- **Where the time goes:** writing the answer, not reading the page. Reading the prompt takes about 0.1 s cached and 2–11 s cold; models write 10–25 tokens/s. Prompt 1.x asked the model for every field (300–625 tokens a page); prompt 2.0 asks only for each act's first words, code and non-defendant actor (140–280 tokens), and the sentence rules derive the rest.
+- **Model choice (5 dev cases, prompt 2.0):**
+
+  | Model | s/page | Event F1 | Action | Level C (R/P) | Harms (R/P) |
+  |---|---:|---:|---:|---|---|
+  | `qwen3:4b` (coder_A) | 7.9 | 0.87 | 0.91 | 1.0 / 0.78 | 0.80 / 1.0 |
+  | `llama3.2:3b` (coder_B) | 7.1 | 0.76 | 0.68 | 1.0 / 0.78 | 0.50 / 0.80 |
+  | `qwen3:8b` | 29.6 | 0.80 | 0.81 | 1.0 / 0.70 | 0.60 / 1.0 |
+
+  The 8B model was slower and not more accurate; `llama3.1:8b` ran about 50 s a page under the old prompt.
+- **Two requests in flight** (`runtime.parallel = 2`): 5.1 s per page wall time against 7.9 s serial.
 - **Page routing for the 30 real cases:** 1,027 pages; 201 docket pages to the parser (procedure entries only), 60 judgment form pages skipped, 766 pages read by the models. Every substantive filing is read.
 - **Rejected: a page prefilter.** On the pilot's real pages (agent-coded), the best keyword prefilter kept 90% of pages with acts while saving only 19% of model pages; the strictest kept 71%. Losing acts to save time is not acceptable, so every non-docket, non-form page is read.
 - **Memory:** a dedicated Ollama server (`models.json` `runtime`) with one model loaded, an 8-bit KV cache, flash attention and an 8k context; the coder pauses while free memory is under 20% instead of swapping.

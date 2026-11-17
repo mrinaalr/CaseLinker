@@ -8,18 +8,22 @@ Hybrid reading:
   charge, plea, verdict, sentence and notice-of-arrest entries, with their dates;
 - form pages of judgments (conditions of supervision, monetary penalties, payment schedules) are
   skipped and counted (``boilerplate``);
-- every other page is read by the model, one page at a time. For each act it returns the first
-  words of the sentence that states it and its codes, constrained to the codebook by a JSON schema.
+- every other page is read by the model, one page at a time. For each act it returns only the
+  first words of the sentence that states it, its action code, and the actor when it is not the
+  defendant, constrained by a JSON schema (prompt 2.0). The sentence rules in ``enrich.py`` code
+  the rest from that sentence: targets, dates, platforms and channels, level-C features, harms
+  that follow from the act, and stated order.
 
 Everything else is code:
 
-- the quote is that sentence, located on the page from its first words (exact, after
-  normalization) and extended to the sentence end; an act whose words are not on the page, or not
+- the quote is that whole sentence, located on the page from the given words (exact, after
+  normalization) and extended back to the sentence start and forward to its end; an act whose words are not on the page, or not
   uniquely, is dropped;
 - people are named by their role in the case ("the defendant", "Minor Victim 1"); those labels
   only map acts to participants P1, P2, ... and are never stored;
 - descriptions are written from the codes, never from model text;
 - a level-C affordance is kept only when its feature words appear in the quote (rule B0);
+- an offender act's actor is the offender: a victim or persona named as its actor is corrected;
 - a "named platform" that is SMS, phone, email or mail becomes a channel (I3);
 - the bundle is validated, and every act that breaks a rule is dropped and logged, until it is clean.
 
