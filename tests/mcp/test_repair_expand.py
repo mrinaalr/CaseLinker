@@ -410,3 +410,10 @@ def test_replay_shards_keep_order_and_a_failed_child_fails_its_side(monkeypatch)
     assert out["checkout"]["failed"] == "boom"
     assert len(calls) == 6 and all(len(ids) <= 3 for _, ids in calls)
     assert R._shards(full=True) == 1 and R._shards(full=False) >= 1
+
+
+def test_a_resolved_field_the_change_adds_reads_as_none_before():
+    moved = R._moved_resolutions({"age": ["resolved", "a"]},
+                                 {"age": ["resolved", "a"], "prior_history": ["resolved", "b"]})
+    assert moved == {"prior_history": {"before": None, "after": "resolved"}}
+    assert R._moved_resolutions({"x": ["empty", "c"]}, {}) == {"x": {"before": "empty", "after": None}}

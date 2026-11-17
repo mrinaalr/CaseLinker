@@ -78,6 +78,13 @@ _NAME_RE = re.compile(r"[a-z][a-z0-9_]{2,39}")
 _ROLE_RE = re.compile(r"[a-z][a-z0-9_]{0,39}")
 _EXCERPT = 70
 _MAX_LISTED = 200
+
+
+def _moved_resolutions(before: Dict[str, List], after: Dict[str, List]) -> Dict[str, Dict[str, Any]]:
+    """Status per resolved field that differs. A field one side does not resolve at all (a field
+    the change adds or removes) reads as ``None`` on that side."""
+    return {f: {"before": (before.get(f) or [None])[0], "after": (after.get(f) or [None])[0]}
+            for f in sorted(before.keys() | after.keys()) if before.get(f) != after.get(f)}
 _MAX_VALUE = 300
 
 
@@ -1240,8 +1247,7 @@ def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, A
             continue
         moved_columns = sorted(k for k in case["columns"].keys() | prior["columns"].keys()
                                if case["columns"].get(k) != prior["columns"].get(k))
-        moved_fields = {f: {"before": prior["resolutions"][f][0], "after": r[0]}
-                        for f, r in case["resolutions"].items() if prior["resolutions"].get(f) != r}
+        moved_fields = _moved_resolutions(prior["resolutions"], case["resolutions"])
         assertions_changed = case["assertions"] != prior["assertions"]
         if moved_columns or moved_fields or assertions_changed:
             columns.update(moved_columns)
