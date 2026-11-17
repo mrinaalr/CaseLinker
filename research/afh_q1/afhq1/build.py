@@ -503,6 +503,7 @@ def build(log=print) -> dict:
     man["citation_check"] = dict(Counter(v.status for v in verdicts))
     dump("manifest.json", man)
     dump("exemplar_inventory.json", exemplar_inventory(man))
+    dump("registry_checks.json", registry_checks())
     cit.dump(cites, OUT / "citations.json")
     dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
@@ -700,11 +701,28 @@ def exemplar_inventory(man: dict) -> dict:
             verdict = r["verdict"] if r and r.get("fingerprint") == x["fingerprint"] else "unreviewed"
             tally[(kind, verdict)] += 1
             rows.append({"platform": plat, "kind": kind, "cited_for": what, "case_id": x["case_id"],
-                         "fingerprint": x["fingerprint"], "span": x["span"], "verdict": verdict,
-                         "note": (r or {}).get("note", "")})
+                         "fingerprint": x["fingerprint"], "span": x["span"], "verdict": verdict})
     by_kind: Dict[str, Dict[str, int]] = defaultdict(dict)
     for (k, v), n in tally.items():
         by_kind[k][v] = n
     return {"exemplars": len(rows), "by_kind_and_verdict": {k: dict(sorted(v.items())) for k, v in sorted(by_kind.items())},
             "rows": rows, "span_basis": pl.SPAN_BASIS,
-            "use": "cite only verdict == supported; partly_supported needs wording that matches the note"}
+            "use": "cite only verdict == supported; partly_supported needs wording checked against the reviewer note in config/review_exemplars.csv"}
+
+
+def registry_checks() -> dict:
+    """Summary of source verification for the platform registry (no source text)."""
+    src = RESEARCH / "config" / "capability_sources"
+    claims = _csv("capability_sources/manuscript_claims_verified.csv")
+    urls = json.loads((src / "url_check.json").read_text()) if (src / "url_check.json").is_file() else {"status": {}}
+    codes = Counter(v[0] for v in urls["status"].values())
+    cfg = pl.load_yaml("platforms.yaml")["platforms"]
+    conf = Counter(c["confidence"] for r in cfg.values() for c in (r.get("capabilities") or {}).values())
+    return {
+        "capability_rows": sum(conf.values()), "capability_confidence": dict(sorted(conf.items())),
+        "cited_urls": len(urls["status"]), "url_status_classes": {f"{k}xx": n for k, n in sorted(codes.items())},
+        "manuscript_claims_checked": len(claims),
+        "manuscript_claims_verdicts": dict(sorted(Counter(r["verdict"] for r in claims).items())),
+        "manuscript_claims_fetched": sum(r["fetched_ok"] == "yes" for r in claims),
+        "corrections": [{"claim_id": r["claim_id"], "date_found": r["date_found"]} for r in claims if r["verdict"] != "confirmed"],
+    }

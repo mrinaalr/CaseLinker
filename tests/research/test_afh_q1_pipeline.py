@@ -259,3 +259,38 @@ def test_record_linewrap_tier_never_below_published():
     with (OUT / "records.csv").open() as f:
         for row in csv.DictReader(f):
             assert rank[row["tier_linewrap"]] >= rank[row["tier"]], row["case_id"]
+
+
+# --- codebook-5, exemplars, LaTeX ------------------------------------------------
+
+def test_synthesis_needs_an_ai_instrument_and_an_actor():
+    rx = CB.harms["h6_likeness_synthesized"]
+    def hit(t):
+        return bool(rx["_cue"].search(t) and not rx["_exclude"].search(t) and rx["_require"].search(t))
+    assert not hit("He produced child pornography using the Snapchat app.")
+    assert not hit("Officers found possession of images created by artificial intelligence.")
+    assert hit("He used an AI app to create explicit images of a classmate.")
+    assert hit("He admitted taking photos from Instagram to morph into nude images.")
+
+
+def test_every_manifest_exemplar_has_a_blind_review():
+    ex = json.loads((OUT / "exemplar_inventory.json").read_text())
+    assert ex["exemplars"] > 0
+    assert all(r["verdict"] != "unreviewed" for r in ex["rows"])
+
+
+def test_latex_tables_compile():
+    import shutil
+    import subprocess
+    import tempfile
+    tex = shutil.which("pdflatex") or ("/Library/TeX/texbin/pdflatex" if Path("/Library/TeX/texbin/pdflatex").exists() else None)
+    if not tex:
+        pytest.skip("pdflatex not installed")
+    tables = sorted((OUT / "latex").glob("*.tex"))
+    assert tables
+    with tempfile.TemporaryDirectory() as d:
+        doc = Path(d) / "check.tex"
+        doc.write_text("\\documentclass{article}\\usepackage{booktabs}\\usepackage[margin=1in]{geometry}\\begin{document}\n"
+                       + "\n".join(f"\\input{{{t}}}\\par" for t in tables) + "\n\\end{document}\n")
+        res = subprocess.run([tex, "-interaction=nonstopmode", "-halt-on-error", "check.tex"], cwd=d, capture_output=True, text=True)
+        assert res.returncode == 0, res.stdout[-800:]
