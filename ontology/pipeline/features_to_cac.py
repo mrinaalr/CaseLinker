@@ -1473,8 +1473,12 @@ class CaseToCAC:
             offender_uris.append(role_uri)
             offender_people.append(person_uri)
 
+        prior = _case_feature(case, "prior_history")
+        if isinstance(prior, dict) and prior.get("records"):
+            self._map_prior_history(g, case_id, prior["records"], offender_people, perp_ages,
+                                    status in _CONVICTED_STATUSES, warnings)
         # Registration is stated once per case; it attributes only to a sole offender.
-        if bool(case.get("perpetrator_registered_sex_offender", False)):
+        elif bool(case.get("perpetrator_registered_sex_offender", False)):
             if len(offender_people) == 1:
                 rso_uri = BASE[f"case/{case_id}/role/registered-sex-offender/1"]
                 g.add((rso_uri, RDF.type, CAC_REGISTRY.RegisteredSexOffender))
@@ -1558,6 +1562,63 @@ class CaseToCAC:
         g.add((rel_uri, UCO_CORE.target, role_uri))
         g.add((rel_uri, UCO_CORE.kindOfRelationship, Literal("Has_Role")))
         g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
+
+    def _map_prior_history(self, g: Graph, case_id: str, records: List[Dict[str, Any]],
+                           offender_people: List[URIRef], perp_ages: List[int], convicted: bool,
+                           warnings: List[str]) -> None:
+        """Earlier convictions, registration and supervision the release states (#64).
+
+        Each record becomes a UCO ``Annotation`` on its defendant, one ``uco-core:tag`` per
+        kind and a structured ``statement`` (count, years, sex offense; never release text).
+        A registered offender also takes a CAC ``RegisteredSexOffender`` role, or
+        ``RecidivistSexOffender`` when this case ended in a conviction, with
+        ``priorConvictionCount`` only when the release states how many earlier sex-offense
+        convictions there were. A record goes on the offender node whose stated age is its
+        defendant's and no one else's; on the sole offender when the sentence named nobody;
+        and on the case otherwise. CAC declares no term for a person's earlier conviction or
+        supervision, so those stay on the annotation.
+        """
+        case_uri = BASE[f"case/{case_id}"]
+        for i, rec in enumerate(records, start=1):
+            person = None
+            if rec.get("person") and rec.get("person") != "unmatched" and rec.get("age") is not None:
+                idx = [n for n, a in enumerate(perp_ages) if a == rec["age"]]
+                if len(idx) == 1 and idx[0] < len(offender_people) and perp_ages.count(rec["age"]) == 1:
+                    person = offender_people[idx[0]]
+            elif rec.get("person") is None and len(offender_people) == 1:
+                person = offender_people[0]
+            if person is None and offender_people:
+                warnings.append(f"prior_history record {i} ({rec.get('person')}) not attributed to one offender; "
+                                f"kept on the case")
+            subject = person or case_uri
+            ann = URIRef(f"{subject}/prior-history") if person else BASE[f"case/{case_id}/prior-history/{i}"]
+            kinds = [k for k in rec.get("kinds") or [] if k in ("prior_conviction", "registered_offender",
+                                                                 "on_supervision")]
+            if not kinds:
+                continue
+            g.add((ann, RDF.type, UCO_CORE.Annotation))
+            g.add((ann, UCO_CORE.object, subject))
+            g.add((ann, RDFS.label, Literal("prior history")))
+            parts = list(kinds)
+            if rec.get("count"):
+                parts.append(f"count={int(rec['count'])}")
+            if rec.get("years"):
+                parts.append("years=" + ",".join(str(int(y)) for y in rec["years"]))
+            parts.append(f"sex_offense={'true' if rec.get('sex_offense') else 'false'}")
+            g.add((ann, UCO_CORE.statement, Literal("; ".join(parts))))
+            for kind in kinds:
+                g.add((ann, UCO_CORE.tag, Literal(kind)))
+                self._evidence("prior_history", kind, kind, ann)
+            if "registered_offender" in kinds and person is not None:
+                n = offender_people.index(person) + 1
+                rso = BASE[f"case/{case_id}/role/registered-sex-offender/{n}"]
+                g.add((rso, RDF.type, CAC_REGISTRY.RecidivistSexOffender if convicted
+                       else CAC_REGISTRY.RegisteredSexOffender))
+                self._has_role(g, person, rso)
+                if convicted and rec.get("count") and rec.get("sex_offense"):
+                    g.add((rso, CAC_REGISTRY.priorConvictionCount,
+                           Literal(int(rec["count"]), datatype=XSD.nonNegativeInteger)))
+                self._evidence("prior_history", "registered_offender", "registered_offender", rso)
 
     def _evidence(self, field: str, role: str, value: Any, node: URIRef) -> None:
         if not hasattr(self, "evidence_nodes"):
