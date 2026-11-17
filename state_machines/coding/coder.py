@@ -196,15 +196,18 @@ def free_memory_percent() -> Optional[int]:
 
 
 def wait_for_memory(minimum: Optional[int] = None, poll: int = 30, limit: int = 3600) -> None:
-    """Pause before a model call while free memory is below the floor, instead of swapping the
-    machine out of disk. Gives up waiting after ``limit`` seconds and proceeds."""
+    """Pause before a model call while free memory or free disk is below its floor, instead of
+    swapping the machine out of disk or failing writes. Gives up waiting after ``limit`` seconds."""
+    import shutil
     floor = minimum if minimum is not None else MODELS["runtime"].get("min_free_memory_percent", 20)
+    disk_floor = MODELS["runtime"].get("min_free_disk_gb", 3)
     waited = 0
     while waited < limit:
         free = free_memory_percent()
-        if free is None or free >= floor:
+        disk = shutil.disk_usage(E.REPO_ROOT).free / 1e9
+        if (free is None or free >= floor) and disk >= disk_floor:
             return
-        print(f"memory: {free}% free, below {floor}%; waiting", flush=True)
+        print(f"memory: {free}% free (floor {floor}%), disk {disk:.1f} GB free (floor {disk_floor} GB); waiting", flush=True)
         time.sleep(poll)
         waited += poll
 
