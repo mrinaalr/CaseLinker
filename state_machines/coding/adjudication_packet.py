@@ -1,48 +1,41 @@
-"""Render the internal adjudication packet and the public adjudication summary.
+"""Render the internal adjudication packet, and a public count of what was decided.
 
-    python -m state_machines.adjudication_packet <release>
+    python -m state_machines.coding.adjudication_packet <release> [case ...]
 
-Internal (gitignored; contains court-record quotes):
-    local/adjudication/<release>/packet.html          one page, all cases: both codings, passages,
-                                                      PDF page links, agent recommendation, agent
-                                                      challenge, and a decision form that exports
-                                                      decisions.json
-Public (committed; no quotes, no names):
-    trajectories/data/<release>/ADJUDICATION_SUMMARY.md
+Internal (gitignored; quotes the court records):
+    local/adjudication/<release>/packet.html      every item of every case: the question, both
+                                                  codings with their passages and PDF page links,
+                                                  and a choice limited to what ``adjudication
+                                                  apply`` accepts. Choices are kept in the browser
+                                                  as you go; "Export" saves one decisions file per
+                                                  case (<case>.decisions.json).
+Public (no quotes, no names):
+    state_machines/data/<release>/ADJUDICATION.md  item and decision counts per case and kind
 
-Agent recommendations and challenges are labelled as AI output. A decision exists only when a
-named human reviewer records one in decisions.json; this module never writes decisions.
+A decision exists only when a named reviewer records it; this module never writes decisions.
 """
 from __future__ import annotations
 
 import html
 import json
-import os
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from state_machines.evidence import evidence as E
-from state_machines.evidence import vocab as V
-from state_machines.coding.workflow import PILOT_CASES, deny_list, source_root
-from state_machines.evidence.validate import identifier_hits
+from state_machines.coding.adjudication import KIND_ORDER, OPTIONS, QUESTIONS
+from state_machines.coding.workflow import PILOT_CASES, source_root
 
 LOCAL = E.REPO_ROOT / "local" / "adjudication"
 DATA = E.REPO_ROOT / "state_machines" / "data"
-KIND_ORDER = ["only_a", "only_b", "action_mismatch", "status_mismatch", "actor_mismatch", "affordance_mismatch",
-              "harm_mismatch", "time_mismatch", "platform_recode", "order_only_a", "order_only_b", "single_step"]
 
 
-def _load(release: str):
-    rec = json.loads((LOCAL / release / "recommendations.json").read_text())
-    recs = {i["item_id"]: i for r in rec["results"] for i in r["items"]}
-    vers = {v["item_id"]: v for r in rec["results"] for v in r["verdicts"]}
-    rulings = rec["rulings"]["rulings"] if isinstance(rec["rulings"], dict) else rec["rulings"]
-    dossiers = {c: json.loads((LOCAL / release / f"{c}.dossier.json").read_text()) for c in PILOT_CASES
-                if (LOCAL / release / f"{c}.dossier.json").is_file()}
-    return recs, vers, rulings, dossiers
+def _dossiers(release: str, cases=None) -> dict:
+    cases = cases or PILOT_CASES
+    return {c: json.loads((LOCAL / release / f"{c}.dossier.json").read_text(encoding="utf-8")) for c in cases
+            if (LOCAL / release / f"{c}.dossier.json").is_file()}
 
 
 def _esc(x) -> str:
@@ -56,78 +49,97 @@ def _pdf_href(dossier: dict, doc_id: str, page: int) -> str:
     return "file://" + str(source_root() / doc["source_path"]).replace(" ", "%20") + f"#page={page}"
 
 
+def _passages(dossier: dict, passages) -> str:
+    return "<ul>" + "".join(
+        f"<li><a href='{_esc(_pdf_href(dossier, p['doc_id'], p['pdf_page']))}'>{_esc(p['doc_id'])} p{p['pdf_page']}</a>"
+        f" <span class='st'>{_esc(p['source_status'])}</span><blockquote>{_esc(p.get('quote'))}</blockquote></li>"
+        for p in passages) + "</ul>"
+
+
 def _event_html(dossier: dict, view: Optional[dict], who: str) -> str:
     if not view:
-        return f"<div class='ev none'><b>{who}</b>: not coded</div>"
-    rows = "".join(
-        f"<li><a href='{_esc(_pdf_href(dossier, p['doc_id'], p['pdf_page']))}'>{_esc(p['doc_id'])} p{p['pdf_page']}</a>"
-        f" {_esc(p.get('court_locator') or '')} <span class='st'>{_esc(p['source_status'])}</span>"
-        f"<blockquote>{_esc(p.get('quote'))}</blockquote></li>" for p in view.get("passages", []))
-    return (f"<div class='ev'><b>{who}</b> <code>{_esc(view['event_id'])}</code> {_esc(view['actor'])} "
-            f"<b>{_esc(view['action'])}</b> [{_esc(view['status'])}, {_esc(view['outcome'])}] "
-            f"time {_esc(view['time'])}<br>{_esc(view['description'])}"
-            f"<br>affordances {_esc(view['affordances'])} harms {_esc(view['harms'])} platforms {_esc(view['platform_mentions'])}"
-            f"<br>tracks {_esc(view['tracks'])}<ul>{rows}</ul></div>")
+        return f"<div class='ev none'><b>{_esc(who)}</b>: not coded</div>"
+    line = lambda k, v: f"<br><span class='k'>{k}</span> {_esc(v)}" if v else ""   # noqa: E731
+    when = "; ".join(f"{t.get('expression') or ''} {t['earliest']}–{t['latest']} ({t['basis']}, {t['status']})" for t in view["time"])
+    return (f"<div class='ev'><b>{_esc(who)}</b> <code>{_esc(view['event_id'])}</code> <b>{_esc(view['action'])}</b>"
+            f" [{_esc(view['status'])}, {_esc(view['outcome'])}] actor {_esc(view['actor'])}"
+            f"{line('targets', ', '.join(view.get('targets', [])))}{line('with', ', '.join(view.get('co_actors', [])))}"
+            f"{line('role open', '; '.join(view.get('unresolved', [])))}"
+            f"{line('time', when)}"
+            f"{line('affordances', view['affordances'])}{line('harms', view['harms'])}"
+            f"{line('platforms', view.get('platforms'))}{line('named', view['platform_mentions'])}"
+            f"{line('coder note', view.get('description'))}"
+            f"{_passages(dossier, view.get('passages', []))}</div>")
 
 
-def render_packet(release: str) -> Path:
-    recs, vers, rulings, dossiers = _load(release)
-    parts = ["""<!doctype html><html><head><meta charset='utf-8'><title>Adjudication packet</title>
-<style>body{font:14px/1.45 system-ui,sans-serif;margin:24px;max-width:1200px}h2{margin-top:40px}
-.item{border:1px solid #ccc;border-radius:6px;padding:12px;margin:12px 0}.ev{background:#f6f6f6;padding:8px;margin:6px 0}
-.ev.none{color:#777}blockquote{margin:4px 0 4px 16px;color:#333;font-style:italic}.agent{background:#eef3ff;padding:8px;margin:6px 0}
-.chal{background:#fff4e5;padding:8px;margin:6px 0}.st{font-size:12px;color:#555}.warn{color:#a00}
-label{display:block;margin-top:6px}textarea{width:100%;height:48px}code{font-size:12px}</style></head><body>
-<h1>Internal adjudication packet</h1>
-<p class='warn'><b>Internal only.</b> Contains quotations from court records. Do not publish, commit or paste elsewhere.</p>
-<p><b>Agent output is not a decision.</b> "Agent recommendation" and "Agent challenge" were produced by AI agents (claude-opus-5-5)
-reading the page text; they are not independent human reviewers. Record decisions in the form; use "Export decisions" to save
-<code>decisions.json</code> beside this file.</p>
-<label>Reviewer <input id='reviewer' placeholder='name or initials (kept local)'></label>
-<button onclick='exportDecisions()'>Export decisions</button>
-<h2>Cross-case rulings (codebook)</h2>"""]
-    for r in rulings:
-        parts.append(f"<div class='item' data-id='{_esc(r['question_id'])}'><b>{_esc(r['question_id'])}</b> {_esc(r['question'])}"
-                     f"<ol>{''.join(f'<li>{_esc(o)}</li>' for o in r['options'])}</ol>"
-                     f"<div class='agent'><b>Agent recommendation:</b> {_esc(r['recommended'])}<br>{_esc(r['reason'])}"
-                     f"<br><span class='st'>affects {len(r['affected_items'])} items; evidence {_esc(', '.join(r['evidence_locators']))}</span></div>"
-                     "<label>Decision <select class='dec'><option></option><option>accept recommendation</option><option>choose other option</option><option>defer</option></select></label>"
-                     "<label>Ruling / note<textarea class='note'></textarea></label></div>")
+def _relation_html(dossier: dict, r: dict) -> str:
+    return (f"<div class='ev'><b>relation</b> <code>{_esc(r['relation_id'])}</code> {_esc(r['from'])} <b>{_esc(r['type'])}</b> {_esc(r['to'])}"
+            f" [{_esc(r['status'])}, {_esc(r['basis'])}]{_passages(dossier, r['passages'])}</div>")
+
+
+def _item_body(d: dict, it: dict) -> str:
+    k = it["kind"]
+    if k in ("order_only_a", "order_only_b"):
+        return _relation_html(d, it["relation"]) + _event_html(d, it["from_event"], "from") + _event_html(d, it["to_event"], "to")
+    if k == "single_coder_relation":
+        return _relation_html(d, it["relation"])
+    if k == "possible_same_act":
+        return f"<p class='st'>{_esc(it['reason'])}</p>" + _event_html(d, it["event_x"], "event") + _event_html(d, it["event_y"], "event")
+    if k == "single_step":
+        return _event_html(d, it["agreed"], "agreed") + "<div class='ev'>unordered with: " + _esc(
+            [(u["event_id"], u["action"], [(t["earliest"], t["latest"]) for t in u["time"]]) for u in it["unordered_with"]][:20]) + "</div>"
+    if k in ("unresolved_role", "platform_recode"):
+        return _event_html(d, it["agreed"], "agreed") + (_event_html(d, it.get("coder_b"), "coder B") if k == "platform_recode" else "")
+    return _event_html(d, it.get("coder_a"), "coder A") + _event_html(d, it.get("coder_b"), "coder B")
+
+
+def render_packet(release: str, cases=None) -> Path:
+    dossiers = _dossiers(release, cases)
+    total = sum(len(d["items"]) for d in dossiers.values())
+    parts = [f"""<!doctype html><html><head><meta charset='utf-8'><title>Adjudication: {_esc(release)}</title>
+<style>body{{font:14px/1.45 system-ui,sans-serif;margin:24px auto;max-width:1100px;padding:0 16px}}h2{{margin-top:40px}}
+.bar{{position:sticky;top:0;background:#fff;border-bottom:1px solid #ddd;padding:10px 0;z-index:2;display:flex;gap:14px;align-items:center;flex-wrap:wrap}}
+.item{{border:1px solid #ccc;border-radius:6px;padding:12px;margin:12px 0}}.item.done{{border-color:#2a7;background:#f6fbf8}}
+.item.defer{{border-color:#c80}}.ev{{background:#f6f6f6;padding:8px;margin:6px 0}}.ev.none{{color:#777}}.k{{color:#666;font-size:12px}}
+blockquote{{margin:4px 0 4px 16px;color:#333;font-style:italic}}.st{{font-size:12px;color:#555}}.warn{{color:#a00}}
+.q{{font-weight:600}}select{{font-size:14px}}textarea{{width:100%;height:40px}}code{{font-size:12px}}</style></head><body>
+<h1>Adjudication packet: {_esc(release)}</h1>
+<p class='warn'><b>Internal only.</b> Quotes court records. Do not publish, commit or paste elsewhere.</p>
+<p>Each choice is one that <code>python -m state_machines.coding.adjudication apply</code> carries out. <b>edit</b> means you change
+<code>local/adjudication/{_esc(release)}/agreed/&lt;case&gt;.json</code> yourself before applying. <b>defer</b> blocks the release.
+Choices are saved in this browser as you go. "Coder note" is the coder's own wording, never published.</p>
+<div class='bar'><label>Reviewer <input id='reviewer' placeholder='name (kept local)'></label>
+<span id='progress'></span><button onclick='exportAll()'>Export decisions</button>
+<label>Import <input type='file' id='imp' accept='.json' multiple></label></div>"""]
     for case, d in dossiers.items():
-        parts.append(f"<h2>{_esc(case)}</h2><p>{_esc(d['counts'])}</p>")
-        items = sorted(d["items"], key=lambda i: (KIND_ORDER.index(i["kind"]), i["item_id"]))
-        for it in items:
-            rec, ver = recs.get(it["item_id"], {}), vers.get(it["item_id"], {})
-            body = []
-            if it["kind"] in ("order_only_a", "order_only_b"):
-                body.append(_event_html(d, it["from_event"], "from"))
-                body.append(_event_html(d, it["to_event"], "to"))
-                body.append(f"<div class='ev'>relation {_esc(it['relation']['type'])} [{_esc(it['relation']['status'])}, {_esc(it['relation']['basis'])}]"
-                            f"<ul>{''.join(f'<li>{_esc(s[chr(100)+chr(111)+chr(99)+chr(95)+chr(105)+chr(100)])} p{s[chr(112)+chr(100)+chr(102)+chr(95)+chr(112)+chr(97)+chr(103)+chr(101)]}<blockquote>{_esc(s.get(chr(113)+chr(117)+chr(111)+chr(116)+chr(101)))}</blockquote></li>' for s in it['support'])}</ul></div>")
-            elif it["kind"] == "single_step":
-                body.append(_event_html(d, it["event"], "agreed event"))
-                body.append(f"<div class='ev'>unordered with: {_esc([(u['event_id'], u['action'], u['time']) for u in it['unordered_with']][:15])}</div>")
-            else:
-                body.append(_event_html(d, it.get("coder_a"), "coder A"))
-                body.append(_event_html(d, it.get("coder_b"), "coder B"))
-            parts.append(
-                f"<div class='item' data-id='{_esc(it['item_id'])}'><b>{_esc(it['item_id'])}</b> <i>{_esc(it['kind'])}</i>"
-                + "".join(body)
-                + f"<div class='agent'><b>Agent recommendation:</b> {_esc(rec.get('recommendation'))} ({_esc(rec.get('confidence'))})"
-                  f"<br>{_esc(rec.get('proposed_coding'))}<br><i>{_esc(rec.get('reason'))}</i>"
-                  f"<br><span class='st'>{_esc(', '.join(rec.get('evidence_locators', [])))} {_esc(rec.get('single_step_cause') if it['kind']=='single_step' else '')}</span>"
-                  f"{('<br><b>Codebook question:</b> ' + _esc(rec['codebook_question'])) if rec.get('codebook_question') else ''}</div>"
-                + f"<div class='chal'><b>Agent challenge:</b> {_esc(ver.get('verdict'))} {_esc(ver.get('problem'))}"
-                  f"{('<br><b>Alternative:</b> ' + _esc(ver['alternative'])) if ver.get('alternative') else ''}</div>"
-                + "<label>Decision <select class='dec'><option></option><option>accept recommendation</option><option>accept challenge alternative</option>"
-                  "<option>accept coder A</option><option>accept coder B</option><option>other (see note)</option><option>defer</option></select></label>"
-                  "<label>Coding / note<textarea class='note'></textarea></label></div>")
-    parts.append("""<script>
-function exportDecisions(){const out={reviewer:document.getElementById('reviewer').value,exported:new Date().toISOString(),decisions:{}};
-document.querySelectorAll('.item').forEach(el=>{const d=el.querySelector('.dec').value,n=el.querySelector('.note').value;
-if(d||n)out.decisions[el.dataset.id]={decision:d,note:n};});
-const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}));
-a.download='decisions.json';a.click();}
+        counts = ", ".join(f"{k} {n}" for k, n in sorted(d["counts"].items(), key=lambda kv: KIND_ORDER.index(kv[0])))
+        parts.append(f"<h2 id='{_esc(case)}'>{_esc(case)} <span class='st'>{len(d['items'])} items: {_esc(counts)}</span></h2>")
+        for it in sorted(d["items"], key=lambda i: (KIND_ORDER.index(i["kind"]), i["item_id"])):
+            opts = "".join(f"<option>{_esc(o)}</option>" for o in [*it["options"], "defer"])
+            parts.append(f"<div class='item' data-case='{_esc(case)}' data-id='{_esc(it['item_id'])}'><b>{_esc(it['item_id'])}</b>"
+                         f"<p class='q'>{_esc(it['question'])}</p>{_item_body(d, it)}"
+                         f"<label>Decision <select class='dec'><option></option>{opts}</select></label>"
+                         f"<label>Note<textarea class='note'></textarea></label></div>")
+    parts.append(f"""<script>
+const KEY='adjudication:{_esc(release)}',TOTAL={total};
+const store=()=>{{try{{return JSON.parse(localStorage.getItem(KEY)||'{{}}')}}catch(e){{return {{}}}}}};
+function save(){{const s={{reviewer:document.getElementById('reviewer').value,decisions:{{}}}};
+document.querySelectorAll('.item').forEach(el=>{{const d=el.querySelector('.dec').value,n=el.querySelector('.note').value;
+el.classList.toggle('done',!!d&&d!=='defer');el.classList.toggle('defer',d==='defer');if(d||n)s.decisions[el.dataset.id]={{decision:d,note:n}};}});
+try{{localStorage.setItem(KEY,JSON.stringify(s))}}catch(e){{}}
+const done=Object.values(s.decisions).filter(x=>x.decision&&x.decision!=='defer').length;
+document.getElementById('progress').textContent=done+' of '+TOTAL+' decided';}}
+function load(s){{if(s.reviewer)document.getElementById('reviewer').value=s.reviewer;
+document.querySelectorAll('.item').forEach(el=>{{const x=(s.decisions||{{}})[el.dataset.id];if(x){{el.querySelector('.dec').value=x.decision||'';el.querySelector('.note').value=x.note||'';}}}});save();}}
+function exportAll(){{save();const s=store(),by={{}};
+document.querySelectorAll('.item').forEach(el=>{{const c=el.dataset.case;by[c]=by[c]||{{reviewer:s.reviewer,exported:new Date().toISOString(),decisions:{{}}}};
+if(s.decisions[el.dataset.id])by[c].decisions[el.dataset.id]=s.decisions[el.dataset.id];}});
+Object.entries(by).forEach(([c,o])=>{{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{{type:'application/json'}}));
+a.download=c+'.decisions.json';a.click();}});}}
+document.getElementById('imp').addEventListener('change',e=>{{[...e.target.files].forEach(f=>f.text().then(t=>{{const o=JSON.parse(t),s=store();
+s.reviewer=s.reviewer||o.reviewer;s.decisions=Object.assign(s.decisions||{{}},o.decisions||{{}});load(s);}}));}});
+document.addEventListener('change',save);document.addEventListener('input',e=>{{if(e.target.id==='reviewer'||e.target.classList.contains('note'))save();}});
+load(store());
 </script></body></html>""")
     out = LOCAL / release / "packet.html"
     out.write_text("".join(parts), encoding="utf-8")
@@ -170,72 +182,36 @@ def _redact(text: str, grams: set) -> str:
     return "".join(out) + text[pos:]
 
 
-def render_summary(release: str) -> Path:
-    recs, vers, rulings, dossiers = _load(release)
-    deny = sorted({w for c in dossiers for w in deny_list(c)})
-    L = [f"# Pilot adjudication summary: {release}", "",
-         "**Status: awaiting human review.** Nothing below is a decision.",
-         "",
-         "- **Agent output:** every recommendation and challenge was produced by AI agents (claude-opus-5-5) reading the page text. They are not independent human reviewers.",
-         "- **Decisions:** the author records them in the internal packet (`local/adjudication/<release>/packet.html`, gitignored because it quotes the court records).",
-         "- **Privacy:** this summary holds no quotations and no personal identifiers.", ""]
-    total = sum(len(d["items"]) for d in dossiers.values())
-    kinds = Counter(i["kind"] for d in dossiers.values() for i in d["items"])
-    L += [f"## Items: {total} across {len(dossiers)} cases", "", "| kind | count |", "|---|---:|"]
-    L += [f"| {k} | {kinds[k]} |" for k in KIND_ORDER if kinds[k]]
-    rc = Counter(i["recommendation"] for i in recs.values())
-    vc = Counter(v["verdict"] for v in vers.values())
-    L += ["", "## Agent recommendations and challenges", "",
-          "| recommendation | count |", "|---|---:|"] + [f"| {k} | {n} |" for k, n in rc.most_common()]
-    L += ["", f"Challenge verdicts: upheld {vc.get('upheld', 0)}, partly refuted {vc.get('partly_refuted', 0)}, refuted {vc.get('refuted', 0)}. "
-          "Every partly refuted or refuted item needs a human decision. Upheld items still need one; the agreement of two agents is not verification."]
-    per_case = defaultdict(Counter)
-    for k, v in vers.items():
-        per_case[k.split(".")[0]][v["verdict"]] += 1
-    L += ["", "| case | items | upheld | partly refuted | refuted |", "|---|---:|---:|---:|---:|"]
+def render_summary(release: str, cases=None) -> Path:
+    """Counts only: items per case and kind, and decisions once decision files exist. No text."""
+    dossiers = _dossiers(release, cases)
+    L = [f"# Adjudication: {release}", "",
+         "Counts of the items a named reviewer decided for each case of this release. The items, their passages and the "
+         "decisions themselves stay local (`local/adjudication/`), because they quote the court records.", "",
+         "| case | items | decided | deferred or open |", "|---|---:|---:|---:|"]
+    by_kind, by_choice = Counter(), Counter()
     for c, d in dossiers.items():
-        pc = per_case[c]
-        L.append(f"| `{c}` | {len(d['items'])} | {pc['upheld']} | {pc['partly_refuted']} | {pc['refuted']} |")
-    ss = defaultdict(Counter)
-    for k, i in recs.items():
-        if ".single_step." in k:
-            ss[k.split(".")[0]][i["single_step_cause"]] += 1
-    causes = ["unrecognized_explicit_ordering", "incomplete_source_chronology", "event_fragmentation", "matching_error", "genuine_parallel_or_unrelated"]
-    L += ["", "## Why agreed trajectories have one step (agent diagnosis, pending review)", "",
-          "| case | " + " | ".join(causes) + " |", "|---|" + "---:|" * len(causes)]
-    for c in dossiers:
-        L.append(f"| `{c}` | " + " | ".join(str(ss[c][x]) for x in causes) + " |")
-    L += ["",
-          "- **`unrecognized_explicit_ordering`:** a cited passage orders the event, but neither coder coded the relation. Each such recommendation names the passage.",
-          "- **`incomplete_source_chronology`:** the documents give no order. These stay unordered.",
-          "- **No order was added automatically.** `add_order` recommendations are proposals only."]
-    grams = _source_ngrams(dossiers)
-    L += ["", "## Cross-case codebook rulings for the author", "",
-          f"Any run of {NGRAM}+ words that reproduces a court-record quote is replaced by `[quote]`; the internal packet has them.", ""]
-    for r in rulings:
-        L += [f"### {r['question_id']}", "", _redact(r["question"], grams), ""] + [f"- {_redact(o, grams)}" for o in r["options"]] + \
-             ["", f"**Agent recommendation:** {_redact(r['recommended'], grams)}", "", _redact(r["reason"], grams), "",
-              f"Affects {len(r['affected_items'])} items. Evidence: {', '.join(r['evidence_locators'])}.", ""]
-    text = "\n".join(L) + "\n"
-    leaked = [g for g in _source_ngrams(dossiers) if " ".join(g) in " ".join(w.lower() for w in _WORD.findall(text))]
-    if leaked:
-        raise SystemExit(f"summary blocked: {len(leaked)} verbatim source 4-grams remain")
-    # Our own identifiers (case ids, ruling ids, page tokens, document ids, codes) have the shape
-    # of handles; remove exactly those before scanning, so the guard still catches real ones.
-    safe = set(dossiers) | {r["question_id"] for r in rulings} | set(V.ACTION_CODES) | set(V.HARM_CODES) | \
-        set(V.AFFORDANCES) | {doc["doc_id"] for d in dossiers.values() for doc in d["documents"]}
-    scan = re.sub(r"\bp\d{4}\b", " ", text)
-    for tok in sorted(safe, key=len, reverse=True):
-        scan = scan.replace(tok, " ")
-    hits = identifier_hits(scan, deny)
-    if hits:
-        raise SystemExit(f"summary blocked: possible identifiers {sorted(set(hits))}")
-    out = DATA / release / "ADJUDICATION_SUMMARY.md"
-    out.write_text(text, encoding="utf-8")
+        f = LOCAL / release / f"{c}.decisions.json"
+        chosen = json.loads(f.read_text(encoding="utf-8")).get("decisions", {}) if f.is_file() else {}
+        decided = 0
+        for it in d["items"]:
+            by_kind[it["kind"]] += 1
+            x = (chosen.get(it["item_id"]) or {}).get("decision", "")
+            if x in it["options"]:
+                decided += 1
+                by_choice[(it["kind"], x)] += 1
+        L.append(f"| `{c}` | {len(d['items'])} | {decided} | {len(d['items']) - decided} |")
+    L += ["", "| kind | items | decisions |", "|---|---:|---|"]
+    for k in KIND_ORDER:
+        if by_kind[k]:
+            L.append(f"| `{k}` | {by_kind[k]} | " + ", ".join(f"{o} {by_choice[(k, o)]}" for o in OPTIONS[k] if by_choice[(k, o)]) + " |")
+    out = DATA / release / "ADJUDICATION.md"
+    out.write_text("\n".join(L) + "\n", encoding="utf-8")
     return out
 
 
 if __name__ == "__main__":
-    rel = sys.argv[1] if len(sys.argv) > 1 else "pilot-v0"
-    print(render_packet(rel))
-    print(render_summary(rel))
+    rel = sys.argv[1] if len(sys.argv) > 1 else "pacer-pilot-v0"
+    cases = sys.argv[2:] or None
+    print(render_packet(rel, cases))
+    print(render_summary(rel, cases))
