@@ -2,17 +2,23 @@
 
 A release is a folder ``state_machines/data/<release_id>/``:
 
-    cases/<case_id>.json                    coded bundles (schema 2.0), the canonical input
+    cases/<case_id>.json                    coded bundles (schema 2.0), the canonical input; they hold
+                                            coder-written text, so they stay local (gitignored)
     derived/<case_id>.<threshold>.json      derived views (partial order, chains, levels)
     graphs/<case_id>.evidence.jsonld        evidence graph (canonical)
     graphs/<case_id>.trajectories.jsonld    derived trajectory graph (INFERRED threshold)
     manifest.json                           what was built from what, with hashes
+    lifecycle.json                          the /lifecycle payload: codes, roles, dates, standing, pages; no text
     <release_id>.nq                         N-Quads for Oxigraph (written by ``nquads``)
 
 Named graphs use stable logical IRIs; the manifest records which release filled them:
 
-    urn:caselinker:pacer:<case_id>:evidence
-    urn:caselinker:pacer:<case_id>:trajectories
+    urn:caselinker:pacer:<case_id>:evidence        source-grounded actions, participants, roles, provenance
+    urn:caselinker:pacer:<case_id>:trajectories    derived order and affordance views; every lifecycle and
+                                                   step names its derivation rule and evidence threshold
+
+A load selects ``evidence`` or ``all`` (evidence plus trajectories); ``verify_store`` checks
+that exactly the selected kinds are present and that each graph is of its kind.
 
 ``build`` refuses a bundle with validation errors and records each case's SHACL result
 (full, partial or fails, upstream defects apart) and its review status, so a release can
@@ -39,10 +45,15 @@ DATA = REPO / "state_machines" / "data"
 GRAPH_PREFIX = "urn:caselinker:pacer:"
 LEGACY_PREFIX = "urn:pacer:kg:"
 MANIFEST_VERSION = "1"
+GRAPH_KINDS = ("evidence", "trajectories")
+SELECTIONS = {"evidence": ("evidence",), "all": GRAPH_KINDS}
+CLT = "https://w3id.org/caselinker/trajectory#"
+INVESTIGATION = "https://ontology.caseontology.org/case/investigation/Investigation"
+LIFECYCLE = "https://ontology.unifiedcyberontology.org/uco/action/ActionLifecycle"
 
 
 def graph_iri(case_id: str, kind: str) -> str:
-    if kind not in ("evidence", "trajectories"):
+    if kind not in GRAPH_KINDS:
         raise ValueError(kind)
     return f"{GRAPH_PREFIX}{case_id}:{kind}"
 
@@ -107,11 +118,14 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         "cases": cases,
     }
     (root / "manifest.json").write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    from state_machines.trajectories.payload import build_payload
+    (root / "lifecycle.json").write_text(json.dumps(build_payload(root, from_bundles=True), sort_keys=True) + "\n",
+                                         encoding="utf-8")
     return manifest
 
 
-def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = None) -> Path:
-    """Write the release's graphs as N-Quads, one named graph per case and kind."""
+def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = None, select: str = "all") -> Path:
+    """Write the selected graph kinds of a release as N-Quads, one named graph per case and kind."""
     import rdflib
 
     root = data_root / release_id
@@ -119,6 +133,8 @@ def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = Non
     ds = rdflib.Dataset()
     for c in manifest["cases"]:
         for kind, meta in c["graphs"].items():
+            if kind not in SELECTIONS[select]:
+                continue
             text = (root / "graphs" / f"{c['case_id']}.{kind}.jsonld").read_text(encoding="utf-8")
             if _sha(text) != meta["sha256"]:
                 raise SystemExit(f"{c['case_id']} {kind}: graph file does not match the manifest")
@@ -129,14 +145,15 @@ def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = Non
     return out
 
 
-def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case_graphs: int = 0) -> List[str]:
+def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case_graphs: int = 0,
+                 select: str = "all") -> List[str]:
     """Problems with a loaded store, checked through SPARQL (empty list = as expected).
 
     ``query(sparql)`` returns SPARQL JSON bindings as dicts of plain strings."""
     problems: List[str] = []
     rows = query("SELECT ?g (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } } GROUP BY ?g")
     counts = {r["g"]: int(r["n"]) for r in rows}
-    expected = {meta["iri"] for c in manifest["cases"] for meta in c["graphs"].values()}
+    expected = {meta["iri"] for c in manifest["cases"] for kind, meta in c["graphs"].items() if kind in SELECTIONS[select]}
     present = {g for g in counts if g.startswith(GRAPH_PREFIX)}
     for g in sorted(expected - present):
         problems.append(f"missing PACER graph {g}")
@@ -151,12 +168,22 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     case_graphs = [g for g in counts if g.startswith("https://w3id.org/caselinker/resource/case/") and not g.endswith("/provenance")]
     if len(case_graphs) < min_case_graphs:
         problems.append(f"only {len(case_graphs)} press-release case graphs (expected at least {min_case_graphs})")
+    def count(g: str, pattern: str) -> int:
+        rows = query("SELECT (COUNT(*) AS ?n) WHERE { GRAPH <%s> { %s } }" % (g, pattern))
+        return int(rows[0]["n"]) if rows else 0
     for c in manifest["cases"]:
-        g = c["graphs"]["evidence"]["iri"]
-        if g in present:
-            n = query("SELECT (COUNT(?i) AS ?n) WHERE { GRAPH <%s> { ?i a <https://ontology.caseontology.org/case/investigation/Investigation> } }" % g)
-            if not n or int(n[0]["n"]) != 1:
-                problems.append(f"{g}: expected exactly one investigation node")
+        ev, tr = c["graphs"]["evidence"]["iri"], c["graphs"]["trajectories"]["iri"]
+        if ev in present:   # an evidence graph: one investigation, no derived lifecycles
+            if count(ev, f"?i a <{INVESTIGATION}>") != 1:
+                problems.append(f"{ev}: expected exactly one investigation node")
+            if count(ev, f"?l a <{LIFECYCLE}>"):
+                problems.append(f"{ev}: holds derived trajectories")
+        if tr in present:   # a trajectory graph: no investigation; every lifecycle states its rule and threshold
+            if count(tr, f"?i a <{INVESTIGATION}>"):
+                problems.append(f"{tr}: holds an investigation (evidence) node")
+            unstamped = count(tr, f"?l a <{LIFECYCLE}> . FILTER NOT EXISTS {{ ?l <{CLT}derivationRule> ?r ; <{CLT}affordanceThreshold> ?t }}")
+            if unstamped:
+                problems.append(f"{tr}: {unstamped} trajectories without derivation rule and threshold")
     return problems
 
 
@@ -169,12 +196,13 @@ def main(argv=None) -> int:
                    help="build a preview from unadjudicated bundles; the manifest says adjudicated=false")
     n = sub.add_parser("nquads")
     n.add_argument("release_id")
+    n.add_argument("--graphs", choices=sorted(SELECTIONS), default="all", help="evidence only, or evidence plus trajectories")
     args = ap.parse_args(argv)
     if args.cmd == "build":
         m = build(args.release_id, allow_unreviewed=args.allow_unreviewed)
         print(json.dumps({"release": m["release_id"], "cases": len(m["cases"]), "adjudicated": m["adjudicated"]}))
     else:
-        print(nquads(args.release_id))
+        print(nquads(args.release_id, select=args.graphs))
     return 0
 
 

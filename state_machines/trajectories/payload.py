@@ -1,6 +1,7 @@
 """The /lifecycle payload: documented event graphs and their derived views, for display.
 
-Built from one PACER release folder (manifest, coded bundles, derived views). It carries
+Built from one PACER release folder: from its coded bundles and derived views when a release is
+built, then read from the release's ``lifecycle.json`` (the bundles stay local). It carries
 codes, roles, statuses, dates and document/page provenance. It carries no quotes, no
 coder-written descriptions, and no names: participants appear as P1, P2, ...
 
@@ -107,10 +108,12 @@ def _date_pairs(bundle: dict, threshold: str, ids: set) -> List[tuple]:
     return sorted((a, b) for a, b in date_order(bundle, V.ADMISSIBLE[threshold]) if a in ids and b in ids)
 
 
-def build_payload(root: Optional[Path] = None) -> dict:
+def build_payload(root: Optional[Path] = None, *, from_bundles: bool = False) -> dict:
     root = root or release_dir()
     if root is None:
         return {"release": None, "cases": []}
+    if not from_bundles and (root / "lifecycle.json").is_file():
+        return json.loads((root / "lifecycle.json").read_text(encoding="utf-8"))
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     cases = []
     for c in manifest["cases"]:

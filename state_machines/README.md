@@ -21,7 +21,7 @@ flowchart LR
   evidence --> traj["trajectories/<br/>order, chains,<br/>affordance levels, AfH sets"]
   evidence --> graphs["graphs/<br/>CASE/UCO/CAC, SHACL,<br/>releases"]
   traj --> graphs
-  graphs --> ox[("Oxigraph<br/>urn:caselinker:pacer:*")]
+  graphs --> ox[("Oxigraph<br/>urn:caselinker:pacer:*:evidence")]
   traj --> ui["/lifecycle, API, MCP"]
   theory["theory/<br/>transition systems"] -. "compatibility checks" .-> traj
 ```

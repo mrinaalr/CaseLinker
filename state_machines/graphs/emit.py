@@ -198,7 +198,6 @@ class _Emitter:
             assertions = e["time"]["assertions"]
             props: Dict[str, Any] = {
                 "uco-action:performer": _ref(self.participant(e["actor"]["participant_ref"])),
-                "uco-core:description": _STR(e["description"]),
                 "clt:actionCode": _CL(e["action"]), "clt:outcome": _CL(e["outcome"]),
                 "clt:assertionStatus": _CL(e["status"]), "clt:reviewStatus": _CL(e["review"]["status"]),
                 "clt:timeConflict": _BOOL(bool(e["time"].get("conflict_flagged"))),
@@ -324,6 +323,8 @@ def trajectory_graph(bundle: dict, derived: dict) -> CASEGraph:
                                       relationship_id=f"kb:step-{tid}-{step['index']}",
                                       properties={
                                           "clt:stepIndex": _INT(step["index"]),
+                                          "clt:affordanceThreshold": _CL(derived["derivation"]["threshold"]),
+                                          "clt:derivationRule": _CL(derived["derivation"]["rule_version"]),
                                           "clt:immediateAfterPrevious": _BOOL(step["immediate_after_previous"]),
                                           **({"clt:stepAffordance": [_ref(V.AFFORDANCE_CLASSES[o]) for o in step["affordances"]]}
                                              if step["affordances"] else {}),

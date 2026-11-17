@@ -8,8 +8,10 @@ files directly and keeps no write-ahead log, so a full corpus fits the 5 GB
 Railway volume. The store must be empty: wipe the volume first.
 
 PACER court-record graphs come from a release built by state_machines/graphs/release.py.
-``--pacer-release <id>`` writes that release's N-Quads (named graphs
-urn:caselinker:pacer:<case_id>:evidence|trajectories) and loads them with the corpus.
+``--pacer-release <id>`` writes that release's N-Quads and loads them with the corpus:
+``--pacer-graphs all`` (default) loads urn:caselinker:pacer:<case_id>:evidence and
+:trajectories, ``--pacer-graphs evidence`` the evidence graphs only. A release that is not
+adjudicated is refused unless ``--allow-preview`` (local stores only).
 ``--verify`` checks the loaded store against the release manifest: every PACER graph
 present and non-empty, nothing outside the release, no superseded urn:pacer:kg graphs,
 and at least ``--min-case-graphs`` press-release case graphs.
@@ -55,6 +57,10 @@ def parse_args(argv=None) -> argparse.Namespace:
                         help="another N-Quads file to load after the case graphs (repeatable), e.g. PACER")
     parser.add_argument("--pacer-release", default="",
                         help="PACER release id under state_machines/data/ to export and load (urn:caselinker:pacer:*)")
+    parser.add_argument("--pacer-graphs", choices=("all", "evidence"), default="all",
+                        help="PACER graph kinds to load: evidence plus trajectories, or evidence only")
+    parser.add_argument("--allow-preview", action="store_true",
+                        help="load a release that is not adjudicated (local stores only; never production)")
     parser.add_argument("--verify", action="store_true",
                         help="after loading, check the store against the PACER release manifest via SPARQL")
     parser.add_argument("--min-case-graphs", type=int, default=1,
@@ -109,8 +115,13 @@ def main(argv=None) -> int:
         import json
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if not manifest.get("adjudicated"):
+            if not (args.allow_preview or args.no_load):
+                print(f"--pacer-release: {args.pacer_release} is not adjudicated; refusing to load it "
+                      "(--allow-preview for a local store)", file=sys.stderr)
+                return 1
             print(f"WARNING: release {args.pacer_release} is not adjudicated (preview)", file=sys.stderr)
-        pacer_nq = nquads(args.pacer_release)
+        pacer_nq = nquads(args.pacer_release, select=args.pacer_graphs,
+                          out=args.output.with_name(f"{args.pacer_release}.{args.pacer_graphs}.nq"))
         print(f"PACER release {args.pacer_release}: {len(manifest['cases'])} cases → {pacer_nq}", flush=True)
     if args.no_load:
         print("Built N-Quads only (--no-load).")
@@ -124,7 +135,8 @@ def main(argv=None) -> int:
             print("--verify needs --pacer-release", file=sys.stderr)
             return 1
         from state_machines.graphs.release import verify_store
-        problems = verify_store(manifest, lambda q: sparql_select(args.oxigraph_url, q), min_case_graphs=args.min_case_graphs)
+        problems = verify_store(manifest, lambda q: sparql_select(args.oxigraph_url, q),
+                                min_case_graphs=args.min_case_graphs, select=args.pacer_graphs)
         for p in problems:
             print(f"VERIFY: {p}", file=sys.stderr)
         if problems:

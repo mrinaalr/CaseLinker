@@ -53,13 +53,15 @@ A release folder `state_machines/data/<release_id>/` holds `cases/` (bundles), `
 The manifest records the schema, codebook, derivation rule, extension and SDK versions, and per case the bundle hash, the source-document hashes, the graph IRIs and hashes, the SHACL result and the review counts. Graph IRIs are stable across releases:
 
 ```
-urn:caselinker:pacer:<case_id>:evidence
-urn:caselinker:pacer:<case_id>:trajectories
+urn:caselinker:pacer:<case_id>:evidence        served from Oxigraph
+urn:caselinker:pacer:<case_id>:trajectories    kept with the release, not served
 ```
+
+Only evidence graphs go to the public store: they are the record. Trajectory graphs are a derived reading at one threshold, rebuilt from the evidence at any time, and served through `/api/lifecycle/analysis`, which states its threshold.
 
 ## Oxigraph
 
-The full corpus is rebuilt into an empty store; PACER graphs come from a release.
+The full corpus is rebuilt into an empty store; PACER evidence graphs come from a release.
 
 ```bash
 # build the corpus and PACER N-Quads without touching a store
@@ -71,8 +73,8 @@ OXIGRAPH_URL=http://localhost:7878 python3 scripts/oxigraph/rebuild_oxigraph.py 
 ```
 
 `--verify` checks over SPARQL that:
-- every PACER graph in the manifest is present and non-empty;
-- no PACER graph outside the release is present;
+- every evidence graph in the manifest is present and non-empty;
+- no other PACER graph is present (trajectory graphs included);
 - no `urn:pacer:kg:*` graph remains;
 - each evidence graph has exactly one investigation;
 - the store holds at least `--min-case-graphs` press-release case graphs.

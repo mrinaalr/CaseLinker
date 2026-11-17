@@ -65,22 +65,51 @@ def test_release_manifest_nquads_and_store_verification(tmp_path):
     assert case["shacl"]["violations"] == 0
     assert set(case["source_documents"]) == {d["sha256"] for d in b["documents"]}
 
-    nq = nquads("test-v1", data_root=root)
-    ds = rdflib.Dataset()
-    ds.parse(nq, format="nquads")
-    ds.graph(rdflib.URIRef("https://w3id.org/caselinker/resource/case/press_001")).add(
-        (rdflib.URIRef("urn:s"), rdflib.URIRef("urn:p"), rdflib.Literal("o")))
-    assert verify_store(m, _query(ds), min_case_graphs=1) == []
+    ev_iri, tr_iri = case["graphs"]["evidence"]["iri"], case["graphs"]["trajectories"]["iri"]
+    press = rdflib.URIRef("https://w3id.org/caselinker/resource/case/press_001")
+    triple = (rdflib.URIRef("urn:s"), rdflib.URIRef("urn:p"), rdflib.Literal("o"))
 
-    # a superseded graph, a stray PACER graph and a missing graph are all reported
-    ds.graph(rdflib.URIRef("urn:pacer:kg:BULK_FOLDER/old.jsonld")).add((rdflib.URIRef("urn:s"), rdflib.URIRef("urn:p"), rdflib.Literal("o")))
-    ds.graph(rdflib.URIRef(f"{GRAPH_PREFIX}other_case:evidence")).add((rdflib.URIRef("urn:s"), rdflib.URIRef("urn:p"), rdflib.Literal("o")))
-    ds.remove_graph(ds.graph(rdflib.URIRef(case["graphs"]["trajectories"]["iri"])))
+    def load(select):
+        ds = rdflib.Dataset()
+        ds.parse(nquads("test-v1", data_root=root, select=select, out=tmp_path / f"{select}.nq"), format="nquads")
+        ds.graph(press).add(triple)
+        return ds
+
+    # all: both kinds, each of its kind
+    ds = load("all")
+    assert {str(g.identifier) for g in ds.graphs() if str(g.identifier).startswith(GRAPH_PREFIX)} == {ev_iri, tr_iri}
+    assert verify_store(m, _query(ds), min_case_graphs=1) == []
+    # evidence only: the trajectory graph must be absent, and is reported if loaded anyway
+    ds = load("evidence")
+    assert {str(g.identifier) for g in ds.graphs() if str(g.identifier).startswith(GRAPH_PREFIX)} == {ev_iri}
+    assert verify_store(m, _query(ds), min_case_graphs=1, select="evidence") == []
+    assert any("missing PACER graph" in p and "trajectories" in p for p in verify_store(m, _query(ds), min_case_graphs=1))
+
+    # a superseded graph, a stray PACER graph, a missing graph and a mixed-up graph are all reported
+    ds = load("all")
+    ds.graph(rdflib.URIRef("urn:pacer:kg:BULK_FOLDER/old.jsonld")).add(triple)
+    ds.graph(rdflib.URIRef(f"{GRAPH_PREFIX}other_case:evidence")).add(triple)
+    ds.graph(rdflib.URIRef(tr_iri)).add((rdflib.URIRef("urn:x"), rdflib.RDF.type,
+                                         rdflib.URIRef("https://ontology.caseontology.org/case/investigation/Investigation")))
+    ds.remove_graph(ds.graph(rdflib.URIRef(ev_iri)))
     problems = verify_store(m, _query(ds), min_case_graphs=2)
     assert any("superseded urn:pacer:kg" in p for p in problems)
-    assert any("not in this release" in p for p in problems)
-    assert any("missing PACER graph" in p and "trajectories" in p for p in problems)
+    assert any("not in this release" in p and "other_case" in p for p in problems)
+    assert any("missing PACER graph" in p and "evidence" in p for p in problems)
+    assert any(tr_iri in p and "investigation" in p for p in problems)
     assert any("press-release case graphs" in p for p in problems)
+
+
+def test_trajectory_graphs_name_rule_and_threshold_on_every_lifecycle(tmp_path):
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    m = build("test-v1", data_root=root, text_root=tmp_path / "text")
+    ds = rdflib.Dataset()
+    ds.parse(nquads("test-v1", data_root=root, out=tmp_path / "all.nq"), format="nquads")
+    tr = ds.graph(rdflib.URIRef(m["cases"][0]["graphs"]["trajectories"]["iri"]))
+    tr.remove((None, rdflib.URIRef("https://w3id.org/caselinker/trajectory#derivationRule"), None))
+    problems = verify_store(m, _query(ds))
+    assert any("without derivation rule and threshold" in p for p in problems)
 
 
 def test_nquads_refuses_graph_files_that_drifted_from_the_manifest(tmp_path):
@@ -91,6 +120,17 @@ def test_nquads_refuses_graph_files_that_drifted_from_the_manifest(tmp_path):
     g.write_text(g.read_text() + " ", encoding="utf-8")
     with pytest.raises(SystemExit, match="does not match the manifest"):
         nquads("test-v1", data_root=root)
+
+
+def test_release_outputs_hold_no_coder_text(tmp_path):
+    """Graphs, derived views and the page snapshot carry codes only: no act descriptions or notes."""
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    build("test-v1", data_root=root, text_root=tmp_path / "text")
+    rel = root / "test-v1"
+    out = "".join(p.read_text(encoding="utf-8") for p in [*rel.glob("graphs/*"), *rel.glob("derived/*"), rel / "lifecycle.json"])
+    for e in b["events"]:
+        assert e["description"] not in out
 
 
 def test_release_graphs_hold_no_quotes_or_names(tmp_path):
