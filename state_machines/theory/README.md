@@ -14,13 +14,13 @@ Finite transition systems for examining how technological affordances shape feas
 AfH 2.0, Appendix X. A model fixes states, actions and the affordances available in an environment $P$:
 
 $$
-M_P = (S,\ \mathcal A,\ \mathcal O(P),\ T_P,\ s_0), \qquad T_P \subseteq S \times \mathcal A \times 2^{\mathcal O(P)} \times S
+M_{P} = (S,\ \mathcal A,\ \mathcal O(P),\ T_{P},\ s_{0}), \qquad T_{P} \subseteq S \times \mathcal A \times 2^{\mathcal O(P)} \times S
 $$
 
-A tuple $(s, a, O, s')$ says action $a$, supported by affordances $O$, can move the process from $s$ to $s'$. Transitions carry no probabilities. A finite run starts at $s_0$; $\varepsilon$ erases its states and keeps the ordered (action, affordance-set) pairs:
+A tuple $(s, a, O, s')$ says action $a$, supported by affordances $O$, can move the process from $s$ to $s'$. Transitions carry no probabilities. A finite run starts at $s_{0}$; $\varepsilon$ erases its states and keeps the ordered (action, affordance-set) pairs:
 
 $$
-\mathcal L(P) = \{\varepsilon(r) : r \text{ a finite run of } M_P \text{ from } s_0\}
+\mathcal L(P) = \{\varepsilon(r) : r \text{ a finite run of } M_{P} \text{ from } s_{0}\}
 $$
 
 $\mathcal L(P)$ includes prefixes and failed attempts (a refused request is a transition to a refused state). Adding one affordance $o$ gives $P \oplus o$, compared with $P$ through two sets:
@@ -41,7 +41,7 @@ All of it is in [`transition_systems.py`](transition_systems.py); tests are in [
 
 | Concept | Code | Test |
 |---|---|---|
-| model $M_P$ | `TransitionSystem` | rejects an affordance outside $\mathcal O(P)$ |
+| model $M_{P}$ | `TransitionSystem` | rejects an affordance outside $\mathcal O(P)$ |
 | runs, $\varepsilon$, $\mathcal L(P)$ | `runs`, `epsilon`, `trajectories` | prefixes and the refused branch are present |
 | $\pi$, $\mathrm{Aff}$ | `pi`, `aff` | used throughout |
 | $P \oplus o$, monotonicity, locality | `add`, `monotone_and_local` | `add` refuses a transition that does not use $o$ |
@@ -60,11 +60,11 @@ Each holds for this toy system only.
 
 ## Attribution of new pathways
 
-**Proposition.** If every transition in $T_{P\oplus o} \setminus T_P$ uses $o$ (locality), then every trajectory $L \in \mathcal L(P\oplus o)$ with $\pi(L) \in \Delta_{\mathrm{path}}(o;P)$ has $o \in \mathrm{Aff}(L)$.
+**Proposition.** If every transition in $T_{P\oplus o} \setminus T_{P}$ uses $o$ (locality), then every trajectory $L \in \mathcal L(P\oplus o)$ with $\pi(L) \in \Delta_{\mathrm{path}}(o;P)$ has $o \in \mathrm{Aff}(L)$.
 
-**Proof.** Let $L = \varepsilon(r)$ for a run $r$ of $M_{P\oplus o}$ from $s_0$, with $\pi(L) \in \Delta_{\mathrm{path}}(o;P)$. If every transition of $r$ were in $T_P$, $r$ would be a run of $M_P$ and $\pi(L) \in \pi(\mathcal L(P))$, a contradiction. So $r$ uses some $t = (s, a, O, s') \in T_{P\oplus o} \setminus T_P$, and $o \in O$ by locality. $\varepsilon$ keeps $O$ as one step of $L$, so $o \in \mathrm{Aff}(L)$. $\square$
+**Proof.** Let $L = \varepsilon(r)$ for a run $r$ of $M_{P\oplus o}$ from $s_{0}$, with $\pi(L) \in \Delta_{\mathrm{path}}(o;P)$. If every transition of $r$ were in $T_{P}$, $r$ would be a run of $M_{P}$ and $\pi(L) \in \pi(\mathcal L(P))$, a contradiction. So $r$ uses some $t = (s, a, O, s') \in T_{P\oplus o} \setminus T_{P}$, and $o \in O$ by locality. $\varepsilon$ keeps $O$ as one step of $L$, so $o \in \mathrm{Aff}(L)$. $\square$
 
-The argument holds for any run that realises $L$. It uses locality only: monotonicity ($T_P \subseteq T_{P\oplus o}$) is not needed for this proposition, and a test introduces $o$ non-monotonically to confirm the code agrees. Monotonicity matters for reading $\Delta_{\mathrm{supp}}$ as "what was feasible stays feasible".
+The argument holds for any run that realises $L$. It uses locality only: monotonicity ($T_{P} \subseteq T_{P\oplus o}$) is not needed for this proposition, and a test introduces $o$ non-monotonically to confirm the code agrees. Monotonicity matters for reading $\Delta_{\mathrm{supp}}$ as "what was feasible stays feasible".
 
 The tests also check the proposition by enumeration on 60 generated systems that satisfy both assumptions, and show it fails on a system that breaks locality. Those checks guard the implementation; the proof is the argument above.
 

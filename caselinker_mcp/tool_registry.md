@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Local: 62 tools. Railway hosted: 47 tools** (eight collector WRITE tools, two local-disk duplicate tools and five repair-and-expand tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
+**Local: 61 tools. Railway hosted: 46 tools** (eight collector WRITE tools, two local-disk duplicate tools and five repair-and-expand tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 
@@ -166,10 +166,9 @@ Requires `CASELINKER_KEY` / `CaseLinker-Key` listed in server `CASELINKER_TRUSTE
 | Tool | Without trusted key | With trusted key |
 |------|---------------------|------------------|
 | `get_all_cases` | **403** from API (or MCP local error if no key configured) | Full corpus via `GET /api/corpus` (every column) |
-| `get_lifecycle_cases` | **403** from API (or MCP local error if no key configured) | Lifecycle swimlane / visualization payload |
-| `get_lifecycle_lstar` | **403** from API (or MCP local error if no key configured) | Full `lstar_all_cases.json` (transition matrix, global L*, per-case details) |
+| `get_lifecycle_cases` | **403** from API (or MCP local error if no key configured) | Documented PACER event graphs and derived trajectories (the `/lifecycle` payload) |
 | `get_case` | Works; **sanitized**: no `raw_data`; `case_text_redacted` is the release with people masked; entity labels and admission quote/context masked | Works; **full** case payload including `raw_data` |
 | `get_case_assertions` | Works; per-method assertions with character offsets but **no** `span_text` / LLM quotes / person names (people are per-case tokens `name_key` and `perpetrator_entities[].person` = `p1`…); same daily limit as `get_case` | Works; includes the span excerpts, still no person names |
 | `llm_chat` | Works; **50 requests/IP/day** (+ slowapi 15/min) | Works; **daily cap exempt** (+ slowapi 15/min still applies) |
 
-`get_all_cases` and both lifecycle tools are blocked without trusted access. `get_case` and `llm_chat` are public tools with richer responses or limits when a trusted key is forwarded on REST calls. The public `/lifecycle` page embeds visualization data server-side and does not require a browser API key.
+`get_all_cases` and `get_lifecycle_cases` are blocked without trusted access. `get_case` and `llm_chat` are public tools with richer responses or limits when a trusted key is forwarded on REST calls. The public `/lifecycle` page embeds visualization data server-side and does not require a browser API key.

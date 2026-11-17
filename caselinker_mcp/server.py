@@ -1252,7 +1252,7 @@ async def export_case_graph_ttl(
 
 
 # REST helpers below are public (no trusted-key gate). get_all_cases and
-# get_lifecycle_* require a trusted CaseLinker-Key (403 without). get_case and
+# get_lifecycle_cases and get_afh_analysis require a trusted CaseLinker-Key (403 without). get_case and
 # llm_chat are public but return richer data / skip daily caps when trusted.
 
 
@@ -1281,13 +1281,37 @@ async def get_all_cases(include_raw_data: bool = False) -> dict[str, Any]:
 
 
 @mcp.tool()
-async def get_lifecycle_cases() -> dict[str, Any]:
-    """PACER exploitation lifecycle swimlanes payload (trusted key required).
+async def get_afh_analysis(case_id: str = "", threshold: str = "INFERRED") -> dict[str, Any]:
+    """AfH quantities over the documented PACER trajectories (trusted key required).
 
-    Wraps GET /api/lifecycle/cases — five offense types as CAC state machines with
-    fundamental stages, cross-case coverage, affordance annotations, and per-case
-    phase trajectories. The public /lifecycle page embeds this data; API access
-    requires CASELINKER_KEY in CASELINKER_TRUSTED_KEYS.
+    Wraps GET /api/lifecycle/afh. For the current release, or one case: Aff(c) (level-C
+    affordances on derived trajectories), H(c) (minor-directed harm categories h1-h6),
+    psi_C(o) (which harms co-occur with each affordance, and in which cases), whether the
+    coverage identity holds, and per track the number of derived chains, unordered event
+    pairs and possible-identity links. threshold is DIRECT or INFERRED. psi_C records
+    co-occurrence, not causation; the response says whether the release is adjudicated.
+    """
+    try:
+        if err := require_caselinker_key():
+            return err
+        params = {"threshold": threshold, **({"case_id": case_id} if case_id else {})}
+        result = await api_get("/api/lifecycle/afh", params=params, timeout=DEFAULT_TIMEOUT)
+        return result if isinstance(result, dict) else {"data": result}
+    except Exception as e:
+        logger.exception("get_afh_analysis failed")
+        return {"error": str(e)}
+
+
+@mcp.tool()
+async def get_lifecycle_cases() -> dict[str, Any]:
+    """Documented PACER event graphs and derived trajectories (trusted key required).
+
+    Wraps GET /api/lifecycle/cases: for each case in the current release, the coded events
+    (action, roles, evidence status, legal standing, dates, affordances, harms, page
+    provenance), their documented relations, and per track the derived chains at the
+    DIRECT and INFERRED thresholds. No quotes, descriptions or names. The public
+    /lifecycle page embeds the same payload; API access requires CASELINKER_KEY in
+    CASELINKER_TRUSTED_KEYS.
     """
     try:
         if err := require_caselinker_key():
@@ -1296,24 +1320,6 @@ async def get_lifecycle_cases() -> dict[str, Any]:
         return result if isinstance(result, dict) else {"data": result}
     except Exception as e:
         logger.exception("get_lifecycle_cases failed")
-        return {"error": str(e)}
-
-
-@mcp.tool()
-async def get_lifecycle_lstar() -> dict[str, Any]:
-    """Full L* computation output for all PACER cases (trusted key required).
-
-    Wraps GET /api/lifecycle/lstar — raw state_machines/data/lstar_all_cases.json including
-    transition_matrix, global_lstar, cross_case_comparison, and per-case
-    phase_details. Use get_lifecycle_cases for the visualization-oriented payload.
-    """
-    try:
-        if err := require_caselinker_key():
-            return err
-        result = await api_get("/api/lifecycle/lstar", timeout=DEFAULT_TIMEOUT)
-        return result if isinstance(result, dict) else {"data": result}
-    except Exception as e:
-        logger.exception("get_lifecycle_lstar failed")
         return {"error": str(e)}
 
 
