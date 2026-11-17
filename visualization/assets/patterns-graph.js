@@ -2617,7 +2617,7 @@
         container.innerHTML =
             '<div class="empty-state">' +
               'No cases have been expressed as knowledge graphs yet.<br>' +
-              'Run <code>python ontology/features_to_cac.py &lt;case_id&gt;</code> ' +
+              'Run <code>python ontology/pipeline/features_to_cac.py &lt;case_id&gt;</code> ' +
               'to generate graphs, then refresh this page.' +
             '</div>';
         document.getElementById('case-title').textContent = 'No graphs available';

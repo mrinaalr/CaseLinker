@@ -57,8 +57,8 @@ _graph_store: dict[str, dict[str, Any]] = {}
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _ONTOLOGY_DIR = _REPO_ROOT / "ontology"
 _RUN_DIR = _REPO_ROOT / "run"
-if str(_ONTOLOGY_DIR) not in sys.path:
-    sys.path.insert(0, str(_ONTOLOGY_DIR))
+if str(_ONTOLOGY_DIR / "pipeline") not in sys.path:
+    sys.path.insert(0, str(_ONTOLOGY_DIR / "pipeline"))
 if str(_RUN_DIR) not in sys.path:
     sys.path.insert(0, str(_RUN_DIR))
 

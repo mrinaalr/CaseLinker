@@ -2,7 +2,7 @@
 
 **Status:** Draft v1.0  
 **Author:** Generated from codebase + ontology audit  
-**Target file:** `ontology/features_to_cac.py`  
+**Target file:** `ontology/pipeline/features_to_cac.py`  
 **CAC Ontology version:** 3.0.0 (ProjectVIC)  
 **CaseLinker corpus:** ~5,092 ICAC cases in PostgreSQL
 
@@ -1043,4 +1043,4 @@ ex:platform/limewire [FileHostingService] (shared singleton)
 
 ---
 
-*This document is the spec for `ontology/features_to_cac.py`. No mapping code should be written until the questions in §7 are resolved and this plan is signed off.*
+*This document is the spec for `ontology/pipeline/features_to_cac.py`. No mapping code should be written until the questions in §7 are resolved and this plan is signed off.*

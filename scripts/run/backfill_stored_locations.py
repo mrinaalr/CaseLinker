@@ -24,7 +24,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 NER_DIR = REPO / "src" / "Processing Layer" / "ML Processing Layer"
 ONTOLOGY = REPO / "ontology"
-for entry in (NER_DIR, ONTOLOGY, REPO / "src" / "Storage Layer"):
+for entry in (NER_DIR, ONTOLOGY / "pipeline", REPO / "src" / "Storage Layer"):
     if str(entry) not in sys.path:
         sys.path.insert(0, str(entry))
 
