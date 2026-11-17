@@ -1474,11 +1474,14 @@ class CaseToCAC:
             offender_people.append(person_uri)
 
         prior = _case_feature(case, "prior_history")
+        rso_mapped = False
         if isinstance(prior, dict) and prior.get("records"):
-            self._map_prior_history(g, case_id, prior["records"], offender_people, perp_ages,
-                                    status in _CONVICTED_STATUSES, warnings)
-        # Registration is stated once per case; it attributes only to a sole offender.
-        elif bool(case.get("perpetrator_registered_sex_offender", False)):
+            rso_mapped = self._map_prior_history(g, case_id, prior["records"], offender_people, perp_ages,
+                                                 status in _CONVICTED_STATUSES, warnings)
+        # Registration is stated once per case; it attributes only to a sole offender. It still
+        # applies when prior history mapped no registered role (e.g. "a convicted sex offender",
+        # which prior_history reads as a prior conviction), so no case loses the role (#64).
+        if not rso_mapped and bool(case.get("perpetrator_registered_sex_offender", False)):
             if len(offender_people) == 1:
                 rso_uri = BASE[f"case/{case_id}/role/registered-sex-offender/1"]
                 g.add((rso_uri, RDF.type, CAC_REGISTRY.RegisteredSexOffender))
@@ -1565,8 +1568,10 @@ class CaseToCAC:
 
     def _map_prior_history(self, g: Graph, case_id: str, records: List[Dict[str, Any]],
                            offender_people: List[URIRef], perp_ages: List[int], convicted: bool,
-                           warnings: List[str]) -> None:
+                           warnings: List[str]) -> bool:
         """Earlier convictions, registration and supervision the release states (#64).
+
+        Returns whether a registered-offender role was attached to an offender.
 
         Each record becomes a UCO ``Annotation`` on its defendant, one ``uco-core:tag`` per
         kind and a structured ``statement`` (count, years, sex offense; never release text).
@@ -1579,6 +1584,7 @@ class CaseToCAC:
         supervision, so those stay on the annotation.
         """
         case_uri = BASE[f"case/{case_id}"]
+        rso_mapped = False
         for i, rec in enumerate(records, start=1):
             person = None
             if rec.get("person") and rec.get("person") != "unmatched" and rec.get("age") is not None:
@@ -1619,6 +1625,8 @@ class CaseToCAC:
                     g.add((rso, CAC_REGISTRY.priorConvictionCount,
                            Literal(int(rec["count"]), datatype=XSD.nonNegativeInteger)))
                 self._evidence("prior_history", "registered_offender", "registered_offender", rso)
+                rso_mapped = True
+        return rso_mapped
 
     def _evidence(self, field: str, role: str, value: Any, node: URIRef) -> None:
         if not hasattr(self, "evidence_nodes"):

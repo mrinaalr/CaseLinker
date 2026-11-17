@@ -166,8 +166,9 @@ DATED_CONVICTION_RE = re.compile(
 PRIOR_CONVICTION_NOT_BEFORE_RE = re.compile(
     r"""
     (?:\b(?:no|without|never\s+had\s+(?:a|any)|not\s+have\s+(?:a|any)|lacks?\s+(?:a|any)
-        |neither\s+(?:\w+\s+){0,2}?(?:has|had)\s+(?:a|any)|(?:does|did)\s+not\s+have\s+(?:a|any))\s+(?:\w+\s+){0,2}
-     | \bif\s+(?:he|she|they|the\s+defendant)\s+(?:has|had|have)\s+(?:a\s+|any\s+|two\s+or\s+more\s+)?(?:\w+\s+){0,2}
+        |neither\s+(?:\w+\s+){0,2}?(?:has|had)\s+(?:a|any)
+        |(?:does|did)(?:\s+not|n['\u2019]?t)\s+(?:appear\s+to\s+|seem\s+to\s+)?have\s+(?:a|any))\s+(?:\w+\s+){0,2}
+     | \b(?:if|whether(?:\s+or\s+not)?)\s+(?:he|she|they|the\s+defendant)\s+(?:has|had|have)\s+(?:a\s+|any\s+|two\s+or\s+more\s+)?(?:\w+\s+){0,2}
      | \b(?:defendants|offenders|those|anyone|individuals|people|persons)\s+(?:with|who\s+have)\s+(?:been\s+)?(?:a\s+|any\s+)?(?:\w+\s+){0,2}
     )$
     """,
@@ -179,11 +180,36 @@ _OWN_CASE_BEFORE_RE = re.compile(r"\b(?:following|after)\s+(?:his|her|their)\s+$
 _SENTENCED_RE = re.compile(r"\bsentenc", re.IGNORECASE)
 
 
+# Supervision as a term of this case's sentence, from the words just before it: "suspended …
+# to be served while on probation", "placed on probation … While on probation, he will be",
+# "subject to monitoring while he is on supervised release". "At the time of the offense, he was
+# on supervised release for a 2013 conviction" has none, and is supervision at the time.
+_THIS_CASE_TERMS_RE = re.compile(
+    r"\b(?:suspended|placed\s+on|to\s+be\s+served|will\s+(?:\w+\s+)?be|subject\s+to|monitoring|conditions?)\b",
+    re.IGNORECASE)
+# "While on probation, he will be subject to special conditions" (vt_ag_2020_010).
+_FUTURE_TERM_RE = re.compile(r"\b(?:will|must|shall)\s+(?:\w+\s+)?be\s+subject\b", re.IGNORECASE)
+# Registration as a term of this case: "lifetime supervision as a registered sex offender".
+_REGISTRATION_AS_TERM_RE = re.compile(
+    r"\b(?:supervision|required|ordered|must|will|shall)\b[^.]{0,50}\bas\s+an?\s+$", re.IGNORECASE)
+
+
 def prior_match_excluded(text: str, start: int) -> str:
     """Why a prior-history match at ``start`` is not this defendant's earlier conviction, or ""."""
     before = text[max(0, start - 60): start]
     if PRIOR_CONVICTION_NOT_BEFORE_RE.search(before):
         return "negated_or_hypothetical"
+    sup = PRIOR_SUPERVISION_RE.match(text, start)
+    if sup:
+        # Within this sentence only: the sentence before can describe supervision conditions
+        # ("… under the conditions of his supervised release. He was on federal supervision
+        # following a 2012 conviction") without making this one a term of this case.
+        lead = text[max(_sentence_start(text, start), start - 80): start]
+        tail = text[sup.end(): sup.end() + 80]
+        if _THIS_CASE_TERMS_RE.search(lead) or _FUTURE_TERM_RE.search(tail):
+            return "this_case_sentence"
+    if REGISTERED_SEX_OFFENDER_RE.match(text, start) and _REGISTRATION_AS_TERM_RE.search(before):
+        return "this_case_sentence"
     if _OWN_CASE_BEFORE_RE.search(before) and _SENTENCED_RE.search(text[_sentence_start(text, start): start]):
         return "this_case_conviction"
     return ""

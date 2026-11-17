@@ -143,3 +143,15 @@ def test_release_text_to_graph_links_each_prior_history_quote_to_its_node(tmp_pa
     assert set(links[("registered_offender", "registered_offender")]) >= set(ann)
     assert list(case.subjects(RDF.type, CAC_REGISTRY.RecidivistSexOffender))
     assert result["coverage_gaps"] == []
+
+
+def test_a_legacy_registration_role_is_kept_when_prior_history_maps_none():
+    # "a convicted sex offender" sets the legacy registration flag; prior_history reads it as a prior conviction.
+    prior = {"records": [{"person": None, "age": None, "kinds": ["prior_conviction"], "count": None, "years": [],
+                          "sex_offense": True, "spans": [[1, 2]]}]}
+    case_id = "ph_2024_011"
+    case = FX.case("fixture_full_001")
+    case.update({"id": case_id, "perpetrator_age": [40], "perpetrator_count": 1,
+                 "perpetrator_registered_sex_offender": True, "prior_history": prior})
+    dataset, _w = CaseToCAC().map_case(case)
+    assert any(True for _ in dataset.quads((None, RDF.type, CAC_REGISTRY.RegisteredSexOffender, None)))

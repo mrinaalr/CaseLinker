@@ -170,3 +170,51 @@ def test_a_year_belongs_to_the_record_only_inside_its_clause(text, year):
     years = {(a.get("extras") or {}).get("year") for a in P.prior_history_assertions(text, 2024)
              if a["role"] != "not_prior"}
     assert years == {year}
+
+
+@pytest.mark.parametrize("text", [
+    # ncmec_2022_602
+    "He doesn't appear to have any previous convictions, according to a records check.",
+    # nj_ag_2017_013, nj_ag_2017_018, nj_ag_2018_003: statute boilerplate
+    "The offense carries a presumptive sentence of three to five years in prison, whether or not the defendant "
+    "has any prior felony conviction.",
+    # vt_ag_2025_022: this case's suspended sentence
+    "The Court sentenced the defendant to one to two years all suspended to be served while on probation supervision.",
+    # vt_ag_2020_010: this case's probation conditions
+    "Ashcombe was placed on probation for 10 years. While on probation, Ashcombe will be subject to special conditions.",
+    # ncmec_2023_112
+    "The judge sentenced Ashcombe to 2 years in jail but suspended all but 388 days while on probation.",
+    # doj_archives_2006_007
+    "His use of any computer will also be subject to monitoring while he is on supervised release.",
+    # doj_safe_childhood_2022_324: registration as a term of this sentence
+    "He will be sentenced to 10 to 12 years, followed by a term of lifetime supervision as a registered sex offender.",
+])
+def test_reviewer_round_one_cases_are_not_prior_history(text):
+    assert set(_roles(text)) <= {"not_prior"}
+    assert not (P._pp.extract_previous_conviction({"case_text": text, "year": "2024"}) or {}).get("has_prior_conviction")
+
+
+def test_supervision_at_the_time_of_the_offense_still_counts():
+    # doj_safe_childhood_2023_156
+    text = ("At the time he possessed these images, Ashcombe was on federal supervised release for a prior federal "
+            "conviction for possession of child pornography.")
+    assert {"on_supervision", "prior_conviction"} <= set(_roles(text))
+
+
+@pytest.mark.parametrize("text", [
+    # doj_safe_childhood_2026_290
+    "At the time of the offense, Ashcombe was on federal supervised release for a 2013 conviction of distribution.",
+    # doj_safe_childhood_2024_036: this case's sentencing verb, earlier supervision
+    "The judge sentenced a man who was caught with child pornography while on supervised release from a prior offense.",
+    # doj_safe_childhood_2025_047
+    "According to evidence presented at sentencing, Ashcombe, 55, was on federal supervised release for a conviction.",
+])
+def test_supervision_at_the_time_survives_this_cases_sentencing_words(text):
+    assert "on_supervision" in _roles(text)
+
+
+def test_conditions_in_the_sentence_before_do_not_make_supervision_this_cases():
+    # doj_safe_childhood_2024_510, doj_safe_childhood_2022_100
+    text = ("He had a phone he was prohibited from possessing under the conditions of his supervised release. "
+            "Ashcombe was on federal supervision following a 2012 federal conviction for receipt.")
+    assert "on_supervision" in _roles(text)
