@@ -52,7 +52,7 @@ The bundle is the canonical artifact. Everything else is a view of it at an evid
 
 - **Order.** $\prec_{\theta}$ is the transitive closure of admitted BEFORE and MEETS relations and of the order cited dates imply. Pairs it leaves incomparable are reported, not forced.
 - **Trajectories.** $L=((a_{1},O_{1}),\ldots,(a_{n},O_{n}))$ is a maximal chain of offender events under $\prec_{\theta}$. $O_{i}$ holds the affordances the record ties to the act. One event can sit in several chains.
-- **AfH sets.** $\operatorname{Aff}(L)$, $H(c)$ and $\psi_{\mathcal{C}}(o)$ are computed over the chains and the case's minor-directed harms.
+- **AfH sets.** $\mathrm{Aff}(L)$, $H(c)$ and $\psi_{\mathcal{C}}(o)$ are computed over the chains and the case's minor-directed harms.
 
 ## From record to release
 
@@ -96,7 +96,7 @@ DATABASE_URL='' python -m pytest tests/pacer
 |---|---|---|
 | [`/lifecycle`](https://caselinker.up.railway.app/lifecycle) | public | documented and theory views of the current adjudicated release |
 | `GET /api/lifecycle/cases` | trusted key or localhost | the page payload: events, roles, dates, standing, sources (no quotes, no names) |
-| `GET /api/lifecycle/analysis` | trusted key or localhost | chains, unordered pairs, $\operatorname{Aff}(c)$, $H(c)$, $\psi$, coverage identity |
+| `GET /api/lifecycle/analysis` | trusted key or localhost | chains, unordered pairs, $\mathrm{Aff}(c)$, $H(c)$, $\psi$, coverage identity |
 | `GET /api/ontology/pacer` | public | the release manifest: cases, graph IRIs, SHACL status |
 | MCP `get_lifecycle_cases`, `get_trajectory_analysis` | trusted key | the two API routes above |
 
@@ -112,7 +112,7 @@ DATABASE_URL='' python -m pytest tests/pacer
 | [`evidence/CODEBOOK.md`](evidence/CODEBOOK.md), [`evidence/CODER_GUIDE.md`](evidence/CODER_GUIDE.md) | What each code means; how to code a case |
 | [`trajectories/derive.py`](trajectories/derive.py) | Partial order, chains, interruptions, derivation metadata |
 | [`trajectories/affordances.py`](trajectories/affordances.py) | Affordance levels A and B from the shared capability registry |
-| [`trajectories/afh.py`](trajectories/afh.py) | $\operatorname{Aff}$, $H(c)$, $\psi$, coverage identity, release analysis |
+| [`trajectories/afh.py`](trajectories/afh.py) | $\mathrm{Aff}$, $H(c)$, $\psi$, coverage identity, release analysis |
 | [`trajectories/payload.py`](trajectories/payload.py) | The `/lifecycle` payload |
 | [`graphs/emit.py`](graphs/emit.py), [`graphs/shacl.py`](graphs/shacl.py), [`graphs/release.py`](graphs/release.py) | Emission, SHACL, releases |
 | [`coding/workflow.py`](coding/workflow.py), [`coding/adjudication.py`](coding/adjudication.py) | Coding and adjudication workflow |

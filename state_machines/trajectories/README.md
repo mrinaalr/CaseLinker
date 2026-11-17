@@ -44,11 +44,11 @@ The registry is the one the AfH Q1 work maintains (`research/afh_q1/config/capab
 ## AfH sets
 
 $$
-\operatorname{Aff}(L)=\bigcup_{i=1}^{n} O_{i},\qquad
-\psi_{\mathcal{C}}(o)=\{h\in\mathcal{H}_{0}:\exists c\in\mathcal{C},\ o\in\operatorname{Aff}(c)\wedge h\in H(c)\}
+\mathrm{Aff}(L)=\bigcup_{i=1}^{n} O_{i},\qquad
+\psi_{\mathcal{C}}(o)=\{h\in\mathcal{H}_{0}:\exists c\in\mathcal{C},\ o\in\mathrm{Aff}(c)\wedge h\in H(c)\}
 $$
 
-$\operatorname{Aff}(c)$ is the union over a case's chains. $H(c)$ holds the case's minor-directed harm categories $h_{1}$–$h_{6}$. $\psi_{\mathcal{C}}$ records co-occurrence within a case. [`afh.py`](afh.py) also checks the coverage identity $\bigcup_{o}\psi_{\mathcal{C}}(o)=\bigcup_{c:\operatorname{Aff}(c)\neq\varnothing}H(c)$.
+$\mathrm{Aff}(c)$ is the union over a case's chains. $H(c)$ holds the case's minor-directed harm categories $h_{1}$–$h_{6}$. $\psi_{\mathcal{C}}$ records co-occurrence within a case. [`afh.py`](afh.py) also checks the coverage identity $\bigcup_{o}\psi_{\mathcal{C}}(o)=\bigcup_{c:\mathrm{Aff}(c)\neq\varnothing}H(c)$.
 
 ## Outputs
 
@@ -56,5 +56,5 @@ $\operatorname{Aff}(c)$ is the union over a case's chains. $H(c)$ holds the case
 |---|---|
 | `derive.derive(bundle, threshold)` | Per track: chains with steps (action, $O_{i}$, levels A and B, outcome, interruptions), unordered pairs, possible-identity pairs, time conflicts, excluded events |
 | `derive.derived_json(...)` | The same, as deterministic JSON |
-| `afh.release_analysis(threshold, case_id)` | $\operatorname{Aff}(c)$, $H(c)$, $\psi$, coverage identity and per-track chain counts for a release (`/api/lifecycle/analysis`) |
+| `afh.release_analysis(threshold, case_id)` | $\mathrm{Aff}(c)$, $H(c)$, $\psi$, coverage identity and per-track chain counts for a release (`/api/lifecycle/analysis`) |
 | `payload.build_payload()` | The `/lifecycle` payload: events with roles, standing, dates, affordances, harms and page provenance; relations; per-track chains at both thresholds (`/api/lifecycle/cases`) |

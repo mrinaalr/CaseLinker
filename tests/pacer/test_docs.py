@@ -66,3 +66,10 @@ def test_tables_are_well_formed(doc):
             i = j
         else:
             i += 1
+
+
+@pytest.mark.parametrize("doc", DOCS, ids=lambda p: str(p.relative_to(ROOT)))
+def test_math_uses_only_macros_github_renders(doc):
+    """GitHub's math renderer rejects some KaTeX macros (\\operatorname shows an error box)."""
+    text = _strip_code(doc.read_text(encoding="utf-8"))
+    assert "\\operatorname" not in text, "use \\mathrm{...} instead of \\operatorname{...}"
