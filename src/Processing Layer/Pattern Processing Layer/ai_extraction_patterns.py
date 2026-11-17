@@ -184,8 +184,19 @@ def prior_match_excluded(text: str, start: int) -> str:
     before = text[max(0, start - 60): start]
     if PRIOR_CONVICTION_NOT_BEFORE_RE.search(before):
         return "negated_or_hypothetical"
-    if _OWN_CASE_BEFORE_RE.search(before):
-        cut = max(text.rfind(". ", 0, start), text.rfind(".\n", 0, start), text.rfind("\n\n", 0, start))
-        if _SENTENCED_RE.search(text[cut + 1: start]):
-            return "this_case_conviction"
+    if _OWN_CASE_BEFORE_RE.search(before) and _SENTENCED_RE.search(text[_sentence_start(text, start): start]):
+        return "this_case_conviction"
     return ""
+
+
+# A period that ends a sentence: not after an initial ("J."), "U.S." or a title.
+_SENTENCE_END_RE = re.compile(r"[.!?]\s+(?=[A-Z\"\u201c])|\n\s*\n")
+_NOT_AN_END = re.compile(r"(?:\b[A-Z]|\bU\.S|\bMrs?|\bMs|\bDr|\bJr|\bSr|\bSt|\bNo|\bInc|\bCo)$")
+
+
+def _sentence_start(text: str, start: int) -> int:
+    """Start of the sentence holding ``start``, within the 400 characters before it."""
+    lo = max(0, start - 400)
+    ends = [m.end() for m in _SENTENCE_END_RE.finditer(text, lo, start)
+            if m.group(0).startswith("\n") or not _NOT_AN_END.search(text[max(lo, m.start() - 4): m.start()])]
+    return ends[-1] if ends else lo

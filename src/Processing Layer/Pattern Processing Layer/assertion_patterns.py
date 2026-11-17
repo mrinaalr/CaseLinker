@@ -862,6 +862,7 @@ _COUNT_BEFORE_RE = re.compile(r"\b(one|two|three|four|five|six|seven|eight|nine|
 _WORD_COUNT = {w: i for i, w in enumerate(
     ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"))}
 _YEAR_RE = re.compile(r"\b((?:19|20)\d\d)\b")
+_CLAUSE_CUT_RE = re.compile(r",\s+(?!\d)|;")
 _PRIOR_SPAN_RES = (
     _ai.REGISTERED_SEX_OFFENDER_RE, _ai.PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE, _ai.PRIOR_STATUS_RE,
     _ai.PRIOR_SUPERVISION_RE, _ai.PRIOR_CONVICTION_WORDING_RE, _ai.DATED_CONVICTION_RE,
@@ -940,7 +941,16 @@ def prior_history_assertions(text: str, batch_year=None, persons=None) -> List[D
         if dated:
             year = int(dated.group(1))
         else:
-            y = _YEAR_RE.search(text[e: min(se, e + 80)]) or _YEAR_RE.search(text[max(ss, s - 30): s])
+            # The year in this clause only: stop at a comma that does not sit inside a date
+            # ("pleaded guilty on Aug. 29, 2023" is another event). A registered offender's year
+            # counts only when its clause names a conviction ("from a 2013 conviction"), since
+            # "a registered sex offender in October of 2019, when he began …" dates this case.
+            after = text[e: min(se, e + 80)]
+            cut = _CLAUSE_CUT_RE.search(after)
+            after = after[: cut.start()] if cut else after
+            y = _YEAR_RE.search(after) or _YEAR_RE.search(text[max(ss, s - 30): s])
+            if y and kind == "registered_offender" and not re.search(r"convict", after, re.IGNORECASE):
+                y = None
             if y and batch_year and int(y.group(1)) <= int(batch_year) - 1:
                 year = int(y.group(1))
         sex = kind == "registered_offender" or bool(_SEX_OFFENSE_RE.search(clause))

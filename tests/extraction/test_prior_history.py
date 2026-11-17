@@ -148,3 +148,25 @@ def test_angel_watch_boilerplate_about_people_previously_convicted_is_not_prior(
     # doj_safe_childhood_2024_406
     text = "The program identifies individuals who have been previously convicted of sexual crimes against children."
     assert set(_roles(text)) <= {"not_prior"}
+
+
+def test_a_sentencing_verb_before_an_abbreviation_still_makes_it_this_case():
+    # doj_safe_childhood_2026_315, doj_safe_childhood_2026_392
+    text = ("Corin Ashcombe, 60, was sentenced by U.S. District Judge Reese Thistlewood to 60 years in prison, "
+            "following his previous conviction of five counts of production of child pornography.")
+    assert set(_roles(text)) <= {"not_prior"}
+
+
+@pytest.mark.parametrize("text, year", [
+    # doj_ai_csam_2024_002: the date after the comma is this case's plea
+    ("He has a prior federal felony conviction for possessing child pornography, pleaded guilty on Aug. 29, 2023.",
+     None),
+    # doj_safe_childhood_2024_322: the date dates this case's conduct
+    ("Ashcombe was a registered sex offender in October of 2019, when he began messaging a girl.", None),
+    ("Ashcombe is a registered sex offender from a 2013 conviction for indecent solicitation.", 2013),
+    ("Ashcombe was previously convicted on August 23, 2019, of possession.", 2019),
+])
+def test_a_year_belongs_to_the_record_only_inside_its_clause(text, year):
+    years = {(a.get("extras") or {}).get("year") for a in P.prior_history_assertions(text, 2024)
+             if a["role"] != "not_prior"}
+    assert years == {year}
