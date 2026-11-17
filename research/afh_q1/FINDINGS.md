@@ -5,7 +5,7 @@ Branch `research/afh-q1-reconstruction` (local, not pushed). Frozen corpus snaps
 - codebook `codebook-6`
 - evidence tiers `tiers-1` (original baseline) and `tiers-1+linewrap-2` (primary)
 
-Every number here is read from [outputs/](outputs/): [TABLES.md](outputs/TABLES.md) has the full tables, and [outputs/latex/](outputs/latex/) has booktabs versions. The manuscript is unchanged. No database, Railway or graph store was written.
+Every number here is read from [outputs/](outputs/): [TABLES.md](outputs/TABLES.md) has the full tables, and `outputs/latex/` (generated locally, not committed) has booktabs versions. The manuscript is unchanged. No database, Railway or graph store was written.
 
 **Who checked what.** All case-level validation below was done by blind AI reviewers: separate agent instances reading masked passages, with no access to the classifier's labels. Disagreements were adjudicated by the author agent. **No row has yet been checked by a human.** "Supported" therefore means "an independent AI reviewer judged it supported", not human-verified. The 25 platform-history claims were checked by an AI agent on fetched, dated pages.
 

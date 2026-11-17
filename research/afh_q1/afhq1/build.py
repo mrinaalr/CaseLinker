@@ -515,7 +515,9 @@ def build(log=print) -> dict:
     from . import latex, report
     report.write(OUT)
     latex.write(OUT)
-    files = sorted(p for p in OUT.rglob("*") if p.is_file() and p.name != "RUN_IDENTITY.json")
+    # Shipped outputs only; outputs/latex/ is generated locally for the manuscript and not committed.
+    files = sorted(p for p in OUT.rglob("*") if p.is_file() and p.name != "RUN_IDENTITY.json"
+                   and "latex" not in p.relative_to(OUT).parts)
     code = sorted((RESEARCH / "afhq1").glob("*.py"))
     identity = {
         "dataset_identity": meta["dataset_identity"], "case_count": int(meta["case_count"]),

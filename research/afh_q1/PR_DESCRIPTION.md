@@ -12,7 +12,7 @@ Adds `research/afh_q1/`, which builds the AfH 2.0 Section 3–4 manifest from a 
 | Harm pathways | Observed and potential, reported separately |
 | Platform registry | 216 capability rows with dated sources |
 | Exemplars | 184 fingerprint-bound; each blind-reviewed |
-| LaTeX tables | 6, booktabs |
+| LaTeX tables | 6, generated locally by `run_all.py`; not committed |
 
 Also fixes four defects in the existing pipeline that the Q1 audit found.
 
@@ -43,7 +43,7 @@ Also fixes four defects in the existing pipeline that the Q1 audit found.
   - fingerprint-bound citations;
   - platform registry (`platforms-2`, generated from `config/capability_sources/`);
   - codebook (`codebook-6`);
-  - classification, harm, validation, LaTeX;
+  - classification, harm, validation, and a local-only LaTeX table generator;
   - docs: `FINDINGS.md`, `DECISION_1_TIERS.md`, `README.md`.
 
 ## Test plan

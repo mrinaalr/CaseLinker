@@ -58,7 +58,7 @@ The snapshot holds source text and stays out of git. Share it only under the sam
 | `outputs/manifest.json`, `exemplar_inventory.json`, `citations.json` | Full manifest; every exemplar with verdict and fingerprint |
 | `outputs/registry_checks.json` | Registry confidence, link reachability, manuscript claim verdicts |
 
-`\input{}` each table inside a `table` environment; captions and labels belong to the manuscript. Requires `\usepackage{booktabs}`.
+Generated locally by `run_all.py` and not committed. `\input{}` each table inside a `table` environment; captions and labels belong to the manuscript. Requires `\usepackage{booktabs}`.
 
 ## What is where
 
