@@ -1,6 +1,6 @@
 # Trajectory codebook v0.2.0 (proposed; pilot)
 
-Codes live in [`vocab.py`](vocab.py); the [schema](schema/case_bundle.schema.json), [validator](validate.py) and [extension shapes](../ontology/extensions/caselinker-trajectory/0.2.0/) read them. Change both together and bump `CODEBOOK_VERSION`.
+Codes live in [`vocab.py`](vocab.py); the [schema](schema/case_bundle.schema.json), [validator](validate.py) and [extension shapes](../../ontology/extensions/caselinker-trajectory/0.3.0/) read them. Change both together and bump `CODEBOOK_VERSION`.
 
 **Contents:**
 - [Unit of coding](#unit-of-coding)
