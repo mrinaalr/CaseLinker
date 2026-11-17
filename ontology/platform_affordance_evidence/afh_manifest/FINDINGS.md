@@ -1,6 +1,6 @@
 # AfH 2.0 Q1: final local review packet
 
-**Scope.** Branch `research/afh-q1-reconstruction` (local, not pushed), working from frozen corpus snapshot `60f7bfaa…d06b` (10,802 cases, 78 sources). Nothing outside this repository was touched: no manuscript, database, Railway or graph store.
+**Scope.** Branch `research/afh-q1-reconstruction` (PR #95), working from frozen corpus snapshot `60f7bfaa…d06b` (10,802 cases, 78 sources). Nothing outside this repository was touched: no manuscript, database, Railway or graph store.
 
 **Versions.**
 
@@ -19,6 +19,8 @@ Every downstream level reads the primary tier (`Record.primary_tier`).
 **Who checked what.** All case-level validation is by blind AI reviewers on masked passages; the author agent adjudicated disagreements. No row is human-verified. The 25 platform-history claims were checked by an AI agent on fetched, dated pages.
 
 ## Hardy review corrections
+
+Numbers in this section are as of that review (linewrap-2); current numbers are in sections 2–5.
 
 **Finding 1: inconsistent tier.** The headline used the line-wrap tier, but every downstream calculation still used the baseline tier: capability-relevant conduct, inferred facilitation, explicit use, harm flags, AI material, the manifest, the temporal tables and the platform-harm tables. So 422 platform-case records in 378 cases counted as documented use in Section 3 but could never appear in Section 4.
 
@@ -43,17 +45,17 @@ Regression tests:
 - no B or documented-harm flag rests on a named-only primary tier;
 - manifest documented-use counts equal the primary-tier counts.
 
-**Finding 2: what 1,513 means.** The headline splits as follows (`inventory.json` → `headline_reconciliation`):
+**Finding 2: what the headline means.** Under linewrap-3 (see the addendum in `DECISION_1_TIERS.md`) the headline is 1,509; it splits as follows (`inventory.json` → `headline_reconciliation`):
 
-| Part of 1,513 | Cases | Rule | Blind review: offender use |
+| Part of 1,509 | Cases | Rule | Blind review: offender use |
 |---|---|---|---|
 | Stated | 1,322 | Platform tied to offense conduct in one sentence | 13/15 in a random sample (9 stated in the release, 4 known via a platform report) |
-| Inferred only (co-occurrence) | 191 | Platform and offense language in one sentence, with no instrumental link | 14/15 in a random sample (9 stated in the release, 5 via a platform report) |
-| Named only (not counted) | 350 | Platform only named | – |
+| Inferred only (co-occurrence) | 187 | Platform and offense language in one sentence, with no instrumental link | 14/15 in a random sample (9 stated in the release, 5 via a platform report) |
+| Named only (not counted) | 354 | Platform only named | – |
 
 Promoted cases (45 sampled, all tiers): 39 show offender use.
 
-**Recommended wording:** "1,513 cases document platform use: 1,322 state it, and 191 show platform and offense language co-occurring." Do not call all 1,513 "documented offender use" without the rates. Part of the use is known through platform reports, not the release narrative.
+**Recommended wording:** "1,509 cases document platform use: 1,322 state it, and 187 show platform and offense language co-occurring." Do not call all 1,509 "documented offender use" without the rates. Part of the use is known through platform reports, not the release narrative.
 
 ## 1. Evidence levels
 
@@ -85,11 +87,11 @@ Assessed cases: 1,984. Distinct cases, with platform-case observations in bracke
 | Class | A available | B relevant conduct | I inferred facilitation | C explicit use | Platforms at C |
 |---|---|---|---|---|---|
 | Anonymity | 1,782 (2,306) | 479 (545) | 378 (418) | 28 (32) | 7 |
-| Ephemerality | 926 (1,197) | 363 (420) | 181 (182) | 0 | 0 |
+| Ephemerality | 926 (1,197) | 361 (418) | 181 (182) | 0 | 0 |
 | Contact discovery | 1,798 (2,373) | 529 (616) | 38 (39) | 10 (10) | 4 |
 | Unmonitored communication | 1,729 (2,314) | 534 (628) | 399 (427) | 23 (25) | 9 |
-| Distribution infrastructure | 1,898 (2,525) | 960 (1,120) | 667 (758) | 515 (581) | 29 |
-| Generative synthesis | 733 (902) | 137 (145) | 66 (68) | 21 (22) | 3 |
+| Distribution infrastructure | 1,898 (2,525) | 959 (1,119) | 666 (757) | 515 (581) | 29 |
+| Generative synthesis | 733 (902) | 136 (143) | 66 (67) | 20 (21) | 2 |
 
 **Why some counts exceed 1,863.** The assessed cases are the 1,863 strict cases plus 70 whose only assessed label is "Gen AI" and 51 whose only one is an ambiguous alias. A case can count in several classes.
 
@@ -113,15 +115,15 @@ Assessed cases: 1,984. Distinct cases, with platform-case observations in bracke
 | Corpus | 10,802 | – |
 | Any platform label (broad; includes generic categories) | 3,080 | 4,680 (57 labels) |
 | Specific named platform (strict) | 1,863 | 2,487 (52 labels) |
-| **Documented use, stated or co-occurring (primary)** | **1,513** (stated 1,322 + co-occurring 191) | 1,834 |
+| **Documented use, stated or co-occurring (primary)** | **1,509** (stated 1,322 + co-occurring 187) | 1,827 |
 | Documented use, original-rule baseline | 1,257 (stated 1,080 + co-occurring 177) | 1,477 |
-| Named only (primary / baseline) | 350 / 606 | 653 / 1,010 |
+| Named only (primary / baseline) | 354 / 606 | 660 / 1,010 |
 | Generic category only | 1,096 | – |
 
 How the repair was validated:
-- Precision of the 256 promoted cases is about 96% (strata 14/16 and 25/25; conservative lower bound about 80%).
+- Precision of the promoted cases, measured on the 256 promoted under linewrap-2, is about 96% (strata 14/16 and 25/25; conservative lower bound about 80%).
 - The repair is additive and never demotes.
-- About a third of named-only records still hide offender use, so 1,513 is still a lower bound.
+- About a third of named-only records still hide offender use, so 1,509 is still a lower bound.
 - Within DOJ Safe Childhood, 2021–25, 85–90% of named-platform cases document use.
 
 The tier-rule comparison is in `DECISION_1_TIERS.md`:
@@ -131,13 +133,14 @@ The tier-rule comparison is in `DECISION_1_TIERS.md`:
 | Original | 1,257 |
 | Plain repair | 1,486 |
 | Additive repair, no guard | 1,526 |
-| **Additive repair with guard (primary)** | **1,513** |
+| Additive repair with guard (linewrap-2) | 1,513 |
+| **Additive repair with platform-specific guard (linewrap-3, primary)** | **1,509** |
 | Extra verbs only | 1,398 |
 | Repair + verbs | 1,577 |
 
 ## 4. Section 4: manifest and harm pathways
 
-The manifest covers 36 platforms with at least 3 documented-use cases (`outputs/manifest.json`). All 203 exemplar citations resolve by content fingerprint.
+The manifest covers 36 platforms with at least 3 documented-use cases (`outputs/manifest.json`). All 201 exemplar citations resolve by content fingerprint.
 
 Harm pathways, counted as cases with a direct harm cue at the I and C levels:
 
@@ -149,11 +152,11 @@ Harm pathways, counted as cases with a direct harm cue at the I and C levels:
 | Unmonitored → coerced imagery | 10 | 0 | Observed examples at I |
 | Ephemerality → coerced imagery / sextortion | 10 / 4 | 0 | Potential: present by design; no release describes disappearing content |
 | Contact discovery → grooming | 0 | 0 | Potential (120 case-level co-occurrences) |
-| Generative → likeness synthesized | 21 | 21 | Small; adjudicate before citing |
+| Generative → likeness synthesized | 20 | 20 | Small; adjudicate before citing |
 
 ## 5. Exemplar inventory
 
-203 exemplars, each with a blind AI verdict. **144 supported. None are human-verified.**
+201 exemplars, each with a blind AI verdict. **144 supported. None are human-verified.**
 
 | Cited for | Supported | Partly | Not |
 |---|---|---|---|
@@ -161,12 +164,12 @@ Harm pathways, counted as cases with a direct harm cue at the I and C levels:
 | Unmonitored communication | 13 | 2 | 1 |
 | Anonymity | 10 | 4 | 1 |
 | Contact discovery | 6 | 0 | 2 |
-| Generative synthesis | 2 | 0 | 2 |
+| Generative synthesis | 2 | 0 | 1 |
 | Harm: material distributed | 39 | 13 | 7 |
 | Harm: sextorted | 10 | 4 | 1 |
 | Harm: coerced self-generated | 5 | 0 | 2 |
 | Harm: groomed toward in-person | 2 | 2 | 0 |
-| Harm: likeness synthesized | 1 | 1 | 2 |
+| Harm: likeness synthesized | 1 | 1 | 1 |
 
 Cite only "supported" rows, after a human read.
 
@@ -200,9 +203,10 @@ The expected output hashes are in `outputs/RUN_IDENTITY.json`. Results from the 
 ## 8. Remaining uncertainties
 
 - **No human adjudication.** Per-cell samples are 3–45 rows.
-- **AI cells are small.** Explicit generative use is 21 cases (2/4 exemplars supported) and likeness synthesis 21 cases (1/4). Do not claim identity-based likeness synthesis beyond the supported example.
+- **AI cells are small.** Explicit generative use is 20 cases (2/3 exemplars supported) and likeness synthesis 20 cases (1/3). Do not claim identity-based likeness synthesis beyond the supported example.
 - **Uncertain registry dates.** 38 capability rows have uncertain start dates; 9 are on manuscript example platforms. They underlie 13–17% of Anonymity, Contact and Unmonitored availability counts; 84% of cases are from 2021–26, which limits the effect.
 - **Attribution errors.** A sentence naming two platforms can attribute conduct to the wrong one. Uploads to cloud storage can count as distribution without sharing being shown.
 - **Coverage, not prevalence.** Enforcement-report coverage, a publication-year timeline, and a changing source mix.
 - **Visualization.** The `/visualization` Platforms tile now shows 52 *named* platforms; the map still lists all 57 labels.
-- **Not changed here.** The public API serves raw `evidence_quote` text; stored date roles are unchanged until a re-extraction.
+- **Person names.** The public evidence file masks people with `[PERSON]` using the case's stored person spans, as case pages do. Masking runs after classification, so no tier changes. Two quotes over-mask a non-person word that a stored span covers (an app and a newspaper name).
+- **Not changed here.** Stored date roles are unchanged until a re-extraction.

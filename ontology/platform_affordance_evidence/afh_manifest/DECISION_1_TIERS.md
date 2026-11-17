@@ -129,3 +129,17 @@ The authors adopted the repair on condition of targeted validation. A blind revi
 - weighted precision of the promoted cases is about 96%, with a conservative lower bound of about 80% (strata 14/16 social of 74, 25/25 other of 182).
 
 1,257 remains the original-rule baseline. The published `stated_vs_inferred` field is still `tiers-1`; `stated_vs_inferred_linewrap` carries `tiers-1+linewrap-2`.
+
+## Addendum: linewrap-3
+
+Review of PR #95 found agency posts and reporting-duty statements that `linewrap-2` let through as co-occurrence: `ncmec_2023_055` (Facebook and Instagram named only as companies required by law to report), `ncmec_2024_998` ("In a Facebook post, the sheriff's office said…"), `ncmec_2024_187` ("according to a Facebook post from the police department") and `svicac_2023_008` ("the sheriff's office said on Facebook").
+
+`linewrap-3` makes two changes:
+- **Wording.** The guard also matches "in / according to / via a {platform} post", "{said / announced / posted / wrote / shared / stated} on {platform}", and "companies … required by law to report".
+- **Platform-specific.** A refusal applies only to the platform the boilerplate phrase names; footer link lists ("Facebook X (formerly Twitter) YouTube", "follow us on") still refuse every platform. In `ncmec_2024_998` the same sentence is real Kik evidence ("criminal activity on Kik"), and Kik keeps its promotion.
+
+Effect on the corpus: the baseline `stated_vs_inferred` is unchanged for all 4,680 records. Eight primary-tier records change, all read:
+- 7 refused promotions, back to named-only: `ncmec_2023_055` (Facebook, Instagram), `ncmec_2023_316` and `ncmec_2025_459` (an agency "posted / announced on Facebook"), and the three cited above;
+- 1 promotion no longer blocked: `ncmec_2024_199` "social media", whose headline reports distributing CSAM on social media; `linewrap-2` blocked it only because the sentence also held a URL. It is a generic label, outside the named-platform set.
+
+On the named-platform set, documented use goes from 1,513 to **1,509** (co-occurrence 191 → 187, named-only 350 → 354); stated stays 1,322. Two exemplars on `ncmec_2024_187` Facebook, both judged not supported in blind review, drop out (203 → 201; 144 supported, unchanged). The repair is still additive: a refusal keeps the original tier.
