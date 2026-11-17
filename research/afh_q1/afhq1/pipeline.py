@@ -231,6 +231,12 @@ class Record:
     harm_direct: Dict[str, bool] = field(default_factory=dict)
     harm_case: Dict[str, bool] = field(default_factory=dict)
 
+    @property
+    def primary_tier(self) -> str:
+        """Tier every downstream level uses: tiers-1+linewrap-2 (Decision 1). `tier` stays the
+        tiers-1 baseline, used only for baseline counts and for re-drawing historical samples."""
+        return self.tier_linewrap or self.tier
+
     def row(self) -> Dict[str, Any]:
         out = {
             "case_id": self.case_id, "fingerprint": self.fingerprint, "source": self.source,
@@ -302,7 +308,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
             if c and c not in conduct:
                 conduct.append(c)
         rec.conduct = conduct
-        rec.ai_material = bool(codebook.ai_material and rec.tier in ("stated", "inferred")
+        rec.ai_material = bool(codebook.ai_material and rec.primary_tier in ("stated", "inferred")
                                and any(codebook.ai_material.search(s) for s in sentences))
         year = case["pub_year"]
         for cname, spec in codebook.classes.items():
@@ -310,7 +316,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
             avail = since is not None and year is not None and year >= since
             rec.available[cname] = avail
             rec.period_uncertain[cname] = bool(avail and year - since < PERIOD_UNCERTAIN_YEARS)
-            used = rec.tier in ("stated", "inferred")
+            used = rec.primary_tier in ("stated", "inferred")
             rec.action_relevant[cname] = bool(
                 avail and used and any(c in spec["action_relevant_conduct"] for c in conduct))
             hit_span = None
@@ -339,7 +345,7 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
             if spec.get("_review") and any(spec["_review"].search(s) for s in sentences):
                 rec.review.setdefault(cname, "review_cue_in_platform_sentence")
         for hname, h in codebook.harms.items():
-            direct = rec.tier in ("stated", "inferred") and any(
+            direct = rec.primary_tier in ("stated", "inferred") and any(
                 h["_cue"].search(s) and not (h["_exclude"] and h["_exclude"].search(s))
                 and (not h["_require"] or h["_require"].search(s)) for s in sentences)
             rec.harm_direct[hname] = bool(direct)
@@ -350,15 +356,16 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
 
 # ----------------------------------------------------------------- aggregates
 
-def case_tiers(records: Iterable[Record], keep=lambda r: True) -> Dict[str, str]:
-    """Best tier per case. Tiers are ordered; each case lands in exactly one."""
+def case_tiers(records: Iterable[Record], keep=lambda r: True, attr: str = "tier") -> Dict[str, str]:
+    """Best tier per case (attr "tier" = tiers-1 baseline, "primary_tier" = line-wrap). Exclusive per case."""
     rank = {t: i for i, t in enumerate(reversed(TIERS))}
     best: Dict[str, str] = {}
     for r in records:
         if not keep(r):
             continue
-        if r.case_id not in best or rank[r.tier] > rank[best[r.case_id]]:
-            best[r.case_id] = r.tier
+        t = getattr(r, attr)
+        if r.case_id not in best or rank[t] > rank[best[r.case_id]]:
+            best[r.case_id] = t
     return best
 
 

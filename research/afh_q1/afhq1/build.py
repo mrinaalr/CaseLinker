@@ -143,6 +143,7 @@ def inventory(cases: List[dict], records: List[pl.Record], excluded: List[dict],
                                        "status": "primary documented-use count (Decision 1, adopted on validation); "
                                                  "tiers-1 strict row is the original-rule baseline"},
         "tier_definition": "case tier = best record tier (stated > inferred > named_only); tiers are mutually exclusive per case",
+        "headline_reconciliation": headline_reconciliation(strict_lw, strict_t),
         "exclusions": {"platform_case_pairs": dict(sorted(excl_pairs.items())), "distinct_cases": dict(sorted(excl_cases.items()))},
         "labels": {s: sorted({r.platform for r in records if r.status == s}) for s in ("specific", "technology", "ambiguous_alias", "generic")},
         "dates": date_summary(cases, dates),
@@ -203,7 +204,7 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
         row = {}
         for level, attr in LEVELS:
             rs = [r for r in pool if getattr(r, attr)[c]]
-            tiers = pl.case_tiers(rs)
+            tiers = pl.case_tiers(rs, attr="primary_tier")
             row[level] = {
                 "distinct_cases": len({r.case_id for r in rs}),
                 "platform_case_observations": len(rs),
@@ -234,7 +235,7 @@ def temporal_tables(cases: List[dict], records: List[pl.Record]) -> dict:
         n = len(group)
         src = Counter(c["source"] for c in group)
         strict = [c for c in group if any(r.status == "specific" for r in by_case.get(c["id"], []))]
-        used = [c for c in strict if any(r.status == "specific" and r.tier in USED for r in by_case[c["id"]])]
+        used = [c for c in strict if any(r.status == "specific" and r.primary_tier in USED for r in by_case[c["id"]])]
         row = {
             "cases": n, "sources": len(src), "ncmec_cases": src.get("NCMEC", 0),
             "top_source_share": round(src.most_common(1)[0][1] / n, 3) if n else None,
@@ -242,7 +243,7 @@ def temporal_tables(cases: List[dict], records: List[pl.Record]) -> dict:
             "strict_use_documented_cases": len(used),
             "pct_strict_named": round(100 * len(strict) / n, 1) if n else None,
             "pct_use_documented_of_named": round(100 * len(used) / len(strict), 1) if strict else None,
-            "distinct_platforms_use_documented": len({r.platform for c in used for r in by_case[c["id"]] if r.status == "specific" and r.tier in USED}),
+            "distinct_platforms_use_documented": len({r.platform for c in used for r in by_case[c["id"]] if r.status == "specific" and r.primary_tier in USED}),
         }
         for cl in pl.CLASSES:
             rs = [r for c in group for r in by_case.get(c["id"], []) if r.status in ANALYSED_STATUSES]
@@ -335,7 +336,7 @@ def harm_tables(records: List[pl.Record], codebook: pl.Codebook) -> dict:
                           "conceptual; label as such"),
             }
     by_platform = {}
-    used = [r for r in pool if r.tier in USED]
+    used = [r for r in pool if r.primary_tier in USED]
     for p in sorted({r.platform for r in used}):
         rs = [r for r in used if r.platform == p]
         by_platform[p] = {h: len({r.case_id for r in rs if r.harm_direct[h]}) for h in harms}
@@ -357,10 +358,10 @@ def manifest(records: List[pl.Record], codebook: pl.Codebook) -> Tuple[dict, Lis
     entries, cites = {}, []
     for p in sorted({r.platform for r in records if r.status in ANALYSED_STATUSES}):
         rs = [r for r in records if r.platform == p]
-        used = [r for r in rs if r.tier in USED]
+        used = [r for r in rs if r.primary_tier in USED]
         if len({r.case_id for r in used}) < MIN_MANIFEST_CASES:
             continue
-        tiers = pl.case_tiers(rs)
+        tiers = pl.case_tiers(rs, attr="primary_tier")
         conduct = Counter(c for r in used for c in r.conduct)
         row = {
             "status": rs[0].status, "family": rs[0].family,
@@ -406,7 +407,7 @@ def legacy_manifest_check(records: List[pl.Record], texts: Dict[str, str]) -> di
                 cited.append((p, i, cid, v.get("analysis_author")))
     old_ids = sorted({c for _, _, c, _ in cited})
     xw = {m.old_id: m for m in idn.build_crosswalk(ev["records"], old_ids, texts)}
-    tier = {(r.case_id, r.platform): r.tier for r in records}
+    tier = {(r.case_id, r.platform): r.primary_tier for r in records}
     rows, tally = [], Counter()
     for p, i, cid, author in cited:
         cur, how = idn.resolve(cid, xw)
@@ -761,3 +762,33 @@ def uncertain_registry_impact(records: List[pl.Record]) -> dict:
     return {"uncertain_rows": len(rows), "rows": rows,
             "A_cases_resting_on_uncertain_rows_by_class": {c: {"cases": by_class.get(c, 0), "of_A": total_a[c]} for c in pl.CLASSES},
             "manuscript_platform_rows": [f"{x['platform']}:{x['capability']}" for x in rows if x["manuscript_platform"]]}
+
+
+def headline_reconciliation(strict_primary: dict, strict_baseline: dict) -> dict:
+    """Decompose the documented-use headline into its tiers and attach the blind-review evidence
+    for each tier. Co-occurrence (inferred) is reported as such, with its review rate."""
+    off = {"offender_use_stated", "offender_use_via_report"}
+    r3 = _csv("review_round3_tier_variants.csv")
+    r4 = _csv("review_round4_promoted_cases.csv")
+
+    def rate(rows, code_key):
+        c = Counter(r[code_key] for r in rows)
+        n = sum(c.values())
+        k = sum(c[x] for x in off)
+        return {"n": n, "offender_use": k, "release_states_use": c["offender_use_stated"],
+                "via_platform_report": c["offender_use_via_report"], "wilson95": wilson(k, n),
+                "non_use": {x: v for x, v in sorted(c.items()) if x not in off}}
+    return {
+        "headline_cases": strict_primary["cases_stated"] + strict_primary["cases_inferred"],
+        "stated_cases": strict_primary["cases_stated"],
+        "inferred_only_cases_cooccurrence": strict_primary["cases_inferred"],
+        "named_only_cases_not_counted": strict_primary["cases_named_only"],
+        "baseline_headline_cases": strict_baseline["cases_stated"] + strict_baseline["cases_inferred"],
+        "review_stated_tier_random": rate([r for r in r3 if r["stratum"] == "R_stated"], "r3_code"),
+        "review_inferred_tier_random": rate([r for r in r3 if r["stratum"] == "R_inferred"], "r3_code"),
+        "review_promoted_cases_all": rate(r4, "r4_code"),
+        "wording": ("documented platform use: stated in a platform sentence, or platform and offense language "
+                    "co-occurring in one sentence (inferred). Report the two separately; co-occurrence is offender "
+                    "use only at the reviewed rate, and part of it is known through platform reports, not the release narrative."),
+        "reviewer": "blind AI reviewers on masked passages; not human-adjudicated",
+    }

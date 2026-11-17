@@ -295,3 +295,37 @@ def test_latex_tables_compile():
                        + "\n".join(f"\\input{{{t}}}\\par" for t in tables) + "\n\\end{document}\n")
         res = subprocess.run([tex, "-interaction=nonstopmode", "-halt-on-error", "check.tex"], cwd=d, capture_output=True, text=True)
         assert res.returncode == 0, res.stdout[-800:]
+
+
+# --- Hardy review: one tier drives every downstream level ------------------------------
+
+WRAPPED_USE = (HEAD + "\n\nAccording to court documents, the defendant uploaded child sexual abuse material to\n"
+               "Dropbox accounts, investigators said in the affidavit.\n")
+
+
+def test_linewrap_promotion_reaches_downstream_levels():
+    recs, _ = run(WRAPPED_USE, ["Dropbox"])
+    r = recs["Dropbox"]
+    assert r.tier == "named_only" and r.primary_tier == "stated"   # promoted only by the repair
+    assert r.action_relevant["DistributionInfrastructure"]          # B follows the primary tier
+    assert r.instrumental["DistributionInfrastructure"]             # C follows the primary tier
+    assert r.harm_direct["h3_material_distributed"]                 # documented harm follows it too
+
+
+def test_committed_levels_never_rest_on_named_only_primary_tier():
+    import csv
+    with (OUT / "records.csv").open() as f:
+        for row in csv.DictReader(f):
+            if row["tier_linewrap"] == "named_only":
+                assert not any(row[f"{c}.B"] == "1" for c in pl.CLASSES), row["case_id"]
+                assert not any(row[k] == "1" for k in row if k.endswith(".direct")), row["case_id"]
+
+
+def test_manifest_use_documented_matches_primary_tier():
+    man = json.loads((OUT / "manifest.json").read_text())["platforms"]
+    import csv
+    with (OUT / "records.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    for p in ("Kik", "Snapchat", "Dropbox"):
+        want = len({r["case_id"] for r in rows if r["platform"] == p and r["tier_linewrap"] in ("stated", "inferred")})
+        assert man[p]["use_documented_cases"] == want, p

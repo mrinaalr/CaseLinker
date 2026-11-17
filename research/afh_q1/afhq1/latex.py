@@ -57,9 +57,9 @@ def write(out: Path) -> List[Path]:
         ["Any platform label (broad)", num(b["cases"]), num(b["records"])],
         ["Specific named platform (strict)", num(s["cases"]), num(s["records"])],
         [r"\quad stated (primary / baseline)", f"{num(lw['cases_stated'])} / {num(s['cases_stated'])}", f"{num(lw['records_stated'])} / {num(s['records_stated'])}"],
-        [r"\quad inferred only", f"{num(lw['cases_inferred'])} / {num(s['cases_inferred'])}", f"{num(lw['records_inferred'])} / {num(s['records_inferred'])}"],
+        [r"\quad inferred only (co-occurrence)", f"{num(lw['cases_inferred'])} / {num(s['cases_inferred'])}", f"{num(lw['records_inferred'])} / {num(s['records_inferred'])}"],
         [r"\quad named only", f"{num(lw['cases_named_only'])} / {num(s['cases_named_only'])}", f"{num(lw['records_named_only'])} / {num(s['records_named_only'])}"],
-        [r"\textbf{Documented use (primary: line-wrap repair)}", num(lw["cases_stated"] + lw["cases_inferred"]), num(lw["records_stated"] + lw["records_inferred"])],
+        [r"\textbf{Documented use, stated or co-occurring (primary: line-wrap repair)}", num(lw["cases_stated"] + lw["cases_inferred"]), num(lw["records_stated"] + lw["records_inferred"])],
         [r"Documented use (original-rule baseline)", num(s["cases_stated"] + s["cases_inferred"]), num(s["records_stated"] + s["records_inferred"])],
         ["Generic category only", num(d["generic_category_only_cases"]), "--"],
     ], note=f"{d['corpus_cases']} cases, {d['sources']} sources"))
