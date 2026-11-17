@@ -209,6 +209,42 @@ class TestRsoAndPriorConviction(unittest.TestCase):
         self.assertIsNotNone(prev)
         self.assertTrue(prev["has_prior_conviction"])
 
+    # --- #64: wording the phrase list missed, and what it must not count ---------------
+
+    def _prior(self, text, year=None):
+        prev = proc.extract_previous_conviction({"case_text": text, "year": year})
+        return bool(prev and prev["has_prior_conviction"])
+
+    def test_plural_and_words_between_count(self):
+        self.assertTrue(self._prior("Ashcombe has two prior convictions for the same conduct."))
+        self.assertTrue(self._prior("He had two prior felony convictions in state court."))
+        self.assertTrue(self._prior("Thistlewood has a previous federal felony conviction for receipt."))
+
+    def test_supervision_at_the_time_counts(self):
+        self.assertTrue(self._prior("Ashcombe was on parole at the time for an earlier offense."))
+        self.assertTrue(self._prior("The offense happened while on probation for a prior sex offense."))
+        self.assertTrue(self._prior("He was on supervised release when agents searched the home."))
+
+    def test_status_that_requires_a_conviction_counts(self):
+        self.assertTrue(self._prior("He pleaded guilty to possession of a firearm by a convicted felon."))
+        self.assertTrue(self._prior("He was also charged with failure to register as a sex offender."))
+
+    def test_dated_conviction_counts_only_well_before_the_release(self):
+        self.assertTrue(self._prior("Brambleton was convicted in 1996 of indecent assault.", year=2010))
+        self.assertFalse(self._prior("Brambleton was convicted in 2023 of the charges.", year=2024))
+        self.assertFalse(self._prior("Brambleton was convicted in 1996 of indecent assault."))
+
+    def test_this_cases_own_conviction_is_not_prior(self):
+        self.assertFalse(self._prior(
+            "He was sentenced to 20 years in prison following his previous conviction for ten counts."))
+
+    def test_negations_and_hypotheticals_are_not_prior(self):
+        self.assertFalse(self._prior("Ashcombe has no prior convictions."))
+        self.assertFalse(self._prior("He faces 15 years if he has a prior conviction for a sex offense."))
+        self.assertFalse(self._prior("The law sets enhanced penalties for defendants with prior convictions."))
+        self.assertFalse(self._prior("He was held prior to his conviction at trial."))
+        self.assertFalse(self._prior("He was sentenced to five years on probation for the offense."))
+
 
 class TestOfAnchoredPerpAge(unittest.TestCase):
     def test_name_age_of_was_sentenced_keeps_age(self):
