@@ -115,3 +115,17 @@ At record level the comparable figure is 1,953 offender-use records (95% CI 1,69
 3. Optionally, add a Facebook/YouTube boilerplate filter (agency page links, share buttons, "posted on the sheriff's Facebook page") before publication. It accounts for 7 of 8 sampled false promotions. That is a separate rule change and would need its own check.
 
 Unrelated, noted only: running `tests/api` creates an empty `caselinker.db` in a worktree, which makes the `caselinker.db`-dependent extraction tests fail instead of skipping. This behaviour predates this work.
+
+## Addendum: final rule (linewrap-2)
+
+The authors adopted the repair on condition of targeted validation. A blind review covered 45 of the 269 cases promoted under B+, oversampling the 87 social-platform promotions (`config/review_round4_promoted_cases.csv`):
+- **39 of 45 showed offender use:** 14/20 social and 25/25 other.
+- **All 6 misses were agency social-media boilerplate:** a sheriff posting arrest news on its Facebook page, a Facebook/X/YouTube footer, a facebook.com post URL, "mugshots are available on the Attorney General's Twitter page", and a police video embed.
+
+`linewrap-2` refuses a promotion whose earning sentence matches `AGENCY_SOCIAL_BOILERPLATE`. Effect:
+- it blocks 4 of the 6 misses and none of the 39 true promotions;
+- in the earlier record sample, it blocks 1 of 4 false promotions and keeps all 11 true ones;
+- promoted cases fall from 269 to 256, and documented use from 1,526 to **1,513**, now the primary count;
+- weighted precision of the promoted cases is about 96%, with a conservative lower bound of about 80% (strata 14/16 social of 74, 25/25 other of 182).
+
+1,257 remains the original-rule baseline. The published `stated_vs_inferred` field is still `tiers-1`; `stated_vs_inferred_linewrap` carries `tiers-1+linewrap-2`.

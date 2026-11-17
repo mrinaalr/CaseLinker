@@ -32,8 +32,14 @@ python research/afh_q1/run_all.py --verify
 |---|---|---|
 | Corpus | `RUN_IDENTITY.json` `dataset_identity` (sha256 over id, `fp-1` fingerprint, text hash, platforms, topics, source, URL, year of every case) | `60f7bfaa…d06b`, 10,802 cases |
 | Code | `RUN_IDENTITY.json` `git.commit`, `code_sha256` | the commit that generated the outputs (`3f346c670` for the committed set) |
-| Rules | `config/platforms.yaml` `platforms-2` (generated from `config/capability_sources/`), `config/codebook.yaml` `codebook-5`; evidence tiers `tiers-1` and `tiers-1+linewrap-1` | sha256 in `RUN_IDENTITY.json` |
+| Rules | `config/platforms.yaml` `platforms-2` (generated from `config/capability_sources/`), `config/codebook.yaml` `codebook-6`; evidence tiers `tiers-1` (baseline) and `tiers-1+linewrap-2` (primary) | sha256 in `RUN_IDENTITY.json` |
 | Outputs | `RUN_IDENTITY.json` `outputs_sha256` | checked by `--verify` |
+
+Tests (pytest and the repo requirements; corpus-dependent tests skip without `caselinker.db`):
+
+```bash
+DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
+```
 
 A different corpus gives a different `dataset_identity`; the outputs are then a new release, not a reproduction. Someone without the corpus DB can still check the committed numbers reconcile (`pytest tests/research/test_afh_q1_pipeline.py`); the snapshot-dependent tests skip.
 
