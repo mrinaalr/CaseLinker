@@ -633,7 +633,7 @@ CaseLinker/
 | [`src/Processing Layer/README.md`](src/Processing%20Layer/README.md) | Readers, span gate, resolver rules, LLM and student passes, how to run extraction |
 | [`ontology/README.md`](ontology/README.md) | Vocabulary, pins, pools, graph pipeline, w3id, regeneration |
 | [`ontology/docs/SPARQL.md`](ontology/docs/SPARQL.md) | Public SPARQL protocol, named graphs, limits, errors, examples |
-| [`ontology/MAPPING_PLAN.md`](ontology/MAPPING_PLAN.md) | Feature-by-feature mapping to CAC classes, unmappable gaps |
+| [`ontology/MAPPING_PLAN.md`](ontology/MAPPING_PLAN.md) | Feature-to-CAC mapping as implemented, generated from the mapper |
 | [`state_machines/README.md`](state_machines/README.md) | Court-record evidence, trajectories, graphs and releases, AfH theory |
 | [`caselinker_mcp/README.md`](caselinker_mcp/README.md) | MCP setup, transports, keys, graph workflow |
 | [`caselinker_mcp/tool_registry.md`](caselinker_mcp/tool_registry.md) | Every tool, backend, READ vs WRITE, host split |
