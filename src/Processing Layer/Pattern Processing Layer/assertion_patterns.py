@@ -26,7 +26,7 @@ for _p in (_PROCESSING_LAYER / "field_assertions", _PROCESSING_LAYER, _PATTERN_L
 
 import span_gate as sg  # noqa: E402
 
-_spec = importlib.util.spec_from_file_location("pattern_processing", _PATTERN_LAYER / "processing.py")
+_spec = importlib.util.spec_from_file_location("pattern_processing", _PATTERN_LAYER / "pattern_processing.py")
 _pp = importlib.util.module_from_spec(_spec)
 assert _spec.loader
 _spec.loader.exec_module(_pp)

@@ -70,7 +70,7 @@ SENTENCE_LENGTH_RE = re.compile(
 
 # Loose "there might be an age here we didn't extract" detector, used only
 # for the possible_miss stratum. Deliberately broader than the real
-# extractor patterns in processing.py so it over-flags candidates for a
+# extractor patterns in pattern_processing.py so it over-flags candidates for a
 # human to check, rather than trying to be a second extractor.
 AGE_LANGUAGE_RE = re.compile(
     r"\b\d{1,2}\s*[-\s]?year[-\s]old\b|"

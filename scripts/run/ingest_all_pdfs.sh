@@ -51,7 +51,7 @@ fi
 # Recompute locally after ingest, then upload the slim cluster payload.
 export SKIP_PRECOMPUTE_CLUSTERS="${SKIP_PRECOMPUTE_CLUSTERS:-1}"
 
-# Pattern layer modules (ai_extraction_patterns, etc.) live beside processing.py
+# Pattern layer modules (ai_extraction_patterns, etc.) live beside pattern_processing.py
 PATTERN_LAYER="$REPO_ROOT/src/Processing Layer/Pattern Processing Layer"
 export PYTHONPATH="$PATTERN_LAYER:$REPO_ROOT/src/Processing Layer:$REPO_ROOT/src/Ingestion Layer:$REPO_ROOT/src/Storage Layer:$REPO_ROOT/src:$PYTHONPATH"
 

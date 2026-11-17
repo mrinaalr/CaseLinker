@@ -11,7 +11,7 @@ REPO = Path(__file__).resolve().parents[2]
 PROC = REPO / "src" / "Processing Layer"
 PATTERN = PROC / "Pattern Processing Layer"
 AI_PATTERNS = PATTERN / "ai_extraction_patterns.py"
-PROCESSING = PATTERN / "processing.py"
+PROCESSING = PATTERN / "pattern_processing.py"
 NORMALIZE = PROC / "agency_label_normalize.py"
 FEATURES_TO_CAC = REPO / "ontology" / "pipeline" / "features_to_cac.py"
 

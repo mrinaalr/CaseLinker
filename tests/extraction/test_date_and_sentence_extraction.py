@@ -9,7 +9,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 PROC = REPO / "src" / "Processing Layer"
-PATTERN = PROC / "Pattern Processing Layer" / "processing.py"
+PATTERN = PROC / "Pattern Processing Layer" / "pattern_processing.py"
 
 
 def _load_processing():

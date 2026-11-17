@@ -1,7 +1,7 @@
 """
 Regex and thresholds for Gen AI (tool) vs AI-CSAM (offense product) extraction.
 
-Imported by processing.py and audit scripts.
+Imported by pattern_processing.py and audit scripts.
 """
 
 from __future__ import annotations

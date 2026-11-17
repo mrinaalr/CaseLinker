@@ -1,15 +1,15 @@
 # Tests
 
 ```bash
-for f in tests/*/test_*.py; do DATABASE_URL='' .venv/bin/python -m pytest -q "$f" || echo "FAIL $f"; done
+DATABASE_URL='' .venv/bin/python -m pytest -q tests/
 ```
 
-**`DATABASE_URL=''` every time.** A test that loads `run/main.py` runs table DDL against whatever `DATABASE_URL` names, and in a shell with Railway variables that is production Postgres. Run one file per process, as `run_gate` does: a whole-suite run collides on module names.
+**`DATABASE_URL=''` every time.** A test that loads `run/main.py` runs table DDL against whatever `DATABASE_URL` names, and in a shell with Railway variables that is production Postgres. One process runs the whole suite; `run_gate` still runs one file per process. [`extraction/test_module_names_unique.py`](extraction/test_module_names_unique.py) fails if two folders on `sys.path` define the same module name, which is what broke whole-suite runs before.
 
 | Folder | Covers |
 |---|---|
 | [`collection/`](collection/) | Collectors, listing and URL fetchers, robots policy, source routing and batching, release filter, case-id collisions, cross-source dedupe, document identity |
-| [`extraction/`](extraction/) | Field assertions end to end, dates and sentences, topics, CyberTip reporter, prosecution status, platform names, NER places, LLM residue pass, re-resolve |
+| [`extraction/`](extraction/) | Field assertions end to end, module names unique on `sys.path`, dates and sentences, topics, CyberTip reporter, prosecution status, platform names, NER places, LLM residue pass, re-resolve |
 | [`grounding/`](grounding/) | Location and agency grounding, pinned gazetteer and registry, location backfill |
 | [`graphs/`](graphs/) | CAC mapping, SHACL, term resolution, provenance graphs, shared nodes, graph generate, Big Bang pool, cohort SPARQL, PACER JSON-LD, Oxigraph N-Quads |
 | [`storage/`](storage/) | SQLite / Postgres parity, provenance tables, corpus import, provenance sidecar paths |

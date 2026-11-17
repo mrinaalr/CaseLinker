@@ -1015,7 +1015,7 @@ ex:platform/limewire [FileHostingService] (shared singleton)
 | File | Purpose |
 |---|---|
 | `src/Storage Layer/storage_postgres.py` | Table definitions |
-| `src/Processing Layer/Pattern Processing Layer/processing.py` | `extract_features`, `assign_comparison_values`, `extract_topics`, `_PLATFORM_SPECS`, `extract_technology_signals` |
+| `src/Processing Layer/Pattern Processing Layer/pattern_processing.py` | `extract_features`, `assign_comparison_values`, `extract_topics`, `_PLATFORM_SPECS`, `extract_technology_signals` |
 | `src/Storage Layer/case_storage_utils.py` | `_SLIM_EXCLUDED_KEYS` |
 | `src/Processing Layer/ML Processing Layer/semantic_concepts.py` | Semantic concept detection |
 | `src/Processing Layer/merge_processing.py` | Merge-layer thresholds |

@@ -28,7 +28,7 @@ from typing import Any, Dict, List, Optional, Tuple
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 _PROC = _REPO_ROOT / "src" / "Processing Layer"
 _SCRIPTS_RUN = _REPO_ROOT / "scripts" / "run"
-# Processing Layer wrapper only; Pattern Processing Layer must not be on path (shadows processing).
+# Processing Layer wrapper (processing.py) and its siblings.
 if str(_PROC) not in sys.path:
     sys.path.insert(0, str(_PROC))
 if str(_SCRIPTS_RUN) not in sys.path:

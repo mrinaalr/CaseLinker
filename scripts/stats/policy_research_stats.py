@@ -209,7 +209,7 @@ def case_text_lower(raw_blob: Any) -> str:
 # --- 1) CSAM possession + contact -------------------------------------------
 
 # Same pattern as ``extract_severity`` -> ``sexual_abuse`` in
-# ``src/Processing Layer/Pattern Processing Layer/processing.py`` (word-boundary).
+# ``src/Processing Layer/Pattern Processing Layer/pattern_processing.py`` (word-boundary).
 _SEXUAL_ABUSE_CONTACT_RE = re.compile(
     r"\b(rape|raped|raping|sexual\s+assault|sexually\s+assaulted|sexual\s+abuse|sexually\s+abused|molest|molested|molesting)\b",
     re.IGNORECASE,
