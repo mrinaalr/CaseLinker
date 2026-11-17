@@ -47,12 +47,12 @@ Levels nest: A available capability > B documented capability-relevant conduct >
 
 | Class | A | B | I | C | C labels | C families | review candidates |
 |---|---|---|---|---|---|---|---|
-| Anonymity | 1782 (2306) | 432 (479) | 364 (390) | 10 (10) | 3 | 2 | 172 |
-| ContactDiscovery | 1798 (2373) | 480 (542) | 28 (28) | 7 (7) | 4 | 3 | 22 |
-| DistributionInfrastructure | 1898 (2525) | 684 (767) | 410 (452) | 290 (314) | 28 | 7 | 586 |
-| Ephemerality | 926 (1197) | 285 (313) | 147 (147) | 0 (0) | 0 | 0 | 14 |
-| GenerativeSynthesis | 733 (902) | 93 (93) | 53 (53) | 41 (41) | 3 | 3 | 28 |
-| UnmonitoredCommunication | 1729 (2314) | 482 (545) | 391 (411) | 19 (20) | 7 | 3 | 66 |
+| Anonymity | 1782 (2306) | 412 (466) | 338 (370) | 22 (23) | 6 | 4 | 159 |
+| ContactDiscovery | 1798 (2373) | 454 (522) | 30 (30) | 9 (9) | 4 | 3 | 20 |
+| DistributionInfrastructure | 1898 (2525) | 802 (914) | 544 (608) | 437 (487) | 28 | 8 | 413 |
+| Ephemerality | 926 (1197) | 322 (365) | 177 (178) | 0 (0) | 0 | 0 | 20 |
+| GenerativeSynthesis | 733 (902) | 121 (126) | 54 (54) | 19 (19) | 1 | 1 | 47 |
+| UnmonitoredCommunication | 1729 (2314) | 459 (532) | 360 (380) | 22 (24) | 8 | 3 | 62 |
 
 Each level is a subset of the one before. C counts what press releases spell out; releases rarely describe mechanisms, so a low C is a property of the record, not evidence that a capability played no role.
 
@@ -64,19 +64,19 @@ Publication year, not offense year. Strict = specific named platform.
 
 | era | cases | sources | ncmec_cases | strict_named_platform_cases | strict_use_documented_cases | pct_strict_named | pct_use_documented_of_named | distinct_platforms_use_documented | Anonymity.C | Ephemerality.C | ContactDiscovery.C | UnmonitoredCommunication.C | DistributionInfrastructure.C | GenerativeSynthesis.C |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2002-2014 | 947 | 24 | 4 | 70 | 33 | 7.4 | 47.1 | 9 | 0 | 0 | 0 | 0 | 8 | 0 |
-| 2015-2019 | 608 | 32 | 3 | 41 | 23 | 6.7 | 56.1 | 16 | 0 | 0 | 1 | 1 | 7 | 0 |
-| 2020-2022 | 2111 | 44 | 626 | 380 | 249 | 18.0 | 65.5 | 21 | 2 | 0 | 1 | 3 | 54 | 0 |
-| 2023-2026 | 7135 | 73 | 2871 | 1371 | 952 | 19.2 | 69.4 | 32 | 8 | 0 | 5 | 15 | 221 | 41 |
+| 2002-2014 | 947 | 24 | 4 | 70 | 33 | 7.4 | 47.1 | 9 | 0 | 0 | 0 | 0 | 11 | 0 |
+| 2015-2019 | 608 | 32 | 3 | 41 | 23 | 6.7 | 56.1 | 16 | 4 | 0 | 1 | 1 | 8 | 0 |
+| 2020-2022 | 2111 | 44 | 626 | 380 | 249 | 18.0 | 65.5 | 21 | 3 | 0 | 1 | 5 | 85 | 0 |
+| 2023-2026 | 7135 | 73 | 2871 | 1371 | 952 | 19.2 | 69.4 | 32 | 15 | 0 | 7 | 16 | 333 | 19 |
 
 **Excluding NCMEC**
 
 | era | cases | sources | ncmec_cases | strict_named_platform_cases | strict_use_documented_cases | pct_strict_named | pct_use_documented_of_named | distinct_platforms_use_documented | Anonymity.C | Ephemerality.C | ContactDiscovery.C | UnmonitoredCommunication.C | DistributionInfrastructure.C | GenerativeSynthesis.C |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2002-2014 | 943 | 23 | 0 | 70 | 33 | 7.4 | 47.1 | 9 | 0 | 0 | 0 | 0 | 8 | 0 |
-| 2015-2019 | 605 | 31 | 0 | 40 | 23 | 6.6 | 57.5 | 16 | 0 | 0 | 1 | 1 | 7 | 0 |
-| 2020-2022 | 1485 | 43 | 0 | 238 | 158 | 16.0 | 66.4 | 21 | 1 | 0 | 1 | 3 | 38 | 0 |
-| 2023-2026 | 4264 | 72 | 0 | 757 | 556 | 17.8 | 73.4 | 29 | 4 | 0 | 4 | 9 | 136 | 29 |
+| 2002-2014 | 943 | 23 | 0 | 70 | 33 | 7.4 | 47.1 | 9 | 0 | 0 | 0 | 0 | 11 | 0 |
+| 2015-2019 | 605 | 31 | 0 | 40 | 23 | 6.6 | 57.5 | 16 | 4 | 0 | 1 | 1 | 8 | 0 |
+| 2020-2022 | 1485 | 43 | 0 | 238 | 158 | 16.0 | 66.4 | 21 | 2 | 0 | 1 | 5 | 55 | 0 |
+| 2023-2026 | 4264 | 72 | 0 | 757 | 556 | 17.8 | 73.4 | 29 | 8 | 0 | 6 | 9 | 199 | 15 |
 
 **Within DOJ Safe Childhood (annual)**
 
@@ -127,12 +127,12 @@ recurs = at least 20 cases, 3+ platform families with 2+ cases each, 2+ publicat
 
 | Class | A cases / families / eras | B cases / families / eras | I cases / families / eras | C cases / families / eras | recurs at |
 |---|---|---|---|---|---|
-| Anonymity | 1782 / 13 / 4 | 432 / 7 / 4 | 364 / 5 / 4 | 10 / 2 / 2 | A, B, I |
-| ContactDiscovery | 1798 / 11 / 4 | 480 / 7 / 4 | 28 / 6 / 3 | 7 / 2 / 1 | A, B, I |
-| DistributionInfrastructure | 1898 / 11 / 4 | 684 / 8 / 4 | 410 / 8 / 4 | 290 / 7 / 4 | A, B, I, C |
-| Ephemerality | 926 / 3 / 3 | 285 / 3 / 3 | 147 / 1 / 2 | 0 / 0 / 0 | A, B |
-| GenerativeSynthesis | 733 / 3 / 1 | 93 / 3 / 1 | 53 / 1 / 1 | 41 / 1 / 1 | none |
-| UnmonitoredCommunication | 1729 / 12 / 4 | 482 / 7 / 4 | 391 / 4 / 4 | 19 / 2 / 2 | A, B, I |
+| Anonymity | 1782 / 13 / 4 | 412 / 9 / 4 | 338 / 8 / 4 | 22 / 3 / 3 | A, B, I, C |
+| ContactDiscovery | 1798 / 11 / 4 | 454 / 7 / 4 | 30 / 6 / 3 | 9 / 2 / 1 | A, B, I |
+| DistributionInfrastructure | 1898 / 11 / 4 | 802 / 9 / 4 | 544 / 9 / 4 | 437 / 6 / 4 | A, B, I, C |
+| Ephemerality | 926 / 3 / 3 | 322 / 3 / 3 | 177 / 1 / 2 | 0 / 0 / 0 | A, B |
+| GenerativeSynthesis | 733 / 3 / 1 | 121 / 3 / 1 | 54 / 1 / 1 | 19 / 1 / 1 | none |
+| UnmonitoredCommunication | 1729 / 12 / 4 | 459 / 9 / 4 | 360 / 4 / 4 | 22 / 2 / 2 | A, B, I |
 
 Report the strongest level at which a class recurs; absence at C reflects what releases spell out.
 
@@ -148,89 +148,89 @@ Documented harm (direct / case-level) by class and level; * marks a potential pa
 
 | Class | cases | h1_groomed_toward_in_person | h2_coerced_self_generated | h3_material_distributed | h4_sextorted | h6_likeness_synthesized |
 |---|---|---|---|---|---|---|
-| Anonymity | 432 | 2 / 88* | 3 / 31* | 66 / 281 | 8 / 32* | 0 / 3 |
-| ContactDiscovery | 480 | 2 / 106* | 3 / 36 | 73 / 313 | 10 / 38 | 0 / 4 |
-| DistributionInfrastructure | 684 | 0 / 99 | 0 / 11 | 531 / 637* | 3 / 18 | 0 / 9 |
-| Ephemerality | 285 | 1 / 64 | 3 / 30* | 37 / 171 | 9 / 26* | 0 / 4 |
-| GenerativeSynthesis | 93 | 0 / 22 | 1 / 5 | 15 / 62 | 1 / 3 | 38 / 51* |
-| UnmonitoredCommunication | 482 | 2 / 106* | 3 / 36* | 73 / 312 | 10 / 40* | 0 / 4 |
+| Anonymity | 412 | 4 / 86* | 8 / 31* | 92 / 253 | 18 / 36* | 1 / 7 |
+| ContactDiscovery | 454 | 4 / 103* | 9 / 36 | 97 / 280 | 21 / 42 | 1 / 9 |
+| DistributionInfrastructure | 802 | 0 / 121 | 1 / 13 | 651 / 730* | 4 / 19 | 0 / 15 |
+| Ephemerality | 322 | 3 / 72 | 10 / 34* | 75 / 199 | 13 / 28* | 0 / 8 |
+| GenerativeSynthesis | 121 | 1 / 26 | 3 / 6 | 37 / 84 | 1 / 5 | 19 / 56* |
+| UnmonitoredCommunication | 459 | 4 / 103* | 9 / 36* | 101 / 282 | 23 / 44* | 1 / 9 |
 
 **I_inferred_facilitation**
 
 | Class | cases | h1_groomed_toward_in_person | h2_coerced_self_generated | h3_material_distributed | h4_sextorted | h6_likeness_synthesized |
 |---|---|---|---|---|---|---|
-| Anonymity | 364 | 2 / 75* | 3 / 25* | 62 / 237 | 6 / 20* | 0 / 2 |
-| ContactDiscovery | 28 | 0 / 9* | 0 / 4 | 1 / 15 | 0 / 2 | 0 / 0 |
-| DistributionInfrastructure | 410 | 0 / 65 | 0 / 10 | 348 / 396* | 2 / 11 | 0 / 7 |
-| Ephemerality | 147 | 1 / 28 | 3 / 20* | 16 / 76 | 2 / 12* | 0 / 1 |
-| GenerativeSynthesis | 53 | 0 / 15 | 0 / 1 | 5 / 34 | 0 / 0 | 38 / 51* |
-| UnmonitoredCommunication | 391 | 2 / 79* | 3 / 25* | 64 / 256 | 3 / 21* | 0 / 2 |
+| Anonymity | 338 | 4 / 71* | 8 / 25* | 81 / 205 | 13 / 24* | 1 / 5 |
+| ContactDiscovery | 30 | 0 / 9* | 0 / 4 | 3 / 18 | 0 / 1 | 1 / 1 |
+| DistributionInfrastructure | 544 | 0 / 91 | 0 / 11 | 497 / 523* | 3 / 13 | 0 / 12 |
+| Ephemerality | 177 | 3 / 36 | 10 / 23* | 38 / 98 | 4 / 13* | 0 / 3 |
+| GenerativeSynthesis | 54 | 0 / 16 | 0 / 1 | 13 / 33 | 0 / 1 | 19 / 54* |
+| UnmonitoredCommunication | 360 | 4 / 74* | 8 / 25* | 78 / 220 | 10 / 22* | 1 / 6 |
 
 **C_explicit_instrumental_use**
 
 | Class | cases | h1_groomed_toward_in_person | h2_coerced_self_generated | h3_material_distributed | h4_sextorted | h6_likeness_synthesized |
 |---|---|---|---|---|---|---|
-| Anonymity | 10 | 0 / 5* | 0 / 0* | 1 / 5 | 3 / 3* | 0 / 0 |
-| ContactDiscovery | 7 | 0 / 4* | 0 / 1 | 0 / 2 | 0 / 1 | 0 / 0 |
-| DistributionInfrastructure | 290 | 0 / 47 | 0 / 5 | 280 / 288* | 2 / 7 | 0 / 6 |
+| Anonymity | 22 | 0 / 5* | 1 / 3* | 5 / 14 | 6 / 8* | 0 / 0 |
+| ContactDiscovery | 9 | 0 / 4* | 0 / 1 | 0 / 4 | 0 / 1 | 0 / 0 |
+| DistributionInfrastructure | 437 | 0 / 75 | 0 / 7 | 431 / 434* | 3 / 7 | 0 / 10 |
 | Ephemerality | 0 | 0 / 0 | 0 / 0* | 0 / 0 | 0 / 0* | 0 / 0 |
-| GenerativeSynthesis | 41 | 0 / 13 | 0 / 1 | 5 / 29 | 0 / 0 | 37 / 39* |
-| UnmonitoredCommunication | 19 | 0 / 5* | 0 / 1* | 4 / 15 | 0 / 1* | 0 / 0 |
+| GenerativeSynthesis | 19 | 0 / 7 | 0 / 0 | 9 / 13 | 0 / 1 | 19 / 19* |
+| UnmonitoredCommunication | 22 | 0 / 6* | 0 / 1* | 9 / 19 | 1 / 1* | 0 / 1 |
 
 AfH psi(a) pathways:
 
 | Class | Harm | pathway open (B cases) | doc. case-level | B | doc. direct | B | | I | | C | label |
 |---|---|---|---|---|---|---|---|
-| Anonymity | h1_groomed_toward_in_person | 432 | 88 | 2 | 2 | 0 | documented in cases where the pathway is open |
-| Anonymity | h2_coerced_self_generated | 432 | 31 | 3 | 3 | 0 | documented example available |
-| Anonymity | h4_sextorted | 432 | 32 | 8 | 6 | 3 | documented example available |
-| ContactDiscovery | h1_groomed_toward_in_person | 480 | 106 | 2 | 0 | 0 | documented in cases where the pathway is open |
-| DistributionInfrastructure | h3_material_distributed | 684 | 637 | 531 | 348 | 280 | documented example available |
-| Ephemerality | h2_coerced_self_generated | 285 | 30 | 3 | 3 | 0 | documented example available |
-| Ephemerality | h4_sextorted | 285 | 26 | 9 | 2 | 0 | documented in cases where the pathway is open |
-| GenerativeSynthesis | h6_likeness_synthesized | 93 | 51 | 38 | 38 | 37 | documented example available |
-| UnmonitoredCommunication | h1_groomed_toward_in_person | 482 | 106 | 2 | 2 | 0 | documented in cases where the pathway is open |
-| UnmonitoredCommunication | h2_coerced_self_generated | 482 | 36 | 3 | 3 | 0 | documented example available |
-| UnmonitoredCommunication | h4_sextorted | 482 | 40 | 10 | 3 | 0 | documented example available |
+| Anonymity | h1_groomed_toward_in_person | 412 | 86 | 4 | 4 | 0 | documented example available |
+| Anonymity | h2_coerced_self_generated | 412 | 31 | 8 | 8 | 1 | documented example available |
+| Anonymity | h4_sextorted | 412 | 36 | 18 | 13 | 6 | documented example available |
+| ContactDiscovery | h1_groomed_toward_in_person | 454 | 103 | 4 | 0 | 0 | documented in cases where the pathway is open |
+| DistributionInfrastructure | h3_material_distributed | 802 | 730 | 651 | 497 | 431 | documented example available |
+| Ephemerality | h2_coerced_self_generated | 322 | 34 | 10 | 10 | 0 | documented example available |
+| Ephemerality | h4_sextorted | 322 | 28 | 13 | 4 | 0 | documented example available |
+| GenerativeSynthesis | h6_likeness_synthesized | 121 | 56 | 19 | 19 | 19 | documented example available |
+| UnmonitoredCommunication | h1_groomed_toward_in_person | 459 | 103 | 4 | 4 | 0 | documented example available |
+| UnmonitoredCommunication | h2_coerced_self_generated | 459 | 36 | 9 | 8 | 0 | documented example available |
+| UnmonitoredCommunication | h4_sextorted | 459 | 44 | 23 | 10 | 1 | documented example available |
 
 ## F. Manifest
 
-Platforms with at least 3 use-documented cases. Citation check: {'ok': 158}
+Platforms with at least 3 use-documented cases. Citation check: {'ok': 185}
 
 | Platform | family | cases | use-documented | years | capabilities (since) | Anonym A/B/I/C | Epheme A/B/I/C | Contac A/B/I/C | Unmoni A/B/I/C | Distri A/B/I/C | Genera A/B/I/C |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Kik | messaging | 561 | 409 | 2014-2026 | anonymity 2010, contact_discovery 2014, distribution_infrastructure 2011, unmonitored_communication 2010 | 561/171/171/2 | 0/0/0/0 | 561/171/0/0 | 561/171/171/12 | 561/252/109/109 | 0/0/0/0 |
-| Snapchat | messaging | 417 | 377 | 2019-2026 | anonymity 2011, contact_discovery 2011, distribution_infrastructure 2013, ephemerality 2011, generative_synthesis 2023, unmonitored_communication 2011 | 417/120/120/5 | 417/144/144/0 | 417/120/4/4 | 417/120/120/1 | 417/142/48/48 | 332/31/1/1 |
-| Facebook | social | 318 | 132 | 2011-2026 | contact_discovery 2008, distribution_infrastructure 2006, ephemerality 2017, generative_synthesis 2023, unmonitored_communication 2008 | 0/0/0/0 | 293/50/0/0 | 318/55/1/1 | 318/55/0/0 | 318/63/63/20 | 223/4/0/0 |
-| Discord | messaging | 129 | 70 | 2021-2026 | anonymity 2015, contact_discovery 2019, distribution_infrastructure 2015, unmonitored_communication 2015 | 129/28/28/0 | 0/0/0/0 | 128/28/0/0 | 129/28/28/1 | 129/40/40/12 | 0/0/0/0 |
-| Dropbox | file_hosting | 147 | 69 | 2019-2026 | anonymity 2008, distribution_infrastructure 2008 | 147/1/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 147/60/34/34 | 0/0/0/0 |
-| Instagram | social | 151 | 66 | 2021-2026 | anonymity 2010, contact_discovery 2010, distribution_infrastructure 2010, ephemerality 2016, generative_synthesis 2023, unmonitored_communication 2013 | 151/29/3/3 | 151/33/0/0 | 151/29/0/0 | 151/29/1/1 | 151/27/27/6 | 113/4/1/1 |
-| Gen AI | ai | 91 | 56 | 2023-2026 | anonymity 2018, contact_discovery 2022, generative_synthesis 2017 | 91/0/0/0 | 0/0/0/0 | 91/0/0/0 | 0/0/0/0 | 0/0/0/0 | 91/51/51/39 |
-| Telegram | messaging | 83 | 42 | 2022-2026 | anonymity 2014, contact_discovery 2014, distribution_infrastructure 2013, ephemerality 2013, unmonitored_communication 2013 | 83/23/23/0 | 83/25/0/0 | 83/23/0/0 | 83/23/23/2 | 83/21/6/6 | 0/0/0/0 |
-| WhatsApp | messaging | 58 | 41 | 2017-2026 | anonymity 2026, contact_discovery 2023, distribution_infrastructure 2011, ephemerality 2020, generative_synthesis 2023, unmonitored_communication 2009 | 23/16/0/0 | 56/28/0/0 | 49/26/0/0 | 58/27/27/0 | 58/9/4/4 | 49/1/0/0 |
-| Twitter / X | social | 107 | 34 | 2011-2026 | anonymity 2006, contact_discovery 2010, distribution_infrastructure 2006, ephemerality 2020, generative_synthesis 2024, unmonitored_communication 2006 | 107/7/0/0 | 99/6/0/0 | 107/7/0/0 | 107/7/2/2 | 107/23/23/12 | 55/2/0/0 |
-| BitTorrent | p2p | 36 | 29 | 2021-2026 | anonymity 2001, contact_discovery 2001, distribution_infrastructure 2001 | 36/1/1/0 | 0/0/0/0 | 36/1/0/0 | 0/0/0/0 | 36/24/24/18 | 0/0/0/0 |
-| Reddit | social | 32 | 22 | 2023-2026 | anonymity 2005, contact_discovery 2005, distribution_infrastructure 2005, unmonitored_communication 2005 | 32/5/5/0 | 0/0/0/0 | 32/5/1/1 | 32/5/0/0 | 32/13/13/2 | 0/0/0/0 |
-| Google Drive | file_hosting | 54 | 21 | 2021-2025 | anonymity 2012, distribution_infrastructure 2012 | 53/0/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 53/20/8/8 | 0/0/0/0 |
-| Facebook Messenger | messaging | 45 | 20 | 2019-2026 | anonymity 2015, contact_discovery 2011, distribution_infrastructure 2011, ephemerality 2016, generative_synthesis 2023, unmonitored_communication 2011 | 45/10/0/0 | 45/11/0/0 | 45/10/0/0 | 45/10/10/0 | 45/6/3/3 | 28/0/0/0 |
-| Skype | messaging | 30 | 19 | 2013-2026 | anonymity 2003, contact_discovery 2003, distribution_infrastructure 2003, unmonitored_communication 2003 | 30/10/10/0 | 0/0/0/0 | 30/10/0/0 | 30/10/10/0 | 30/4/2/2 | 0/0/0/0 |
-| Webcam platform | video | 49 | 18 | 2007-2025 | anonymity 1996, contact_discovery 1996, distribution_infrastructure 1996, unmonitored_communication 1996 | 49/8/0/0 | 0/0/0/0 | 49/8/0/0 | 49/8/0/0 | 49/3/3/1 | 0/0/0/0 |
-| Mega.nz | file_hosting | 38 | 15 | 2022-2026 | anonymity 2013, distribution_infrastructure 2013, unmonitored_communication 2015 | 38/0/0/0 | 0/0/0/0 | 0/0/0/0 | 38/0/0/0 | 38/12/3/3 | 0/0/0/0 |
-| Omegle | anonymous_chat | 19 | 12 | 2022-2026 | anonymity 2009, contact_discovery 2009, unmonitored_communication 2009 | 19/7/7/0 | 0/0/0/0 | 19/7/7/0 | 19/7/7/0 | 0/0/0/0 | 0/0/0/0 |
-| Whisper | anonymous_chat | 17 | 10 | 2015-2024 | anonymity 2012, contact_discovery 2012, distribution_infrastructure 2012, unmonitored_communication 2013 | 17/8/8/0 | 0/0/0/0 | 17/8/0/0 | 17/8/1/1 | 17/0/0/0 | 0/0/0/0 |
-| MeWe | social | 10 | 9 | 2021-2026 | anonymity 2016, contact_discovery 2016, distribution_infrastructure 2016, unmonitored_communication 2016 | 10/2/0/0 | 0/0/0/0 | 10/2/0/0 | 10/2/0/0 | 10/7/7/1 | 0/0/0/0 |
-| Tumblr | social | 20 | 9 | 2019-2025 | anonymity 2007, contact_discovery 2007, distribution_infrastructure 2007, unmonitored_communication 2015 | 20/1/0/0 | 0/0/0/0 | 20/1/0/0 | 20/1/0/0 | 20/6/6/4 | 0/0/0/0 |
-| Wickr | messaging | 11 | 9 | 2023-2026 | anonymity 2012, contact_discovery 2012, distribution_infrastructure 2012, ephemerality 2012, unmonitored_communication 2012 | 11/3/3/0 | 11/3/3/0 | 11/3/0/0 | 11/3/3/0 | 11/4/4/4 | 0/0/0/0 |
-| TikTok | social | 29 | 8 | 2023-2026 | anonymity 2016, contact_discovery 2016, distribution_infrastructure 2016, ephemerality 2022, generative_synthesis 2025, unmonitored_communication 2016 | 29/8/0/0 | 29/8/0/0 | 29/8/0/0 | 29/8/0/0 | 29/0/0/0 | 10/0/0/0 |
+| Kik | messaging | 561 | 409 | 2014-2026 | anonymity 2010, contact_discovery 2014, distribution_infrastructure 2011, unmonitored_communication 2010 | 561/136/136/5 | 0/0/0/0 | 561/136/0/0 | 561/136/136/12 | 561/307/181/181 | 0/0/0/0 |
+| Snapchat | messaging | 417 | 377 | 2019-2026 | anonymity 2011, contact_discovery 2011, distribution_infrastructure 2013, ephemerality 2011, generative_synthesis 2023, unmonitored_communication 2011 | 417/127/127/10 | 417/175/175/0 | 417/127/5/5 | 417/127/127/2 | 417/192/78/78 | 332/51/0/0 |
+| Facebook | social | 318 | 132 | 2011-2026 | contact_discovery 2008, distribution_infrastructure 2006, ephemerality 2017, generative_synthesis 2023, unmonitored_communication 2008 | 0/0/0/0 | 293/60/0/0 | 318/58/2/2 | 318/58/1/1 | 318/71/71/38 | 223/8/0/0 |
+| Discord | messaging | 129 | 70 | 2021-2026 | anonymity 2015, contact_discovery 2019, distribution_infrastructure 2015, unmonitored_communication 2015 | 129/30/30/0 | 0/0/0/0 | 128/30/0/0 | 129/30/30/2 | 129/45/45/19 | 0/0/0/0 |
+| Dropbox | file_hosting | 147 | 69 | 2019-2026 | anonymity 2008, distribution_infrastructure 2008 | 147/2/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 147/61/38/38 | 0/0/0/0 |
+| Instagram | social | 151 | 66 | 2021-2026 | anonymity 2010, contact_discovery 2010, distribution_infrastructure 2010, ephemerality 2016, generative_synthesis 2023, unmonitored_communication 2013 | 151/35/3/3 | 151/43/0/0 | 151/35/0/0 | 151/35/2/2 | 151/31/31/12 | 113/7/0/0 |
+| Gen AI | ai | 91 | 56 | 2023-2026 | anonymity 2018, contact_discovery 2022, generative_synthesis 2017 | 91/0/0/0 | 0/0/0/0 | 91/0/0/0 | 0/0/0/0 | 0/0/0/0 | 91/54/54/19 |
+| Telegram | messaging | 83 | 42 | 2022-2026 | anonymity 2014, contact_discovery 2014, distribution_infrastructure 2013, ephemerality 2013, unmonitored_communication 2013 | 83/17/17/0 | 83/24/0/0 | 83/17/0/0 | 83/17/17/2 | 83/21/10/10 | 0/0/0/0 |
+| WhatsApp | messaging | 58 | 41 | 2017-2026 | anonymity 2026, contact_discovery 2023, distribution_infrastructure 2011, ephemerality 2020, generative_synthesis 2023, unmonitored_communication 2009 | 23/16/0/0 | 56/28/0/0 | 49/24/0/0 | 58/25/25/0 | 58/13/9/9 | 49/3/0/0 |
+| Twitter / X | social | 107 | 34 | 2011-2026 | anonymity 2006, contact_discovery 2010, distribution_infrastructure 2006, ephemerality 2020, generative_synthesis 2024, unmonitored_communication 2006 | 107/7/0/0 | 99/7/0/0 | 107/7/0/0 | 107/7/2/2 | 107/26/26/15 | 55/2/0/0 |
+| BitTorrent | p2p | 36 | 29 | 2021-2026 | anonymity 2001, contact_discovery 2001, distribution_infrastructure 2001 | 36/0/0/0 | 0/0/0/0 | 36/0/0/0 | 0/0/0/0 | 36/25/25/20 | 0/0/0/0 |
+| Reddit | social | 32 | 22 | 2023-2026 | anonymity 2005, contact_discovery 2005, distribution_infrastructure 2005, unmonitored_communication 2005 | 32/8/8/1 | 0/0/0/0 | 32/8/1/1 | 32/8/0/0 | 32/16/16/7 | 0/0/0/0 |
+| Google Drive | file_hosting | 54 | 21 | 2021-2025 | anonymity 2012, distribution_infrastructure 2012 | 53/0/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 53/21/8/8 | 0/0/0/0 |
+| Facebook Messenger | messaging | 45 | 20 | 2019-2026 | anonymity 2015, contact_discovery 2011, distribution_infrastructure 2011, ephemerality 2016, generative_synthesis 2023, unmonitored_communication 2011 | 45/11/0/0 | 45/12/0/0 | 45/11/0/0 | 45/11/11/0 | 45/7/6/6 | 28/0/0/0 |
+| Skype | messaging | 30 | 19 | 2013-2026 | anonymity 2003, contact_discovery 2003, distribution_infrastructure 2003, unmonitored_communication 2003 | 30/12/12/0 | 0/0/0/0 | 30/12/0/0 | 30/12/12/0 | 30/6/3/3 | 0/0/0/0 |
+| Webcam platform | video | 49 | 18 | 2007-2025 | anonymity 1996, contact_discovery 1996, distribution_infrastructure 1996, unmonitored_communication 1996 | 49/11/3/3 | 0/0/0/0 | 49/11/0/0 | 49/11/0/0 | 49/2/2/0 | 0/0/0/0 |
+| Mega.nz | file_hosting | 38 | 15 | 2022-2026 | anonymity 2013, distribution_infrastructure 2013, unmonitored_communication 2015 | 38/4/4/0 | 0/0/0/0 | 0/0/0/0 | 38/4/0/0 | 38/12/6/6 | 0/0/0/0 |
+| Omegle | anonymous_chat | 19 | 12 | 2022-2026 | anonymity 2009, contact_discovery 2009, unmonitored_communication 2009 | 19/6/6/0 | 0/0/0/0 | 19/6/6/0 | 19/6/6/0 | 0/0/0/0 | 0/0/0/0 |
+| Whisper | anonymous_chat | 17 | 10 | 2015-2024 | anonymity 2012, contact_discovery 2012, distribution_infrastructure 2012, unmonitored_communication 2013 | 17/8/8/1 | 0/0/0/0 | 17/8/0/0 | 17/8/0/0 | 17/2/2/1 | 0/0/0/0 |
+| MeWe | social | 10 | 9 | 2021-2026 | anonymity 2016, contact_discovery 2016, distribution_infrastructure 2016, unmonitored_communication 2016 | 10/2/0/0 | 0/0/0/0 | 10/2/0/0 | 10/2/0/0 | 10/7/7/3 | 0/0/0/0 |
+| Tumblr | social | 20 | 9 | 2019-2025 | anonymity 2007, contact_discovery 2007, distribution_infrastructure 2007, unmonitored_communication 2015 | 20/1/0/0 | 0/0/0/0 | 20/1/0/0 | 20/1/0/0 | 20/9/9/6 | 0/0/0/0 |
+| Wickr | messaging | 11 | 9 | 2023-2026 | anonymity 2012, contact_discovery 2012, distribution_infrastructure 2012, ephemerality 2012, unmonitored_communication 2012 | 11/2/2/0 | 11/3/3/0 | 11/2/0/0 | 11/2/2/0 | 11/5/5/5 | 0/0/0/0 |
+| TikTok | social | 29 | 8 | 2023-2026 | anonymity 2016, contact_discovery 2016, distribution_infrastructure 2016, ephemerality 2022, generative_synthesis 2025, unmonitored_communication 2016 | 29/7/0/0 | 29/8/0/0 | 29/7/0/0 | 29/7/0/0 | 29/0/0/0 | 10/1/0/0 |
 | Cash App | payment | 20 | 7 | 2024-2026 | anonymity 2013, contact_discovery 2015, unmonitored_communication 2013 | 20/1/1/0 | 0/0/0/0 | 20/1/0/0 | 20/1/0/0 | 0/0/0/0 | 0/0/0/0 |
-| Craigslist | classifieds | 15 | 7 | 2007-2022 | anonymity 1995, contact_discovery 1995, distribution_infrastructure 1995, unmonitored_communication 1995 | 15/4/4/0 | 0/0/0/0 | 15/4/4/0 | 15/4/0/0 | 15/2/2/0 | 0/0/0/0 |
-| IRC | messaging | 15 | 7 | 2002-2010 | anonymity 1988, contact_discovery 1988, distribution_infrastructure 1988, unmonitored_communication 1988 | 15/1/1/0 | 0/0/0/0 | 15/1/0/0 | 15/1/0/0 | 15/6/6/4 | 0/0/0/0 |
-| iCloud | file_hosting | 18 | 7 | 2020-2026 | anonymity 2021, distribution_infrastructure 2012 | 16/0/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 18/4/2/2 | 0/0/0/0 |
+| Craigslist | classifieds | 15 | 7 | 2007-2022 | anonymity 1995, contact_discovery 1995, distribution_infrastructure 1995, unmonitored_communication 1995 | 15/5/5/0 | 0/0/0/0 | 15/5/5/0 | 15/5/1/1 | 15/2/2/0 | 0/0/0/0 |
+| IRC | messaging | 15 | 7 | 2002-2010 | anonymity 1988, contact_discovery 1988, distribution_infrastructure 1988, unmonitored_communication 1988 | 15/1/1/0 | 0/0/0/0 | 15/1/0/0 | 15/1/0/0 | 15/6/6/6 | 0/0/0/0 |
+| iCloud | file_hosting | 18 | 7 | 2020-2026 | anonymity 2021, distribution_infrastructure 2012 | 16/1/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 18/5/2/2 | 0/0/0/0 |
 | Grindr | dating | 14 | 6 | 2023-2026 | anonymity 2009, contact_discovery 2009, distribution_infrastructure 2009, ephemerality 2019, unmonitored_communication 2009 | 14/5/0/0 | 13/5/0/0 | 14/5/5/0 | 14/5/5/0 | 14/1/1/1 | 0/0/0/0 |
-| Tor | anonymization | 10 | 6 | 2017-2026 | anonymity 2002, distribution_infrastructure 2004, unmonitored_communication 2002 | 10/1/1/0 | 0/0/0/0 | 0/0/0/0 | 10/1/0/0 | 10/3/2/2 | 0/0/0/0 |
-| YouTube | video | 19 | 5 | 2017-2025 | anonymity 2005, contact_discovery 2005, distribution_infrastructure 2005, unmonitored_communication 2017 | 19/3/0/0 | 0/0/0/0 | 19/3/0/0 | 18/3/0/0 | 19/2/2/1 | 0/0/0/0 |
-| MySpace | social | 3 | 3 | 2007-2009 | anonymity 2003, contact_discovery 2003, distribution_infrastructure 2003, unmonitored_communication 2003 | 3/0/0/0 | 0/0/0/0 | 3/0/0/0 | 3/0/0/0 | 3/1/1/0 | 0/0/0/0 |
-| OneDrive | file_hosting | 3 | 3 | 2024-2025 | anonymity 2007, distribution_infrastructure 2007 | 3/0/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 3/2/1/1 | 0/0/0/0 |
+| Tor | anonymization | 10 | 6 | 2017-2026 | anonymity 2002, distribution_infrastructure 2004, unmonitored_communication 2002 | 10/3/3/0 | 0/0/0/0 | 0/0/0/0 | 10/3/0/0 | 10/5/4/4 | 0/0/0/0 |
+| YouTube | video | 19 | 5 | 2017-2025 | anonymity 2005, contact_discovery 2005, distribution_infrastructure 2005, unmonitored_communication 2017 | 19/1/0/0 | 0/0/0/0 | 19/1/0/0 | 18/1/0/0 | 19/4/4/1 | 0/0/0/0 |
+| MySpace | social | 3 | 3 | 2007-2009 | anonymity 2003, contact_discovery 2003, distribution_infrastructure 2003, unmonitored_communication 2003 | 3/1/0/0 | 0/0/0/0 | 3/1/0/0 | 3/1/0/0 | 3/1/1/0 | 0/0/0/0 |
+| OneDrive | file_hosting | 3 | 3 | 2024-2025 | anonymity 2007, distribution_infrastructure 2007 | 3/0/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 3/2/2/2 | 0/0/0/0 |
 | Roblox | game | 7 | 3 | 2025-2026 | anonymity 2006, contact_discovery 2006, distribution_infrastructure 2009, unmonitored_communication 2006 | 7/2/2/0 | 0/0/0/0 | 7/2/2/0 | 7/2/0/0 | 7/0/0/0 | 0/0/0/0 |
 | Twitch | video | 4 | 3 | 2019-2025 | anonymity 2007, contact_discovery 2007, distribution_infrastructure 2007, unmonitored_communication 2015 | 4/1/0/0 | 0/0/0/0 | 4/1/1/1 | 4/1/0/0 | 4/2/2/0 | 0/0/0/0 |
 
@@ -256,7 +256,7 @@ Platforms with at least 3 use-documented cases. Citation check: {'ok': 158}
 | tier:named_only | 10 | {'correct': 3, 'use_documented': 7} | 0.7 | [0.397, 0.892] |
 | tier:stated | 12 | {'correct': 11, 'incorrect': 1} | 0.917 | [0.646, 0.985] |
 
-C rows after codebook-2: {'C:Anonymity': {'correct->still_C': 6, 'incorrect->dropped': 1}, 'C:ContactDiscovery': {'correct->still_C': 7}, 'C:DistributionInfrastructure': {'correct->dropped': 1, 'correct->still_C': 13, 'incorrect->dropped': 1}, 'C:GenerativeSynthesis': {'correct->still_C': 9, 'incorrect->still_C': 1}, 'C:UnmonitoredCommunication': {'correct->still_C': 8, 'incorrect->dropped': 1, 'incorrect->still_C': 1}}
+C rows after codebook-2: {'C:Anonymity': {'correct->still_C': 6, 'incorrect->dropped': 1}, 'C:ContactDiscovery': {'correct->still_C': 7}, 'C:DistributionInfrastructure': {'correct->still_C': 14, 'incorrect->dropped': 1}, 'C:GenerativeSynthesis': {'correct->dropped': 5, 'correct->still_C': 4, 'incorrect->dropped': 1}, 'C:UnmonitoredCommunication': {'correct->dropped': 2, 'correct->still_C': 6, 'incorrect->dropped': 2}}
 
 ## Validation, round 2 (independent blind reviewer + adjudication)
 
