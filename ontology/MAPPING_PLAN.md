@@ -16,6 +16,7 @@ Each press-release case becomes one `cacontology:CACInvestigation` graph. CaseLi
 - [Relationship to the victim](#relationship-to-the-victim)
 - [Investigative technology](#investigative-technology)
 - [NLP concepts](#nlp-concepts)
+- [Modelling decisions](#modelling-decisions)
 - [Terms the mapper emits](#terms-the-mapper-emits)
 
 ## Platforms
@@ -304,6 +305,22 @@ Source: `NLP_CONCEPT_MAP` (8 entries). A concept is mapped only at or above its 
 | exploitive_positions | 0.45 | `cac-custodial:PositionOfTrust` |
 | registered_sex_offender | 0.45 | `cac-sex-offender-registry:RegisteredSexOffender` |
 | evidence_seizure | 0.45 | `cac-production:ProducedContent` |
+
+## Modelling decisions
+
+- **One investigation per case.** Each case is a `cacontology:CACInvestigation`, with the CaseLinker case id as `dcterms:identifier`; everything else hangs off it.
+- **People are masked, never named.** Names are masked before mapping (`_mask_case_people`); offenders and victims appear as unnamed `uco-identity:Person` nodes with their roles.
+- **Shared nodes for platforms and places.** A platform or a place is one node shared across cases (platforms by name; places as `uco-location:Location` and `cac-core:PlaceLikeEntity`, linked by `dcterms:spatial`), so the corpus can be queried by them.
+- **First match wins for charges and sentences.** Charge and sentence text is matched against ordered patterns; the first matching pattern decides the class, so more specific patterns come first.
+- **NLP concepts are thresholded and carry their confidence.** A semantic concept is mapped only at or above its threshold, and the node records the score as `cac-core:hasConfidence`.
+- **Not mapped on purpose:** the clustering vectors (`comparison_values`, which duplicate mapped fields), raw model scores other than concept confidence, and evidence volume.
+- **Where CAC has no class, nothing is invented:**
+  - victim and offender gender: no CAC property, so omitted;
+  - fiat payment apps (Cash App): no CAC platform class, so no platform node (`PLATFORM_MAP` marks them skipped);
+  - classified-ads sites (Craigslist): mapped to the nearest class, `cac-platforms:SocialMediaPlatform`, with `platformType=classifieds`;
+  - peer-to-peer clients: mapped to `cac-platforms:FileHostingService` with `platformType=p2p`.
+
+These gaps are the ones to raise with Project VIC for future CAC versions.
 
 ## Terms the mapper emits
 
