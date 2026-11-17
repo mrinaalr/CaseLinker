@@ -47,7 +47,7 @@ flowchart LR
 | `/patterns/questions/q01`–`q03` | [`questions/`](questions/) | Research-question write-ups | `/ontology/question_data/` |
 | `/explore` | [`explore.html`](explore.html) | Walk one case graph: id → steps, agencies, platforms, places → provenance → passage | `/resource` |
 | `/search` | [`search.html`](search.html) | Facet tree, cohort members, a copyable cohort SPARQL query | `/api/facet-*`, `/api/cohort-sparql` |
-| `/lifecycle` | [`lifecycle.html`](lifecycle.html) | PACER prosecution state machines, L* | `/api/lifecycle/*` |
+| `/lifecycle` | [`lifecycle.html`](lifecycle.html) | Documented PACER trajectories: event graphs, derived chains, formal model | `/api/lifecycle/cases`, `/api/lifecycle/analysis` |
 | `/visualization` | [`visualization.html`](visualization.html) | Platform affordances and harm analysis | `/ontology/platform-affordance-evidence/` |
 | `/sources` | [`sources.html`](sources.html) | Per-source counts and date spans | `/api/sources-stats` |
 | `/audit` | [`audit.html`](audit.html) | Case review and tag removal | `/api/case-count`, case APIs |
