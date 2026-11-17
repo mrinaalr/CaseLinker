@@ -8,6 +8,4 @@ This folder is where the PACER court records live on a researcher's machine: the
 | Coded evidence, derived trajectories, CASE/UCO/CAC graphs | [`state_machines/`](../../state_machines/README.md); releases in `state_machines/data/<release_id>/` |
 | Graphs in the SPARQL store | named graphs `urn:caselinker:pacer:<case_id>:evidence` and `…:trajectories` |
 
-**Earlier graphs.** Until this change, the folder held 297 per-document JSON-LD graphs built in 2026-08 by Project VIC with an earlier SDK. They were served at `/ontology/PACER/` and as `urn:pacer:kg:*`. They are replaced by graphs emitted from coded, adjudicated bundles, and remain in git history.
-
 Keep a checksummed backup of the PDFs somewhere access-controlled: they are the evidence every coded event cites.

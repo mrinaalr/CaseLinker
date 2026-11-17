@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from state_machines.theory.transition_systems import (
-    TransitionSystem, aff, admits_prefix, appendix_x_example, attribution_holds, delta_path, delta_supp,
+    TransitionSystem, aff, admits_partial_order, admits_prefix, appendix_x_example, attribution_holds, delta_path, delta_supp,
     epsilon, monotone_and_local, pi,
 )
 
@@ -99,3 +99,24 @@ def test_theory_never_reads_pacer_data():
                {a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}
         assert not {m for m in mods if m.startswith("state_machines.") and not m.startswith("state_machines.theory")}, p
         assert "PACER" not in p.read_text().replace("PACER records", "")
+
+
+def test_partial_order_is_searched_over_every_source_consistent_ordering():
+    P = appendix_x_example()["P"]
+    amap = {"INITIATE_CONTACT": "contact", "SOLICIT_IMAGERY": "request"}
+    acts = {"e1": "SOLICIT_IMAGERY", "e2": "INITIATE_CONTACT"}
+    # unordered: the arbitrary listed order (request, contact) fails, but contact-then-request runs
+    assert not admits_prefix(P, [acts["e1"], acts["e2"]], amap)
+    assert admits_partial_order(P, acts, [], amap) == ("e2", "e1")
+    # documented order request-before-contact: no admitted ordering
+    assert admits_partial_order(P, acts, [("e1", "e2")], amap) is None
+
+
+def test_attribution_needs_only_locality():
+    # a non-monotone introduction (an old transition removed) still attributes new paths to o
+    P = appendix_x_example()["P"]
+    kept = frozenset(t for t in P.transitions if t[3] != "s3")
+    shrunk = TransitionSystem(P.states, P.actions, P.affordances, kept, P.s0)
+    after = shrunk.add("generative_synthesis", [("s0", "synthesize", {"generative_synthesis"}, "s2")])
+    assert not monotone_and_local(P, after, "generative_synthesis")["monotonicity"]
+    assert attribution_holds("generative_synthesis", P, after, 4)

@@ -15,10 +15,8 @@ Comparing P with P ⊕ o (an isolated additive introduction of affordance o):
 Proposition (attribution): under monotonicity and locality, every trajectory realising a
 sequence in Δ_path(o; P) contains o in Aff(L).
 
-What this module does NOT do: estimate T_P, probabilities, rewards, utilities or policies
-from PACER records, or assert that any offender chooses any run. Models here are specified
-by hand with declared assumptions; documented trajectories can be *tested* against a model
-(is this documented action sequence a run prefix?), never used to fit one.
+Models are specified by hand with declared assumptions. A documented trajectory can be
+tested against a model (is its action sequence a run prefix?); it is not used to fit one.
 """
 from __future__ import annotations
 
@@ -147,6 +145,42 @@ def admits_prefix(system: TransitionSystem, actions: Iterable[str], action_map: 
     return True
 
 
+def admits_partial_order(system: TransitionSystem, actions: Dict[str, str], order: Iterable[Tuple[str, str]],
+                         action_map: Optional[Dict[str, str]] = None) -> Optional[Tuple[str, ...]]:
+    """Does some ordering of documented events that respects their documented order run in the model?
+
+    ``actions`` maps event ids to action codes, ``order`` holds (earlier, later) pairs of the
+    documented partial order. Returns one admitted ordering of event ids, or None when no
+    source-consistent ordering is admitted. Unordered events are not forced into one arbitrary
+    sequence: every linear extension is searched, pruned by the model's reachable states."""
+    amap = action_map or {}
+    preds = {e: set() for e in actions}
+    for a, b in order:
+        if a in preds and b in preds:
+            preds[b].add(a)
+    seen = set()
+
+    def search(done: Tuple[str, ...], states: FrozenSet[str]):
+        if len(done) == len(actions):
+            return done
+        key = (frozenset(done), states)
+        if key in seen:
+            return None
+        seen.add(key)
+        for e in sorted(actions):
+            if e in done or not preds[e] <= set(done):
+                continue
+            act = amap.get(actions[e], actions[e])
+            nxt = frozenset(t for s, x, _, t in system.transitions if s in states and x == act)
+            if nxt:
+                found = search(done + (e,), nxt)
+                if found:
+                    return found
+        return None
+
+    return search((), frozenset({system.s0}))
+
+
 def appendix_x_example() -> Dict[str, TransitionSystem]:
     """The worked comparison of AfH Appendix X, verbatim in structure.
 
@@ -164,4 +198,4 @@ def appendix_x_example() -> Dict[str, TransitionSystem]:
 
 
 __all__ = ["TransitionSystem", "epsilon", "pi", "aff", "monotone_and_local", "delta_path", "delta_supp",
-           "attribution_holds", "admits_prefix", "appendix_x_example", "VALIDATION_STATUS"]
+           "attribution_holds", "admits_prefix", "admits_partial_order", "appendix_x_example", "VALIDATION_STATUS"]
