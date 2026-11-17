@@ -26,11 +26,11 @@ Commit `2cc50804c` (code clean) on `research/afh-q1-reconstruction`, local only.
 - **Exemplars:** 42 new manifest exemplars were blind-reviewed (22 supported, 16 partly, 4 not). The inventory now has 203, 144 supported.
 - **Unchanged:** the inventory and the headline (1,513 / 1,257), level A, and the published `stated_vs_inferred` field.
 
-## Regression tests (fail on the old code)
+## Regression tests
 
-- `test_linewrap_promotion_reaches_downstream_levels`: a record promoted only by the repair reaches conduct, explicit use and documented harm.
-- `test_committed_levels_never_rest_on_named_only_primary_tier`: no conduct or documented-harm flag sits on a named-only primary tier.
-- `test_manifest_use_documented_matches_primary_tier`: manifest documented-use counts equal the primary-tier counts.
+- `test_linewrap_promotion_reaches_downstream_levels`: a record promoted only by the repair reaches conduct, explicit use and documented harm. Fails on the old code.
+- `test_committed_levels_never_rest_on_named_only_primary_tier`: no conduct or documented-harm flag sits on a named-only primary tier. This guards the invariant and passes on old and new outputs alike.
+- `test_manifest_use_documented_matches_primary_tier`: manifest documented-use counts equal the primary-tier counts. Fails on the old outputs.
 
 ## Source attribution and privacy
 
