@@ -1,6 +1,8 @@
 # State machines
 
-Federal court records, coded as evidence and read as trajectories. Each case becomes a documented event graph: the acts the record describes, who took part in what role, when, in what order, through which platforms, with which harms, and the page each claim rests on. Trajectories, CASE/UCO/CAC graphs and the [`/lifecycle`](https://caselinker.up.railway.app/lifecycle) page are derived from it. A separate theory layer specifies the state-space model of [Affordances for Harm](https://doi.org/10.5281/zenodo.21347781) (AfH) and tests documented trajectories against it.
+Federal court records, coded as evidence and represented through documented trajectories. Each case is reconstructed from source-supported actions, participants, temporal relationships, platform interactions, and harms, with provenance and uncertainty preserved.
+
+The underlying event graph serves as the canonical representation from which trajectories, CASE/UCO/CAC knowledge graphs, and the /lifecycle visualization are derived. Separately, the theory layer implements the affordance-aware state-space framework of [Affordances for Harm](https://doi.org/10.5281/zenodo.21347781) (AfH), allowing documented trajectories to be evaluated against formally specified models.
 
 **Contents:**
 - [Layers](#layers)
