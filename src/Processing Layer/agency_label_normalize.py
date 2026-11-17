@@ -17,8 +17,9 @@ _APOS_CLASS = r"[''\u2018\u2019`\u00b4\u02bc]"
 _APOSTROPHE_NORMALIZE_RE = re.compile(r"[\u2018\u2019`\u00b4\u02bc]")
 
 FEDERAL_DOJ_CANONICAL = "U.S. Department of Justice"
-GENERIC_STATE_POLICE_LABEL = "State Police Department"
-_PREFIXED_STATE_POLICE_RE = re.compile(r"^.+\s+State Police Department$", re.IGNORECASE)
+GENERIC_STATE_POLICE_LABEL = "State Police"
+_GENERIC_STATE_POLICE_LABELS = frozenset({"State Police", "State Police Department"})
+_PREFIXED_STATE_POLICE_RE = re.compile(r"^.+\s+State Police(?: Department)?$", re.IGNORECASE)
 
 # Canonical alias table (ingest only; stats reads stored labels as-is).
 AGENCY_CANONICAL_ALIASES_CASEFOLD: Dict[str, str] = {
@@ -96,6 +97,12 @@ _LBI_CANONICAL = "Louisiana Bureau of Investigation"
 _SHERIFF_DUP_RE = re.compile(
     r"^Sheriff's Office\s+(.+Sheriff's Office)$",
     re.IGNORECASE,
+)
+# One county sheriff glued to the next, as in one-agency-per-line digests (#60):
+# "Forsyth County Sheriff's Office Hall County Sheriff's Office" is two agencies.
+_SHERIFF_THEN_COUNTY_SHERIFF = re.compile(
+    r"^(.+?\bSheriff['\u2019]s (?:Office|Department))\s+"
+    r"((?:[A-Z][\w.'\u2019-]*\s+){1,3}(?:County|Parish)\s+Sheriff['\u2019]s (?:Office|Department).*)$"
 )
 # Sheriff/Prosecutor/DA office + city PD (second agency)
 _SHERIFF_DEPT_THEN_PD = re.compile(
@@ -188,6 +195,10 @@ def _split_one_merge_glued(s: str) -> List[str]:
     m = _SHERIFF_DUP_RE.match(s)
     if m:
         return [m.group(1).strip()]
+
+    m = _SHERIFF_THEN_COUNTY_SHERIFF.match(s)
+    if m:
+        return [m.group(1).strip(), m.group(2).strip()]
 
     m = _OFFICE_THEN_PD.match(s)
     if m:
@@ -313,21 +324,21 @@ def canonicalize_agency_label_for_storage(label: str) -> str:
 
 def dedupe_generic_state_police(agencies: List[str]) -> List[str]:
     """
-    Drop bare ``State Police Department`` when a prefixed sibling exists on the same case.
+    Drop bare ``State Police`` / ``State Police Department`` when a prefixed sibling exists on the same case.
 
     Does not infer state for generic-only cases (no prefixed sibling).
     """
-    if GENERIC_STATE_POLICE_LABEL not in agencies:
+    if not any(a in _GENERIC_STATE_POLICE_LABELS for a in agencies):
         return agencies
     has_prefixed = any(
         isinstance(a, str)
-        and a.strip() != GENERIC_STATE_POLICE_LABEL
+        and a.strip() not in _GENERIC_STATE_POLICE_LABELS
         and _PREFIXED_STATE_POLICE_RE.match(a.strip())
         for a in agencies
     )
     if not has_prefixed:
         return agencies
-    return [a for a in agencies if a != GENERIC_STATE_POLICE_LABEL]
+    return [a for a in agencies if a not in _GENERIC_STATE_POLICE_LABELS]
 
 
 def drop_non_le_agencies(agencies: List[str]) -> List[str]:
@@ -346,6 +357,7 @@ _BARE_GENERIC_AGENCY_LABELS = frozenset(
         "district attorney's office",
         "prosecutor's office",
         "state police department",
+        "state police",
         "federal agencies",
         "federal agents",
         "federal and international",

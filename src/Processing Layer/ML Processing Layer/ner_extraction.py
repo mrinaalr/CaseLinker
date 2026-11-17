@@ -30,6 +30,8 @@ Usage:
 
 import os
 import warnings
+from functools import lru_cache
+from pathlib import Path
 from typing import Dict, List, Any, Optional, Set
 import re
 import traceback
@@ -110,6 +112,80 @@ def stored_location(text: str, start: int, end: int) -> str:
         end = end + of_state.end()
     phrase = re.sub(r"\s+", " ", text[start:end]).strip()
     return re.sub(r"^the\s+", "", phrase, count=1, flags=re.I)
+
+
+_SHERIFF_START_RE = re.compile(r"^sheriff(?:['’]s|s)?\b", re.I)
+_STATE_POLICE_START_RE = re.compile(r"^state\s+police\b", re.I)
+_SECRETARY_OF_BEFORE_RE = re.compile(r"\bSecretary\s+of\s*$")
+_COUNTY_WORD_RE = re.compile(r"^(?:County|Parish)$")
+_COUNTY_NAME_TOKEN_RE = re.compile(r"^(?:[A-Z][A-Za-z'’.\-]*|de|du|la|le|of)$")
+_AGENCY_WORDS = frozenset({
+    "office", "department", "police", "sheriff", "sheriff's", "sheriff’s", "prosecutor's",
+    "prosecutor’s", "bureau", "attorney's", "attorney’s", "task", "force", "and", "the",
+    "division", "unit", "agency", "patrol", "service", "services", "investigation",
+    "investigations", "security", "crimes", "enforcement", "regional", "center", "court",
+    "courts", "commission", "association", "family", "homeland", "marshals", "county",
+})
+
+
+def stored_organization(text: str, start: int, end: int) -> str:
+    """The organization to store for one NER span.
+
+    In run-on partner lists ("… Prosecutor's Office Camden County Sheriff's Office …")
+    the model tags "Camden County" as a place and starts the ORG at "Sheriff's", which
+    stores a bare "Sheriff's Office" (#60). A span that starts with "Sheriff" takes the
+    "<Name> County" or "<Name> Parish" written directly before it ("County" may end the
+    line above), taking only the county's own name from that line.
+    """
+    span = (text or "")[max(0, start or 0): end or 0]
+    phrase = span.strip()
+    if not text or start is None:
+        return phrase
+    # "Secretary of State Police" is its own agency (Illinois); the model often tags only
+    # "State Police", which would then read as the state police (#59).
+    if _STATE_POLICE_START_RE.match(phrase) and _SECRETARY_OF_BEFORE_RE.search(text[max(0, start - 40): start]):
+        return "Secretary of " + re.sub(r"\s+", " ", phrase)
+    if not _SHERIFF_START_RE.match(phrase):
+        return phrase
+    before = text[max(0, start - 80): start]
+    if not re.search(r"[ \t]*\n?[ \t]*$", before) or re.search(r"[,.;:()]\s*$", before):
+        return phrase
+    # The county's name sits on the same line as "County"; a line above is another agency.
+    tokens = before.rstrip().split("\n")[-1].split()
+    if not tokens or not _COUNTY_WORD_RE.match(tokens[-1]):
+        return phrase
+    words: list[str] = []
+    for tok in reversed(tokens[:-1]):
+        if len(words) == 3 or tok.lower().strip(".,") in _AGENCY_WORDS or not _COUNTY_NAME_TOKEN_RE.match(tok):
+            break
+        words.insert(0, tok)
+    # Only a name the Census gazetteer lists as a county or parish: the words before
+    # "County" can be a sergeant's name or the end of another sentence. Longest first;
+    # a hyphenated word is tried whole ("Miami-Dade") and from its last part.
+    known = _gazetteer_county_names()
+    suffix = tokens[-1].lower()
+    for i in range(len(words)):
+        tried = [" ".join(words[i:])]
+        if "-" in words[i]:
+            tried.append(" ".join([words[i].rsplit("-", 1)[1], *words[i + 1:]]))
+        for name in tried:
+            if f"{name} {suffix}".lower().replace("\u2019", "'") in known:
+                flat = re.sub(r"\s+", " ", phrase)
+                return f"{name} {tokens[-1]} {flat}"
+    return phrase
+
+
+@lru_cache(maxsize=1)
+def _gazetteer_county_names() -> frozenset:
+    path = Path(__file__).resolve().parents[3] / "data" / "gazetteer" / "2024_Gaz_counties_national.txt"
+    if not path.is_file():
+        return frozenset()
+    names = set()
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines()[1:]:
+        cols = line.split("\t")
+        if len(cols) > 3:
+            names.add(cols[3].strip().lower())
+    return frozenset(names)
 
 
 def _is_sentencing_context(text: str,
@@ -351,7 +427,7 @@ class NERExtractor:
                 person_spans.append([ent.start_char, ent.end_char, ent.text])
 
             if entity_type == 'ORG':
-                entities['organizations'].append(entity_text)
+                entities['organizations'].append(stored_organization(text, ent.start_char, ent.end_char))
             elif entity_type in ['LOC', 'GPE']:
                 entities['locations'].append(stored_location(text, ent.start_char, ent.end_char))
             elif entity_type == 'DATE':

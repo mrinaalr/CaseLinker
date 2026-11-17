@@ -181,3 +181,59 @@ def test_state_named_and_national_labels_stay_one_node(ag):
     assert ag.ungrounded_agency_scope("NCA", {"status": "out_of_scope"}) == "shared"
     # A county that shares a state's name is not that state.
     assert ag.ungrounded_agency_scope("Washington County Sheriff's Office", UNGROUNDED) == "case"
+
+
+# --- state police (#59) -------------------------------------------------------
+
+@pytest.mark.parametrize(
+    "mention, source, ori",
+    [
+        ("New York State Police", "NCMEC", "NY1010000"),  # one statewide CDE row
+        ("Delaware State Police", "NCMEC", "DEDSP0000"),  # CDE "State Police: Headquarters"
+        ("Kentucky State Police", "KY SP", "KYKSP0000"),
+    ],
+)
+def test_state_police_grounds_to_the_state_row(ag, mention, source, ori):
+    row = ag.ground_case_agencies([mention], source=source, case_id="sp")[0]
+    assert row["status"] == "grounded", row
+    assert row["reason"] == "cde_state_police"
+    assert row["ori"] == ori
+    assert row["agency_kind"] == "state"
+
+
+def test_state_police_with_posts_only_grounds_statewide_without_ori(ag):
+    for mention in ("New Jersey State Police", "New Jersey State Police Department", "N.J. State Police"):
+        row = ag.ground_case_agencies([mention], source="NCMEC", case_id="sp")[0]
+        assert row["status"] == "grounded", row
+        assert row["reason"] == "state_police_statewide"
+        assert row["ori"] is None
+        assert row["agency_name"] == "New Jersey State Police"
+        assert row["slug"] == "new-jersey-state-police-nj"
+
+
+def test_bare_state_police_takes_the_source_state(ag):
+    row = ag.ground_case_agencies(["State Police"], source="NJ AG", case_id="sp")[0]
+    assert row["status"] == "grounded", row
+    assert row["agency_name"] == "New Jersey State Police"
+
+
+def test_state_police_is_not_grounded_where_cde_has_no_agency_by_that_name(ag):
+    # Missouri's CDE state police is the State Highway Patrol; Washington's is the State Patrol.
+    for mention in ("Missouri State Police", "Washington State Police"):
+        row = ag.ground_case_agencies([mention], source="NCMEC", case_id="sp")[0]
+        assert row["status"] == "ungrounded", row
+        assert row["reason"] == "no_cde_state_police"
+
+
+# --- county sheriff recovered from the NER span (#60) --------------------------
+
+def test_county_sheriffs_from_an_nj_partner_list_ground(ag):
+    rows = ag.ground_case_agencies(
+        ["Camden County Sheriff's Office", "Passaic County Sheriff's Department"], source="NJ AG", case_id="sh"
+    )
+    assert [(r["status"], r["ori"]) for r in rows] == [("grounded", "NJ0040000"), ("grounded", "NJ0160000")]
+
+
+def test_secretary_of_state_police_does_not_ground_to_the_state_police(ag):
+    row = ag.ground_case_agencies(["Secretary of State Police"], source="ILLINOIS AG", case_id="sos")[0]
+    assert row.get("ori") != "ILISP0000" and row.get("agency_name") != "Illinois State Police", row
