@@ -160,6 +160,63 @@ class TestDistinctNamedAgenciesLeOnly(unittest.TestCase):
         self.assertFalse(any("fire" in x.casefold() for x in kept))
         self.assertFalse(any("child safety" in x.casefold() for x in kept))
 
+    def test_merges_sheriff_office_department_and_state_abbr(self):
+        kept = norm.distinct_named_agencies(
+            [
+                "Ada County Sheriff's Department",
+                "Ada County Sheriff's Office",
+                "N.C. State Bureau of Investigation",
+                "NC State Bureau of Investigation",
+                "North Carolina State Bureau of Investigation",
+                "Toms River PD",
+                "Toms River Police Department",
+                "The FBI",
+                "FBI",
+            ]
+        )
+        self.assertEqual(len(kept), 4)
+        self.assertTrue(any("ada county sheriff" in x.casefold() for x in kept))
+        self.assertTrue(any("north carolina" in x.casefold() for x in kept))
+        self.assertTrue(any("toms river" in x.casefold() for x in kept))
+        self.assertIn("FBI", kept)
+
+    def test_drops_task_force_and_detective_fragments(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "Task Force",
+                    "Bensalem Detectives",
+                    "Special Victims Detectives",
+                    "Radcliff PD Detective",
+                    "Austin Police Department",
+                    "Cyber Crimes Task Force",
+                ]
+            )
+        )
+        self.assertIn("Austin Police Department", kept)
+        self.assertTrue(any("cyber" in x.casefold() for x in kept))
+        self.assertNotIn("Task Force", kept)
+        self.assertFalse(any(x.casefold().endswith("detectives") for x in kept))
+        self.assertFalse(any(x.casefold().endswith("detective") for x in kept))
+
+    def test_keeps_county_detective_bureaus(self):
+        kept = set(norm.distinct_named_agencies(["Bucks County Detectives", "Chester County Detectives"]))
+        self.assertEqual(kept, {"Bucks County Detectives", "Chester County Detectives"})
+
+    def test_still_excludes_ncmec_and_courts(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "NCMEC",
+                    "NCMEC CyberTipline",
+                    "Federal District Court",
+                    "Bureau County Circuit Court",
+                    "FBI",
+                ]
+            )
+        )
+        self.assertEqual(kept, {"FBI"})
+
 
 class TestRsoAndPriorConviction(unittest.TestCase):
     def test_registered_sex_offender(self):

@@ -358,8 +358,72 @@ _BARE_GENERIC_AGENCY_LABELS = frozenset(
         "county attorney's office",
         "district attorneys",
         "these task forces",
+        "task force",
+        "the task force",
     }
 )
+
+# "X Detectives" / "X Detective" unit fragments — not a distinct named agency.
+# Keep named detective bureaus, divisions, offices and county detectives (a PA county
+# detective bureau is its own agency); drop "City PD Detective" unit forms.
+_DETECTIVE_FRAGMENT_RE = re.compile(r"(?i)\bdetectives?\s*$")
+_DETECTIVE_FRAGMENT_KEEP_RE = re.compile(r"(?i)sheriff|bureau|division|office|\bcounty\s+detectives?\s*$")
+_PD_DETECTIVE_FRAGMENT_RE = re.compile(
+    r"(?i)(?:police department|police dept\.?)\s+detectives?\s*$"
+)
+
+# State / territory abbreviations used in press labels → full names for merge keys.
+_STATE_ABBR_EXPAND: Dict[str, str] = {
+    "ala": "alabama",
+    "ariz": "arizona",
+    "ark": "arkansas",
+    "calif": "california",
+    "colo": "colorado",
+    "conn": "connecticut",
+    "del": "delaware",
+    "fla": "florida",
+    "ga": "georgia",
+    "ill": "illinois",
+    "ind": "indiana",
+    "kans": "kansas",
+    "ky": "kentucky",
+    "la": "louisiana",
+    "md": "maryland",
+    "mass": "massachusetts",
+    "mich": "michigan",
+    "minn": "minnesota",
+    "miss": "mississippi",
+    "mo": "missouri",
+    "mont": "montana",
+    "neb": "nebraska",
+    "nebr": "nebraska",
+    "nev": "nevada",
+    "n.h": "new hampshire",
+    "n.j": "new jersey",
+    "n.m": "new mexico",
+    "n.y": "new york",
+    "n.c": "north carolina",
+    "n.d": "north dakota",
+    "okla": "oklahoma",
+    "ore": "oregon",
+    "oreg": "oregon",
+    "pa": "pennsylvania",
+    "penn": "pennsylvania",
+    "r.i": "rhode island",
+    "s.c": "south carolina",
+    "s.d": "south dakota",
+    "tenn": "tennessee",
+    "tex": "texas",
+    "vt": "vermont",
+    "va": "virginia",
+    "wash": "washington",
+    "w.va": "west virginia",
+    "w.v": "west virginia",
+    "wis": "wisconsin",
+    "wisc": "wisconsin",
+    "wyo": "wyoming",
+    "d.c": "district of columbia",
+}
 _NON_AGENCY_LABELS = frozenset(
     {
         "federal express",
@@ -531,12 +595,80 @@ def _is_counted_law_enforcement_agency(label: str) -> bool:
     return False
 
 
+def _is_stats_agency_fragment(label: str) -> bool:
+    """True for bare 'Task Force' and 'X Detective(s)' unit fragments."""
+    t = (label or "").strip()
+    if not t:
+        return True
+    if t.casefold() in {"task force", "the task force"}:
+        return True
+    if _PD_DETECTIVE_FRAGMENT_RE.search(t):
+        return True
+    if _DETECTIVE_FRAGMENT_RE.search(t) and not _DETECTIVE_FRAGMENT_KEEP_RE.search(t):
+        return True
+    return False
+
+
+def agency_variant_key(label: str) -> str:
+    """Merge key: case, punctuation, PD/SO, state abbrevs, leading 'the', possessives."""
+    s = (label or "").strip()
+    if not s:
+        return ""
+    s = s.replace("\u2019", "'").replace("\u2018", "'")
+    s = re.sub(r"\s+", " ", s)
+    s = re.sub(r"\bP\.?\s*D\.?\b", "Police Department", s, flags=re.I)
+    s = re.sub(r"\bPolice Dept\.?\b", "Police Department", s, flags=re.I)
+    s = re.sub(r"\bS\.?\s*O\.?\b", "Sheriff's Office", s, flags=re.I)
+    s = re.sub(r"\bSheriff'?s?\s+Dept\.?\b", "Sheriff's Office", s, flags=re.I)
+    s = re.sub(r"\bSheriff'?s?\s+Department\b", "Sheriff's Office", s, flags=re.I)
+    s = re.sub(r"\bSheriff Office\b", "Sheriff's Office", s, flags=re.I)
+    s = re.sub(r"\bSO\b", "Sheriff's Office", s)
+    s = s.casefold()
+    s = re.sub(r"^the\s+", "", s)
+    s = re.sub(r"'s\b", "s", s)
+    s = re.sub(r"s'\b", "s", s)
+    s = re.sub(r"\bpd\b", "police department", s)
+    s = re.sub(r"\bsheriffs?\s+(office|department|dept\.?)\b", "sheriffs office", s)
+    for abbr, full in sorted(_STATE_ABBR_EXPAND.items(), key=lambda kv: -len(kv[0])):
+        pat = re.escape(abbr).replace(r"\.", r"\.?")
+        s = re.sub(rf"(?<![a-z]){pat}\.?(?![a-z])", full, s)
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _agency_display_rank(label: str) -> tuple:
+    """Prefer expanded formal names when collapsing variants."""
+    low = label.casefold()
+    return (
+        1 if "sheriff's office" in low else 0,
+        1 if "police department" in low else 0,
+        len(label),
+        label,
+    )
+
+
+def _expand_agency_abbrev_tokens(label: str) -> str:
+    """Expand PD / abbreviated SO tokens so LE gating and merge see full forms.
+
+    Full "Sheriff's Department" wording is left intact; agency_variant_key merges
+    it with "Sheriff's Office".
+    """
+    s = label
+    s = re.sub(r"\bP\.?\s*D\.?\b", "Police Department", s, flags=re.I)
+    s = re.sub(r"\bPolice Dept\.?\b", "Police Department", s, flags=re.I)
+    s = re.sub(r"\bS\.?\s*O\.?\b", "Sheriff's Office", s, flags=re.I)
+    s = re.sub(r"\bSheriff'?s?\s+Dept\.?\b", "Sheriff's Office", s, flags=re.I)
+    s = re.sub(r"\bSheriff Office\b", "Sheriff's Office", s, flags=re.I)
+    return s
+
+
 def _tidy_distinct_agency_label(label: str) -> str | None:
     """Collapse field-office aliases and drop non-LE labels for corpus unique counts."""
     t = (label or "").strip().lstrip("#-_ ").strip()
     if not t:
         return None
     t = re.sub(r"\s+", " ", t)
+    t = _expand_agency_abbrev_tokens(t)
     t = re.sub(r"'s$", "", t)
     t = re.sub(r"\bDivison\b", "Division", t, flags=re.I)
     t = re.sub(r"\blnvestigation\b", "Investigation", t, flags=re.I)
@@ -596,6 +728,8 @@ def _tidy_distinct_agency_label(label: str) -> str | None:
         return None
     if len(t) < 3:
         return None
+    if _is_stats_agency_fragment(t):
+        return None
     if not _is_counted_law_enforcement_agency(t):
         return None
     return t
@@ -605,9 +739,10 @@ def distinct_named_agencies(labels: Iterable[str]) -> List[str]:
     """Unique law-enforcement agencies after ingest normalize and alias collapse.
 
     Splits glued labels, applies storage canonicalization (FBI/ICAC/DOJ/USAO),
-    collapses FBI resident/field offices to FBI, and drops unlabeled generics,
-    person names, courts, and non-LE orgs (fire, child-welfare, education).
-    Used for the public distinct-agency count.
+    collapses FBI resident/field offices to FBI, merges press variants (PD/SO,
+    state abbreviations, possessives, leading "the"), and drops unlabeled
+    generics, detective-unit fragments, person names, courts, NCMEC, and non-LE
+    orgs (fire, child-welfare, education). Used for the public distinct-agency count.
     """
     expanded: List[str] = []
     for label in labels:
@@ -619,7 +754,12 @@ def distinct_named_agencies(labels: Iterable[str]) -> List[str]:
         tidy = _tidy_distinct_agency_label(raw)
         if tidy is None:
             continue
-        kept[tidy.casefold()] = tidy
+        key = agency_variant_key(tidy)
+        if not key:
+            continue
+        prev = kept.get(key)
+        if prev is None or _agency_display_rank(tidy) > _agency_display_rank(prev):
+            kept[key] = tidy
     return sorted(kept.values(), key=str.casefold)
 
 
