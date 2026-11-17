@@ -4,8 +4,8 @@ from __future__ import annotations
 import copy
 
 from tests.pacer import fixtures as F
-from state_machines.coding.pilot import agreement, compile_draft
-from state_machines.coding.pilot_report import agreed_core
+from state_machines.coding.workflow import agreement, compile_draft
+from state_machines.coding.release_report import agreed_core
 from state_machines.evidence.validate import validate
 
 
