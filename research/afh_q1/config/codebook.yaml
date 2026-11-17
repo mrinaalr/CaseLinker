@@ -19,7 +19,14 @@
 # Cues are case-insensitive regexes, matched against sentences that name the
 # platform (same sentence only). A cue anywhere else in the release produces a
 # review candidate, never a C row.
-version: codebook-3
+version: codebook-4
+# codebook-4 (2026-11-17): generative synthesis C and harm h6 require creation or
+# alteration language. Possessing or sharing "AI-generated material" is counted separately
+# (ai_material_documented), not as synthesis of a likeness. Cues read line-repaired
+# sentences (Decision 1). Passive material descriptions ("created by artificial
+# intelligence") and possession/count wording are excluded from C and h6, and the
+# sentence must attribute the act to someone in the case (require_cues). Blind harm review: 3 of 4
+# shared-trigger h6 rows under codebook-3 were possession only.
 # codebook-3 (2026-11-17): GenerativeSynthesis B requires production conduct. With dated
 # registry rows, general platforms gained built-in AI image tools in 2023-25; sharing or
 # possessing material on them is not generative-capability-relevant conduct.
@@ -84,10 +91,15 @@ classes:
     capability: generative_synthesis
     definition: Creating or altering sexual imagery with generative or image-manipulation AI, including from a real child's benign photo.
     action_relevant_conduct: [production]
-    instrumental_cues: '\b(?:ai[- ]generated|computer[- ]generated|generated\s+(?:using|with|by)|(?:used|using|use)\s+(?:an?\s+)?(?:ai|artificial\s+intelligence|generative)\b|artificial\s+intelligence\s+(?:to|tool|program|app\w*|software|platform)|deep\s*fake\w*|morph\w*|nudif\w*|face[- ]?swap\w*|digitally\s+(?:altered|manipulated|created)|text[- ]to[- ]image|stable\s+diffusion|synthetic\s+(?:image|csam|material))'
-    exclude_cues: '\b(?:threats?|crimes?|forms?|dangers?|risks?)\s+(?:like|such\s+as|including)\b'
+    instrumental_cues: '(?:\b(?:creat\w*|generat\w*|produc\w*|made|mak\w*|alter\w*|manipulat\w*|edit\w*|transform\w*|turned\s+(?:\w+\s+){0,3}into|convert\w*)\b[^.]{0,80}\b(?:ai|a\.i\.|artificial\s+intelligence|generative|deep\s*fake\w*|app|application|software|program|tool|website)\b|\b(?:ai|a\.i\.|artificial\s+intelligence|generative)\b[^.]{0,40}\b(?:to|that)\s+(?:creat\w*|generat\w*|produc\w*|mak\w*|alter\w*|manipulat\w*|morph\w*|undress\w*|nudif\w*)|\b(?:deep\s*fake\w*|morph\w*|nudif\w*|undress\w*|face[- ]?swap\w*|superimpos\w*)|\bdigitally\s+(?:altered|manipulated|created|edited)|\btext[- ]to[- ]image|(?<!ai\s)(?<!a\.i\.\s)(?<!computer\s)(?<!intelligence\s)(?<![-\w])generat\w*\b[^.]{0,40}\b(?:images?|pictures?|photos?|videos?|simulations?|depictions?|content|material|csam|child\s+(?:pornography|sexual\s+abuse))\b)'
+    exclude_cues: '\b(?:creat\w*|generat\w*|made|produc\w*|alter\w*)\s+(?:by|using|with|through|via)\s+(?:\w+\s+){0,3}(?:ai|a\.i\.|artificial\s+intelligence|generative|computer)\b|\b(?:possession|possess\w*)\s+of\b[^.]{0,60}\b(?:generated|created|made)\b|\b(?:threats?|crimes?|forms?|dangers?|risks?)\s+(?:like|such\s+as|including)\b|\bgenerated\s+ai\b'
+    require_cues: '\b(?:he|she|they|him|her|his|defendant|suspect|accused|man|woman|teen\w*|juvenile\w*|student\w*|individual|offender|admit\w*|pleaded\s+guilty|pled\s+guilty|charged\s+with|accused\s+of|convicted\s+of|arrested\s+for|investigators\s+(?:said|say|found))\b'
     exclusions: Mentions of AI as a detection tool by police or a platform; officials' general statements ("new threats like AI-generated abuse material").
     detection_guard: '\b(?:detect\w*|flag\w*|identif\w*|scan\w*)\b[^.]{0,40}\b(?:ai|artificial\s+intelligence)\b'
+
+# Observation, not a harm category: AI-generated material documented in the release
+# (possessed, received or shared), whoever made it.
+ai_material_cue: '\b(?:ai[- ]generated|computer[- ]generated|artificial\s+intelligence[- ]generated|ai\s+(?:csam|child\s+sexual\s+abuse\s+material|images?)|synthetic\s+(?:image|csam|material))'
 
 harms:
   # Victim-facing harm categories from AfH 1.0 Sec. 7 (h1..h6, h5 unused there).
@@ -106,5 +118,7 @@ harms:
     cue: '\b(?:sextort\w*|extort\w*|threaten\w*\s+(?:to\s+)?(?:post|share|send|release|expose|distribut|publish)\w*|blackmail\w*)'
     topics: [sextortion]
   h6_likeness_synthesized:
-    cue: '\b(?:ai[- ]generated|deep\s*fake\w*|morph\w*|nudif\w*|face[- ]?swap\w*|digitally\s+(?:altered|manipulated)|(?:used|using)\s+(?:an?\s+)?(?:ai|artificial\s+intelligence))'
+    cue: '(?:\b(?:creat\w*|generat\w*|produc\w*|made|mak\w*|alter\w*|manipulat\w*|edit\w*|transform\w*|turned\s+(?:\w+\s+){0,3}into|convert\w*)\b[^.]{0,80}\b(?:ai|a\.i\.|artificial\s+intelligence|generative|deep\s*fake\w*|app|application|software|program|tool|website)\b|\b(?:ai|a\.i\.|artificial\s+intelligence|generative)\b[^.]{0,40}\b(?:to|that)\s+(?:creat\w*|generat\w*|produc\w*|mak\w*|alter\w*|manipulat\w*|morph\w*|undress\w*|nudif\w*)|\b(?:deep\s*fake\w*|morph\w*|nudif\w*|undress\w*|face[- ]?swap\w*|superimpos\w*)|\bdigitally\s+(?:altered|manipulated|created|edited)|\btext[- ]to[- ]image|(?<!ai\s)(?<!a\.i\.\s)(?<!computer\s)(?<!intelligence\s)(?<![-\w])generat\w*\b[^.]{0,40}\b(?:images?|pictures?|photos?|videos?|simulations?|depictions?|content|material|csam|child\s+(?:pornography|sexual\s+abuse))\b)'
+    require: '\b(?:he|she|they|him|her|his|defendant|suspect|accused|man|woman|teen\w*|juvenile\w*|student\w*|individual|offender|admit\w*|pleaded\s+guilty|pled\s+guilty|charged\s+with|accused\s+of|convicted\s+of|arrested\s+for|investigators\s+(?:said|say|found))\b'
+    exclude: '\b(?:creat\w*|generat\w*|made|produc\w*|alter\w*)\s+(?:by|using|with|through|via)\s+(?:\w+\s+){0,3}(?:ai|a\.i\.|artificial\s+intelligence|generative|computer)\b|\b(?:possession|possess\w*)\s+of\b[^.]{0,60}\b(?:generated|created|made)\b|\b(?:threats?|crimes?|forms?|dangers?|risks?)\s+(?:like|such\s+as|including)\b|\bgenerated\s+ai\b'
     topics: [ai_csam]

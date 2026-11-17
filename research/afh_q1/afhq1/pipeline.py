@@ -27,6 +27,7 @@ CLASSES = ("Anonymity", "Ephemerality", "ContactDiscovery", "UnmonitoredCommunic
            "DistributionInfrastructure", "GenerativeSynthesis")
 TIERS = ("stated", "inferred", "named_only")
 PERIOD_UNCERTAIN_YEARS = 2
+SPAN_BASIS = "repaired_text"  # offsets index pe.repair_line_wraps(case_text)
 
 # Sensitivity tier (not the published tier). The 2026-11-17 blind tier review found 25 of 40
 # named_only records describe use; most failed the published rules because releases are
@@ -157,6 +158,7 @@ class Codebook:
     conduct: List[Tuple[str, re.Pattern]]
     classes: Dict[str, dict]
     harms: Dict[str, dict]
+    ai_material: Optional[re.Pattern] = None
 
     @classmethod
     def load(cls, cfg: Optional[dict] = None) -> "Codebook":
@@ -170,9 +172,11 @@ class Codebook:
                 "_exclude": _compile(row.get("exclude_cues")),
                 "_review": _compile(row.get("review_cues")),
                 "_guard": _compile(row.get("undercover_guard") or row.get("detection_guard")),
+                "_require": _compile(row.get("require_cues")),
             }
-        harms = {k: {**v, "_cue": _compile(v["cue"])} for k, v in cfg["harms"].items()}
-        return cls(cfg["version"], conduct, classes, harms)
+        harms = {k: {**v, "_cue": _compile(v["cue"]), "_exclude": _compile(v.get("exclude")),
+                      "_require": _compile(v.get("require"))} for k, v in cfg["harms"].items()}
+        return cls(cfg["version"], conduct, classes, harms, _compile(cfg.get("ai_material_cue")))
 
 
 def conduct_of(sentence: str, codebook: Codebook) -> Optional[str]:
@@ -195,6 +199,8 @@ def instrumental_hit(sentence: str, spec: dict, context: str = "") -> bool:
     if spec["_exclude"] and spec["_exclude"].search(scope):
         return False
     if spec["_guard"] and spec["_guard"].search(scope):
+        return False
+    if spec.get("_require") and not spec["_require"].search(sentence):
         return False
     return True
 
@@ -221,6 +227,7 @@ class Record:
     instrumental: Dict[str, bool] = field(default_factory=dict)
     instrumental_span: Dict[str, Tuple[int, int]] = field(default_factory=dict)
     review: Dict[str, str] = field(default_factory=dict)
+    ai_material: bool = False   # AI-generated material documented in a platform sentence (any maker)
     harm_direct: Dict[str, bool] = field(default_factory=dict)
     harm_case: Dict[str, bool] = field(default_factory=dict)
 
@@ -231,7 +238,7 @@ class Record:
             "family": self.family, "tier": self.tier, "tier_linewrap": self.tier_linewrap,
             "tier_sensitivity": self.tier_sensitivity,
             "text_found": self.text_found,
-            "conduct": "|".join(self.conduct),
+            "conduct": "|".join(self.conduct), "ai_material": int(self.ai_material),
             "sentence_spans": ";".join(f"{a}-{b}" for a, b in self.sentence_spans),
         }
         for c in CLASSES:
@@ -272,7 +279,11 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
     offense, _psa, _cap = pe.offense_lines(case["text"])
     sens = sensitivity_tiers(case["id"], kept, case["text"])
     linewrap = pe.linewrap_tiers(case["id"], kept, case["text"], result["records"])
-    text = case["text"]
+    # Cues (conduct, A/B/I/C, harms) read line-repaired sentences: hard wraps split verbs from
+    # platform names (Decision 1). Offsets in sentence_spans / instrumental_span refer to the
+    # repaired text, pe.repair_line_wraps(case_text) (SPAN_BASIS). Published tiers stay on raw text.
+    text = pe.repair_line_wraps(case["text"])
+    offense, _psa, _cap = pe.offense_lines(text)
     lower_release = text.lower()
     topics = set(case["topics"])
     out = []
@@ -291,6 +302,8 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
             if c and c not in conduct:
                 conduct.append(c)
         rec.conduct = conduct
+        rec.ai_material = bool(codebook.ai_material and rec.tier in ("stated", "inferred")
+                               and any(codebook.ai_material.search(s) for s in sentences))
         year = case["pub_year"]
         for cname, spec in codebook.classes.items():
             since = info.capabilities.get(spec["capability"])
@@ -326,7 +339,9 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
             if spec.get("_review") and any(spec["_review"].search(s) for s in sentences):
                 rec.review.setdefault(cname, "review_cue_in_platform_sentence")
         for hname, h in codebook.harms.items():
-            direct = rec.tier in ("stated", "inferred") and any(h["_cue"].search(s) for s in sentences)
+            direct = rec.tier in ("stated", "inferred") and any(
+                h["_cue"].search(s) and not (h["_exclude"] and h["_exclude"].search(s))
+                and (not h["_require"] or h["_require"].search(s)) for s in sentences)
             rec.harm_direct[hname] = bool(direct)
             rec.harm_case[hname] = bool(topics & set(h["topics"]) or h["_cue"].search(lower_release))
         out.append(rec)

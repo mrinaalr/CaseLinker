@@ -212,6 +212,9 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
                 "top_platforms": Counter(r.platform for r in rs).most_common(5),
                 "period_uncertain_observations": sum(r.period_uncertain[c] for r in rs),
             }
+        if c == "GenerativeSynthesis":
+            row["ai_material_documented_cases"] = len({r.case_id for r in pool if r.ai_material})
+            row["ai_material_without_creation_cases"] = len({r.case_id for r in pool if r.ai_material and not r.instrumental[c]})
         row["A_only_cases"] = len({r.case_id for r in pool if r.available[c]} - {r.case_id for r in pool if r.action_relevant[c]})
         row["review_candidates"] = dict(sorted(Counter(r.review[c] for r in pool if r.review.get(c)).items()))
         out[c] = row
