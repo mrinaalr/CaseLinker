@@ -105,7 +105,7 @@ Press-release case graphs and PACER court-record graphs are different datasets:
 | Family | Named graph | Source | Load |
 |---|---|---|---|
 | Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` | `rebuild_oxigraph.py` bulk load (see [Reloading the store](#reloading-the-store)) |
-| PACER release | `urn:caselinker:pacer:<case_id>:evidence` (trajectory graphs are built with the release but not served) | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
+| PACER release | `urn:caselinker:pacer:<case_id>:evidence`, `urn:caselinker:pacer:<case_id>:trajectories` (`--pacer-graphs evidence` loads the first only) | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
 
 `--verify` checks the loaded store against the release manifest: every manifest graph present and non-empty, no PACER graph outside the release, no legacy `urn:pacer:kg:*` graph left.
 

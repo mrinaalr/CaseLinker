@@ -4909,7 +4909,7 @@ def api_ontology_cases(
 def api_ontology_pacer():
     """
     The current PACER graph release: one entry per case with its named graphs
-    (urn:caselinker:pacer:<case_id>:evidence served from /sparql; :trajectories built, not served), SHACL conformance and
+    (urn:caselinker:pacer:<case_id>:evidence and :trajectories), review mode, SHACL conformance and
     review status, read from the release manifest (state_machines/graphs/release.py).
     """
     from fastapi.responses import JSONResponse
