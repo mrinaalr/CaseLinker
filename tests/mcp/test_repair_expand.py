@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import sqlite3
 import subprocess
 import sys
@@ -296,3 +297,85 @@ def test_the_tools_are_registered_on_local_mcp(corpus):
     assert out["tool_kind"] == "READ" and out["corpus"]["cases"] == 3
     for name in ("diagnose_case", "profile_new_source", "scaffold_extension", "run_gate"):
         assert callable(getattr(server, name))
+
+
+# --- pattern-layer fields ----------------------------------------------------------
+
+PRIOR = ("Corin Ashcombe, 34, a previously convicted sex offender, was arrested. "
+         "He has two prior felony convictions.")
+
+
+@pytest.fixture
+def prior_corpus(tmp_path: Path, monkeypatch) -> Path:
+    path = tmp_path / "prior.db"
+    storage = CaseStorage(str(path))
+    assert storage.store_case({"id": "prior_case", "source": "TEST",
+                               "raw_data": {"source_file": "t.pdf", "case_text": PRIOR, "case_id": "prior_case"},
+                               "extracted_features": {"previous_conviction": None}})
+    monkeypatch.setenv("CASELINKER_DB", str(path))
+    return path
+
+
+def test_describe_lists_pattern_layer_fields_with_their_extractor(corpus):
+    d = R.describe_pipeline()
+    fields = {f["field"]: f for f in d["pattern_layer_fields"]["fields"]}
+    prev = fields["previous_conviction"]
+    assert prev["extractor"] == "extract_previous_conviction"
+    assert re.search(r"processing\.py:\d+$", prev["defined_in"])
+    assert "processing.py:" in prev["set_in"]
+    stored_fields = next(r for r in d["reserved_for_maintainer"] if r["decision"].startswith("a new stored field"))
+    assert "previous_conviction" in stored_fields["today"]
+
+
+def test_diagnose_replays_a_pattern_layer_field_with_masked_matches(prior_corpus):
+    out = R.diagnose_case("prior_case", field="previous_conviction")
+    f = out["fields"]["previous_conviction"]
+    assert f["kind"] == "pattern_layer"
+    assert f["stored"] is None and f["replay"]["has_prior_conviction"] is True
+    assert f["changed_if_reextracted"] is True
+    names = {p["pattern"] for p in f["patterns"]}
+    assert "_PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE" in names
+    excerpts = " ".join(m["excerpt"] for p in f["patterns"] for m in p["matches"])
+    assert "Ashcombe" not in excerpts and "previously convicted sex offender" in excerpts
+    assert out["where_to_look"]["extractor"] == "extract_previous_conviction"
+    assert out["write"] is False
+
+
+def test_diagnose_names_pattern_layer_fields_when_a_field_is_unknown(prior_corpus):
+    out = R.diagnose_case("prior_case", field="no_such_field")
+    assert "error" in out and "previous_conviction" in out["pattern_layer_fields"]
+
+
+def test_replay_values_are_short_and_never_release_text():
+    assert R._moved_value("admissions", '"he said"', '"she said"') == {
+        "shown": False, "reason": "may hold release text; read it with diagnose_case"}
+    long = '"' + "x" * 1000 + '"'
+    shown = R._moved_value("previous_conviction", None, long)
+    assert shown["before"] is None and len(shown["after"]) == R._MAX_VALUE + 1
+
+
+AGENCIES = ("Detectives with the Riverton Police Department and the Kentucky State Police arrested "
+            "Corin Ashcombe, 34, after a tip from the Federal Bureau of Investigation.")
+
+
+@pytest.fixture
+def agency_corpus(tmp_path: Path, monkeypatch) -> Path:
+    path = tmp_path / "agency.db"
+    storage = CaseStorage(str(path))
+    assert storage.store_case({"id": "agency_case", "source": "TEST",
+                               "raw_data": {"source_file": "t.pdf", "case_text": AGENCIES, "case_id": "agency_case"}})
+    monkeypatch.setenv("CASELINKER_DB", str(path))
+    return path
+
+
+def test_pattern_layer_replay_goes_through_the_merge_and_full_adds_ner(agency_corpus):
+    fast = R.diagnose_case("agency_case", field="agencies_involved")
+    assert "pattern_layer_only" in fast["fields"]["agencies_involved"]
+    assert "ner_stanza" in fast["readers_not_replayed"]
+    if R._pipeline().create_primary_ner_extractor() is None:
+        pytest.skip("Stanza NER not installed")
+    full = R.diagnose_case("agency_case", field="agencies_involved", full=True)
+    assert "ner_stanza" not in full["readers_not_replayed"]
+    replay = full["fields"]["agencies_involved"]["replay"]
+    assert any("Riverton" in a for a in replay), replay
+    assert len(replay) > len(fast["fields"]["agencies_involved"]["replay"] or [])

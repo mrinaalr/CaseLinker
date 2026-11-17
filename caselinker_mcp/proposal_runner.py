@@ -96,12 +96,25 @@ def _extension_candidates(root: Path, payload: Dict) -> Dict:
 
 
 def _replay(root: Path, payload: Dict) -> Dict:
-    """Pattern extract -> assertions (no spaCy, no NER, no human file) -> resolve -> merge, as stored columns."""
+    """Pattern extract -> assertions -> resolve -> merge, as stored columns.
+
+    Default: no spaCy, no NER, no human file. With ``full``, Stanza NER and spaCy run as at
+    ingest, and NER output reaches the assertions and the merge (agencies, locations, …).
+    """
     for sub in ("src", "src/Processing Layer", "src/Storage Layer", "src/Ingestion Layer"):
         sys.path.insert(0, str(root / sub))
     processing = _load("caselinker_processing", root / "src" / "Processing Layer" / "processing.py")
     amod = processing.assertions_module
     merger = processing.MergeProcessing()
+    full = bool(payload.get("full"))
+    ner_by_id: Dict[str, Any] = {}
+    if full:
+        extractor = processing.create_primary_ner_extractor()
+        if extractor is None:
+            return {"failed": "full replay needs Stanza NER, which did not load"}
+        docs = [d for d in payload["docs"] if d.get("text")]
+        for doc, entities in zip(docs, extractor.extract_entities_bulk([d["text"] for d in docs])):
+            ner_by_id[doc["case_id"]] = entities
     cases = []
     errors: List[Dict] = []
     for doc in payload["docs"]:
@@ -112,8 +125,9 @@ def _replay(root: Path, payload: Dict) -> Dict:
             features = processing.extract_features(raw)
             text = features.get("case_text") or doc["text"]
             year = raw.get("year")
+            ner_entities = ner_by_id.get(doc["case_id"]) if full else None
             assertions = amod.collect_assertions(
-                text, case_id=doc["case_id"], use_spacy=False, overrides={},
+                text, case_id=doc["case_id"], use_spacy=full, overrides={}, ner_entities=ner_entities,
                 batch_year=int(year) if str(year or "").isdigit() else None,
                 doc_kind=raw.get("document_kind") or "press_release",
             )
@@ -121,7 +135,7 @@ def _replay(root: Path, payload: Dict) -> Dict:
                 assertions, batch_date=(features.get("date_range") or {}).get("start"), text=text
             )
             case = processing.assign_comparison_values(
-                merger.merge_features(features, None, assertions=assertions, resolutions=resolutions)
+                merger.merge_features(features, ner_entities, assertions=assertions, resolutions=resolutions)
             )
         except Exception as exc:
             if len(errors) < _MAX_ERRORS:
