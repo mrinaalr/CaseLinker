@@ -165,3 +165,19 @@ def test_reporter_from_a_tip_named_without_the_word():
             "a user had uploaded 3,284 files to a Google Drive account.")
     assert _found(text) == [("named_esp", "Google")]
     assert _found("Officers received a CyberTip. The user uploaded files to a Google Drive account.") == []
+
+
+@pytest.mark.parametrize("text", [
+    # gbi_2016_001, gbi_2016_002: a yearly count is not this case's tip
+    "The GA ICAC TF received almost 3,000 tips from the National Center for Missing and Exploited Children (NCMEC) "
+    "in 2015 and worked 3,872 investigations related to child exploitation.",
+    "The task force receives thousands of tips from NCMEC every year.",
+])
+def test_yearly_tip_counts_are_statistics(text):
+    assert "case_action" not in _scope(text)
+
+
+def test_a_small_count_of_this_cases_tips_is_still_a_tip():
+    # ncmec_2023_408
+    text = "A detective received 19 Internet Crimes Against Children Task Force tips from the National Center for Missing and Exploited Children."
+    assert "case_action" in _scope(text)

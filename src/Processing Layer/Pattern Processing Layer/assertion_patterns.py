@@ -604,7 +604,7 @@ _TIP_TOKEN_RE = re.compile(
 _TIP_BOILERPLATE = re.compile(
     r"\b(?:can|may|should)\s+be\s+(?:made|reported|submitted)|\breport(?:s|ed)?\s+(?:it\s+)?(?:to|at|online)\b[^.]{0,60}"
     r"(?:cybertip|missingkids)|1-800|\bmissingkids\.org\b|\bonline\s+reports\s+of\b|\bsteadily\s+increased\b"
-    r"|\breceives?\s+(?:thousands\s+of\s+)?CyberTips\b|\bhas\s+received\s+more\s+than\b|\b\d{1,3}(?:,\d{3})+\s+(?:cyber\s*tips?|reports)\b"
+    r"|\breceives?\s+(?:thousands\s+of\s+)?CyberTips\b|\bhas\s+received\s+more\s+than\b|\b\d{1,3}(?:,\d{3})+\s+(?:cyber\s*tips?|tips|leads|reports)\b|\b(?:hundreds|thousands)\s+of\s+(?:cyber\s*)?tips\b"
     r"|\bmore\s+than\s+[\d,]+\s+(?:cyber\s*tips?|reports)\b|\bnation'?s\s+centralized\b|\bthe\s+public\b|\bincreased\s+by\b|\bin\s+20\d\d,\s+(?:the\s+)?(?:task\s+force|ICAC|NCMEC|reports)\b"
     r"|\b(?:file|submit|make|report)\s+a\s+cyber\s*tip|\breceives?\s+(?:thousands\s+of\s+|hundreds\s+of\s+)?(?:online\s+)?cyber\s*tip"
     r"|\bclearing\s*house\b|\bcan\s+be\s+reported\b|\bif\s+you\s+have\s+(?:a\s+|any\s+)?(?:tip|information)\b|\bplease\s+(?:submit|report|contact)\b",
