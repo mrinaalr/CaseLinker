@@ -64,9 +64,9 @@ Levels nest: A available capability > B documented capability-relevant conduct >
 |---|---|---|---|---|---|---|---|
 | Anonymity | 1782 (2306) | 479 (545) | 378 (418) | 28 (32) | 7 | 4 | 195 |
 | ContactDiscovery | 1798 (2373) | 529 (616) | 38 (39) | 10 (10) | 4 | 3 | 25 |
-| DistributionInfrastructure | 1898 (2525) | 960 (1120) | 667 (758) | 515 (581) | 29 | 9 | 535 |
-| Ephemerality | 926 (1197) | 363 (420) | 181 (182) | 0 (0) | 0 | 0 | 20 |
-| GenerativeSynthesis | 733 (902) | 137 (145) | 66 (68) | 21 (22) | 3 | 2 | 53 |
+| DistributionInfrastructure | 1898 (2525) | 959 (1119) | 666 (757) | 515 (581) | 29 | 9 | 534 |
+| Ephemerality | 926 (1197) | 361 (418) | 181 (182) | 0 (0) | 0 | 0 | 20 |
+| GenerativeSynthesis | 733 (902) | 136 (143) | 66 (67) | 20 (21) | 2 | 1 | 53 |
 | UnmonitoredCommunication | 1729 (2314) | 534 (628) | 399 (427) | 23 (25) | 9 | 3 | 79 |
 
 Each level is a subset of the one before. C counts what press releases spell out; releases rarely describe mechanisms, so a low C is a property of the record, not evidence that a capability played no role.
@@ -77,9 +77,9 @@ Named platforms only (the paper's 1,863-case analytic set):
 |---|---|---|---|---|
 | Anonymity | 1653 (2128) | 457 (519) | 373 (409) | 23 (27) |
 | ContactDiscovery | 1691 (2233) | 508 (594) | 38 (39) | 10 (10) |
-| DistributionInfrastructure | 1845 (2438) | 946 (1101) | 656 (746) | 509 (574) |
-| Ephemerality | 926 (1197) | 363 (420) | 181 (182) | 0 (0) |
-| GenerativeSynthesis | 651 (811) | 73 (79) | 2 (2) | 2 (2) |
+| DistributionInfrastructure | 1845 (2438) | 945 (1100) | 655 (745) | 509 (574) |
+| Ephemerality | 926 (1197) | 361 (418) | 181 (182) | 0 (0) |
+| GenerativeSynthesis | 651 (811) | 71 (77) | 1 (1) | 1 (1) |
 | UnmonitoredCommunication | 1676 (2227) | 513 (602) | 399 (427) | 23 (25) |
 
 ## C. Publication-year eras
@@ -93,7 +93,7 @@ Publication year, not offense year. Strict = specific named platform.
 | 2002-2014 | 947 | 24 | 4 | 70 | 47 | 7.4 | 67.1 | 9 | 0 | 0 | 0 | 0 | 15 | 0 |
 | 2015-2019 | 608 | 32 | 3 | 41 | 30 | 6.7 | 73.2 | 18 | 6 | 0 | 1 | 1 | 11 | 0 |
 | 2020-2022 | 2111 | 44 | 626 | 380 | 319 | 18.0 | 83.9 | 26 | 4 | 0 | 2 | 5 | 105 | 0 |
-| 2023-2026 | 7135 | 73 | 2871 | 1371 | 1116 | 19.2 | 81.4 | 38 | 18 | 0 | 7 | 17 | 384 | 21 |
+| 2023-2026 | 7135 | 73 | 2871 | 1371 | 1112 | 19.2 | 81.1 | 38 | 18 | 0 | 7 | 17 | 384 | 20 |
 
 **Excluding NCMEC**
 
@@ -102,7 +102,7 @@ Publication year, not offense year. Strict = specific named platform.
 | 2002-2014 | 943 | 23 | 0 | 70 | 47 | 7.4 | 67.1 | 9 | 0 | 0 | 0 | 0 | 15 | 0 |
 | 2015-2019 | 605 | 31 | 0 | 40 | 30 | 6.6 | 75.0 | 18 | 6 | 0 | 1 | 1 | 11 | 0 |
 | 2020-2022 | 1485 | 43 | 0 | 238 | 201 | 16.0 | 84.5 | 25 | 3 | 0 | 2 | 5 | 66 | 0 |
-| 2023-2026 | 4264 | 72 | 0 | 757 | 641 | 17.8 | 84.7 | 35 | 10 | 0 | 6 | 10 | 226 | 15 |
+| 2023-2026 | 4264 | 72 | 0 | 757 | 640 | 17.8 | 84.5 | 35 | 10 | 0 | 6 | 10 | 226 | 15 |
 
 **Within DOJ Safe Childhood (annual)**
 
@@ -142,9 +142,9 @@ Publication year, not offense year. Strict = specific named platform.
 | 2020 | 217 | 24 | 3 | 15 | 11 | 6.9 | 73.3 | 8 |
 | 2021 | 429 | 33 | 19 | 59 | 48 | 13.8 | 81.4 | 18 |
 | 2022 | 1465 | 37 | 604 | 306 | 260 | 20.9 | 85.0 | 23 |
-| 2023 | 1510 | 42 | 638 | 279 | 237 | 18.5 | 84.9 | 24 |
-| 2024 | 2180 | 47 | 1210 | 434 | 343 | 19.9 | 79.0 | 28 |
-| 2025 | 2260 | 56 | 1023 | 466 | 381 | 20.6 | 81.8 | 31 |
+| 2023 | 1510 | 42 | 638 | 279 | 235 | 18.5 | 84.2 | 24 |
+| 2024 | 2180 | 47 | 1210 | 434 | 342 | 19.9 | 78.8 | 28 |
+| 2025 | 2260 | 56 | 1023 | 466 | 380 | 20.6 | 81.5 | 31 |
 | 2026 | 1185 | 64 | 0 | 192 | 155 | 16.2 | 80.7 | 24 |
 
 ## D. Recurrence
@@ -155,9 +155,9 @@ recurs = at least 20 cases, 3+ platform families with 2+ cases each, 2+ publicat
 |---|---|---|---|---|---|
 | Anonymity | 1782 / 13 / 4 | 479 / 9 / 4 | 378 / 8 / 4 | 28 / 3 / 3 | A, B, I, C |
 | ContactDiscovery | 1798 / 11 / 4 | 529 / 7 / 4 | 38 / 6 / 4 | 10 / 2 / 2 | A, B, I |
-| DistributionInfrastructure | 1898 / 11 / 4 | 960 / 10 / 4 | 667 / 9 / 4 | 515 / 7 / 4 | A, B, I, C |
-| Ephemerality | 926 / 3 / 3 | 363 / 3 / 3 | 181 / 1 / 2 | 0 / 0 / 0 | A, B |
-| GenerativeSynthesis | 733 / 3 / 1 | 137 / 3 / 1 | 66 / 1 / 1 | 21 / 1 / 1 | none |
+| DistributionInfrastructure | 1898 / 11 / 4 | 959 / 10 / 4 | 666 / 9 / 4 | 515 / 7 / 4 | A, B, I, C |
+| Ephemerality | 926 / 3 / 3 | 361 / 3 / 3 | 181 / 1 / 2 | 0 / 0 / 0 | A, B |
+| GenerativeSynthesis | 733 / 3 / 1 | 136 / 3 / 1 | 66 / 1 / 1 | 20 / 1 / 1 | none |
 | UnmonitoredCommunication | 1729 / 12 / 4 | 534 / 9 / 4 | 399 / 4 / 4 | 23 / 2 / 2 | A, B, I |
 
 Report the strongest level at which a class recurs; absence at C reflects what releases spell out.
@@ -176,9 +176,9 @@ Documented harm (direct / case-level) by class and level; * marks a potential pa
 |---|---|---|---|---|---|---|
 | Anonymity | 479 | 4 / 100* | 11 / 40* | 97 / 294 | 25 / 43* | 0 / 6 |
 | ContactDiscovery | 529 | 4 / 120* | 12 / 46 | 101 / 325 | 28 / 49 | 0 / 7 |
-| DistributionInfrastructure | 960 | 0 / 145 | 1 / 19 | 757 / 866* | 4 / 21 | 1 / 15 |
-| Ephemerality | 363 | 3 / 82 | 12 / 39* | 77 / 220 | 15 / 30* | 1 / 6 |
-| GenerativeSynthesis | 137 | 1 / 31 | 3 / 6 | 41 / 93 | 1 / 5 | 21 / 66* |
+| DistributionInfrastructure | 959 | 0 / 145 | 1 / 19 | 757 / 866* | 4 / 21 | 1 / 15 |
+| Ephemerality | 361 | 3 / 81 | 12 / 39* | 77 / 219 | 15 / 30* | 0 / 5 |
+| GenerativeSynthesis | 136 | 1 / 30 | 3 / 6 | 41 / 92 | 1 / 5 | 20 / 66* |
 | UnmonitoredCommunication | 534 | 4 / 120* | 12 / 46* | 105 / 327 | 30 / 51* | 0 / 7 |
 
 **I_inferred_facilitation**
@@ -187,9 +187,9 @@ Documented harm (direct / case-level) by class and level; * marks a potential pa
 |---|---|---|---|---|---|---|
 | Anonymity | 378 | 4 / 79* | 8 / 29* | 84 / 229 | 16 / 27* | 0 / 4 |
 | ContactDiscovery | 38 | 0 / 11* | 0 / 5 | 3 / 22 | 0 / 1 | 0 / 0 |
-| DistributionInfrastructure | 667 | 0 / 109 | 0 / 17 | 586 / 631* | 3 / 15 | 1 / 13 |
+| DistributionInfrastructure | 666 | 0 / 109 | 0 / 17 | 586 / 631* | 3 / 15 | 1 / 13 |
 | Ephemerality | 181 | 3 / 37 | 10 / 23* | 38 / 99 | 4 / 13* | 0 / 1 |
-| GenerativeSynthesis | 66 | 0 / 19 | 0 / 1 | 16 / 40 | 0 / 1 | 21 / 66* |
+| GenerativeSynthesis | 66 | 0 / 19 | 0 / 1 | 16 / 40 | 0 / 1 | 20 / 66* |
 | UnmonitoredCommunication | 399 | 4 / 79* | 10 / 31* | 81 / 240 | 11 / 23* | 0 / 3 |
 
 **C_explicit_instrumental_use**
@@ -200,7 +200,7 @@ Documented harm (direct / case-level) by class and level; * marks a potential pa
 | ContactDiscovery | 10 | 0 / 5* | 0 / 1 | 0 / 4 | 0 / 1 | 0 / 0 |
 | DistributionInfrastructure | 515 | 0 / 87 | 0 / 8 | 506 / 510* | 3 / 7 | 1 / 11 |
 | Ephemerality | 0 | 0 / 0 | 0 / 0* | 0 / 0 | 0 / 0* | 0 / 0 |
-| GenerativeSynthesis | 21 | 0 / 7 | 0 / 0 | 9 / 13 | 0 / 1 | 21 / 21* |
+| GenerativeSynthesis | 20 | 0 / 7 | 0 / 0 | 9 / 13 | 0 / 1 | 20 / 20* |
 | UnmonitoredCommunication | 23 | 0 / 7* | 0 / 1* | 9 / 19 | 1 / 1* | 0 / 1 |
 
 AfH psi(a) pathways:
@@ -211,26 +211,26 @@ AfH psi(a) pathways:
 | Anonymity | h2_coerced_self_generated | 479 | 40 | 11 | 8 | 1 | documented example available |
 | Anonymity | h4_sextorted | 479 | 43 | 25 | 16 | 8 | documented example available |
 | ContactDiscovery | h1_groomed_toward_in_person | 529 | 120 | 4 | 0 | 0 | documented in cases where the pathway is open |
-| DistributionInfrastructure | h3_material_distributed | 960 | 866 | 757 | 586 | 506 | documented example available |
-| Ephemerality | h2_coerced_self_generated | 363 | 39 | 12 | 10 | 0 | documented example available |
-| Ephemerality | h4_sextorted | 363 | 30 | 15 | 4 | 0 | documented example available |
-| GenerativeSynthesis | h6_likeness_synthesized | 137 | 66 | 21 | 21 | 21 | documented example available |
+| DistributionInfrastructure | h3_material_distributed | 959 | 866 | 757 | 586 | 506 | documented example available |
+| Ephemerality | h2_coerced_self_generated | 361 | 39 | 12 | 10 | 0 | documented example available |
+| Ephemerality | h4_sextorted | 361 | 30 | 15 | 4 | 0 | documented example available |
+| GenerativeSynthesis | h6_likeness_synthesized | 136 | 66 | 20 | 20 | 20 | documented example available |
 | UnmonitoredCommunication | h1_groomed_toward_in_person | 534 | 120 | 4 | 4 | 0 | documented example available |
 | UnmonitoredCommunication | h2_coerced_self_generated | 534 | 46 | 12 | 10 | 0 | documented example available |
 | UnmonitoredCommunication | h4_sextorted | 534 | 51 | 30 | 11 | 1 | documented example available |
 
 ## F. Manifest
 
-Platforms with at least 3 use-documented cases. Citation check: {'ok': 203}
+Platforms with at least 3 use-documented cases. Citation check: {'ok': 201}
 
 | Platform | family | cases | use-documented | years | capabilities (since) | Anonym A/B/I/C | Epheme A/B/I/C | Contac A/B/I/C | Unmoni A/B/I/C | Distri A/B/I/C | Genera A/B/I/C |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Kik | messaging | 561 | 488 | 2014-2026 | anonymity 2010, contact_discovery 2014, distribution_infrastructure 2011, unmonitored_communication 2010 | 561/150/150/6 | 0/0/0/0 | 561/150/0/0 | 561/150/150/12 | 561/357/206/206 | 0/0/0/0 |
 | Snapchat | messaging | 417 | 387 | 2019-2026 | anonymity 2011, contact_discovery 2011, distribution_infrastructure 2013, ephemerality 2011, generative_synthesis 2023, unmonitored_communication 2011 | 417/130/130/11 | 417/178/178/0 | 417/130/5/5 | 417/130/130/2 | 417/194/78/78 | 332/51/0/0 |
-| Facebook | social | 318 | 181 | 2011-2026 | contact_discovery 2008, distribution_infrastructure 2006, ephemerality 2017, generative_synthesis 2023, unmonitored_communication 2008 | 0/0/0/0 | 293/73/0/0 | 318/71/3/3 | 318/71/1/1 | 318/96/96/47 | 223/11/1/1 |
+| Facebook | social | 318 | 175 | 2011-2026 | contact_discovery 2008, distribution_infrastructure 2006, ephemerality 2017, generative_synthesis 2023, unmonitored_communication 2008 | 0/0/0/0 | 293/71/0/0 | 318/71/3/3 | 318/71/1/1 | 318/95/95/47 | 223/9/0/0 |
 | Dropbox | file_hosting | 147 | 107 | 2018-2026 | anonymity 2008, distribution_infrastructure 2008 | 147/2/0/0 | 0/0/0/0 | 0/0/0/0 | 0/0/0/0 | 147/92/59/59 | 0/0/0/0 |
 | Discord | messaging | 129 | 96 | 2021-2026 | anonymity 2015, contact_discovery 2019, distribution_infrastructure 2015, unmonitored_communication 2015 | 129/38/38/0 | 0/0/0/0 | 128/38/0/0 | 129/38/38/2 | 129/64/64/25 | 0/0/0/0 |
-| Instagram | social | 151 | 96 | 2019-2026 | anonymity 2010, contact_discovery 2010, distribution_infrastructure 2010, ephemerality 2016, generative_synthesis 2023, unmonitored_communication 2013 | 151/45/7/7 | 151/55/0/0 | 151/45/0/0 | 151/45/2/2 | 151/45/45/19 | 113/8/0/0 |
+| Instagram | social | 151 | 95 | 2019-2026 | anonymity 2010, contact_discovery 2010, distribution_infrastructure 2010, ephemerality 2016, generative_synthesis 2023, unmonitored_communication 2013 | 151/45/7/7 | 151/55/0/0 | 151/45/0/0 | 151/45/2/2 | 151/45/45/19 | 113/8/0/0 |
 | Gen AI | ai | 91 | 70 | 2023-2026 | anonymity 2018, contact_discovery 2022, generative_synthesis 2017 | 91/0/0/0 | 0/0/0/0 | 91/0/0/0 | 0/0/0/0 | 0/0/0/0 | 91/66/66/20 |
 | Telegram | messaging | 83 | 56 | 2022-2026 | anonymity 2014, contact_discovery 2014, distribution_infrastructure 2013, ephemerality 2013, unmonitored_communication 2013 | 83/22/22/0 | 83/30/0/0 | 83/22/0/0 | 83/22/22/2 | 83/29/14/14 | 0/0/0/0 |
 | Twitter / X | social | 107 | 51 | 2011-2026 | anonymity 2006, contact_discovery 2010, distribution_infrastructure 2006, ephemerality 2020, generative_synthesis 2024, unmonitored_communication 2006 | 107/10/0/0 | 99/11/0/0 | 107/10/0/0 | 107/10/2/2 | 107/36/36/18 | 55/3/0/0 |
