@@ -441,6 +441,8 @@ from ai_extraction_patterns import (
     GEN_AI_TOOL_RE,
     PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE,
     PRIOR_CONVICTION_RE,
+    DATED_CONVICTION_RE,
+    PRIOR_CONVICTION_NOT_BEFORE_RE,
     PROJECT_SAFE_CHILDHOOD_TOPIC_RE,
     REGISTERED_SEX_OFFENDER_RE,
     SEXTORTION_TOPIC_RE,
@@ -453,6 +455,8 @@ _PROJECT_SAFE_CHILDHOOD_TOPIC_RE = PROJECT_SAFE_CHILDHOOD_TOPIC_RE
 _REGISTERED_SEX_OFFENDER_RE = REGISTERED_SEX_OFFENDER_RE
 _PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE = PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE
 _PRIOR_CONVICTION_RE = PRIOR_CONVICTION_RE
+_DATED_CONVICTION_RE = DATED_CONVICTION_RE
+_PRIOR_CONVICTION_NOT_BEFORE_RE = PRIOR_CONVICTION_NOT_BEFORE_RE
 
 
 def process_cases(df: pd.DataFrame) -> List[Dict[str, Any]]:
@@ -1619,6 +1623,29 @@ def extract_relationship(case: Dict[str, Any]) -> Optional[str]:
     return 'unknown'
 
 
+def _states_prior_conviction(text: str, year: Any = None) -> bool:
+    """True when the text states this defendant's earlier conviction (#64).
+
+    A match is dropped when the words just before it negate it ("no prior convictions"),
+    make it hypothetical ("if he has a prior conviction", "defendants with prior
+    convictions"), or make it this case's own ("sentenced … following his previous
+    conviction"). A dated conviction counts only when its year is two or more years before
+    the release's year.
+    """
+    for m in _PRIOR_CONVICTION_RE.finditer(text):
+        if not _PRIOR_CONVICTION_NOT_BEFORE_RE.search(text[max(0, m.start() - 60): m.start()]):
+            return True
+    try:
+        release_year = int(str(year)[:4]) if year else None
+    except ValueError:
+        release_year = None
+    if release_year:
+        for m in _DATED_CONVICTION_RE.finditer(text):
+            if int(m.group(1)) <= release_year - 2:
+                return True
+    return False
+
+
 def extract_previous_conviction(case: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """
     Extract previous conviction information.
@@ -1643,7 +1670,7 @@ def extract_previous_conviction(case: Dict[str, Any]) -> Optional[Dict[str, Any]
     if _PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE.search(case_text):
         prev_conviction['is_registered'] = True
         prev_conviction['has_prior_conviction'] = True
-    if _PRIOR_CONVICTION_RE.search(case_text):
+    if _states_prior_conviction(case_text, case.get('year')):
         prev_conviction['has_prior_conviction'] = True
     
     # Extract age at first offense: "arrested when he was 16 years old"

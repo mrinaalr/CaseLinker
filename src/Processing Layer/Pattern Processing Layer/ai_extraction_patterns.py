@@ -125,14 +125,49 @@ PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE = re.compile(
     """,
     re.IGNORECASE | re.VERBOSE,
 )
-# Prior conviction language (previous_conviction.has_prior_conviction) — not RSO alone.
-PRIOR_CONVICTION_RE = re.compile(
+# Prior conviction language (previous_conviction.has_prior_conviction) — not RSO alone (#64).
+# Plurals and up to two words between ("two prior felony convictions", "a previous federal
+# felony conviction"), but not "prior to his conviction". Supervision at the time of the
+# offense and "convicted felon" / failure to register imply an earlier conviction.
+# Negations, hypotheticals and this case's own conviction are dropped in
+# processing.extract_previous_conviction, which reads the words before each match.
+# The parts below give prior_history its kinds; PRIOR_CONVICTION_RE is their union.
+PRIOR_CONVICTION_WORDING_RE = re.compile(
     r"""
-    \b(?:previous(?:ly)?|prior)\s+conviction\b
+    \b(?:previous|prior)\s+(?:(?!to\b)[a-z][a-z-]*\s+){0,2}convictions?\b
     | \bpreviously\s+(?:been\s+)?convicted\b
-    | \bprior\s+conviction\b
     | \brepeat\s+(?:CSAM\s+|child\s+pornograph\w*\s+|sex\s+)?offenses?\b
-    | \bdue\s+to\s+(?:his|her|their)\s+prior\s+conviction\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+PRIOR_STATUS_RE = re.compile(
+    r"\bconvicted\s+felon\b|\bfail(?:ure|ed|ing)?\s+to\s+register\s+as\s+a\s+sex\s+offender\b",
+    re.IGNORECASE,
+)
+PRIOR_SUPERVISION_RE = re.compile(
+    r"\b(?:while|was|were|is|been|already)\s+(?:on|serving)\s+(?:federal\s+|state\s+)?"
+    r"(?:parole|probation|supervised\s+release)\b",
+    re.IGNORECASE,
+)
+PRIOR_CONVICTION_RE = re.compile(
+    "|".join(f"(?:{rx.pattern})" for rx in (PRIOR_CONVICTION_WORDING_RE, PRIOR_STATUS_RE, PRIOR_SUPERVISION_RE)),
+    re.IGNORECASE | re.VERBOSE,
+)
+# "was convicted in 1996 of …": an earlier conviction only when the year is at least two
+# years before the release's own year (a year-only match is this case's conviction otherwise).
+DATED_CONVICTION_RE = re.compile(
+    r"\b(?:was|had\s+been|been|were)\s+(?:previously\s+|also\s+)?convicted\s+in\s+((?:19|20)\d\d)\b",
+    re.IGNORECASE,
+)
+# Words before a match that make it not this defendant's earlier conviction.
+PRIOR_CONVICTION_NOT_BEFORE_RE = re.compile(
+    r"""
+    (?:\b(?:no|without|never\s+had\s+(?:a|any)|not\s+have\s+(?:a|any)|lacks?\s+(?:a|any)
+        |neither\s+(?:\w+\s+){0,2}?(?:has|had)\s+(?:a|any)|(?:does|did)\s+not\s+have\s+(?:a|any))\s+(?:\w+\s+){0,2}
+     | \bif\s+(?:he|she|they|the\s+defendant)\s+(?:has|had|have)\s+(?:a\s+|any\s+|two\s+or\s+more\s+)?(?:\w+\s+){0,2}
+     | \b(?:defendants?|offenders?|those|anyone|individuals?|people)\s+(?:with|who\s+have)\s+(?:a\s+|any\s+)?(?:\w+\s+){0,2}
+     | \b(?:following|after)\s+(?:his|her|their)\s+
+    )$
     """,
     re.IGNORECASE | re.VERBOSE,
 )

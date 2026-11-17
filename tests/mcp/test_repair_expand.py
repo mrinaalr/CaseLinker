@@ -87,7 +87,8 @@ def test_describe_lists_detectors_with_their_source_and_the_reserved_decisions(c
     by_name = {d["name"]: d for d in out["detectors"]}
     assert by_name["press_cybertip"]["kinds"] == ["press_release"]
     assert by_name["press_cybertip"]["defined_in"].startswith("src/Processing Layer/field_assertions/assertions.py:")
-    assert [f["field"] for f in out["fields"]] == ["age", "sentence", "investigation_type", "cybertip_reporter", "date"]
+    assert [f["field"] for f in out["fields"]] == ["age", "sentence", "investigation_type", "cybertip_reporter", "date",
+                                                   "prior_history"]
     reserved = {r["decision"] for r in out["reserved_for_maintainer"]}
     assert "a new document kind" in reserved and "ontology mapping and pinned versions" in reserved
     assert out["corpus"]["cases"] == 3 and "victim_count" in out["corpus"]["domain_columns"]
