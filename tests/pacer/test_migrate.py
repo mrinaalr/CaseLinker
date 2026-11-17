@@ -50,13 +50,21 @@ def test_migrated_bundle_validates_and_keeps_roles_dates_and_victim_kinds(tmp_pa
     assert new["schema_version"] == "2.0.0"
 
 
-def test_offender_family_co_actor_with_another_role_becomes_a_listed_recipient(tmp_path):
+def test_co_actor_with_an_incompatible_role_is_left_unresolved_not_given_a_role(tmp_path):
+    F.write_pages(tmp_path)
     v1 = _as_v1(F.build()[0])
     next(e for e in v1["events"] if e["event_id"] == "e08")["co_actor_refs"] = ["LE1"]
     new, review = migrate(v1)
     e08 = next(e for e in new["events"] if e["event_id"] == "e08")
-    assert e08["co_actors"] == [] and {"participant_ref": "P2", "role": "recipient"} in e08["targets"]
-    assert any("e08" in r and "decide the role" in r for r in review)
+    assert e08["co_actors"] == [] and all(t["participant_ref"] != "P2" for t in e08["targets"])
+    assert e08["unresolved_participants"] == [{"participant_ref": "P2", "passage_ids": ["p08"],
+                                               "note": "coded as co-actor LE1 (law_enforcement) of an offender action in schema 1"}]
+    assert any("e08" in r and "decide it" in r for r in review)
+    findings = validate(new, text_root=tmp_path)
+    assert not [f for f in findings if f.severity == "error"]
+    assert any(f.code == "T17" and f.severity == "warning" for f in findings)
+    from state_machines.evidence.validate import release_errors
+    assert any("role is not decided" in p for p in release_errors(new, text_root=tmp_path, allow_unreviewed=True))
 
 
 def test_schema_2_bundles_pass_through_unchanged():

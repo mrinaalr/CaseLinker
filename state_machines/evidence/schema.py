@@ -137,6 +137,10 @@ def build_schema() -> Dict[str, Any]:
          "co_actors": _list(_obj(("participant_ref", "role", "mode"),
                                  {"participant_ref": _REF, "role": _ENUM(V.ACTOR_ROLES), "mode": _ENUM(V.PARTICIPATION_MODES)})),
          "targets": _list(_obj(("participant_ref", "role"), {"participant_ref": _REF, "role": _ENUM(V.TARGET_ROLES)})),
+         # a participant the record ties to the event whose role is not yet decided (adjudication);
+         # no role is claimed, and a release refuses an event that still has one
+         "unresolved_participants": _list(_obj(("participant_ref", "note", "passage_ids"),
+                                               {"participant_ref": _REF, "note": _TEXT(300), "passage_ids": _list(_ID, 1)})),
          "action": _ENUM(V.ACTION_CODES), "other_action_label": _TEXT(80), "outcome": _ENUM(V.OUTCOMES),
          "description": {"type": "string", "minLength": 5, "maxLength": 200}, "support": supports,
          "status": _ENUM(V.ASSERTION_STATUS), "time": {"$ref": "#/$defs/time"},

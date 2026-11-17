@@ -120,8 +120,11 @@ def validate(bundle: dict, *, text_root: Optional[Path] = None, deny_list: Seque
     for e in bundle["events"]:
         w = f"event:{e['event_id']}"
         need_actor(e["actor"]["participant_ref"], w)
-        for x in e.get("targets", []) + e.get("co_actors", []):
+        for x in e.get("targets", []) + e.get("co_actors", []) + e.get("unresolved_participants", []):
             need_actor(x["participant_ref"], w)
+        for x in e.get("unresolved_participants", []):
+            for pid in x["passage_ids"]:
+                need_passage(pid, w + ".unresolved_participants")
         for s in e["support"]:
             need_passage(s["passage_id"], w)
         for a in e["time"]["assertions"]:
@@ -324,6 +327,8 @@ def validate(bundle: dict, *, text_root: Optional[Path] = None, deny_list: Seque
             err("T17", f"event:{e['event_id']}", "a participant appears twice among the actors of one event")
         if people[e["actor"]["participant_ref"]]["kind"] == "persona" and e["actor"]["role"] != "undercover":
             err("T17", f"event:{e['event_id']}", "an undercover persona can only act in the undercover role")
+        for x in e.get("unresolved_participants", []):
+            warn("T17", f"event:{e['event_id']}", f"{x['participant_ref']}: role not yet decided ({x['note'][:80]})")
 
     # T18 possible identity (R05)
     seen_pairs = set()
@@ -386,4 +391,7 @@ def release_errors(bundle: dict, *, text_root: Optional[Path] = None, deny_list:
         pending += [r["relation_id"] for r in bundle["relations"] if (r.get("review") or {}).get("status", "adjudicated") != "adjudicated"]
         if pending:
             out.append(f"{len(pending)} events/relations not adjudicated (first: {', '.join(pending[:5])})")
+    unresolved = [e["event_id"] for e in bundle["events"] if e.get("unresolved_participants")]
+    if unresolved:
+        out.append(f"{len(unresolved)} events have participants whose role is not decided: {', '.join(unresolved[:5])}")
     return out

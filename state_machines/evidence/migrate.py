@@ -80,10 +80,13 @@ def migrate(bundle: dict) -> Tuple[dict, List[str]]:
         for r in e.pop("co_actor_refs", []):
             if roles[r] in allowed:
                 e["co_actors"].append({"participant_ref": refs[r], "role": roles[r], "mode": "assisting"})
-            else:   # e.g. a third party asked to delete an account: addressed by the act, role to be decided
-                e["targets"].append({"participant_ref": refs[r], "role": "recipient"})
+            else:   # tied to the act by the record, but no role can be claimed without adjudication
+                pids = sorted({s["passage_id"] for s in e["support"]})
+                e.setdefault("unresolved_participants", []).append({
+                    "participant_ref": refs[r], "passage_ids": pids,
+                    "note": f"coded as co-actor {r} ({roles[r]}) of an {V.FAMILY_OF[e['action']]} action in schema 1"})
                 review.append(f"{e['event_id']}: {refs[r]} ({r}, {roles[r]}) was a co-actor of a {V.FAMILY_OF[e['action']]} action; "
-                              "recorded as recipient; decide the role in this event (R04)")
+                              f"role unresolved; read passages {', '.join(pids)} and decide it (R04)")
         for r in [t["participant_ref"] for t in e["targets"]]:
             as_target.setdefault(r, set()).add(e["event_id"])
         e["time"] = _time(e["time"])

@@ -692,6 +692,38 @@
         },
         "time": {
           "$ref": "#/$defs/time"
+        },
+        "unresolved_participants": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "note": {
+                "maxLength": 300,
+                "type": "string"
+              },
+              "participant_ref": {
+                "pattern": "^P[0-9]+$",
+                "type": "string"
+              },
+              "passage_ids": {
+                "items": {
+                  "maxLength": 120,
+                  "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "participant_ref",
+              "note",
+              "passage_ids"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
         }
       },
       "required": [
