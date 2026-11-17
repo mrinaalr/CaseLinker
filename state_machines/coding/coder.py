@@ -47,7 +47,7 @@ from state_machines.evidence.validate import errors, validate
 HERE = Path(__file__).resolve().parent
 MODELS = json.loads((HERE / "models.json").read_text(encoding="utf-8"))
 CACHE = E.REPO_ROOT / "local" / "coder_cache.db"
-PROMPT_VERSION = "coder-prompt-1.1"
+PROMPT_VERSION = "coder-prompt-1.2"
 MAX_PAGE_CHARS = 7000
 BOILERPLATE = re.compile(r"(STANDARD CONDITIONS OF SUPERVISION|CRIMINAL MONETARY PENALTIES|SCHEDULE OF PAYMENTS|"
                          r"SPECIAL CONDITIONS OF SUPERVISION|ADDITIONAL (?:STANDARD|SPECIAL) CONDITIONS|CERTIFICATE OF SERVICE)", re.I)
@@ -82,6 +82,19 @@ _DEF = {  # short definitions from the codebook, for the prompt
     "PROC_CHARGE": "charging document filed", "PROC_PLEA": "plea entered", "PROC_VERDICT": "verdict", "PROC_SENTENCE": "sentence imposed",
 }
 ACTIONS = [a for a in V.ACTION_CODES if a in _DEF]
+HARM_LINES = "\n".join(f"  {k}: {v}" for k, v in {
+    "HARM_IN_PERSON_SEXUAL_ABUSE": "hands-on sexual abuse", "HARM_COERCED_SELF_GENERATED_IMAGERY": "the child made images at the offender's request or under threat",
+    "HARM_DISTRIBUTION_RECIRCULATION": "the child's images were shared or circulated", "HARM_EXPOSURE_THREAT": "a threat to expose images (sextortion)",
+    "HARM_EXPOSURE_REALIZED": "images sent to the child's own contacts", "HARM_COMMERCIAL_SEXUAL_EXPLOITATION": "commercial sex",
+    "HARM_SYNTHETIC_LIKENESS": "a real child's likeness was synthesised", "HARM_SEXUALIZED_CONTACT_ONLINE": "sexual messages without any images",
+    "HARM_PHYSICAL_VIOLENCE_OR_CONTROL": "violence, weapons, confinement", "HARM_PSYCHOLOGICAL_DISTRESS_DOCUMENTED": "stated fear or distress"}.items())
+AFF_LINES = "\n".join(f"  {k}: {v}" for k, v in {
+    "anonymity": "an identity not linked to the person: new or fake accounts, false names, Tor, burner numbers",
+    "ephemerality": "content designed to disappear: disappearing, view-once or expiring messages",
+    "contact_discovery": "a feature that surfaced the contact: search, public groups or posts, recommendations, listings",
+    "unmonitored_communication": "a private, direct or encrypted channel described as private or hidden",
+    "distribution_infrastructure": "something that moved material to others: group chats, links, cloud, upload, sites",
+    "generative_synthesis": "AI generation or manipulation of images"}.items())
 CHANNEL_WORDS = {"sms": "sms", "text message": "sms", "text messages": "sms", "phone": "voice_call", "telephone": "voice_call",
                  "phone call": "voice_call", "email": "email", "e-mail": "email", "mail": "mail", "in person": "in_person"}
 
@@ -125,8 +138,19 @@ Answer in compact JSON. For each act:
   af = only if the sentence names a platform FEATURE used for the act: {"c": class, "f": the feature's exact words}. A platform name alone is never a feature.
   h  = a harm code, only if the sentence documents that harm to the victim
   after = if the sentence says the act came after another act on this page, the first words of that act's sentence
-Leave out every field that does not apply. Never guess. Skip legal boilerplate and statutes.
-An undercover officer's messages are LE_UNDERCOVER_ENGAGE; the defendant's messages to an undercover persona are offender acts.
+Leave out a field only when the page says nothing about it. Never guess. Skip legal boilerplate and statutes.
+
+Rules that are easy to get wrong:
+- The actor of an offender act is always the offender. When a victim sends images at the defendant's request,
+  the act is RECEIVE_SELF_GENERATED, by "the defendant", to "minor victim 1" (victim).
+- An undercover officer's messages are LE_UNDERCOVER_ENGAGE; the defendant's messages to an undercover persona are offender acts
+  whose target is the persona (role counterparty), and no harm is coded for a persona.
+- "after": whenever the sentence says it followed something on this page ("after", "then", "following", "later",
+  "in response"), give the first words of that earlier sentence.
+- h: only these, and only when the sentence documents that harm to a child:
+{harms}
+- af: only when the sentence names the feature and ties it to this act. Classes:
+{affordances}
 
 Action codes:
 {codes}
@@ -645,7 +669,8 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
             ans, how = {"acts": []}, "skipped: first coder found no act"
         else:
             text = full[:MAX_PAGE_CHARS]
-            prompt = render_prompt(codes=codes, doc_type=doc["doc_type"].replace("_", " "), page=str(page_no), text=text)
+            prompt = render_prompt(codes=codes, harms=HARM_LINES, affordances=AFF_LINES, doc_type=doc["doc_type"].replace("_", " "),
+                               page=str(page_no), text=text)
             ans, how = prompt, "model" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
             jobs.append(len(answers))
         answers.append([doc, page_no, full, ans, how])
@@ -659,7 +684,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         if progress:
             progress(doc["doc_id"], page_no, len(ans.get("acts", [])))
     answers = [tuple(a[:4]) for a in answers]
-    bundle, quotes, log = assemble(case_id, sources, answers, coder, spec)
+    bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec)
     log = coverage + log
     bundle, rlog = repair(bundle, text_root, deny or [])
     return bundle, quotes, log + rlog
