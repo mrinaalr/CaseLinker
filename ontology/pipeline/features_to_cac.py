@@ -3,10 +3,14 @@
 CaseLinker → CAC Ontology mapper.
 
 Transforms a CaseLinker case dict (as returned by CaseStorage.get_case()) into a
-typed RDF knowledge graph using the CAC Ontology v3.0.0 class vocabulary.
+typed RDF knowledge graph using the CAC Ontology vocabulary, pinned at 3.1.0
+(ontology/CAC_ONTOLOGY_VERSION; shapes from ontology/vendor/cac-3.1.0).
 
-Uses rdflib 7.x with manual CAC namespace bindings.
-(case-uco and case-uco-cac are not published on PyPI as of May 2026.)
+The mapping from CaseLinker's extracted features to CAC classes and properties is
+CaseLinker's own; the graph is built with rdflib 7.x and manual CAC namespace bindings.
+The CASE-UCO SDK (ontology/SDK_VERSION) would only serialize the same mapping, so it is
+used where its builders add structure: the PACER court-record graphs
+(state_machines/graphs/emit.py). Both are validated against the same pinned shapes.
 
 Entry points
 ------------
