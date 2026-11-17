@@ -31,9 +31,22 @@ python ontology/platform_affordance_evidence/afh_manifest/run_all.py --verify
 | Pin | Where | Value for the committed outputs |
 |---|---|---|
 | Corpus | `RUN_IDENTITY.json` `dataset_identity` (sha256 over id, `fp-1` fingerprint, text hash, platforms, topics, source, URL, year of every case) | `60f7bfaa…d06b`, 10,802 cases |
-| Code | `RUN_IDENTITY.json` `git.commit`, `code_sha256` | the commit that generated the outputs (`3f346c670` for the committed set) |
+| Code | `RUN_IDENTITY.json` `git.commit`, `code_sha256` | the commit that generated the committed outputs |
 | Rules | `config/platforms.yaml` `platforms-2` (generated from `config/capability_sources/`), `config/codebook.yaml` `codebook-6`; evidence tiers `tiers-1` (baseline) and `tiers-1+linewrap-3` (primary) | sha256 in `RUN_IDENTITY.json` |
 | Outputs | `RUN_IDENTITY.json` `outputs_sha256` | checked by `--verify` |
+
+### Snapshot archive
+
+The paper's figures come from one snapshot. A later corpus rebuild renumbers case ids and changes `dataset_identity`, so `--export` from a rebuilt corpus produces a new release, not these figures. `--verify` needs only the snapshot, not the corpus DB, so archiving the file keeps the figures reproducible.
+
+| | Value |
+|---|---|
+| File | `data/snapshot.sqlite` (gitignored) |
+| sha256 | `8dfc22b157c38d0b87101c68994f45060beccb3cbf8f7f581eaab8a82f36127c` |
+| Size | 43,319,296 bytes |
+| `dataset_identity` | `60f7bfaaa287b3c7cb7ad7a94a8eaf23eb704751860880f9c6663c3b5767d06b` (10,802 cases) |
+
+A second `--export` from the same corpus reproduced the file byte for byte. The file holds full release text, so it is not committed and belongs in a restricted-access deposit, cited by its sha256. To reproduce from the deposit, place the file at `data/snapshot.sqlite`, check `shasum -a 256`, and run `run_all.py --verify`.
 
 Tests (pytest and the repo requirements; corpus-dependent tests skip without `caselinker.db`):
 
