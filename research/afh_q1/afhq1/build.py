@@ -502,6 +502,7 @@ def build(log=print) -> dict:
     verdicts = cit.verify(cites, fingerprints)
     man["citation_check"] = dict(Counter(v.status for v in verdicts))
     dump("manifest.json", man)
+    dump("exemplar_inventory.json", exemplar_inventory(man))
     cit.dump(cites, OUT / "citations.json")
     dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
@@ -509,8 +510,9 @@ def build(log=print) -> dict:
     dump("tier_variants.json", tier_variant_report(cases))
     dump("validation_sample.json", rv.sample_rows(records))
     write_records_csv(records)
-    from . import report
+    from . import latex, report
     report.write(OUT)
+    latex.write(OUT)
     files = sorted(p for p in OUT.rglob("*") if p.is_file() and p.name != "RUN_IDENTITY.json")
     code = sorted((RESEARCH / "afhq1").glob("*.py"))
     identity = {
@@ -685,3 +687,24 @@ def tier_variant_report(cases: List[dict]) -> dict:
             x.update(rows.get((x["case_id"], x["platform"]), {}))
         out["review"] = tv.review_analysis(sample, codes, rows, wilson)
     return out
+
+
+def exemplar_inventory(man: dict) -> dict:
+    """Every manifest exemplar with its blind review verdict (config/review_exemplars.csv)."""
+    reviews = {(r["item"], r["case_id"]): r for r in _csv("review_exemplars.csv")}
+    rows, tally = [], Counter()
+    for p, e in sorted(man["platforms"].items()):
+        for x in e["exemplars"]:
+            _, plat, kind, what = x["purpose"].split(":", 3)
+            r = reviews.get((x["purpose"], x["case_id"]))
+            verdict = r["verdict"] if r and r.get("fingerprint") == x["fingerprint"] else "unreviewed"
+            tally[(kind, verdict)] += 1
+            rows.append({"platform": plat, "kind": kind, "cited_for": what, "case_id": x["case_id"],
+                         "fingerprint": x["fingerprint"], "span": x["span"], "verdict": verdict,
+                         "note": (r or {}).get("note", "")})
+    by_kind: Dict[str, Dict[str, int]] = defaultdict(dict)
+    for (k, v), n in tally.items():
+        by_kind[k][v] = n
+    return {"exemplars": len(rows), "by_kind_and_verdict": {k: dict(sorted(v.items())) for k, v in sorted(by_kind.items())},
+            "rows": rows, "span_basis": pl.SPAN_BASIS,
+            "use": "cite only verdict == supported; partly_supported needs wording that matches the note"}
