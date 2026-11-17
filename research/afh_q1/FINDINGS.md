@@ -1,135 +1,147 @@
-# AfH 2.0 Q1: author review report
+# AfH 2.0 Q1: platform-affordance manifest (review checkpoint)
 
-Corpus snapshot `60f7bfaa…d06b` (10,802 cases, 78 sources). Rules: `platforms-2`, `codebook-3`. Outputs are regenerated from a clean clone of this branch and reproduce byte for byte (`run_all.py --export --verify` → `identical`). Every number below is read from [outputs/](outputs/); [TABLES.md](outputs/TABLES.md) has the full tables. The manuscript is unchanged.
+Snapshot `60f7bfaa…d06b` (10,802 cases, 78 sources). Rules: `platforms-2`, `codebook-5`, evidence tiers `tiers-1` (published) and `tiers-1+linewrap-1` (alternative). Every number below is read from [outputs/](outputs/). [TABLES.md](outputs/TABLES.md) has every table, and [outputs/latex/](outputs/latex/) has booktabs versions for `\input{}`. A fresh clone with only Python 3.12 and PyYAML regenerates all outputs byte for byte. The manuscript is unchanged.
 
-## How to read the evidence levels
+## Evidence levels and denominators
 
-AfH argues affordance → misuse → harm conceptually. Press releases are written to report charges, not mechanisms, so the corpus is read at five levels. A low count at a strict level describes the record, not the role of the affordance. The strictest counts are not a validity test of the theory.
-
-| Level | Meaning | What it can support |
+| Term | Definition | Denominator |
 |---|---|---|
-| **A available capability** | The platform offered the feature natively in the case's publication year (dated, sourced registry) | "This capability was present wherever offenders used this platform" |
-| **B capability-relevant conduct** | Documented use of the platform for conduct of the kind the feature bears on | "Documented conduct of the relevant kind occurred on platforms with the feature" |
-| **I inferred facilitation** | B on a platform where the feature is on for every use by design | "The conduct passed through the feature by design" (plausibility validated per class, below) |
-| **C explicit instrumental use** | The release states the feature-specific behaviour in a sentence naming the platform | "The record documents the feature being used" |
-| Harm: potential / documented | Potential: an AfH ψ(a) pathway is open (class at B or I). Documented: a harm cue in the release, direct (platform sentence) or case-level. | Potential harms are conceptual; documented harms are co-occurrence, not causation |
+| Specific platform presence | Case names a registered specific platform (not "social media", "chat", "online") | distinct cases; platform-case observations |
+| Documented use: stated / inferred / named only | Published `tiers-1` rules on the platform sentence; case tier = best record tier, exclusive per case | strict cases |
+| Documented use, line-wrap repair | The better of `tiers-1` on stored text and on text with mid-sentence hard wraps joined (Decision 1) | strict cases; reported beside, not instead of, `tiers-1` |
+| A available capability | Platform offered the class natively in the case's publication year (dated registry) | cases on assessed platforms (1,984) |
+| B capability-relevant conduct | A, plus documented use for conduct of the kind the class bears on | same |
+| I inferred facilitation | B, on a platform where the feature is on for every use by design | same |
+| C explicit instrumental use | B, plus the class-specific behaviour stated in a sentence naming the platform | same |
+| Potential vs documented harm | Potential: AfH ψ(a) pathway open (B or I). Documented: harm cue in a platform sentence (direct) or anywhere in the release (case level). | cases at that level |
 
-## Section 3 findings
+Levels nest: A ⊇ B ⊇ I ⊇ C. A low C describes how press releases are written. It is not evidence that a capability played no role, and it is not a test of the AfH theory.
 
-| Finding | Value | Basis |
+## 1–2. Platform presence and documented use
+
+| Measure | Cases | Platform-case observations |
 |---|---|---|
-| Corpus | 10,802 cases, 78 sources, publication years 2002–2026 (one 1992 date error) | verified |
-| Cases naming any platform label (broad, AfH 1.0 rule) | 3,080 (4,680 platform-case observations, 57 labels) | verified |
-| Cases naming a specific platform (strict) | 1,863 (2,487 observations, 52 labels) | verified |
-| Strict cases documenting platform use, published rules | 1,257 (1,080 stated + 177 inferred-only) | verified; a lower bound |
-| Same, corrected for measured undercount | about 1,480 (sample-weighted; bounds 1,080–1,674). Sensitivity rules give 1,577. | validated (blind 70-row tier sample) |
-| Timeline | Publication year only. 2,601 cases carry an offense-typed date. Program boilerplate ("launched in May 2006") is excluded from dates. | verified |
-| Coverage | 84% of cases from 2021–26; source mix changes across eras; within DOJ Safe Childhood 2021–26, 67–79% of named-platform cases document use (flat) | verified |
+| Corpus | 10,802 | – |
+| Any platform label (broad, AfH 1.0 rule) | 3,080 | 4,680 (57 labels) |
+| **Specific named platform (strict)** | **1,863** | **2,487** (52 labels) |
+| stated | 1,080 | 1,228 |
+| inferred only | 177 | 249 |
+| named only | 606 | 1,010 |
+| **Documented use, original rules** | **1,257** | 1,477 |
+| **Documented use, line-wrap repair** | **1,526** | 1,850 |
+| Generic-category-only cases | 1,096 | – |
 
-**Systematic undercount, confirmed.** In a blind sample of 40 named-only records, 25 document use (62.5%, Wilson 47–76%). The undercount sits in one rule: the offense-keyword gate, where 20 of 26 rows document use.
+The corpus also has 4,384 cases with no platform label, 3,334 with only "online" or "internet", and 4 lost to PSA or Gen-AI filters. All partitions reconcile (`inventory.json` → `reconciliation`).
 
-The cause is mechanical. Releases are line-wrapped, so the verb and the platform name land on different "sentences". The keyword list also lacks storage and receipt verbs (stored, saved, received, requested, purchased). Joining wrapped lines and adding those verbs (the sensitivity tier) upgrades 18 of those 25 rows, and wrongly upgrades 3 of the 15 no-use rows.
+Tier precision, from a blind, offender-use-coded sample:
+- stated 13/15, inferred 14/15;
+- named-only rows document offender use in 26/40;
+- line-wrap promotions are 11/15 precise. The repair recovers 14/26 hidden uses for 2/14 false promotions.
 
-The PSA, enumeration and awareness gates were right in all 6 sampled rows. Stated is 13/15 and inferred 14/15 in the new sample; 12/12 and 10/10 after adjudication in the original one.
+Decision 1 has the full comparison: `DECISION_1_TIERS.md`, `outputs/tier_variants.json`.
 
-## Section 4: platform-level comparisons
+## 3. Six-affordance coverage
 
-Format per class: A / B / I / C distinct cases.
+Distinct cases, with platform-case observations in brackets; last column is distinct platforms at C.
 
-| Platform | use-documented cases | Anonymity | Ephemerality | Contact discovery | Unmonitored comm. | Distribution | Generative |
-|---|---|---|---|---|---|---|---|
-| Kik | 409 | 561/171/171/2 | – | 561/171/0/0 | 561/171/171/12 | 561/252/109/109 | – |
-| Snapchat | 377 | 417/120/120/5 | 417/144/144/0 | 417/120/4/4 | 417/120/120/1 | 417/142/48/48 | 332/31/1/1 |
-| Facebook | 132 | not native | 293/50/0/0 | 318/55/1/1 | 318/55/0/0 | 318/63/63/20 | 223/4/0/0 |
-| Discord | 70 | 129/28/28/0 | – | 128/28/0/0 | 129/28/28/1 | 129/40/40/12 | – |
-| Dropbox | 69 | 147/1/0/0 | – | – | – | 147/60/34/34 | – |
-| Instagram | 66 | 151/29/3/3 | 151/33/0/0 | 151/29/0/0 | 151/29/1/1 | 151/27/27/6 | 113/4/1/1 |
-| Gen AI | 56 | – | – | – | – | – | 91/51/51/39 |
-| Telegram | 42 | 83/23/23/0 | 83/25/0/0 (opt-in) | 83/23/0/0 | 83/23/23/2 | 83/21/6/6 | – |
-| WhatsApp | 41 | partial (2026) | 56/28/0/0 (opt-in, 2020+) | 49/26/0/0 | 58/27/27/0 | 58/9/4/4 | 49/1/0/0 |
-| BitTorrent | 29 | 36/1/1/0 | – | 36/1/0/0 | – | 36/24/24/18 | – |
-| Omegle | 12 | 19/7/7/0 | – | 19/7/7/0 | 19/7/7/0 | – | – |
+| Class | A available | B relevant conduct | I inferred facilitation | C explicit use | C platforms |
+|---|---|---|---|---|---|
+| Anonymity | 1,782 (2,306) | 412 (466) | 338 (370) | 22 (23) | 6 |
+| Ephemerality | 926 (1,197) | 322 (365) | 177 (178) | 0 | 0 |
+| Contact discovery | 1,798 (2,373) | 454 (522) | 30 (30) | 9 (9) | 4 |
+| Unmonitored communication | 1,729 (2,314) | 459 (532) | 360 (380) | 22 (24) | 8 |
+| Distribution infrastructure | 1,898 (2,525) | 802 (914) | 544 (608) | 437 (487) | 28 |
+| Generative synthesis | 733 (902) | 121 (126) | 54 (54) | 19 (19) | 1 |
 
-All 34 manifest platforms are in `outputs/manifest.json`, with capability profile, dates, confidence, conduct mix and fingerprint-verified exemplars (all 146 citations `ok`).
+43 cases document AI-generated material. 31 of them don't attribute creation to anyone in the case, so they count as "AI material", not synthesis.
 
-Comparisons that hold:
-- Kik's record is dominated by distribution and pseudonymous contact.
-- Snapchat is the only platform where ephemerality is on by design for every capability-relevant interaction (144 cases).
-- File hosting and P2P appear almost only as distribution.
-- Facebook has no native anonymity (real-name policy) yet carries comparable contact conduct.
-- Omegle and the dating and game platforms are the stranger-meeting cases.
+**Validation (blind reviewers).**
+- **Explicit use, exemplar review:** Anonymity 12/14 supported, Contact 5/7, Unmonitored 13/15, Distribution 54/67, Generative 2/3.
+- **Inferred facilitation judged reasonable:** Generative 6/6, Unmonitored 5/6, Contact 4/6, Distribution 1/6.
+- **Anonymity and Ephemerality:** 0/6 each judged reasonable; all were "weak". The conduct passes through the feature by design, but the passage doesn't show it depended on it. Call this "present by design", not "facilitated".
 
 ## Historically supported recurrence
 
-Every capability year now comes from dated research: 216 capability rows across 56 platforms, 87 documented, 91 approximate, 38 uncertain. Recurrence means at least 20 cases, 3+ platform families with 2+ cases each, and 2+ eras with 2+ cases each.
+Recurrence means at least 20 cases, 3+ families with 2+ cases each, and 2+ publication eras with 2+ cases each.
 
-| Class | B: families / eras | I: families / eras | C: families / eras | Strongest level that recurs |
+| Class | B: cases / families / eras | I | C | Recurs at |
 |---|---|---|---|---|
-| UnmonitoredCommunication | 7 / 4 | 4 / 4 | 2 / 2 | I |
-| Anonymity | 7 / 4 | 5 / 4 | 2 / 2 | I |
-| ContactDiscovery | 7 / 4 | 6 / 3 | 2 / 1 | I (28 cases) |
-| DistributionInfrastructure | 8 / 4 | 8 / 4 | 7 / 4 | **C** |
-| Ephemerality | 3 / 3 | 1 / 2 | 0 / 0 | B; native ephemeral messaging only exists from 2011 (Snapchat), so pre-2011 absence is historical, not a gap |
-| GenerativeSynthesis | 3 / 1 | 1 / 1 | 1 / 1 | none across eras; consistent with public tools dating from 2017 (face-swap) and 2022 (diffusion) |
+| Distribution | 802 / 9 / 4 | 544 / 9 / 4 | 437 / 6 / 4 | A, B, I, C |
+| Anonymity | 412 / 9 / 4 | 338 / 8 / 4 | 22 / 3 / 3 | A, B, I, C |
+| Unmonitored communication | 459 / 9 / 4 | 360 / 4 / 4 | 22 / 2 / 2 | A, B, I |
+| Contact discovery | 454 / 7 / 4 | 30 / 6 / 3 | 9 / 2 / 1 | A, B, I |
+| Ephemerality | 322 / 3 / 3 | 177 / 1 / 2 | 0 | A, B. Native ephemeral messaging begins in 2011, so earlier absence is historical. |
+| Generative synthesis | 121 / 3 / 1 | 54 / 1 / 1 | 19 / 1 / 1 | none across eras. Public tools date from 2017 (face-swap) and 2022 (diffusion). |
 
-Two kinds of recurrence are supported:
-- **Distribution** recurs as documented misuse (C) from IRC and early P2P to Telegram and cloud links.
-- **Private communication, pseudonymity and stranger contact** recur as capability-relevant conduct across every era and seven platform families.
+## Platform registry and operational definitions
 
-## Defensible affordance → misuse → harm examples
+| Item | Value |
+|---|---|
+| Platforms | 59 labels, each with a status (specific / technology / generic / ambiguous alias / excluded) and a family (`config/platforms.yaml`) |
+| Capability rows | 216 across the 55 corpus labels that have capabilities (56 platforms researched, including VRChat, which is not in the corpus): 87 documented, 91 approximate, 38 uncertain. Each row has native, `default_on`, first year and confidence; dated evidence per cell is in `config/capability_sources/*.yaml`. |
+| Source reachability | 217 cited URLs: 185 resolve, 30 return 4xx (mostly bot blocking; 1 404, 1 410), 2 time out (`url_check.json`) |
+| Manuscript-relevant claims | 25 checked on fetched dated pages: 23 confirmed, 2 corrected (`manuscript_claims_verified.csv`) |
+| Coding rules | Ephemerality and Generative synthesis count only fully native features. Contact discovery is on by design only for stranger-meeting platforms. Snapchat's generative capability is dated to Dreams (2023-08), not AR Lenses. |
+| Definitions | `config/codebook.yaml`: class definitions, conduct categories, instrumental cues and guards (undercover, app descriptions, AI detection, passive or possession AI wording), harm cues |
 
-These come from cells with documented harm at C or I, whose harm cue passed the blind harm review.
+The two corrections:
+- **Kik:** discoverable hashtag groups date from 2014-12.
+- **Dropbox:** a Public folder and shared folders at the 2008 launch; per-file share links from 2012-04.
 
-| Pathway | Evidence | Status |
+## Platform comparisons (Section 4)
+
+34 platforms have at least 3 use-documented cases. Each manifest entry gives the capability profile with dates, cases by tier, conduct mix, A/B/I/C per class, harm counts and fingerprint-bound exemplars (`outputs/manifest.json`; top 15 in `latex/tab_platform_manifest.tex`). All 185 cited exemplars resolve to the same content (`citation_check: ok`).
+
+## Verified exemplar inventory
+
+Every manifest exemplar was blind-reviewed (`outputs/exemplar_inventory.json`, `latex/tab_verified_exemplars.tex`). Cite only `supported`.
+
+| Cited for | Supported | Partly | Not |
+|---|---|---|---|
+| Distribution (explicit use) | 54 | 10 | 3 |
+| Unmonitored communication | 13 | 1 | 1 |
+| Anonymity | 12 | 1 | 1 |
+| Contact discovery | 5 | 0 | 2 |
+| Generative synthesis | 2 | 0 | 1 |
+| h3 material distributed | 37 | 11 | 9 |
+| h4 sextorted | 7 | 3 | 2 |
+| h2 coerced self-generated | 3 | 0 | 0 |
+| h1 groomed toward in-person | 2 | 2 | 0 |
+| h6 likeness synthesized | 1 | 0 | 2 |
+
+The main failure patterns:
+- the harm or conduct happened on a different platform named in the same sentence (e.g. first contact on Grindr, material sent over Kik);
+- an upload to cloud storage with no sharing shown;
+- headline-only passages;
+- an undercover target.
+
+## Misuse → harm: observed vs potential
+
+| Pathway | Observed (direct cases at C / I) | Label |
 |---|---|---|
-| Distribution infrastructure → material distributed / re-victimization | 290 C cases; harm direct in 280; reviewer confirmed 6/6 shared-trigger rows and 5/6 direct rows | Defensible. State that the conduct and harm cues share verbs, so this is one observation. |
-| Generative synthesis → likeness synthesized | 41 C cases; harm direct in 37 | Defensible for creation. 3 of 4 shared-trigger rows were possession of AI material, not synthesis of a child's likeness, so phrase it as "AI-generated material", and as likeness synthesis only where the release says so. |
-| Unmonitored communication → coerced self-generated imagery / sextortion | I in 391 cases; harm direct 3 (h2) and 3 (h4); inference judged reasonable in 5/6 | Defensible as qualitative examples with case ids, not as a rate |
-| Contact discovery (stranger-meeting platforms) → grooming | I in 28 cases; inference reasonable in 4/6; h1 case-level only | Use as illustration (Omegle, dating, game platforms) |
-| Anonymity (persona) → sextortion | C 10; h4 direct 3 | Thin; usable as named examples |
+| Distribution → material distributed | 431 / 497 | Observed. The class and harm share verbs, so count it once. |
+| Anonymity → sextortion | 6 / 13 | Observed examples |
+| Unmonitored → sextortion, coerced imagery | 1 / 10; 0 / 8 | Observed at I, with examples |
+| Ephemerality → coerced imagery, sextortion | 0 / 10; 0 / 4 | Potential: pathway open in 322 cases; no release describes disappearing content |
+| Contact discovery → grooming | 0 / 0 (103 case-level) | Potential; illustrate with stranger-meeting platforms |
+| Generative → likeness synthesized | 19 / 19 | Observed but small. Exemplars 1/3 supported, so adjudicate before citing. |
 
-Pick the exemplars from `outputs/manifest.json`. Each carries a case id and content fingerprint.
+## Limitations
 
-## Conceptual examples that need labelling as such
+- Enforcement-report coverage, not prevalence: 84% of cases are from 2021–26 and the source mix changes by era.
+- Publication year is the timeline; it is an upper bound on conduct time.
+- Text is capped at 6,000 characters. Cues are sentence-local, so a sentence naming two platforms can attribute conduct to the wrong one.
+- Rules are deterministic regexes with small validation samples (n = 3–40 per cell; wide intervals).
+- All reviewers were AI agents working blind; no human adjudicator has checked the disagreement rows.
+- 38 registry rows are uncertain; most citations were checked for reachability, not read in full. The 25 manuscript claims were read in full.
 
-| Claim | Why it is conceptual here |
-|---|---|
-| Ephemerality → coerced imagery / sextortion | Ephemerality is on by design in 147 Snapchat cases with capability-relevant conduct. In 6/6 sampled rows the reviewer judged the facilitation possible but not shown ("weak inference"). No release states disappearing content facilitated the conduct; one generic-platform case documents a five-second-view image. |
-| Anonymity → grooming / coerced imagery | 364 cases pass through by-design pseudonymity (I), but 6/6 sampled rows were "weak inference". Only 10 releases describe a persona on a named platform. |
-| Contact discovery on feed platforms (People You May Know, Quick Add) | Shown by default, but the record rarely says where first contact began. Coded as available, not inferred. |
-| ψ(a) links rated "documented in cases where the pathway is open" (`harm.json`) | Harm is documented in the case, not tied to the feature |
+## Remaining author decisions
 
-## Claims to remove or revise
-
-| AfH 1.0 claim | Revision |
-|---|---|
-| 1,875 / 3,128 / 54 / 858 / 136 / 881 | Report broad 3,080 and strict 1,863 with both denominators, tiers as a lower bound, and the corrected estimate. 858/136 appear in no committed output; the June outputs say 856/134. |
-| Platform signatures written as offender use ("Ephemerality … evidence destruction by design" for Snapchat; Kik "anonymity") | Write as capability (A, with dates) plus inferred facilitation (I), and cite explicit examples where they exist |
-| "The same chat affordance, on a platform from 2008 or 2025, produces the same offense pattern" | Supported as recurrence of capability-relevant conduct (B) across eras, and of documented misuse (C) for distribution only. Drop "produces". |
-| "A platform's affordance profile predicts its harm profile" | Not tested; call it a hypothesis |
-| Snapchat generative synthesis, or any "AI on every platform" reading | Meta, Snapchat, X and TikTok AI image tools date from 2023–25. Availability (A) is not misuse. |
-| Contact-discovery claims for 2002–2014 releases on Kik | Kik's searchable public groups date from 2014 (approximate); username search earlier |
-
-## Unresolved author decisions
-
-1. **Registry confidence.** 38 capability rows are `uncertain` and 91 `approximate`. of 217 cited URLs, 185 resolve, 28 block automated checks (403/429), 2 are dead (404/410) and 2 timed out (`config/capability_sources/url_check.json`). Cells to resolve first: Chat Avenue launch year, Wickr signup identity, Snapchat Quick Add date, Kik public-groups year, Instagram/TikTok/Tumblr discovery dates.
-2. **Tier rules.** Adopt the sensitivity tier (unwrap + verbs) as the published rule, or report published counts with the corrected estimate. The choice changes Section 3 numbers.
-3. **What "inferred facilitation" may be called in the paper.** It validates for GenerativeSynthesis, UnmonitoredCommunication and stranger-meeting ContactDiscovery. For Anonymity and Ephemerality it means "passed through the feature by design", not "was facilitated by it".
-4. **Class boundaries.** Closed-group trading (Unmonitored vs Distribution), and screenshots or screen recordings of live or ephemeral content (capture; CAC CoercionLeverage is outside the six).
-5. **Gen AI as a manifest row.** It is a technology label, not a platform.
-6. **Release boundaries in compilations.** One reviewed Anonymity hit came from a different release on the same compilation page. Splitting NCMEC and state compilations more finely would remove such cases.
-7. **Re-extraction.** Storing the fixed date roles (`temporal_tags` 1.1.0) in `caselinker.db` and production needs your approval.
-8. **Raw `evidence_quote` text in the public evidence API.**
-
-## Validation summary
-
-| Check | Result |
-|---|---|
-| 107-row classification sample, second blind reviewer | Agreement: instrumental rows 47/49 (κ 0.78), tier rows 31/32 (κ 0.84). 7 disagreements adjudicated (`config/validation_adjudication.csv`). |
-| Explicit-use precision after adjudication | Anonymity 5/7, ContactDiscovery 7/7, Distribution 14/15, Generative 9/10, Unmonitored 8/10 |
-| Harm cues (74 rows) | Direct cue tied to platform: h1 2/3, h2 3/3, h3 5/6, h4 5/6, h6 5/6. Case-level-only rows are weak (0–75%). Negatives: h3 2/4 missed, others 0/4. |
-| Inferred facilitation (36 rows) | Reasonable: Generative 6/6, Unmonitored 5/6, Contact 4/6, Distribution 1/6, Anonymity 0/6, Ephemerality 0/6 (the remainder "weak", 1 not reasonable) |
-| Determinism and clean checkout | `--verify` identical in a fresh clone after `--export`; 47 Q1 tests pass there |
-| Privacy | Outputs hold ids, hashes, offsets and counts. A test asserts no 25+ character output string appears in any release. Review sheets with masked passages stay in gitignored `data/`. |
-
-Reviewers: one agent reviewer (round 1) and four independent blind agent reviewers (round 2), each with only the masked passages and definitions. Human adjudication of the disagreement rows is still pending.
+1. Adopt the line-wrap repair (1,526) as the Section 3 count, or report 1,257 with the repair alongside.
+2. Wording for inferred facilitation: "facilitated" for Generative, Unmonitored and stranger-meeting Contact; "present by design" for Anonymity and Ephemerality.
+3. Resolve the 38 uncertain registry rows that appear in the manuscript, and the 2 claim corrections.
+4. Human adjudication of the Generative and h6 cells before citing AI examples.
+5. A Facebook/YouTube boilerplate filter: 7 of 8 false line-wrap promotions.
+6. Whether Gen AI is listed as a manifest platform (it is a technology label).
+7. Re-extraction to store the fixed date roles (`temporal_tags` 1.1.0) in the databases.
+8. Raw `evidence_quote` text in the public evidence API.
