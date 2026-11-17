@@ -71,6 +71,17 @@ Levels nest: A available capability > B documented capability-relevant conduct >
 
 Each level is a subset of the one before. C counts what press releases spell out; releases rarely describe mechanisms, so a low C is a property of the record, not evidence that a capability played no role.
 
+Named platforms only (the paper's 1,863-case analytic set):
+
+| Class | A | B | I | C |
+|---|---|---|---|---|
+| Anonymity | 1653 (2128) | 457 (519) | 373 (409) | 23 (27) |
+| ContactDiscovery | 1691 (2233) | 508 (594) | 38 (39) | 10 (10) |
+| DistributionInfrastructure | 1845 (2438) | 946 (1101) | 656 (746) | 509 (574) |
+| Ephemerality | 926 (1197) | 363 (420) | 181 (182) | 0 (0) |
+| GenerativeSynthesis | 651 (811) | 73 (79) | 2 (2) | 2 (2) |
+| UnmonitoredCommunication | 1676 (2227) | 513 (602) | 399 (427) | 23 (25) |
+
 ## C. Publication-year eras
 
 Publication year, not offense year. Strict = specific named platform.
