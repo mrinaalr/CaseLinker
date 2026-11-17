@@ -1,0 +1,151 @@
+@prefix clt: <https://w3id.org/caselinker/trajectory#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# EXPERIMENTAL CaseLinker research extension. Not part of CAC, CASE or UCO.
+#
+# Everything structural reuses canonical terms: uco-action:Action, uco-action:ActionLifecycle,
+# uco-core:Relationship, uco-core:Grouping, cac-platforms:* affordance classes and W3C oa:Annotation.
+# This file only adds what those cannot say: the evidence and source status of an assertion,
+# the coded action/harm/outcome code, partial dates, and the step index of a derived trajectory.
+# No classes are declared. Values of the *Status/*Code properties are constrained by
+# caselinker-trajectory-shapes.ttl; their definitions are in trajectories/CODEBOOK.md.
+
+<https://w3id.org/caselinker/trajectory>
+    a owl:Ontology ;
+    rdfs:label "CaseLinker trajectory evidence extension (experimental)" ;
+    owl:versionInfo "0.2.0" ;
+    owl:versionIRI <https://w3id.org/caselinker/trajectory/0.2.0> ;
+    dcterms:description "Evidence-status and coding properties for source-grounded action trajectories. Experimental; subject to change; never presented as CAC, CASE or UCO." .
+
+clt:assertionStatus a owl:DatatypeProperty ;
+    rdfs:label "assertion status" ;
+    rdfs:comment "Whether the cited passage supports this specific assertion: DIRECT, INFERRED, UNSUPPORTED or CONTRADICTED." ;
+    rdfs:range xsd:string .
+
+clt:sourceStatus a owl:DatatypeProperty ;
+    rdfs:label "source status" ;
+    rdfs:comment "Legal or procedural standing of the cited passage's claim (e.g. ALLEGATION, ADMITTED, JUDICIAL_FINDING). Independent of the case outcome." ;
+    rdfs:range xsd:string .
+
+clt:verificationStatus a owl:DatatypeProperty ;
+    rdfs:label "verification status" ;
+    rdfs:comment "Whether the passage was re-derived from page text: VERIFIED, UNVERIFIED or FAILED." ;
+    rdfs:range xsd:string .
+
+clt:reviewStatus a owl:DatatypeProperty ;
+    rdfs:label "coder review status" ;
+    rdfs:comment "Agreement between coders (single_coder, agreed, adjudicated, disputed). Not a court's adjudication." ;
+    rdfs:range xsd:string .
+
+clt:supportFacet a owl:DatatypeProperty ;
+    rdfs:label "support facet" ;
+    rdfs:comment "Which part of the body assertion the annotation's passage supports (action, actor, time, feature, ...)." ;
+    rdfs:range xsd:string .
+
+clt:actionCode a owl:DatatypeProperty ;
+    rdfs:label "action code" ;
+    rdfs:comment "Code from the CaseLinker action scheme for this uco-action:Action." ;
+    rdfs:range xsd:string .
+
+clt:outcome a owl:DatatypeProperty ;
+    rdfs:label "outcome" ;
+    rdfs:comment "What became of the attempted action: completed, attempted_not_completed, refused, blocked, interrupted or unknown." ;
+    rdfs:range xsd:string .
+
+clt:actorRole a owl:DatatypeProperty ;
+    rdfs:label "actor role" ;
+    rdfs:comment "Role of a pseudonymous actor in the case (offender, victim, undercover, law_enforcement, ...)." ;
+    rdfs:range xsd:string .
+
+clt:affordanceBasis a owl:DatatypeProperty ;
+    rdfs:label "affordance basis" ;
+    rdfs:comment "What the court record states for an instrumental (level C) affordance-support relationship: feature_stated or mechanism_stated. A platform name alone is never a basis for level C." ;
+    rdfs:range xsd:string .
+
+clt:featureTerm a owl:DatatypeProperty ;
+    rdfs:label "feature term" ;
+    rdfs:comment "The platform feature or mechanism as the source names it." ;
+    rdfs:range xsd:string .
+
+clt:harmCode a owl:DatatypeProperty ;
+    rdfs:label "harm code" ;
+    rdfs:comment "Documented-harm code for a harm relationship." ;
+    rdfs:range xsd:string .
+
+clt:h0Category a owl:DatatypeProperty ;
+    rdfs:label "AfH H0 category" ;
+    rdfs:comment "AfH Section 7 harm category h1-h6 the harm code maps to, when it maps to one." ;
+    rdfs:range xsd:string .
+
+clt:timeEarliest a owl:DatatypeProperty ;
+    rdfs:label "earliest time" ;
+    rdfs:comment "Earliest date the evidence allows, at the precision stated (YYYY, YYYY-MM or YYYY-MM-DD)." ;
+    rdfs:range xsd:string .
+
+clt:timeLatest a owl:DatatypeProperty ;
+    rdfs:label "latest time" ;
+    rdfs:comment "Latest date the evidence allows, at the precision stated." ;
+    rdfs:range xsd:string .
+
+clt:timePrecision a owl:DatatypeProperty ;
+    rdfs:label "time precision" ;
+    rdfs:range xsd:string .
+
+clt:quoteSha256 a owl:DatatypeProperty ;
+    rdfs:label "quote SHA-256" ;
+    rdfs:comment "SHA-256 of the normalized quoted text. The quote itself is not published." ;
+    rdfs:range xsd:string .
+
+clt:pageTextSha256 a owl:DatatypeProperty ;
+    rdfs:label "page text SHA-256" ;
+    rdfs:comment "SHA-256 of the normalized page text the selector offsets index." ;
+    rdfs:range xsd:string .
+
+clt:stepIndex a owl:DatatypeProperty ;
+    rdfs:label "step index" ;
+    rdfs:comment "Zero-based position of a uco-action:Action in a derived trajectory. Position means 'known to be later', not 'immediately next'." ;
+    rdfs:range xsd:nonNegativeInteger .
+
+clt:immediateAfterPrevious a owl:DatatypeProperty ;
+    rdfs:label "immediately after previous step" ;
+    rdfs:comment "True only when a source states that this step immediately followed the previous one." ;
+    rdfs:range xsd:boolean .
+
+clt:stepAffordance a owl:ObjectProperty ;
+    rdfs:label "step affordance" ;
+    rdfs:comment "A member of O_i: a cac-platforms affordance class supporting this trajectory step." .
+
+clt:stepRelevantAffordance a owl:ObjectProperty ;
+    rdfs:label "step action-relevant affordance" ;
+    rdfs:comment "Level B: a cac-platforms affordance class the platform used for this step provided (per the reviewed capability registry) and that is relevant to this kind of action. Not evidence of use; not part of O_i." .
+
+clt:stepAvailableAffordance a owl:ObjectProperty ;
+    rdfs:label "step available affordance" ;
+    rdfs:comment "Level A: a cac-platforms affordance class the platform used for this step provided at the time, per the reviewed capability registry. Not evidence of use; not part of O_i." .
+
+clt:capabilityEntry a owl:DatatypeProperty ;
+    rdfs:label "capability registry entry" ;
+    rdfs:comment "Identifier of the capability registry entry a level A or B statement rests on." ;
+    rdfs:range xsd:string .
+
+clt:capabilityReview a owl:DatatypeProperty ;
+    rdfs:label "capability review status" ;
+    rdfs:comment "Review status of a capability registry entry: proposed, reviewed or rejected." ;
+    rdfs:range xsd:string .
+
+clt:affordanceThreshold a owl:DatatypeProperty ;
+    rdfs:label "affordance threshold" ;
+    rdfs:comment "Lowest assertion status admitted when a trajectory was derived (DIRECT or INFERRED)." ;
+    rdfs:range xsd:string .
+
+clt:derivationRule a owl:DatatypeProperty ;
+    rdfs:label "derivation rule" ;
+    rdfs:comment "Version of the rule that derived a trajectory from coded evidence." ;
+    rdfs:range xsd:string .
+
+clt:trackKind a owl:DatatypeProperty ;
+    rdfs:label "track kind" ;
+    rdfs:range xsd:string .

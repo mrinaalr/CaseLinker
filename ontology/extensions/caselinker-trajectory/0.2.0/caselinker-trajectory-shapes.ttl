@@ -1,0 +1,152 @@
+@prefix clt: <https://w3id.org/caselinker/trajectory#> .
+@prefix cltsh: <https://w3id.org/caselinker/trajectory/shapes#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cac-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Shapes for graphs emitted by trajectories/emit.py. The sh:in lists must equal
+# trajectories/vocab.py (tests/trajectory/test_emit_shacl.py checks this).
+
+cltsh:prefixes sh:declare
+    [ sh:prefix "clt" ; sh:namespace "https://w3id.org/caselinker/trajectory#"^^xsd:anyURI ] ,
+    [ sh:prefix "oa" ; sh:namespace "http://www.w3.org/ns/oa#"^^xsd:anyURI ] ,
+    [ sh:prefix "uco-core" ; sh:namespace "https://ontology.unifiedcyberontology.org/uco/core/"^^xsd:anyURI ] ,
+    [ sh:prefix "uco-action" ; sh:namespace "https://ontology.unifiedcyberontology.org/uco/action/"^^xsd:anyURI ] ,
+    [ sh:prefix "rdf" ; sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ] .
+
+# A coded action: code, outcome and status, and at least one evidence annotation.
+cltsh:CodedActionShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:actionCode ;
+    sh:class uco-action:Action ;
+    sh:property [ sh:path clt:actionCode ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+    sh:property [ sh:path clt:outcome ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( "completed" "attempted_not_completed" "refused" "blocked" "interrupted" "unknown" ) ] ;
+    sh:property [ sh:path clt:assertionStatus ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( "DIRECT" "INFERRED" "UNSUPPORTED" "CONTRADICTED" ) ] ;
+    sh:property [ sh:path [ sh:inversePath oa:hasBody ] ; sh:minCount 1 ;
+        sh:message "Every coded action must be the body of at least one evidence annotation." ] .
+
+# Every uco-action:Action in an emitted evidence graph is coded (lifecycles excepted).
+cltsh:EveryActionCodedShape a sh:NodeShape ;
+    sh:targetClass uco-action:Action ;
+    sh:or ( [ sh:class uco-action:ActionLifecycle ] [ sh:path clt:actionCode ; sh:minCount 1 ] ) ;
+    sh:message "An action without an action code (and not a derived lifecycle) is not allowed." .
+
+# Any assertion status anywhere uses the four evidence values. SYNTHETIC is not one of them.
+cltsh:AssertionStatusValues a sh:NodeShape ;
+    sh:targetSubjectsOf clt:assertionStatus ;
+    sh:property [ sh:path clt:assertionStatus ; sh:in ( "DIRECT" "INFERRED" "UNSUPPORTED" "CONTRADICTED" ) ] .
+
+cltsh:SourceStatusValues a sh:NodeShape ;
+    sh:targetSubjectsOf clt:sourceStatus ;
+    sh:property [ sh:path clt:sourceStatus ; sh:in ( "ALLEGATION" "SWORN_AFFIDAVIT" "ADMITTED" "ADMITTED_UNDER_OATH"
+        "JUDICIAL_FINDING" "VERDICT_ELEMENT" "COURT_RECORD" "ADVOCACY" "PROCEDURAL" ) ] .
+
+# Instrumental affordance (level C): canonical uco-core:Relationship from a CAC affordance
+# individual to an action, resting on a passage that names the feature or mechanism.
+cltsh:AffordanceSupportShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:affordanceBasis ;
+    sh:class uco-core:Relationship ;
+    sh:property [ sh:path uco-core:kindOfRelationship ; sh:hasValue "Supports_Action" ] ;
+    sh:property [ sh:path uco-core:source ; sh:minCount 1 ; sh:maxCount 1 ; sh:class cac-platforms:PlatformAffordance ] ;
+    sh:property [ sh:path uco-core:target ; sh:class uco-action:Action ] ;
+    sh:property [ sh:path clt:affordanceBasis ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( "feature_stated" "mechanism_stated" ) ] ;
+    sh:property [ sh:path clt:assertionStatus ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path [ sh:inversePath oa:hasBody ] ; sh:minCount 1 ;
+        sh:message "An instrumental affordance must rest on at least one evidence annotation." ] .
+
+# Every Supports_Action relationship is an instrumental claim and must carry a basis.
+cltsh:SupportsActionNeedsBasis a sh:NodeShape ;
+    sh:targetClass uco-core:Relationship ;
+    sh:sparql [
+        sh:message "A Supports_Action relationship without clt:affordanceBasis is not an instrumental claim." ;
+        sh:prefixes cltsh:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+                $this uco-core:kindOfRelationship "Supports_Action" .
+                FILTER NOT EXISTS { $this clt:affordanceBasis ?b }
+            }""" ;
+    ] .
+
+# Documented platform interaction: the act was carried out through the platform.
+cltsh:InteractionShape a sh:NodeShape ;
+    sh:targetClass uco-core:Relationship ;
+    sh:sparql [
+        sh:message "A Carried_Out_Through relationship needs an action source, a status and an evidence annotation." ;
+        sh:prefixes cltsh:prefixes ;
+        sh:select """
+            SELECT $this WHERE {
+                $this uco-core:kindOfRelationship "Carried_Out_Through" .
+                FILTER (NOT EXISTS { $this uco-core:source ?a . ?a a uco-action:Action }
+                        || NOT EXISTS { $this clt:assertionStatus ?s }
+                        || NOT EXISTS { ?ann oa:hasBody $this })
+            }""" ;
+    ] .
+
+# Available capability (level A): a platform provided an affordance, per cited public sources.
+cltsh:ProvidesAffordanceShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:capabilityReview ;
+    sh:class uco-core:Relationship ;
+    sh:property [ sh:path uco-core:kindOfRelationship ; sh:hasValue "Provides_Affordance" ] ;
+    sh:property [ sh:path uco-core:target ; sh:class cac-platforms:PlatformAffordance ] ;
+    sh:property [ sh:path dcterms:source ; sh:minCount 1 ; sh:message "A capability needs at least one cited source." ] ;
+    sh:property [ sh:path clt:capabilityReview ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "proposed" "reviewed" "rejected" ) ] .
+
+# Harm: canonical uco-core:Relationship from an action to a victim identity.
+cltsh:HarmShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:harmCode ;
+    sh:class uco-core:Relationship ;
+    sh:property [ sh:path uco-core:kindOfRelationship ; sh:hasValue "Documents_Harm" ] ;
+    sh:property [ sh:path uco-core:source ; sh:class uco-action:Action ] ;
+    sh:property [ sh:path clt:assertionStatus ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path clt:h0Category ; sh:maxCount 1 ; sh:in ( "h1" "h2" "h3" "h4" "h5" "h6" ) ] .
+
+# Evidence annotation: a hashed, located passage in a hashed source document.
+cltsh:EvidenceAnnotationShape a sh:NodeShape ;
+    sh:targetClass oa:Annotation ;
+    sh:property [ sh:path oa:hasBody ; sh:minCount 1 ] ;
+    sh:property [ sh:path oa:hasTarget ; sh:minCount 1 ; sh:maxCount 1 ; sh:class oa:SpecificResource ] ;
+    sh:property [ sh:path ( oa:hasTarget oa:hasSource ) ; sh:minCount 1 ; sh:maxCount 1 ; sh:class uco-core:UcoObject ] ;
+    sh:property [ sh:path ( oa:hasTarget oa:hasSelector ) ; sh:minCount 1 ; sh:class oa:FragmentSelector ] ;
+    sh:property [ sh:path ( oa:hasTarget oa:hasSelector oa:refinedBy ) ; sh:minCount 1 ; sh:class oa:TextPositionSelector ] ;
+    sh:property [ sh:path clt:quoteSha256 ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9a-f]{64}$" ] ;
+    sh:property [ sh:path clt:pageTextSha256 ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9a-f]{64}$" ] ;
+    sh:property [ sh:path clt:verificationStatus ; sh:minCount 1 ; sh:in ( "VERIFIED" "UNVERIFIED" "FAILED" ) ] ;
+    sh:property [ sh:path clt:sourceStatus ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path clt:assertionStatus ; sh:minCount 1 ; sh:maxCount 1 ] .
+
+# Derived trajectory step: canonical uco-core:Relationship from a lifecycle to an action.
+cltsh:TrajectoryStepShape a sh:NodeShape ;
+    sh:targetSubjectsOf clt:stepIndex ;
+    sh:class uco-core:Relationship ;
+    sh:property [ sh:path uco-core:kindOfRelationship ; sh:hasValue "Trajectory_Step" ] ;
+    sh:property [ sh:path uco-core:source ; sh:minCount 1 ; sh:maxCount 1 ; sh:class uco-action:ActionLifecycle ] ;
+    sh:property [ sh:path uco-core:target ; sh:class uco-action:Action ] ;
+    sh:property [ sh:path clt:stepIndex ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:nonNegativeInteger ] ;
+    sh:property [ sh:path clt:immediateAfterPrevious ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ] ;
+    sh:property [ sh:path clt:stepAffordance ;
+        sh:in ( cac-platforms:Anonymity cac-platforms:Ephemerality cac-platforms:ContactDiscovery
+                cac-platforms:UnmonitoredCommunication cac-platforms:DistributionInfrastructure
+                cac-platforms:GenerativeSynthesis ) ] ;
+    sh:property [ sh:path clt:stepRelevantAffordance ;
+        sh:in ( cac-platforms:Anonymity cac-platforms:Ephemerality cac-platforms:ContactDiscovery
+                cac-platforms:UnmonitoredCommunication cac-platforms:DistributionInfrastructure
+                cac-platforms:GenerativeSynthesis ) ] ;
+    sh:property [ sh:path clt:stepAvailableAffordance ;
+        sh:in ( cac-platforms:Anonymity cac-platforms:Ephemerality cac-platforms:ContactDiscovery
+                cac-platforms:UnmonitoredCommunication cac-platforms:DistributionInfrastructure
+                cac-platforms:GenerativeSynthesis ) ] .
+
+# Phases are not evidence. No CAC phase instance may appear in an emitted graph.
+cltsh:NoPhaseInstances a sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    sh:property [ sh:path rdf:type ; sh:maxCount 0 ;
+        sh:message "Phase instances are not allowed in evidence or trajectory graphs." ] .
