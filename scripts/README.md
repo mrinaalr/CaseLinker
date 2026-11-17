@@ -35,8 +35,7 @@ Operator scripts, run from the repo root. **Writes** names what a script changes
 
 | Script | Does | Writes |
 |---|---|---|
-| [`rebuild_oxigraph.py`](oxigraph/rebuild_oxigraph.py) | Canonical TTL → named-graph N-Quads → bulk load into an empty store ([reload procedure](../ontology/docs/SPARQL.md#reloading-the-store)) | N-Quads; Oxigraph unless `--no-load` |
-| [`load_pacer_jsonld.py`](oxigraph/load_pacer_jsonld.py) | PACER JSON-LD → `urn:pacer:kg:` N-Quads | `--output`; Oxigraph with `--post` |
+| [`rebuild_oxigraph.py`](oxigraph/rebuild_oxigraph.py) | Canonical TTL plus a PACER release (`--pacer-release`) → named-graph N-Quads → bulk load into an empty store, checked with `--verify` ([reload procedure](../ontology/docs/SPARQL.md#reloading-the-store)) | N-Quads; Oxigraph unless `--no-load` |
 | [`warm_oxigraph.py`](oxigraph/warm_oxigraph.py) | Wake the store before a demo | – |
 
 ## verify/
@@ -57,7 +56,6 @@ Operator scripts, run from the repo root. **Writes** names what a script changes
 | Script | Does | Writes |
 |---|---|---|
 | [`audit_graphs.py`](ontology_audit/audit_graphs.py) | Map every case with today's mapper; count what #57 measures | `--out` |
-| [`remap_pacer_jsonld.py`](ontology_audit/remap_pacer_jsonld.py) | Rewrite committed PACER JSON-LD so every term and IRI resolves | `ontology/PACER/` |
 | [`analyze_stats.py`](stats/analyze_stats.py) · [`interesting_icac_stats.py`](stats/interesting_icac_stats.py) · [`policy_research_stats.py`](stats/policy_research_stats.py) | Corpus statistics over SQLite | – |
 
 Re-extraction, backfills and store reloads are the maintainer's call. Say in the PR whether `caselinker.db`, `ontology/graph_output/` or Oxigraph still hold old values.

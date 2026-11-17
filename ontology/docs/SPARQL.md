@@ -98,27 +98,25 @@ Instance IRIs are minted under `https://w3id.org/caselinker/resource/`. The SPAR
 
 `dcterms:identifier` on a `cac:CACInvestigation` is the CaseLinker `case_id` (e.g. `nj_ag_2017_001`).
 
-### Two PACER named-graph families
+### PACER graphs
 
-Press-release case graphs and PACER court-record graphs modeled by the CASE-UCO SDK MCP server are different datasets:
+Press-release case graphs and PACER court-record graphs are different datasets:
 
 | Family | Named graph | Source | Load |
 |---|---|---|---|
-| Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` (old one-file PACER bundles lived in `ontology/PACER/` and compiled to `graph_output/pacer/pacer_{slug}.ttl`) | `python3 scripts/oxigraph/rebuild_oxigraph.py` bulk load into an empty store (see [Reloading the store](#reloading-the-store)) |
-| CASE-UCO SDK modeled PACER KG | `urn:pacer:kg:<relative/path.jsonld>` | `ontology/PACER/` family folders (`BULK_FOLDER/`, `ENTICEMENT/`, `ENTERPRISE/`, `PRODUCTION/`, `SEXTORTION/`, `TRAFFICKING/`; 128 documents, 41 investigations, 128 annotations; modeled by the CASE-UCO SDK MCP server) | Incremental `python3 scripts/oxigraph/load_pacer_jsonld.py --post` (`POST /store`) |
+| Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` | `rebuild_oxigraph.py` bulk load (see [Reloading the store](#reloading-the-store)) |
+| PACER release | `urn:caselinker:pacer:<case_id>:evidence`, `urn:caselinker:pacer:<case_id>:trajectories` | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
 
-`rebuild_oxigraph.py` globs `ontology/graph_output/{pool}/*.ttl`, skips `*.provenance.ttl` as cases, and loads the sidecar beside the selected case file into `…/case/{case_id}/provenance`. It does not read CASE-UCO SDK JSON-LD under `ontology/PACER/`.
-
-A full reload starts from an empty store, so pass the PACER N-Quads (`load_pacer_jsonld.py --output`) as `--extra-nq` to load them in the same run.
+`--verify` checks the loaded store against the release manifest: every manifest graph present and non-empty, no PACER graph outside the release, no legacy `urn:pacer:kg:*` graph left.
 
 ## Reloading the store
 
 The hosted store is `oxigraph serve` from `ghcr.io/oxigraph/oxigraph:0.5.13` on a 5 GB Railway volume (`/data/caselinker_oxigraph`). A reload is a bulk load into an empty store:
 
-1. Build the N-Quads anywhere: `python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`, and `python3 scripts/oxigraph/load_pacer_jsonld.py --output pacer.nq` for the PACER graphs.
-2. Copy both to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`, and the same for `pacer.nq`.
+1. Build the N-Quads anywhere: `python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`. The PACER release's N-Quads are committed with the release (`state_machines/data/<release>/`).
+2. Copy the corpus file to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`.
 3. Wipe the volume (Railway dashboard → `oxigraph-volume-S6Fs` → Settings → Wipe volume). The bulk loader refuses a store that is not empty.
-4. In the web service: `python3 scripts/oxigraph/rebuild_oxigraph.py --skip-build --output /tmp/caselinker.nq.gz --extra-nq /tmp/pacer.nq`.
+4. In the web service: `python3 scripts/oxigraph/rebuild_oxigraph.py --skip-build --output /tmp/caselinker.nq.gz --pacer-release <release> --verify --min-case-graphs 10000`.
 
 `bulk_load_nquads` posts 500,000-line slices to `POST /store?no_transaction`, Oxigraph's bulk loader, which writes sorted data files and no write-ahead log. It holds the rebuild lock, so `/sparql` answers 503 while the store is partial, and fails unless the store's quad count equals the lines sent. A failed load keeps the lock, so a partial store is never served; rerun the load after another wipe, or remove `/tmp/caselinker-sparql-rebuild.lock` in the web service to serve what is there. Between the wipe and the start of the load the store is empty and `/sparql` answers with no rows. A full load (6,151,655 quads) takes about 5 minutes and leaves about 2.1 GB on the volume.
 
