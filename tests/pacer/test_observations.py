@@ -119,6 +119,39 @@ def test_a_relationship_needs_the_act_sentence_to_state_the_means(tmp_path):
     assert any("does not cite this sentence" in p for p in O.check(doc, tmp_path, _bundle(tmp_path, docs, acts[1:3])))
 
 
+@pytest.mark.parametrize("kind,sentence,term,expected", [
+    ("platform", "The defendant sent Minor Victim 1 threats, and her mother reported the account to Kitebox.", "Kitebox", None),      # recipient, another subject
+    ("platform", "The defendant stored the images on his phone, and agents served a warrant on Kitebox.", "Kitebox", None),         # someone else's act
+    ("platform", "The defendant denied that he had ever asked Minor Victim 1 for images through Kitebox.", "Kitebox", None),        # a denial
+    ("platform", "The defendant told Minor Victim 1 to download Kitebox and delete her messages.", "Kitebox", None),                # an infinitive, not a means
+    ("feature", "The defendant asked Minor Victim 1 for images after she used a fake name to open her account.", "fake name", None),   # the victim's use
+    ("platform", "The defendant first contacted Minor Victim 1 on Kitebox.", "Kitebox", "Carried_Out_Through"),
+    ("platform", "The defendant uploaded the images to Kitebox.", "Kitebox", "Carried_Out_Through"),
+    ("platform", "The defendant told Minor Victim 1 to continue their conversation on Kitebox.", "Kitebox", "Moved_To"),
+    ("platform", "Minor Victim 1 then sent the defendant three images over Kitebox.", "Kitebox", "Carried_Out_Through"),
+])
+def test_the_means_must_be_stated_in_the_offenders_own_clause(kind, sentence, term, expected):
+    o = {"kind": kind, "named_as": term, "platform": term, "feature_term": term}
+    got = O._means(kind, sentence, o)
+    assert (got and got[0]) == expected
+
+
+def test_a_sentence_several_acts_cite_ties_its_platform_to_none(tmp_path):
+    E.write_page("two_acts", "sof", 1, "STATEMENT OF FACTS. The defendant first wrote to Minor Victim 1 through Kitebox and later drove to her home.", tmp_path)
+    docs = [{"doc_id": "sof", "doc_type": "statement_of_facts", "sha256": "x", "pages": [{"pdf_page": 1, "text_method": "text_layer"}]}]
+    (tmp_path / "two_acts" / "sources.json").write_text(json.dumps({"case_id": "two_acts", "documents": docs}), encoding="utf-8")
+    page = E.normalize("STATEMENT OF FACTS. The defendant first wrote to Minor Victim 1 through Kitebox and later drove to her home.")
+    a, b = page.index("The defendant"), len(page)
+    act = lambda eid, code: {"event_id": eid, "action": code, "support": [{"passage_id": "q1", "facet": "action", "status": "DIRECT"}]}
+    bundle = {"case_id": "two_acts", "documents": docs, "passages": [{"passage_id": "q1", "doc_id": "sof", "pdf_page": 1, "char_start": a, "char_end": b}],
+              "events": [act("e1", "INITIATE_CONTACT"), act("e2", "TRAVEL_TO_MEET")]}
+    doc = O.relate(O.observe("two_acts", tmp_path), bundle, tmp_path)
+    assert [o["relations"] for o in doc["observations"]] == [[]] and doc["observations"][0]["several_acts"] == 2
+    bundle["events"] = bundle["events"][:1]                               # one act cites it: the means is that act's
+    assert O.relate(O.observe("two_acts", tmp_path), bundle, tmp_path)["observations"][0]["relations"][0]["event_id"] == "e1"
+    assert [n for n, _, _ in O.platforms_in("He wrote to her on the Signal Messenger app and on the WhatsApp Messenger app.")] == ["Signal", "WhatsApp"]
+
+
 def test_observation_graph_uses_existing_terms_and_claims_no_use(tmp_path):
     pytest.importorskip("case_uco")
     import sys
@@ -162,6 +195,13 @@ def test_benchmark_scoring_counts_mentions_features_and_relationships():
     s = summarize_observations(score_observations(gold, doc, gold))
     assert s["platform_mentions_found"]["rate"] == 1.0 and s["feature_statements_found"]["rate"] == 1.0
     assert s["relationships_correct"]["rate"] == 1.0 and s["relationships_platform_only_named_in_gold"] == 0
+    flipped = json.loads(json.dumps(doc))                            # the right platform in the wrong way is not correct
+    for o in flipped["observations"]:
+        for r in o["relations"]:
+            if o["kind"] == "platform":
+                r["relationship"] = "Moved_To" if r["relationship"] == "Carried_Out_Through" else "Carried_Out_Through"
+    f = summarize_observations(score_observations(gold, flipped, gold))
+    assert f["relationships_right_platform_wrong_kind"] > 0 and f["relationships_correct"]["rate"] < 1.0
     for o in doc["observations"]:                                    # a relationship the gold does not hold is counted as wrong
         o["relations"] = [{"event_id": gold["events"][0]["event_id"], "relationship": "Carried_Out_Through", "cue": "on", "basis": "x"}]
     assert summarize_observations(score_observations(gold, doc, gold))["relationships_correct"]["rate"] < 1.0

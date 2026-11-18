@@ -266,6 +266,7 @@ _OBS_ROWS = [("gold platform mentions found", "platform_mentions_found"), ("gold
              ("observed platforms the gold names in that sentence", "platform_observations_gold_names"),
              ("observed feature phrases the gold codes as an affordance there", "feature_observations_gold_codes_as_affordance"),
              ("relationships that the gold also holds", "relationships_correct"),
+             ("relationships to the right platform, wrong kind", "relationships_right_platform_wrong_kind"),
              ("relationships to a platform the gold says is only named", "relationships_platform_only_named_in_gold"),
              ("relationships on an act that is not a gold act", "relationships_on_act_not_in_gold"),
              ("gold relationships found, on published acts", "gold_relationships_found_on_published_acts"),

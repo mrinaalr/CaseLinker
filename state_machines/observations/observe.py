@@ -37,7 +37,7 @@ from state_machines.evidence import vocab as V
 from state_machines.coding import enrich as N
 from state_machines.coding.coder import _ABBREV, pages_of
 
-RULE_VERSION = "observe-1.1.0"
+RULE_VERSION = "observe-1.2.0"
 SCHEMA_VERSION = "observations-1.0.0"
 
 # Feature phrases per affordance class: the codebook's list (enrich.FEATURES), with two changes.
@@ -78,21 +78,48 @@ _SERVICE_AFTER = re.compile(r"^[\s-]+(?:app|apps|application|applications|accoun
 _SERVICE_BEFORE = re.compile(r"\b(?:on|via|using|through|over|onto|into|from|with)\s+(?:(?:the|a|an|his|her|their|its)\s+)?$", re.I)
 # Two listed spellings of one service are one platform.
 ALIASES = {"Kik Messenger": "Kik", "Text Now": "TextNow", "CashApp": "Cash App", "Play Station": "PlayStation", "Xbox Live": "Xbox",
-           "Yahoo Messenger": "Yahoo", "Google Hangouts": "Hangouts", "Messenger": "Facebook Messenger"}
-_NAMES = sorted(N.PLATFORMS | N.FICTIONAL_PLATFORMS, key=len, reverse=True)
+           "Yahoo Messenger": "Yahoo", "Google Hangouts": "Hangouts"}
+# A bare "Messenger" is not observed: it follows other services' names ("Signal Messenger") as often as it names one.
+_NAMES = sorted((N.PLATFORMS | N.FICTIONAL_PLATFORMS) - {"Messenger"}, key=len, reverse=True)
 _NAME_PATTERNS = [(name, re.compile(r"(?<![A-Za-z0-9])(?:" + _breakable(name) + ("" if name in AMBIGUOUS else "|" + _breakable(name.upper()))
                                     + r")(?![A-Za-z0-9])")) for name in _NAMES]
 
-# Level 3: the sentence states the act was done by means of the platform or feature.
+# Level 3: the sentence states the act was done by means of the platform or feature. The cue and
+# the term must stand together in one clause; that clause must not be someone else's doing or a
+# denial; and "on" or "to" count only after a verb of the offender's own conduct.
 _DET = r"(?i:(?:the|a|an|his|her|their|its)\s+)?"
-_PLATFORM_MEANS = (r"\b(?P<cue>(?i:through|via|using|used|uses|use|over|on|onto|to|by means of|utilized|utilizing))\s+" + _DET
-                   + r"(?:\w+\s+)?{name}(?![A-Za-z0-9])")
-_PLATFORM_IN = r"\b(?P<cue>(?i:in))\s+(?i:a|an|the)\s+{name}\s+(?i:group|chat|application|app|channel|server|account)\b"
+_CONDUCT = (r"(?i:contact|messag|wrote|write|writing|chat|communicat|talk|spoke|speak|sent|send|post|shar|upload|distribut|met|meet|"
+            r"text|call|ask|request|told|tell|threaten|solicit|found|find|search|advertis|stream|record|receiv|stor|sav|kept|keep|"
+            r"exchang|trad|creat|open|join|ran|operat|administ|convers|correspond|engag|befriend|approach|initiat|began|start|"
+            r"direct|instruct|demand|offer|paid|pay|entic|persuad|coerc|groom|view|watch|download|access|publish|maintain)\w*")
+_PLATFORM_CUES = [
+    ("Moved_To", r"\b(?P<cue>(?i:continu|mov|switch|migrat|transition|shift)\w*)\b[^.;,]{{0,80}}?\b(?i:to|on|onto)\s+" + _DET + r"{name}(?![A-Za-z0-9])"),
+    ("Carried_Out_Through", r"\b(?P<cue>(?i:through|via|using|used|uses|use|over|by means of|utilized|utilizing))\s+" + _DET + r"{name}(?![A-Za-z0-9])"),
+    ("Carried_Out_Through", r"\b" + _CONDUCT + r"\b[^.;,]{{0,70}}?\b(?P<cue>(?i:on))\s+" + _DET + r"{name}(?![A-Za-z0-9])"),
+    ("Carried_Out_Through", r"\b(?i:upload|post|sav|transfer|back)\w*\b[^.;,]{{0,70}}?\b(?P<cue>(?i:to|onto))\s+" + _DET + r"{name}(?![A-Za-z0-9])"),
+    ("Carried_Out_Through", r"\b(?P<cue>(?i:in))\s+(?i:a|an|the)\s+{name}\s+(?i:group|chat|application|app|channel|server|account)\b"),
+]
 _FEATURE_MEANS = (r"\b(?P<cue>through|via|using|used|uses|by means of|with|utilized|utilizing|enabled|activated|turned on|"
                   r"created|creating|made|making|opened|set up|registered|published|posted|sent|shared|joined|ran|operated|"
                   r"administered|maintained|installed)\s+(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
-_NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies)\b[^.;]{0,25}$", re.I)
-_MOVE = re.compile(r"\b(?:continue|continued|move|moved|switch|switched|migrate|migrated)\b", re.I)
+_CLAUSE_BREAK = re.compile(r"[,;]\s+(?:and|but|while|when|after|before|because|which|who|so)\b|;\s+|\s(?:and then|after|before|when|while|because)\s", re.I)
+_OTHER_SUBJECT = re.compile(r"^\s*(?:and\s+|but\s+|then\s+|later\s+|after\s+|before\s+|when\s+|while\s+|because\s+|which\s+|who\s+|so\s+)*"
+                            r"(?:she|they|her\s+\w+|his\s+(?:mother|father|parents?)|(?:the\s+)?(?:mother|father|parents?|agents?|officers?|"
+                            r"detectives?|investigators?|police|law enforcement|government|court|victim|minor|platform|company)\b|"
+                            r"Minor Victim|MV-?\d|Victim\s+\w|Jane Doe|John Doe|an?\s+(?:undercover|agent|officer)|the undercover|NCMEC|FBI|HSI)", re.I)
+_NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies|deny|declined|refused)\b", re.I)
+
+
+def _own_clause(sentence: str, at: int) -> Optional[Tuple[int, str]]:
+    """The clause holding offset ``at``, up to it: (start, text). None when that clause is not the
+    opening one and its subject is someone other than the offender ("..., and agents served ...")."""
+    start = 0
+    for m in _CLAUSE_BREAK.finditer(sentence[:at]):
+        start = m.start()
+    clause = sentence[start:at]
+    if start > 0 and _OTHER_SUBJECT.search(re.sub(r"^[,;\s]+", "", clause)):
+        return None
+    return start, clause
 
 
 def sentences(page_n: str) -> Iterator[Tuple[int, int]]:
@@ -196,21 +223,25 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
     """(relationship kind, cue word) when the sentence states the act was done by means of the observation."""
     if kind == "platform":
         name = "(?:" + _breakable(o["named_as"]) + "|" + _breakable(o["named_as"].upper()) + ")"
-        m = re.search(_PLATFORM_MEANS.format(name=name), sentence) or re.search(_PLATFORM_IN.format(name=name), sentence)
-        if not m or _NEGATED.search(sentence[:m.start()]):
-            return None
-        moved = m.group("cue").lower() in ("to", "onto", "on") and _MOVE.search(sentence[:m.start()])
-        return ("Moved_To" if moved else "Carried_Out_Through"), m.group("cue").lower()
-    term = _breakable(o["feature_term"])
-    m = re.search(_FEATURE_MEANS.format(term=term), sentence, 0 if o["feature_term"] in ("Tor", "VPN") else re.I)
-    if not m or _NEGATED.search(sentence[:m.start()]):
-        return None
-    return "Supports_Action", m.group("cue").lower()
+        patterns = [(rel, pat.format(name=name), 0) for rel, pat in _PLATFORM_CUES]
+    else:
+        patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), 0 if o["feature_term"] in ("Tor", "VPN") else re.I)]
+    for rel, pattern, flags in patterns:
+        for m in re.finditer(pattern, sentence, flags):
+            own = _own_clause(sentence, m.end())
+            if own is None or m.start() < own[0]:           # another subject's clause, or cue and term in different clauses
+                continue
+            if _NEGATED.search(sentence[own[0]:m.start("cue")]):
+                continue
+            return rel, m.group("cue").lower()
+    return None
 
 
 def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
     """Level 3: tie an observation to a published offender act whose cited sentence holds it and states
-    the act was done by means of it. Returns the document with ``relations`` filled."""
+    the act was done by means of it. Where several published acts cite that sentence, the sentence
+    does not say which of them the means belongs to, and nothing is tied (``several_acts`` is set).
+    Returns the document with ``relations`` filled."""
     P = {p["passage_id"]: p for p in bundle["passages"]}
     acts = []
     for e in bundle["events"]:
@@ -223,6 +254,11 @@ def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
+        o.pop("several_acts", None)
+        citing = {eid for d, pg, a, b, eid in acts if (d, pg) == (o["doc_id"], o["pdf_page"]) and a <= o["term_start"] and o["term_end"] <= b}
+        if len(citing) > 1:
+            o["several_acts"] = len(citing)
+            continue
         for d, pg, a, b, eid in acts:
             if (d, pg) != (o["doc_id"], o["pdf_page"]) or not (a <= o["term_start"] and o["term_end"] <= b):
                 continue
@@ -244,6 +280,7 @@ def summary(doc: dict) -> dict:
             "feature_terms": dict(sorted(Counter(o["feature_term"] for o in obs if o["kind"] == "feature").items())),
             "by_standing": dict(sorted(Counter(o["source_status"] for o in obs).items())),
             "observations_tied_to_an_act": sum(bool(o["relations"]) for o in obs),
+            "observations_in_a_sentence_several_acts_cite": sum(bool(o.get("several_acts")) for o in obs),
             "observations_with_a_date_in_the_sentence": sum(bool(o["dates_in_sentence"]) for o in obs)}
 
 

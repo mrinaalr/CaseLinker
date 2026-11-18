@@ -108,6 +108,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
                   "trajectories": {"iri": graph_iri(case_id, "trajectories"), "sha256": _sha(tr), "chains": chains}}
         documents = [ev, tr]
         observed = None
+        if not observations:      # nothing left from an earlier build that had them
+            for stale in (root / "observations" / f"{case_id}.json", root / "graphs" / f"{case_id}.observations.jsonld"):
+                stale.unlink(missing_ok=True)
         if observations:
             from state_machines.observations import observe as O
             doc = O.relate(O.observe(case_id, text_root), bundle, text_root)
@@ -152,6 +155,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     if observations:      # the case-level research table, from the files just written
         from state_machines.observations.table import write as write_table
         write_table(root)
+    else:
+        for stale in ("research_table.json", "research_table.csv", "validation.json"):
+            (root / stale).unlink(missing_ok=True)
     return manifest
 
 

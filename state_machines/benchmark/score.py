@@ -114,6 +114,9 @@ def score_case(gold: dict, coded: dict) -> Counter:
     return c
 
 
+_KIND_OF_MODE = {"through": "Carried_Out_Through", "to": "Moved_To", "from": "Moved_From", "acted_on": "Acted_On"}
+
+
 def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> Counter:
     """Observations of a case (state_machines/observations) against the gold.
 
@@ -121,8 +124,9 @@ def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> C
     sentence; a gold level-C affordance is a gold feature statement in its sentence. Counted:
     how many of those the rule observed; observed feature phrases in sentences where the gold codes
     no affordance (a phrase is a mention, not an affordance); and, given the coded bundle, whether
-    each supported relationship is one the gold also holds (a platform the gold act goes through,
-    an affordance the gold act carries) or not (for example a platform the gold says is only named)."""
+    each supported relationship is one the gold also holds: the same platform in the same way
+    (carried out through it, or moved to it), or an affordance the gold act carries. A relationship
+    to the right platform of the wrong kind is counted apart and is not correct."""
     c: Counter = Counter()
     P = {p["passage_id"]: p for p in gold["passages"]}
     span = lambda e: next(P[s["passage_id"]] for s in e["support"] if s["facet"] == "action")
@@ -156,7 +160,7 @@ def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> C
         for o in obs:
             for r in o["relations"]:
                 g = eg.get(c2g.get(r["event_id"]))
-                key = (r["event_id"], o["kind"], o.get("platform") or o.get("feature_class"))
+                key = (r["event_id"], o["kind"], o.get("platform") or o.get("feature_class"), r["relationship"])
                 if key in made:
                     continue
                 made.add(key)
@@ -164,19 +168,21 @@ def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> C
                 if g is None:
                     c["relation_on_act_not_in_gold"] += 1
                 elif o["kind"] == "platform":
-                    ok = any(i["platform_surface"] == o["platform"] for i in g["platform_interactions"])
+                    same = [i for i in g["platform_interactions"] if i["platform_surface"] == o["platform"]]
+                    ok = any(_KIND_OF_MODE.get(i["mode"]) == r["relationship"] for i in same)
                     c["relation_correct"] += ok
-                    c["relation_platform_only_named_in_gold"] += (not ok) and any(m["platform_surface"] == o["platform"] for m in g["platform_mentions"])
+                    c["relation_wrong_kind"] += bool(same) and not ok
+                    c["relation_platform_only_named_in_gold"] += (not same) and any(m["platform_surface"] == o["platform"] for m in g["platform_mentions"])
                 else:
                     c["relation_correct"] += any(a["affordance"] == o["feature_class"] for a in g["affordances"])
         for ig, ic in g2c.items():       # gold relationships on acts the coded bundle publishes
             g = eg[ig]
             for i in g["platform_interactions"]:
                 c["relation_gold"] += 1
-                c["relation_gold_found"] += (ic, "platform", i["platform_surface"]) in made
+                c["relation_gold_found"] += (ic, "platform", i["platform_surface"], _KIND_OF_MODE.get(i["mode"])) in made
             for a in g["affordances"]:
                 c["relation_gold"] += 1
-                c["relation_gold_found"] += (ic, "feature", a["affordance"]) in made
+                c["relation_gold_found"] += (ic, "feature", a["affordance"], "Supports_Action") in made
     return c
 
 
@@ -188,6 +194,7 @@ def summarize_observations(c: Counter) -> dict:
         "feature_statements_found": _rate(c["feature_found"], c["feature_gold"]),
         "feature_observations_gold_codes_as_affordance": _rate(c["feature_observed_where_gold_has_that_affordance"], c["feature_observed_in_gold_act"]),
         "relationships_correct": _rate(c["relation_correct"], c["relations"]),
+        "relationships_right_platform_wrong_kind": c["relation_wrong_kind"],
         "relationships_platform_only_named_in_gold": c["relation_platform_only_named_in_gold"],
         "relationships_on_act_not_in_gold": c["relation_on_act_not_in_gold"],
         "gold_relationships_found_on_published_acts": _rate(c["relation_gold_found"], c["relation_gold"]),

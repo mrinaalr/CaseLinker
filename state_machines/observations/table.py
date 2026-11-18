@@ -68,11 +68,13 @@ def case_observed(doc: dict, actions: Dict[str, str] = None) -> dict:
 def build(root: Path) -> dict:
     """The research table of the release under ``root``, from its committed files."""
     payload = json.loads((root / "lifecycle.json").read_text(encoding="utf-8"))
+    listed = {c["case_id"] for c in json.loads((root / "manifest.json").read_text(encoding="utf-8"))["cases"] if "observations" in c["graphs"]}
     rows, rule = [], None
     for case in payload["cases"]:
         events = case["events"]
         path = root / "observations" / f"{case['case_id']}.json"
-        doc = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {"observations": [], "rule": None}
+        doc = (json.loads(path.read_text(encoding="utf-8")) if case["case_id"] in listed and path.is_file()
+               else {"observations": [], "rule": None})
         rule = rule or doc.get("rule")
         observed = case_observed(doc, {k: e["action"] for k, e in events.items()})
         offender = [e for e in events.values() if e["family"] == "offender"]

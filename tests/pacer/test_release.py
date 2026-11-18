@@ -256,3 +256,17 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     only = rdflib.Dataset()
     only.parse(nquads("test-v1", data_root=root, out=tmp_path / "ev.nq", select="evidence"), format="nquads")
     assert verify_store(m, _query(only), select="evidence") == [] and len(list(only.graphs())) <= 2
+
+
+def test_a_rebuild_without_observations_leaves_none_behind(tmp_path):
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    (tmp_path / "text" / F.CASE / "sources.json").write_text(json.dumps({"case_id": F.CASE, "documents": b["documents"]}), encoding="utf-8")
+    build("test-v1", data_root=root, text_root=tmp_path / "text", observations=True)
+    rel = root / "test-v1"
+    assert (rel / "research_table.json").is_file() and "observed" in (rel / "lifecycle.json").read_text()
+    m = build("test-v1", data_root=root, text_root=tmp_path / "text")
+    assert set(m["cases"][0]["graphs"]) == {"evidence", "trajectories"}
+    assert "observed" not in (rel / "lifecycle.json").read_text()
+    left = [p.name for p in rel.rglob("*") if "observations" in p.name or p.name.startswith("research_table")]
+    assert left in ([], ["observations"]) and not list((rel / "observations").glob("*"))

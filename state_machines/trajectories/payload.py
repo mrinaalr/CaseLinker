@@ -133,7 +133,7 @@ def build_payload(root: Optional[Path] = None, *, from_bundles: bool = False) ->
         cp = case_payload(bundle, derived)
         cp["shacl"] = c["shacl"]["conformance"]
         obs_path = root / "observations" / f"{c['case_id']}.json"
-        if obs_path.is_file():      # what the record names (mentions, not use); only releases built with the observation layer
+        if "observations" in c["graphs"] and obs_path.is_file():   # what the record names (mentions, not use); only where the manifest lists it
             from state_machines.observations.table import case_observed
             cp["observed"] = case_observed(json.loads(obs_path.read_text(encoding="utf-8")),
                                            {k: e["action"] for k, e in cp["events"].items()})
