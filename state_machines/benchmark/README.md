@@ -60,6 +60,21 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 | same_act | gold retellings the coded bundle links |
 | by_tag | recall per hard-case tag |
 
+## Results
+
+[`results/`](results/) holds the scores of each rule version on each split (`pipeline bench --split <split> --record`), one file per `<rule version>.<split>`. Each release's `REPORT.md` prints them as tables.
+
+| Rule version, split | Gold acts found | Published acts that are gold acts | Action code | Order relations correct |
+|---|---:|---:|---:|---:|
+| `resolve-1.0.0`, held-out (frozen baseline, scored once) | 0.649 (148/228) | 0.980 (148/151) | 0.912 | not measured this way |
+| `resolve-1.1.0`, dev (rules tuned here) | 0.773 (187/242) | 0.995 (187/188) | 0.957 | 20 of 21 |
+| `resolve-1.1.0`, held-out (second look, no tuning) | 0.671 (153/228) | 0.975 (153/157) | 0.915 | 6 of 7 |
+| `resolve-1.1.0`, confirm (scored once) | 0.421 (104/247) | 0.945 (104/110) | 0.971 | 1 of 1 |
+
+All rows are the resolved coding a machine release publishes. No coded order relation was reversed or undocumented on any split; the ones not counted correct touch an act that is not a gold act.
+
+**Reading the confirm row.** On wording the rules had never met, what is published stays right and much less is published. The lost acts, of 247: neither model coded it (34); only one model did (49); both did but named different actors (27) or different codes (31); cited spans that did not pair (2). Victim responses (0 of 14), platform-mention-only acts (0 of 11) and docket procedure entries (20 of 40) are the weakest categories.
+
 ## Limits
 
 - **Same generator.** Dev, held-out and confirm cases come from one generator; the held-out and confirm registers change the wording, not the scenario shapes. Accuracy here is accuracy on these shapes.

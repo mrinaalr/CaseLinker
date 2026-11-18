@@ -91,6 +91,30 @@ def _coverage(log: Path) -> Counter:
     return c
 
 
+def published_content(release_id: str) -> dict:
+    """What the release's bundles hold, counted: acts by family, dated acts, relations, harms, level C."""
+    from state_machines.evidence import vocab as V
+    c: Counter = Counter()
+    for path in sorted((DATA / release_id / "cases").glob("*.json")):
+        b = json.loads(path.read_text(encoding="utf-8"))
+        c["cases"] += 1
+        c["cases with offender acts"] += any(V.FAMILY_OF[e["action"]] == "offender" for e in b["events"])
+        for e in b["events"]:
+            fam = V.FAMILY_OF[e["action"]]
+            c["acts"] += 1
+            c[f"acts: {fam}"] += 1
+            c["acts with a cited date"] += bool(e["time"]["assertions"])
+            if fam == "offender":
+                c["offender acts naming a victim or an undercover persona"] += bool(e["targets"])
+                c["offender acts with a documented platform"] += bool(e["platform_interactions"])
+                c["level-C affordances (feature stated in the sentence)"] += len(e["affordances"])
+            for h in e["harms"]:
+                c[f"harms recorded: victim {h['victim_kind']}"] += 1
+        for r in b["relations"]:
+            c["relations: stated order" if r["type"] in V.ORDER_RELATIONS else "relations: possibly the same act"] += 1
+    return dict(sorted(c.items()))
+
+
 def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
     root = DATA / release_id
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
@@ -138,6 +162,7 @@ def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
     return {"release": release_id, "review_mode": manifest.get("review_mode"), "models": C.MODELS,
             "privacy_scan": {k: (len(v) if k == "hits" else v) for k, v in privacy.items()},
             "runtime_per_model": model_stats(), "totals": dict(sorted(totals.items())), "reliability_real_cases": reliability,
+            "published": published_content(release_id),
             "benchmark": benchmark_results(), "reference_real_cases": reference, "cases": cases}
 
 
@@ -194,6 +219,9 @@ def markdown(r: dict) -> str:
          f"Review mode **{r['review_mode']}**: two local models coded every case independently; a fixed rule published what both coded. "
          "Nothing here is human-adjudicated. Reliability is agreement between the coders on these cases; benchmark accuracy is measured "
          "on synthetic records ([benchmark](../../benchmark/README.md)). Neither is accuracy on these cases.", "",
+         "## What is published", "", "| Content | Count |", "|---|---:|"] + [f"| {k} | {v} |" for k, v in (r.get("published") or {}).items()] + [
+         "", "Order between acts comes mostly from cited dates; stated order is published only where a sentence names the earlier act "
+         "or follows it directly. An act with no date and no stated order is unordered, not placed.", "",
          "## Models", "", "| Coder | Model | Digest | Quantization |", "|---|---|---|---|"]
     for name, spec in r["models"]["coders"].items():
         L.append(f"| {name} | `{spec['model']}` | `{spec['digest'][:19]}…` | {spec.get('quantization', '')} |")
