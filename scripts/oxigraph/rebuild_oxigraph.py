@@ -9,8 +9,9 @@ Railway volume. The store must be empty: wipe the volume first.
 
 PACER court-record graphs come from a release built by state_machines/graphs/release.py.
 ``--pacer-release <id>`` writes that release's N-Quads and loads them with the corpus:
-``--pacer-graphs all`` (default) loads urn:caselinker:pacer:<case_id>:evidence and
-:trajectories, ``--pacer-graphs evidence`` the evidence graphs only. A release that is not
+``--pacer-graphs all`` (default) loads urn:caselinker:pacer:<case_id>:evidence,
+:trajectories and, where the release has them, :observations; ``--pacer-graphs evidence``
+the evidence graphs only. A release that is not
 that is a preview (neither adjudicated nor machine-coded) is refused unless ``--allow-preview``
 (local stores only).
 ``--verify`` checks the loaded store against the release manifest: every PACER graph
@@ -59,7 +60,7 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("--pacer-release", default="",
                         help="PACER release id under state_machines/data/ to export and load (urn:caselinker:pacer:*)")
     parser.add_argument("--pacer-graphs", choices=("all", "evidence"), default="all",
-                        help="PACER graph kinds to load: evidence plus trajectories, or evidence only")
+                        help="PACER graph kinds to load: every kind the release has (evidence, trajectories, observations), or evidence only")
     parser.add_argument("--allow-preview", action="store_true",
                         help="load a preview release (local stores only; never production)")
     parser.add_argument("--verify", action="store_true",

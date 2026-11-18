@@ -10,7 +10,7 @@ CASE/UCO/CAC graphs emitted from coded bundles with the CASE-UCO SDK, validated 
 
 ## Emission
 
-[`emit.py`](emit.py) builds two graphs per case with `case_uco.CASEGraph` (SDK pinned in [`ontology/SDK_VERSION`](../../ontology/SDK_VERSION)). Canonical terms carry the structure; the `clt:` extension ([`ontology/extensions/caselinker-trajectory/0.3.0/`](../../ontology/extensions/caselinker-trajectory/0.3.0/)) carries codes, statuses and two classes no canonical term covers.
+[`emit.py`](emit.py) builds two graphs per case (three with observations) with `case_uco.CASEGraph` (SDK pinned in [`ontology/SDK_VERSION`](../../ontology/SDK_VERSION)). Canonical terms carry the structure; the `clt:` extension ([`ontology/extensions/caselinker-trajectory/0.3.0/`](../../ontology/extensions/caselinker-trajectory/0.3.0/)) carries codes, statuses and two classes no canonical term covers.
 
 | Record | Graph |
 |---|---|
@@ -26,6 +26,16 @@ CASE/UCO/CAC graphs emitted from coded bundles with the CASE-UCO SDK, validated 
 | platform | `uco-action:instrument`, plus `Carried_Out_Through` / `Moved_From` / `Moved_To` / `Acted_On` |
 | harm | `Documents_Harm` relationship to the victim, with victim kind and H0 category |
 | evidence | `oa:Annotation` targeting a page and character range of the document; quote hash only |
+
+A release built with `--observations` adds a third graph per case, `urn:caselinker:pacer:<case>:observations`: what the record names, as W3C Web Annotations, with no new vocabulary ([observations](../observations/README.md#graph)).
+
+| Record | Graph |
+|---|---|
+| platform observation | `oa:Annotation`, `oa:motivatedBy oa:identifying`, body = the platform |
+| feature observation | `oa:Annotation`, `oa:motivatedBy oa:classifying`, body = the CAC affordance class, `clt:featureTerm` = the phrase; no individual of the class |
+| supported relationship | `Carried_Out_Through`, `Moved_To` or `Supports_Action` under the evidence graph's IRIs, with an evidence annotation on the observation's own target |
+
+Why each `clt:` term exists, and which could move to an existing term, is recorded in the [extension's README](../../ontology/extensions/caselinker-trajectory/README.md).
 
 The trajectory graph is the derived view: one `uco-action:ActionLifecycle` per chain, with `Trajectory_Step` relationships carrying the step index and $O_{i}$. Graphs hold no names and no quote text.
 
@@ -48,14 +58,20 @@ python -m state_machines.graphs.release build <release_id>
 python -m state_machines.graphs.release nquads <release_id>
 ```
 
-A release folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `manifest.json` and `lifecycle.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
+A release folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `observations/` (when built with them), `manifest.json` and `lifecycle.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
 
 The manifest records the schema, codebook, derivation rule, extension and SDK versions, and per case the bundle hash, the source-document hashes, the graph IRIs and hashes, the SHACL result and the review counts. Graph IRIs are stable across releases:
 
 ```
 urn:caselinker:pacer:<case_id>:evidence        actions, participants, roles, relations, provenance
 urn:caselinker:pacer:<case_id>:trajectories    derived order and affordance views; every lifecycle and step names its derivation rule and threshold
+urn:caselinker:pacer:<case_id>:observations    platforms and feature phrases the record names, each cited; relationships a sentence supports (releases built with observations)
 ```
+
+| Release | Holds |
+|---|---|
+| `pacer-v1` | 30 cases, 258 agreed acts: evidence and trajectory graphs. The baseline, kept as built |
+| `pacer-v2` | The same bundles and graphs, byte for byte, plus `observations/` and an observation graph per case |
 
 ## Oxigraph
 

@@ -233,6 +233,8 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     assert {k: v["sha256"] for k, v in case["graphs"].items() if k != "observations"} == before
     assert case["graphs"]["observations"]["iri"] == graph_iri(F.CASE, "observations") and case["observations"]["observations"] > 0
     assert case["shacl"]["violations"] == 0
+    page = json.loads((root / "test-v1" / "lifecycle.json").read_text())["cases"][0]
+    assert page["observed"]["feature_classes"] == case["observations"]["feature_classes"] and "observed" not in json.dumps(plain)
     stored = json.loads((root / "test-v1" / "observations" / f"{F.CASE}.json").read_text())
     assert "quote" not in json.dumps(stored).replace("quote_sha256", "").replace("quote_word_count", "")   # hashes and offsets, no text
     ds = rdflib.Dataset()

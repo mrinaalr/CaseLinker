@@ -115,6 +115,49 @@ def published_content(release_id: str) -> dict:
     return dict(sorted(c.items()))
 
 
+def observed_content(release_id: str, pilot: Path = None) -> dict:
+    """The observation layer of a release, counted from its manifest, with the three level queries run
+    on its graphs and, where reference bundles are given, the platforms those name per case."""
+    manifest = json.loads((DATA / release_id / "manifest.json").read_text(encoding="utf-8"))
+    cases = [c for c in manifest["cases"] if c.get("observations")]
+    if not cases:
+        return {}
+    c: Counter = Counter()
+    for case in cases:
+        o = case["observations"]
+        c["cases"] += 1
+        c["observations"] += o["observations"]
+        c["platform observations"] += o["platform_observations"]
+        c["feature observations"] += o["feature_observations"]
+        c["cases naming at least one listed platform"] += bool(o["platforms"])
+        c["cases stating at least one feature phrase"] += bool(o["feature_classes"])
+        c["distinct case-platform pairs"] += len(o["platforms"])
+        c["observations tied to a published act by a stated means"] += o["observations_tied_to_an_act"]
+        c["cases with at least one such relationship"] += o["observations_tied_to_an_act"] > 0
+        for k, v in o["by_standing"].items():
+            c[f"observations in documents with standing {k}"] += v
+    from state_machines.observations.queries import QUERIES, run
+    out = {"counts": dict(c), "queries": {k: {"title": QUERIES[k]["title"], "columns": QUERIES[k]["columns"], "sparql": QUERIES[k]["sparql"], "rows": rows}
+                                           for k, rows in run(release_id).items()}}
+    if pilot is not None and pilot.is_dir():
+        from state_machines.coding.enrich import known_platform
+        ref: Counter = Counter()
+        for path in sorted(pilot.glob("*.json")):
+            case = next((x for x in cases if x["case_id"] == path.stem), None)
+            if case is None:
+                continue
+            b = json.loads(path.read_text(encoding="utf-8"))
+            raw = {x["platform_surface"] for e in b["events"] for k in ("platform_interactions", "platform_mentions") for x in e.get(k, [])}
+            named = {known_platform(r) for r in raw if known_platform(r)}
+            ref["cases"] += 1
+            ref["listed platforms the reference coding names"] += len(named)
+            ref["of which observed"] += len(named & set(case["observations"]["platforms"]))
+            ref["platform surfaces in the reference that are not on the list"] += len({r for r in raw if not known_platform(r)})
+            ref["listed platforms observed"] += len(case["observations"]["platforms"])
+        out["reference"] = dict(ref)
+    return out
+
+
 def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
     root = DATA / release_id
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
@@ -162,7 +205,7 @@ def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
     return {"release": release_id, "review_mode": manifest.get("review_mode"), "models": C.MODELS,
             "privacy_scan": {k: (len(v) if k == "hits" else v) for k, v in privacy.items()},
             "runtime_per_model": model_stats(), "totals": dict(sorted(totals.items())), "reliability_real_cases": reliability,
-            "published": published_content(release_id),
+            "published": published_content(release_id), "observed": observed_content(release_id, pilot),
             "benchmark": benchmark_results(), "reference_real_cases": reference, "cases": cases}
 
 
@@ -188,6 +231,35 @@ def _cell(v) -> str:
     return f"{v['rate']} ({v['n']}/{v['of']})" if isinstance(v, dict) else str(v)
 
 
+def _observed_md(ob: dict) -> list:
+    if not ob:
+        return []
+    L = ["## What the records name (observation layer)", "",
+         "Read by rule from every page except docket sheets, independent of the coders. An observation says a listed platform is named or a "
+         "codebook feature phrase is stated in a cited sentence. It does not say anyone used it. A relationship exists only where a "
+         "published act's own sentence states the means.", "", "| Content | Count |", "|---|---:|"]
+    L += [f"| {k} | {v} |" for k, v in ob["counts"].items()] + [""]
+    if ob.get("reference"):
+        L += ["On the reference cases (another coding, not truth): " + "; ".join(f"{k} {v}" for k, v in ob["reference"].items()) + ".", ""]
+    for q in ob["queries"].values():
+        L += [f"### {q['title']}", "", "```sparql", q["sparql"], "```", "", "| " + " | ".join(q["columns"]) + " |", "|" + "---|" * len(q["columns"])]
+        L += ["| " + " | ".join(row) + " |" for row in q["rows"][:40]]
+        if len(q["rows"]) > 40:
+            L.append(f"\n{len(q['rows']) - 40} more rows.")
+        L.append("")
+    return L
+
+
+_OBS_ROWS = [("gold platform mentions found", "platform_mentions_found"), ("gold feature statements found", "feature_statements_found"),
+             ("observed platforms the gold names in that sentence", "platform_observations_gold_names"),
+             ("observed feature phrases the gold codes as an affordance there", "feature_observations_gold_codes_as_affordance"),
+             ("relationships that the gold also holds", "relationships_correct"),
+             ("relationships to a platform the gold says is only named", "relationships_platform_only_named_in_gold"),
+             ("relationships on an act that is not a gold act", "relationships_on_act_not_in_gold"),
+             ("gold relationships found, on published acts", "gold_relationships_found_on_published_acts"),
+             ("observations outside gold act sentences (not judged)", "observations_outside_gold_acts")]
+
+
 def _benchmark_md(results: dict) -> list:
     L = []
     if not results:
@@ -195,6 +267,15 @@ def _benchmark_md(results: dict) -> list:
     L += ["## Accuracy on the synthetic benchmark", "",
           "Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, "
           "not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.", ""]
+    observed = {k: v for k, v in results.items() if k.startswith("observe-")}
+    results = {k: v for k, v in results.items() if k not in observed}
+    if observed:
+        splits = sorted(observed, key=lambda k: ["dev", "heldout", "confirm"].index(k.rsplit(".", 1)[1]))
+        L += ["### Observation layer (" + ", ".join(sorted({k.rsplit('.', 1)[0] for k in observed})) + ")", "",
+              "Platform names and feature terms are kept verbatim in every split, so these rates measure finding listed terms in new sentence "
+              "constructions, not recognising unlisted wording.", "",
+              "| Measure | " + " | ".join(_SPLITS.get(k.rsplit(".", 1)[1], k).split(" (")[0] for k in splits) + " |", "|---|" + "---:|" * len(splits)]
+        L += [f"| {label} | " + " | ".join(_cell(observed[k].get(field)) for k in splits) + " |" for label, field in _OBS_ROWS] + [""]
     for key, systems in results.items():
         version, split = key.rsplit(".", 1)
         note = systems.get("_note")
@@ -238,6 +319,7 @@ def markdown(r: dict) -> str:
     L += ["", "## Coverage and drops", "", "| Measure | Count |", "|---|---:|"] + [f"| {k} | {v} |" for k, v in t.items() if k.startswith("coder_")]
     rel = r["reliability_real_cases"]
     L += ["", "## Reliability on the real cases", "", f"```json\n{json.dumps(rel, indent=1)}\n```", ""]
+    L += _observed_md(r.get("observed") or {})
     L += _benchmark_md(r.get("benchmark") or {})
     ref = r.get("reference_real_cases")
     if ref:

@@ -271,6 +271,15 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
                 open_values += 1
                 if not ok(value):
                     hits.append({"case": bundle["case_id"], "kind": "open_text", "file": f"cases/{path.name}"})
+    from state_machines.observations.observe import FEATURES as OBSERVED_FEATURES
+    phrases = {(cls, ph) for cls, group in OBSERVED_FEATURES.items() for ph in group}
+    for path in sorted((root / "observations").glob("*.json")):      # observation files: listed names and phrases only
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        for o in doc["observations"]:
+            open_values += 1
+            ok = known_platform(o["platform"]) == o["platform"] if o["kind"] == "platform" else (o["feature_class"], o["feature_term"]) in phrases
+            if not ok:
+                hits.append({"case": doc["case_id"], "kind": "open_text", "file": f"observations/{path.name}"})
     return {"files": len(files), "deny_terms": checked_terms, "quotes": checked_quotes, "listed_values": open_values, "hits": hits}
 
 

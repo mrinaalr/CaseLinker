@@ -6,6 +6,7 @@
 #
 # Environment: CASELINKER_PACER_TEXT (page text store), PYTHON (interpreter with the research deps),
 # OLLAMA_PARALLEL (requests in flight, default 2), SELECTIVE=1 (second coder reads only pages where the first found acts),
+# OBSERVATIONS=1 (also publish what each record names as a third graph per case),
 # PILOT (folder of reference bundles of real cases to compare the release with, optional). Benchmark scores in the report are read from
 # state_machines/benchmark/results (written by `pipeline bench --record`). Starts the dedicated Ollama server from
 # state_machines/coding/models.json if it is not running.
@@ -37,7 +38,7 @@ fi
   echo "== $(date -u +%FT%TZ) resolve"
   "$PY" -m state_machines.coding.pipeline resolve "${CASES[@]}" --text-root "$TEXT"
   echo "== $(date -u +%FT%TZ) release $RELEASE"
-  "$PY" -m state_machines.coding.pipeline release "$RELEASE" "${CASES[@]}" --text-root "$TEXT"
+  "$PY" -m state_machines.coding.pipeline release "$RELEASE" "${CASES[@]}" --text-root "$TEXT" ${OBSERVATIONS:+--observations}
   echo "== $(date -u +%FT%TZ) report"
   "$PY" -m state_machines.coding.report "$RELEASE" ${PILOT:+--pilot "$PILOT"}
   echo "== $(date -u +%FT%TZ) done"

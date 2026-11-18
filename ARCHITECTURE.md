@@ -118,7 +118,7 @@ Three stores, one corpus:
 - **Deterministic first.** Regex, grammar and NER are the witnesses. The LLM is optional, reads sentence windows, must quote its source, and cannot finalize a value alone.
 - **No span, no value.** Every stored assertion points at a character span of the original text. Assertions are append-only; resolution is versioned and re-runnable without re-extraction.
 - **A wrong final is worse than review.** Disagreement between evidence families vetoes a value. Open items go to a review queue, not to a column.
-- **Standard vocabularies.** CAC, UCO and CASE for cases; PROV-O and Web Annotation for provenance; Census FIPS and FBI CDE for grounding; persistent `w3id.org/caselinker` IRIs. CaseLinker binds, it does not invent.
+- **Standard vocabularies.** CAC, UCO and CASE for cases; PROV-O and Web Annotation for provenance; Census FIPS and FBI CDE for grounding; persistent `w3id.org/caselinker` IRIs. CaseLinker binds, it does not invent. Two small local vocabularies carry only what those cannot say: the provenance terms in [`caselinker-provenance.ttl`](ontology/caselinker-provenance.ttl) and the experimental `clt:` terms of the PACER graphs, each justified term by term in the [extension's README](ontology/extensions/caselinker-trajectory/README.md).
 - **Agents read; humans investigate.** MCP tools let an agent ask complex relational questions over the corpus: cohorts, facet trees, session graphs, SPARQL and comparisons across the whole corpus in a single call. Answers come from stored assertions and graphs, never from the agent's own inference, and no tool writes a claim back into the database.
 
 ---

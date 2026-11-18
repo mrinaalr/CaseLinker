@@ -60,6 +60,8 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 | same_act | gold retellings the coded bundle links |
 | by_tag | recall per hard-case tag |
 
+`score_observations` scores the [observation layer](../observations/README.md) apart from the acts: gold platform mentions and feature statements found, and whether each supported relationship is one the gold holds (`pipeline bench-observations`, results in `results/observe-<version>.<split>.json`).
+
 ## Results
 
 [`results/`](results/) holds the scores of each rule version on each split (`pipeline bench --split <split> --record`), one file per `<rule version>.<split>`. Each release's `REPORT.md` prints them as tables.

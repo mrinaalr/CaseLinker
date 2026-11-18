@@ -105,7 +105,9 @@ Press-release case graphs and PACER court-record graphs are different datasets:
 | Family | Named graph | Source | Load |
 |---|---|---|---|
 | Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` | `rebuild_oxigraph.py` bulk load (see [Reloading the store](#reloading-the-store)) |
-| PACER release | `urn:caselinker:pacer:<case_id>:evidence`, `urn:caselinker:pacer:<case_id>:trajectories` (`--pacer-graphs evidence` loads the first only) | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
+| PACER release | `urn:caselinker:pacer:<case_id>:evidence`, `…:trajectories` and, in releases built with them, `…:observations` (`--pacer-graphs evidence` loads the first only) | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
+
+The three graph kinds hold three levels of evidence: what the record names (`:observations`), the acts both coders agreed on (`:evidence`), and the relationships a sentence supports. One query per level, with results on the 30 cases, is in [`state_machines/observations/queries.py`](../../state_machines/observations/queries.py) and in each release's `REPORT.md`.
 
 `--verify` checks the loaded store against the release manifest: every manifest graph present and non-empty, no PACER graph outside the release, no legacy `urn:pacer:kg:*` graph left.
 

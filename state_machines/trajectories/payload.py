@@ -132,6 +132,10 @@ def build_payload(root: Optional[Path] = None, *, from_bundles: bool = False) ->
                    for thr in ("DIRECT", "INFERRED")}
         cp = case_payload(bundle, derived)
         cp["shacl"] = c["shacl"]["conformance"]
+        if c.get("observations"):      # what the record names (mentions, not use); only releases built with the observation layer
+            o = c["observations"]
+            cp["observed"] = {"platforms": o["platforms"], "feature_classes": o["feature_classes"], "feature_terms": o["feature_terms"],
+                              "tied_to_an_act": o["observations_tied_to_an_act"]}
         cases.append(cp)
     return {"release": {"id": manifest["release_id"], "adjudicated": manifest["adjudicated"],
                         "review_mode": review_mode(manifest),

@@ -352,3 +352,4 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
   - order agreement on matched pairs.
 - **Adjudication** produces the adjudicated bundle. Each disagreement gets a decision and a note (`review.status = adjudicated`).
 - **Machine resolution** instead publishes only what both coders coded, by a fixed rule (`review.status = agreed`); see [coding](../coding/README.md#machine-resolution).
+- **Observations** are not coded and need no agreement. A listed platform named, or a listed feature phrase stated, in a sentence of the record is published as a mention with its source ([observations](../observations/README.md)). It becomes level C only through a relationship: the act's own sentence states the means.

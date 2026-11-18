@@ -19,6 +19,7 @@ python -m state_machines.coding.pipeline code <case> [...]           # coder_A, 
 python -m state_machines.coding.pipeline resolve <case> [...]        # local/auto/resolved, reports
 python -m state_machines.coding.pipeline bench --split confirm --record   # score a benchmark split → benchmark/results/
 python -m state_machines.coding.pipeline release pacer-v1 <case> [...]
+python -m state_machines.coding.pipeline release pacer-v2 <case> [...] --observations   # the same bundles plus what the record names
 ```
 
 | Part | What it does |
@@ -95,7 +96,7 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 - On five real cases its codes agreed with reference coding less often than codes both models gave (numbers in each release's `REPORT.md`): real sentences are long and often state several acts.
 - A machine release states that two coders agreed on everything published, so settled codes stay out until they have a review tier of their own.
 
-Everything else is left out and counted. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
+Everything else is left out and counted. What the record names (platforms, feature phrases) does not depend on this rule: the [observation layer](../observations/README.md) reads it from the pages and publishes it apart from the acts. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
 
 ## Adjudication
 
