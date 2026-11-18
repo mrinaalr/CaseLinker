@@ -47,7 +47,7 @@ from typing import Dict, List, Optional, Tuple
 from state_machines.evidence import evidence as E
 from state_machines.evidence import vocab as V
 from state_machines.evidence.validate import errors, validate
-from state_machines.coding.enrich import enrich, stated_prior
+from state_machines.coding.enrich import enrich, feature, known_platform, stated_prior
 
 HERE = Path(__file__).resolve().parent
 MODELS = json.loads((HERE / "models.json").read_text(encoding="utf-8"))
@@ -562,6 +562,8 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                 ch = CHANNEL_WORDS.get(name.lower())
                 if ch:
                     e["channels"].append({"channel": ch, "status": "DIRECT", "support": [{"passage_id": pid, "facet": "channel", "status": "DIRECT"}]})
+                elif known_platform(name) is None:      # not a listed service: never recorded (it may be a username or a place)
+                    log.append(f"left out {doc['doc_id']} p{page_no} {action}: a platform name not on the list of known services")
                 elif name.lower() in qn.lower():
                     key_name = re.sub(r"[^A-Za-z0-9 ._+\-]", "", name)[:60].strip()
                     if key_name and key_name[0].isalnum():
@@ -571,11 +573,12 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                             "audience": plat.get("audience") if plat.get("audience") in V.AUDIENCES else "unknown",
                             "status": "DIRECT", "support": [{"passage_id": pid, "facet": "platform", "status": "DIRECT"}]})
             named = (act.get("named_platform") or "").strip()
-            if named and named.lower() in qn.lower() and named.lower() not in CHANNEL_WORDS and not e["platform_interactions"]:
+            if named and known_platform(named) and named.lower() in qn.lower() and named.lower() not in CHANNEL_WORDS and not e["platform_interactions"]:
                 e["platform_mentions"].append({"platform_surface": named[:80], "passage_ids": [pid]})
             aff = act.get("affordance") or {}
             feat = (aff.get("feature") or "").strip()
-            if aff.get("class") in V.AFFORDANCES and feat and E.normalize(feat).lower() in qn.lower() and fam == "offender":
+            if (aff.get("class") in V.AFFORDANCES and feat and E.normalize(feat).lower() in qn.lower() and fam == "offender"
+                    and (feature(feat) or (None,))[0] == aff["class"]):      # only the codebook's feature words are ever stored
                 a = {"affordance": aff["class"], "basis": "feature_stated", "feature_term": feat[:120],
                      "status": "DIRECT", "support": [{"passage_id": pid, "facet": "feature", "status": "DIRECT"}]}
                 if e["platform_interactions"]:

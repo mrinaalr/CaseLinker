@@ -1,6 +1,6 @@
 """The run report of a machine-coded release: what was coded, how well, and what was left out.
 
-    python -m state_machines.coding.report <release_id> [--auto local/auto] [--bench local/bench]
+    python -m state_machines.coding.report <release_id> [--auto local/auto] [--pilot <dir of reference bundles>]
 
 Writes ``state_machines/data/<release_id>/report.json`` (for tools and the review agent) and
 ``REPORT.md`` (for people). Numbers only: no quotes, no names, no coder text.
@@ -8,9 +8,11 @@ Writes ``state_machines/data/<release_id>/report.json`` (for tools and the revie
 Sections: the pinned models and inference settings; per case, whether it was published, its
 published acts and relations, its failures and reasons; page coverage by route (model, docket
 parser, skipped form pages, skipped by the selective second pass); acts dropped and why;
-inter-coder reliability on model-coded acts; held-out benchmark accuracy; runtime per page.
-Reliability is agreement between the two coders on the real cases; benchmark accuracy is on
-synthetic records. Neither is accuracy on the real cases.
+inter-coder reliability on model-coded acts; benchmark accuracy per split and rule version (read
+from ``state_machines/benchmark/results``); a comparison with reference coding of real cases where
+one is given (``--pilot``); runtime per page. Reliability is agreement between the two coders on
+the real cases; benchmark accuracy is on synthetic records; the reference comparison is agreement
+with another coding of a few real cases. None of them is accuracy on the real cases.
 """
 from __future__ import annotations
 
@@ -25,6 +27,48 @@ from state_machines.coding import coder as C
 from state_machines.coding.throughput import model_stats
 
 DATA = E.REPO_ROOT / "state_machines" / "data"
+RESULTS = E.REPO_ROOT / "state_machines" / "benchmark" / "results"
+
+
+def benchmark_results() -> dict:
+    """Committed benchmark scores, keyed ``<rule version>.<split>``: {system: overall scores}."""
+    out = {}
+    for path in sorted(RESULTS.glob("*.json")):
+        out[path.stem] = json.loads(path.read_text(encoding="utf-8"))
+    return out
+
+
+def reference_comparison(resolved: Path, pilot: Path) -> dict:
+    """Published non-procedure acts of real cases against a reference coding of the same pages.
+
+    For each published act: did the reference code an act in the same sentence (overlapping cited
+    span), and did it give one there the same action code. The reference is another coding, not
+    truth, and it does not code every act, so these are agreement counts, not accuracy."""
+    from state_machines.coding.workflow import _spans
+    from state_machines.evidence import vocab as V
+    c: Counter = Counter()
+    cases = []
+    for ref_path in sorted(pilot.glob("*.json")):
+        got = resolved / ref_path.name
+        if not got.is_file():
+            continue
+        ref, r = (json.loads(x.read_text(encoding="utf-8")) for x in (ref_path, got))
+        cases.append(r["case_id"])
+        ref_spans = [(sp, e) for e in ref["events"] if V.FAMILY_OF[e["action"]] != "procedure" for sp in _spans(ref, e)]
+        ours = [e for e in r["events"] if V.FAMILY_OF[e["action"]] != "procedure"]
+        our_spans = [(sp, e) for e in ours for sp in _spans(r, e)]
+        hit = lambda s, t: s[0] == t[0] and s[1] == t[1] and s[2] < t[3] and t[2] < s[3]
+        for e in ours:
+            near = [x for sp, x in ref_spans for s in _spans(r, e) if hit(s, sp)]
+            tier = "settled" if "settled by cue rule" in e["review"].get("note", "") else "agreed"
+            c[f"{tier}: published acts"] += 1
+            c[f"{tier}: reference coded an act in the same sentence"] += bool(near)
+            c[f"{tier}: reference gave the same action code there"] += any(x["action"] == e["action"] for x in near)
+        ref_acts = {e["event_id"] for _, e in ref_spans}
+        c["reference acts"] += len(ref_acts)
+        c["reference acts in a sentence the release also cites"] += len({e["event_id"] for sp, e in ref_spans
+                                                                          if any(hit(s, sp) for s, _ in our_spans)})
+    return {"cases": cases, "counts": dict(sorted(c.items()))}
 
 
 def _coverage(log: Path) -> Counter:
@@ -47,7 +91,7 @@ def _coverage(log: Path) -> Counter:
     return c
 
 
-def build(release_id: str, auto: Path, bench: Path) -> dict:
+def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
     root = DATA / release_id
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     published = {c["case_id"]: c for c in manifest["cases"]}
@@ -84,14 +128,64 @@ def build(release_id: str, auto: Path, bench: Path) -> dict:
         "mean_action_kappa": round(sum(kappas) / len(kappas), 3) if kappas else None,
         "note": "agreement on acts the models coded; the docket parser's acts are excluded",
     }
-    bench_path = bench / "reports" / "benchmark.heldout.json"
-    benchmark = {k: v["overall"] for k, v in json.loads(bench_path.read_text(encoding="utf-8")).items()} if bench_path.is_file() else None
+    reference = None
+    if pilot is not None and pilot.is_dir():
+        reference = {"released": reference_comparison(auto / "resolved", pilot)}
+        if (auto / "resolved_2b").is_dir():
+            reference["candidate_2b"] = reference_comparison(auto / "resolved_2b", pilot)
     from state_machines.graphs.release import privacy_scan
     privacy = privacy_scan(release_id, E.text_root())
     return {"release": release_id, "review_mode": manifest.get("review_mode"), "models": C.MODELS,
             "privacy_scan": {k: (len(v) if k == "hits" else v) for k, v in privacy.items()},
             "runtime_per_model": model_stats(), "totals": dict(sorted(totals.items())), "reliability_real_cases": reliability,
-            "benchmark_heldout": benchmark, "cases": cases}
+            "benchmark": benchmark_results(), "reference_real_cases": reference, "cases": cases}
+
+
+_ROWS = [("gold acts found (recall)", lambda o: o["events"]["recall"]), ("coded acts that are gold acts (precision)", lambda o: o["events"]["precision"]),
+         ("action code", lambda o: o["action"]), ("actor", lambda o: o["actor"]), ("legal standing", lambda o: o["standing"]),
+         ("dates", lambda o: o["dates"]),
+         ("order relations: correct against the documented order", lambda o: o.get("order_claims", {}).get("correct")),
+         ("order relations: reversed", lambda o: o.get("order_claims", {}).get("reversed")),
+         ("order relations: not documented", lambda o: o.get("order_claims", {}).get("not_documented")),
+         ("gold sequence sentences recovered (stated order recall)", lambda o: o["order"]["recall"]),
+         ("gold-ordered pairs also ordered, both acts coded", lambda o: o.get("order_pairs", {}).get("of_pairs_with_both_acts_coded")),
+         ("gold-ordered pairs also ordered, all", lambda o: o.get("order_pairs", {}).get("of_all_gold_pairs")),
+         ("level C found (recall)", lambda o: o["level_c"]["recall"]), ("level C correct (precision)", lambda o: o["level_c"]["precision"]),
+         ("harms found (recall)", lambda o: o["harms"]["recall"]), ("harms correct (precision)", lambda o: o["harms"]["precision"]),
+         ("possible retellings linked", lambda o: o["same_act"])]
+_SPLITS = {"dev": "development cases (rules were tuned on these)", "heldout": "held-out cases",
+           "confirm": "confirmation cases (wording written without sight of the rules; scored once)"}
+
+
+def _cell(v) -> str:
+    if v is None:
+        return ""
+    return f"{v['rate']} ({v['n']}/{v['of']})" if isinstance(v, dict) else str(v)
+
+
+def _benchmark_md(results: dict) -> list:
+    L = []
+    if not results:
+        return L
+    L += ["## Accuracy on the synthetic benchmark", "",
+          "Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, "
+          "not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.", ""]
+    for key, systems in results.items():
+        version, split = key.rsplit(".", 1)
+        note = systems.get("_note")
+        cols = [k for k in ("coder_A", "coder_B", "resolved", "resolved_2b") if k in systems]
+        L += [f"### {version}, {_SPLITS.get(split, split)}", ""] + ([note, ""] if note else [])
+        L += ["| Measure | " + " | ".join(cols) + " |", "|---|" + "---:|" * len(cols)]
+        for label, get in _ROWS:
+            cells = [_cell(get(systems[k])) for k in cols]
+            if any(cells):
+                L.append(f"| {label} | " + " | ".join(cells) + " |")
+        tags = sorted({t for k in cols for t in systems[k].get("by_tag", {})})
+        if tags and "resolved" in systems:
+            L += ["", "Recall of the released coding by hard-case tag: " +
+                  "; ".join(f"{t} {_cell(systems['resolved']['by_tag'][t])}" for t in tags if t in systems["resolved"]["by_tag"]) + ".", ""]
+        L.append("")
+    return L
 
 
 def markdown(r: dict) -> str:
@@ -116,16 +210,22 @@ def markdown(r: dict) -> str:
     L += ["", "## Coverage and drops", "", "| Measure | Count |", "|---|---:|"] + [f"| {k} | {v} |" for k, v in t.items() if k.startswith("coder_")]
     rel = r["reliability_real_cases"]
     L += ["", "## Reliability on the real cases", "", f"```json\n{json.dumps(rel, indent=1)}\n```", ""]
-    if r["benchmark_heldout"]:
-        L += ["## Accuracy on the held-out synthetic benchmark", ""]
-        for who, s in r["benchmark_heldout"].items():
-            L.append(f"- **{who}:** event F1 {s['events']['f1']}, recall {s['events']['recall']['rate']}, precision {s['events']['precision']['rate']}; "
-                     f"action {s['action']['rate']}; actor {s['actor']['rate']}; dates {s['dates']['rate']}; order recall {s['order']['recall']['rate']}; "
-                     f"level C recall {s['level_c']['recall']['rate']}; harms recall {s['harms']['recall']['rate']}; standing {s['standing']['rate']}")
+    L += _benchmark_md(r.get("benchmark") or {})
+    ref = r.get("reference_real_cases")
+    if ref:
+        L += ["## Agreement with reference coding of real cases", "",
+              f"Cases {', '.join('`' + c + '`' for c in ref['released']['cases'])} were coded earlier by two agent coders of a larger "
+              "model (their agreed coding, not adjudicated). For each non-procedure act published here: did the reference code an act "
+              "in the same sentence, and did it give the same action code there. The reference is another coding and does not code "
+              "every act; this is agreement, not accuracy.", "", "| Measure | Released | Candidate 2b |", "|---|---:|---:|"]
+        keys = sorted(set(ref["released"]["counts"]) | set(ref.get("candidate_2b", {}).get("counts", {})))
+        for k in keys:
+            L.append(f"| {k} | {ref['released']['counts'].get(k, 0)} | {ref.get('candidate_2b', {}).get('counts', {}).get(k, '')} |")
         L.append("")
     ps = r["privacy_scan"]
-    L += ["## Privacy", "", f"{ps['files']} committed files checked against {ps['deny_terms']} deny-list terms and {ps['quotes']} stored quotes: "
-          f"**{ps['hits']} hits**.", ""]
+    L += ["## Privacy", "", f"{ps['files']} committed files checked against {ps['deny_terms']} deny-list terms (names from the case captions) "
+          f"and {ps['quotes']} stored quotes; {ps.get('listed_values', 0)} platform names and feature words checked against the fixed lists they must "
+          f"come from: **{ps['hits']} hits**.", ""]
     L += ["## Runtime", "", f"```json\n{json.dumps(r['runtime_per_model'], indent=1)}\n```", ""]
     return "\n".join(L)
 
@@ -134,9 +234,9 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("release_id")
     ap.add_argument("--auto", type=Path, default=E.REPO_ROOT / "local" / "auto")
-    ap.add_argument("--bench", type=Path, default=E.REPO_ROOT / "local" / "bench")
+    ap.add_argument("--pilot", type=Path, help="reference bundles of real cases (<case_id>.json) to compare the release with")
     a = ap.parse_args(argv)
-    r = build(a.release_id, a.auto, a.bench)
+    r = build(a.release_id, a.auto, a.pilot)
     (DATA / a.release_id / "report.json").write_text(json.dumps(r, indent=1) + "\n", encoding="utf-8")
     (DATA / a.release_id / "REPORT.md").write_text(markdown(r) + "\n", encoding="utf-8")
     print(DATA / a.release_id / "REPORT.md")

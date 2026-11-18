@@ -28,12 +28,23 @@ def test_level_c_needs_the_feature_words_in_the_sentence():
     assert N.feature("He used the disappearing-message feature on Vellum Chat.") == ("ephemerality", "disappearing-message")
     assert N.feature("He created a new account under a different name to hide.")[0] == "anonymity"
     assert N.feature("He messaged her on Snapwire.") is None                  # a platform name alone is never level C (B0)
+    assert N.feature("The operator kept a history of the factors.") is None   # "Tor" is a word of its own, in its own case
+    assert N.feature("He reached the site through Tor.") == ("anonymity", "Tor")
 
 
 def test_platforms_are_named_services_never_places_or_dates():
     assert N.platform("He first contacted her through the Chirpline application.")["n"] == "Chirpline"
     assert N.platform("He posted the images in a Kitebox group chat.") == {"n": "Kitebox", "m": "through", "au": "group"}
     assert N.platform("He lived in Anchorage on June 3.") is None
+    assert N.platform("He messaged her on Instagram Direct.")["n"] == "Instagram"
+    # a name that is not a listed service is never recorded: it may be a username, a nickname or a place
+    assert N.platform("He sent the files to Greggy using the RexRiddle Hado account.") is None
+    assert N.platform("The matter went to Grand Jury on Philippines time.") is None
+
+
+def test_the_benchmark_services_are_the_only_invented_names_on_the_list():
+    from state_machines.benchmark.generate import PLATFORMS
+    assert set(PLATFORMS) == set(N.FICTIONAL_PLATFORMS) and not N.FICTIONAL_PLATFORMS & N.PLATFORMS
 
 
 def test_harm_follows_the_act_only_with_a_minor_target():

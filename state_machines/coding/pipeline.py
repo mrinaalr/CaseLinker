@@ -37,8 +37,12 @@ DATA = E.REPO_ROOT / "state_machines" / "data"
 
 
 def _deny(text_root: Path, case_id: str) -> List[str]:
+    """The case's deny list (names from its captions), built from the page text when it is not there yet."""
     p = text_root / case_id / "deny.json"
-    return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else []
+    if p.is_file():
+        return json.loads(p.read_text(encoding="utf-8"))
+    from state_machines.coding.workflow import build_deny
+    return build_deny(case_id, text_root) if (text_root / case_id / "sources.json").is_file() and "benchmark" not in text_root.parts else []
 
 
 def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) -> dict:
@@ -128,6 +132,18 @@ def bench(split: str = "all", out: Path = E.REPO_ROOT / "local" / "bench", selec
     return result
 
 
+def record(split: str, result: dict, note: str = "") -> Path:
+    """Write a split's overall scores to the committed results folder, keyed by the rule version."""
+    from state_machines.coding.resolve import RULE_VERSION
+    path = E.REPO_ROOT / "state_machines" / "benchmark" / "results" / f"{RULE_VERSION}.{split}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    body = {name: dict(r["overall"], cases=r["cases"], cases_without_output=r["missing"]) for name, r in result.items()}
+    if note:
+        body["_note"] = note
+    path.write_text(json.dumps(body, indent=1) + "\n", encoding="utf-8")
+    return path
+
+
 def release(release_id: str, cases: List[str], out: Path, text_root: Path) -> dict:
     from state_machines.graphs.release import build
     root = DATA / release_id / "cases"
@@ -152,6 +168,8 @@ def main(argv=None) -> int:
     ap.add_argument("--selective", action="store_true", help="coder_B reads only pages where coder_A found acts")
     ap.add_argument("--settle-codes", action="store_true",
                     help="resolve: candidate rule 2b, settle a differing action code from the sentence (not for a machine release)")
+    ap.add_argument("--record", action="store_true", help="bench: write the split's scores to state_machines/benchmark/results")
+    ap.add_argument("--note", default="", help="bench --record: one line stored with the scores")
     ap.add_argument("--bench-out", type=Path, default=E.REPO_ROOT / "local" / "bench")
     a = ap.parse_args(argv)
     if a.cmd == "code":
@@ -160,6 +178,8 @@ def main(argv=None) -> int:
         print(json.dumps(resolve_cases(a.args, a.out, a.text_root, a.settle_codes, "resolved_2b" if a.settle_codes else "resolved"), indent=1))
     elif a.cmd == "bench":
         r = bench(a.split, a.bench_out, a.selective)
+        if a.record:
+            record(a.split, r, a.note)
         print(json.dumps({k: v["overall"] for k, v in r.items()}, indent=1))
     else:
         print(json.dumps(release(a.args[0], a.args[1:], a.out, a.text_root), indent=1))

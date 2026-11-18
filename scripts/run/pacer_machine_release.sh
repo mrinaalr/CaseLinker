@@ -6,7 +6,8 @@
 #
 # Environment: CASELINKER_PACER_TEXT (page text store), PYTHON (interpreter with the research deps),
 # OLLAMA_PARALLEL (requests in flight, default 2), SELECTIVE=1 (second coder reads only pages where the first found acts),
-# BENCH (benchmark output folder whose held-out scores go into the report, default local/bench). Starts the dedicated Ollama server from
+# PILOT (folder of reference bundles of real cases to compare the release with, optional). Benchmark scores in the report are read from
+# state_machines/benchmark/results (written by `pipeline bench --record`). Starts the dedicated Ollama server from
 # state_machines/coding/models.json if it is not running.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -34,10 +35,10 @@ fi
   echo "== $(date -u +%FT%TZ) code ${#CASES[@]} cases"
   "$PY" -m state_machines.coding.pipeline code "${CASES[@]}" --text-root "$TEXT" ${SELECTIVE:+--selective}
   echo "== $(date -u +%FT%TZ) resolve"
-  "$PY" -m state_machines.coding.pipeline resolve "${CASES[@]}"
+  "$PY" -m state_machines.coding.pipeline resolve "${CASES[@]}" --text-root "$TEXT"
   echo "== $(date -u +%FT%TZ) release $RELEASE"
   "$PY" -m state_machines.coding.pipeline release "$RELEASE" "${CASES[@]}" --text-root "$TEXT"
   echo "== $(date -u +%FT%TZ) report"
-  "$PY" -m state_machines.coding.report "$RELEASE" --bench "${BENCH:-local/bench}"
+  "$PY" -m state_machines.coding.report "$RELEASE" ${PILOT:+--pilot "$PILOT"}
   echo "== $(date -u +%FT%TZ) done"
 } 2>&1 | tee -a "$LOG"

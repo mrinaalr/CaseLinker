@@ -54,6 +54,8 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 | standing | the act's passage has the gold legal standing (an allegation stays an allegation) |
 | dates | the gold date among the coded dates |
 | order | recall and precision of stated order between matched acts |
+| order_claims | every coded order relation judged against the gold's full documented order (listed relations and cited dates, closed transitively): correct, reversed, not documented |
+| order_pairs | gold-ordered pairs of acts the coded bundle also orders, by stated relations and cited dates together |
 | level_c, harms | recall and precision of level-C affordances and H0 harms |
 | same_act | gold retellings the coded bundle links |
 | by_tag | recall per hard-case tag |

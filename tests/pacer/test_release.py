@@ -179,6 +179,34 @@ def test_privacy_scan_finds_a_name_or_quote_in_committed_files(tmp_path):
     assert kinds == {"deny", "quote"}
 
 
+def test_privacy_scan_refuses_an_unlisted_platform_name_in_a_machine_coded_bundle(tmp_path):
+    from state_machines.graphs.release import privacy_scan
+    b = _adjudicated(F.build()[0])
+    b["coding"]["note"] = "machine resolution (resolve-1.1.0) of two independent codings; not adjudicated"
+    root = _release(tmp_path, b)
+    build("test-v1", data_root=root, text_root=tmp_path / "text")
+    path = root / "test-v1" / "cases" / f"{F.CASE}.json"
+    bundle = json.loads(path.read_text())
+    for a in bundle["events"]:                              # as the automated coder writes them: listed words only
+        a["affordances"] = [{k: v for k, v in dict(o, feature_term="public group").items() if k != "platform_surface"} for o in a["affordances"]]
+        a["platform_interactions"], a["platform_mentions"] = [], []
+    path.write_text(json.dumps(bundle), encoding="utf-8")
+    assert [h for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"] if h["kind"] == "open_text"] == []
+    e = next(x for x in bundle["events"] if x["affordances"])
+    e["affordances"][0]["platform_surface"] = "Some Username"
+    path.write_text(json.dumps(bundle), encoding="utf-8")
+    assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
+
+
+def test_deny_list_is_built_from_the_case_captions(tmp_path):
+    from state_machines.coding.workflow import build_deny
+    from state_machines.evidence import evidence as E
+    E.write_page("case_x", "ind", 1, "UNITED STATES OF AMERICA ) ) v. ) Case No. 1:24-cr-1 JORDAN Q. EXAMPLE, ) Defendant.", tmp_path)
+    E.write_page("case_x", "jdg", 1, "JUDGMENT IN A CRIMINAL CASE V. Jordan Example a/k/a Jay Sample Case Number 3", tmp_path)
+    assert build_deny("case_x", tmp_path) == ["example", "jay", "jordan", "sample"]
+    assert json.loads((tmp_path / "case_x" / "deny.json").read_text()) == ["example", "jay", "jordan", "sample"]
+
+
 def test_a_case_without_offender_chains_has_no_trajectory_graph_to_load(tmp_path):
     b = _adjudicated(F.build()[0])
     keep = {e["event_id"] for e in b["events"] if e["action"].startswith(("LE_", "RESP_"))}

@@ -142,6 +142,50 @@ def deny_list(case_id: str, text_root: Optional[Path] = None) -> List[str]:
     return json.loads(path.read_text()) if path.is_file() else []
 
 
+_CAPTION = re.compile(r"(?:UNITED STATES OF AMERICA|United States of America|UNITED STATES|United States|USA|U\.S\.|CRIMINAL CASE)"
+                      r"[^.]{0,60}?(?<![A-Za-z])[Vv][Ss]?\.\s+(?:[)(|:\-]\s*)*([A-Z][A-Za-z.,'\-/\"“” ]{2,120})")
+_ALIAS = re.compile(r"\ba/k/a\b|\bA/K/A\b|\baka\b|\bAKA\b|also known as")
+_CAPTION_STOP = re.compile(r"\b(?:Defendants?|DEFENDANTS?|Case|CASE|No|NO|Criminal|CRIMINAL|Cr|CR|Docket|DOCKET|Plaintiff|et al)\b|[)(|:\d]")
+_NOT_NAME = set("""
+united states america defendant defendants plaintiff the and case criminal court district jr sr ii iii iv usa inc llc doe john jane
+under seal sealed unknown indictment superseding information complaint judgment amended plea agreement sentencing memorandum
+statement facts offense factual basis proffer stipulation order motion notice government response reply brief exhibit count counts
+number numbers date filed file filing violation violations title section code page pages docket entry minute sheet warrant arrest
+production distribution receipt possession child pornography minor minors sexual exploitation enticement coercion trafficking
+conspiracy attempt transportation interstate commerce release detention hearing trial jury grand verdict true bill foreign
+for its may first include includes result results fields with from that this was were not his her has have had who which
+division eastern western northern southern middle central honorable judge magistrate clerk attorney assistant
+""".split())
+_NAME_TOKEN = re.compile(r"^[A-Z][A-Za-z'\-]+\.?,?$|^[A-Z]\.,?$")
+
+
+def _name_words(raw: str) -> List[str]:
+    """The leading run of capitalised words of a caption fragment: a name is at most six words and
+    ends at the first word that is not capitalised or is a caption word ("INDICTMENT", "Defendant")."""
+    out = []
+    for token in raw.replace('"', " ").replace("“", " ").replace("”", " ").split()[:6]:
+        word = token.strip(".,'-/").lower()
+        if not _NAME_TOKEN.match(token) or word in _NOT_NAME:
+            break
+        if len(word) >= 3 and word.isalpha():
+            out.append(word)
+    return out
+
+
+def build_deny(case_id: str, text_root: Optional[Path] = None) -> List[str]:
+    """Names from the case captions ("United States v. ...") in the page text: the words T14 and the
+    release privacy scan must never find in coded text. Written to the local store beside the pages."""
+    root = E.text_root(text_root) / case_id
+    names = set()
+    for page in sorted(root.glob("*/p*.txt")):
+        for m in _CAPTION.finditer(E.normalize(page.read_text(encoding="utf-8", errors="replace"))):
+            for part in _ALIAS.split(m.group(1)):               # the name, then each "a/k/a" alias
+                names |= set(_name_words(_CAPTION_STOP.split(part)[0]))
+    terms = sorted(names)
+    (root / "deny.json").write_text(json.dumps(terms, indent=1) + "\n", encoding="utf-8")
+    return terms
+
+
 def check(draft_path: Path, text_root: Optional[Path] = None) -> int:
     from state_machines.evidence.validate import validate
 

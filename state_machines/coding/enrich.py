@@ -7,7 +7,9 @@ read the same sentence for the rest, so each field is auditable and identical fo
                    "an undercover agent", "other users")
     date           the first date the sentence states ("on or about May 2, 2020", "In June 2020",
                    "05/02/2020"), with its exact words and real calendar bounds
-    platform       a named service the act went through ("through the Kitebox application", "on Kitebox")
+    platform       a named service the act went through ("through the Kitebox application", "on Kitebox"),
+                   only when the name is on the list of known services (``PLATFORMS``): a username, a
+                   place or any other capitalised word is never recorded
     channel        SMS, phone, email, mail (never platforms, I3)
     affordance     level C only when the sentence names the feature (rule B0); feature words from a
                    fixed phrase list per class
@@ -140,11 +142,32 @@ def find_date(sentence: str) -> Optional[dict]:
 _PLATFORM_IN = re.compile(r"\bin (?:a|an|the) (?P<n>[A-Z][A-Za-z0-9]+(?: [A-Z][A-Za-z0-9]+)?) (?:group|chat|application|app|channel|server|account)")
 
 
+# A name is recorded as a platform only when it is a known service. Anything else after "on", "via" or
+# "to" (a username, a nickname, a place, a court body) is left out, so it can never be published.
+PLATFORMS = frozenset("""
+Instagram Snapchat Facebook Messenger WhatsApp Telegram Kik Discord TikTok Twitter Omegle Skype Zoom FaceTime Signal Wickr Viber
+WeChat Line Tumblr Reddit YouTube Twitch Roblox Minecraft Fortnite Xbox PlayStation Steam Grindr Tinder Bumble Whisper MeetMe
+Yubo Wizz Monkey Amino Likee LiveMe Periscope Chatroulette Chatstep Musically Vine Pinterest LinkedIn Craigslist Backpage
+Dropbox Mega MediaFire iCloud OneDrive Gmail Yahoo Hotmail Outlook Hangouts Freenet BitTorrent eMule Shareaza LimeWire
+FrostWire Gnutella Ares PayPal Venmo Zelle CashApp Bitcoin Session Threema Element Matrix Tox Jabber Imgur Flickr Photobucket
+MocoSpace Tagged Badoo Skout Hoop Oovoo Paltalk Mewe Gab Parler OnlyFans Patreon Chaturbate Motherless Pornhub Imgsrc
+""".split()) | frozenset({"Google Drive", "Google Photos", "Google Hangouts", "Google Chat", "Google Voice", "Cash App", "Apple Pay",
+                         "Western Union", "Facebook Messenger", "Kik Messenger", "Yahoo Messenger", "Text Now", "TextNow",
+                         "Chat Avenue", "Among Us", "Call of Duty", "Xbox Live", "Play Station"})
+FICTIONAL_PLATFORMS = frozenset({"Chirpline", "Vellum Chat", "Snapwire", "Kitebox", "Orbit Messenger", "Loopit", "Pinehollow"})   # the synthetic benchmark's
+_KNOWN = {n.lower(): n for n in PLATFORMS | FICTIONAL_PLATFORMS}
+
+
+def known_platform(name: str) -> Optional[str]:
+    """The listed service a captured name is, or None. "Instagram Direct" is Instagram."""
+    name = " ".join((name or "").split())
+    return _KNOWN.get(name.lower()) or (_KNOWN.get(name.split()[0].lower()) if name else None)
+
+
 def platform(sentence: str) -> Optional[dict]:
     for m in [*_PLATFORM.finditer(sentence), *_PLATFORM_IN.finditer(sentence)]:
-        name = m.group("n").strip()
-        first = name.split()[0]
-        if first in _NOT_PLATFORM or len(name) < 3:
+        name = known_platform(m.group("n"))
+        if name is None or m.group("n").split()[0] in _NOT_PLATFORM:
             continue
         mode = "to" if re.search(r"\b(?:continue|move|moved|switch|switched)\b[^.]*\b(?:on|to|onto)\s+(?:the\s+)?" + re.escape(name), sentence) else "through"
         audience = "group" if re.search(r"\bgroup\b", sentence, re.I) else ("public" if re.search(r"\bpublic\b", sentence, re.I) else "one_to_one")
@@ -152,13 +175,16 @@ def platform(sentence: str) -> Optional[dict]:
     return None
 
 
+_FEATURE_PATTERNS = [   # whole words only; short proper names ("Tor", "VPN") keep their case, so "operator" is not Tor
+    (cls, re.compile(r"(?<![A-Za-z0-9])" + re.escape(ph) + r"(?![A-Za-z0-9])", 0 if ph in ("Tor", "VPN") else re.I))
+    for cls, phrases in FEATURES.items() for ph in phrases]
+
+
 def feature(sentence: str) -> Optional[Tuple[str, str]]:
-    low = sentence.lower()
-    for cls, phrases in FEATURES.items():
-        for ph in phrases:
-            i = low.find(ph.lower())
-            if i >= 0:
-                return cls, sentence[i:i + len(ph)]
+    for cls, pat in _FEATURE_PATTERNS:
+        m = pat.search(sentence)
+        if m:
+            return cls, m.group(0)
     return None
 
 

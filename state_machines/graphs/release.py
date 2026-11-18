@@ -200,7 +200,9 @@ COMMITTED = ("graphs/*", "derived/*", "manifest.json", "lifecycle.json", "report
 
 def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) -> dict:
     """Committed release files checked against each case's deny list (names from the caption) and
-    every stored quote of six or more words. Returns counts and the files with hits (no hit text)."""
+    every stored quote of six or more words; and, in machine-coded bundles, every platform name and
+    feature word checked against the fixed lists they must come from (``open_text`` hits).
+    Returns counts and the files with hits (no hit text)."""
     import re
     root = data_root / release_id
     files = sorted({p for pat in COMMITTED for p in root.glob(pat) if p.is_file()})
@@ -222,7 +224,24 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
                 checked_quotes += 1
                 probe = q[:60]
                 hits += [{"case": case, "kind": "quote", "file": str(p.relative_to(root))} for p, t in texts.items() if probe in t]
-    return {"files": len(files), "deny_terms": checked_terms, "quotes": checked_quotes, "hits": hits}
+    # machine-coded bundles hold no free text: every platform name and feature word comes from a fixed list
+    from state_machines.coding.enrich import FEATURES, known_platform
+    words = {ph.lower() for phrases in FEATURES.values() for ph in phrases}
+    open_values = 0
+    for path in sorted((root / "cases").glob("*.json")):
+        bundle = json.loads(path.read_text(encoding="utf-8"))
+        if not str(bundle["coding"].get("note", "")).startswith("machine resolution"):
+            continue
+        for e in bundle["events"]:
+            values = ([(i["platform_surface"], known_platform) for i in e["platform_interactions"]]
+                      + [(m["platform_surface"], known_platform) for m in e["platform_mentions"]]
+                      + [(a.get("platform_surface"), known_platform) for a in e["affordances"] if a.get("platform_surface")]
+                      + [(a["feature_term"], lambda v: v.lower() in words) for a in e["affordances"] if a.get("feature_term")])
+            for value, ok in values:
+                open_values += 1
+                if not ok(value):
+                    hits.append({"case": bundle["case_id"], "kind": "open_text", "file": f"cases/{path.name}"})
+    return {"files": len(files), "deny_terms": checked_terms, "quotes": checked_quotes, "listed_values": open_values, "hits": hits}
 
 
 def main(argv=None) -> int:

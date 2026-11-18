@@ -17,16 +17,18 @@ export CASELINKER_PACER_TEXT=local/pacer_text CASELINKER_PACER_SOURCE=<folder of
 python -m state_machines.coding.workflow extract <case> [...]        # page text, local
 python -m state_machines.coding.pipeline code <case> [...]           # coder_A, coder_B → local/auto/
 python -m state_machines.coding.pipeline resolve <case> [...]        # local/auto/resolved, reports
+python -m state_machines.coding.pipeline bench --split confirm --record   # score a benchmark split → benchmark/results/
 python -m state_machines.coding.pipeline release pacer-v1 <case> [...]
 ```
 
 | Part | What it does |
 |---|---|
-| [`coder.py`](coder.py) | Reads a case page by page. Docket pages go to a deterministic parser (charge, plea, verdict, sentence and arrest entries only). Judgment form pages are skipped and counted. Every other page goes to a local model, which names each act's sentence (its first words) and action code, and the actor when it is not the defendant. Code locates the whole sentence, applies the sentence rules, maps role names to participants, writes descriptions from codes, and drops (and logs) every act that breaks a rule. |
-| [`enrich.py`](enrich.py) | Sentence rules for what the model is not asked: targets (victim, persona, recipient mentions), dates (exact words, real bounds), platforms and channels, level-C features (a fixed phrase list per class, so B0 holds by construction), harms that follow from the act code with a minor target, order from sequence words ("after that first contact" → the contact act). Identical for both coders, so reliability is reported on acts and action codes only. |
+| [`coder.py`](coder.py) | Reads a case page by page. Docket pages go to a deterministic parser (charge, plea, verdict, sentence and arrest entries only). Judgment form pages are skipped and counted. Every other page goes to a local model, which names each act's sentence (its first words) and action code, and the actor when it is not the defendant. Code locates the whole sentence (exactly, also where the page breaks a word across a line; the quote kept is the page's own text), applies the sentence rules, maps role names to participants, writes descriptions from codes, and drops (and logs) every act that breaks a rule. |
+| [`enrich.py`](enrich.py) | Sentence rules for what the model is not asked: targets (victim, persona, recipient mentions; victims by number, letter or pseudonym, and a pseudonym is a minor only where the sentence says so), dates (exact words, real bounds), platforms and channels, level-C features (a fixed phrase list per class, so B0 holds by construction), harms that follow from the act code with a minor target, order from sequence words ("after that first contact" → the contact act; "then" → the act in the sentence before; otherwise no relation). Identical for both coders, so reliability is reported on acts and action codes only. |
 | [`models.json`](models.json) | The two coders, pinned by content digest with every inference setting: **coder_A** `qwen3:4b`, **coder_B** `llama3.2:3b` (two model families, so their errors are not shared), chosen on dev cases (`selection`). A model whose local digest differs is refused. |
 | [`select_models.py`](select_models.py) | Scores candidate models on dev benchmark cases (accuracy and seconds per page); held-out cases are never used. |
 | [`resolve.py`](resolve.py) | Publishes what both coders coded (see [machine resolution](#machine-resolution)). |
+| [`cues.py`](cues.py) | Cue words per action code for candidate rule 2b (off by default). |
 | [`pipeline.py`](pipeline.py) | Runs both coders (cached, resumable, a failed case recorded rather than forced), resolves, scores the [benchmark](../benchmark/README.md), builds the release. |
 
 **Court text never leaves the machine.** The models run in a local Ollama server, and page text, quotes, model answers and the response cache stay in `local/`. People are named by role; the labels exist only in memory and are never stored. The coders can make mistakes a human would not; their reliability is the agreement between them, and their accuracy is measured on the synthetic benchmark.
@@ -81,8 +83,17 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 2. **Status, affordances, harms:** the status is the weaker of the two; affordances and harms are kept only where both coders annotated them.
 3. **Dates:** every cited date of either coder is kept, and disjoint dates are flagged as a conflict (T1–T5).
 4. **Relations:** those both coders asserted. Order implied by cited dates is derived later.
-5. **Possible retellings** (same action, overlapping dates) are linked `SAME_ACT`, never merged (R05).
-6. **Open roles** stay open.
+5. **Stated order, restated (rule 5c):** each coder could link a sequence sentence only to acts in its own list, so the same sentence rule ([`enrich.stated_prior`](enrich.py)) runs once more over the agreed acts. It never guesses:
+   - the opening clause names the earlier act ("After that first contact") → the nearest earlier agreed act with that code;
+   - the sentence only says "then", "in response" or "thereafter" → the act in the sentence immediately before it;
+   - neither is among the agreed acts → no relation.
+6. **Possible retellings** (same action, overlapping dates) are linked `SAME_ACT`, never merged (R05).
+7. **Open roles** stay open.
+
+**Candidate rule 2b, not released.** Where both coders cite the same sentence and actor but give different codes, [`cues.py`](cues.py) reads the sentence against a cue table written from the codebook definitions and takes the one code it cues (`pipeline resolve --settle-codes`, output in `resolved_2b`).
+- On the synthetic benchmark it recovers acts at no cost in precision.
+- On five real cases its codes agreed with reference coding less often than codes both models gave (numbers in each release's `REPORT.md`): real sentences are long and often state several acts.
+- A machine release states that two coders agreed on everything published, so settled codes stay out until they have a review tier of their own.
 
 Everything else is left out and counted. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
 
