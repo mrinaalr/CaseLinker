@@ -188,7 +188,8 @@ _NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies|deny|declined|re
 _SERVICE_SUBJECT = r"(?:(?:the|this|that|each|a)\s+(?:web\s?site|site|forum|service|network|application|app|board|server)\b|Website\s(?:[A-Z]|\d{1,2})\b)"
 _OTHER_BEFORE = {"platform": re.compile(_THIRD_PARTY, re.I),
                  "feature": re.compile("(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + "|" + _SERVICE_SUBJECT + ")", re.I)}
-_OFFENDER = re.compile(r"\b(?:defendants?|accused|he|him|his)\b", re.I)
+_OFFENDER = re.compile(r"(?<!\bwith\s)(?<!\bto\s)(?<!\bfrom\s)(?<!\bagainst\s)(?<!\bwith\sthe\s)(?<!\bto\sthe\s)(?<!\bfrom\sthe\s)"
+                       r"(?<!\bagainst\sthe\s)\b(?:defendants?|accused|he)\b", re.I)      # as the one acting, not "chat with the defendant"
 
 
 def _own_clause(sentence: str, at: int, kind: str = "feature") -> Optional[Tuple[int, str]]:
@@ -396,8 +397,13 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
     events = {e["event_id"]: e for e in (bundle or {}).get("events", [])}
     passages = {p["passage_id"]: p for p in (bundle or {}).get("passages", [])}
     pages: Dict[tuple, Optional[str]] = {}
+    listed = text_root / doc["case_id"] / "sources.json"
+    standing = ({d["doc_id"]: V.DOC_TYPES[d["doc_type"]][0] for d in json.loads(listed.read_text(encoding="utf-8"))["documents"]}
+                if listed.is_file() else {})
     for o in doc["observations"]:
         where = f"{o['observation_id']}"
+        if o["doc_id"] in standing and o["source_status"] != standing[o["doc_id"]]:
+            problems.append(f"{where}: standing {o['source_status']} is not its document's ({standing[o['doc_id']]})")
         key = (o["doc_id"], o["pdf_page"])
         if key not in pages:
             raw = E.read_page(doc["case_id"], o["doc_id"], o["pdf_page"], text_root)

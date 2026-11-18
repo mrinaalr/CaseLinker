@@ -231,8 +231,9 @@ _ROWS = [("gold acts found (recall)", lambda o: o["events"]["recall"]), ("coded 
          ("level C found (recall)", lambda o: o["level_c"]["recall"]), ("level C correct (precision)", lambda o: o["level_c"]["precision"]),
          ("harms found (recall)", lambda o: o["harms"]["recall"]), ("harms correct (precision)", lambda o: o["harms"]["precision"]),
          ("possible retellings linked", lambda o: o["same_act"])]
-_SPLITS = {"dev": "development cases (rules were tuned on these)", "heldout": "held-out cases",
-           "confirm": "confirmation cases (wording written without sight of the rules; scored once)"}
+_SPLITS = {"dev": "development cases (rules were tuned on these)",
+           "heldout": "held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)",
+           "confirm": "confirmation cases (wording written without sight of the rules; the only blind split)"}
 
 
 def _cell(v) -> str:

@@ -52,6 +52,15 @@ def test_resolution_publishes_only_what_both_coders_coded(tmp_path):
     assert any(t["basis"] == "relative_statement" for t in e02["time"]["assertions"])   # coder B's date kept
     assert all(e["review"]["status"] == "agreed" for e in out["events"])
     assert all(r["review"]["status"] == "agreed" for r in out["relations"])
+    # an affordance only one coder annotated on an act both coded is left out and counted
+    a2, b2 = _coders()
+    shared = next(e for e in a2["events"] if e["event_id"] in ids and e.get("affordances"))
+    twin = next(e for e in b2["events"] if e["affordances"] and e["affordances"][0]["affordance"] == shared["affordances"][0]["affordance"]
+                and e["action"] == shared["action"])
+    twin["affordances"] = []
+    out2, report2 = resolve(a2, b2)
+    assert sum(len(e["affordances"]) for e in out2["events"]) == sum(len(e["affordances"]) for e in out["events"]) - 1
+    assert report2["counts"]["left out: affordance only coder A annotated"] == counts.get("left out: affordance only coder A annotated", 0) + 1
     F.write_pages(tmp_path)
     assert release_errors(out, text_root=tmp_path, mode="machine") == []
     assert any("not adjudicated" in p for p in release_errors(out, text_root=tmp_path, mode="adjudicated"))

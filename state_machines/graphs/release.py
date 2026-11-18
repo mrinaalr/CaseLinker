@@ -112,6 +112,12 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
                 stale.unlink(missing_ok=True)
         if observations:
             from state_machines.observations import observe as O
+            listed = text_root / case_id / "sources.json"
+            if listed.is_file():
+                stored = {d["sha256"] for d in json.loads(listed.read_text(encoding="utf-8"))["documents"]}
+                if stored != {d["sha256"] for d in bundle["documents"]}:
+                    raise SystemExit(f"{case_id}: the coded bundle and the text store list different documents; "
+                                     "recode the case before building (a filing was added or removed)")
             doc = O.relate(O.observe(case_id, text_root), bundle, text_root)
             unsound = O.check(doc, text_root, bundle)
             if unsound:

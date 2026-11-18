@@ -98,9 +98,17 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
     old = json.loads((folder / "sources.json").read_text(encoding="utf-8"))["documents"] if (folder / "sources.json").is_file() else []
     known = {d["sha256"]: d for d in old}
     used = Counter(re.sub(r"_\d+$", "", d["doc_id"]) for d in old)
-    docs, files = [], {}
-    for pdf in case_pdfs(case_id):
+    docs, files, seen = [], {}, set()
+    pdfs = case_pdfs(case_id)
+    if not pdfs:
+        raise FileNotFoundError(f"no PDF for case {case_id!r}: expected <source>/BULK_FOLDER/pacer -- {case_id} -- <document type>.pdf "
+                                f"under {source_root()}")
+    for pdf in pdfs:
         sha = E.sha256_file(pdf)
+        if sha in seen:               # the same filing collected under two names is one document
+            print(f"{case_id}: {pdf.name!r} repeats a file already read; skipped", file=sys.stderr)
+            continue
+        seen.add(sha)
         if sha in known:
             doc = known[sha]
         else:
@@ -337,13 +345,23 @@ def main(argv: Optional[List[str]] = None) -> int:
     g.add_argument("b", type=Path)
     args = ap.parse_args(argv)
     if args.cmd == "extract":
+        failed = 0
         for case in args.cases:
-            manifest = extract(case)
+            try:
+                manifest = extract(case)
+            except Exception as exc:                  # noqa: BLE001 - one unreadable case is reported, the batch goes on
+                failed += 1
+                print(f"{case}: NOT extracted: {type(exc).__name__}: {exc}", file=sys.stderr)
+                continue
             out = E.text_root() / case / "sources.json"
             out.write_text(json.dumps(manifest, indent=1) + "\n")
             print(case, len(manifest["documents"]), "documents",
                   sum(len(d["pages"]) for d in manifest["documents"]), "pages ->", out)
-        return 0
+            for d in manifest["documents"]:
+                if d["doc_type"] == "other":          # an unrecognised label would give every passage the standing PROCEDURAL
+                    print(f"{case}: {d['doc_id']} has no recognised document type in its file name; rename the file", file=sys.stderr)
+                    failed += 1
+        return 1 if failed else 0
     if args.cmd == "check":
         return check(args.draft)
     if args.cmd == "compile":

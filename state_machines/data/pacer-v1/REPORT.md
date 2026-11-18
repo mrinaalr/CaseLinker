@@ -389,9 +389,9 @@ Platform names and feature terms are kept verbatim in every split, so these rate
 | gold relationships found, on published acts | 0.903 (65/72) | 0.915 (65/71) | 0.762 (32/42) |
 | observations outside gold act sentences (not judged) | 20 | 20 | 20 |
 
-### resolve-1.0.0, held-out cases
+### resolve-1.0.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
 
-Frozen baseline: rules resolve-1.0.0, held-out cases scored once, before any later rule was written.
+Rules resolve-1.0.0. Held-out cases were scored beside dev in four code states while the coder was developed on 2026-11-17 (resolved recall 98, 138, 141, then 148 of 228); this is the last of those. A second development register, not a blind set.
 
 | Measure | coder_A | coder_B | resolved |
 |---|---:|---:|---:|
@@ -411,9 +411,9 @@ Frozen baseline: rules resolve-1.0.0, held-out cases scored once, before any lat
 Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.8 (12/15); allegation_only 0.0 (0/7); explicit_order 0.403 (29/72); harm 0.55 (22/40); interrupted 0.4 (4/10); level_c 0.867 (26/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.833 (15/18); undated 0.489 (22/45); undercover 0.4 (10/25).
 
 
-### resolve-1.1.0, confirmation cases (wording written without sight of the rules; scored once)
+### resolve-1.1.0, confirmation cases (wording written without sight of the rules; the only blind split)
 
-Scored once, after the rules were frozen and committed. Wording written without sight of the rules.
+The one scoring of this split under resolve-1.1.0, after the rules were frozen and committed. Wording written without sight of the rules. The pages were first coded earlier the same day under pre-freeze code and were not scored then; this run is a second coding under the committed rules.
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
@@ -465,9 +465,9 @@ Rules were developed on these cases.
 Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
 
 
-### resolve-1.1.0, held-out cases
+### resolve-1.1.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
 
-Second look: these cases were scored once under resolve-1.0.0 before the 1.1.0 rules were written; no rule was tuned on them.
+A later look: these cases had been scored repeatedly during coder development under resolve-1.0.0 before the 1.1.0 rules were written. No 1.1.0 rule was written against them, but they are not a blind set.
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
@@ -492,7 +492,7 @@ Second look: these cases were scored once under resolve-1.0.0 before the 1.1.0 r
 Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
 
 
-### resolve-1.2.0, confirmation cases (wording written without sight of the rules; scored once)
+### resolve-1.2.0, confirmation cases (wording written without sight of the rules; the only blind split)
 
 resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
 
@@ -546,7 +546,7 @@ resolve-1.2.0: level C now needs the sentence to state the feature as the means 
 Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
 
 
-### resolve-1.2.0, held-out cases
+### resolve-1.2.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
 
 resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
 

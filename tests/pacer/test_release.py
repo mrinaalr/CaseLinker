@@ -203,6 +203,25 @@ def test_privacy_scan_refuses_an_unlisted_platform_name_in_a_machine_coded_bundl
     bundle["documents"][0]["source_path"] = f"BULK_FOLDER/pacer -- {F.CASE} -- Smithson Factual Proffer.pdf"   # a file name as collected
     path.write_text(json.dumps(bundle), encoding="utf-8")
     assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
+    tail = bundle["documents"][0]["doc_type"].replace("_", " ")
+    bundle["documents"][0]["source_path"] = f"BULK_FOLDER/pacer -- Smithson -- {tail}.pdf"                     # a valid tail, a name where the case id belongs
+    path.write_text(json.dumps(bundle), encoding="utf-8")
+    assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
+    bundle["documents"][0]["source_path"] = f"FICTIONAL/{F.CASE} -- {bundle['documents'][0]['doc_type']}.pdf"
+    bundle["events"][0]["platform_interactions"] = [dict(platform_surface="Some Username", platform_key="Some Username", mode="through")]
+    path.write_text(json.dumps(bundle), encoding="utf-8")
+    assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]   # every platform surface is checked
+    bundle["events"][0]["platform_interactions"] = []
+    path.write_text(json.dumps(bundle), encoding="utf-8")
+    # the committed observation files are held to the same lists and forms
+    obs = root / "test-v1" / "observations"
+    obs.mkdir(exist_ok=True)
+    row = {"observation_id": "o0001", "kind": "platform", "platform": "Some Username", "named_as": "Some Username"}
+    (obs / f"{F.CASE}.json").write_text(json.dumps({"case_id": F.CASE, "observations": [row]}), encoding="utf-8")
+    assert [(h["kind"], h["file"]) for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == [("open_text", f"observations/{F.CASE}.json")]
+    row = {"observation_id": "o0001", "kind": "service_description", "service_term": "somebody's private site"}
+    (obs / f"{F.CASE}.json").write_text(json.dumps({"case_id": F.CASE, "observations": [row]}), encoding="utf-8")
+    assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
 
 
 def test_extraction_keeps_file_names_local_and_adds_new_filings_without_touching_old_ones(tmp_path, monkeypatch):
@@ -232,6 +251,19 @@ def test_extraction_keeps_file_names_local_and_adds_new_filings_without_touching
     assert [d["doc_id"] for d in second["documents"]] == ["factual_proffer_2", "factual_proffer", "complaint"]     # file-name order
     assert next(d for d in second["documents"] if d["doc_id"] == "factual_proffer")["sha256"] == doc["sha256"]   # the old filing keeps its id
     assert page.stat().st_mtime_ns == stamp                                           # and its page text is not rewritten
+    # a rerun recodes a case whose documents changed, and a build refuses a bundle that does not cover them
+    from state_machines.coding.pipeline import _same_documents
+    coded = tmp_path / "coded.json"
+    coded.write_text(json.dumps({"documents": first["documents"]}), encoding="utf-8")
+    assert _same_documents(coded, text, "agency_2024_002")                         # sources.json still lists the one document
+    (text / "agency_2024_002" / "sources.json").write_text(json.dumps(second), encoding="utf-8")
+    assert not _same_documents(coded, text, "agency_2024_002")                     # two filings were added: code the case again
+    shutil.copy(src / "BULK_FOLDER" / "pacer -- agency_2024_009 -- criminal complaint.pdf",
+                src / "BULK_FOLDER" / "pacer -- agency_2024_009 -- copy of complaint.pdf")                     # the same file under two names
+    assert len(W.extract("agency_2024_002", text)["documents"]) == 3
+    with pytest.raises(FileNotFoundError):                                          # a mistyped id is an error, not an empty case
+        W.extract("agency_2024_999", text)
+    assert not (text / "agency_2024_999" / "sources.json").exists()
     assert W.doc_type_of(Path("pacer -- x -- response in opposition.pdf")) == "brief" and W.doc_type_of(Path("pacer -- x -- memorandum opinion and order.pdf")) == "opinion"
 
 
@@ -307,6 +339,15 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     only = rdflib.Dataset()
     only.parse(nquads("test-v1", data_root=root, out=tmp_path / "ev.nq", select="evidence"), format="nquads")
     assert verify_store(m, _query(only), select="evidence") == [] and len(list(only.graphs())) <= 2
+
+
+def test_a_build_refuses_a_bundle_that_does_not_cover_the_stored_documents(tmp_path):
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    extra = dict(b["documents"][0], doc_id="complaint", doc_type="complaint", sha256="f" * 64)       # a filing added after coding
+    (tmp_path / "text" / F.CASE / "sources.json").write_text(json.dumps({"case_id": F.CASE, "documents": b["documents"] + [extra]}), encoding="utf-8")
+    with pytest.raises(SystemExit, match="recode the case"):
+        build("test-v1", data_root=root, text_root=tmp_path / "text", observations=True)
 
 
 def test_a_rebuild_without_observations_leaves_none_behind(tmp_path):

@@ -112,7 +112,7 @@ python -c "import json,sys; from state_machines.evidence.validate import validat
   [print(f) for f in validate(json.load(open(sys.argv[1])), require_verified=True)]" bundle.json
 
 # build a release and its N-Quads
-python -m state_machines.graphs.release build pacer-v1
+python -m state_machines.coding.pipeline release pacer-v1 <case> [...] --observations   # from the local resolved bundles (machine-coded)
 python -m state_machines.graphs.release nquads pacer-v1
 
 # convert a schema 1.x bundle, and list what needs a person

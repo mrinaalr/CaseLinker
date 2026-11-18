@@ -132,6 +132,7 @@ def test_a_relationship_needs_the_act_sentence_to_state_the_means(tmp_path):
     ("feature", "The defendant, who used no VPN, was identified by his address.", "VPN", None),                                     # negation between cue and term
     ("feature", "The defendant sent messages that were not encrypted.", "encrypted", None),
     ("feature", "The defendant created an account without a fake name.", "fake name", None),
+    ("platform", "An undercover agent used a fake profile to chat with the defendant on Kitebox.", "Kitebox", None),               # the agent's chat; the defendant is not acting
     ("platform", "Agents learned that the defendant contacted Minor Victim 1 through Kitebox.", "Kitebox", "Carried_Out_Through"),  # reported, but the offender's act
     ("feature", "The defendant used a fake name to open the account.", "fake name", "Supports_Action"),
     ("platform", "The defendant first contacted Minor Victim 1 on Kitebox.", "Kitebox", "Carried_Out_Through"),
@@ -371,3 +372,33 @@ def test_queries_keep_cases_and_kinds_apart(tmp_path):
     assert rows("described") == [["chat room", "1", "1"]]
     supported = {(r[0], r[4]) for r in rows("supported")}
     assert supported == {("case_one", "Website A (name withheld)"), ("case_two", "Website A (name withheld)"), ("case_two", "Kitebox")}   # not "group chat"
+
+
+def test_an_observation_carries_its_documents_standing_and_never_another(tmp_path):
+    """An allegation stays an allegation in the file, the graph and the level-3 query row."""
+    from state_machines.graphs.emit import observation_graph, serialize
+    from state_machines.observations.queries import QUERIES
+    text = "The defendant contacted Minor Victim 1 through the Kitebox application, the grand jury charges."
+    E.write_page("standing", "indictment", 1, text, tmp_path)
+    docs = [{"doc_id": "indictment", "doc_type": "indictment", "sha256": E.sha256_text("x"),
+             "pages": [{"pdf_page": 1, "text_method": "text_layer", "page_text_sha256": E.sha256_text(E.normalize(text))}]}]
+    (tmp_path / "standing" / "sources.json").write_text(json.dumps({"case_id": "standing", "documents": docs}), encoding="utf-8")
+    page = E.normalize(text)
+    bundle = {"case_id": "standing", "documents": docs, "passages": [{"passage_id": "q1", "doc_id": "indictment", "pdf_page": 1, "char_start": 0, "char_end": len(page)}],
+              "events": [{"event_id": "e1", "action": "INITIATE_CONTACT", "support": [{"passage_id": "q1", "facet": "action", "status": "DIRECT"}],
+                          "platform_interactions": [], "affordances": []}]}
+    doc = O.relate(O.observe("standing", tmp_path), bundle, tmp_path)
+    assert [o["source_status"] for o in doc["observations"]] == ["ALLEGATION"] and doc["observations"][0]["relations"]
+    assert O.check(doc, tmp_path, bundle) == []
+    upgraded = copy.deepcopy(doc)
+    upgraded["observations"][0]["source_status"] = "ADMITTED"
+    assert any("standing" in p for p in O.check(upgraded, tmp_path, bundle))
+    ds = rdflib.Dataset()
+    g = ds.graph(rdflib.URIRef("urn:caselinker:pacer:standing:observations"))
+    g.parse(data=serialize(observation_graph(bundle, doc)), format="json-ld")
+    CLT = rdflib.Namespace("https://w3id.org/caselinker/trajectory#")
+    assert {str(o) for o in g.objects(None, CLT.sourceStatus)} == {"ALLEGATION"}
+    ev = ds.graph(rdflib.URIRef("urn:caselinker:pacer:standing:evidence"))
+    ev.add((next(s for s in g.subjects() if str(s).endswith("e1")), CLT.actionCode, rdflib.Literal("INITIATE_CONTACT")))
+    rows = [[str(v) for v in r] for r in ds.query(QUERIES["supported"]["sparql"])]
+    assert [r[-1] for r in rows] == ["ALLEGATION"]

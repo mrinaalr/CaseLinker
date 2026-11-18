@@ -45,6 +45,15 @@ def _deny(text_root: Path, case_id: str) -> List[str]:
     return build_deny(case_id, text_root) if (text_root / case_id / "sources.json").is_file() and "benchmark" not in text_root.parts else []
 
 
+def _same_documents(bundle_path: Path, text_root: Path, case_id: str) -> bool:
+    """The coded bundle covers exactly the documents the text store now lists (by SHA-256)."""
+    sources = text_root / case_id / "sources.json"
+    if not sources.is_file():
+        return True
+    have = {d["sha256"] for d in json.loads(bundle_path.read_text(encoding="utf-8"))["documents"]}
+    return have == {d["sha256"] for d in json.loads(sources.read_text(encoding="utf-8"))["documents"]}
+
+
 def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) -> dict:
     status = {}
     cache = C.Cache()
@@ -56,8 +65,8 @@ def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) 
         d.mkdir(parents=True, exist_ok=True)
         for case_id in cases:
             target = d / f"{case_id}.json"
-            if target.is_file():
-                continue
+            if target.is_file() and _same_documents(target, text_root, case_id):
+                continue            # coded already, for these documents; a new filing recodes the case (old pages come from the cache)
             t = time.time()
             try:
                 only = None

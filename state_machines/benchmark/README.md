@@ -39,7 +39,7 @@ Every gold event carries tags (in `notes`) for the hard cases built in on purpos
 
 ## Splits
 
-Cases 1–20 are **dev**: prompts and rules may be tuned on them. Cases 21–40 are **heldout**: they are scored once, with the final prompt, and never used for tuning. Held-out cases are written in a register the dev cases never use ("DEFENDANT", "MV-1", "initiated contact with", "on or about", statutory phrasing), so a prompt fitted to the dev wording does not carry over for free.
+Cases 1–20 are **dev**: prompts and rules may be tuned on them. Cases 21–40 are **heldout**: a second register that no rule was written against. They are not a blind set. While the coder was being developed on 2026-11-17 the held-out cases were scored beside dev in four code states (resolved recall 98, 138, 141, then 148 of 228), and the `resolve-1.0.0` row is the last of those. Held-out cases are written in a register the dev cases never use ("DEFENDANT", "MV-1", "initiated contact with", "on or about", statutory phrasing), so a prompt fitted to the dev wording does not carry over for free.
 
 Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-confirm`): a third register for the final check, added after the held-out score had been looked at. Its wording was written without sight of the coding rules (`state_machines/coding/` and its tests were not read), from how federal indictments, statements of facts, complaint affidavits and sentencing memoranda phrase the same acts: other party designations, other verbs and constructions, dates inside or at the end of the sentence, other sequence wording, and a few extra boilerplate sentences that use conduct words without describing an act. Confirm cases come from their own seed (`confirm_seed` in [`data/MANIFEST.json`](data/MANIFEST.json)), so cases 1–40 are byte-identical with or without them. The confirm split is scored once; do not read its pages or tune on it before that run.
 
@@ -68,10 +68,10 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 
 | Rule version, split | Gold acts found | Published acts that are gold acts | Action code | Order relations correct |
 |---|---:|---:|---:|---:|
-| `resolve-1.0.0`, held-out (frozen baseline, scored once) | 0.649 (148/228) | 0.980 (148/151) | 0.912 | not measured this way |
+| `resolve-1.0.0`, held-out (the last of four scorings during coder development) | 0.649 (148/228) | 0.980 (148/151) | 0.912 | not measured this way |
 | `resolve-1.1.0`, dev (rules tuned here) | 0.773 (187/242) | 0.995 (187/188) | 0.957 | 20 of 21 |
-| `resolve-1.1.0`, held-out (second look, no tuning) | 0.671 (153/228) | 0.975 (153/157) | 0.915 | 6 of 7 |
-| `resolve-1.1.0`, confirm (scored once) | 0.421 (104/247) | 0.945 (104/110) | 0.971 | 1 of 1 |
+| `resolve-1.1.0`, held-out (a later look; no rule written against it) | 0.671 (153/228) | 0.975 (153/157) | 0.915 | 6 of 7 |
+| `resolve-1.1.0`, confirm (the only blind split) | 0.421 (104/247) | 0.945 (104/110) | 0.971 | 1 of 1 |
 
 All rows are the resolved coding a machine release publishes. No coded order relation was reversed or undocumented on any split; the ones not counted correct touch an act that is not a gold act.
 
