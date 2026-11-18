@@ -37,7 +37,7 @@ A release built with `--observations` adds a third graph per case, `urn:caselink
 
 Why each `clt:` term exists, and which could move to an existing term, is recorded in the [extension's README](../../ontology/extensions/caselinker-trajectory/README.md).
 
-The trajectory graph is the derived view: one `uco-action:ActionLifecycle` per chain, with `Trajectory_Step` relationships carrying the step index and $O_{i}$. Graphs hold no names and no quote text.
+The trajectory graph is the derived view: one `uco-action:ActionLifecycle` per chain, with `Trajectory_Step` relationships carrying the step index and $O_{i}$. `ActionLifecycle` and `uco-action:phase` are UCO's names for a sequence of actions and its link to them; no phase model is asserted, and a chain exists only where the record documents the order. Graphs hold no names and no quote text.
 
 ## SHACL
 

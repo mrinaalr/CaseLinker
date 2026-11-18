@@ -66,7 +66,7 @@
   "files": 189,
   "deny_terms": 248,
   "quotes": 6940,
-  "listed_values": 988,
+  "listed_values": 982,
   "hits": 0
  },
  "runtime_per_model": {
@@ -125,11 +125,11 @@
   "cases": 30,
   "events_coder_A": 2718,
   "events_coder_B": 5956,
-  "matched": 1118,
+  "matched": 1117,
   "mean_event_f1": 0.242,
   "pooled_action_agreement": {
    "exact": 375,
-   "of": 1118
+   "of": 1117
   },
   "mean_action_kappa": 0.298,
   "note": "agreement on acts the models coded; the docket parser's acts are excluded"
@@ -145,7 +145,7 @@
   "cases with offender acts": 24,
   "harms recorded: victim minor": 15,
   "harms recorded: victim unknown": 1,
-  "level-C affordances (feature stated in the sentence)": 6,
+  "level-C affordances (sentence states the feature as the means)": 0,
   "offender acts naming a victim or an undercover persona": 71,
   "offender acts with a documented platform": 9,
   "relations: possibly the same act": 7,
@@ -763,16 +763,18 @@
     "title": "Level 3. Where does a record state that an act was done by means of a platform or feature?",
     "columns": [
      "case",
+     "act",
      "action",
      "relationship",
      "platform_or_class",
      "phrase",
      "standing"
     ],
-    "sparql": "PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>\nPREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>\nPREFIX clt: <https://w3id.org/caselinker/trajectory#>\nSELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {\n  GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .\n              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)\n              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }\n  GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }\n  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), \":evidence\"))\n  FILTER(?m != oa:describing)\n  FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))\n  BIND(COALESCE(?name, REPLACE(STR(?body), \"^.*#\", \"\")) AS ?what)\n  BIND(REPLACE(REPLACE(STR(?og), \"^urn:caselinker:pacer:\", \"\"), \":observations$\", \"\") AS ?case)\n} ORDER BY ?case ?action ?what",
+    "sparql": "PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>\nPREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>\nPREFIX clt: <https://w3id.org/caselinker/trajectory#>\nSELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {\n  GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .\n              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)\n              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }\n  GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }\n  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), \":evidence\"))\n  FILTER(?m != oa:describing)\n  FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))\n  BIND(COALESCE(?name, REPLACE(STR(?body), \"^.*#\", \"\")) AS ?what)\n  BIND(REPLACE(REPLACE(STR(?og), \"^urn:caselinker:pacer:\", \"\"), \":observations$\", \"\") AS ?case)\n  BIND(REPLACE(STR(?act), \"^.*[/#:-](e[0-9]+)$\", \"$1\") AS ?event)\n} ORDER BY ?case ?event ?what",
     "rows": [
      [
       "anchorage_pd_2022_006",
+      "e133",
       "DISTRIBUTE_MATERIAL",
       "Carried_Out_Through",
       "Snapchat",
@@ -781,14 +783,7 @@
      ],
      [
       "anchorage_pd_2022_007",
-      "INITIATE_CONTACT",
-      "Carried_Out_Through",
-      "Instagram",
-      "",
-      "ALLEGATION"
-     ],
-     [
-      "anchorage_pd_2022_007",
+      "e077",
       "STORE_MATERIAL",
       "Carried_Out_Through",
       "Dropbox",
@@ -796,7 +791,17 @@
       "ALLEGATION"
      ],
      [
+      "anchorage_pd_2022_007",
+      "e176",
+      "INITIATE_CONTACT",
+      "Carried_Out_Through",
+      "Instagram",
+      "",
+      "ALLEGATION"
+     ],
+     [
       "doj_ceos_2025_026",
+      "e035",
       "SOLICIT_IMAGERY",
       "Carried_Out_Through",
       "Snapchat",
@@ -805,14 +810,7 @@
      ],
      [
       "doj_ceos_2026_001",
-      "ACQUIRE_MATERIAL",
-      "Carried_Out_Through",
-      "Instagram",
-      "",
-      "ADMITTED"
-     ],
-     [
-      "doj_ceos_2026_001",
+      "e050",
       "INITIATE_CONTACT",
       "Carried_Out_Through",
       "Instagram",
@@ -820,7 +818,26 @@
       "ADMITTED"
      ],
      [
+      "doj_ceos_2026_001",
+      "e056",
+      "INITIATE_CONTACT",
+      "Carried_Out_Through",
+      "Instagram",
+      "",
+      "ADMITTED"
+     ],
+     [
+      "doj_ceos_2026_001",
+      "e121",
+      "ACQUIRE_MATERIAL",
+      "Carried_Out_Through",
+      "Instagram",
+      "",
+      "ADMITTED"
+     ],
+     [
       "doj_safe_childhood_2023_420",
+      "e034",
       "DIRECT_CONDUCT",
       "Carried_Out_Through",
       "Snapchat",
@@ -829,6 +846,7 @@
      ],
      [
       "ky_sp_2025_038",
+      "e052",
       "DISTRIBUTE_MATERIAL",
       "Carried_Out_Through",
       "Facebook Messenger",
@@ -837,6 +855,7 @@
      ],
      [
       "ncmec_2022_575",
+      "e077",
       "INITIATE_CONTACT",
       "Carried_Out_Through",
       "Snapchat",
@@ -895,7 +914,7 @@
    },
    "cases": 20,
    "rule": "observe-1.3.0",
-   "_note": "observe-1.3.0 adds placeholder labels and generic service descriptions and ties a means only inside one sentence. The benchmark holds neither kind in its gold, so this is a regression check on the platform, feature and relationship rows; all three splits had been scored before, so none is a first look."
+   "_note": "observe-1.3.0 with the tightened subject and negation checks of the stated-means rule. The benchmark holds no placeholder label and no generic description, so this checks the platform, feature and relationship rows only. All three splits had been scored before; none is a first look."
   },
   "observe-1.3.0.dev": {
    "observations": 130,
@@ -937,7 +956,7 @@
    },
    "cases": 20,
    "rule": "observe-1.3.0",
-   "_note": "observe-1.3.0 adds placeholder labels and generic service descriptions and ties a means only inside one sentence. The benchmark holds neither kind in its gold, so this is a regression check on the platform, feature and relationship rows; all three splits had been scored before, so none is a first look."
+   "_note": "observe-1.3.0 with the tightened subject and negation checks of the stated-means rule. The benchmark holds no placeholder label and no generic description, so this checks the platform, feature and relationship rows only. All three splits had been scored before; none is a first look."
   },
   "observe-1.3.0.heldout": {
    "observations": 130,
@@ -965,13 +984,13 @@
     "of": 42
    },
    "relationships_correct": {
-    "rate": 0.903,
+    "rate": 0.942,
     "n": 65,
-    "of": 72
+    "of": 69
    },
    "relationships_right_platform_wrong_kind": 0,
    "relationships_platform_only_named_in_gold": 0,
-   "relationships_on_act_not_in_gold": 3,
+   "relationships_on_act_not_in_gold": 0,
    "gold_relationships_found_on_published_acts": {
     "rate": 0.915,
     "n": 65,
@@ -979,7 +998,7 @@
    },
    "cases": 20,
    "rule": "observe-1.3.0",
-   "_note": "observe-1.3.0 adds placeholder labels and generic service descriptions and ties a means only inside one sentence. The benchmark holds neither kind in its gold, so this is a regression check on the platform, feature and relationship rows; all three splits had been scored before, so none is a first look."
+   "_note": "observe-1.3.0 with the tightened subject and negation checks of the stated-means rule. The benchmark holds no placeholder label and no generic description, so this checks the platform, feature and relationship rows only. All three splits had been scored before; none is a first look."
   },
   "resolve-1.0.0.heldout": {
    "coder_A": {
@@ -3506,6 +3525,2079 @@
     "cases_without_output": []
    },
    "_note": "Second look: these cases were scored once under resolve-1.0.0 before the 1.1.0 rules were written; no rule was tuned on them."
+  },
+  "resolve-1.2.0.confirm": {
+   "coder_A": {
+    "events": {
+     "recall": {
+      "rate": 0.794,
+      "n": 196,
+      "of": 247
+     },
+     "precision": {
+      "rate": 0.827,
+      "n": 196,
+      "of": 237
+     },
+     "f1": 0.81
+    },
+    "action": {
+     "rate": 0.929,
+     "n": 182,
+     "of": 196
+    },
+    "actor": {
+     "rate": 0.974,
+     "n": 191,
+     "of": 196
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 196,
+     "of": 196
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 94,
+     "of": 94
+    },
+    "order": {
+     "recall": {
+      "rate": 0.1,
+      "n": 8,
+      "of": 80
+     },
+     "precision": {
+      "rate": 0.889,
+      "n": 8,
+      "of": 9
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.889,
+      "n": 8,
+      "of": 9
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 1
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.598,
+      "n": 153,
+      "of": 256
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.34,
+      "n": 153,
+      "of": 450
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.516,
+      "n": 16,
+      "of": 31
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 16,
+      "of": 16
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.81,
+      "n": 34,
+      "of": 42
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 34,
+      "of": 34
+     }
+    },
+    "same_act": {
+     "rate": 0.0,
+     "n": 0,
+     "of": 27
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 0.364,
+      "n": 4,
+      "of": 11
+     },
+     "allegation": {
+      "rate": 1.0,
+      "n": 16,
+      "of": 16
+     },
+     "allegation_only": {
+      "rate": 1.0,
+      "n": 9,
+      "of": 9
+     },
+     "explicit_order": {
+      "rate": 0.763,
+      "n": 58,
+      "of": 76
+     },
+     "harm": {
+      "rate": 0.824,
+      "n": 42,
+      "of": 51
+     },
+     "interrupted": {
+      "rate": 1.0,
+      "n": 8,
+      "of": 8
+     },
+     "level_c": {
+      "rate": 0.969,
+      "n": 31,
+      "of": 32
+     },
+     "mention_only": {
+      "rate": 1.0,
+      "n": 11,
+      "of": 11
+     },
+     "no_level_c": {
+      "rate": 0.773,
+      "n": 17,
+      "of": 22
+     },
+     "procedure": {
+      "rate": 0.5,
+      "n": 20,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 14
+     },
+     "retelling": {
+      "rate": 0.741,
+      "n": 20,
+      "of": 27
+     },
+     "undated": {
+      "rate": 0.938,
+      "n": 45,
+      "of": 48
+     },
+     "undercover": {
+      "rate": 1.0,
+      "n": 20,
+      "of": 20
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "coder_B": {
+    "events": {
+     "recall": {
+      "rate": 0.733,
+      "n": 181,
+      "of": 247
+     },
+     "precision": {
+      "rate": 0.595,
+      "n": 181,
+      "of": 304
+     },
+     "f1": 0.657
+    },
+    "action": {
+     "rate": 0.818,
+     "n": 148,
+     "of": 181
+    },
+    "actor": {
+     "rate": 0.757,
+     "n": 137,
+     "of": 181
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 181,
+     "of": 181
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 87,
+     "of": 87
+    },
+    "order": {
+     "recall": {
+      "rate": 0.062,
+      "n": 5,
+      "of": 80
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 5,
+      "of": 5
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 1.0,
+      "n": 5,
+      "of": 5
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 0
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.573,
+      "n": 138,
+      "of": 241
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.307,
+      "n": 138,
+      "of": 450
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.607,
+      "n": 17,
+      "of": 28
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 17,
+      "of": 17
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.674,
+      "n": 31,
+      "of": 46
+     },
+     "precision": {
+      "rate": 0.838,
+      "n": 31,
+      "of": 37
+     }
+    },
+    "same_act": {
+     "rate": 0.0,
+     "n": 0,
+     "of": 27
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 1.0,
+      "n": 11,
+      "of": 11
+     },
+     "allegation": {
+      "rate": 0.875,
+      "n": 14,
+      "of": 16
+     },
+     "allegation_only": {
+      "rate": 0.556,
+      "n": 5,
+      "of": 9
+     },
+     "explicit_order": {
+      "rate": 0.816,
+      "n": 62,
+      "of": 76
+     },
+     "harm": {
+      "rate": 0.902,
+      "n": 46,
+      "of": 51
+     },
+     "interrupted": {
+      "rate": 0.875,
+      "n": 7,
+      "of": 8
+     },
+     "level_c": {
+      "rate": 0.875,
+      "n": 28,
+      "of": 32
+     },
+     "mention_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 11
+     },
+     "no_level_c": {
+      "rate": 0.636,
+      "n": 14,
+      "of": 22
+     },
+     "procedure": {
+      "rate": 0.5,
+      "n": 20,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.357,
+      "n": 5,
+      "of": 14
+     },
+     "retelling": {
+      "rate": 0.926,
+      "n": 25,
+      "of": 27
+     },
+     "undated": {
+      "rate": 0.958,
+      "n": 46,
+      "of": 48
+     },
+     "undercover": {
+      "rate": 0.8,
+      "n": 16,
+      "of": 20
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "resolved": {
+    "events": {
+     "recall": {
+      "rate": 0.421,
+      "n": 104,
+      "of": 247
+     },
+     "precision": {
+      "rate": 0.945,
+      "n": 104,
+      "of": 110
+     },
+     "f1": 0.583
+    },
+    "action": {
+     "rate": 0.971,
+     "n": 101,
+     "of": 104
+    },
+    "actor": {
+     "rate": 1.0,
+     "n": 104,
+     "of": 104
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 104,
+     "of": 104
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 64,
+     "of": 64
+    },
+    "order": {
+     "recall": {
+      "rate": 0.013,
+      "n": 1,
+      "of": 80
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 1,
+      "of": 1
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 1.0,
+      "n": 1,
+      "of": 1
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 0
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.732,
+      "n": 71,
+      "of": 97
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.158,
+      "n": 71,
+      "of": 450
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.625,
+      "n": 10,
+      "of": 16
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 10,
+      "of": 10
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.833,
+      "n": 15,
+      "of": 18
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 15,
+      "of": 15
+     }
+    },
+    "same_act": {
+     "rate": 0.222,
+     "n": 6,
+     "of": 27
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 0.273,
+      "n": 3,
+      "of": 11
+     },
+     "allegation": {
+      "rate": 0.5,
+      "n": 8,
+      "of": 16
+     },
+     "allegation_only": {
+      "rate": 0.111,
+      "n": 1,
+      "of": 9
+     },
+     "explicit_order": {
+      "rate": 0.303,
+      "n": 23,
+      "of": 76
+     },
+     "harm": {
+      "rate": 0.353,
+      "n": 18,
+      "of": 51
+     },
+     "interrupted": {
+      "rate": 0.75,
+      "n": 6,
+      "of": 8
+     },
+     "level_c": {
+      "rate": 0.5,
+      "n": 16,
+      "of": 32
+     },
+     "mention_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 11
+     },
+     "no_level_c": {
+      "rate": 0.455,
+      "n": 10,
+      "of": 22
+     },
+     "procedure": {
+      "rate": 0.5,
+      "n": 20,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 14
+     },
+     "retelling": {
+      "rate": 0.407,
+      "n": 11,
+      "of": 27
+     },
+     "undated": {
+      "rate": 0.396,
+      "n": 19,
+      "of": 48
+     },
+     "undercover": {
+      "rate": 0.55,
+      "n": 11,
+      "of": 20
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "resolved_2b": {
+    "events": {
+     "recall": {
+      "rate": 0.457,
+      "n": 113,
+      "of": 247
+     },
+     "precision": {
+      "rate": 0.95,
+      "n": 113,
+      "of": 119
+     },
+     "f1": 0.617
+    },
+    "action": {
+     "rate": 0.973,
+     "n": 110,
+     "of": 113
+    },
+    "actor": {
+     "rate": 0.991,
+     "n": 112,
+     "of": 113
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 113,
+     "of": 113
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 66,
+     "of": 66
+    },
+    "order": {
+     "recall": {
+      "rate": 0.025,
+      "n": 2,
+      "of": 80
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 2,
+      "of": 2
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 1.0,
+      "n": 2,
+      "of": 2
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 0
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.675,
+      "n": 77,
+      "of": 114
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.171,
+      "n": 77,
+      "of": 450
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.625,
+      "n": 10,
+      "of": 16
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 10,
+      "of": 10
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.864,
+      "n": 19,
+      "of": 22
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 19,
+      "of": 19
+     }
+    },
+    "same_act": {
+     "rate": 0.259,
+     "n": 7,
+     "of": 27
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 0.273,
+      "n": 3,
+      "of": 11
+     },
+     "allegation": {
+      "rate": 0.625,
+      "n": 10,
+      "of": 16
+     },
+     "allegation_only": {
+      "rate": 0.111,
+      "n": 1,
+      "of": 9
+     },
+     "explicit_order": {
+      "rate": 0.395,
+      "n": 30,
+      "of": 76
+     },
+     "harm": {
+      "rate": 0.431,
+      "n": 22,
+      "of": 51
+     },
+     "interrupted": {
+      "rate": 0.75,
+      "n": 6,
+      "of": 8
+     },
+     "level_c": {
+      "rate": 0.5,
+      "n": 16,
+      "of": 32
+     },
+     "mention_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 11
+     },
+     "no_level_c": {
+      "rate": 0.455,
+      "n": 10,
+      "of": 22
+     },
+     "procedure": {
+      "rate": 0.5,
+      "n": 20,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 14
+     },
+     "retelling": {
+      "rate": 0.481,
+      "n": 13,
+      "of": 27
+     },
+     "undated": {
+      "rate": 0.521,
+      "n": 25,
+      "of": 48
+     },
+     "undercover": {
+      "rate": 0.6,
+      "n": 12,
+      "of": 20
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "_note": "resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm."
+  },
+  "resolve-1.2.0.dev": {
+   "coder_A": {
+    "events": {
+     "recall": {
+      "rate": 0.963,
+      "n": 233,
+      "of": 242
+     },
+     "precision": {
+      "rate": 0.975,
+      "n": 233,
+      "of": 239
+     },
+     "f1": 0.969
+    },
+    "action": {
+     "rate": 0.957,
+     "n": 223,
+     "of": 233
+    },
+    "actor": {
+     "rate": 1.0,
+     "n": 233,
+     "of": 233
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 233,
+     "of": 233
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 117,
+     "of": 117
+    },
+    "order": {
+     "recall": {
+      "rate": 0.506,
+      "n": 41,
+      "of": 81
+     },
+     "precision": {
+      "rate": 0.911,
+      "n": 41,
+      "of": 45
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.911,
+      "n": 41,
+      "of": 45
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 4
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.722,
+      "n": 340,
+      "of": 471
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.695,
+      "n": 340,
+      "of": 489
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.963,
+      "n": 26,
+      "of": 27
+     },
+     "precision": {
+      "rate": 0.963,
+      "n": 26,
+      "of": 27
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.894,
+      "n": 42,
+      "of": 47
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 42,
+      "of": 42
+     }
+    },
+    "same_act": {
+     "rate": 0.0,
+     "n": 0,
+     "of": 24
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 1.0,
+      "n": 6,
+      "of": 6
+     },
+     "allegation": {
+      "rate": 0.889,
+      "n": 16,
+      "of": 18
+     },
+     "allegation_only": {
+      "rate": 0.143,
+      "n": 1,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 1.0,
+      "n": 79,
+      "of": 79
+     },
+     "harm": {
+      "rate": 1.0,
+      "n": 47,
+      "of": 47
+     },
+     "interrupted": {
+      "rate": 1.0,
+      "n": 4,
+      "of": 4
+     },
+     "level_c": {
+      "rate": 1.0,
+      "n": 27,
+      "of": 27
+     },
+     "mention_only": {
+      "rate": 1.0,
+      "n": 10,
+      "of": 10
+     },
+     "no_level_c": {
+      "rate": 0.957,
+      "n": 22,
+      "of": 23
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 1.0,
+      "n": 9,
+      "of": 9
+     },
+     "retelling": {
+      "rate": 0.917,
+      "n": 22,
+      "of": 24
+     },
+     "undated": {
+      "rate": 1.0,
+      "n": 54,
+      "of": 54
+     },
+     "undercover": {
+      "rate": 1.0,
+      "n": 10,
+      "of": 10
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "coder_B": {
+    "events": {
+     "recall": {
+      "rate": 0.909,
+      "n": 220,
+      "of": 242
+     },
+     "precision": {
+      "rate": 0.853,
+      "n": 220,
+      "of": 258
+     },
+     "f1": 0.88
+    },
+    "action": {
+     "rate": 0.841,
+     "n": 185,
+     "of": 220
+    },
+    "actor": {
+     "rate": 0.991,
+     "n": 218,
+     "of": 220
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 220,
+     "of": 220
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 117,
+     "of": 117
+    },
+    "order": {
+     "recall": {
+      "rate": 0.432,
+      "n": 35,
+      "of": 81
+     },
+     "precision": {
+      "rate": 0.875,
+      "n": 35,
+      "of": 40
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.875,
+      "n": 35,
+      "of": 40
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 5
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.756,
+      "n": 329,
+      "of": 435
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.673,
+      "n": 329,
+      "of": 489
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.963,
+      "n": 26,
+      "of": 27
+     },
+     "precision": {
+      "rate": 0.963,
+      "n": 26,
+      "of": 27
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.636,
+      "n": 28,
+      "of": 44
+     },
+     "precision": {
+      "rate": 0.933,
+      "n": 28,
+      "of": 30
+     }
+    },
+    "same_act": {
+     "rate": 0.0,
+     "n": 0,
+     "of": 24
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 0.833,
+      "n": 5,
+      "of": 6
+     },
+     "allegation": {
+      "rate": 1.0,
+      "n": 18,
+      "of": 18
+     },
+     "allegation_only": {
+      "rate": 0.714,
+      "n": 5,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.911,
+      "n": 72,
+      "of": 79
+     },
+     "harm": {
+      "rate": 0.936,
+      "n": 44,
+      "of": 47
+     },
+     "interrupted": {
+      "rate": 0.75,
+      "n": 3,
+      "of": 4
+     },
+     "level_c": {
+      "rate": 1.0,
+      "n": 27,
+      "of": 27
+     },
+     "mention_only": {
+      "rate": 0.3,
+      "n": 3,
+      "of": 10
+     },
+     "no_level_c": {
+      "rate": 0.957,
+      "n": 22,
+      "of": 23
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.667,
+      "n": 6,
+      "of": 9
+     },
+     "retelling": {
+      "rate": 0.958,
+      "n": 23,
+      "of": 24
+     },
+     "undated": {
+      "rate": 1.0,
+      "n": 54,
+      "of": 54
+     },
+     "undercover": {
+      "rate": 0.8,
+      "n": 8,
+      "of": 10
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "resolved": {
+    "events": {
+     "recall": {
+      "rate": 0.773,
+      "n": 187,
+      "of": 242
+     },
+     "precision": {
+      "rate": 0.995,
+      "n": 187,
+      "of": 188
+     },
+     "f1": 0.87
+    },
+    "action": {
+     "rate": 0.957,
+     "n": 179,
+     "of": 187
+    },
+    "actor": {
+     "rate": 1.0,
+     "n": 187,
+     "of": 187
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 187,
+     "of": 187
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 108,
+     "of": 108
+    },
+    "order": {
+     "recall": {
+      "rate": 0.247,
+      "n": 20,
+      "of": 81
+     },
+     "precision": {
+      "rate": 0.952,
+      "n": 20,
+      "of": 21
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.952,
+      "n": 20,
+      "of": 21
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 1
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.757,
+      "n": 253,
+      "of": 334
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.517,
+      "n": 253,
+      "of": 489
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.958,
+      "n": 23,
+      "of": 24
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 23,
+      "of": 23
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.848,
+      "n": 28,
+      "of": 33
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 28,
+      "of": 28
+     }
+    },
+    "same_act": {
+     "rate": 0.583,
+     "n": 14,
+     "of": 24
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 0.833,
+      "n": 5,
+      "of": 6
+     },
+     "allegation": {
+      "rate": 0.889,
+      "n": 16,
+      "of": 18
+     },
+     "allegation_only": {
+      "rate": 0.143,
+      "n": 1,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.696,
+      "n": 55,
+      "of": 79
+     },
+     "harm": {
+      "rate": 0.702,
+      "n": 33,
+      "of": 47
+     },
+     "interrupted": {
+      "rate": 0.75,
+      "n": 3,
+      "of": 4
+     },
+     "level_c": {
+      "rate": 0.889,
+      "n": 24,
+      "of": 27
+     },
+     "mention_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 10
+     },
+     "no_level_c": {
+      "rate": 0.826,
+      "n": 19,
+      "of": 23
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.667,
+      "n": 6,
+      "of": 9
+     },
+     "retelling": {
+      "rate": 0.875,
+      "n": 21,
+      "of": 24
+     },
+     "undated": {
+      "rate": 0.704,
+      "n": 38,
+      "of": 54
+     },
+     "undercover": {
+      "rate": 0.6,
+      "n": 6,
+      "of": 10
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "resolved_2b": {
+    "events": {
+     "recall": {
+      "rate": 0.872,
+      "n": 211,
+      "of": 242
+     },
+     "precision": {
+      "rate": 0.995,
+      "n": 211,
+      "of": 212
+     },
+     "f1": 0.93
+    },
+    "action": {
+     "rate": 0.962,
+     "n": 203,
+     "of": 211
+    },
+    "actor": {
+     "rate": 1.0,
+     "n": 211,
+     "of": 211
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 211,
+     "of": 211
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 113,
+     "of": 113
+    },
+    "order": {
+     "recall": {
+      "rate": 0.444,
+      "n": 36,
+      "of": 81
+     },
+     "precision": {
+      "rate": 0.973,
+      "n": 36,
+      "of": 37
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.973,
+      "n": 36,
+      "of": 37
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 1
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.77,
+      "n": 314,
+      "of": 408
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.642,
+      "n": 314,
+      "of": 489
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.963,
+      "n": 26,
+      "of": 27
+     },
+     "precision": {
+      "rate": 0.963,
+      "n": 26,
+      "of": 27
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.886,
+      "n": 39,
+      "of": 44
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 39,
+      "of": 39
+     }
+    },
+    "same_act": {
+     "rate": 0.667,
+     "n": 16,
+     "of": 24
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 0.833,
+      "n": 5,
+      "of": 6
+     },
+     "allegation": {
+      "rate": 0.889,
+      "n": 16,
+      "of": 18
+     },
+     "allegation_only": {
+      "rate": 0.143,
+      "n": 1,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.899,
+      "n": 71,
+      "of": 79
+     },
+     "harm": {
+      "rate": 0.936,
+      "n": 44,
+      "of": 47
+     },
+     "interrupted": {
+      "rate": 0.75,
+      "n": 3,
+      "of": 4
+     },
+     "level_c": {
+      "rate": 1.0,
+      "n": 27,
+      "of": 27
+     },
+     "mention_only": {
+      "rate": 0.3,
+      "n": 3,
+      "of": 10
+     },
+     "no_level_c": {
+      "rate": 0.87,
+      "n": 20,
+      "of": 23
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.667,
+      "n": 6,
+      "of": 9
+     },
+     "retelling": {
+      "rate": 0.875,
+      "n": 21,
+      "of": 24
+     },
+     "undated": {
+      "rate": 0.981,
+      "n": 53,
+      "of": 54
+     },
+     "undercover": {
+      "rate": 0.8,
+      "n": 8,
+      "of": 10
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "_note": "resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm."
+  },
+  "resolve-1.2.0.heldout": {
+   "coder_A": {
+    "events": {
+     "recall": {
+      "rate": 0.934,
+      "n": 213,
+      "of": 228
+     },
+     "precision": {
+      "rate": 0.955,
+      "n": 213,
+      "of": 223
+     },
+     "f1": 0.945
+    },
+    "action": {
+     "rate": 0.93,
+     "n": 198,
+     "of": 213
+    },
+    "actor": {
+     "rate": 0.967,
+     "n": 206,
+     "of": 213
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 213,
+     "of": 213
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 119,
+     "of": 119
+    },
+    "order": {
+     "recall": {
+      "rate": 0.299,
+      "n": 23,
+      "of": 77
+     },
+     "precision": {
+      "rate": 0.676,
+      "n": 23,
+      "of": 34
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.676,
+      "n": 23,
+      "of": 34
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 11
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.746,
+      "n": 314,
+      "of": 421
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.667,
+      "n": 314,
+      "of": 471
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.931,
+      "n": 27,
+      "of": 29
+     },
+     "precision": {
+      "rate": 0.871,
+      "n": 27,
+      "of": 31
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.8,
+      "n": 32,
+      "of": 40
+     },
+     "precision": {
+      "rate": 0.97,
+      "n": 32,
+      "of": 33
+     }
+    },
+    "same_act": {
+     "rate": 0.0,
+     "n": 0,
+     "of": 18
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 1.0,
+      "n": 3,
+      "of": 3
+     },
+     "allegation": {
+      "rate": 0.933,
+      "n": 14,
+      "of": 15
+     },
+     "allegation_only": {
+      "rate": 1.0,
+      "n": 7,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.861,
+      "n": 62,
+      "of": 72
+     },
+     "harm": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "interrupted": {
+      "rate": 1.0,
+      "n": 10,
+      "of": 10
+     },
+     "level_c": {
+      "rate": 0.967,
+      "n": 29,
+      "of": 30
+     },
+     "mention_only": {
+      "rate": 0.833,
+      "n": 5,
+      "of": 6
+     },
+     "no_level_c": {
+      "rate": 1.0,
+      "n": 15,
+      "of": 15
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.125,
+      "n": 1,
+      "of": 8
+     },
+     "retelling": {
+      "rate": 0.944,
+      "n": 17,
+      "of": 18
+     },
+     "undated": {
+      "rate": 0.956,
+      "n": 43,
+      "of": 45
+     },
+     "undercover": {
+      "rate": 0.88,
+      "n": 22,
+      "of": 25
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "coder_B": {
+    "events": {
+     "recall": {
+      "rate": 0.842,
+      "n": 192,
+      "of": 228
+     },
+     "precision": {
+      "rate": 0.869,
+      "n": 192,
+      "of": 221
+     },
+     "f1": 0.855
+    },
+    "action": {
+     "rate": 0.766,
+     "n": 147,
+     "of": 192
+    },
+    "actor": {
+     "rate": 0.964,
+     "n": 185,
+     "of": 192
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 192,
+     "of": 192
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 110,
+     "of": 110
+    },
+    "order": {
+     "recall": {
+      "rate": 0.286,
+      "n": 22,
+      "of": 77
+     },
+     "precision": {
+      "rate": 0.733,
+      "n": 22,
+      "of": 30
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.733,
+      "n": 22,
+      "of": 30
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 8
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.749,
+      "n": 269,
+      "of": 359
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.571,
+      "n": 269,
+      "of": 471
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.933,
+      "n": 28,
+      "of": 30
+     },
+     "precision": {
+      "rate": 0.875,
+      "n": 28,
+      "of": 32
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.444,
+      "n": 16,
+      "of": 36
+     },
+     "precision": {
+      "rate": 0.762,
+      "n": 16,
+      "of": 21
+     }
+    },
+    "same_act": {
+     "rate": 0.0,
+     "n": 0,
+     "of": 18
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 1.0,
+      "n": 3,
+      "of": 3
+     },
+     "allegation": {
+      "rate": 1.0,
+      "n": 15,
+      "of": 15
+     },
+     "allegation_only": {
+      "rate": 0.714,
+      "n": 5,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.819,
+      "n": 59,
+      "of": 72
+     },
+     "harm": {
+      "rate": 0.9,
+      "n": 36,
+      "of": 40
+     },
+     "interrupted": {
+      "rate": 0.5,
+      "n": 5,
+      "of": 10
+     },
+     "level_c": {
+      "rate": 1.0,
+      "n": 30,
+      "of": 30
+     },
+     "mention_only": {
+      "rate": 0.167,
+      "n": 1,
+      "of": 6
+     },
+     "no_level_c": {
+      "rate": 0.8,
+      "n": 12,
+      "of": 15
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.375,
+      "n": 3,
+      "of": 8
+     },
+     "retelling": {
+      "rate": 1.0,
+      "n": 18,
+      "of": 18
+     },
+     "undated": {
+      "rate": 0.956,
+      "n": 43,
+      "of": 45
+     },
+     "undercover": {
+      "rate": 0.72,
+      "n": 18,
+      "of": 25
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "resolved": {
+    "events": {
+     "recall": {
+      "rate": 0.671,
+      "n": 153,
+      "of": 228
+     },
+     "precision": {
+      "rate": 0.975,
+      "n": 153,
+      "of": 157
+     },
+     "f1": 0.795
+    },
+    "action": {
+     "rate": 0.915,
+     "n": 140,
+     "of": 153
+    },
+    "actor": {
+     "rate": 0.993,
+     "n": 152,
+     "of": 153
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 153,
+     "of": 153
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 106,
+     "of": 106
+    },
+    "order": {
+     "recall": {
+      "rate": 0.078,
+      "n": 6,
+      "of": 77
+     },
+     "precision": {
+      "rate": 0.857,
+      "n": 6,
+      "of": 7
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.857,
+      "n": 6,
+      "of": 7
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 1
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.804,
+      "n": 226,
+      "of": 281
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.48,
+      "n": 226,
+      "of": 471
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.926,
+      "n": 25,
+      "of": 27
+     },
+     "precision": {
+      "rate": 0.862,
+      "n": 25,
+      "of": 29
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.727,
+      "n": 16,
+      "of": 22
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 16,
+      "of": 16
+     }
+    },
+    "same_act": {
+     "rate": 0.556,
+     "n": 10,
+     "of": 18
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 1.0,
+      "n": 3,
+      "of": 3
+     },
+     "allegation": {
+      "rate": 0.867,
+      "n": 13,
+      "of": 15
+     },
+     "allegation_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.417,
+      "n": 30,
+      "of": 72
+     },
+     "harm": {
+      "rate": 0.55,
+      "n": 22,
+      "of": 40
+     },
+     "interrupted": {
+      "rate": 0.5,
+      "n": 5,
+      "of": 10
+     },
+     "level_c": {
+      "rate": 0.9,
+      "n": 27,
+      "of": 30
+     },
+     "mention_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 6
+     },
+     "no_level_c": {
+      "rate": 0.8,
+      "n": 12,
+      "of": 15
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.125,
+      "n": 1,
+      "of": 8
+     },
+     "retelling": {
+      "rate": 0.889,
+      "n": 16,
+      "of": 18
+     },
+     "undated": {
+      "rate": 0.489,
+      "n": 22,
+      "of": 45
+     },
+     "undercover": {
+      "rate": 0.52,
+      "n": 13,
+      "of": 25
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "resolved_2b": {
+    "events": {
+     "recall": {
+      "rate": 0.768,
+      "n": 175,
+      "of": 228
+     },
+     "precision": {
+      "rate": 0.978,
+      "n": 175,
+      "of": 179
+     },
+     "f1": 0.86
+    },
+    "action": {
+     "rate": 0.926,
+     "n": 162,
+     "of": 175
+    },
+    "actor": {
+     "rate": 0.989,
+     "n": 173,
+     "of": 175
+    },
+    "standing": {
+     "rate": 1.0,
+     "n": 175,
+     "of": 175
+    },
+    "dates": {
+     "rate": 1.0,
+     "n": 107,
+     "of": 107
+    },
+    "order": {
+     "recall": {
+      "rate": 0.143,
+      "n": 11,
+      "of": 77
+     },
+     "precision": {
+      "rate": 0.733,
+      "n": 11,
+      "of": 15
+     }
+    },
+    "order_claims": {
+     "correct": {
+      "rate": 0.733,
+      "n": 11,
+      "of": 15
+     },
+     "reversed": 0,
+     "not_documented": 0,
+     "endpoint_not_gold": 4
+    },
+    "order_pairs": {
+     "of_pairs_with_both_acts_coded": {
+      "rate": 0.767,
+      "n": 240,
+      "of": 313
+     },
+     "of_all_gold_pairs": {
+      "rate": 0.51,
+      "n": 240,
+      "of": 471
+     }
+    },
+    "level_c": {
+     "recall": {
+      "rate": 0.929,
+      "n": 26,
+      "of": 28
+     },
+     "precision": {
+      "rate": 0.867,
+      "n": 26,
+      "of": 30
+     }
+    },
+    "harms": {
+     "recall": {
+      "rate": 0.786,
+      "n": 22,
+      "of": 28
+     },
+     "precision": {
+      "rate": 1.0,
+      "n": 22,
+      "of": 22
+     }
+    },
+    "same_act": {
+     "rate": 0.556,
+     "n": 10,
+     "of": 18
+    },
+    "by_tag": {
+     "advocacy": {
+      "rate": 1.0,
+      "n": 3,
+      "of": 3
+     },
+     "allegation": {
+      "rate": 0.867,
+      "n": 13,
+      "of": 15
+     },
+     "allegation_only": {
+      "rate": 0.714,
+      "n": 5,
+      "of": 7
+     },
+     "explicit_order": {
+      "rate": 0.639,
+      "n": 46,
+      "of": 72
+     },
+     "harm": {
+      "rate": 0.7,
+      "n": 28,
+      "of": 40
+     },
+     "interrupted": {
+      "rate": 0.5,
+      "n": 5,
+      "of": 10
+     },
+     "level_c": {
+      "rate": 0.933,
+      "n": 28,
+      "of": 30
+     },
+     "mention_only": {
+      "rate": 0.0,
+      "n": 0,
+      "of": 6
+     },
+     "no_level_c": {
+      "rate": 0.8,
+      "n": 12,
+      "of": 15
+     },
+     "procedure": {
+      "rate": 1.0,
+      "n": 40,
+      "of": 40
+     },
+     "response": {
+      "rate": 0.125,
+      "n": 1,
+      "of": 8
+     },
+     "retelling": {
+      "rate": 0.889,
+      "n": 16,
+      "of": 18
+     },
+     "undated": {
+      "rate": 0.733,
+      "n": 33,
+      "of": 45
+     },
+     "undercover": {
+      "rate": 0.72,
+      "n": 18,
+      "of": 25
+     }
+    },
+    "cases": 20,
+    "cases_without_output": []
+   },
+   "_note": "resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm."
   }
  },
  "reference_real_cases": {
@@ -3546,6 +5638,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 6,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -3661,6 +5754,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 15,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -3730,19 +5824,19 @@
    "parser_events": 11,
    "coverage": {
     "coder_A": {
-     "pages: docket parser": 53,
-     "acts proposed: docket parser": 11,
      "pages: model": 55,
      "acts proposed: model": 412,
+     "pages: docket parser": 53,
+     "acts proposed: docket parser": 11,
      "acts dropped: procedure act without a stated date": 150,
      "acts dropped: procedure act repeating a dated anchor": 13,
      "acts dropped: quote not located on the page": 83
     },
     "coder_B": {
-     "pages: docket parser": 53,
-     "acts proposed: docket parser": 11,
      "pages: model": 55,
      "acts proposed: model": 540,
+     "pages: docket parser": 53,
+     "acts proposed: docket parser": 11,
      "acts dropped: quote not located on the page": 110,
      "acts dropped: procedure act without a stated date": 23
     }
@@ -3754,7 +5848,7 @@
    },
    "passages": {
     "ocr_text_only": 0,
-    "total": 28
+    "total": 30
    }
   },
   "anchorage_pd_2022_007": {
@@ -3774,6 +5868,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 27,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -3816,10 +5911,10 @@
       "both_yes": 0
      },
      "distribution_infrastructure": {
-      "kappa": 1.0,
-      "a_yes": 1,
-      "b_yes": 1,
-      "both_yes": 1
+      "kappa": null,
+      "a_yes": 0,
+      "b_yes": 0,
+      "both_yes": 0
      },
      "generative_synthesis": {
       "kappa": null,
@@ -3887,6 +5982,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 1,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -3998,6 +6094,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 5,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4113,6 +6210,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 6,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4225,6 +6323,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 10,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4262,9 +6361,9 @@
      },
      "unmonitored_communication": {
       "kappa": 1.0,
-      "a_yes": 3,
-      "b_yes": 3,
-      "both_yes": 3
+      "a_yes": 1,
+      "b_yes": 1,
+      "both_yes": 1
      },
      "distribution_infrastructure": {
       "kappa": null,
@@ -4334,6 +6433,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 20,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4353,9 +6453,9 @@
     "affordance_per_class": {
      "anonymity": {
       "kappa": 1.0,
-      "a_yes": 23,
-      "b_yes": 23,
-      "both_yes": 23
+      "a_yes": 8,
+      "b_yes": 8,
+      "both_yes": 8
      },
      "ephemerality": {
       "kappa": null,
@@ -4377,9 +6477,9 @@
      },
      "distribution_infrastructure": {
       "kappa": 1.0,
-      "a_yes": 4,
-      "b_yes": 4,
-      "both_yes": 4
+      "a_yes": 1,
+      "b_yes": 1,
+      "both_yes": 1
      },
      "generative_synthesis": {
       "kappa": null,
@@ -4446,6 +6546,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 15,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 1
    },
    "agreement_model_coded": {
@@ -4533,7 +6634,7 @@
    "shacl": "fails",
    "shacl_violations": 0,
    "review": {
-    "agreed": 16
+    "agreed": 15
    },
    "passages": {
     "ocr_text_only": 0,
@@ -4559,6 +6660,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 15,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4633,8 +6735,8 @@
      "pages: docket parser": 17,
      "acts proposed: docket parser": 10,
      "acts dropped: quote not located on the page": 80,
-     "acts dropped: procedure act repeating a dated anchor": 19,
-     "acts dropped: procedure act without a stated date": 127
+     "acts dropped: procedure act without a stated date": 127,
+     "acts dropped: procedure act repeating a dated anchor": 19
     },
     "coder_B": {
      "pages: model": 48,
@@ -4652,7 +6754,7 @@
    },
    "passages": {
     "ocr_text_only": 1,
-    "total": 29
+    "total": 30
    }
   },
   "doj_ceos_2026_001": {
@@ -4670,6 +6772,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 32,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4688,10 +6791,10 @@
     },
     "affordance_per_class": {
      "anonymity": {
-      "kappa": 1.0,
-      "a_yes": 1,
-      "b_yes": 1,
-      "both_yes": 1
+      "kappa": null,
+      "a_yes": 0,
+      "b_yes": 0,
+      "both_yes": 0
      },
      "ephemerality": {
       "kappa": null,
@@ -4784,6 +6887,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 1,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4899,6 +7003,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 11,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -4972,8 +7077,8 @@
      "acts proposed: docket parser": 3,
      "pages: model": 53,
      "acts proposed: model": 408,
-     "acts dropped: procedure act without a stated date": 137,
      "acts dropped: quote not located on the page": 74,
+     "acts dropped: procedure act without a stated date": 137,
      "acts dropped: procedure act repeating a dated anchor": 17
     },
     "coder_B": {
@@ -5013,6 +7118,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 3,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5106,7 +7212,7 @@
    },
    "passages": {
     "ocr_text_only": 0,
-    "total": 7
+    "total": 6
    }
   },
   "doj_ceos_2026_008": {
@@ -5127,6 +7233,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 4,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 1,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5216,7 +7323,7 @@
    "shacl": "fails",
    "shacl_violations": 0,
    "review": {
-    "agreed": 5
+    "agreed": 4
    },
    "passages": {
     "ocr_text_only": 8,
@@ -5241,6 +7348,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 9,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5356,6 +7464,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 5,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5470,6 +7579,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 1,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5585,6 +7695,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 2,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5697,6 +7808,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 4,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -5798,34 +7910,35 @@
    "failed": null,
    "resolution": {
     "left out: affordance only coder B annotated": 0,
-    "left out: coders chose different action codes": 13,
+    "left out: coders chose different action codes": 12,
     "left out: harm only one coder recorded": 0,
     "left out: only coder A coded it (law_enforcement)": 8,
     "left out: only coder A coded it (offender)": 26,
-    "left out: only coder A coded it (procedure)": 3,
+    "left out: only coder A coded it (procedure)": 4,
     "left out: only coder A coded it (response)": 3,
     "left out: only coder B coded it (law_enforcement)": 2,
     "left out: only coder B coded it (offender)": 53,
-    "left out: only coder B coded it (procedure)": 1,
+    "left out: only coder B coded it (procedure)": 2,
     "left out: only coder B coded it (response)": 11,
     "open roles kept open": 0,
     "published: events both coders coded": 5,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
     "events": {
      "coder_a": 58,
      "coder_b": 85,
-     "matched": 18,
-     "precision_vs_a": 0.212,
-     "recall_vs_a": 0.31,
-     "f1": 0.252
+     "matched": 17,
+     "precision_vs_a": 0.2,
+     "recall_vs_a": 0.293,
+     "f1": 0.238
     },
     "action_code": {
      "exact": 5,
-     "of": 18,
-     "kappa": 0.215
+     "of": 17,
+     "kappa": 0.224
     },
     "affordance_per_class": {
      "anonymity": {
@@ -5867,8 +7980,8 @@
     },
     "affordance_set_jaccard_mean": 1.0,
     "harm_set": {
-     "exact": 18,
-     "of": 18,
+     "exact": 17,
+     "of": 17,
      "kappa": null
     },
     "order_on_matched_pairs": {
@@ -5893,8 +8006,8 @@
      "acts proposed: model": 145,
      "pages: skipped: judgment form page": 3,
      "acts proposed: skipped: judgment form page": 0,
-     "acts dropped: procedure act without a stated date": 4,
-     "acts dropped: quote not located on the page": 56
+     "acts dropped: quote not located on the page": 56,
+     "acts dropped: procedure act without a stated date": 4
     }
    },
    "shacl": "fails",
@@ -5903,8 +8016,8 @@
     "agreed": 5
    },
    "passages": {
-    "ocr_text_only": 12,
-    "total": 12
+    "ocr_text_only": 11,
+    "total": 11
    }
   },
   "ncmec_2022_575": {
@@ -5927,6 +8040,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 19,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 5,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6018,7 +8132,7 @@
    "shacl": "fails",
    "shacl_violations": 0,
    "review": {
-    "agreed": 24
+    "agreed": 19
    },
    "passages": {
     "ocr_text_only": 29,
@@ -6040,6 +8154,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 1,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6150,6 +8265,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 1,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6264,6 +8380,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 19,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6382,6 +8499,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 19,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6451,21 +8569,21 @@
    "parser_events": 8,
    "coverage": {
     "coder_A": {
+     "pages: docket parser": 9,
+     "acts proposed: docket parser": 8,
      "pages: model": 35,
      "acts proposed: model": 329,
-     "pages: docket parser": 9,
-     "acts proposed: docket parser": 8,
      "pages: skipped: judgment form page": 2,
      "acts proposed: skipped: judgment form page": 0,
-     "acts dropped: quote not located on the page": 78,
+     "acts dropped: procedure act repeating a dated anchor": 18,
      "acts dropped: procedure act without a stated date": 131,
-     "acts dropped: procedure act repeating a dated anchor": 18
+     "acts dropped: quote not located on the page": 78
     },
     "coder_B": {
-     "pages: model": 35,
-     "acts proposed: model": 341,
      "pages: docket parser": 9,
      "acts proposed: docket parser": 8,
+     "pages: model": 35,
+     "acts proposed: model": 341,
      "pages: skipped: judgment form page": 2,
      "acts proposed: skipped: judgment form page": 0,
      "acts dropped: quote not located on the page": 86,
@@ -6480,7 +8598,7 @@
    },
    "passages": {
     "ocr_text_only": 0,
-    "total": 27
+    "total": 24
    }
   },
   "usss_2017_006": {
@@ -6502,6 +8620,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 13,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6617,6 +8736,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 7,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 1,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6704,7 +8824,7 @@
    "shacl": "fails",
    "shacl_violations": 0,
    "review": {
-    "agreed": 8
+    "agreed": 7
    },
    "passages": {
     "ocr_text_only": 5,
@@ -6729,6 +8849,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 3,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {
@@ -6838,6 +8959,7 @@
     "open roles kept open": 0,
     "published: events both coders coded": 6,
     "published: relations both coders asserted": 0,
+    "published: relations in all (asserted by both coders, or made by rule from agreed acts)": 0,
     "published: stated order re-derived on agreed acts (5c)": 0
    },
    "agreement_model_coded": {

@@ -65,9 +65,8 @@ def _sha(data: str | bytes) -> str:
 
 
 def _review_summary(bundle: dict) -> Dict[str, int]:
-    c = Counter(e["review"]["status"] for e in bundle["events"])
-    c.update(r["review"]["status"] for r in bundle["relations"] if r.get("review"))
-    return dict(sorted(c.items()))
+    """Review status of the acts. Relations are counted apart (``relations``), since a machine release makes some by rule."""
+    return dict(sorted(Counter(e["review"]["status"] for e in bundle["events"]).items()))
 
 
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
@@ -130,6 +129,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "bundle_sha256": _sha(path.read_bytes()),
             "source_documents": sorted({d["sha256"] for d in bundle["documents"]}),
             "review": _review_summary(bundle),
+            "relations": len(bundle["relations"]),
             "passages": {"total": len(bundle["passages"]),
                          "ocr_text_only": sum(p["verification"].get("method") == "ocr_text_exact" for p in bundle["passages"])},
             "graphs": graphs,
@@ -143,7 +143,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         "manifest_version": MANIFEST_VERSION, "release_id": release_id,
         "schema_version": V.SCHEMA_VERSION, "codebook_version": V.CODEBOOK_VERSION,
         "derivation_rule": RULE_VERSION, "extension": EXTENSION.name,
-        "sdk": (REPO / "ontology" / "SDK_VERSION").read_text(encoding="utf-8").split("\n")[0] if (REPO / "ontology" / "SDK_VERSION").is_file() else None,
+        "sdk": sdk_pin(),
         "review_mode": "preview" if allow_unreviewed else mode,
         "adjudicated": all(set(c["review"]) <= {"adjudicated"} for c in cases),
         "cases": cases,
@@ -241,6 +241,15 @@ COMMITTED = ("graphs/*", "derived/*", "observations/*", "research_table.json", "
              "affordance_case_grid.csv", "validation.json", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
 
 
+def sdk_pin() -> Optional[str]:
+    """The pinned CASE-UCO SDK that writes the graphs, as "<tag> <commit>", from ontology/SDK_VERSION."""
+    import re
+    path = REPO / "ontology" / "SDK_VERSION"
+    text = path.read_text(encoding="utf-8") if path.is_file() else ""
+    tag, commit = re.search(r"^\s*tag:\s*(\S+)", text, re.M), re.search(r"^\s*commit:\s*([0-9a-f]{40})", text, re.M)
+    return f"{tag.group(1)} {commit.group(1)}" if tag and commit else None
+
+
 def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) -> dict:
     """Committed release files checked against each case's deny list (names from the caption) and
     every stored quote of six or more words; and, in machine-coded bundles, every platform name and
@@ -267,7 +276,14 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
                 checked_quotes += 1
                 probe = q[:60]
                 hits += [{"case": case, "kind": "quote", "file": str(p.relative_to(root))} for p, t in texts.items() if probe in t]
-    # machine-coded bundles hold no free text: every platform name and feature word comes from a fixed list
+    ledger = REPO / "ontology" / "PACER" / "BULK_FOLDER" / "pacer_cost.csv"       # tracked: case ids, docket numbers, document types, costs
+    if ledger.is_file():
+        low = ledger.read_text(encoding="utf-8", errors="replace").lower()
+        for folder in sorted(p for p in text_root.iterdir() if (p / "deny.json").is_file()) if text_root.is_dir() else []:
+            for term in json.loads((folder / "deny.json").read_text(encoding="utf-8")):
+                if len(term) > 3 and re.search(r"\b" + re.escape(term.lower()) + r"\b", low):
+                    hits.append({"case": folder.name, "kind": "deny", "file": "ontology/PACER/BULK_FOLDER/pacer_cost.csv"})
+
     from state_machines.coding.enrich import FEATURES, known_platform
     words = {ph.lower() for phrases in FEATURES.values() for ph in phrases}
     open_values = 0

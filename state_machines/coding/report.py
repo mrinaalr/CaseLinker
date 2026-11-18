@@ -107,7 +107,7 @@ def published_content(release_id: str) -> dict:
             if fam == "offender":
                 c["offender acts naming a victim or an undercover persona"] += bool(e["targets"])
                 c["offender acts with a documented platform"] += bool(e["platform_interactions"])
-                c["level-C affordances (feature stated in the sentence)"] += len(e["affordances"])
+                c["level-C affordances (sentence states the feature as the means)"] += len(e["affordances"])
             for h in e["harms"]:
                 c[f"harms recorded: victim {h['victim_kind']}"] += 1
         for r in b["relations"]:
@@ -331,7 +331,7 @@ def markdown(r: dict) -> str:
         L.append(f"| {name} | `{spec['model']}` | `{spec['digest'][:19]}…` | {spec.get('quantization', '')} |")
     L += ["", f"Inference: `{json.dumps(r['models']['options'])}`; runtime `{json.dumps(r['models']['runtime'].get('env', {}))}`; prompt `{r['models'].get('prompt', {}).get('version')}`.", "",
           "## Cases", "", f"{t.get('cases published', 0)} published, {t.get('cases not published', 0)} not published.", "",
-          "| Case | Published | Events | Relations | Coder A acts | Coder B acts | Matched | Action κ | SHACL |", "|---|---|---:|---:|---:|---:|---:|---:|---|"]
+          "| Case | Published | Events | Relations both coders asserted | Coder A acts | Coder B acts | Matched | Action κ | SHACL |", "|---|---|---:|---:|---:|---:|---:|---:|---|"]
     for cid, c in r["cases"].items():
         res = c.get("resolution") or {}
         ev = (c.get("agreement_model_coded") or {}).get("events", {})
@@ -339,6 +339,10 @@ def markdown(r: dict) -> str:
         L.append(f"| `{cid}` | {'yes' if c['published'] else 'no: ' + str(c.get('failed'))[:60]} | {res.get('published: events both coders coded', '')} | "
                  f"{res.get('published: relations both coders asserted', '')} | {ev.get('coder_a', '')} | {ev.get('coder_b', '')} | {ev.get('matched', '')} | "
                  f"{kap} | {c.get('shacl', '')} |")
+    L += ["", "Relations made by rule from agreed acts (stated order, possible retellings) are counted under \"What is published\", not in this column. "
+          "**SHACL:** our own shapes have 0 violations in every case. `fails` means a violation only of an upstream CAC shape listed in "
+          "`state_machines/graphs/shacl_upstream_defects.json`; `partial` means upstream constraints that apply could not be run "
+          "(see [graphs](../../graphs/README.md)).", ""]
     L += ["", "## Coverage and drops", "", "| Measure | Count |", "|---|---:|"] + [f"| {k} | {v} |" for k, v in t.items() if k.startswith("coder_")]
     rel = r["reliability_real_cases"]
     L += ["", "## Reliability on the real cases", "", f"```json\n{json.dumps(rel, indent=1)}\n```", ""]

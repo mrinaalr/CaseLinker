@@ -45,7 +45,7 @@ from state_machines.coding.workflow import agreement
 from state_machines.coding.cues import CUE_VERSION, settle
 
 CODERS = ("coder_A", "coder_B")
-RULE_VERSION = "resolve-1.1.0"
+RULE_VERSION = "resolve-1.2.0"
 _RANK = {"DIRECT": 0, "INFERRED": 1, "UNSUPPORTED": 2, "CONTRADICTED": 3}
 
 
@@ -222,9 +222,10 @@ def resolve(a: dict, b: dict, text_root=None, settle_codes: bool = False) -> Tup
                 "facet": "action", "status": "INFERRED"} for ev in (keep[x], keep[y])]
         core["relations"].append({"relation_id": f"same-{x}-{y}", "type": "SAME_ACT", "from_event": x, "to_event": y,
                                   "basis": "coder_inference", "status": "INFERRED", "support": sup,
-                                  "note": "same action, overlapping dates: possibly one act told twice; both kept",
+                                  "note": "made by the resolution rule from two agreed acts, not asserted by a coder: same action, overlapping dates, possibly one act told twice; both kept",
                                   "review": {"status": "agreed", "coders": list(CODERS), "adjudicator": None}})
         report["linked: possibly the same act (SAME_ACT)"] += 1
+    report["published: relations in all (asserted by both coders, or made by rule from agreed acts)"] = len(core["relations"])
     report["open roles kept open"] = sum(len(e.get("unresolved_participants", [])) for e in core["events"])
 
     core["tracks"] = [dict(t, event_ids=[x for x in t["event_ids"] if x in keep]) for t in a["tracks"]]
@@ -283,7 +284,7 @@ def restate_order(bundle: dict, text_root) -> int:
                 "relation_id": f"so-{prior}-{e['event_id']}", "type": "BEFORE", "from_event": prior, "to_event": e["event_id"],
                 "basis": "explicit_sequence_language", "status": "DIRECT",
                 "support": [{"passage_id": pid, "facet": "time", "status": "DIRECT"}],
-                "note": "stated order, sentence rule applied to agreed acts",
+                "note": "made by the resolution rule from two agreed acts, not asserted by a coder: stated order, sentence rule applied to agreed acts",
                 "review": {"status": "agreed", "coders": list(CODERS), "adjudicator": None}})
             have.add((prior, e["event_id"]))
             added += 1

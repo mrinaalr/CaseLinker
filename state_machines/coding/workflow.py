@@ -123,8 +123,7 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
                    "page_count": len(pages), "pages": pages}
         doc["source_path"] = f"{pdf.parent.name}/pacer -- {case_id} -- {doc['doc_id'].replace('_', ' ')}.pdf"
         files[doc["doc_id"]] = str(pdf.relative_to(source_root()))
-        docs.append(doc)
-    docs.sort(key=lambda d: d["doc_id"])
+        docs.append(doc)                      # in file-name order, as collected: a rerun lists a case's documents as before
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "files.json").write_text(json.dumps(files, indent=1, sort_keys=True) + "\n", encoding="utf-8")   # names on disk: local only
     return {"case_id": case_id, "documents": docs}

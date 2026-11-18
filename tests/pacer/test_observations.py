@@ -125,6 +125,15 @@ def test_a_relationship_needs_the_act_sentence_to_state_the_means(tmp_path):
     ("platform", "The defendant denied that he had ever asked Minor Victim 1 for images through Kitebox.", "Kitebox", None),        # a denial
     ("platform", "The defendant told Minor Victim 1 to download Kitebox and delete her messages.", "Kitebox", None),                # an infinitive, not a means
     ("feature", "The defendant asked Minor Victim 1 for images after she used a fake name to open her account.", "fake name", None),   # the victim's use
+    ("feature", "Minor Victim 1 used a fake name when she replied to the defendant.", "fake name", None),                          # an opening clause about the victim
+    ("feature", "An undercover agent used a fake profile to chat with the defendant on Kitebox.", "fake profile", None),            # the agent's feature
+    ("platform", "Agents served a search warrant on Kitebox for the account the defendant had created.", "Kitebox", None),          # an opening clause with no offender in it
+    ("platform", "Agents used Dropbox to store the images the defendant had sent to Minor Victim 1.", "Dropbox", None),
+    ("feature", "The defendant, who used no VPN, was identified by his address.", "VPN", None),                                     # negation between cue and term
+    ("feature", "The defendant sent messages that were not encrypted.", "encrypted", None),
+    ("feature", "The defendant created an account without a fake name.", "fake name", None),
+    ("platform", "Agents learned that the defendant contacted Minor Victim 1 through Kitebox.", "Kitebox", "Carried_Out_Through"),  # reported, but the offender's act
+    ("feature", "The defendant used a fake name to open the account.", "fake name", "Supports_Action"),
     ("platform", "The defendant first contacted Minor Victim 1 on Kitebox.", "Kitebox", "Carried_Out_Through"),
     ("platform", "The defendant uploaded the images to Kitebox.", "Kitebox", "Carried_Out_Through"),
     ("platform", "The defendant told Minor Victim 1 to continue their conversation on Kitebox.", "Kitebox", "Moved_To"),
@@ -360,5 +369,5 @@ def test_queries_keep_cases_and_kinds_apart(tmp_path):
     assert rows("documented") == [["Kitebox", "1", "1"]]                                   # no placeholder among listed platforms
     assert rows("withheld") == [["case_one", "Website A (name withheld)", "1"], ["case_two", "Website A (name withheld)", "1"]]
     assert rows("described") == [["chat room", "1", "1"]]
-    supported = {(r[0], r[3]) for r in rows("supported")}
+    supported = {(r[0], r[4]) for r in rows("supported")}
     assert supported == {("case_one", "Website A (name withheld)"), ("case_two", "Website A (name withheld)"), ("case_two", "Kitebox")}   # not "group chat"

@@ -229,7 +229,7 @@ def test_extraction_keeps_file_names_local_and_adds_new_filings_without_touching
     pdf("pacer -- agency_2024_009 -- Avery Factual Proffer.pdf", "A second defendant admits other facts in this one.")   # sorts before the first
     pdf("pacer -- agency_2024_009 -- criminal complaint.pdf", "The affiant states the following on oath to the court.")
     second = W.extract("agency_2024_002", text)
-    assert [d["doc_id"] for d in second["documents"]] == ["complaint", "factual_proffer", "factual_proffer_2"]
+    assert [d["doc_id"] for d in second["documents"]] == ["factual_proffer_2", "factual_proffer", "complaint"]     # file-name order
     assert next(d for d in second["documents"] if d["doc_id"] == "factual_proffer")["sha256"] == doc["sha256"]   # the old filing keeps its id
     assert page.stat().st_mtime_ns == stamp                                           # and its page text is not rewritten
     assert W.doc_type_of(Path("pacer -- x -- response in opposition.pdf")) == "brief" and W.doc_type_of(Path("pacer -- x -- memorandum opinion and order.pdf")) == "opinion"
@@ -288,7 +288,10 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     assert sum(stated.values()) == case["observations"]["feature_observations"]
     for c in matrix["classes"]:
         assert not (c["needs_researcher_interpretation"] and c["no_evidence_in_these_records"])
-        assert c["no_evidence_in_these_records"] == (not c["phrase_stated"]["statements"] and not c["coder_agreed_on_act"]["acts"])
+        assert c["no_evidence_in_these_records"] == (not c["phrase_stated"]["statements"] and not c["means_stated_in_act_sentence"]["acts"])
+        assert set(c["in_agreed_act_sentence"]["cases"]) <= set(c["phrase_stated"]["cases"])       # co-occurrence needs a statement
+    import re
+    assert re.fullmatch(r"v\d+\.\d+\.\d+ [0-9a-f]{40}", m["sdk"])                               # the SDK that wrote the graphs, not a comment line
     assert {n: (root / "test-v1" / n).read_text() for n in AM.FILES} == AM.rendered(root / "test-v1")
     assert len((root / "test-v1" / "affordance_case_grid.csv").read_text().splitlines()) == 2
     shutil.rmtree(root / "test-v1" / "cases")                       # no local bundle is needed

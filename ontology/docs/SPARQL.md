@@ -119,7 +119,7 @@ The three graph kinds hold three levels of evidence: what the record names (`:ob
 
 The hosted store is `oxigraph serve` from `ghcr.io/oxigraph/oxigraph:0.5.13` on a 5 GB Railway volume (`/data/caselinker_oxigraph`). A reload is a bulk load into an empty store:
 
-1. Build the N-Quads anywhere: `python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`. The PACER release's N-Quads are committed with the release (`state_machines/data/<release>/`).
+1. Build the N-Quads anywhere: `python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`. The PACER release's N-Quads are built from the release's committed graph files (`state_machines/data/<release>/graphs/`) by the same script.
 2. Copy the corpus file to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`.
 3. Wipe the volume (Railway dashboard → `oxigraph-volume-S6Fs` → Settings → Wipe volume). The bulk loader refuses a store that is not empty.
 4. In the web service: `python3 scripts/oxigraph/rebuild_oxigraph.py --skip-build --output /tmp/caselinker.nq.gz --pacer-release <release> --verify --min-case-graphs 10000`.

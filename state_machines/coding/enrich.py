@@ -206,7 +206,7 @@ def enrich(act: dict, sentence: str, family: str) -> dict:
             if p:
                 out["platform"] = {"name": p["n"], "mode": p["m"], "audience": p["au"]}
         if not out.get("affordance"):
-            f = feature(sentence)
+            f = feature_as_means(sentence)
             if f:
                 out["affordance"] = {"class": f[0], "feature": f[1]}
         victims = [t for t in out["targets"] if t["role"] == "victim"]
@@ -221,6 +221,19 @@ def enrich(act: dict, sentence: str, family: str) -> dict:
     if sequence_words(sentence) and not out.get("after"):
         out["after"] = "__previous__"
     return out
+
+
+def feature_as_means(sentence: str) -> Optional[Tuple[str, str]]:
+    """(class, phrase) when the sentence states a listed feature as the means of what it describes ("used the
+    disappearing-message feature to ...", "created a new account under a false name"). Level C is instrumental
+    use (codebook B): a phrase that only stands in the sentence ("the Tor network conceals its users", "did not
+    use a fake name", a feature the victim used) is a mention, kept by the observation layer, not level C."""
+    from state_machines.observations.observe import _means       # the one stated-means rule, shared by both layers
+    for cls, pat in _FEATURE_PATTERNS:
+        m = pat.search(sentence)
+        if m and _means("feature", sentence, {"feature_term": m.group(0)}):
+            return cls, m.group(0)
+    return None
 
 
 def sequence_words(sentence: str) -> bool:

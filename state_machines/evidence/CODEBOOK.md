@@ -192,6 +192,7 @@ O holds the six classes of AfH §7. Each maps to the CAC 3.1.0 class of the same
 **Rule B0. A platform name is never level C.** A level-C annotation needs `basis = feature_stated` or `mechanism_stated`:
 - `DIRECT` needs a passage that names the feature or mechanism and links it to the action (facet `feature`).
 - `INFERRED` needs a named feature or mechanism whose link to this action is interpretive.
+- **In automated coding** the link is one fixed rule, shared with the observation layer: the act's own sentence must state the feature as the means ("used the … feature to …", "created a new account under a false name"), in a clause about the offender and not negated. A listed phrase that only stands in the act's sentence (what a technology is, another person's use, a denial) is a mention: it is published as an observation, marked as lying in an agreed act's sentence, and is not level C.
 
 A platform name, and a documented interaction, are level A/B material. Only `through` and `to` interactions with a named platform reach level B. Case-level associations (a press release naming a platform) are never promoted to event-level claims.
 

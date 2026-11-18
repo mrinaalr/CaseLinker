@@ -413,9 +413,9 @@ The press-release corpus answers *what happened at scale*. [`state_machines/`](s
 
 - **Evidence.** Each case is coded by two coders into a bundle $D=(\Pi,E,R,P,U)$: participants, events with their event roles and dated assertions, relations, page-level provenance with the legal standing of each passage, and an assertion status on every claim. Disagreements, open roles and possible retellings of one act are adjudicated before release.
 - **Trajectories.** The documented order is the transitive closure of cited order and dates; trajectories are its maximal chains of offender acts, each step carrying the affordances the record ties to it. Unordered pairs are reported, never forced.
-- **Graphs.** Bundles are emitted as CASE/UCO/CAC with the CASE-UCO SDK, validated with SHACL, and released with a manifest under stable IRIs `urn:caselinker:pacer:<case>:evidence|trajectories`.
+- **Graphs.** Bundles are emitted as CASE/UCO/CAC with the CASE-UCO SDK, validated with SHACL, and released with a manifest under stable IRIs `urn:caselinker:pacer:<case>:evidence|trajectories|observations`.
 - **Theory.** Finite transition systems for AfH Appendix X; documented trajectories are checked for compatibility with a specified model.
-- **Serving.** `/lifecycle` (public; the current adjudicated release), the trusted `/api/lifecycle/cases` and `/api/lifecycle/analysis`, and the public manifest at `/api/ontology/pacer`.
+- **Serving.** `/lifecycle` (public; the current release, machine-coded and labelled as such), the trusted `/api/lifecycle/cases` and `/api/lifecycle/analysis`, and the public manifest at `/api/ontology/pacer`.
 
 These describe the observable enforcement record only: what the court documents say happened, at the standing they say it.
 
@@ -433,7 +433,7 @@ Hand-off: [`state_machines/README.md`](state_machines/README.md).
 | `/analysis` | `analysis.html` | Question → SPARQL (templates, or Groq for the rest) → rows → passages in the released text; LLM mode runs read-only SQL over the case table |
 | `/patterns` (+ `/patterns/graph`, `/patterns/questions/q01–q03`) | `patterns-graph.html`, `questions/` | Graph viewer: find cases by class / platform / agency / id, load or compare them on the canvas, filter by spine; Q1–Q3 findings |
 | `/explore` | `explore.html` | Walk w3id IRIs by hand: case → steps, agencies, platforms → provenance graph → annotation → passage, with the source text highlighted |
-| `/lifecycle` | `lifecycle.html` | PACER state machines: swimlanes per offence, the machine and its estimators ([`state_machines/README.md`](state_machines/README.md)) |
+| `/lifecycle` | `lifecycle.html` | PACER court records as documented acts per case, with what each record names, and the theory view ([`state_machines/README.md`](state_machines/README.md)) |
 | `/visualization` | `visualization.html` | Platform affordances: platforms on six lifecycle lanes; affordances, misuse surface, harm vectors, case evidence |
 | `/search` | `search.html` | Facet decision tree; copy a cohort as SPARQL or open it in the graph viewer |
 | `/audit` | `audit.html` | Feature-by-feature review with the passage highlighted |

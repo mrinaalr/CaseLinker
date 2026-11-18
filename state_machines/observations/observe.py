@@ -183,6 +183,12 @@ _THIRD_PARTY = (r"(?:her\s+\w+|his\s+(?:mother|father|parents?)|(?:the\s+)?(?:mo
 _OTHER_PARTY = (r"(?:she|they|(?:the\s+)?(?:victim|minor)\b|Minor Victim|MV-?\d|Victim\s+\w|Jane Doe|John Doe|an?\s+undercover|the undercover)")
 _OTHER_SUBJECT = {"platform": re.compile(_LEAD + _THIRD_PARTY, re.I), "feature": re.compile(_LEAD + "(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + ")", re.I)}
 _NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies|deny|declined|refused)\b", re.I)
+# who a clause is about, anywhere before the cue: someone other than the offender, and the offender
+# a feature of the service itself ("the site operated on the Tor network") is what the technology is, not what anyone did
+_SERVICE_SUBJECT = r"(?:(?:the|this|that|each|a)\s+(?:web\s?site|site|forum|service|network|application|app|board|server)\b|Website\s(?:[A-Z]|\d{1,2})\b)"
+_OTHER_BEFORE = {"platform": re.compile(_THIRD_PARTY, re.I),
+                 "feature": re.compile("(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + "|" + _SERVICE_SUBJECT + ")", re.I)}
+_OFFENDER = re.compile(r"\b(?:defendants?|accused|he|him|his)\b", re.I)
 
 
 def _own_clause(sentence: str, at: int, kind: str = "feature") -> Optional[Tuple[int, str]]:
@@ -310,7 +316,10 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
             own = _own_clause(sentence, m.end(), kind)
             if own is None or m.start() < own[0]:           # another subject's clause, or cue and term in different clauses
                 continue
-            if _NEGATED.search(sentence[own[0]:m.start("cue")]):
+            before = sentence[own[0]:m.start("cue")]
+            if _NEGATED.search(before) or _NEGATED.search(sentence[m.start("cue"):m.end()]):    # "did not ... through", "used no VPN"
+                continue
+            if _OTHER_BEFORE[kind].search(before) and not _OFFENDER.search(before):             # "Agents served a warrant on ...": no offender in the clause
                 continue
             return rel, m.group("cue").lower()
     return None
@@ -338,6 +347,9 @@ def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
         if o["kind"] == "service_description":                  # a description is never tied to an act
             continue
         citing = {eid for d, pg, a, b, eid in acts if (d, pg) == (o["doc_id"], o["pdf_page"]) and a <= o["term_start"] and o["term_end"] <= b}
+        o.pop("in_act_sentence", None)
+        if citing:                       # co-occurrence only: the term stands in a sentence a published offender act cites
+            o["in_act_sentence"] = sorted(citing)
         if len(citing) > 1:
             o["several_acts"] = len(citing)
             continue

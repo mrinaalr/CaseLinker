@@ -313,6 +313,8 @@
       item(el("i", { class: "box box-inferred" }), "inferred act"),
       item(el("i", { class: "box box-harm", text: "h2" }), "harm to a child"),
       item(el("i", { class: "tick" }), "court, police, response"),
+      item(el("i", { class: "legend-none", text: "◇" }), "sentence states the means"),
+      item(el("i", { class: "legend-none", text: "no arrow" }), "no documented order"),
       ...Object.values(AFF).map(a => item(el("i", { class: "dot", style: `background:${a.color}` }), a.label)));
   }
 
@@ -440,7 +442,7 @@
       kv("Actor", `${ev.actor.participant_ref} (${ev.actor.role.replace("_", "-")})`),
       ev.co_actors.length ? kv("With", ev.co_actors.map(c => `${c.participant_ref} (${c.role}, ${c.mode})`).join("; ")) : null,
       ev.targets.length ? kv("Targets", ev.targets.map(t => `${t.participant_ref} (${t.role})`).join("; ")) : null,
-      ev.unresolved.length ? kv("Role open", `${ev.unresolved.join(", ")}, decided in adjudication`) : null,
+      ev.unresolved.length ? kv("Role open", `${ev.unresolved.join(", ")} (not resolved by the coders)`) : null,
       ev.outcome !== "completed" ? kv("Outcome", ev.outcome.replace(/_/g, " ")) : null,
       kv("When", when),
       ev.affordances.length ? kv("Affordances", ev.affordances.map(a => `${AFF[a.class].label} (${a.basis.replace("_", " ")}, ${a.status.toLowerCase()})`).join("; ")) : null,
@@ -469,7 +471,7 @@
       const b = document.getElementById("release-banner");
       b.hidden = false;
       b.className = "release-banner " + (mode === "preview" ? "is-preview" : "is-machine");
-      b.textContent = mode === "preview" ? "Preview · not reviewed" : "Machine-coded · two independent coders";
+      b.textContent = mode === "preview" ? "Preview · not reviewed" : "Machine-coded · two model coders, no human review";
       b.title = `${p.release.id} · schema ${p.release.schema_version} · codebook ${p.release.codebook_version}`;
     }
     document.querySelectorAll("#view-tabs button").forEach(b => b.addEventListener("click", () => {

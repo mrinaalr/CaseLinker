@@ -32,6 +32,23 @@ def test_level_c_needs_the_feature_words_in_the_sentence():
     assert N.feature("He reached the site through Tor.") == ("anonymity", "Tor")
 
 
+def test_level_c_needs_the_sentence_to_state_the_feature_as_the_means():
+    """Level C is instrumental use. A phrase that only stands in the sentence is a mention, not level C."""
+    means = N.feature_as_means
+    assert means("He used the disappearing-message feature on Vellum Chat to send the request.") == ("ephemerality", "disappearing-message")
+    assert means("He created a new account under a different name to reach her again.")[0] == "anonymity"
+    assert means("He reached the site through Tor.") == ("anonymity", "Tor")
+    for mention in ("The Tor network is designed to conceal the location of its users.",       # what the technology is
+                    "The defendant did not use a fake name when he wrote to Minor Victim 1.",   # a negation
+                    "Minor Victim 1 used a fake name when she replied to the defendant.",       # the victim's use
+                    "The site operated on the Tor network and had many members.",               # where it ran, not how the act was done
+                    "Snapwire offers disappearing messages to all of its users."):              # a platform's capability in general
+        assert means(mention) is None, mention
+        assert N.enrich({"action": "COMMUNICATE"}, mention, "offender").get("affordance") is None, mention
+    assert N.enrich({"action": "COMMUNICATE"}, "He used the disappearing-message feature to ask her again.", "offender")["affordance"] == {
+        "class": "ephemerality", "feature": "disappearing-message"}
+
+
 def test_platforms_are_named_services_never_places_or_dates():
     assert N.platform("He first contacted her through the Chirpline application.")["n"] == "Chirpline"
     assert N.platform("He posted the images in a Kitebox group chat.") == {"n": "Kitebox", "m": "through", "au": "group"}

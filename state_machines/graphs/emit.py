@@ -244,7 +244,7 @@ class _Emitter:
             for a in sorted(e.get("affordances", []), key=lambda a: a["affordance"]):
                 ind = f"kb:affordance-{eid}-{a['affordance']}"
                 self.g.upsert_node(ind, types=[V.AFFORDANCE_CLASSES[a["affordance"]]], properties={
-                    "uco-core:description": _STR(f"{a['affordance']} as used in {eid}")})
+                    "uco-core:description": _STR(f"{a['affordance']} stated as the means of {eid}")})
                 rel = self.g.create_relationship(ind, node, "Supports_Action",
                                                  relationship_id=f"kb:supports-{eid}-{a['affordance']}",
                                                  properties={"clt:affordanceBasis": _CL(a["basis"]),
@@ -402,7 +402,8 @@ def observation_graph(bundle: dict, doc: dict) -> CASEGraph:
                 cls = o["feature_class"]
                 rel_id, ind = f"kb:supports-{eid}-{cls}", f"kb:affordance-{eid}-{cls}"
                 if (eid, cls) not in have_aff:
-                    g.upsert_node(ind, types=[V.AFFORDANCE_CLASSES[cls]], properties={"uco-core:description": _STR(f"{cls} as used in {eid}")})
+                    have_aff.add((eid, cls))             # a second phrase of the class in that sentence adds evidence, not a second individual
+                    g.upsert_node(ind, types=[V.AFFORDANCE_CLASSES[cls]], properties={"uco-core:description": _STR(f"{cls} stated as the means of {eid}")})
                     g.create_relationship(ind, action, "Supports_Action", relationship_id=rel_id, properties={
                         "clt:affordanceBasis": _CL("feature_stated"), "clt:assertionStatus": _CL("DIRECT"),
                         "clt:featureTerm": _CL(o["feature_term"])})

@@ -124,7 +124,7 @@ DATABASE_URL='' python -m pytest tests/pacer
 
 | Surface | Access | Returns |
 |---|---|---|
-| [`/lifecycle`](https://caselinker.up.railway.app/lifecycle) | public | documented and theory views of the current adjudicated release |
+| [`/lifecycle`](https://caselinker.up.railway.app/lifecycle) | public | documented and theory views of the current release (machine-coded, labelled as such) |
 | `GET /api/lifecycle/cases` | trusted key or localhost | the page payload: events, roles, dates, standing, sources (no quotes, no names) |
 | `GET /api/lifecycle/analysis` | trusted key or localhost | chains, unordered pairs, $\mathrm{Aff}(c)$, $H(c)$, $\psi$, coverage identity |
 | `GET /api/ontology/pacer` | public | the release manifest: cases, graph IRIs, SHACL status |

@@ -16,7 +16,7 @@ Review mode **machine**: two local models coded every case independently; a fixe
 | cases with offender acts | 24 |
 | harms recorded: victim minor | 15 |
 | harms recorded: victim unknown | 1 |
-| level-C affordances (feature stated in the sentence) | 6 |
+| level-C affordances (sentence states the feature as the means) | 0 |
 | offender acts naming a victim or an undercover persona | 71 |
 | offender acts with a documented platform | 9 |
 | relations: possibly the same act | 7 |
@@ -37,7 +37,7 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 
 30 published, 0 not published.
 
-| Case | Published | Events | Relations | Coder A acts | Coder B acts | Matched | Action κ | SHACL |
+| Case | Published | Events | Relations both coders asserted | Coder A acts | Coder B acts | Matched | Action κ | SHACL |
 |---|---|---:|---:|---:|---:|---:|---:|---|
 | `anchorage_pd_2022_004` | yes | 6 | 0 | 108 | 214 | 52 | 0.168 | fails |
 | `anchorage_pd_2022_006` | yes | 15 | 0 | 166 | 407 | 64 | 0.273 | fails |
@@ -59,7 +59,7 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 | `external_extortion` | yes | 1 | 0 | 22 | 99 | 15 | 0.227 | fails |
 | `ky_sp_2025_038` | yes | 2 | 0 | 65 | 123 | 32 | 0.186 | fails |
 | `ncis_2022_002` | yes | 4 | 0 | 22 | 152 | 15 | 0.207 | fails |
-| `ncis_2023_001` | yes | 5 | 0 | 58 | 85 | 18 | 0.215 | fails |
+| `ncis_2023_001` | yes | 5 | 0 | 58 | 85 | 17 | 0.224 | fails |
 | `ncmec_2022_575` | yes | 19 | 0 | 92 | 185 | 43 | 0.465 | fails |
 | `ncmec_2023_222` | yes | 1 | 0 | 14 | 66 | 1 | None | partial |
 | `ncmec_2025_1035` | yes | 1 | 0 | 18 | 100 | 4 | 0.2 | fails |
@@ -69,6 +69,9 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 | `usss_2021_017` | yes | 7 | 0 | 88 | 178 | 32 | 0.354 | fails |
 | `usss_2023_004` | yes | 3 | 0 | 43 | 126 | 21 | 0.255 | fails |
 | `wy_dci_2023_005` | yes | 6 | 0 | 7 | 113 | 3 | 0.143 | partial |
+
+Relations made by rule from agreed acts (stated order, possible retellings) are counted under "What is published", not in this column. **SHACL:** our own shapes have 0 violations in every case. `fails` means a violation only of an upstream CAC shape listed in `state_machines/graphs/shacl_upstream_defects.json`; `partial` means upstream constraints that apply could not be run (see [graphs](../../graphs/README.md)).
+
 
 ## Coverage and drops
 
@@ -102,11 +105,11 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
  "cases": 30,
  "events_coder_A": 2718,
  "events_coder_B": 5956,
- "matched": 1118,
+ "matched": 1117,
  "mean_event_f1": 0.242,
  "pooled_action_agreement": {
   "exact": 375,
-  "of": 1118
+  "of": 1117
  },
  "mean_action_kappa": 0.298,
  "note": "agreement on acts the models coded; the docket parser's acts are excluded"
@@ -338,7 +341,7 @@ PREFIX oa: <http://www.w3.org/ns/oa#>
 PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
 PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
 PREFIX clt: <https://w3id.org/caselinker/trajectory#>
-SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
+SELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {
   GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .
               ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)
               OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
@@ -348,20 +351,22 @@ SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
   FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))
   BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
   BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
-} ORDER BY ?case ?action ?what
+  BIND(REPLACE(STR(?act), "^.*[/#:-](e[0-9]+)$", "$1") AS ?event)
+} ORDER BY ?case ?event ?what
 ```
 
-| case | action | relationship | platform_or_class | phrase | standing |
-|---|---|---|---|---|---|
-| anchorage_pd_2022_006 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Snapchat |  | ADVOCACY |
-| anchorage_pd_2022_007 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ALLEGATION |
-| anchorage_pd_2022_007 | STORE_MATERIAL | Carried_Out_Through | Dropbox |  | ALLEGATION |
-| doj_ceos_2025_026 | SOLICIT_IMAGERY | Carried_Out_Through | Snapchat |  | ADMITTED |
-| doj_ceos_2026_001 | ACQUIRE_MATERIAL | Carried_Out_Through | Instagram |  | ADMITTED |
-| doj_ceos_2026_001 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ADMITTED |
-| doj_safe_childhood_2023_420 | DIRECT_CONDUCT | Carried_Out_Through | Snapchat |  | ADMITTED |
-| ky_sp_2025_038 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Facebook Messenger |  | ADMITTED |
-| ncmec_2022_575 | INITIATE_CONTACT | Carried_Out_Through | Snapchat |  | ADMITTED |
+| case | act | action | relationship | platform_or_class | phrase | standing |
+|---|---|---|---|---|---|---|
+| anchorage_pd_2022_006 | e133 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Snapchat |  | ADVOCACY |
+| anchorage_pd_2022_007 | e077 | STORE_MATERIAL | Carried_Out_Through | Dropbox |  | ALLEGATION |
+| anchorage_pd_2022_007 | e176 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ALLEGATION |
+| doj_ceos_2025_026 | e035 | SOLICIT_IMAGERY | Carried_Out_Through | Snapchat |  | ADMITTED |
+| doj_ceos_2026_001 | e050 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ADMITTED |
+| doj_ceos_2026_001 | e056 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ADMITTED |
+| doj_ceos_2026_001 | e121 | ACQUIRE_MATERIAL | Carried_Out_Through | Instagram |  | ADMITTED |
+| doj_safe_childhood_2023_420 | e034 | DIRECT_CONDUCT | Carried_Out_Through | Snapchat |  | ADMITTED |
+| ky_sp_2025_038 | e052 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Facebook Messenger |  | ADMITTED |
+| ncmec_2022_575 | e077 | INITIATE_CONTACT | Carried_Out_Through | Snapchat |  | ADMITTED |
 
 ## Accuracy on the synthetic benchmark
 
@@ -377,10 +382,10 @@ Platform names and feature terms are kept verbatim in every split, so these rate
 | gold feature statements found | 1.0 (27/27) | 1.0 (30/30) | 1.0 (32/32) |
 | observed platforms the gold names in that sentence | 0.973 (71/73) | 0.926 (63/68) | 0.947 (71/75) |
 | observed feature phrases the gold codes as an affordance there | 0.973 (36/37) | 0.905 (38/42) | 0.947 (36/38) |
-| relationships that the gold also holds | 0.985 (65/66) | 0.903 (65/72) | 0.97 (32/33) |
+| relationships that the gold also holds | 0.985 (65/66) | 0.942 (65/69) | 0.97 (32/33) |
 | relationships to the right platform, wrong kind | 1 | 0 | 1 |
 | relationships to a platform the gold says is only named | 0 | 0 | 0 |
-| relationships on an act that is not a gold act | 0 | 3 | 0 |
+| relationships on an act that is not a gold act | 0 | 0 | 0 |
 | gold relationships found, on published acts | 0.903 (65/72) | 0.915 (65/71) | 0.762 (32/42) |
 | observations outside gold act sentences (not judged) | 20 | 20 | 20 |
 
@@ -487,6 +492,87 @@ Second look: these cases were scored once under resolve-1.0.0 before the 1.1.0 r
 Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
 
 
+### resolve-1.2.0, confirmation cases (wording written without sight of the rules; scored once)
+
+resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+
+| Measure | coder_A | coder_B | resolved | resolved_2b |
+|---|---:|---:|---:|---:|
+| gold acts found (recall) | 0.794 (196/247) | 0.733 (181/247) | 0.421 (104/247) | 0.457 (113/247) |
+| coded acts that are gold acts (precision) | 0.827 (196/237) | 0.595 (181/304) | 0.945 (104/110) | 0.95 (113/119) |
+| action code | 0.929 (182/196) | 0.818 (148/181) | 0.971 (101/104) | 0.973 (110/113) |
+| actor | 0.974 (191/196) | 0.757 (137/181) | 1.0 (104/104) | 0.991 (112/113) |
+| legal standing | 1.0 (196/196) | 1.0 (181/181) | 1.0 (104/104) | 1.0 (113/113) |
+| dates | 1.0 (94/94) | 1.0 (87/87) | 1.0 (64/64) | 1.0 (66/66) |
+| order relations: correct against the documented order | 0.889 (8/9) | 1.0 (5/5) | 1.0 (1/1) | 1.0 (2/2) |
+| order relations: reversed | 0 | 0 | 0 | 0 |
+| order relations: not documented | 0 | 0 | 0 | 0 |
+| gold sequence sentences recovered (stated order recall) | 0.1 (8/80) | 0.062 (5/80) | 0.013 (1/80) | 0.025 (2/80) |
+| gold-ordered pairs also ordered, both acts coded | 0.598 (153/256) | 0.573 (138/241) | 0.732 (71/97) | 0.675 (77/114) |
+| gold-ordered pairs also ordered, all | 0.34 (153/450) | 0.307 (138/450) | 0.158 (71/450) | 0.171 (77/450) |
+| level C found (recall) | 0.516 (16/31) | 0.607 (17/28) | 0.625 (10/16) | 0.625 (10/16) |
+| level C correct (precision) | 1.0 (16/16) | 1.0 (17/17) | 1.0 (10/10) | 1.0 (10/10) |
+| harms found (recall) | 0.81 (34/42) | 0.674 (31/46) | 0.833 (15/18) | 0.864 (19/22) |
+| harms correct (precision) | 1.0 (34/34) | 0.838 (31/37) | 1.0 (15/15) | 1.0 (19/19) |
+| possible retellings linked | 0.0 (0/27) | 0.0 (0/27) | 0.222 (6/27) | 0.259 (7/27) |
+
+Recall of the released coding by hard-case tag: advocacy 0.273 (3/11); allegation 0.5 (8/16); allegation_only 0.111 (1/9); explicit_order 0.303 (23/76); harm 0.353 (18/51); interrupted 0.75 (6/8); level_c 0.5 (16/32); mention_only 0.0 (0/11); no_level_c 0.455 (10/22); procedure 0.5 (20/40); response 0.0 (0/14); retelling 0.407 (11/27); undated 0.396 (19/48); undercover 0.55 (11/20).
+
+
+### resolve-1.2.0, development cases (rules were tuned on these)
+
+resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+
+| Measure | coder_A | coder_B | resolved | resolved_2b |
+|---|---:|---:|---:|---:|
+| gold acts found (recall) | 0.963 (233/242) | 0.909 (220/242) | 0.773 (187/242) | 0.872 (211/242) |
+| coded acts that are gold acts (precision) | 0.975 (233/239) | 0.853 (220/258) | 0.995 (187/188) | 0.995 (211/212) |
+| action code | 0.957 (223/233) | 0.841 (185/220) | 0.957 (179/187) | 0.962 (203/211) |
+| actor | 1.0 (233/233) | 0.991 (218/220) | 1.0 (187/187) | 1.0 (211/211) |
+| legal standing | 1.0 (233/233) | 1.0 (220/220) | 1.0 (187/187) | 1.0 (211/211) |
+| dates | 1.0 (117/117) | 1.0 (117/117) | 1.0 (108/108) | 1.0 (113/113) |
+| order relations: correct against the documented order | 0.911 (41/45) | 0.875 (35/40) | 0.952 (20/21) | 0.973 (36/37) |
+| order relations: reversed | 0 | 0 | 0 | 0 |
+| order relations: not documented | 0 | 0 | 0 | 0 |
+| gold sequence sentences recovered (stated order recall) | 0.506 (41/81) | 0.432 (35/81) | 0.247 (20/81) | 0.444 (36/81) |
+| gold-ordered pairs also ordered, both acts coded | 0.722 (340/471) | 0.756 (329/435) | 0.757 (253/334) | 0.77 (314/408) |
+| gold-ordered pairs also ordered, all | 0.695 (340/489) | 0.673 (329/489) | 0.517 (253/489) | 0.642 (314/489) |
+| level C found (recall) | 0.963 (26/27) | 0.963 (26/27) | 0.958 (23/24) | 0.963 (26/27) |
+| level C correct (precision) | 0.963 (26/27) | 0.963 (26/27) | 1.0 (23/23) | 0.963 (26/27) |
+| harms found (recall) | 0.894 (42/47) | 0.636 (28/44) | 0.848 (28/33) | 0.886 (39/44) |
+| harms correct (precision) | 1.0 (42/42) | 0.933 (28/30) | 1.0 (28/28) | 1.0 (39/39) |
+| possible retellings linked | 0.0 (0/24) | 0.0 (0/24) | 0.583 (14/24) | 0.667 (16/24) |
+
+Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
+
+
+### resolve-1.2.0, held-out cases
+
+resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+
+| Measure | coder_A | coder_B | resolved | resolved_2b |
+|---|---:|---:|---:|---:|
+| gold acts found (recall) | 0.934 (213/228) | 0.842 (192/228) | 0.671 (153/228) | 0.768 (175/228) |
+| coded acts that are gold acts (precision) | 0.955 (213/223) | 0.869 (192/221) | 0.975 (153/157) | 0.978 (175/179) |
+| action code | 0.93 (198/213) | 0.766 (147/192) | 0.915 (140/153) | 0.926 (162/175) |
+| actor | 0.967 (206/213) | 0.964 (185/192) | 0.993 (152/153) | 0.989 (173/175) |
+| legal standing | 1.0 (213/213) | 1.0 (192/192) | 1.0 (153/153) | 1.0 (175/175) |
+| dates | 1.0 (119/119) | 1.0 (110/110) | 1.0 (106/106) | 1.0 (107/107) |
+| order relations: correct against the documented order | 0.676 (23/34) | 0.733 (22/30) | 0.857 (6/7) | 0.733 (11/15) |
+| order relations: reversed | 0 | 0 | 0 | 0 |
+| order relations: not documented | 0 | 0 | 0 | 0 |
+| gold sequence sentences recovered (stated order recall) | 0.299 (23/77) | 0.286 (22/77) | 0.078 (6/77) | 0.143 (11/77) |
+| gold-ordered pairs also ordered, both acts coded | 0.746 (314/421) | 0.749 (269/359) | 0.804 (226/281) | 0.767 (240/313) |
+| gold-ordered pairs also ordered, all | 0.667 (314/471) | 0.571 (269/471) | 0.48 (226/471) | 0.51 (240/471) |
+| level C found (recall) | 0.931 (27/29) | 0.933 (28/30) | 0.926 (25/27) | 0.929 (26/28) |
+| level C correct (precision) | 0.871 (27/31) | 0.875 (28/32) | 0.862 (25/29) | 0.867 (26/30) |
+| harms found (recall) | 0.8 (32/40) | 0.444 (16/36) | 0.727 (16/22) | 0.786 (22/28) |
+| harms correct (precision) | 0.97 (32/33) | 0.762 (16/21) | 1.0 (16/16) | 1.0 (22/22) |
+| possible retellings linked | 0.0 (0/18) | 0.0 (0/18) | 0.556 (10/18) | 0.556 (10/18) |
+
+Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
+
+
 ## Agreement with reference coding of real cases
 
 Cases `anchorage_pd_2022_006`, `doj_ceos_2025_026`, `ncis_2023_001`, `svicac_2022_009`, `texas_ag_2019_013` were coded earlier by two agent coders of a larger model (their agreed coding, not adjudicated). For each non-procedure act published here: did the reference code an act in the same sentence, and did it give the same action code there. The reference is another coding and does not code every act; this is agreement, not accuracy.
@@ -501,7 +587,7 @@ Cases `anchorage_pd_2022_006`, `doj_ceos_2025_026`, `ncis_2023_001`, `svicac_202
 
 ## Privacy
 
-189 committed files checked against 248 deny-list terms (names from the case captions) and 6940 stored quotes; 988 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
+189 committed files checked against 248 deny-list terms (names from the case captions) and 6940 stored quotes; 982 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
 
 ## Runtime
 

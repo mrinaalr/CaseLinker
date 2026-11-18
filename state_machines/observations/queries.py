@@ -57,8 +57,8 @@ SELECT ?description (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WH
 } GROUP BY ?action ORDER BY DESC(?acts) ?action"""},
     "supported": {
         "title": "Level 3. Where does a record state that an act was done by means of a platform or feature?",
-        "columns": ["case", "action", "relationship", "platform_or_class", "phrase", "standing"],
-        "sparql": PREFIXES + """SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
+        "columns": ["case", "act", "action", "relationship", "platform_or_class", "phrase", "standing"],
+        "sparql": PREFIXES + """SELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {
   GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .
               ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)
               OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
@@ -68,7 +68,8 @@ SELECT ?description (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WH
   FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))
   BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
   BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
-} ORDER BY ?case ?action ?what"""},
+  BIND(REPLACE(STR(?act), "^.*[/#:-](e[0-9]+)$", "$1") AS ?event)
+} ORDER BY ?case ?event ?what"""},
 }
 
 

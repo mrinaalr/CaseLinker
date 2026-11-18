@@ -39,7 +39,7 @@ python -m state_machines.coding.pipeline release pacer-v1 <case> [...] --observa
 
 | Step | Tool | Output |
 |---|---|---|
-| 1. Page text | `workflow.py extract` | per page: text (text layer, or OCR with the page image checked) and its hash, under `local/pacer_text/<case_id>/` |
+| 1. Page text | `workflow.py extract` | per page: text (text layer, or OCR; the OCR text is not checked against the page image) and its hash, under `local/pacer_text/<case_id>/` |
 | 2. Draft | each coder, following the [coder guide](../evidence/CODER_GUIDE.md) | a draft bundle per coder, with quotes in the local store |
 | 3. Check | `workflow.py check` | validation findings (T01–T19) against the page text |
 | 4. Compile | `workflow.py compile` | the coder's bundle: passages located and hashed, quotes kept local |
@@ -72,7 +72,7 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
   The 8B model was slower and not more accurate; `llama3.1:8b` ran about 50 s a page under the old prompt.
 - **Requests in flight:** on synthetic pages two in flight gave 5.1 s per page against 7.9 s serial. Real filings are denser (prompts of about 1,400 tokens, answers of 200–900 tokens, up to 24 acts a page) and cost about 19–22 s per page with `qwen3:4b`; going from two to four in flight barely helps there, because the GPU's memory bandwidth, not request concurrency, is the limit, and four slots cost about 2.5 GB more cache (the memory guard then pauses the run). Two is the default.
 - **The 30 real cases** therefore take about 4 hours for coder_A and, with the selective second pass, about 1.5 hours for coder_B on this laptop. Shorter answers would be faster but would change what the benchmark measured, so they were not used.
-- **Page routing for the 30 real cases:** 1,027 pages; 201 docket pages to the parser (procedure entries only), 60 judgment form pages skipped, 766 pages read by the models. Every substantive filing is read.
+- **Page routing for the 30 real cases:** 1,147 pages; 201 docket pages to the parser (procedure entries only), 60 judgment form pages skipped, 886 pages read by the first coder and 878 by the second (it skips a page where the first found no act). Every substantive filing is read.
 - **Rejected: a page prefilter.** On the pilot's real pages (agent-coded), the best keyword prefilter kept 90% of pages with acts while saving only 19% of model pages; the strictest kept 71%. Losing acts to save time is not acceptable, so every non-docket, non-form page is read.
 - **Memory:** a dedicated Ollama server (`models.json` `runtime`) with one model loaded, an 8-bit KV cache, flash attention and an 8k context; the coder pauses while free memory is under 20% instead of swapping.
 - **Selective second pass (`--selective`):** the second coder reads only pages where the first found acts. The release is unchanged (only acts both coded are published); reliability is then reported on those pages.
@@ -94,7 +94,7 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 
 **Rule 2b, evaluated and not adopted.** Where both coders cite the same sentence and actor but give different codes, [`cues.py`](cues.py) reads the sentence against a cue table written from the codebook definitions and takes the one code it cues (`pipeline resolve --settle-codes`, output in `resolved_2b`).
 - On the synthetic benchmark it recovers acts at no cost in precision.
-- On five real cases its codes agreed with reference coding less often than codes both models gave (numbers in each release's `REPORT.md`): real sentences are long and often state several acts.
+- On five real cases its codes agreed with reference coding less often than codes both models gave (7 of 11 sentences against 19 of 24; the candidate's scores are in `benchmark/results/` under `resolved_2b`): real sentences are long and often state several acts.
 - A machine release states that two coders agreed on everything published. Settled codes are one coder's code confirmed by a word rule, so they are not published. The rule stays in the code, off, so the measurement can be repeated.
 
 Everything else is left out and counted. What the record names (platforms, feature phrases) does not depend on this rule: the [observation layer](../observations/README.md) reads it from the pages and publishes it apart from the acts. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
