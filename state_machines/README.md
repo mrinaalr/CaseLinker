@@ -33,7 +33,7 @@ flowchart LR
 | [`trajectories/`](trajectories/) | Views derived from it: the documented partial order, maximal chains, affordance levels, the AfH sets, the `/lifecycle` payload | [trajectories](trajectories/README.md) |
 | [`graphs/`](graphs/) | CASE/UCO/CAC emission with the CASE-UCO SDK, SHACL against the full CAC shape set, releases, Oxigraph loading | [graphs](graphs/README.md) |
 | [`coding/`](coding/) | The workflow that produces bundles: page text, two pinned local model coders, agreement, machine resolution, optional adjudication | [coding](coding/README.md) |
-| [`benchmark/`](benchmark/) | Synthetic gold cases (dev and held-out) and the scorer that measures the coders' accuracy on known truth | [benchmark](benchmark/README.md) |
+| [`benchmark/`](benchmark/) | Synthetic gold cases (dev, held-out and a blind confirmation split) and the scorer that measures the coders' accuracy on known truth | [benchmark](benchmark/README.md) |
 | [`theory/`](theory/) | Finite transition systems for feasible pathways (AfH Appendix X) | [theory](theory/README.md) |
 
 ## The documented event graph
