@@ -166,7 +166,7 @@ def resolve(a: dict, b: dict) -> Tuple[dict, dict]:
             e["time"]["conflict_flagged"] = True
             report["dates: conflicting assertions kept and flagged"] += 1
         e["review"] = {"status": "agreed", "coders": list(CODERS), "adjudicator": None,
-                       "note": f"matched {ib} in coder_B; {RULE_VERSION}"}
+                       "note": f"coded by both coders; {RULE_VERSION}"}
         keep[ia] = e
     core["events"] = [keep[k] for k in sorted(keep)]
     report["published: events both coders coded"] = len(keep)
