@@ -95,7 +95,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         for threshold in ("DIRECT", "INFERRED"):
             (root / "derived" / f"{case_id}.{threshold.lower()}.json").write_text(derived_json(bundle, threshold), encoding="utf-8")
         ev = serialize(evidence_graph(bundle))
-        tr = serialize(trajectory_graph(bundle, derive(bundle, "INFERRED")))
+        derived_inferred = derive(bundle, "INFERRED")
+        chains = sum(len(t["trajectories"]) for t in derived_inferred["tracks"])
+        tr = serialize(trajectory_graph(bundle, derived_inferred))
         (root / "graphs" / f"{case_id}.evidence.jsonld").write_text(ev, encoding="utf-8")
         (root / "graphs" / f"{case_id}.trajectories.jsonld").write_text(tr, encoding="utf-8")
         shacl = validation_report(ev, tr)
@@ -107,7 +109,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "passages": {"total": len(bundle["passages"]),
                          "ocr_text_only": sum(p["verification"].get("method") == "ocr_text_exact" for p in bundle["passages"])},
             "graphs": {"evidence": {"iri": graph_iri(case_id, "evidence"), "sha256": _sha(ev)},
-                       "trajectories": {"iri": graph_iri(case_id, "trajectories"), "sha256": _sha(tr)}},
+                       "trajectories": {"iri": graph_iri(case_id, "trajectories"), "sha256": _sha(tr), "chains": chains}},
             "shacl": {"conformance": shacl["conformance"], "violations": len(shacl["violations"]),
                       "upstream_defect_violations": len(shacl["upstream_defect_violations"]),
                       "applicable_skipped": shacl["applicable_skipped"]},
@@ -138,7 +140,7 @@ def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = Non
     ds = rdflib.Dataset()
     for c in manifest["cases"]:
         for kind, meta in c["graphs"].items():
-            if kind not in SELECTIONS[select]:
+            if kind not in SELECTIONS[select] or meta.get("chains") == 0:   # an empty graph has nothing to load
                 continue
             text = (root / "graphs" / f"{c['case_id']}.{kind}.jsonld").read_text(encoding="utf-8")
             if _sha(text) != meta["sha256"]:
@@ -158,7 +160,8 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     problems: List[str] = []
     rows = query("SELECT ?g (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } } GROUP BY ?g")
     counts = {r["g"]: int(r["n"]) for r in rows}
-    expected = {meta["iri"] for c in manifest["cases"] for kind, meta in c["graphs"].items() if kind in SELECTIONS[select]}
+    expected = {meta["iri"] for c in manifest["cases"] for kind, meta in c["graphs"].items()
+                if kind in SELECTIONS[select] and meta.get("chains") != 0}   # a case with no offender chain has no trajectory graph
     present = {g for g in counts if g.startswith(GRAPH_PREFIX)}
     for g in sorted(expected - present):
         problems.append(f"missing PACER graph {g}")

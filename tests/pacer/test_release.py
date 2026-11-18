@@ -177,3 +177,17 @@ def test_privacy_scan_finds_a_name_or_quote_in_committed_files(tmp_path):
     g.write_text(g.read_text() + "\n// Jordan Example " + next(iter(quotes.values())), encoding="utf-8")
     kinds = {h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]}
     assert kinds == {"deny", "quote"}
+
+
+def test_a_case_without_offender_chains_has_no_trajectory_graph_to_load(tmp_path):
+    b = _adjudicated(F.build()[0])
+    keep = {e["event_id"] for e in b["events"] if e["action"].startswith(("LE_", "RESP_"))}
+    b["events"] = [e for e in b["events"] if e["event_id"] in keep]
+    b["relations"] = [r for r in b["relations"] if r["from_event"] in keep and r["to_event"] in keep]
+    b["tracks"] = [dict(t, event_ids=[x for x in t["event_ids"] if x in keep]) for t in b["tracks"]]
+    root = _release(tmp_path, b)
+    m = build("test-v1", data_root=root, text_root=tmp_path / "text")
+    assert m["cases"][0]["graphs"]["trajectories"]["chains"] == 0
+    ds = rdflib.Dataset()
+    ds.parse(nquads("test-v1", data_root=root, out=tmp_path / "all.nq"), format="nquads")
+    assert verify_store(m, _query(ds)) == []
