@@ -8,6 +8,7 @@ The graphs bind to existing vocabulary first. `clt:` carries only what those voc
 - [What existing vocabulary carries](#what-existing-vocabulary-carries)
 - [Why each local term exists](#why-each-local-term-exists)
 - [Candidates for an existing term](#candidates-for-an-existing-term)
+- [Existing trajectory vocabularies](#existing-trajectory-vocabularies)
 
 ## What existing vocabulary carries
 
@@ -54,3 +55,14 @@ Terms whose meaning an existing term may cover. None is changed in this release:
 | `derivationRule` | `prov:wasGeneratedBy` | PROV-O is not vendored or validated here |
 | `actionCode` and the other code properties | a SKOS concept scheme | SKOS is not vendored; codes would become IRIs |
 | `featureTerm` on an observation | `oa:TextualBody` | Kept so a phrase reads the same on an observation and on a level-C relationship |
+
+## Existing trajectory vocabularies
+
+Two existing vocabularies model offence trajectories. Neither is used yet, for the reasons below; both are the first place to look before any new trajectory term.
+
+| Vocabulary | What it models | Fit | Blocker |
+|---|---|---|---|
+| CASE-UCO SDK `ext.trajectories` (`traj:State`, `Transition`, `Trajectory`, `PhaseAssertion`, `StateMachineModel`, `TransitionEstimate`) | A subject occupying a state or phase over an interval; transitions between states; an estimated state machine with transition probabilities | Could carry the derived view (`stepIndex` and the other step terms) and is the natural home for the [theory](../../../state_machines/theory/README.md) layer's transition systems | Its namespace is `http://example.org/ontology/trajectories`, a placeholder, in SDK 1.34.0; it is not vendored or validated here; and it orders phase assertions, while the record gives dated acts with no phases |
+| CAC 3.1.0 `cac-platforms:AffordanceMisuse` (`affordanceClass`, `enablesTransitionFrom`, `enablesTransitionTo`, `platform`) | An affordance on a trajectory edge, enabling the transition from one `cac-core:Phase` to another | The closest existing term to a level-3 feature relationship | It states that the affordance *enabled* a phase transition. The record supports "the act was done by means of this feature"; enablement and phases are claims of the model, not of the source |
+
+The evidence terms that make up most of `clt:` (assertion status, legal standing, partial dates, codes) are outside both.
