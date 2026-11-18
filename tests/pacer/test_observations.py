@@ -129,6 +129,7 @@ def test_a_relationship_needs_the_act_sentence_to_state_the_means(tmp_path):
     ("platform", "The defendant uploaded the images to Kitebox.", "Kitebox", "Carried_Out_Through"),
     ("platform", "The defendant told Minor Victim 1 to continue their conversation on Kitebox.", "Kitebox", "Moved_To"),
     ("platform", "Minor Victim 1 then sent the defendant three images over Kitebox.", "Kitebox", "Carried_Out_Through"),
+    ("platform", "The defendant first contacted her in May, when Minor Victim 1 wrote back to him via Kitebox.", "Kitebox", "Carried_Out_Through"),   # both sides of a conversation
 ])
 def test_the_means_must_be_stated_in_the_offenders_own_clause(kind, sentence, term, expected):
     o = {"kind": kind, "named_as": term, "platform": term, "feature_term": term}

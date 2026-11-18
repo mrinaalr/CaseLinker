@@ -48,18 +48,33 @@ python -m state_machines.coding.pipeline release <release_id> <case> [...] --obs
 
 ## Supported relationships
 
-`relate` ties an observation to a published offender act only when both hold:
+`relate` ties an observation to a published offender act only when all of these hold:
 
-1. the observed term lies inside the sentence the act cites;
-2. that sentence states the means.
+1. the observed term lies inside the sentence the act cites, and no other published act cites that sentence;
+2. a cue and the term stand together in one clause of it;
+3. that clause is not a third party's doing, and nothing before the cue in it negates or denies it.
 
 | Kind | Construction | Relationship |
 |---|---|---|
-| Platform | "through / via / using / on / over the Kitebox application", "in a Kitebox group" | `Carried_Out_Through` |
-| Platform | the same after "moved / continued / switched ... to" | `Moved_To` |
-| Feature | "used / using / through / with the disappearing-message feature", or the feature is what the act made or sent ("created a new account under a false name", "posted ... in a group chat") | `Supports_Action` |
+| Platform | "through / via / using / over / by means of the Kitebox application" | `Carried_Out_Through` |
+| Platform | "on Kitebox" after a verb of the conduct ("contacted her on Kitebox") | `Carried_Out_Through` |
+| Platform | "uploaded / posted / saved ... to Dropbox"; "in a Kitebox group" | `Carried_Out_Through` |
+| Platform | "moved / continued / switched ... to, on or onto Kitebox" | `Moved_To` |
+| Feature | "used / using / through / with the disappearing-message feature", or the feature is what the act made or sent ("created a new account under a false name") | `Supports_Action` |
 
-A negated sentence ("did not reply on Kitebox"), a platform that is only present ("had the Snapwire application installed") and a non-offender act give no relationship.
+What gives no relationship:
+
+| Sentence | Why |
+|---|---|
+| "... and her mother reported the account to Kitebox" | a recipient, in a third party's clause |
+| "... and agents served a warrant on Kitebox" | a third party's act; "served" is not the offender's conduct |
+| "He denied that he had ever asked her for images through Kitebox" | a denial |
+| "He told her to download Kitebox" | an infinitive, not a means |
+| "... after she used a fake name" | a feature someone else used |
+| "He had the Snapwire application installed" | present, not a means |
+| "He wrote to her through Kitebox and later drove to her home" (two published acts cite it) | the sentence does not say which act the means belongs to |
+
+A platform carries both sides of a conversation, so a clause about the victim ("when Minor Victim 1 wrote back via Kitebox") can still state the means of the offender's act. A feature cannot be borrowed that way.
 
 ## Dates
 
@@ -74,7 +89,7 @@ No new vocabulary. An observation is a W3C Web Annotation, the pattern the evide
 | platform observation | `oa:Annotation`, `oa:motivatedBy oa:identifying`, `oa:hasBody` the platform (`uco-observable:ObservableObject`, the IRI the evidence graph uses) |
 | feature observation | `oa:Annotation`, `oa:motivatedBy oa:classifying`, `oa:hasBody` the CAC affordance class, `clt:featureTerm` the phrase. The passage is classified; no individual of the class is created |
 | source | `oa:SpecificResource` on the document, page `oa:FragmentSelector` refined by `oa:TextPositionSelector`; `clt:quoteSha256`, `clt:pageTextSha256`, `clt:sourceStatus` |
-| rule | `clt:derivationRule "observe-1.1.0"` on every observation |
+| rule | `clt:derivationRule "observe-1.2.0"` on every observation |
 | supported relationship | the canonical relationship (`Carried_Out_Through`, `Moved_To`, `Supports_Action`) under the IRI the evidence graph would use, plus an evidence `oa:Annotation` on the observation's own target |
 
 Graph IRI: `urn:caselinker:pacer:<case>:observations`. A case with nothing observed has no observation graph.
@@ -121,21 +136,29 @@ python -m state_machines.observations.validation score pacer-v2 <downloaded deci
 
 ## Measured
 
-On the [synthetic benchmark](../benchmark/README.md) (`pipeline bench-observations --split <split> --record`). The rule was developed on dev; held-out and confirm were scored once after it was committed.
+On the [synthetic benchmark](../benchmark/README.md) (`pipeline bench-observations --split <split> --record`), rule `observe-1.2.0`:
 
 | Measure | Dev | Held-out | Confirm |
 |---|---:|---:|---:|
 | Gold platform mentions found | 71/71 | 63/63 | 71/71 |
 | Gold feature statements found | 27/27 | 30/30 | 32/32 |
-| Relationships the gold also holds | 67/68 | 67/74 | 33/33 |
+| Relationships the gold also holds, same kind | 65/66 | 65/72 | 32/33 |
+| Relationships to the right platform, wrong kind | 1 | 0 | 1 |
 | Relationships to a platform the gold says is only named | 0 | 0 | 0 |
-| Gold relationships found, on published acts | 67/72 | 67/71 | 33/42 |
+| Relationships on an act that is not a gold act | 0 | 3 | 0 |
+| Gold relationships found, on published acts | 65/72 | 65/71 | 32/42 |
 
-On the 30 real cases (`pacer-v2`, rule `observe-1.1.0`): 497 observations (478 platform, 19 feature); 22 cases name a listed platform and 10 state a feature phrase; 59 distinct case-platform pairs; 12 observations tied to a published act, in 9 cases. Rule 1.1.0 differs from 1.0.0 only in merging aliases and dropping "website"; its benchmark scores are identical.
+History of the rule, so the numbers can be read correctly:
+- **1.0.0** was developed on dev and scored once on held-out and confirm.
+- **1.1.0** merged aliases and dropped "website", from the audit of the real cases.
+- **1.2.0** followed an independent review that found relationships asserted without a stated means. The relationship rule was rewritten on the reviewer's examples, the dev cases and the structure of the real cases' relationships, and the scorer was made to require the relationship kind. Held-out and confirm are therefore a later look, not a first one.
+
+On the 30 real cases (`pacer-v2`): 497 observations (478 platform, 19 feature); 22 cases name a listed platform and 10 state a feature phrase; 59 distinct case-platform pairs; 10 acts tied to a platform by a stated means, in 7 cases; no act tied to a feature. The review removed two relationships: one resting on a bare "to", and one feature in a clause whose subject was "they".
 
 ## Limits
 
 - **Listed terms only.** A service or a feature wording that is not on the lists is not observed. All benchmark splits keep platform names and feature terms verbatim, so the rates above measure finding listed terms in new sentence constructions, not recognising new wording.
 - **Real-text review is the reviewer's to do.** Until `validation.json` exists, the release report says the observations are not yet reviewed. On the five reference cases the three listed platforms the reference coding names were all observed, and the reference names four platform surfaces that are not on the list.
 - **Features are rare in court records.** 19 feature statements in 30 cases. The records name platforms far more often than they describe capabilities.
-- **Relationships are few because acts are few.** A relationship needs a published act in that sentence, and the release publishes 152 offender acts.
+- **Relationships are few because acts are few, and the rule prefers silence.** A relationship needs a published act in that sentence (the release publishes 152 offender acts) and a construction the rule recognises. A true means stated another way is not tied.
+- **Known rough edges with no hit in the 30 cases:** "Line 7" or a surname "Tor" would be observed; a hyphenated feature phrase broken across a line stops the build; a relationship can take a different IRI from the evidence graph's when the two rules disagree on "through" versus "moved to".

@@ -103,21 +103,25 @@ _FEATURE_MEANS = (r"\b(?P<cue>through|via|using|used|uses|by means of|with|utili
                   r"created|creating|made|making|opened|set up|registered|published|posted|sent|shared|joined|ran|operated|"
                   r"administered|maintained|installed)\s+(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
 _CLAUSE_BREAK = re.compile(r"[,;]\s+(?:and|but|while|when|after|before|because|which|who|so)\b|;\s+|\s(?:and then|after|before|when|while|because)\s", re.I)
-_OTHER_SUBJECT = re.compile(r"^\s*(?:and\s+|but\s+|then\s+|later\s+|after\s+|before\s+|when\s+|while\s+|because\s+|which\s+|who\s+|so\s+)*"
-                            r"(?:she|they|her\s+\w+|his\s+(?:mother|father|parents?)|(?:the\s+)?(?:mother|father|parents?|agents?|officers?|"
-                            r"detectives?|investigators?|police|law enforcement|government|court|victim|minor|platform|company)\b|"
-                            r"Minor Victim|MV-?\d|Victim\s+\w|Jane Doe|John Doe|an?\s+(?:undercover|agent|officer)|the undercover|NCMEC|FBI|HSI)", re.I)
+_LEAD = r"^\s*(?:and\s+|but\s+|then\s+|later\s+|after\s+|before\s+|when\s+|while\s+|because\s+|which\s+|who\s+|so\s+)*"
+# a clause whose subject is a third party is never the offender's act ("..., and agents served a warrant on Kitebox")
+_THIRD_PARTY = (r"(?:her\s+\w+|his\s+(?:mother|father|parents?)|(?:the\s+)?(?:mother|father|parents?|agents?|officers?|detectives?|"
+                r"investigators?|police|law enforcement|government|court|platform|company)\b|an?\s+(?:agent|officer)|NCMEC|FBI|HSI)")
+# a platform carries both sides of a conversation, so a clause about the victim ("when Minor Victim 1 wrote back via Kitebox")
+# can still state the means of the offender's act; a feature someone else used ("after she used a fake name") cannot
+_OTHER_PARTY = (r"(?:she|they|(?:the\s+)?(?:victim|minor)\b|Minor Victim|MV-?\d|Victim\s+\w|Jane Doe|John Doe|an?\s+undercover|the undercover)")
+_OTHER_SUBJECT = {"platform": re.compile(_LEAD + _THIRD_PARTY, re.I), "feature": re.compile(_LEAD + "(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + ")", re.I)}
 _NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies|deny|declined|refused)\b", re.I)
 
 
-def _own_clause(sentence: str, at: int) -> Optional[Tuple[int, str]]:
+def _own_clause(sentence: str, at: int, kind: str = "feature") -> Optional[Tuple[int, str]]:
     """The clause holding offset ``at``, up to it: (start, text). None when that clause is not the
-    opening one and its subject is someone other than the offender ("..., and agents served ...")."""
+    opening one and its subject cannot be doing the offender's act ("..., and agents served ...")."""
     start = 0
     for m in _CLAUSE_BREAK.finditer(sentence[:at]):
         start = m.start()
     clause = sentence[start:at]
-    if start > 0 and _OTHER_SUBJECT.search(re.sub(r"^[,;\s]+", "", clause)):
+    if start > 0 and _OTHER_SUBJECT[kind].search(re.sub(r"^[,;\s]+", "", clause)):
         return None
     return start, clause
 
@@ -228,7 +232,7 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
         patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), 0 if o["feature_term"] in ("Tor", "VPN") else re.I)]
     for rel, pattern, flags in patterns:
         for m in re.finditer(pattern, sentence, flags):
-            own = _own_clause(sentence, m.end())
+            own = _own_clause(sentence, m.end(), kind)
             if own is None or m.start() < own[0]:           # another subject's clause, or cue and term in different clauses
                 continue
             if _NEGATED.search(sentence[own[0]:m.start("cue")]):

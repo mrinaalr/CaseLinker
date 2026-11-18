@@ -126,8 +126,8 @@ Read by rule from every page except docket sheets, independent of the coders. An
 | cases naming at least one listed platform | 22 |
 | cases stating at least one feature phrase | 10 |
 | distinct case-platform pairs | 59 |
-| observations tied to a published act by a stated means | 12 |
-| cases with at least one such relationship | 9 |
+| observations tied to a published act by a stated means | 10 |
+| cases with at least one such relationship | 7 |
 | observations in documents with standing ADVOCACY | 82 |
 | observations in documents with standing ALLEGATION | 200 |
 | observations in documents with standing COURT_RECORD | 19 |
@@ -270,9 +270,7 @@ SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
 | case | action | relationship | platform_or_class | phrase | standing |
 |---|---|---|---|---|---|
 | anchorage_pd_2022_006 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Snapchat |  | ADVOCACY |
-| doj_ceos_2025_023 | COMMUNICATE | Supports_Action | UnmonitoredCommunication | encrypted | ADMITTED |
 | enticement | SOLICIT_IMAGERY | Carried_Out_Through | Snapchat |  | ADMITTED |
-| external_extortion | DISTRIBUTE_MATERIAL | Carried_Out_Through | Snapchat |  | ADVOCACY |
 | ky_sp_2025_038 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Facebook Messenger |  | ADMITTED |
 | ncmec_2022_586 | INITIATE_CONTACT | Carried_Out_Through | Snapchat |  | ADMITTED |
 | ncmec_2023_190 | DIRECT_CONDUCT | Carried_Out_Through | Snapchat |  | ADMITTED |
@@ -285,7 +283,7 @@ SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
 
 Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.
 
-### Observation layer (observe-1.1.0)
+### Observation layer (observe-1.2.0)
 
 Platform names and feature terms are kept verbatim in every split, so these rates measure finding listed terms in new sentence constructions, not recognising unlisted wording.
 
@@ -295,10 +293,11 @@ Platform names and feature terms are kept verbatim in every split, so these rate
 | gold feature statements found | 1.0 (27/27) | 1.0 (30/30) | 1.0 (32/32) |
 | observed platforms the gold names in that sentence | 0.973 (71/73) | 0.926 (63/68) | 0.947 (71/75) |
 | observed feature phrases the gold codes as an affordance there | 0.973 (36/37) | 0.905 (38/42) | 0.947 (36/38) |
-| relationships that the gold also holds | 0.985 (67/68) | 0.905 (67/74) | 1.0 (33/33) |
+| relationships that the gold also holds | 0.985 (65/66) | 0.903 (65/72) | 0.97 (32/33) |
+| relationships to the right platform, wrong kind | 1 | 0 | 1 |
 | relationships to a platform the gold says is only named | 0 | 0 | 0 |
-| relationships on an act that is not a gold act | 1 | 3 | 0 |
-| gold relationships found, on published acts | 0.931 (67/72) | 0.944 (67/71) | 0.786 (33/42) |
+| relationships on an act that is not a gold act | 0 | 3 | 0 |
+| gold relationships found, on published acts | 0.903 (65/72) | 0.915 (65/71) | 0.762 (32/42) |
 | observations outside gold act sentences (not judged) | 20 | 20 | 20 |
 
 ### resolve-1.0.0, held-out cases
