@@ -32,11 +32,24 @@ MONTHS = {m.lower(): i for i, m in enumerate(calendar.month_name) if m}
 MONTHS.update({m.lower(): i for i, m in enumerate(calendar.month_abbr) if m})
 
 _VICTIM = re.compile(r"\b(?:Minor Victim|Victim|MV|Minor|Child Victim|CV)[\s-]?(\d+)\b|\bthe (?:minor|child|victim)\b", re.I)
+# designations by letter or pseudonym, as real filings write them ("Minor Victim A", "Victim B", "Jane Doe 2");
+# case-sensitive, and a bare "Victim A" / "Minor I" is not read as a designation
+_VICTIM_LETTER = re.compile(r"\b(?:Minor Victim|MINOR VICTIM|Child Victim)[\s-]([A-Z])\b|\b(?:Victim|VICTIM|MV|CV|Minor|MINOR)[\s-]?([B-HJ-Z])\b(?!\.)")
+_VICTIM_DOE = re.compile(r"\b(?:Jane|John|JANE|JOHN) (?:Doe|DOE)(?:[\s-]?(?:No\. ?|#)?(\d+))?\b")
+_MINOR_WORDS = re.compile(r"\b(?:minor|child|juvenile|years? old|year-old|had not attained|under the age of)\b", re.I)
 _PERSONA = re.compile(r"\b(?:an? |the )?undercover (?:agent|officer|employee|detective|persona)\b|\bUC\b|\bOCE\b", re.I)
 _RECIPIENTS = re.compile(r"\b(?:other (?:users|members|people|individuals)|\d+ (?:other )?(?:users|members|people)|the (?:group|members))\b", re.I)
 _SEQ = re.compile(r"^(?:After|Following|Then|Thereafter|Later|Next|Subsequently|In response|Afterward|Afterwards|Shortly after|"
                   r"The next day|Within (?:a|one|two|\d+) (?:day|days|hour|hours))\b", re.I)
 _THEN = re.compile(r"^[^,]{0,80}\b(?:then|thereafter|subsequently|in response)\b", re.I)
+_AFTER = re.compile(r"^(?:Shortly after|After|Following)\b", re.I)
+REFERENTS = [  # what an "After ..." clause refers to, by the earlier act's code
+    (r"first (?:contact|conversation|message|communication)|initial contact", {"INITIATE_CONTACT"}),
+    (r"block", {"RESP_BLOCK"}), (r"report", {"RESP_REPORT"}), (r"refus|declin", {"RESP_REFUSE"}),
+    (r"meeting|arrang", {"ARRANGE_MEETING"}), (r"arrest", {"LE_ARREST"}), (r"threat", {"THREATEN_EXPOSURE", "THREATEN_HARM"}),
+    (r"images|photos|pictures|video", {"RECEIVE_SELF_GENERATED", "SOLICIT_IMAGERY"}),
+]
+_HEADER = re.compile(r"^Case \S+ Document \S+ Filed \S+ Page \d+ of \d+\s*", re.I)   # a court header glued to a page's first sentence
 _DATES = [
     (re.compile(r"(?:on or about |on |in or around |around |about )?(?P<m>[A-Z][a-z]+\.?) (?P<d>\d{1,2}), (?P<y>\d{4})", re.I), "day"),
     (re.compile(r"(?:in or around |in |around |during |by )?(?P<m>[A-Z][a-z]+) (?P<y>\d{4})\b", re.I), "month"),
@@ -82,11 +95,17 @@ def targets(sentence: str, family: str) -> List[Dict[str, str]]:
     out = []
     if _PERSONA.search(sentence):
         out.append({"who": "an undercover agent", "role": "counterparty"})
-    for m in _VICTIM.finditer(sentence):
-        label = f"minor victim {m.group(1)}" if m.group(1) else "minor victim 1"
-        if all(t["who"] != label for t in out):
-            out.append({"who": label, "role": "victim"})
-        break
+    m, letter, doe = _VICTIM.search(sentence), _VICTIM_LETTER.search(sentence), _VICTIM_DOE.search(sentence)
+    first = min((x for x in (m, letter, doe) if x), key=lambda x: x.start(), default=None)
+    if first is not None:                      # the first victim the sentence names
+        if first is letter:
+            c = (letter.group(1) or letter.group(2)).lower()
+            label = f"minor victim {c}{ord(c) - 96}"
+        elif first is doe:                     # a pseudonym says nothing about age: minor only where the sentence says so
+            label = ("minor " if _MINOR_WORDS.search(sentence) else "") + "victim doe " + (doe.group(1) or "1")
+        else:
+            label = f"minor victim {m.group(1)}" if m.group(1) else "minor victim 1"
+        out.append({"who": label, "role": "victim"})
     if _RECIPIENTS.search(sentence):
         out.append({"who": "other users", "role": "recipient"})
     return out
@@ -170,7 +189,37 @@ def enrich(act: dict, sentence: str, family: str) -> dict:
         if pat.search(sentence) and not out.get("platform"):
             out["platform"] = {"name": ch if ch != "sms" else "text message", "mode": "through", "audience": "one_to_one"}
             break
-    if (_SEQ.search(sentence.strip()) or _THEN.search(sentence)) and not out.get("after"):
+    if sequence_words(sentence) and not out.get("after"):
         out["after"] = "__previous__"
-        out["after_hint"] = sentence.split(",")[0][:120]
     return out
+
+
+def sequence_words(sentence: str) -> bool:
+    """The sentence states its place in a sequence ("After ...", "Then", "... then ...", "In response")."""
+    s = _HEADER.sub("", sentence).strip()
+    return bool(_SEQ.search(s) or _THEN.search(s))
+
+
+def stated_prior(sentence: str, start: int, earlier: List[Tuple[str, str, int, bool]]) -> Optional[str]:
+    """The earlier act a sequence sentence places itself after, or None. Never a guess.
+
+    ``earlier`` lists the acts before this one in the same document, in reading order, as (event id,
+    action code, end offset of its sentence, on the same page). Two cases give a relation:
+
+    * the opening clause names the earlier act ("After that first contact", "Following the block"):
+      the nearest earlier act with that code. If no such act was coded, nothing is linked.
+    * the sentence only says "then", "in response", "thereafter", or "After ..." with no act named:
+      the act stated in the sentence immediately before it on the page. If that sentence holds no
+      coded act, nothing is linked.
+    """
+    s = _HEADER.sub("", sentence).strip()
+    if not (_SEQ.search(s) or _THEN.search(s)):
+        return None
+    if _AFTER.search(s):
+        clause = s.split(",")[0]
+        wanted = next((codes for pat, codes in REFERENTS if re.search(pat, clause, re.I)), None)
+        if wanted:
+            named = [t for t in earlier if t[1] in wanted and not (t[3] and t[2] > start)]
+            return named[-1][0] if named else None
+    adjacent = [t for t in earlier if t[3] and 0 <= start - t[2] <= 2]
+    return adjacent[-1][0] if adjacent else None

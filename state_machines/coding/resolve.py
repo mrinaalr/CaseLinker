@@ -8,12 +8,18 @@ The rule, in full:
    (``workflow.match_events``), never by action code.
 2. An event is published when both coders coded it with the same action code and the same
    actor. Participants are aligned across the two codings by the matched events they act in.
+   A differing action code leaves the act out. (Candidate rule 2b, off by default: settle the
+   code from the sentence's own words, ``cues.settle``; see ``cues`` for why it is not released.)
 3. Its status is the weaker of the two. Affordances, candidate affordances, access and harms
    are kept only where both coders annotated them.
 4. Dates keep every cited assertion of either coder (T1-T5). Assertions that do not overlap
    are kept and the event is flagged as a time conflict, so it gives no date order.
-5. A relation is published when both coders asserted it between matched events. Order the
-   cited dates imply is derived later, whoever coded the dates.
+5. A relation is published when both coders asserted it between matched events. Rule 5c: the
+   stated-order sentence rule (``enrich.stated_prior``) is then applied once more over the
+   published acts (``restate_order``), because each coder could only link a sentence to acts in
+   its own list. It links an act to the act its opening clause names, or to the act in the
+   sentence just before it, and to nothing otherwise. Order the cited dates imply is derived
+   later, whoever coded the dates.
 6. Two published events with the same offender action and overlapping dates that nothing
    links are linked as possibly the same act (SAME_ACT, INFERRED). Both are kept (R05).
 7. A participant whose role the source leaves open stays open.
@@ -36,9 +42,10 @@ from typing import Dict, List, Optional, Tuple
 from state_machines.evidence import vocab as V
 from state_machines.trajectories.derive import event_spans
 from state_machines.coding.workflow import agreement
+from state_machines.coding.cues import CUE_VERSION, settle
 
 CODERS = ("coder_A", "coder_B")
-RULE_VERSION = "resolve-1.0.0"
+RULE_VERSION = "resolve-1.1.0"
 _RANK = {"DIRECT": 0, "INFERRED": 1, "UNSUPPORTED": 2, "CONTRADICTED": 3}
 
 
@@ -108,9 +115,20 @@ def lookalikes(bundle: dict) -> List[Tuple[str, str]]:
     return out
 
 
-def resolve(a: dict, b: dict) -> Tuple[dict, dict]:
+def _sentence(bundle: dict, event: dict, text_root) -> str:
+    """The cited sentence of an event's action, read from the page text store."""
+    from state_machines.evidence import evidence as E
+    from state_machines.coding.enrich import _HEADER
+    P = {p["passage_id"]: p for p in bundle["passages"]}
+    p = P[next(s["passage_id"] for s in event["support"] if s["facet"] == "action")]
+    page = E.normalize(E.read_page(bundle["case_id"], p["doc_id"], p["pdf_page"], text_root) or "")
+    return _HEADER.sub("", page[p["char_start"]:p["char_end"]]).strip()
+
+
+def resolve(a: dict, b: dict, text_root=None, settle_codes: bool = False) -> Tuple[dict, dict]:
     """(bundle, report). The bundle is coder A's frame (ids, participants, passages) holding only
-    what both coders coded; coder B's dated assertions are imported under a ``b.`` prefix."""
+    what both coders coded; coder B's dated assertions are imported under a ``b.`` prefix.
+    ``settle_codes`` turns on candidate rule 2b, which needs the page text (``text_root``)."""
     agree = agreement(a, b)
     pairs = agree["pairs"]
     pmap = align_participants(a, b, pairs)
@@ -128,9 +146,14 @@ def resolve(a: dict, b: dict) -> Tuple[dict, dict]:
     keep: Dict[str, dict] = {}
     for ia, ib in pairs:
         x, y = ea[ia], eb[ib]
+        settled = None
         if x["action"] != y["action"]:
-            report["left out: coders chose different action codes"] += 1
-            continue
+            same_actor = pmap.get(y["actor"]["participant_ref"]) == x["actor"]["participant_ref"]
+            if settle_codes and text_root is not None and same_actor and V.FAMILY_OF[x["action"]] == V.FAMILY_OF[y["action"]]:
+                settled = settle(_sentence(a, x, text_root), x["action"], y["action"])     # rule 2b
+            if settled is None:
+                report["left out: coders chose different action codes"] += 1
+                continue
         if pmap.get(y["actor"]["participant_ref"]) != x["actor"]["participant_ref"]:
             report["left out: coders named different actors"] += 1
             continue
@@ -150,8 +173,18 @@ def resolve(a: dict, b: dict) -> Tuple[dict, dict]:
         yc = {c["candidate"] for c in y.get("candidate_affordances", [])}
         e["candidate_affordances"] = [c for c in x.get("candidate_affordances", []) if c["candidate"] in yc]
         yh = {h["harm"] for h in y.get("harms", [])}
-        e["harms"] = [h for h in x.get("harms", []) if h["harm"] in yh]
-        report["left out: harm only one coder recorded"] += len({h["harm"] for h in x.get("harms", [])} ^ yh)
+        if settled is None:
+            e["harms"] = [h for h in x.get("harms", []) if h["harm"] in yh]
+            report["left out: harm only one coder recorded"] += len({h["harm"] for h in x.get("harms", [])} ^ yh)
+        else:      # the harm follows from the action code (enrich.HARM_OF_ACTION): keep the settled code's
+            e["action"] = settled
+            e["description"] = e["description"].replace(x["action"].lower().replace("_", " "), settled.lower().replace("_", " "), 1)
+            if settled == y["action"]:
+                own = next(s["passage_id"] for s in x["support"] if s["facet"] == "action")
+                e["harms"] = [dict(copy.deepcopy(h), victim_ref=pmap[h["victim_ref"]],
+                                   support=[{"passage_id": own, "facet": "action", "status": h["status"]}])
+                              for h in y.get("harms", []) if h["victim_ref"] in pmap]
+            report["published: action code settled by cue rule (candidate 2b)"] += 1
         ya = {c["form"] for c in y.get("access", [])}
         e["access"] = [c for c in x.get("access", []) if c["form"] in ya]
         # T1-T5: every cited dated assertion of either coder is kept
@@ -166,7 +199,8 @@ def resolve(a: dict, b: dict) -> Tuple[dict, dict]:
             e["time"]["conflict_flagged"] = True
             report["dates: conflicting assertions kept and flagged"] += 1
         e["review"] = {"status": "agreed", "coders": list(CODERS), "adjudicator": None,
-                       "note": f"coded by both coders; {RULE_VERSION}"}
+                       "note": f"coded by both coders; {RULE_VERSION}" if settled is None else
+                       f"act and actor coded by both coders; action code settled by cue rule; {RULE_VERSION}, {CUE_VERSION}"}
         keep[ia] = e
     core["events"] = [keep[k] for k in sorted(keep)]
     report["published: events both coders coded"] = len(keep)
@@ -214,6 +248,46 @@ def resolve(a: dict, b: dict) -> Tuple[dict, dict]:
                           note=f"machine resolution ({RULE_VERSION}) of two independent codings; not adjudicated")
     return core, {"rule": RULE_VERSION, "agreement": {k: v for k, v in agree.items() if k != "pairs"},
                   "participants_aligned": len(pmap), "counts": dict(sorted(report.items()))}
+
+
+def restate_order(bundle: dict, text_root) -> int:
+    """Rule 5c: apply the stated-order sentence rule (``enrich.stated_prior``) over the published acts.
+
+    Each coder linked a sequence sentence to an act from its own list, often one the other coder
+    did not code, so the relation was lost although both acts were agreed. The same deterministic
+    rule runs here once on the resolved bundle, per document in reading order. It links a published
+    act to the earlier published act its opening clause names ("After that first contact" -> the
+    contact act) or to the act in the sentence immediately before it; where neither is published,
+    it links nothing. Returns the number of relations added."""
+    from state_machines.evidence import evidence as E
+    from state_machines.coding.enrich import stated_prior
+    P = {p["passage_id"]: p for p in bundle["passages"]}
+    have = {(r["from_event"], r["to_event"]) for r in bundle["relations"] if r["type"] in V.ORDER_RELATIONS}
+    by_doc: Dict[str, list] = {}
+    for e in bundle["events"]:
+        pid = next((s["passage_id"] for s in e["support"] if s["facet"] == "action"), None)
+        if pid:
+            by_doc.setdefault(P[pid]["doc_id"], []).append((P[pid]["pdf_page"], P[pid]["char_start"], P[pid]["char_end"], e, pid))
+    added, pages = 0, {}
+    for doc, acts in by_doc.items():
+        acts.sort(key=lambda t: t[:3])
+        for i, (page, start, end, e, pid) in enumerate(acts):
+            if (doc, page) not in pages:
+                pages[(doc, page)] = E.normalize(E.read_page(bundle["case_id"], doc, page, text_root) or "")
+            earlier = [(x["event_id"], x["action"], e0, p0 == page) for p0, s0, e0, x, _ in acts[:i]
+                       if p0 < page or e0 <= start]
+            prior = stated_prior(pages[(doc, page)][start:end], start, earlier)
+            if prior is None or (prior, e["event_id"]) in have or (e["event_id"], prior) in have:
+                continue
+            bundle["relations"].append({
+                "relation_id": f"so-{prior}-{e['event_id']}", "type": "BEFORE", "from_event": prior, "to_event": e["event_id"],
+                "basis": "explicit_sequence_language", "status": "DIRECT",
+                "support": [{"passage_id": pid, "facet": "time", "status": "DIRECT"}],
+                "note": "stated order, sentence rule applied to agreed acts",
+                "review": {"status": "agreed", "coders": list(CODERS), "adjudicator": None}})
+            have.add((prior, e["event_id"]))
+            added += 1
+    return added
 
 
 def main(argv: Optional[List[str]] = None) -> int:

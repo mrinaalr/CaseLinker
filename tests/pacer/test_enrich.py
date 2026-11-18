@@ -48,3 +48,27 @@ def test_sequence_words_mark_order_and_channels_are_not_platforms():
     assert a["after"] == "__previous__"
     c = N.enrich({"action": "COMMUNICATE"}, "The defendant sent Minor Victim 1 text messages every day.", "offender")
     assert c["platform"]["name"] == "text message"                            # becomes a channel in assemble (I3)
+
+
+def test_victims_named_by_letter_or_pseudonym():
+    t = lambda s: N.targets(s, "offender")
+    assert t("The defendant asked Minor Victim B for images.") == [{"who": "minor victim b2", "role": "victim"}]
+    assert t("The defendant sent Victim C a message.") == [{"who": "minor victim c3", "role": "victim"}]
+    assert t("He enticed Jane Doe 2, a minor, to send images.") == [{"who": "minor victim doe 2", "role": "victim"}]
+    assert t("He sent Jane Doe 2 a message.") == [{"who": "victim doe 2", "role": "victim"}]      # age not stated here
+    assert t("Victim A statement was filed.") == [] and t("Counsel for Minor I spoke.") == []            # not designations
+    # a harm needs a victim the sentence shows to be a minor only through the label it gives
+    assert N.enrich({"action": "THREATEN_EXPOSURE"}, "He threatened to post the images of Minor Victim B.", "offender")["harm"]
+
+
+def test_stated_order_links_the_named_act_or_the_sentence_just_before():
+    earlier = [("e1", "INITIATE_CONTACT", 100, True), ("e2", "MISREPRESENT_IDENTITY", 180, True)]
+    assert N.stated_prior("After that first contact, the defendant told her to move to Kitebox.", 181, earlier) == "e1"
+    assert N.stated_prior("After that first contact, the defendant told her to move to Kitebox.", 181, earlier[1:]) is None
+    assert N.stated_prior("Minor Victim 1 then blocked the defendant's account.", 181, earlier) == "e2"
+    assert N.stated_prior("Minor Victim 1 then blocked the defendant's account.", 260, earlier) is None      # a sentence lies between
+    assert N.stated_prior("Minor Victim 1 then blocked the defendant's account.", 0, [("e0", "MOVE_CHANNEL", 400, False)]) is None
+    assert N.stated_prior("The defendant later sent the images to other users.", 181, earlier) is None         # "later" names no act
+    assert N.stated_prior("The defendant sent the images to other users.", 181, earlier) is None
+    header = "Case 1:24-cr-00229 Document 21 Filed 03/13/24 Page 2 of 3 After the block, the defendant made a new account."
+    assert N.stated_prior(header, 0, [("e4", "RESP_BLOCK", 700, False)]) == "e4"                               # across a page

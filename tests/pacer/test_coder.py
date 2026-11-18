@@ -141,3 +141,14 @@ def test_a_quote_stops_at_its_sentence_even_when_the_words_run_past_it():
     page = "The next day, the defendant drove to the hotel. At the hotel, the defendant met Minor Victim 1."
     s, e, q = C.locate_sentence(page, "The next day, the defendant drove to the hotel. At the")
     assert q == "The next day, the defendant drove to the hotel."
+
+
+def test_a_word_broken_across_a_line_is_still_found_exactly():
+    page = "The parties agree. On May 2, 2020, the defendant asked Minor Victim 1 to send sexually expl-\nicit images. Then more."
+    s, e, q = C.locate_sentence(page, "On May 2, 2020, the defendant asked Minor Victim 1 to send sexually explicit")
+    assert q == "On May 2, 2020, the defendant asked Minor Victim 1 to send sexually expl- icit images." and E.normalize(page)[s:e] == q
+    assert C.locate_sentence(page, "On May 2, 2020, the defendant asked Minor Victim 1 to send sexually expl-icit")[2] == q
+    with pytest.raises(E.QuoteNotFound):                                    # other words are still not on the page
+        C.locate_sentence(page, "On May 2, 2020, the defendant asked Minor Victim 1 to send sexually explicit videos")
+    with pytest.raises(E.QuoteNotFound):                                    # and an ambiguous start is still refused
+        C.locate_sentence("He asked for expl-\nicit images now. He asked for explicit images now.", "He asked for explicit images")

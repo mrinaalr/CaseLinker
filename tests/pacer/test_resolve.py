@@ -5,7 +5,7 @@ import copy
 
 import pytest
 
-from state_machines.coding.resolve import align_participants, resolve
+from state_machines.coding.resolve import align_participants, resolve, restate_order
 from state_machines.coding.workflow import agreement
 from state_machines.evidence.validate import release_errors
 from tests.pacer import fixtures as F
@@ -67,6 +67,61 @@ def test_actor_disagreement_and_date_conflict():
     assert "e05" not in ids and report["counts"]["left out: coders named different actors"] == 1
     e06 = next(e for e in out["events"] if e["event_id"] == "e06")
     assert e06["time"]["conflict_flagged"] is True and len(e06["time"]["assertions"]) == 2
+
+
+def test_candidate_rule_settles_a_differing_code_only_from_the_sentence_and_only_when_asked(tmp_path):
+    F.write_pages(tmp_path)
+    a, b = _coders()                                       # coder B coded e03 DIRECT_CONDUCT; the sentence says "asked ... to send ... images"
+    out, report = resolve(a, b, tmp_path)                  # off by default: a machine release holds only agreed codes
+    assert "e03" not in {e["event_id"] for e in out["events"]} and report["counts"]["left out: coders chose different action codes"] == 1
+    out, report = resolve(a, b, tmp_path, settle_codes=True)
+    e03 = next(e for e in out["events"] if e["event_id"] == "e03")
+    assert e03["action"] == "SOLICIT_IMAGERY" and "settled by cue rule" in e03["review"]["note"]
+    assert report["counts"]["published: action code settled by cue rule (candidate 2b)"] == 1
+    assert "left out: coders chose different action codes" not in report["counts"]
+    assert release_errors(out, text_root=tmp_path, mode="machine") == []
+    # the other way round: coder A has the code the sentence does not support
+    a, b = _coders()
+    next(e for e in a["events"] if e["event_id"] == "e03")["action"] = "DIRECT_CONDUCT"
+    next(e for e in b["events"] if e["event_id"] == "e03")["action"] = "SOLICIT_IMAGERY"
+    out, _ = resolve(a, b, tmp_path, settle_codes=True)
+    e03 = next(e for e in out["events"] if e["event_id"] == "e03")
+    assert e03["action"] == "SOLICIT_IMAGERY" and [h["victim_ref"] for h in e03["harms"]] == ["P2"]   # in coder A's frame
+    assert release_errors(out, text_root=tmp_path, mode="machine") == []
+    # a sentence with no cue for either code, or a different actor, stays out
+    a, b = _coders()
+    next(e for e in a["events"] if e["event_id"] == "e03")["action"] = "BUILD_RAPPORT"
+    out, report = resolve(a, b, tmp_path, settle_codes=True)
+    assert "e03" not in {e["event_id"] for e in out["events"]}
+    a, b = _coders()
+    next(e for e in b["events"] if e["event_id"] == "e03")["actor"] = {"participant_ref": "P1", "role": "offender"}
+    out, report = resolve(a, b, tmp_path, settle_codes=True)
+    assert "e03" not in {e["event_id"] for e in out["events"]}
+
+
+def test_stated_order_is_restated_on_agreed_acts_and_never_guessed(tmp_path):
+    F.write_pages(tmp_path)
+    a, b = _coders()
+    for bundle in (a, b):                                  # whole sentences, as the automated coder cites them
+        for p in bundle["passages"]:
+            page = F.PAGES[(p["doc_id"], p["pdf_page"])]
+            if p["passage_id"] == "p02":
+                p["char_start"] = page.index("After that first contact")
+            if p["passage_id"] == "p05":
+                p["char_start"] = page.index("Within a day of being blocked")
+        bundle["relations"] = []
+    out, _ = resolve(a, b)
+    assert restate_order(out, tmp_path) == 2
+    assert sorted((r["from_event"], r["to_event"], r["basis"]) for r in out["relations"] if r["type"] == "BEFORE") == [
+        ("e01", "e02", "explicit_sequence_language"),     # "After that first contact" names the contact act
+        ("e04", "e05", "explicit_sequence_language")]     # "Within a day ..." follows the sentence just before it
+    # the named act is not published: nothing is linked to it, and the nearest earlier act is not a stand-in
+    a2, b2 = copy.deepcopy(a), copy.deepcopy(b)
+    for bundle in (a2, b2):
+        next(e for e in bundle["events"] if e["event_id"] == "e01")["action"] = "SEEK_TARGETS"
+    out, _ = resolve(a2, b2)
+    assert restate_order(out, tmp_path) == 1
+    assert [(r["from_event"], r["to_event"]) for r in out["relations"] if r["type"] == "BEFORE"] == [("e04", "e05")]
 
 
 def test_possible_retellings_are_linked_not_merged():

@@ -24,7 +24,7 @@ import sys
 import time
 import traceback
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from state_machines.evidence import evidence as E
 from state_machines.coding import coder as C
@@ -84,9 +84,13 @@ def _model_coded(bundle: dict) -> dict:
                 relations=[r for r in bundle["relations"] if r["from_event"] in keep and r["to_event"] in keep])
 
 
-def resolve_cases(cases: List[str], out: Path) -> dict:
-    (out / "resolved").mkdir(parents=True, exist_ok=True)
-    (out / "reports").mkdir(parents=True, exist_ok=True)
+def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
+                  sub: str = "resolved") -> dict:
+    """Resolve each case's two codings into ``out/<sub>``; reports beside it. ``settle_codes`` turns on
+    candidate rule 2b (``cues``), which a machine release does not use."""
+    reports = "reports" if sub == "resolved" else f"reports_{sub}"
+    (out / sub).mkdir(parents=True, exist_ok=True)
+    (out / reports).mkdir(parents=True, exist_ok=True)
     summary = {}
     for case_id in cases:
         pa, pb = out / "coder_A" / f"{case_id}.json", out / "coder_B" / f"{case_id}.json"
@@ -94,18 +98,21 @@ def resolve_cases(cases: List[str], out: Path) -> dict:
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
-        bundle, report = resolve(a, b)
+        bundle, report = resolve(a, b, text_root, settle_codes)
+        if text_root is not None:
+            from state_machines.coding.resolve import restate_order
+            report["counts"]["published: stated order re-derived on agreed acts (5c)"] = restate_order(bundle, text_root)
         model_agree = agreement(_model_coded(a), _model_coded(b))
         report["agreement_model_coded"] = {k: v for k, v in model_agree.items() if k != "pairs"}
         report["parser_events"] = sum(e.get("notes") == "docket-parser" for e in bundle["events"])
         if not bundle["events"]:
             summary[case_id] = {"failed": "no event both coders coded", "report": report}
             continue
-        (out / "resolved" / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-        (out / "reports" / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+        (out / sub / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
         summary[case_id] = {"events": len(bundle["events"]), "parser_events": report["parser_events"],
                             "agreement_model_coded": report["agreement_model_coded"]}
-    (out / "reports" / "SUMMARY.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
+    (out / reports / "SUMMARY.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     return summary
 
 
@@ -113,8 +120,9 @@ def bench(split: str = "all", out: Path = E.REPO_ROOT / "local" / "bench", selec
     from state_machines.benchmark.score import score_dir, split_of
     cases = [p.parent.name for p in sorted(BENCH.glob("synth_*/gold.json")) if split == "all" or split_of(p.parent.name) == split]
     code(cases, BENCH, out, selective)
-    resolve_cases(cases, out)
-    result = {name: score_dir(out / name, split) for name in ("coder_A", "coder_B", "resolved")}
+    resolve_cases(cases, out, BENCH)
+    resolve_cases(cases, out, BENCH, settle_codes=True, sub="resolved_2b")       # the candidate rule, scored beside the released one
+    result = {name: score_dir(out / name, split) for name in ("coder_A", "coder_B", "resolved", "resolved_2b")}
     (out / "reports").mkdir(parents=True, exist_ok=True)
     (out / "reports" / f"benchmark.{split}.json").write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
     return result
@@ -140,14 +148,16 @@ def main(argv=None) -> int:
     ap.add_argument("args", nargs="*")
     ap.add_argument("--text-root", type=Path, default=E.text_root())
     ap.add_argument("--out", type=Path, default=OUT)
-    ap.add_argument("--split", choices=("dev", "heldout", "all"), default="all")
+    ap.add_argument("--split", choices=("dev", "heldout", "confirm", "all"), default="all")
     ap.add_argument("--selective", action="store_true", help="coder_B reads only pages where coder_A found acts")
+    ap.add_argument("--settle-codes", action="store_true",
+                    help="resolve: candidate rule 2b, settle a differing action code from the sentence (not for a machine release)")
     ap.add_argument("--bench-out", type=Path, default=E.REPO_ROOT / "local" / "bench")
     a = ap.parse_args(argv)
     if a.cmd == "code":
         print(json.dumps(code(a.args, a.text_root, a.out, a.selective), indent=1))
     elif a.cmd == "resolve":
-        print(json.dumps(resolve_cases(a.args, a.out), indent=1))
+        print(json.dumps(resolve_cases(a.args, a.out, a.text_root, a.settle_codes, "resolved_2b" if a.settle_codes else "resolved"), indent=1))
     elif a.cmd == "bench":
         r = bench(a.split, a.bench_out, a.selective)
         print(json.dumps({k: v["overall"] for k, v in r.items()}, indent=1))

@@ -47,7 +47,7 @@ from typing import Dict, List, Optional, Tuple
 from state_machines.evidence import evidence as E
 from state_machines.evidence import vocab as V
 from state_machines.evidence.validate import errors, validate
-from state_machines.coding.enrich import enrich
+from state_machines.coding.enrich import enrich, stated_prior
 
 HERE = Path(__file__).resolve().parent
 MODELS = json.loads((HERE / "models.json").read_text(encoding="utf-8"))
@@ -291,9 +291,24 @@ def ask(spec: dict, prompt: str, cache: Cache) -> dict:
 _ABBREV = re.compile(r"(?:\b(?:Mr|Mrs|Ms|Dr|No|Nos|Inc|Co|Corp|Jr|Sr|St|v|vs|Ct|Cir|Supp|App|Stat|Sec|U\.S|U\.S\.C|e\.g|i\.e)|\b[A-Z])\.$")
 
 
+def _broken_word_pattern(words: str) -> "re.Pattern":
+    """``words`` as a pattern that also matches where the page hyphenates a word across a line
+    break. Every character must still match in order; only "- " inside a word is allowed extra."""
+    out = []
+    for prev, ch in zip(" " + words, words):
+        if ch == "-":
+            out.append(r"-?\s?")
+        elif ch == " ":
+            out.append(r"\s")
+        else:
+            out.append((r"(?:-\s)?" if prev.isalnum() and ch.isalnum() else "") + re.escape(ch))
+    return re.compile("".join(out), re.I)
+
+
 def locate_sentence(page_text: str, start_words: str) -> Tuple[int, int, str]:
     """The sentence that begins with ``start_words``: offsets into the normalized page text.
-    Exact match first, then case-insensitive; never fuzzy. Ambiguous starts are refused."""
+    Exact match first, then case-insensitive, then allowing a word the page breaks across a line;
+    never fuzzy. Ambiguous starts are refused. The quote kept is always the page's own text."""
     page_n, sw = E.normalize(page_text), E.normalize(start_words)
     if len(sw.split()) < 4:
         raise E.QuoteNotFound("first words too short")
@@ -302,10 +317,13 @@ def locate_sentence(page_text: str, start_words: str) -> Tuple[int, int, str]:
     if i < 0:
         hay, needle = page_n.lower(), sw.lower()
         i = hay.find(needle)
-        if i < 0:
-            raise E.QuoteNotFound("first words not on this page")
-    if hay.find(needle, i + 1) >= 0:
+    # also where the page breaks a word across a line ("expl- icit") that the model wrote whole
+    found = [m.start() for m in _broken_word_pattern(sw).finditer(page_n)]
+    if i < 0 and not found:
+        raise E.QuoteNotFound("first words not on this page")
+    if len(found) > 1 or (i >= 0 and hay.find(needle, i + 1) >= 0):
         raise E.QuoteNotFound("first words occur more than once on this page")
+    i = i if i >= 0 else found[0]
     # models often give the first words of the main clause: extend back to the sentence's own start
     begin = i
     for m in re.finditer(r"[.;!?](?=\s)", page_n[max(0, i - 400):i]):
@@ -330,13 +348,6 @@ def locate_sentence(page_text: str, start_words: str) -> Tuple[int, int, str]:
     end = min(end, i + 700)
     return i, end, page_n[i:end]
 
-
-_REFERENTS = [  # what an "after ..." clause refers to, by the earlier act's code
-    (r"first (?:contact|conversation|message|communication)|initial contact", {"INITIATE_CONTACT"}),
-    (r"block", {"RESP_BLOCK"}), (r"report", {"RESP_REPORT"}), (r"refus|declin", {"RESP_REFUSE"}),
-    (r"meeting|arrang", {"ARRANGE_MEETING"}), (r"arrest", {"LE_ARREST"}), (r"threat", {"THREATEN_EXPOSURE", "THREATEN_HARM"}),
-    (r"images|photos|pictures|video", {"RECEIVE_SELF_GENERATED", "SOLICIT_IMAGERY"}),
-]
 
 _KEYS = {"s": "start", "a": "action", "by": "actor", "r": "actor_role", "o": "outcome", "d": "date",
          "np": "named_platform", "h": "harm"}
@@ -466,7 +477,8 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
 
     proc_seen: set = set()
     for doc, page_no, text, ans in answers:
-        page_events: List[Tuple[str, str]] = []
+        page_events: List[Tuple[str, str, int, bool]] = []   # (event id, action, sentence end, same page)
+        page_quotes: List[Tuple[str, str]] = []
         for act in ans.get("acts", []):
             act = expand(act)
             try:
@@ -583,18 +595,14 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                 if participants[ref]["_first"] is None:
                     participants[ref]["_first"] = pid
             events.append(e)
-            page_events.append((eid, qn, start))
-            after = E.normalize(act.get("after") or "").lower()
             prior = None
-            if after == "__previous__":            # the sentence opens with sequence words: the act it refers to
-                earlier = [(x, qx, st) for x, qx, st in page_events[:-1] if st < start]
-                hint = act.get("after_hint") or ""
-                wanted = next((codes for pat, codes in _REFERENTS if re.search(pat, hint, re.I)), None)
-                named = [t for t in earlier if wanted and next(e["action"] for e in events if e["event_id"] == t[0]) in wanted]
-                pick = named or earlier
-                prior = max(pick, key=lambda t: t[2])[0] if pick else None
-            elif len(after.split()) >= 3:
-                prior = next((x for x, qx, _ in page_events[:-1] if qx.lower().startswith(after) or after in qx.lower()), None)
+            if act.get("after") == "__previous__":            # the sentence states its place in a sequence
+                prior = stated_prior(qn, start, sorted(page_events, key=lambda t: t[2]))
+            elif len(E.normalize(act.get("after") or "").split()) >= 3:
+                after = E.normalize(act["after"]).lower()
+                prior = next((x for x, qx in page_quotes if qx.lower().startswith(after) or after in qx.lower()), None)
+            page_events.append((eid, action, end, True))
+            page_quotes.append((eid, qn))
             if prior:
                 relations.append({"relation_id": f"r{len(relations) + 1:03d}", "type": "BEFORE", "from_event": prior, "to_event": eid,
                                   "basis": "explicit_sequence_language", "status": "DIRECT",
