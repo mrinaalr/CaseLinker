@@ -352,4 +352,5 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
   - order agreement on matched pairs.
 - **Adjudication** produces the adjudicated bundle. Each disagreement gets a decision and a note (`review.status = adjudicated`).
 - **Machine resolution** instead publishes only what both coders coded, by a fixed rule (`review.status = agreed`); see [coding](../coding/README.md#machine-resolution).
+- **Victim designations in automated coding.** "Minor Victim 1", "MV-1", "Victim 3" and "Minor Victim B" are read as minors: an assumption that holds for this child-exploitation case set and is not to be carried to cases with adult victims. A pseudonym ("Jane Doe 2") is a minor only where the sentence says so.
 - **Observations** are not coded and need no agreement. A listed platform named, or a listed feature phrase stated, in a sentence of the record is published as a mention with its source ([observations](../observations/README.md)). It becomes level C only through a relationship: the act's own sentence states the means.

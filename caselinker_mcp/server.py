@@ -1312,6 +1312,12 @@ async def get_lifecycle_cases() -> dict[str, Any]:
     DIRECT and INFERRED thresholds. No quotes, descriptions or names. The public
     /lifecycle page embeds the same payload; API access requires CASELINKER_KEY in
     CASELINKER_TRUSTED_KEYS.
+
+    Three kinds of evidence, never to be added together. Events are acts two model coders
+    agreed on (machine-coded, not adjudicated; an absent act is not evidence it did not
+    happen). Each case's ``observed.platforms`` and ``observed.features`` are what the record
+    NAMES (mentions, not use). Only ``observed.used_in_act`` ties technology to conduct: there
+    the act's own sentence states it was done by means of that platform or feature.
     """
     try:
         if err := require_caselinker_key():

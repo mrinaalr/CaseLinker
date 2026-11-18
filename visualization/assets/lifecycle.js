@@ -146,8 +146,22 @@
     const pos = new Map();
     GROUPS.forEach(([g], gi) => (cols.get(g) || []).forEach((id, k) => pos.set(id, { x: L.label + gi * L.col + (L.col - L.w) / 2, y: 10 + k * L.row })));
     const ctx = track.events.filter(id => cs.events[id].family !== "offender");
-    return { ...r, ids, o, pos, ctx, h: stack * L.row + 26 };
+    const named = r.first ? namedLine(cs) : "";
+    const lines = (r.first ? 2 : 1) + (r.first && r.more ? 1 : 0) + (named ? 1 : 0);
+    return { ...r, ids, o, pos, ctx, named, h: Math.max(stack * L.row + 26, 16 + lines * 16 + (ctx.length ? 22 : 8)) };
   }
+
+  // what the record names (mentions, not use): one short line under the case, opening the full list
+  const RELATION = { Carried_Out_Through: "carried out through", Moved_To: "moved to", Supports_Action: "done by means of" };
+  function namedLine(cs) {
+    const o = cs.observed;
+    if (!o) return "";
+    const p = Object.keys(o.platforms).length, f = Object.values(o.features).reduce((n, t) => n + Object.keys(t).length, 0);
+    if (!p && !f) return "";
+    return "names " + [p ? `${p} platform${p > 1 ? "s" : ""}` : "", f ? `${f} feature${f > 1 ? "s" : ""}` : ""].filter(Boolean).join(", ");
+  }
+  const meansOf = (cs, id) => ((cs.observed || {}).used_in_act || []).filter(u => u.event_id === id);
+  const meansText = u => `${RELATION[u.relationship] || u.relationship} ${u.platform || (AFF[u.feature_class].label.toLowerCase() + " (" + u.feature_term + ")")}`;
 
   function defs() {
     const d = sv("defs");
@@ -172,6 +186,15 @@
       if (r.more) head.append(svText({ x: 28, y: 58, class: "case-more" }, state.open.has(r.cs.case_id) ? "− fewer tracks" : `+ ${r.more} more track${r.more > 1 ? "s" : ""}`));
     } else {
       head.append(svText({ x: 28, y: 26, class: "case-meta" }, `${TRACK_KIND[r.track.kind] || r.track.kind} track · ${r.ids.length} acts`));
+    }
+    if (r.named) {
+      const y = r.more ? 74 : 58;
+      const named = svText({ x: 28, y, class: "case-named", tabindex: 0, role: "button" }, r.named + " ›");
+      named.setAttribute("aria-label", `${r.cs.case_id}: what the record names`);
+      const open = e => { e.stopPropagation(); showObserved(r.cs); };
+      named.addEventListener("click", open);
+      named.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(e); } });
+      g.append(named);
     }
     if (r.more && r.first) {
       const toggle = () => { state.open.has(r.cs.case_id) ? state.open.delete(r.cs.case_id) : state.open.add(r.cs.case_id); renderDocumented(); };
@@ -199,7 +222,7 @@
     }
     g.append(edges);
     for (const id of r.ids) {
-      const n = drawNode(r.cs.events[id], r.pos.get(id), color);
+      const n = drawNode(r.cs.events[id], r.pos.get(id), color, meansOf(r.cs, id));
       n.dataset.id = id;
       // the trace stays lit while the pointer follows its lines; it changes on another act and clears on leaving the case
       const on = () => { clearTimeout(g._off); focusRow(g, r, id); };
@@ -248,7 +271,7 @@
     }
   }
 
-  function drawNode(ev, p, color) {
+  function drawNode(ev, p, color, means = []) {
     const g = sv("g", { class: `node node-${ev.status.toLowerCase()}`, transform: `translate(${p.x},${p.y})`, tabindex: 0, role: "button" });
     g.setAttribute("aria-label", `${ev.label}. Select for sources.`);
     g.append(sv("rect", { width: L.w, height: L.h, rx: 7, class: "node-box", style: `--case:${color}` }));
@@ -265,7 +288,12 @@
       g.append(svText({ x: x + 10, y: 34, class: "harm-text", "text-anchor": "middle" }, h));
     });
     if (ev.outcome !== "completed") g.append(sv("rect", { x: 0, y: L.h - 3, width: L.w, height: 3, rx: 1.5, class: "node-outcome-bar" }));
-    const open = () => showDetail(ev);
+    if (means.length) {     // the act's own sentence states the platform or feature it was done by means of
+      const m = sv("path", { d: `M${L.w - 14},${L.h - 5} l5,-5 l5,5 l-5,5 z`, class: "means-mark" });
+      m.append(Object.assign(sv("title"), { textContent: "The record states: " + means.map(meansText).join("; ") }));
+      g.append(m);
+    }
+    const open = () => showDetail(ev, means);
     g.addEventListener("click", open);
     g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
     return g;
@@ -345,16 +373,51 @@
   }
 
   // ---------- detail panel ----------
-  function showDetail(ev) {
+  function openPanel(nodes) {
     const panel = document.getElementById("detail-panel");
     const back = document.getElementById("detail-backdrop");
+    panel.innerHTML = "";
+    panel.append(el("button", { class: "detail-close", type: "button", "aria-label": "Close", text: "×" }), ...nodes.filter(Boolean));
+    panel.setAttribute("aria-hidden", "false");
+    panel.classList.add("is-open");
+    back.classList.add("is-open");
+    const close = () => { panel.classList.remove("is-open"); back.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); };
+    panel.querySelector(".detail-close").addEventListener("click", close);
+    back.onclick = close;
+    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); }, { once: true });
+  }
+
+  // a case's observations: what its record names, kept apart from what anyone did
+  function showObserved(cs) {
+    const o = cs.observed;
+    const standing = s => Object.entries(s).map(([k, n]) => `${STANDING[k] || k.toLowerCase()} ${n}`).join(", ");
+    const platforms = Object.entries(o.platforms).sort((a, b) => b[1].mentions - a[1].mentions);
+    const features = Object.entries(o.features);
+    openPanel([
+      el("div", { class: "cl-eyebrow", text: cs.case_id }),
+      el("h3", { class: "detail-title", text: "What the record names" }),
+      el("p", { class: "detail-note", text: "Mentions in the court record, read by rule from its pages. A mention is not use." }),
+      el("div", { class: "detail-sub", text: "Platforms named" }),
+      platforms.length ? el("ul", { class: "prov" }, platforms.map(([name, v]) =>
+        el("li", { text: `${name} · ${v.mentions} mention${v.mentions > 1 ? "s" : ""} · ${standing(v.standing)}` })))
+        : el("p", { class: "detail-none", text: "No listed platform is named." }),
+      el("div", { class: "detail-sub", text: "Features stated" }),
+      features.length ? el("ul", { class: "prov" }, features.map(([cls, terms]) =>
+        el("li", { text: `${AFF[cls].label}: ${Object.entries(terms).map(([t, n]) => n > 1 ? `${t} ×${n}` : t).join(", ")}` })))
+        : el("p", { class: "detail-none", text: "No listed feature phrase is stated." }),
+      el("div", { class: "detail-sub", text: "Stated as the means of an act" }),
+      o.used_in_act.length ? el("ul", { class: "prov" }, o.used_in_act.map(u =>
+        el("li", { text: `${(cs.events[u.event_id] || {}).label || u.action} · ${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing}` })))
+        : el("p", { class: "detail-none", text: "None. No agreed act's own sentence states a platform or feature as its means." }),
+    ]);
+  }
+
+  function showDetail(ev, means = []) {
     const kv = (k, v) => el("div", { class: "kv" }, el("span", { class: "k", text: k }), el("span", { class: "v", text: v }));
     const when = ev.time.length
       ? ev.time.map(a => `${a.earliest === a.latest ? a.earliest : a.earliest + " – " + a.latest} (${a.precision}, ${a.basis.replace(/_/g, " ")}, ${a.status.toLowerCase()})`).join("; ") + (ev.time_conflict ? "; dates conflict" : "")
       : "undated";
-    panel.innerHTML = "";
-    panel.append(...[
-      el("button", { class: "detail-close", type: "button", "aria-label": "Close", text: "×" }),
+    openPanel([
       el("div", { class: "cl-eyebrow", text: ev.id }),
       el("h3", { class: "detail-title", text: ev.label }),
       kv("Evidence", `${ev.status === "DIRECT" ? "stated" : ev.status.toLowerCase()} · ${STANDING_LONG[ev.standing] || "—"}`),
@@ -369,15 +432,9 @@
       ev.harms.length ? kv("Harms", ev.harms.map(h => `${h.code.replace("HARM_", "").replace(/_/g, " ").toLowerCase()}${h.h0 ? " · " + h.h0 : ""} (${h.victim_kind})`).join("; ")) : null,
       ev.platforms.length ? kv("Platforms", ev.platforms.map(p => `${p.key} (${p.mode}, ${p.audience})`).join("; ")) : null,
       ev.mentions.length ? kv("Named", ev.mentions.join(", ")) : null,
+      means.length ? kv("Stated means", means.map(u => `${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing}`).join("; ")) : null,
       el("div", { class: "detail-sub", text: "Sources" }),
-      el("ul", { class: "prov" }, ev.provenance.map(p => el("li", { text: `${p.doc_type.replace(/_/g, " ")}, page ${p.page} · ${STANDING_LONG[p.standing] || p.standing}` })))].filter(Boolean));
-    panel.setAttribute("aria-hidden", "false");
-    panel.classList.add("is-open");
-    back.classList.add("is-open");
-    const close = () => { panel.classList.remove("is-open"); back.classList.remove("is-open"); panel.setAttribute("aria-hidden", "true"); };
-    panel.querySelector(".detail-close").addEventListener("click", close);
-    back.onclick = close;
-    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); }, { once: true });
+      el("ul", { class: "prov" }, ev.provenance.map(p => el("li", { text: `${p.doc_type.replace(/_/g, " ")}, page ${p.page} · ${STANDING_LONG[p.standing] || p.standing}` })))]);
   }
 
   // ---------- shell ----------

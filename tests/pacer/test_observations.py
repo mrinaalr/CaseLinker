@@ -66,6 +66,17 @@ def test_feature_phrases_are_whole_codebook_phrases():
     assert feats("The government recommended a sentence and the operator agreed.") == []       # everyday wording; "Tor" inside a word
     assert feats("The app showed him recommended friends.") == [("contact_discovery", "recommended friends")]
     assert feats("He joined a public group search page.") == [("contact_discovery", "public group search")]   # the longest phrase, once
+    assert feats("He ran a website and uploaded the files to cloud storage.") == [
+        ("distribution_infrastructure", "uploaded"), ("distribution_infrastructure", "cloud storage")]   # a bare "website" is not a feature
+
+
+def test_two_spellings_of_one_service_are_one_platform(tmp_path):
+    E.write_page("alias_case", "sof", 1, "STATEMENT OF FACTS. He wrote to her on Kik Messenger. She answered on Kik the next day.", tmp_path)
+    (tmp_path / "alias_case" / "sources.json").write_text(json.dumps({"case_id": "alias_case", "documents": [
+        {"doc_id": "sof", "doc_type": "statement_of_facts", "sha256": "x", "pages": [{"pdf_page": 1, "text_method": "text_layer"}]}]}), encoding="utf-8")
+    doc = O.observe("alias_case", tmp_path)
+    assert [(o["platform"], o["named_as"]) for o in doc["observations"]] == [("Kik", "Kik Messenger"), ("Kik", "Kik")]
+    assert O.summary(doc)["platforms"] == {"Kik": 2} and O.check(doc, tmp_path) == []
 
 
 def test_observations_cite_their_sentence_and_skip_docket_sheets(tmp_path):
@@ -154,3 +165,29 @@ def test_benchmark_scoring_counts_mentions_features_and_relationships():
     for o in doc["observations"]:                                    # a relationship the gold does not hold is counted as wrong
         o["relations"] = [{"event_id": gold["events"][0]["event_id"], "relationship": "Carried_Out_Through", "cue": "on", "basis": "x"}]
     assert summarize_observations(score_observations(gold, doc, gold))["relationships_correct"]["rate"] < 1.0
+
+
+def test_validation_sample_covers_every_relationship_and_feature_and_scores_apart(tmp_path):
+    from state_machines.observations import validation as V2
+    docs = _store(tmp_path)
+    bundle = _bundle(tmp_path, docs, [("e1", "SOLICIT_IMAGERY", "On May 2, 2020"), ("e4", "SOLICIT_IMAGERY", "He used the disappearing-message")])
+    doc = O.relate(O.observe(CASE, tmp_path), bundle, tmp_path)
+    root = tmp_path / "rel"
+    (root / "observations").mkdir(parents=True)
+    (root / "observations" / f"{CASE}.json").write_text(json.dumps(doc), encoding="utf-8")
+    items = V2.sample(root)
+    assert [i["item_id"] for i in items] == [i["item_id"] for i in V2.sample(root)]                 # the same release, the same items
+    tied = {f"{CASE}:{o['observation_id']}" for o in doc["observations"] if o["relations"]}
+    assert {i["item_id"] for i in items if i["stratum"] == "relationship"} == tied and len(tied) == 3
+    assert {i["item_id"] for i in items} == {f"{CASE}:{o['observation_id']}" for o in doc["observations"]}   # a small case: all of it
+    page = V2.packet("rel", root, tmp_path, tmp_path / "out").read_text()
+    assert "<mark>Kitebox</mark>" in page and "http" not in page.replace("http-equiv", "")           # local text, no network
+    decisions = {"reviewer": "MR", "reviewed_on": "2026-11-18", "decisions": {
+        i["item_id"]: {"stratum": i["stratum"], "grounding": "yes", "meaning": "no" if i["stratum"] == "feature" else "yes"} for i in items}}
+    s = V2.score(root, decisions)["strata"]
+    assert s["relationship"]["meaning_yes"] == 3 and s["feature"]["meaning_no"] == s["feature"]["reviewed"] and s["platform"]["grounded"] == s["platform"]["reviewed"]
+    assert "sentence" not in json.dumps(V2.score(root, decisions))                                   # answers only
+    del decisions["decisions"][items[0]["item_id"]]
+    with pytest.raises(SystemExit, match="unanswered"):
+        V2.score(root, decisions)
+    assert V2.wilson(9, 10) == [0.596, 0.982]

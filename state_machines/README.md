@@ -55,7 +55,7 @@ A record supports three different kinds of claim, and each has its own gate. The
 - **A sparse graph is a correct graph.** A case may have observations and no relationship, or acts and no platform.
 - **The record is not the model.** A stated feature documents that the capability appears in the case. Whether it enabled the offence is a question for the [theory](theory/README.md) layer, not a fact in the graph.
 
-Release `pacer-v1` holds levels 2 and the level-3 relationships its agreed acts carried. Release `pacer-v2` holds the same bundles, byte for byte, and adds level 1 and the level-3 relationships derived from it.
+Release `pacer-v1` holds level 2 and the level-3 relationships its agreed acts carried. Release `pacer-v2` holds the same bundles, byte for byte, and adds level 1, the level-3 relationships derived from it, and a case-level [research table](observations/README.md#research-table) that keeps the three apart. The cases are a selected collection of prosecutions, not a sample of offending.
 
 ## The documented event graph
 

@@ -132,10 +132,11 @@ def build_payload(root: Optional[Path] = None, *, from_bundles: bool = False) ->
                    for thr in ("DIRECT", "INFERRED")}
         cp = case_payload(bundle, derived)
         cp["shacl"] = c["shacl"]["conformance"]
-        if c.get("observations"):      # what the record names (mentions, not use); only releases built with the observation layer
-            o = c["observations"]
-            cp["observed"] = {"platforms": o["platforms"], "feature_classes": o["feature_classes"], "feature_terms": o["feature_terms"],
-                              "tied_to_an_act": o["observations_tied_to_an_act"]}
+        obs_path = root / "observations" / f"{c['case_id']}.json"
+        if obs_path.is_file():      # what the record names (mentions, not use); only releases built with the observation layer
+            from state_machines.observations.table import case_observed
+            cp["observed"] = case_observed(json.loads(obs_path.read_text(encoding="utf-8")),
+                                           {k: e["action"] for k, e in cp["events"].items()})
         cases.append(cp)
     return {"release": {"id": manifest["release_id"], "adjudicated": manifest["adjudicated"],
                         "review_mode": review_mode(manifest),

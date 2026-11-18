@@ -149,6 +149,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     from state_machines.trajectories.payload import build_payload
     (root / "lifecycle.json").write_text(json.dumps(build_payload(root, from_bundles=True), sort_keys=True) + "\n",
                                          encoding="utf-8")
+    if observations:      # the case-level research table, from the files just written
+        from state_machines.observations.table import write as write_table
+        write_table(root)
     return manifest
 
 
@@ -225,7 +228,7 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     return problems
 
 
-COMMITTED = ("graphs/*", "derived/*", "observations/*", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
+COMMITTED = ("graphs/*", "derived/*", "observations/*", "research_table.json", "research_table.csv", "validation.json", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
 
 
 def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) -> dict:
@@ -277,7 +280,7 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
         doc = json.loads(path.read_text(encoding="utf-8"))
         for o in doc["observations"]:
             open_values += 1
-            ok = known_platform(o["platform"]) == o["platform"] if o["kind"] == "platform" else (o["feature_class"], o["feature_term"]) in phrases
+            ok = known_platform(o["named_as"]) == o["named_as"] if o["kind"] == "platform" else (o["feature_class"], o["feature_term"]) in phrases
             if not ok:
                 hits.append({"case": doc["case_id"], "kind": "open_text", "file": f"observations/{path.name}"})
     return {"files": len(files), "deny_terms": checked_terms, "quotes": checked_quotes, "listed_values": open_values, "hits": hits}

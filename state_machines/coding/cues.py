@@ -1,6 +1,6 @@
 """Codebook cue words per action code: a deterministic third reading of an act's sentence.
 
-A candidate rule, off by default (``resolve(..., settle_codes=True)``, ``pipeline --settle-codes``).
+A rule that was evaluated and not adopted; off by default (``resolve(..., settle_codes=True)``, ``pipeline --settle-codes``).
 Where both model coders cite the same sentence as an act and name the same actor but give it
 different action codes, the sentence is read against this table. If it carries a cue for exactly
 one of the two codes, that code is taken; in every other case (no cue, cues for both, a code with
@@ -12,8 +12,8 @@ agreed on everything published, and a settled code is one coder's code confirmed
 On the synthetic benchmark the rule recovers acts at no cost in precision; on five real cases
 coded earlier by hand-checked pilot coders, settled codes matched the pilot's code for the same
 sentence less often than codes both models gave (numbers in the release REPORT). Real sentences
-are long and often state several acts, so each coder may have coded a different one. Publishing
-settled codes needs a review tier of their own and a maintainer's decision.
+are long and often state several acts, so each coder may have coded a different one. The rule is
+kept so the measurement can be repeated.
 
 The cues restate the codebook's definitions (``coder._DEF``) as the words filings use for them.
 Residual codes (``RESIDUAL``) are defined by the codebook as "not coded more specifically", so

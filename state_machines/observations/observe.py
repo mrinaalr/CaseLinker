@@ -37,13 +37,15 @@ from state_machines.evidence import vocab as V
 from state_machines.coding import enrich as N
 from state_machines.coding.coder import _ABBREV, pages_of
 
-RULE_VERSION = "observe-1.0.0"
+RULE_VERSION = "observe-1.1.0"
 SCHEMA_VERSION = "observations-1.0.0"
 
-# Feature phrases per affordance class: the codebook's list (enrich.FEATURES), except that a bare
-# "recommended" is everyday legal wording ("the government recommended ...") and is replaced by
-# the phrases that name the recommendation feature.
-FEATURES: Dict[str, List[str]] = {cls: [p for p in phrases if p != "recommended"] for cls, phrases in N.FEATURES.items()}
+# Feature phrases per affordance class: the codebook's list (enrich.FEATURES), with two changes.
+# A bare "recommended" is everyday legal wording ("the government recommended ...") and is replaced
+# by the phrases that name the recommendation feature. A bare "website" names a place on the
+# internet, not a capability of one, and is dropped (it was 97 of 116 feature observations in the
+# 30 real cases).
+FEATURES: Dict[str, List[str]] = {cls: [p for p in phrases if p not in ("recommended", "website")] for cls, phrases in N.FEATURES.items()}
 FEATURES["contact_discovery"] += ["recommended friends", "suggested friends", "friend suggestions", "people you may know"]
 
 
@@ -74,6 +76,9 @@ _SERVICE_AFTER = re.compile(r"^[\s-]+(?:app|apps|application|applications|accoun
                             r"channel|channels|server|servers|profile|profiles|username|user|users|website|service|message|messages|"
                             r"messaging|link|links|folder|folders|call|calls|video|videos)\b", re.I)
 _SERVICE_BEFORE = re.compile(r"\b(?:on|via|using|through|over|onto|into|from|with)\s+(?:(?:the|a|an|his|her|their|its)\s+)?$", re.I)
+# Two listed spellings of one service are one platform.
+ALIASES = {"Kik Messenger": "Kik", "Text Now": "TextNow", "CashApp": "Cash App", "Play Station": "PlayStation", "Xbox Live": "Xbox",
+           "Yahoo Messenger": "Yahoo", "Google Hangouts": "Hangouts", "Messenger": "Facebook Messenger"}
 _NAMES = sorted(N.PLATFORMS | N.FICTIONAL_PLATFORMS, key=len, reverse=True)
 _NAME_PATTERNS = [(name, re.compile(r"(?<![A-Za-z0-9])(?:" + _breakable(name) + ("" if name in AMBIGUOUS else "|" + _breakable(name.upper()))
                                     + r")(?![A-Za-z0-9])")) for name in _NAMES]
@@ -174,7 +179,7 @@ def observe(case_id: str, text_root: Path) -> dict:
                                  "checked_by": RULE_VERSION}}
         for start, end in sentences(page_n):
             s = page_n[start:end]
-            found = [("platform", {"platform": name}, a, b) for name, a, b in platforms_in(s)]
+            found = [("platform", {"platform": ALIASES.get(name, name), "named_as": name}, a, b) for name, a, b in platforms_in(s)]
             found += [("feature", {"feature_class": cls, "feature_term": phrase}, a, b) for cls, phrase, a, b in features_in(s)]
             if not found:
                 continue
@@ -190,7 +195,7 @@ def observe(case_id: str, text_root: Path) -> dict:
 def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
     """(relationship kind, cue word) when the sentence states the act was done by means of the observation."""
     if kind == "platform":
-        name = "(?:" + _breakable(o["platform"]) + "|" + _breakable(o["platform"].upper()) + ")"
+        name = "(?:" + _breakable(o["named_as"]) + "|" + _breakable(o["named_as"].upper()) + ")"
         m = re.search(_PLATFORM_MEANS.format(name=name), sentence) or re.search(_PLATFORM_IN.format(name=name), sentence)
         if not m or _NEGATED.search(sentence[:m.start()]):
             return None
@@ -269,7 +274,7 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
         if not (o["char_start"] <= o["term_start"] < o["term_end"] <= o["char_end"]):
             problems.append(f"{where}: term outside its sentence")
         if o["kind"] == "platform":
-            if N.known_platform(o["platform"]) != o["platform"] or not _same(term, o["platform"]):
+            if N.known_platform(o["named_as"]) != o["named_as"] or ALIASES.get(o["named_as"], o["named_as"]) != o["platform"] or not _same(term, o["named_as"]):
                 problems.append(f"{where}: not a listed service at that span")
         elif (o["feature_class"], o["feature_term"]) not in terms or not _same(term, o["feature_term"]):
             problems.append(f"{where}: not a listed feature phrase at that span")

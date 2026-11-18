@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import copy
 import json
+import shutil
 
 import pytest
 import rdflib
@@ -234,7 +235,16 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     assert case["graphs"]["observations"]["iri"] == graph_iri(F.CASE, "observations") and case["observations"]["observations"] > 0
     assert case["shacl"]["violations"] == 0
     page = json.loads((root / "test-v1" / "lifecycle.json").read_text())["cases"][0]
-    assert page["observed"]["feature_classes"] == case["observations"]["feature_classes"] and "observed" not in json.dumps(plain)
+    assert set(page["observed"]["features"]) == set(case["observations"]["feature_classes"]) and "mentions, not use" in page["observed"]["meaning"]
+    # the research table is rebuilt from the committed files alone and keeps the three kinds of evidence apart
+    from state_machines.observations import table as T
+    stored = json.loads((root / "test-v1" / "research_table.json").read_text())
+    assert stored == json.loads(json.dumps(T.build(root / "test-v1"), sort_keys=True))
+    row = stored["cases"][0]
+    assert {"platform_named", "feature_stated", "used_in_act"} <= set(row) and row["counts"]["feature_statements"] == case["observations"]["feature_observations"]
+    assert (root / "test-v1" / "research_table.csv").read_text().splitlines()[0].split(",")[:3] == ["case_id", "documents", "agreed_acts"]
+    shutil.rmtree(root / "test-v1" / "cases")                       # no local bundle is needed
+    assert json.loads(json.dumps(T.build(root / "test-v1"), sort_keys=True)) == stored
     stored = json.loads((root / "test-v1" / "observations" / f"{F.CASE}.json").read_text())
     assert "quote" not in json.dumps(stored).replace("quote_sha256", "").replace("quote_word_count", "")   # hashes and offsets, no text
     ds = rdflib.Dataset()

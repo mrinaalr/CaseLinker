@@ -91,10 +91,10 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 6. **Possible retellings** (same action, overlapping dates) are linked `SAME_ACT`, never merged (R05).
 7. **Open roles** stay open.
 
-**Candidate rule 2b, not released.** Where both coders cite the same sentence and actor but give different codes, [`cues.py`](cues.py) reads the sentence against a cue table written from the codebook definitions and takes the one code it cues (`pipeline resolve --settle-codes`, output in `resolved_2b`).
+**Rule 2b, evaluated and not adopted.** Where both coders cite the same sentence and actor but give different codes, [`cues.py`](cues.py) reads the sentence against a cue table written from the codebook definitions and takes the one code it cues (`pipeline resolve --settle-codes`, output in `resolved_2b`).
 - On the synthetic benchmark it recovers acts at no cost in precision.
 - On five real cases its codes agreed with reference coding less often than codes both models gave (numbers in each release's `REPORT.md`): real sentences are long and often state several acts.
-- A machine release states that two coders agreed on everything published, so settled codes stay out until they have a review tier of their own.
+- A machine release states that two coders agreed on everything published. Settled codes are one coder's code confirmed by a word rule, so they are not published. The rule stays in the code, off, so the measurement can be repeated.
 
 Everything else is left out and counted. What the record names (platforms, feature phrases) does not depend on this rule: the [observation layer](../observations/README.md) reads it from the pages and publishes it apart from the acts. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
 

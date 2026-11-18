@@ -120,21 +120,23 @@ Read by rule from every page except docket sheets, independent of the coders. An
 | Content | Count |
 |---|---:|
 | cases | 30 |
-| observations | 594 |
+| observations | 497 |
 | platform observations | 478 |
-| feature observations | 116 |
+| feature observations | 19 |
 | cases naming at least one listed platform | 22 |
-| cases stating at least one feature phrase | 12 |
-| distinct case-platform pairs | 60 |
+| cases stating at least one feature phrase | 10 |
+| distinct case-platform pairs | 59 |
 | observations tied to a published act by a stated means | 12 |
 | cases with at least one such relationship | 9 |
-| observations in documents with standing ADVOCACY | 121 |
-| observations in documents with standing ALLEGATION | 215 |
+| observations in documents with standing ADVOCACY | 82 |
+| observations in documents with standing ALLEGATION | 200 |
 | observations in documents with standing COURT_RECORD | 19 |
-| observations in documents with standing ADMITTED | 192 |
+| observations in documents with standing ADMITTED | 149 |
 | observations in documents with standing SWORN_AFFIDAVIT | 47 |
 
-On the reference cases (another coding, not truth): cases 5; listed platforms the reference coding names 3; of which observed 3; platform surfaces in the reference that are not on the list 4; listed platforms observed 4.
+**Not yet reviewed on the real text.** A stratified local packet (`python -m state_machines.observations.validation packet`) covers every relationship, every feature observation and a sample of platform observations; its score is printed here once a reviewer has answered it.
+
+On the reference cases (another coding, not truth): cases 5; listed platforms the reference coding names 3; of which observed 3; platform surfaces in the reference that are not on the list 4; listed platforms observed 3.
 
 ### Level 1. Which platforms do the records name, in how many cases?
 
@@ -153,7 +155,7 @@ SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE
 | Facebook | 10 | 29 |
 | Snapchat | 9 | 154 |
 | Instagram | 7 | 98 |
-| Kik | 6 | 48 |
+| Kik | 6 | 49 |
 | Grindr | 3 | 22 |
 | Omegle | 3 | 3 |
 | Facebook Messenger | 2 | 39 |
@@ -167,7 +169,6 @@ SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE
 | Skype | 1 | 8 |
 | Discord | 1 | 7 |
 | Telegram | 1 | 4 |
-| Kik Messenger | 1 | 1 |
 | Tumblr | 1 | 1 |
 | Twitter | 1 | 1 |
 | iCloud | 1 | 1 |
@@ -190,7 +191,6 @@ SELECT ?class ?phrase (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) 
 | Anonymity | VPN | 1 | 1 |
 | Anonymity | burner phone | 1 | 1 |
 | ContactDiscovery | public group | 1 | 1 |
-| DistributionInfrastructure | website | 5 | 97 |
 | DistributionInfrastructure | uploaded | 5 | 5 |
 | DistributionInfrastructure | cloud storage | 3 | 3 |
 | Ephemerality | self-destructing | 1 | 1 |
@@ -285,7 +285,7 @@ SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
 
 Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.
 
-### Observation layer (observe-1.0.0)
+### Observation layer (observe-1.1.0)
 
 Platform names and feature terms are kept verbatim in every split, so these rates measure finding listed terms in new sentence constructions, not recognising unlisted wording.
 
@@ -421,7 +421,7 @@ Cases `anchorage_pd_2022_006`, `enticement`, `ncis_2023_001`, `svicac_2022_009`,
 
 ## Privacy
 
-184 committed files checked against 248 deny-list terms (names from the case captions) and 5693 stored quotes; 607 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
+186 committed files checked against 248 deny-list terms (names from the case captions) and 5693 stored quotes; 510 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
 
 ## Runtime
 

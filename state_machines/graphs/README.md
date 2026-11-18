@@ -58,7 +58,7 @@ python -m state_machines.graphs.release build <release_id>
 python -m state_machines.graphs.release nquads <release_id>
 ```
 
-A release folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `observations/` (when built with them), `manifest.json` and `lifecycle.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
+A release folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `manifest.json`, `lifecycle.json` and the run report, and, when built with observations, `observations/`, `research_table.json`/`.csv` and (once reviewed) `validation.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
 
 The manifest records the schema, codebook, derivation rule, extension and SDK versions, and per case the bundle hash, the source-document hashes, the graph IRIs and hashes, the SHACL result and the review counts. Graph IRIs are stable across releases:
 
@@ -71,7 +71,7 @@ urn:caselinker:pacer:<case_id>:observations    platforms and feature phrases the
 | Release | Holds |
 |---|---|
 | `pacer-v1` | 30 cases, 258 agreed acts: evidence and trajectory graphs. The baseline, kept as built |
-| `pacer-v2` | The same bundles and graphs, byte for byte, plus `observations/` and an observation graph per case |
+| `pacer-v2` | The same bundles and graphs, byte for byte, plus `observations/`, an observation graph per case and the case-level research table |
 
 ## Oxigraph
 

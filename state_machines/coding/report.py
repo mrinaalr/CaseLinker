@@ -139,6 +139,8 @@ def observed_content(release_id: str, pilot: Path = None) -> dict:
     from state_machines.observations.queries import QUERIES, run
     out = {"counts": dict(c), "queries": {k: {"title": QUERIES[k]["title"], "columns": QUERIES[k]["columns"], "sparql": QUERIES[k]["sparql"], "rows": rows}
                                            for k, rows in run(release_id).items()}}
+    if (DATA / release_id / "validation.json").is_file():
+        out["validation"] = json.loads((DATA / release_id / "validation.json").read_text(encoding="utf-8"))
     if pilot is not None and pilot.is_dir():
         from state_machines.coding.enrich import known_platform
         ref: Counter = Counter()
@@ -239,6 +241,16 @@ def _observed_md(ob: dict) -> list:
          "codebook feature phrase is stated in a cited sentence. It does not say anyone used it. A relationship exists only where a "
          "published act's own sentence states the means.", "", "| Content | Count |", "|---|---:|"]
     L += [f"| {k} | {v} |" for k, v in ob["counts"].items()] + [""]
+    v = ob.get("validation")
+    if v:
+        L += [f"**Reviewed on the real text** by {v['reviewer'] or 'the maintainer'} on {v['reviewed_on']} ({v['note']}):", "",
+              "| Stratum | Reviewed | Term is in the sentence as cited | Meaning: yes / no / unclear | Meaning yes, 95% interval |", "|---|---:|---:|---:|---|"]
+        L += [f"| {k} | {x['reviewed']} | {x['grounded']} | {x['meaning_yes']} / {x['meaning_no']} / {x['meaning_unclear']} | "
+              f"{x['meaning_yes_interval_95'][0]} to {x['meaning_yes_interval_95'][1]} |" for k, x in v["strata"].items()] + [""]
+    else:
+        L += ["**Not yet reviewed on the real text.** A stratified local packet (`python -m state_machines.observations.validation packet`) "
+              "covers every relationship, every feature observation and a sample of platform observations; its score is printed here once a "
+              "reviewer has answered it.", ""]
     if ob.get("reference"):
         L += ["On the reference cases (another coding, not truth): " + "; ".join(f"{k} {v}" for k, v in ob["reference"].items()) + ".", ""]
     for q in ob["queries"].values():
