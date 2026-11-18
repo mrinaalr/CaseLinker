@@ -22,6 +22,10 @@ Evidence graph (canonical, one per case):
   evidence        oa:Annotation(body = assertion, target = SpecificResource(source = document,
                   FragmentSelector page=N refinedBy TextPositionSelector)), quote hash only
 
+Observation graph (what the record names; see ``observation_graph``): oa:Annotation with
+oa:motivatedBy oa:identifying (a platform) or oa:classifying (a feature phrase), and the
+relationships the act's own sentence supports.
+
 Trajectory graph (derived view): uco-action:ActionLifecycle + uco-action:ArrayOfAction, and
 one uco-core:Relationship "Trajectory_Step" per step with clt:stepIndex and clt:stepAffordance.
 
@@ -334,6 +338,74 @@ def trajectory_graph(bundle: dict, derived: dict) -> CASEGraph:
                                              if step.get("available_affordances") else {}),
                                           **({"clt:capabilityEntry": [_CL("|".join(c)) for c in step.get("capability_evidence", [])]}
                                              if step.get("capability_evidence") else {})})
+    return g
+
+
+def observation_graph(bundle: dict, doc: dict) -> CASEGraph:
+    """Documented observations (state_machines/observations): what the record names, kept apart from
+    what anyone did. No new vocabulary:
+
+      platform observation   oa:Annotation, oa:motivatedBy oa:identifying, body = the platform
+                             (uco-observable:ObservableObject, the IRI the evidence graph uses)
+      feature observation    oa:Annotation, oa:motivatedBy oa:classifying, body = the CAC affordance
+                             class the codebook lists the phrase under, clt:featureTerm = the phrase.
+                             The passage is classified; no affordance individual is created.
+      source                 the same oa:SpecificResource / selector pattern as evidence, with hashes
+      supported relationship only where the act's own sentence states the means: the canonical
+                             Carried_Out_Through / Moved_To relationship (action -> platform) or a
+                             cac-platforms individual --Supports_Action--> action, under the IRIs the
+                             evidence graph uses, with an evidence annotation on the observation's
+                             own target. Dates stated in the sentence are not written to the graph.
+    """
+    em = _Emitter(bundle)
+    g = em.g
+    pages = {(d["doc_id"], pg["pdf_page"]) for d in bundle["documents"] for pg in d["pages"]}
+    have_inter = {(e["event_id"], i["platform_key"], i["mode"]) for e in bundle["events"] for i in e.get("platform_interactions", [])}
+    have_aff = {(e["event_id"], a["affordance"]) for e in bundle["events"] for a in e.get("affordances", [])}
+    for o in doc["observations"]:
+        if (o["doc_id"], o["pdf_page"]) not in pages:
+            continue
+        g.upsert_node(em.doc(o["doc_id"]), types=["uco-observable:ObservableObject"])   # typed so the graph stands alone
+        key = _h(o["doc_id"], str(o["pdf_page"]), str(o["char_start"]), str(o["char_end"]))
+        page_sel, pos_sel, target = f"kb:obs-selector-page-{key}", f"kb:obs-selector-text-{key}", f"kb:obs-target-{key}"
+        g.upsert_node(pos_sel, types=["oa:TextPositionSelector"], properties={"oa:start": _INT(o["char_start"]), "oa:end": _INT(o["char_end"])})
+        g.upsert_node(page_sel, types=["oa:FragmentSelector"], properties={
+            "rdf:value": _STR(f"page={o['pdf_page']}"), "dcterms:conformsTo": _ref("http://tools.ietf.org/rfc/rfc3778"),
+            "oa:refinedBy": _ref(pos_sel)})
+        g.upsert_node(target, types=["oa:SpecificResource"], properties={
+            "oa:hasSource": _ref(em.doc(o["doc_id"])), "oa:hasSelector": _ref(page_sel)})
+        source = {"clt:sourceStatus": _CL(o["source_status"]), "clt:verificationStatus": _CL(o["verification"]["status"]),
+                  "clt:quoteSha256": _CL(o["quote_sha256"]), "clt:pageTextSha256": _CL(o["page_text_sha256"])}
+        if o["kind"] == "platform":
+            body, extra = em.platform(o["platform"], o["platform"]), {"oa:motivatedBy": _ref("oa:identifying"), "clt:supportFacet": _CL("platform")}
+        else:
+            body, extra = V.AFFORDANCE_CLASSES[o["feature_class"]], {"oa:motivatedBy": _ref("oa:classifying"), "clt:supportFacet": _CL("feature"),
+                                                                    "clt:featureTerm": _CL(o["feature_term"])}
+        g.upsert_node(f"kb:observation-{o['observation_id']}", types=["oa:Annotation"], properties={
+            "oa:hasBody": _ref(body), "oa:hasTarget": _ref(target), "clt:assertionStatus": _CL("DIRECT"),
+            "clt:derivationRule": _CL(doc["rule"]), **extra, **source})
+        for r in o["relations"]:
+            eid, action = r["event_id"], em.event(r["event_id"])
+            g.upsert_node(action, types=["uco-action:Action"])
+            if o["kind"] == "platform":
+                mode = "to" if r["relationship"] == "Moved_To" else "through"
+                rel_id = f"kb:{mode}-{eid}-{_slug(o['platform'])}"
+                if (eid, o["platform"], mode) not in have_inter:        # the evidence graph already holds it otherwise
+                    g.create_relationship(action, body, INTERACTION_KIND[mode], relationship_id=rel_id, properties={
+                        "clt:assertionStatus": _CL("DIRECT"), "clt:interactionMode": _CL(mode)})
+                facet = "platform"
+            else:
+                cls = o["feature_class"]
+                rel_id, ind = f"kb:supports-{eid}-{cls}", f"kb:affordance-{eid}-{cls}"
+                if (eid, cls) not in have_aff:
+                    g.upsert_node(ind, types=[V.AFFORDANCE_CLASSES[cls]], properties={"uco-core:description": _STR(f"{cls} as used in {eid}")})
+                    g.create_relationship(ind, action, "Supports_Action", relationship_id=rel_id, properties={
+                        "clt:affordanceBasis": _CL("feature_stated"), "clt:assertionStatus": _CL("DIRECT"),
+                        "clt:featureTerm": _CL(o["feature_term"])})
+                facet = "feature"
+            g.upsert_node(f"kb:obs-evidence-{_h(rel_id, o['observation_id'])}", types=["oa:Annotation"], properties={
+                "oa:hasBody": _ref(rel_id), "oa:hasTarget": _ref(target), "clt:supportFacet": _CL(facet),
+                "clt:assertionStatus": _CL("DIRECT"), "clt:derivationRule": _CL(doc["rule"]), **source})
     return g
 
 

@@ -219,3 +219,28 @@ def test_a_case_without_offender_chains_has_no_trajectory_graph_to_load(tmp_path
     ds = rdflib.Dataset()
     ds.parse(nquads("test-v1", data_root=root, out=tmp_path / "all.nq"), format="nquads")
     assert verify_store(m, _query(ds)) == []
+
+
+def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two_as_they_were(tmp_path):
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    (tmp_path / "text" / F.CASE / "sources.json").write_text(json.dumps({"case_id": F.CASE, "documents": b["documents"]}), encoding="utf-8")
+    plain = build("test-v1", data_root=root, text_root=tmp_path / "text")
+    before = {k: v["sha256"] for k, v in plain["cases"][0]["graphs"].items()}
+    assert set(before) == {"evidence", "trajectories"} and not (root / "test-v1" / "observations").exists()
+    m = build("test-v1", data_root=root, text_root=tmp_path / "text", observations=True)
+    case = m["cases"][0]
+    assert {k: v["sha256"] for k, v in case["graphs"].items() if k != "observations"} == before
+    assert case["graphs"]["observations"]["iri"] == graph_iri(F.CASE, "observations") and case["observations"]["observations"] > 0
+    assert case["shacl"]["violations"] == 0
+    stored = json.loads((root / "test-v1" / "observations" / f"{F.CASE}.json").read_text())
+    assert "quote" not in json.dumps(stored).replace("quote_sha256", "").replace("quote_word_count", "")   # hashes and offsets, no text
+    ds = rdflib.Dataset()
+    ds.parse(nquads("test-v1", data_root=root, out=tmp_path / "all.nq"), format="nquads")
+    assert verify_store(m, _query(ds)) == []
+    ob = ds.graph(rdflib.URIRef(case["graphs"]["observations"]["iri"]))
+    ob.remove((None, rdflib.URIRef("https://w3id.org/caselinker/trajectory#derivationRule"), None))
+    assert any("without a derivation rule" in p for p in verify_store(m, _query(ds)))
+    only = rdflib.Dataset()
+    only.parse(nquads("test-v1", data_root=root, out=tmp_path / "ev.nq", select="evidence"), format="nquads")
+    assert verify_store(m, _query(only), select="evidence") == [] and len(list(only.graphs())) <= 2

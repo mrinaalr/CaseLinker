@@ -114,6 +114,86 @@ def score_case(gold: dict, coded: dict) -> Counter:
     return c
 
 
+def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> Counter:
+    """Observations of a case (state_machines/observations) against the gold.
+
+    A gold act that goes through a platform, or only names one, is a gold platform mention in its
+    sentence; a gold level-C affordance is a gold feature statement in its sentence. Counted:
+    how many of those the rule observed; observed feature phrases in sentences where the gold codes
+    no affordance (a phrase is a mention, not an affordance); and, given the coded bundle, whether
+    each supported relationship is one the gold also holds (a platform the gold act goes through,
+    an affordance the gold act carries) or not (for example a platform the gold says is only named)."""
+    c: Counter = Counter()
+    P = {p["passage_id"]: p for p in gold["passages"]}
+    span = lambda e: next(P[s["passage_id"]] for s in e["support"] if s["facet"] == "action")
+    inside = lambda o, p: (o["doc_id"], o["pdf_page"]) == (p["doc_id"], p["pdf_page"]) and p["char_start"] <= o["term_start"] and o["term_end"] <= p["char_end"]
+    obs = doc["observations"]
+    for e in gold["events"]:
+        p = span(e)
+        here = [o for o in obs if inside(o, p)]
+        names = {i["platform_surface"] for i in e["platform_interactions"]} | {m["platform_surface"] for m in e["platform_mentions"]}
+        for name in names:
+            c["platform_gold"] += 1
+            c["platform_found"] += any(o["kind"] == "platform" and o["platform"] == name for o in here)
+        classes = {a["affordance"] for a in e["affordances"]}
+        for cls in classes:
+            c["feature_gold"] += 1
+            c["feature_found"] += any(o["kind"] == "feature" and o["feature_class"] == cls for o in here)
+        for o in here:
+            if o["kind"] == "feature":
+                c["feature_observed_in_gold_act"] += 1
+                c["feature_observed_where_gold_has_that_affordance"] += o["feature_class"] in classes
+            else:
+                c["platform_observed_in_gold_act"] += 1
+                c["platform_observed_where_gold_names_it"] += o["platform"] in names
+    c["observations"] += len(obs)
+    c["observations_outside_gold_acts"] += sum(not any(inside(o, span(e)) for e in gold["events"]) for o in obs)
+    if coded is not None:
+        g2c = dict(match_events(gold, coded))
+        c2g = {v: k for k, v in g2c.items()}
+        eg = {e["event_id"]: e for e in gold["events"]}
+        made = set()
+        for o in obs:
+            for r in o["relations"]:
+                g = eg.get(c2g.get(r["event_id"]))
+                key = (r["event_id"], o["kind"], o.get("platform") or o.get("feature_class"))
+                if key in made:
+                    continue
+                made.add(key)
+                c["relations"] += 1
+                if g is None:
+                    c["relation_on_act_not_in_gold"] += 1
+                elif o["kind"] == "platform":
+                    ok = any(i["platform_surface"] == o["platform"] for i in g["platform_interactions"])
+                    c["relation_correct"] += ok
+                    c["relation_platform_only_named_in_gold"] += (not ok) and any(m["platform_surface"] == o["platform"] for m in g["platform_mentions"])
+                else:
+                    c["relation_correct"] += any(a["affordance"] == o["feature_class"] for a in g["affordances"])
+        for ig, ic in g2c.items():       # gold relationships on acts the coded bundle publishes
+            g = eg[ig]
+            for i in g["platform_interactions"]:
+                c["relation_gold"] += 1
+                c["relation_gold_found"] += (ic, "platform", i["platform_surface"]) in made
+            for a in g["affordances"]:
+                c["relation_gold"] += 1
+                c["relation_gold_found"] += (ic, "feature", a["affordance"]) in made
+    return c
+
+
+def summarize_observations(c: Counter) -> dict:
+    return {
+        "observations": c["observations"], "observations_outside_gold_acts": c["observations_outside_gold_acts"],
+        "platform_mentions_found": _rate(c["platform_found"], c["platform_gold"]),
+        "platform_observations_gold_names": _rate(c["platform_observed_where_gold_names_it"], c["platform_observed_in_gold_act"]),
+        "feature_statements_found": _rate(c["feature_found"], c["feature_gold"]),
+        "feature_observations_gold_codes_as_affordance": _rate(c["feature_observed_where_gold_has_that_affordance"], c["feature_observed_in_gold_act"]),
+        "relationships_correct": _rate(c["relation_correct"], c["relations"]),
+        "relationships_platform_only_named_in_gold": c["relation_platform_only_named_in_gold"],
+        "relationships_on_act_not_in_gold": c["relation_on_act_not_in_gold"],
+        "gold_relationships_found_on_published_acts": _rate(c["relation_gold_found"], c["relation_gold"]),
+    }
+
+
 def summarize(c: Counter) -> dict:
     p = c["matched"] / c["coded_events"] if c["coded_events"] else 0
     r = c["matched"] / c["gold_events"] if c["gold_events"] else 0

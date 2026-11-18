@@ -46,9 +46,10 @@ DATA = REPO / "state_machines" / "data"
 GRAPH_PREFIX = "urn:caselinker:pacer:"
 LEGACY_PREFIX = "urn:pacer:kg:"
 MANIFEST_VERSION = "1"
-GRAPH_KINDS = ("evidence", "trajectories")
+GRAPH_KINDS = ("evidence", "trajectories", "observations")
 SELECTIONS = {"evidence": ("evidence",), "all": GRAPH_KINDS}
 CLT = "https://w3id.org/caselinker/trajectory#"
+OA = "http://www.w3.org/ns/oa#"
 INVESTIGATION = "https://ontology.caseontology.org/case/investigation/Investigation"
 LIFECYCLE = "https://ontology.unifiedcyberontology.org/uco/action/ActionLifecycle"
 
@@ -71,10 +72,13 @@ def _review_summary(bundle: dict) -> Dict[str, int]:
 
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
           deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
-          mode: str = "adjudicated") -> dict:
-    """Validate, derive, emit and SHACL-check every bundle of a release; write the manifest."""
+          mode: str = "adjudicated", observations: bool = False) -> dict:
+    """Validate, derive, emit and SHACL-check every bundle of a release; write the manifest.
+
+    ``observations`` also reads every page of each case for the platforms and features it names
+    (state_machines/observations), writes ``observations/<case>.json`` and a third graph per case."""
     from state_machines.evidence.validate import release_errors
-    from state_machines.graphs.emit import evidence_graph, serialize, trajectory_graph
+    from state_machines.graphs.emit import evidence_graph, observation_graph, serialize, trajectory_graph
     from state_machines.graphs.shacl import validation_report
     from state_machines.trajectories.derive import RULE_VERSION, derive, derived_json
 
@@ -100,7 +104,24 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         tr = serialize(trajectory_graph(bundle, derived_inferred))
         (root / "graphs" / f"{case_id}.evidence.jsonld").write_text(ev, encoding="utf-8")
         (root / "graphs" / f"{case_id}.trajectories.jsonld").write_text(tr, encoding="utf-8")
-        shacl = validation_report(ev, tr)
+        graphs = {"evidence": {"iri": graph_iri(case_id, "evidence"), "sha256": _sha(ev)},
+                  "trajectories": {"iri": graph_iri(case_id, "trajectories"), "sha256": _sha(tr), "chains": chains}}
+        documents = [ev, tr]
+        observed = None
+        if observations:
+            from state_machines.observations import observe as O
+            doc = O.relate(O.observe(case_id, text_root), bundle, text_root)
+            unsound = O.check(doc, text_root, bundle)
+            if unsound:
+                raise SystemExit(f"{case_id}: observations not sound:\n  " + "\n  ".join(unsound[:20]))
+            (root / "observations").mkdir(exist_ok=True)
+            (root / "observations" / f"{case_id}.json").write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            ob = serialize(observation_graph(bundle, doc))
+            (root / "graphs" / f"{case_id}.observations.jsonld").write_text(ob, encoding="utf-8")
+            observed = O.summary(doc)
+            graphs["observations"] = {"iri": graph_iri(case_id, "observations"), "sha256": _sha(ob), "observations": observed["observations"]}
+            documents.append(ob)
+        shacl = validation_report(*documents)
         cases.append({
             "case_id": case_id,
             "bundle_sha256": _sha(path.read_bytes()),
@@ -108,8 +129,8 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "review": _review_summary(bundle),
             "passages": {"total": len(bundle["passages"]),
                          "ocr_text_only": sum(p["verification"].get("method") == "ocr_text_exact" for p in bundle["passages"])},
-            "graphs": {"evidence": {"iri": graph_iri(case_id, "evidence"), "sha256": _sha(ev)},
-                       "trajectories": {"iri": graph_iri(case_id, "trajectories"), "sha256": _sha(tr), "chains": chains}},
+            "graphs": graphs,
+            **({"observations": observed} if observed is not None else {}),
             "shacl": {"conformance": shacl["conformance"], "violations": len(shacl["violations"]),
                       "upstream_defect_violations": len(shacl["upstream_defect_violations"]),
                       "applicable_skipped": shacl["applicable_skipped"]},
@@ -140,7 +161,7 @@ def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = Non
     ds = rdflib.Dataset()
     for c in manifest["cases"]:
         for kind, meta in c["graphs"].items():
-            if kind not in SELECTIONS[select] or meta.get("chains") == 0:   # an empty graph has nothing to load
+            if kind not in SELECTIONS[select] or 0 in (meta.get("chains"), meta.get("observations")):   # an empty graph has nothing to load
                 continue
             text = (root / "graphs" / f"{c['case_id']}.{kind}.jsonld").read_text(encoding="utf-8")
             if _sha(text) != meta["sha256"]:
@@ -161,7 +182,7 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     rows = query("SELECT ?g (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } } GROUP BY ?g")
     counts = {r["g"]: int(r["n"]) for r in rows}
     expected = {meta["iri"] for c in manifest["cases"] for kind, meta in c["graphs"].items()
-                if kind in SELECTIONS[select] and meta.get("chains") != 0}   # a case with no offender chain has no trajectory graph
+                if kind in SELECTIONS[select] and 0 not in (meta.get("chains"), meta.get("observations"))}   # no chain, or nothing observed: no graph
     present = {g for g in counts if g.startswith(GRAPH_PREFIX)}
     for g in sorted(expected - present):
         problems.append(f"missing PACER graph {g}")
@@ -192,10 +213,19 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
             unstamped = count(tr, f"?l a <{LIFECYCLE}> . FILTER NOT EXISTS {{ ?l <{CLT}derivationRule> ?r ; <{CLT}affordanceThreshold> ?t }}")
             if unstamped:
                 problems.append(f"{tr}: {unstamped} trajectories without derivation rule and threshold")
+        ob = c["graphs"].get("observations", {}).get("iri")
+        if ob in present:   # an observation graph: annotations only, each stamped with its rule
+            if count(ob, f"?i a <{INVESTIGATION}>") or count(ob, f"?l a <{LIFECYCLE}>"):
+                problems.append(f"{ob}: holds evidence or trajectory nodes")
+            if not count(ob, f"?a <{OA}motivatedBy> ?m"):
+                problems.append(f"{ob}: no observation")
+            unstamped = count(ob, f"?a <{OA}motivatedBy> ?m . FILTER NOT EXISTS {{ ?a <{CLT}derivationRule> ?r }}")
+            if unstamped:
+                problems.append(f"{ob}: {unstamped} observations without a derivation rule")
     return problems
 
 
-COMMITTED = ("graphs/*", "derived/*", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
+COMMITTED = ("graphs/*", "derived/*", "observations/*", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
 
 
 def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) -> dict:

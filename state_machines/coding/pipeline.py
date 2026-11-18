@@ -132,6 +132,33 @@ def bench(split: str = "all", out: Path = E.REPO_ROOT / "local" / "bench", selec
     return result
 
 
+def bench_observations(split: str, out: Path, note: str = "", write: bool = False) -> dict:
+    """Score the observation layer on a benchmark split. Observations need no model; supported
+    relationships use the resolved bundles already in ``out`` (from ``bench``)."""
+    from collections import Counter
+    from state_machines.benchmark.score import score_observations, split_of, summarize_observations
+    from state_machines.observations import observe as O
+    total: Counter = Counter()
+    cases = [p.parent.name for p in sorted(BENCH.glob("synth_*/gold.json")) if split_of(p.parent.name) == split]
+    for case_id in cases:
+        gold = json.loads((BENCH / case_id / "gold.json").read_text(encoding="utf-8"))
+        doc = O.observe(case_id, BENCH)
+        coded_path = out / "resolved" / f"{case_id}.json"
+        coded = json.loads(coded_path.read_text(encoding="utf-8")) if coded_path.is_file() else None
+        if coded:
+            O.relate(doc, coded, BENCH)
+        if O.check(doc, BENCH, coded):
+            raise SystemExit(f"{case_id}: observations not sound")
+        total += score_observations(gold, doc, coded)
+    body = dict(summarize_observations(total), cases=len(cases), rule=O.RULE_VERSION)
+    if note:
+        body["_note"] = note
+    if write:
+        path = E.REPO_ROOT / "state_machines" / "benchmark" / "results" / f"{O.RULE_VERSION}.{split}.json"
+        path.write_text(json.dumps(body, indent=1) + "\n", encoding="utf-8")
+    return body
+
+
 def record(split: str, result: dict, note: str = "") -> Path:
     """Write a split's overall scores to the committed results folder, keyed by the rule version."""
     from state_machines.coding.resolve import RULE_VERSION
@@ -144,7 +171,7 @@ def record(split: str, result: dict, note: str = "") -> Path:
     return path
 
 
-def release(release_id: str, cases: List[str], out: Path, text_root: Path) -> dict:
+def release(release_id: str, cases: List[str], out: Path, text_root: Path, observations: bool = False) -> dict:
     from state_machines.graphs.release import build
     root = DATA / release_id / "cases"
     root.mkdir(parents=True, exist_ok=True)
@@ -154,18 +181,21 @@ def release(release_id: str, cases: List[str], out: Path, text_root: Path) -> di
         if src.is_file():
             shutil.copy(src, root / f"{case_id}.json")
             included.append(case_id)
-    manifest = build(release_id, text_root=text_root, deny_lists={c: _deny(text_root, c) for c in included}, mode="machine")
+    manifest = build(release_id, text_root=text_root, deny_lists={c: _deny(text_root, c) for c in included}, mode="machine",
+                     observations=observations)
     return {"release": release_id, "cases": len(manifest["cases"]), "left_out": sorted(set(cases) - set(included))}
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=("code", "resolve", "bench", "release"))
+    ap.add_argument("cmd", choices=("code", "resolve", "bench", "bench-observations", "release"))
     ap.add_argument("args", nargs="*")
     ap.add_argument("--text-root", type=Path, default=E.text_root())
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--split", choices=("dev", "heldout", "confirm", "all"), default="all")
     ap.add_argument("--selective", action="store_true", help="coder_B reads only pages where coder_A found acts")
+    ap.add_argument("--observations", action="store_true",
+                    help="release: also publish what each record names (platforms, feature phrases) as a third graph per case")
     ap.add_argument("--settle-codes", action="store_true",
                     help="resolve: candidate rule 2b, settle a differing action code from the sentence (not for a machine release)")
     ap.add_argument("--record", action="store_true", help="bench: write the split's scores to state_machines/benchmark/results")
@@ -176,13 +206,15 @@ def main(argv=None) -> int:
         print(json.dumps(code(a.args, a.text_root, a.out, a.selective), indent=1))
     elif a.cmd == "resolve":
         print(json.dumps(resolve_cases(a.args, a.out, a.text_root, a.settle_codes, "resolved_2b" if a.settle_codes else "resolved"), indent=1))
+    elif a.cmd == "bench-observations":
+        print(json.dumps(bench_observations(a.split, a.bench_out, a.note, a.record), indent=1))
     elif a.cmd == "bench":
         r = bench(a.split, a.bench_out, a.selective)
         if a.record:
             record(a.split, r, a.note)
         print(json.dumps({k: v["overall"] for k, v in r.items()}, indent=1))
     else:
-        print(json.dumps(release(a.args[0], a.args[1:], a.out, a.text_root), indent=1))
+        print(json.dumps(release(a.args[0], a.args[1:], a.out, a.text_root, a.observations), indent=1))
     return 0
 
 
