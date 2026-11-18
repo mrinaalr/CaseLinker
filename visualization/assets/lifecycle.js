@@ -156,9 +156,13 @@
   function namedLine(cs) {
     const o = cs.observed;
     if (!o) return "";
-    const p = Object.keys(o.platforms).length, f = Object.values(o.features).reduce((n, t) => n + Object.keys(t).length, 0);
-    if (!p && !f) return "";
-    return "names " + [p ? `${p} platform${p > 1 ? "s" : ""}` : "", f ? `${f} feature${f > 1 ? "s" : ""}` : ""].filter(Boolean).join(", ");
+    const all = Object.values(o.platforms), w = all.filter(v => v.withheld).length, p = all.length - w;
+    const f = Object.values(o.features).reduce((n, t) => n + Object.keys(t).length, 0);
+    const d = Object.keys(o.service_descriptions || {}).length;
+    const parts = [p ? `names ${p} platform${p > 1 ? "s" : ""}` : "", w ? `${w} under a placeholder` : "",
+                   f ? `${f} feature${f > 1 ? "s" : ""}` : ""].filter(Boolean);
+    if (parts.length) return parts.join(", ");
+    return d ? "describes an online service, names none" : "";
   }
   const meansOf = (cs, id) => ((cs.observed || {}).used_in_act || []).filter(u => u.event_id === id);
   const meansText = u => `${RELATION[u.relationship] || u.relationship} ${u.platform || (AFF[u.feature_class].label.toLowerCase() + " (" + u.feature_term + ")")}`;
@@ -391,7 +395,9 @@
   function showObserved(cs) {
     const o = cs.observed;
     const standing = s => Object.entries(s).map(([k, n]) => `${STANDING[k] || k.toLowerCase()} ${n}`).join(", ");
-    const platforms = Object.entries(o.platforms).sort((a, b) => b[1].mentions - a[1].mentions);
+    const sorted = Object.entries(o.platforms).sort((a, b) => b[1].mentions - a[1].mentions);
+    const platforms = sorted.filter(([, v]) => !v.withheld), withheld = sorted.filter(([, v]) => v.withheld);
+    const described = Object.entries(o.service_descriptions || {});
     const features = Object.entries(o.features);
     openPanel([
       el("div", { class: "cl-eyebrow", text: cs.case_id }),
@@ -401,6 +407,15 @@
       platforms.length ? el("ul", { class: "prov" }, platforms.map(([name, v]) =>
         el("li", { text: `${name} · ${v.mentions} mention${v.mentions > 1 ? "s" : ""} · ${standing(v.standing)}` })))
         : el("p", { class: "detail-none", text: "No listed platform is named." }),
+      ...(withheld.length ? [
+        el("div", { class: "detail-sub", text: "Services under a placeholder (name withheld by the record)" }),
+        el("ul", { class: "prov" }, withheld.map(([name, v]) =>
+          el("li", { text: `${name.replace(" (name withheld)", "")} · ${v.mentions} mention${v.mentions > 1 ? "s" : ""} · ${standing(v.standing)}` }))),
+        el("p", { class: "detail-note", text: "The label is the record's own and means nothing outside this case. A withheld name says nothing about the service's features." })] : []),
+      ...(described.length ? [
+        el("div", { class: "detail-sub", text: "Generic descriptions of an online service" }),
+        el("ul", { class: "prov" }, described.map(([t, n]) => el("li", { text: n > 1 ? `${t} ×${n}` : t }))),
+        el("p", { class: "detail-note", text: "Phrases the record uses without naming a service. Not platforms, and never tied to an act." })] : []),
       el("div", { class: "detail-sub", text: "Features stated" }),
       features.length ? el("ul", { class: "prov" }, features.map(([cls, terms]) =>
         el("li", { text: `${AFF[cls].label}: ${Object.entries(terms).map(([t, n]) => n > 1 ? `${t} ×${n}` : t).join(", ")}` })))

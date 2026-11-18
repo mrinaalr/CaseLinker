@@ -183,7 +183,7 @@ def audit_checks(case_id: str, bundles: Dict[str, dict], core: dict) -> List[dic
     def add(claim, fn):
         checks.append({"audit_finding": claim, **{k: fn(b) for k, b in {**bundles, "agreed": core}.items()}})
 
-    if case_id == "enticement":
+    if case_id == "doj_ceos_2025_026":
         add("no DIRECT retention/storage event (June t4 'Material Retained' unsupported)",
             lambda b: not _events(b, "STORE_MATERIAL", ("DIRECT",)))
         add("two separate in-person meetings coded (June merged them)",

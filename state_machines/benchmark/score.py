@@ -131,7 +131,10 @@ def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> C
     P = {p["passage_id"]: p for p in gold["passages"]}
     span = lambda e: next(P[s["passage_id"]] for s in e["support"] if s["facet"] == "action")
     inside = lambda o, p: (o["doc_id"], o["pdf_page"]) == (p["doc_id"], p["pdf_page"]) and p["char_start"] <= o["term_start"] and o["term_end"] <= p["char_end"]
-    obs = doc["observations"]
+    # the benchmark's gold has no placeholder labels and does not code generic descriptions: they are counted, not scored
+    c["service_descriptions"] += sum(o["kind"] == "service_description" for o in doc["observations"])
+    c["withheld_platforms"] += sum(bool(o.get("withheld")) for o in doc["observations"])
+    obs = [o for o in doc["observations"] if o["kind"] != "service_description"]
     for e in gold["events"]:
         p = span(e)
         here = [o for o in obs if inside(o, p)]
@@ -147,7 +150,7 @@ def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> C
             if o["kind"] == "feature":
                 c["feature_observed_in_gold_act"] += 1
                 c["feature_observed_where_gold_has_that_affordance"] += o["feature_class"] in classes
-            else:
+            elif o["kind"] == "platform":
                 c["platform_observed_in_gold_act"] += 1
                 c["platform_observed_where_gold_names_it"] += o["platform"] in names
     c["observations"] += len(obs)
@@ -189,6 +192,7 @@ def score_observations(gold: dict, doc: dict, coded: Optional[dict] = None) -> C
 def summarize_observations(c: Counter) -> dict:
     return {
         "observations": c["observations"], "observations_outside_gold_acts": c["observations_outside_gold_acts"],
+        "service_descriptions_not_scored": c["service_descriptions"], "withheld_platform_observations": c["withheld_platforms"],
         "platform_mentions_found": _rate(c["platform_found"], c["platform_gold"]),
         "platform_observations_gold_names": _rate(c["platform_observed_where_gold_names_it"], c["platform_observed_in_gold_act"]),
         "feature_statements_found": _rate(c["feature_found"], c["feature_gold"]),

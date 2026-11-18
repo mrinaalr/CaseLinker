@@ -37,8 +37,8 @@ from state_machines.evidence import vocab as V
 from state_machines.coding import enrich as N
 from state_machines.coding.coder import _ABBREV, pages_of
 
-RULE_VERSION = "observe-1.2.0"
-SCHEMA_VERSION = "observations-1.0.0"
+RULE_VERSION = "observe-1.3.0"
+SCHEMA_VERSION = "observations-1.1.0"
 
 # Feature phrases per affordance class: the codebook's list (enrich.FEATURES), with two changes.
 # A bare "recommended" is everyday legal wording ("the government recommended ...") and is replaced
@@ -83,6 +83,82 @@ ALIASES = {"Kik Messenger": "Kik", "Text Now": "TextNow", "CashApp": "Cash App",
 _NAMES = sorted((N.PLATFORMS | N.FICTIONAL_PLATFORMS) - {"Messenger"}, key=len, reverse=True)
 _NAME_PATTERNS = [(name, re.compile(r"(?<![A-Za-z0-9])(?:" + _breakable(name) + ("" if name in AMBIGUOUS else "|" + _breakable(name.upper()))
                                     + r")(?![A-Za-z0-9])")) for name in _NAMES]
+
+# A service the record refers to by a placeholder instead of its name ("Website A"). The record says a
+# service exists and withholds which one, so it is observed under the record's own label, inside the case
+# only: "Website A" in two cases is two services. Nothing follows from the withholding itself: it is not
+# evidence of anonymity, of any feature, or of use. Only "Website" followed by one capital letter or a
+# number is taken (the one form the 30 real cases hold); the letter I is left out, because "the Website I
+# described" is far more common than a ninth placeholder.
+_WITHHELD = re.compile(r"(?<![A-Za-z0-9])(?:Web(?:-\s)?site|WEBSITE)\s(?P<k>[A-HJ-Z]|\d{1,2})(?![A-Za-z0-9-])")
+WITHHELD_SUFFIX = " (name withheld)"
+_LABEL_END = re.compile(_WITHHELD.pattern + r"[.;!?]$")
+
+
+def withheld_in(sentence: str) -> List[Tuple[str, int, int]]:
+    """Placeholder labels the sentence uses for a service: (label, start, end), first use of each."""
+    out: Dict[str, Tuple[str, int, int]] = {}
+    for m in _WITHHELD.finditer(sentence):
+        out.setdefault("Website " + m.group("k"), ("Website " + m.group("k"), m.start(), m.end()))
+    return sorted(out.values(), key=lambda t: t[1])
+
+
+# A generic description of an online service with no name and no label ("a social media application").
+# It is kept as what it is: a cited phrase from a closed grammar. It is not a platform, carries no
+# affordance class, and is never tied to an act. Qualifiers that would themselves claim a capability
+# ("encrypted", "anonymous", "dark web") are not in the grammar; a bare "website", "application" or
+# "social media" names nothing and is not taken.
+_PLACE = r"(?:online|internet-based|internet|web-based|mobile)"
+_QUAL = (r"(?:social[-\s]media|social[-\s]networking|instant[-\s]messaging|messaging|video[-\s]chat|chat|"
+         r"peer(?:-\s?|\s)to(?:-\s?|\s)peer(?:\sfile(?:-\s?|\s)sharing)?|(?:file|photo|image|video)(?:-\s?|\s)sharing|"
+         r"(?:cloud|file)[-\s]storage|dating|gaming|live(?:-\s?|\s)?streaming)")
+_HEAD = r"(?:applications?|apps?|websites?|sites?|platforms?|services?|programs?|networks?|software|forums?)"
+SERVICE = re.compile(r"(?<![A-Za-z0-9-])(?:(?:" + _PLACE + r"\s)?(?:" + _QUAL + r"\s" + _HEAD + r"|chat\s?rooms?|social[-\s]networks?)|"
+                     + _PLACE + r"\sforums?|(?:online|internet|electronic)\s(?:bulletin|message)\sboards?)(?![A-Za-z0-9-])", re.I)
+_SPELLING = [(r"-\s", "-"), (r"\bpeer[-\s]to[-\s]peer\b", "peer-to-peer"), (r"\b(file|photo|image|video)[-\s]sharing\b", r"\1-sharing"),
+             (r"\bsocial[-\s]media\b", "social media"), (r"\bsocial[-\s]network(ing)?\b", r"social network\1"),
+             (r"\binstant[-\s]messaging\b", "instant messaging"), (r"\bvideo[-\s]chat\b", "video chat"),
+             (r"\b(cloud|file)[-\s]storage\b", r"\1 storage"), (r"\blive[-\s]?streaming\b", "live-streaming"), (r"\bchatroom", "chat room"),
+             (r"(application|app|website|site|platform|service|program|network|forum|room|board)s$", r"\1")]
+_OWN_NAME_BEFORE = re.compile(r"(?:'s)?[\s,(\"]*(?:(?:a|an|the)\s)?$", re.I)          # "the Kik messaging application"
+_OWN_NAME_AFTER = re.compile(r"^[\s,(\"]*(?:(?:called|named|known as)\s)?[\"(]?$", re.I)   # "a messaging app called Kik"
+
+
+def service_term(found: str) -> str:
+    """The canonical spelling of a matched description: lower case, one spelling per phrase, singular."""
+    t = " ".join(found.lower().split())
+    for pat, to in _SPELLING:
+        t = re.sub(pat, to, t)
+    return t
+
+
+def descriptions_in(sentence: str, names: List[Tuple[int, int]]) -> List[Tuple[str, int, int]]:
+    """Generic service descriptions the sentence holds: (canonical term, start, end), first use of each.
+    One that overlaps or sits right beside a named or withheld service is that service's own descriptor
+    ("the Kik messaging application") and is not taken."""
+    out: Dict[str, Tuple[str, int, int]] = {}
+    for m in SERVICE.finditer(sentence):
+        if any(m.start() < e and s < m.end() for s, e in names):
+            continue
+        if any((e <= m.start() and _OWN_NAME_BEFORE.fullmatch(sentence[e:m.start()])) or
+               (m.end() <= s and _OWN_NAME_AFTER.fullmatch(sentence[m.end():s])) for s, e in names):
+            continue
+        out.setdefault(service_term(m.group(0)), (service_term(m.group(0)), m.start(), m.end()))
+    return sorted(out.values(), key=lambda t: t[1])
+
+
+def listed_service_term(o: dict) -> bool:
+    """A service description holds only a canonical phrase of the closed grammar."""
+    v = o.get("service_term") or ""
+    return bool(SERVICE.fullmatch(v)) and service_term(v) == v
+
+
+def listed_platform(o: dict) -> bool:
+    """A platform observation holds only a listed service name, or a placeholder label of the fixed form."""
+    if "withheld" in o:
+        return o["withheld"] is True and bool(re.fullmatch(r"Website (?:[A-HJ-Z]|\d{1,2})", o["named_as"])) and o["platform"] == o["named_as"] + WITHHELD_SUFFIX
+    return N.known_platform(o["named_as"]) == o["named_as"] and ALIASES.get(o["named_as"], o["named_as"]) == o["platform"]
+
 
 # Level 3: the sentence states the act was done by means of the platform or feature. The cue and
 # the term must stand together in one clause; that clause must not be someone else's doing or a
@@ -132,8 +208,8 @@ def sentences(page_n: str) -> Iterator[Tuple[int, int]]:
     start = 0
     for m in re.finditer(r"[.;!?](?=\s|$)", page_n):
         k = m.end()
-        if k - start < 12 or _ABBREV.search(page_n[max(start, k - 8):k]):
-            continue
+        if k - start < 12 or (_ABBREV.search(page_n[max(start, k - 8):k]) and not _LABEL_END.search(page_n[max(start, k - 16):k])):
+            continue                                              # "... through Website A." ends a sentence; "John A. Smith" does not
         yield from _capped(page_n, start, k)
         start = k
     if page_n[start:].strip():
@@ -211,6 +287,10 @@ def observe(case_id: str, text_root: Path) -> dict:
         for start, end in sentences(page_n):
             s = page_n[start:end]
             found = [("platform", {"platform": ALIASES.get(name, name), "named_as": name}, a, b) for name, a, b in platforms_in(s)]
+            found += [("platform", {"platform": label + WITHHELD_SUFFIX, "named_as": label, "withheld": True}, a, b)
+                      for label, a, b in withheld_in(s)]
+            names = [m.span() for _, pat in _NAME_PATTERNS for m in pat.finditer(s)] + [m.span() for m in _WITHHELD.finditer(s)]
+            found += [("service_description", {"service_term": term}, a, b) for term, a, b in descriptions_in(s, names)]
             found += [("feature", {"feature_class": cls, "feature_term": phrase}, a, b) for cls, phrase, a, b in features_in(s)]
             if not found:
                 continue
@@ -259,6 +339,9 @@ def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
     for o in doc["observations"]:
         o["relations"] = []
         o.pop("several_acts", None)
+        o.pop("act_passage_runs_on", None)
+        if o["kind"] == "service_description":                  # a description is never tied to an act
+            continue
         citing = {eid for d, pg, a, b, eid in acts if (d, pg) == (o["doc_id"], o["pdf_page"]) and a <= o["term_start"] and o["term_end"] <= b}
         if len(citing) > 1:
             o["several_acts"] = len(citing)
@@ -268,6 +351,11 @@ def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
                 continue
             if (d, pg) not in pages:
                 pages[(d, pg)] = E.normalize(E.read_page(bundle["case_id"], d, pg, text_root) or "")
+            # A cited passage can run across a sentence end the coder's splitter does not see ("... through
+            # Website A. The defendant ..."). Which of its sentences is the act's own is then unknown, so nothing is tied.
+            if a < o["char_start"] - 1 or b > o["char_end"] + 1:
+                o["act_passage_runs_on"] = True
+                continue
             hit = _means(o["kind"], pages[(d, pg)][a:b], o)
             if hit and all(r["event_id"] != eid for r in o["relations"]):
                 o["relations"].append({"event_id": eid, "relationship": hit[0], "cue": hit[1], "basis": "means_stated_in_act_sentence"})
@@ -277,14 +365,19 @@ def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
 
 def summary(doc: dict) -> dict:
     obs = doc["observations"]
-    plat = Counter(o["platform"] for o in obs if o["kind"] == "platform")
+    plat = Counter(o["platform"] for o in obs if o["kind"] == "platform" and not o.get("withheld"))
+    held = Counter(o["platform"] for o in obs if o.get("withheld"))
     feat = Counter(o["feature_class"] for o in obs if o["kind"] == "feature")
-    return {"observations": len(obs), "platform_observations": sum(plat.values()), "feature_observations": sum(feat.values()),
+    desc = Counter(o["service_term"] for o in obs if o["kind"] == "service_description")
+    return {"observations": len(obs), "platform_observations": sum(plat.values()),
+            "withheld_platform_observations": sum(held.values()), "withheld_platforms": dict(sorted(held.items())),
+            "service_description_observations": sum(desc.values()), "service_terms": dict(sorted(desc.items())), "feature_observations": sum(feat.values()),
             "platforms": dict(sorted(plat.items())), "feature_classes": dict(sorted(feat.items())),
             "feature_terms": dict(sorted(Counter(o["feature_term"] for o in obs if o["kind"] == "feature").items())),
             "by_standing": dict(sorted(Counter(o["source_status"] for o in obs).items())),
             "observations_tied_to_an_act": sum(bool(o["relations"]) for o in obs),
             "observations_in_a_sentence_several_acts_cite": sum(bool(o.get("several_acts")) for o in obs),
+            "observations_in_an_act_passage_that_runs_across_sentences": sum(bool(o.get("act_passage_runs_on")) for o in obs),
             "observations_with_a_date_in_the_sentence": sum(bool(o["dates_in_sentence"]) for o in obs)}
 
 
@@ -315,8 +408,13 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
         if not (o["char_start"] <= o["term_start"] < o["term_end"] <= o["char_end"]):
             problems.append(f"{where}: term outside its sentence")
         if o["kind"] == "platform":
-            if N.known_platform(o["named_as"]) != o["named_as"] or ALIASES.get(o["named_as"], o["named_as"]) != o["platform"] or not _same(term, o["named_as"]):
-                problems.append(f"{where}: not a listed service at that span")
+            if not listed_platform(o) or not _same(term, o["named_as"]):
+                problems.append(f"{where}: not a listed service or placeholder label at that span")
+        elif o["kind"] == "service_description":
+            if not listed_service_term(o) or service_term(term) != o["service_term"] or not SERVICE.fullmatch(term):
+                problems.append(f"{where}: not a generic service description of the fixed grammar at that span")
+            if o["relations"] or any(k in o for k in ("platform", "named_as", "withheld", "feature_class", "feature_term")):
+                problems.append(f"{where}: a service description is tied to an act or carries a platform or feature field")
         elif (o["feature_class"], o["feature_term"]) not in terms or not _same(term, o["feature_term"]):
             problems.append(f"{where}: not a listed feature phrase at that span")
         for r in o["relations"]:

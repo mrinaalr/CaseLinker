@@ -5,6 +5,8 @@ import copy
 import json
 import shutil
 
+from pathlib import Path
+
 import pytest
 import rdflib
 
@@ -197,6 +199,40 @@ def test_privacy_scan_refuses_an_unlisted_platform_name_in_a_machine_coded_bundl
     e["affordances"][0]["platform_surface"] = "Some Username"
     path.write_text(json.dumps(bundle), encoding="utf-8")
     assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
+    del e["affordances"][0]["platform_surface"]
+    bundle["documents"][0]["source_path"] = f"BULK_FOLDER/pacer -- {F.CASE} -- Smithson Factual Proffer.pdf"   # a file name as collected
+    path.write_text(json.dumps(bundle), encoding="utf-8")
+    assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
+
+
+def test_extraction_keeps_file_names_local_and_adds_new_filings_without_touching_old_ones(tmp_path, monkeypatch):
+    pymupdf = pytest.importorskip("pymupdf")
+    from state_machines.coding import workflow as W
+    src, text = tmp_path / "src", tmp_path / "text"
+    (src / "BULK_FOLDER").mkdir(parents=True)
+
+    def pdf(name, words):
+        d = pymupdf.open()
+        d.new_page().insert_textbox(pymupdf.Rect(40, 40, 560, 780), (words + " ") * 40)
+        d.save(str(src / "BULK_FOLDER" / name))
+    monkeypatch.setenv("CASELINKER_PACER_SOURCE", str(src))
+    monkeypatch.setitem(W.COLLECTED_AS, "agency_2024_002", "agency_2024_009")      # the press release was renumbered after collection
+    pdf("pacer -- agency_2024_009 -- Smithson Factual Proffer.pdf", "The defendant admits the facts set out here.")
+    first = W.extract("agency_2024_002", text)
+    (doc,) = first["documents"]
+    assert doc["doc_id"] == "factual_proffer" and doc["source_path"] == "BULK_FOLDER/pacer -- agency_2024_002 -- factual proffer.pdf"
+    assert "Smithson" not in json.dumps(first)                                        # the name on disk stays in the local store
+    assert W.local_file("agency_2024_002", "factual_proffer", text).name == "pacer -- agency_2024_009 -- Smithson Factual Proffer.pdf"
+    (text / "agency_2024_002" / "sources.json").write_text(json.dumps(first), encoding="utf-8")
+    page = text / "agency_2024_002" / "factual_proffer" / "p0001.txt"
+    stamp = page.stat().st_mtime_ns
+    pdf("pacer -- agency_2024_009 -- Avery Factual Proffer.pdf", "A second defendant admits other facts in this one.")   # sorts before the first
+    pdf("pacer -- agency_2024_009 -- criminal complaint.pdf", "The affiant states the following on oath to the court.")
+    second = W.extract("agency_2024_002", text)
+    assert [d["doc_id"] for d in second["documents"]] == ["complaint", "factual_proffer", "factual_proffer_2"]
+    assert next(d for d in second["documents"] if d["doc_id"] == "factual_proffer")["sha256"] == doc["sha256"]   # the old filing keeps its id
+    assert page.stat().st_mtime_ns == stamp                                           # and its page text is not rewritten
+    assert W.doc_type_of(Path("pacer -- x -- response in opposition.pdf")) == "brief" and W.doc_type_of(Path("pacer -- x -- memorandum opinion and order.pdf")) == "opinion"
 
 
 def test_deny_list_is_built_from_the_case_captions(tmp_path):
@@ -243,6 +279,18 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     row = stored["cases"][0]
     assert {"platform_named", "feature_stated", "used_in_act"} <= set(row) and row["counts"]["feature_statements"] == case["observations"]["feature_observations"]
     assert (root / "test-v1" / "research_table.csv").read_text().splitlines()[0].split(",")[:3] == ["case_id", "documents", "agreed_acts"]
+    # the affordance evidence matrix: every class present, kinds of evidence apart, rebuilt from committed files alone
+    from state_machines.observations import affordance_matrix as AM
+    from state_machines.evidence import vocab as V
+    matrix = json.loads((root / "test-v1" / "affordance_matrix.json").read_text())
+    assert [c["affordance_class"] for c in matrix["classes"]] == list(V.AFFORDANCE_CLASSES) and matrix["cases_read"] == 1
+    stated = {c["affordance_class"]: c["phrase_stated"]["statements"] for c in matrix["classes"]}
+    assert sum(stated.values()) == case["observations"]["feature_observations"]
+    for c in matrix["classes"]:
+        assert not (c["needs_researcher_interpretation"] and c["no_evidence_in_these_records"])
+        assert c["no_evidence_in_these_records"] == (not c["phrase_stated"]["statements"] and not c["coder_agreed_on_act"]["acts"])
+    assert {n: (root / "test-v1" / n).read_text() for n in AM.FILES} == AM.rendered(root / "test-v1")
+    assert len((root / "test-v1" / "affordance_case_grid.csv").read_text().splitlines()) == 2
     shutil.rmtree(root / "test-v1" / "cases")                       # no local bundle is needed
     assert json.loads(json.dumps(T.build(root / "test-v1"), sort_keys=True)) == stored
     stored = json.loads((root / "test-v1" / "observations" / f"{F.CASE}.json").read_text())
@@ -268,5 +316,5 @@ def test_a_rebuild_without_observations_leaves_none_behind(tmp_path):
     m = build("test-v1", data_root=root, text_root=tmp_path / "text")
     assert set(m["cases"][0]["graphs"]) == {"evidence", "trajectories"}
     assert "observed" not in (rel / "lifecycle.json").read_text()
-    left = [p.name for p in rel.rglob("*") if "observations" in p.name or p.name.startswith("research_table")]
+    left = [p.name for p in rel.rglob("*") if "observations" in p.name or p.name.startswith(("research_table", "affordance_"))]
     assert left in ([], ["observations"]) and not list((rel / "observations").glob("*"))

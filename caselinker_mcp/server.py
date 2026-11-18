@@ -1315,9 +1315,15 @@ async def get_lifecycle_cases() -> dict[str, Any]:
 
     Three kinds of evidence, never to be added together. Events are acts two model coders
     agreed on (machine-coded, not adjudicated; an absent act is not evidence it did not
-    happen). Each case's ``observed.platforms`` and ``observed.features`` are what the record
-    NAMES (mentions, not use). Only ``observed.used_in_act`` ties technology to conduct: there
-    the act's own sentence states it was done by means of that platform or feature.
+    happen). Each case's ``observed.platforms``, ``observed.service_descriptions`` and
+    ``observed.features`` are what the record NAMES (mentions, not use). A platform marked
+    ``withheld`` is one the record refers to by a placeholder ("Website A"): the label means
+    nothing outside that case, and a withheld name is not evidence of anonymity or of any
+    feature. ``service_descriptions`` are generic phrases ("social media application"), not
+    platforms, and are never tied to an act. Only ``observed.used_in_act`` ties technology to
+    conduct: there the act's own sentence states it was done by means of that platform or
+    feature. ``case_id`` is the id of the press release for the same prosecution where the
+    corpus holds one.
     """
     try:
         if err := require_caselinker_key():

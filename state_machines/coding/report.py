@@ -127,11 +127,19 @@ def observed_content(release_id: str, pilot: Path = None) -> dict:
         o = case["observations"]
         c["cases"] += 1
         c["observations"] += o["observations"]
-        c["platform observations"] += o["platform_observations"]
+        c["observations of a listed platform's name"] += o["platform_observations"]
+        c["observations of a platform under a placeholder (name withheld)"] += o["withheld_platform_observations"]
+        c["observations of a generic service description"] += o["service_description_observations"]
         c["feature observations"] += o["feature_observations"]
         c["cases naming at least one listed platform"] += bool(o["platforms"])
+        c["cases with a platform whose name is withheld"] += bool(o["withheld_platforms"])
+        c["cases with a generic service description"] += bool(o["service_terms"])
+        c["cases with no listed platform, a withheld one"] += bool(o["withheld_platforms"]) and not o["platforms"]
+        c["cases with neither, a generic service description"] += bool(o["service_terms"]) and not (o["platforms"] or o["withheld_platforms"])
+        c["cases with none of the three"] += not (o["platforms"] or o["withheld_platforms"] or o["service_terms"])
         c["cases stating at least one feature phrase"] += bool(o["feature_classes"])
-        c["distinct case-platform pairs"] += len(o["platforms"])
+        c["distinct case and listed-platform pairs"] += len(o["platforms"])
+        c["distinct case and withheld-platform pairs"] += len(o["withheld_platforms"])
         c["observations tied to a published act by a stated means"] += o["observations_tied_to_an_act"]
         c["cases with at least one such relationship"] += o["observations_tied_to_an_act"] > 0
         for k, v in o["by_standing"].items():
@@ -237,9 +245,11 @@ def _observed_md(ob: dict) -> list:
     if not ob:
         return []
     L = ["## What the records name (observation layer)", "",
-         "Read by rule from every page except docket sheets, independent of the coders. An observation says a listed platform is named or a "
-         "codebook feature phrase is stated in a cited sentence. It does not say anyone used it. A relationship exists only where a "
-         "published act's own sentence states the means.", "", "| Content | Count |", "|---|---:|"]
+         "Read by rule from every page except docket sheets, independent of the coders. An observation says that a cited sentence names a "
+         "listed platform, refers to a service by a placeholder (\"Website A\", name withheld, a label that means nothing outside its "
+         "case), uses a generic description of an online service (\"social media application\"), or states a codebook feature phrase. It "
+         "does not say anyone used it, and a withheld name is not evidence of anonymity or of any feature. A relationship exists only "
+         "where a published act's own sentence states the means; a generic description is never tied to an act.", "", "| Content | Count |", "|---|---:|"]
     L += [f"| {k} | {v} |" for k, v in ob["counts"].items()] + [""]
     v = ob.get("validation")
     if v:

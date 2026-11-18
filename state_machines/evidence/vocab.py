@@ -49,6 +49,8 @@ DOC_TYPES = {
     "statement_of_reasons": ("COURT_RECORD", ("COURT_RECORD", "JUDICIAL_FINDING")),
     "sentencing_memorandum": ("ADVOCACY", ("ADVOCACY",)),
     "trial_brief": ("ADVOCACY", ("ADVOCACY",)),
+    "brief": ("ADVOCACY", ("ADVOCACY",)),                       # a party's brief on a motion (not a trial or sentencing brief)
+    "opinion": ("JUDICIAL_FINDING", ("JUDICIAL_FINDING", "COURT_RECORD", "PROCEDURAL")),   # a court's memorandum opinion or order
     "other": ("PROCEDURAL", SOURCE_STATUS),
 }
 

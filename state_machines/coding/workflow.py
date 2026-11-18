@@ -13,6 +13,11 @@ writes the quotes to ``quotes.json`` and emits a bundle with no quote text.
 
 PDFs are read from ``$CASELINKER_PACER_SOURCE`` (default: ontology/PACER in this checkout;
 the PDFs are gitignored, so point it at the main checkout). Nothing is written there.
+
+A case id is the corpus id of the press release for the same prosecution, where the corpus holds one.
+The PDFs keep the file names they were collected under (``COLLECTED_AS``), and a bundle records each
+document under a normalized ``source_path`` (folder, case id, document id) with the file's SHA-256;
+the name on disk stays in the local store (``files.json``), because a file name can carry a surname.
 """
 from __future__ import annotations
 
@@ -31,9 +36,14 @@ from typing import Dict, List, Optional, Tuple
 from state_machines.evidence import evidence as E
 from state_machines.evidence import vocab as V
 
-PILOT_CASES = ("enticement", "ncis_2023_001", "svicac_2022_009", "texas_ag_2019_013", "anchorage_pd_2022_006")
-ANCHOR_DIRS = {"enticement": "ENTICEMENT", "production": "PRODUCTION", "sextortion": "SEXTORTION",
-               "enterprise": "ENTERPRISE", "trafficking": "TRAFFICKING"}
+PILOT_CASES = ("doj_ceos_2025_026", "ncis_2023_001", "svicac_2022_009", "texas_ag_2019_013", "anchorage_pd_2022_006")
+# cases collected by crime type sit in their own folders
+ANCHOR_DIRS = {"doj_ceos_2025_026": "ENTICEMENT", "doj_ceos_2026_001": "PRODUCTION", "anchorage_pd_2022_007": "SEXTORTION",
+               "doj_ceos_2025_007": "ENTERPRISE", "doj_ceos_2026_006": "TRAFFICKING"}
+# case id -> the id written in the PDF file names, where the press release has since been renumbered or
+# the corpus now holds it under another source (checked 2026-11-18 by the defendant's full name in the press text)
+COLLECTED_AS = {"ncmec_2022_575": "ncmec_2022_586", "ncmec_2023_222": "ncmec_2023_224", "ncmec_2025_1035": "ncmec_2025_1116",
+                "usss_2021_017": "usss_2021_019", "doj_safe_childhood_2023_420": "ncmec_2023_190"}
 DOC_TYPE_WORDS = [  # first match wins; order matters
     ("fourth superseding indictment", "superseding_indictment"), ("second superseding indictment", "superseding_indictment"),
     ("third superseding indictment", "superseding_indictment"), ("superseding indictment", "superseding_indictment"),
@@ -41,7 +51,8 @@ DOC_TYPE_WORDS = [  # first match wins; order matters
     ("stipulation of facts", "stipulation_of_facts"), ("factual basis", "factual_basis"), ("factual proffer", "factual_proffer"),
     ("plea transcript", "plea_transcript"), ("plea agreement", "plea_agreement"), ("findings of fact", "findings_of_fact"),
     ("amended judgment", "amended_judgment"), ("statement of reasons", "statement_of_reasons"), ("judgment", "judgment"),
-    ("sentencing", "sentencing_memorandum"), ("trial brief", "trial_brief"), ("criminal complaint", "complaint"),
+    ("sentencing", "sentencing_memorandum"), ("trial brief", "trial_brief"), ("response in opposition", "brief"),
+    ("memorandum opinion", "opinion"), ("criminal complaint", "complaint"),
     ("complaint", "complaint"), ("information", "information"), ("indictment", "indictment"), ("docket", "docket"),
 ]
 MIN_TEXT_CHARS = 300  # per page; below this the page is treated as a scan
@@ -55,7 +66,7 @@ def case_pdfs(case_id: str) -> List[Path]:
     root = source_root()
     if case_id in ANCHOR_DIRS:
         return sorted((root / ANCHOR_DIRS[case_id]).glob("*.pdf"))
-    pat = re.compile(rf"-- ?{re.escape(case_id)} ?--", re.I)
+    pat = re.compile(rf"-- ?{re.escape(COLLECTED_AS.get(case_id, case_id))} ?--", re.I)
     return sorted(p for p in (root / "BULK_FOLDER").glob("*.pdf") if pat.search(p.name))
 
 
@@ -79,31 +90,51 @@ def _ocr(page, dpi: int = 300) -> Tuple[str, Optional[float]]:
 
 
 def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
-    """Page text for every PDF of a case into the local store; returns the source manifest."""
+    """Page text for every PDF of a case into the local store; returns the source manifest.
+    A document already in the store (same SHA-256) keeps its id and its page text; a new PDF is added."""
     import pymupdf
 
-    docs, used = [], Counter()
+    folder = E.text_root(text_root) / case_id
+    old = json.loads((folder / "sources.json").read_text(encoding="utf-8"))["documents"] if (folder / "sources.json").is_file() else []
+    known = {d["sha256"]: d for d in old}
+    used = Counter(re.sub(r"_\d+$", "", d["doc_id"]) for d in old)
+    docs, files = [], {}
     for pdf in case_pdfs(case_id):
-        kind = doc_type_of(pdf)
-        used[kind] += 1
-        doc_id = kind if used[kind] == 1 else f"{kind}_{used[kind]}"
-        d = pymupdf.open(str(pdf))
-        pages = []
-        for i, page in enumerate(d, 1):
-            text = page.get_text()
-            if len(text.strip()) >= MIN_TEXT_CHARS:
-                method, conf = "text_layer", None
-            else:
-                text, conf = _ocr(page)
-                method = "ocr"
-            sha = E.write_page(case_id, doc_id, i, text, text_root)
-            pages.append({"pdf_page": i, "text_method": method, "page_text_sha256": sha, "court_page_label": None,
-                          "ocr_engine": "tesseract 5 (psm 6, 300 dpi)" if method == "ocr" else None,
-                          "ocr_mean_confidence": conf, "image_checked": False, "limitations": []})
-        docs.append({"doc_id": doc_id, "doc_type": kind, "source_path": str(pdf.relative_to(source_root())),
-                     "sha256": E.sha256_file(pdf), "ecf_document_number": None, "filed_date": None,
-                     "page_count": len(pages), "pages": pages})
+        sha = E.sha256_file(pdf)
+        if sha in known:
+            doc = known[sha]
+        else:
+            kind = doc_type_of(pdf)
+            used[kind] += 1
+            doc_id = kind if used[kind] == 1 else f"{kind}_{used[kind]}"
+            pages = []
+            for i, page in enumerate(pymupdf.open(str(pdf)), 1):
+                text = page.get_text()
+                if len(text.strip()) >= MIN_TEXT_CHARS:
+                    method, conf = "text_layer", None
+                else:
+                    text, conf = _ocr(page)
+                    method = "ocr"
+                digest = E.write_page(case_id, doc_id, i, text, text_root)
+                pages.append({"pdf_page": i, "text_method": method, "page_text_sha256": digest, "court_page_label": None,
+                              "ocr_engine": "tesseract 5 (psm 6, 300 dpi)" if method == "ocr" else None,
+                              "ocr_mean_confidence": conf, "image_checked": False, "limitations": []})
+            doc = {"doc_id": doc_id, "doc_type": kind, "sha256": sha, "ecf_document_number": None, "filed_date": None,
+                   "page_count": len(pages), "pages": pages}
+        doc["source_path"] = f"{pdf.parent.name}/pacer -- {case_id} -- {doc['doc_id'].replace('_', ' ')}.pdf"
+        files[doc["doc_id"]] = str(pdf.relative_to(source_root()))
+        docs.append(doc)
+    docs.sort(key=lambda d: d["doc_id"])
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "files.json").write_text(json.dumps(files, indent=1, sort_keys=True) + "\n", encoding="utf-8")   # names on disk: local only
     return {"case_id": case_id, "documents": docs}
+
+
+def local_file(case_id: str, doc_id: str, text_root: Optional[Path] = None) -> Optional[Path]:
+    """The PDF a document was read from, on this machine."""
+    path = E.text_root(text_root) / case_id / "files.json"
+    name = json.loads(path.read_text(encoding="utf-8")).get(doc_id) if path.is_file() else None
+    return source_root() / name if name else None
 
 
 # --- drafts -----------------------------------------------------------------------------

@@ -377,7 +377,11 @@ def observation_graph(bundle: dict, doc: dict) -> CASEGraph:
         source = {"clt:sourceStatus": _CL(o["source_status"]), "clt:verificationStatus": _CL(o["verification"]["status"]),
                   "clt:quoteSha256": _CL(o["quote_sha256"]), "clt:pageTextSha256": _CL(o["page_text_sha256"])}
         if o["kind"] == "platform":
-            body, extra = em.platform(o["platform"], o["platform"]), {"oa:motivatedBy": _ref("oa:identifying"), "clt:supportFacet": _CL("platform")}
+            body, extra = em.platform(("unnamed:" if o.get("withheld") else "") + o["platform"], o["platform"]), {"oa:motivatedBy": _ref("oa:identifying"), "clt:supportFacet": _CL("platform")}
+        elif o["kind"] == "service_description":
+            # a cited phrase, nothing more: its own text body per observation, so two mentions are never one service
+            body, extra = f"kb:observation-{o['observation_id']}-body", {"oa:motivatedBy": _ref("oa:describing")}
+            g.upsert_node(body, types=["oa:TextualBody"], properties={"rdf:value": _STR(o["service_term"])})
         else:
             body, extra = V.AFFORDANCE_CLASSES[o["feature_class"]], {"oa:motivatedBy": _ref("oa:classifying"), "clt:supportFacet": _CL("feature"),
                                                                     "clt:featureTerm": _CL(o["feature_term"])}

@@ -20,11 +20,27 @@ PREFIX clt: <https://w3id.org/caselinker/trajectory#>
 
 QUERIES: Dict[str, dict] = {
     "documented": {
-        "title": "Level 1. Which platforms do the records name, in how many cases?",
+        "title": "Level 1. Which listed platforms do the records name, in how many cases?",
         "columns": ["platform", "cases", "mentions"],
         "sparql": PREFIXES + """SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE {
   GRAPH ?g { ?obs oa:motivatedBy oa:identifying ; oa:hasBody ?p . ?p core:name ?platform }
+  FILTER(STRSTARTS(STR(?p), "https://w3id.org/caselinker/resource/platform/"))
 } GROUP BY ?platform ORDER BY DESC(?cases) DESC(?mentions) ?platform"""},
+    "withheld": {
+        "title": "Level 1. Which services does a record refer to by a placeholder, case by case? (A label means nothing outside its case.)",
+        "columns": ["case", "label", "mentions"],
+        "sparql": PREFIXES + """SELECT ?case ?label (COUNT(?obs) AS ?mentions) WHERE {
+  GRAPH ?g { ?obs oa:motivatedBy oa:identifying ; oa:hasBody ?p . ?p core:name ?label }
+  FILTER(!STRSTARTS(STR(?p), "https://w3id.org/caselinker/resource/platform/"))
+  BIND(REPLACE(REPLACE(STR(?g), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
+} GROUP BY ?case ?label ORDER BY ?case ?label"""},
+    "described": {
+        "title": "Level 1. Which generic descriptions of an online service do the records use? (Not platforms; no use claimed.)",
+        "columns": ["description", "cases", "mentions"],
+        "sparql": PREFIXES + """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?description (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE {
+  GRAPH ?g { ?obs oa:motivatedBy oa:describing ; oa:hasBody ?b . ?b rdf:value ?description }
+} GROUP BY ?description ORDER BY DESC(?cases) DESC(?mentions) ?description"""},
     "features": {
         "title": "Level 1. Which feature phrases do the records state, under which CAC class?",
         "columns": ["class", "phrase", "cases", "mentions"],
@@ -48,7 +64,8 @@ QUERIES: Dict[str, dict] = {
               OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
   GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }
   GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), ":evidence"))
-  FILTER(?body IN (?s, ?t) || BOUND(?phrase))
+  FILTER(?m != oa:describing)
+  FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))
   BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
   BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
 } ORDER BY ?case ?action ?what"""},

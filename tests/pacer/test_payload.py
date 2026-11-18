@@ -82,6 +82,8 @@ def test_page_and_analysis_need_only_committed_release_files(tmp_path):
         (case,) = afh.release_analysis(root, thr)["cases"]
         assert (case["aff"], case["h0"]) == (affs, harms)
         assert harms, "the fixture records minor-directed harms"
+    with pytest.raises(LookupError):                       # an id the release does not hold is an error, never an empty success
+        afh.release_analysis(root, "INFERRED", case_id="some_other_id")
 
 
 def test_machine_coded_releases_are_served_and_labelled(tmp_path, monkeypatch):

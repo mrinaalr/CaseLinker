@@ -26,29 +26,34 @@ from collections import Counter
 from pathlib import Path
 from typing import Dict, List
 
-MEANING = ("platforms and features are what the record names (mentions, not use); used_in_act lists the only places "
-           "where an agreed act's own sentence states the act was done by means of one")
+MEANING = ("platforms, service descriptions and features are what the record names (mentions, not use); used_in_act lists the "
+           "only places where the observation rule found an agreed act's own sentence stating the act was done by means of one")
 READING = [
     "platform_named, feature_stated and used_in_act are three kinds of evidence; do not add them together",
+    "platform_withheld holds services the record refers to by a placeholder (\"Website A\"); the label is the record's and means nothing outside its case; a withheld name is not evidence of anonymity or of any feature",
+    "service_described holds generic descriptions (\"social media application\"): cited phrases, not platforms, never tied to an act",
     "a case with platforms named and nothing in used_in_act documents mentions only, not platform-mediated acts",
     "acts are those two model coders agreed on; an absent act is not evidence the act did not happen",
     "the cases are a selected collection of prosecutions, not a sample of offending",
 ]
 CSV_COLUMNS = ["case_id", "documents", "agreed_acts", "offender_acts", "dated_acts", "offender_action_codes", "harm_codes",
-               "platforms_named", "platform_mentions", "feature_classes_stated", "feature_statements",
-               "platforms_used_in_an_act", "features_used_in_an_act", "platforms_named_list", "features_stated_list", "used_in_act_list"]
+               "platforms_named", "platform_mentions", "platforms_withheld", "withheld_platform_mentions", "service_description_mentions", "feature_classes_stated", "feature_statements",
+               "platforms_used_in_an_act", "features_used_in_an_act", "platforms_named_list", "platforms_withheld_list", "service_descriptions_list", "features_stated_list", "used_in_act_list"]
 
 
 def case_observed(doc: dict, actions: Dict[str, str] = None) -> dict:
     """A case's observations, grouped: who is named, what is stated, and what an act's sentence ties to the act."""
     platforms: Dict[str, dict] = {}
     features: Dict[str, Counter] = {}
+    described: Counter = Counter()
     used: List[dict] = []
     for o in doc["observations"]:
         if o["kind"] == "platform":
-            p = platforms.setdefault(o["platform"], {"mentions": 0, "standing": Counter()})
+            p = platforms.setdefault(o["platform"], {"mentions": 0, "standing": Counter(), "withheld": bool(o.get("withheld"))})
             p["mentions"] += 1
             p["standing"][o["source_status"]] += 1
+        elif o["kind"] == "service_description":
+            described[o["service_term"]] += 1
         else:
             features.setdefault(o["feature_class"], Counter())[o["feature_term"]] += 1
         for r in o["relations"]:
@@ -60,8 +65,10 @@ def case_observed(doc: dict, actions: Dict[str, str] = None) -> dict:
             if row not in used:
                 used.append(row)
     return {"meaning": MEANING,
-            "platforms": {k: {"mentions": v["mentions"], "standing": dict(sorted(v["standing"].items()))} for k, v in sorted(platforms.items())},
+            "platforms": {k: {"mentions": v["mentions"], "standing": dict(sorted(v["standing"].items())), **({"withheld": True} if v["withheld"] else {})}
+                          for k, v in sorted(platforms.items())},
             "features": {k: dict(sorted(v.items())) for k, v in sorted(features.items())},
+            "service_descriptions": dict(sorted(described.items())),
             "used_in_act": sorted(used, key=lambda r: (r["event_id"], r["kind"], r.get("platform") or r.get("feature_class")))}
 
 
@@ -84,11 +91,16 @@ def build(root: Path) -> dict:
             "acts": {"agreed": len(events), "offender": len(offender), "dated": sum(bool(e["time"]) for e in events.values()),
                      "offender_action_codes": dict(sorted(Counter(e["action"] for e in offender).items())),
                      "harm_codes": sorted({h["code"] for e in events.values() for h in e["harms"]})},
-            "platform_named": observed["platforms"],
+            "platform_named": {k: v for k, v in observed["platforms"].items() if not v.get("withheld")},
+            "platform_withheld": {k: v for k, v in observed["platforms"].items() if v.get("withheld")},
+            "service_described": observed["service_descriptions"],
             "feature_stated": observed["features"],
             "used_in_act": observed["used_in_act"],
-            "counts": {"platforms_named": len(observed["platforms"]),
-                       "platform_mentions": sum(p["mentions"] for p in observed["platforms"].values()),
+            "counts": {"platforms_named": sum(not p.get("withheld") for p in observed["platforms"].values()),
+                       "platforms_withheld": sum(bool(p.get("withheld")) for p in observed["platforms"].values()),
+                       "platform_mentions": sum(p["mentions"] for p in observed["platforms"].values() if not p.get("withheld")),
+                       "withheld_platform_mentions": sum(p["mentions"] for p in observed["platforms"].values() if p.get("withheld")),
+                       "service_description_mentions": sum(observed["service_descriptions"].values()),
                        "feature_classes_stated": len(observed["features"]),
                        "feature_statements": sum(sum(t.values()) for t in observed["features"].values()),
                        "platforms_used_in_an_act": sum(r["kind"] == "platform" for r in observed["used_in_act"]),
@@ -98,6 +110,11 @@ def build(root: Path) -> dict:
     for r in rows:
         totals["cases"] += 1
         totals["cases naming a platform"] += bool(r["platform_named"])
+        totals["cases with a platform whose name is withheld"] += bool(r["platform_withheld"])
+        totals["cases with a generic service description"] += bool(r["service_described"])
+        totals["cases with no listed platform, a withheld one"] += bool(r["platform_withheld"]) and not r["platform_named"]
+        totals["cases with no listed or withheld platform, a generic description"] += bool(r["service_described"]) and not (r["platform_named"] or r["platform_withheld"])
+        totals["cases with none of the three"] += not (r["platform_named"] or r["platform_withheld"] or r["service_described"])
         totals["cases stating a feature"] += bool(r["feature_stated"])
         totals["cases with a platform or feature used in an act"] += bool(r["used_in_act"])
         totals["agreed acts"] += r["acts"]["agreed"]
@@ -116,9 +133,12 @@ def to_csv(table: dict) -> str:
         c = r["counts"]
         w.writerow([r["case_id"], r["documents"], r["acts"]["agreed"], r["acts"]["offender"], r["acts"]["dated"],
                     "; ".join(f"{k}={v}" for k, v in r["acts"]["offender_action_codes"].items()), "; ".join(r["acts"]["harm_codes"]),
-                    c["platforms_named"], c["platform_mentions"], c["feature_classes_stated"], c["feature_statements"],
+                    c["platforms_named"], c["platform_mentions"], c["platforms_withheld"], c["withheld_platform_mentions"],
+                    c["service_description_mentions"], c["feature_classes_stated"], c["feature_statements"],
                     c["platforms_used_in_an_act"], c["features_used_in_an_act"],
                     "; ".join(f"{k}={v['mentions']}" for k, v in r["platform_named"].items()),
+                    "; ".join(f"{k}={v['mentions']}" for k, v in r["platform_withheld"].items()),
+                    "; ".join(f"{k}={v}" for k, v in r["service_described"].items()),
                     "; ".join(f"{cls}:{t}={n}" for cls, terms in r["feature_stated"].items() for t, n in terms.items()),
                     "; ".join(f"{x['action']} {x['relationship']} {x.get('platform') or x['feature_class'] + ':' + x['feature_term']} [{x['standing']}]"
                               for x in r["used_in_act"])])

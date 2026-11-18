@@ -36,6 +36,8 @@ from state_machines.evidence import evidence as E
 
 SEED, PLATFORM_N, FEATURE_CAP = 7, 60, 60
 QUESTION = {"platform": "Does it refer to that online service?", "feature": "Does the sentence describe that capability?",
+            "withheld": "Is it the record's placeholder for an online service whose name is withheld?",
+            "description": "Is it a generic description of an online service (not a named one, not a person's account)?",
             "relationship": "Does the sentence state the act was done by means of it?"}
 
 
@@ -48,13 +50,21 @@ def sample(root: Path) -> List[dict]:
         every += [dict(o, case_id=doc["case_id"]) for o in doc["observations"]]
     key = lambda o: f"{o['case_id']}:{o['observation_id']}"
     items: Dict[str, dict] = {}
+    seen: set = set()
     for o in every:
         if o["relations"]:
             items[key(o)] = dict(o, stratum="relationship")
     features = [o for o in every if o["kind"] == "feature" and key(o) not in items]
     for o in (features if len(features) <= FEATURE_CAP else rng.sample(features, FEATURE_CAP)):
         items[key(o)] = dict(o, stratum="feature")
-    platforms = [o for o in every if o["kind"] == "platform" and key(o) not in items]
+    for o in every:                                              # every case's placeholder labels and every distinct description, by standing
+        if key(o) in items or not (o.get("withheld") or o["kind"] == "service_description"):
+            continue
+        group = (o["case_id"], o.get("platform") or o["service_term"], o["source_status"])
+        if group not in seen:
+            seen.add(group)
+            items[key(o)] = dict(o, stratum="withheld" if o.get("withheld") else "description")
+    platforms = [o for o in every if o["kind"] == "platform" and not o.get("withheld") and key(o) not in items]
     by_pair: Dict[tuple, list] = {}
     for o in platforms:
         by_pair.setdefault((o["platform"], o["source_status"]), []).append(o)
@@ -72,7 +82,9 @@ def packet(release_id: str, root: Path, text_root: Path, out: Path) -> Path:
         page = E.normalize(E.read_page(it["case_id"], it["doc_id"], it["pdf_page"], text_root) or "")
         a, b, s, e = it["char_start"], it["char_end"], it["term_start"], it["term_end"]
         sentence = f"{html.escape(page[a:s])}<mark>{html.escape(page[s:e])}</mark>{html.escape(page[e:b])}"
-        claim = (f"names the platform <b>{html.escape(it['platform'])}</b>" if it["kind"] == "platform" else
+        claim = (f"refers to a service by the placeholder <b>{html.escape(it['named_as'])}</b>" if it.get("withheld") else
+                 f"names the platform <b>{html.escape(it['platform'])}</b>" if it["kind"] == "platform" else
+                 f"uses the generic service description <b>{html.escape(it['service_term'])}</b>" if it["kind"] == "service_description" else
                  f"states the feature phrase <b>{html.escape(it['feature_term'])}</b> ({it['feature_class'].replace('_', ' ')})")
         if it["stratum"] == "relationship":
             claim += " and states the act (" + ", ".join(f"{r['event_id']}: {r['relationship'].replace('_', ' ').lower()}" for r in it["relations"]) + ") was done by means of it"
@@ -124,15 +136,18 @@ def score(root: Path, decisions: dict) -> dict:
     if missing or set(given) - set(expected):
         raise SystemExit(f"decisions do not match the sample: {len(missing)} unanswered, {len(set(given) - set(expected))} unknown")
     out = {}
-    for stratum in ("platform", "feature", "relationship"):
+    for stratum in ("platform", "withheld", "description", "feature", "relationship"):
         ids = [k for k, s in expected.items() if s == stratum]
+        if not ids:
+            continue
         g = sum(given[k]["grounding"] == "yes" for k in ids)
         m = Counter(given[k]["meaning"] for k in ids)
         out[stratum] = {"reviewed": len(ids), "grounded": g, "grounded_interval_95": wilson(g, len(ids)),
                         "meaning_yes": m["yes"], "meaning_no": m["no"], "meaning_unclear": m["unclear"],
                         "meaning_yes_interval_95": wilson(m["yes"], len(ids))}
     return {"reviewer": decisions.get("reviewer") or "", "reviewed_on": decisions.get("reviewed_on"), "seed": SEED,
-            "note": "platform items are a stratified sample; feature and relationship items are all of them", "strata": out}
+            "note": ("platform items are a stratified sample; withheld and description items are one per case, term and standing; "
+                     "feature and relationship items are all of them"), "strata": out}
 
 
 def main(argv=None) -> int:

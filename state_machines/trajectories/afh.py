@@ -72,6 +72,8 @@ def release_analysis(root=None, threshold: str = "INFERRED", case_id: str = "") 
         return {"release": None, "cases": []}
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     page = {c["case_id"]: c for c in json.loads((root / "lifecycle.json").read_text(encoding="utf-8"))["cases"]}
+    if case_id and case_id not in page:
+        raise LookupError(f"no case {case_id!r} in release {manifest['release_id']}")   # never an empty success for a mistyped or foreign id
     rows, per_case = [], []
     for c in manifest["cases"]:
         if case_id and c["case_id"] != case_id:

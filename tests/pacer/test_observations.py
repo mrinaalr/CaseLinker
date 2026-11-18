@@ -165,11 +165,12 @@ def test_observation_graph_uses_existing_terms_and_claims_no_use(tmp_path):
     F.write_pages(tmp_path)
     (tmp_path / F.CASE / "sources.json").write_text(json.dumps({"case_id": F.CASE, "documents": bundle["documents"]}), encoding="utf-8")
     plain = O.observe(F.CASE, tmp_path)
-    assert {o["feature_term"] for o in plain["observations"]} >= {"public group", "private direct messages"}
+    features = [o for o in plain["observations"] if o["kind"] == "feature"]
+    assert {o["feature_term"] for o in features} >= {"public group", "private direct messages"}
     g = rdflib.Graph().parse(data=serialize(observation_graph(bundle, plain)), format="json-ld")
     OA, CLT = rdflib.Namespace("http://www.w3.org/ns/oa#"), rdflib.Namespace("https://w3id.org/caselinker/trajectory#")
     obs = set(g.subjects(OA.motivatedBy, OA.classifying))
-    assert len(obs) == len(plain["observations"]) and all((a, CLT.derivationRule, rdflib.Literal(O.RULE_VERSION)) in g for a in obs)
+    assert len(obs) == len(features) and all((a, CLT.derivationRule, rdflib.Literal(O.RULE_VERSION)) in g for a in obs)
     classes = {URIRef(c) for c in V.AFFORDANCE_CLASSES.values()}
     assert {g.value(a, OA.hasBody) for a in obs} <= classes            # the passage is classified under the CAC class ...
     assert not any((None, RDF.type, c) in g for c in classes)          # ... and no affordance individual exists without a stated means
@@ -232,3 +233,132 @@ def test_validation_sample_covers_every_relationship_and_feature_and_scores_apar
     with pytest.raises(SystemExit, match="unanswered"):
         V2.score(root, decisions)
     assert V2.wilson(9, 10) == [0.596, 0.982]
+
+
+def test_a_placeholder_label_is_observed_as_a_platform_whose_name_is_withheld(tmp_path, monkeypatch):
+    labels = lambda s: [n for n, _, _ in O.withheld_in(s)]
+    assert labels("He administered Website A and posted on Website B; Website A had many users.") == ["Website A", "Website B"]
+    assert labels("He used a social media application and an online service.") == []          # a description, no label
+    assert labels("The U.S. Secret Service I contacted, and Exhibit A, and Count 2.") == []    # not a service label
+    assert labels("He posted on Web- site B and on WEBSITE 12.") == ["Website B", "Website 12"]   # a line break; capitals
+    for ordinary in ("On the Website I saw images.", "Agents searched Site 1 and Site 2.", "The warrant Application 2 was granted.",
+                     "He posted on the Forum A user saw it.", "See Website A-1 and Platform 9.", "the website a user visits"):
+        assert labels(ordinary) == [], ordinary                                               # only "Website" + a letter or number
+    monkeypatch.setitem(PAGES, ("sof", 1), "The defendant sent the files to other members through Website A. "
+                                           "He did not post on Website B. Agents later seized Website A.")
+    docs = _store(tmp_path)
+    doc = O.observe(CASE, tmp_path)
+    got = [(o["platform"], o["named_as"], o.get("withheld")) for o in doc["observations"]]
+    assert got == [("Website A (name withheld)", "Website A", True), ("Website B (name withheld)", "Website B", True),
+                   ("Website A (name withheld)", "Website A", True)]
+    bundle = _bundle(tmp_path, docs, [("e1", "DISTRIBUTE_MATERIAL", "The defendant sent"), ("e2", "DISTRIBUTE_MATERIAL", "He did not post")])
+    O.relate(doc, bundle, tmp_path)
+    assert [[(r["event_id"], r["relationship"]) for r in o["relations"]] for o in doc["observations"]] == [
+        [("e1", "Carried_Out_Through")], [], []]                                             # the denial and the seizure tie nothing
+    assert O.check(doc, tmp_path, bundle) == []
+    bad = copy.deepcopy(doc)
+    bad["observations"][0]["platform"] = "Somebody's Site (name withheld)"                   # free text is refused
+    assert any("placeholder" in p for p in O.check(bad, tmp_path, bundle))
+    from state_machines.observations.table import case_observed
+    seen = case_observed(doc)["platforms"]
+    assert seen["Website A (name withheld)"] == {"mentions": 2, "standing": {"ADMITTED": 2}, "withheld": True}
+    from state_machines.graphs.emit import observation_graph, serialize
+    g = rdflib.Graph().parse(data=serialize(observation_graph(bundle, doc)), format="json-ld")
+    nodes = {str(n) for n, _, name in g if str(name) == "Website A (name withheld)"}
+    assert len(nodes) == 1 and "/resource/platform/" not in next(iter(nodes))                # stays inside the case
+
+
+def _case(tmp_path, case, text, acts=()):
+    """One statement-of-facts page for ``case`` with offender acts located by their opening words."""
+    E.write_page(case, "sof", 1, text, tmp_path)
+    page = E.normalize(text)
+    docs = [{"doc_id": "sof", "doc_type": "statement_of_facts", "sha256": E.sha256_text(case),
+             "pages": [{"pdf_page": 1, "text_method": "text_layer", "page_text_sha256": E.sha256_text(page)}]}]
+    (tmp_path / case / "sources.json").write_text(json.dumps({"case_id": case, "documents": docs}), encoding="utf-8")
+    passages, events = [], []
+    for eid, action, words, end in acts:
+        a = page.index(words)
+        passages.append({"passage_id": f"q{eid}", "doc_id": "sof", "pdf_page": 1, "char_start": a, "char_end": page.index(end, a) + len(end)})
+        events.append({"event_id": eid, "action": action, "support": [{"passage_id": f"q{eid}", "facet": "action", "status": "DIRECT"}],
+                       "platform_interactions": [], "affordances": []})
+    bundle = {"case_id": case, "documents": docs, "passages": passages, "events": events}
+    return O.relate(O.observe(case, tmp_path), bundle, tmp_path), bundle
+
+
+@pytest.mark.parametrize("text, words, end", [
+    # the coder's splitter reads "A." as an initial, so the act's cited passage runs across both sentences
+    ("Another user contacted Minor Victim 1 through Website A. The defendant distributed the files to other members in March 2020.",
+     "Another user", "2020."),
+    ("The defendant told Minor Victim 1 about Website A. Another user then uploaded the files through Kitebox.", "The defendant told", "Kitebox."),
+])
+def test_a_passage_that_runs_across_sentences_ties_only_what_the_observations_own_sentence_states(tmp_path, text, words, end):
+    doc, bundle = _case(tmp_path, "runon", text, [("e1", "DISTRIBUTE_MATERIAL", words, end)])
+    assert [r for o in doc["observations"] for r in o["relations"]] == []       # which sentence is the act's own is unknown
+    assert all(o["act_passage_runs_on"] for o in doc["observations"] if o["kind"] == "platform")
+    assert O.check(doc, tmp_path, bundle) == []
+
+
+def test_generic_service_descriptions_are_cited_phrases_and_nothing_more(tmp_path):
+    def terms(s):
+        names = [m.span() for _, pat in O._NAME_PATTERNS for m in pat.finditer(s)] + [m.span() for m in O._WITHHELD.finditer(s)]
+        return [t for t, _, _ in O.descriptions_in(s, names)]
+    assert terms("He met her on a social media application and an online chat room.") == ["social media application", "online chat room"]
+    assert terms("He used peer to peer file sharing software and Social-Networking Sites.") == ["peer-to-peer file-sharing software", "social networking site"]
+    for none in ("the forum selection clause", "the dating of the application", "a social media account", "the website", "an application",
+                 "a notice on the bulletin board", "an encrypted messaging application he denied", "social media"):
+        assert terms(none) in ([], ["messaging application"]) and "encrypted" not in " ".join(terms(none)), none
+    assert terms("the forum selection clause and the website and social media") == []
+    assert terms("the Kitebox messaging application") == [] and terms("a messaging app called Kitebox") == []   # the named service's own descriptor
+    assert terms("the file-sharing website Website A") == []
+    text = ("The defendant asked Minor Victim 2 for images through a social media application. "
+            "He used a file-sharing website to send them. He also used the Kitebox messaging application.")
+    doc, bundle = _case(tmp_path, "generic", text, [("e1", "SOLICIT_IMAGERY", "The defendant asked", "application.")])
+    kinds = [(o["kind"], o.get("service_term") or o.get("feature_term") or o.get("platform")) for o in doc["observations"]]
+    assert kinds == [("service_description", "social media application"), ("service_description", "file-sharing website"),
+                     ("feature", "file-sharing"), ("platform", "Kitebox")]
+    assert all(o["relations"] == [] for o in doc["observations"] if o["kind"] == "service_description")   # never tied to an act
+    assert O.check(doc, tmp_path, bundle) == []
+    bad = copy.deepcopy(doc)
+    bad["observations"][0]["service_term"] = "somebody's private site"
+    assert any("fixed grammar" in p for p in O.check(bad, tmp_path, bundle))
+    bad = copy.deepcopy(doc)
+    bad["observations"][0]["relations"] = [{"event_id": "e1", "relationship": "Carried_Out_Through", "cue": "through", "basis": "x"}]
+    assert any("tied to an act" in p for p in O.check(bad, tmp_path, bundle))
+    from state_machines.observations.table import case_observed
+    seen = case_observed(doc)
+    assert seen["service_descriptions"] == {"file-sharing website": 1, "social media application": 1}
+    assert list(seen["platforms"]) == ["Kitebox"] and seen["features"] == {"distribution_infrastructure": {"file-sharing": 1}}
+    from state_machines.graphs.emit import observation_graph, serialize
+    g = rdflib.Graph().parse(data=serialize(observation_graph(bundle, doc)), format="json-ld")
+    OA = rdflib.Namespace("http://www.w3.org/ns/oa#")
+    described = list(g.subjects(OA.motivatedBy, OA.describing))
+    assert len(described) == 2
+    for a in described:
+        body = g.value(a, OA.hasBody)
+        assert (body, rdflib.RDF.type, OA.TextualBody) in g and str(g.value(body, rdflib.RDF.value)) in seen["service_descriptions"]
+    names = {str(o) for o in g.objects(None, rdflib.URIRef("https://ontology.unifiedcyberontology.org/uco/core/name"))}
+    assert names == {"Kitebox"}                                # a description is not a platform entity
+
+
+def test_queries_keep_cases_and_kinds_apart(tmp_path):
+    from state_machines.graphs.emit import observation_graph, serialize
+    from state_machines.observations.queries import QUERIES
+    ds = rdflib.Dataset()
+    for case, text, words in [
+        ("case_one", "The defendant sent the files to other members through Website A, he admitted. He had a chat room open.", "The defendant sent"),
+        ("case_two", "The defendant posted the images on Website A, she said. The defendant, who was a member of a group chat, asked "
+                     "Minor Victim 1 for images through the Kitebox application.", "The defendant posted")]:
+        doc, bundle = _case(tmp_path, case, text, [("e1", "DISTRIBUTE_MATERIAL", words, "."), ] + (
+            [("e2", "SOLICIT_IMAGERY", "The defendant, who", "application.")] if case == "case_two" else []))
+        g = ds.graph(rdflib.URIRef(f"urn:caselinker:pacer:{case}:observations"))
+        g.parse(data=serialize(observation_graph(bundle, doc)), format="json-ld")
+        ev = ds.graph(rdflib.URIRef(f"urn:caselinker:pacer:{case}:evidence"))
+        for e in bundle["events"]:
+            ev.add((next(s for s in g.subjects() if str(s).endswith(e["event_id"])), rdflib.URIRef("https://w3id.org/caselinker/trajectory#actionCode"),
+                    rdflib.Literal(e["action"])))
+    rows = lambda name: [[str(v) for v in r] for r in ds.query(QUERIES[name]["sparql"])]
+    assert rows("documented") == [["Kitebox", "1", "1"]]                                   # no placeholder among listed platforms
+    assert rows("withheld") == [["case_one", "Website A (name withheld)", "1"], ["case_two", "Website A (name withheld)", "1"]]
+    assert rows("described") == [["chat room", "1", "1"]]
+    supported = {(r[0], r[3]) for r in rows("supported")}
+    assert supported == {("case_one", "Website A (name withheld)"), ("case_two", "Website A (name withheld)"), ("case_two", "Kitebox")}   # not "group chat"

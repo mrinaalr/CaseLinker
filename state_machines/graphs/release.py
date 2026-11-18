@@ -155,8 +155,11 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     if observations:      # the case-level research table, from the files just written
         from state_machines.observations.table import write as write_table
         write_table(root)
+        from state_machines.observations.affordance_matrix import write as write_matrix
+        write_matrix(root)
     else:
-        for stale in ("research_table.json", "research_table.csv", "validation.json"):
+        for stale in ("research_table.json", "research_table.csv", "validation.json", "affordance_matrix.json", "affordance_matrix.csv",
+                      "affordance_case_grid.csv"):
             (root / stale).unlink(missing_ok=True)
     return manifest
 
@@ -234,7 +237,8 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     return problems
 
 
-COMMITTED = ("graphs/*", "derived/*", "observations/*", "research_table.json", "research_table.csv", "validation.json", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
+COMMITTED = ("graphs/*", "derived/*", "observations/*", "research_table.json", "research_table.csv", "affordance_matrix.json", "affordance_matrix.csv",
+             "affordance_case_grid.csv", "validation.json", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
 
 
 def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) -> dict:
@@ -271,6 +275,12 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
         bundle = json.loads(path.read_text(encoding="utf-8"))
         if not str(bundle["coding"].get("note", "")).startswith("machine resolution"):
             continue
+        for d in bundle["documents"]:      # a path on disk can carry a surname: only the normalized form is published
+            open_values += 1
+            tail = d["source_path"].rsplit(" -- ", 1)[-1]
+            if not re.fullmatch(r"[A-Z_]+/(?:pacer -- )?" + re.escape(bundle["case_id"]) + r" -- [a-z0-9 _]+\.pdf", d["source_path"]) \
+                    or tail not in {d["doc_id"].replace("_", " ") + ".pdf", d["doc_type"].replace("_", " ") + ".pdf", d["doc_type"] + ".pdf"}:
+                hits.append({"case": bundle["case_id"], "kind": "open_text", "file": f"cases/{path.name}"})
         for e in bundle["events"]:
             values = ([(i["platform_surface"], known_platform) for i in e["platform_interactions"]]
                       + [(m["platform_surface"], known_platform) for m in e["platform_mentions"]]
@@ -280,13 +290,13 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
                 open_values += 1
                 if not ok(value):
                     hits.append({"case": bundle["case_id"], "kind": "open_text", "file": f"cases/{path.name}"})
-    from state_machines.observations.observe import FEATURES as OBSERVED_FEATURES
+    from state_machines.observations.observe import FEATURES as OBSERVED_FEATURES, listed_platform, listed_service_term
     phrases = {(cls, ph) for cls, group in OBSERVED_FEATURES.items() for ph in group}
     for path in sorted((root / "observations").glob("*.json")):      # observation files: listed names and phrases only
         doc = json.loads(path.read_text(encoding="utf-8"))
         for o in doc["observations"]:
             open_values += 1
-            ok = known_platform(o["named_as"]) == o["named_as"] if o["kind"] == "platform" else (o["feature_class"], o["feature_term"]) in phrases
+            ok = listed_platform(o) if o["kind"] == "platform" else listed_service_term(o) if o["kind"] == "service_description" else (o["feature_class"], o["feature_term"]) in phrases
             if not ok:
                 hits.append({"case": doc["case_id"], "kind": "open_text", "file": f"observations/{path.name}"})
     return {"files": len(files), "deny_terms": checked_terms, "quotes": checked_quotes, "listed_values": open_values, "hits": hits}

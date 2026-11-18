@@ -26,7 +26,7 @@ from typing import List, Optional
 
 from state_machines.evidence import evidence as E
 from state_machines.coding.adjudication import KIND_ORDER, OPTIONS, QUESTIONS
-from state_machines.coding.workflow import PILOT_CASES, source_root
+from state_machines.coding.workflow import PILOT_CASES, local_file, source_root
 
 LOCAL = E.REPO_ROOT / "local" / "adjudication"
 DATA = E.REPO_ROOT / "state_machines" / "data"
@@ -46,7 +46,8 @@ def _pdf_href(dossier: dict, doc_id: str, page: int) -> str:
     doc = next((d for d in dossier["documents"] if d["doc_id"] == doc_id), None)
     if not doc:
         return ""
-    return "file://" + str(source_root() / doc["source_path"]).replace(" ", "%20") + f"#page={page}"
+    path = local_file(dossier["case_id"], doc_id) or source_root() / doc["source_path"]
+    return "file://" + str(path).replace(" ", "%20") + f"#page={page}"
 
 
 def _passages(dossier: dict, passages) -> str:

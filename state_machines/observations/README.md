@@ -1,6 +1,6 @@
 # Observations
 
-What a court record names: the platforms and technological features stated in its text, each cited to its sentence. Read by rule from the pages, independent of the model coders and of which acts they agreed on.
+What a court record names: the platforms, the services it refers to without a name, and the technological features stated in its text, each cited to its sentence. Read by rule from the pages, independent of the model coders and of which acts they agreed on.
 
 **Contents:**
 - [Three levels of evidence](#three-levels-of-evidence)
@@ -10,6 +10,7 @@ What a court record names: the platforms and technological features stated in it
 - [Graph](#graph)
 - [Queries](#queries)
 - [Research table](#research-table)
+- [Affordance evidence matrix](#affordance-evidence-matrix)
 - [Review on the real text](#review-on-the-real-text)
 - [Measured](#measured)
 - [Limits](#limits)
@@ -18,7 +19,7 @@ What a court record names: the platforms and technological features stated in it
 
 ```mermaid
 flowchart LR
-  pages["page text<br/>(local)"] --> obs["1. observation<br/>a platform is named,<br/>a feature phrase is stated"]
+  pages["page text<br/>(local)"] --> obs["1. observation<br/>a platform is named or<br/>referred to without a name,<br/>a feature phrase is stated"]
   pages --> acts["2. act<br/>both coders agree<br/>someone did this"]
   obs --> rel["3. supported relationship<br/>the act's own sentence<br/>states the means"]
   acts --> rel
@@ -26,11 +27,11 @@ flowchart LR
 
 | Level | Claim | Gate | Where |
 |---|---|---|---|
-| 1. Observation | The record mentions this platform or feature, here | The name or phrase is on a fixed list and on the page | [`observe.py`](observe.py), `:observations` graph |
+| 1. Observation | The record mentions this platform, unnamed service or feature, here | The name or phrase is on a fixed list, or has a fixed form, and is on the page | [`observe.py`](observe.py), `:observations` graph |
 | 2. Act | The record states someone did this | Two model coders agree on sentence, action and actor | [`coding/`](../coding/README.md), `:evidence` graph |
 | 3. Supported relationship | The record states the act was done by means of it | The observation lies in the act's cited sentence, and that sentence states the means | [`observe.relate`](observe.py) |
 
-A level is never promoted by proximity. A mention is not use. A platform name is not an affordance. Sharing a case, a page, a sentence or a date ties nothing together. A sparse graph is a correct graph: most observations stand alone.
+A level is never promoted by proximity. A mention is not use. A platform name is not an affordance, and neither is a withheld name. Sharing a case, a page, a sentence or a date ties nothing together. A sparse graph is a correct graph: most observations stand alone.
 
 ## What is observed
 
@@ -41,16 +42,18 @@ python -m state_machines.coding.pipeline release <release_id> <case> [...] --obs
 
 - **Platforms:** a service on the list of known services ([`enrich.PLATFORMS`](../coding/enrich.py)). A name that is also an ordinary word ("Signal", "Zoom", "Discord") counts only beside a service word ("on Signal", "a Discord server").
 - **Features:** a phrase on the codebook's list per affordance class (`FEATURES` in [`observe.py`](observe.py)), matched as whole words. The phrase is recorded under the class the codebook lists it in; no affordance is asserted. The bare word "website" is not a feature: it names a place on the internet, not a capability.
+- **Services under a placeholder:** a record that writes "Website A" says a service exists and withholds which one. It is observed as a platform under the record's own label, marked `withheld`, and kept inside its case: "Website A" in two cases is two services. Nothing is inferred from the withholding: it is not evidence of anonymity, of any feature, or of use. Only "Website" followed by one capital letter or a number is taken, the one form the 30 cases hold; the letter I is left out ("the Website I described").
+- **Generic service descriptions:** a phrase such as "social media application", "online chat room" or "file-sharing website", from a closed grammar (an optional "online" or "mobile", one kind of service, one head noun). It is kept as a cited phrase of kind `service_description`. It is not a platform, has no affordance class, and is never tied to an act. A description standing beside a named or placeholder service ("the Kik messaging application") is that service's own descriptor and is not taken. A bare "website", "application" or "social media" names nothing and is not taken; qualifiers that would themselves claim a capability ("encrypted", "anonymous", "dark web") are not in the grammar.
 - **Aliases:** two listed spellings of one service are one platform ("Kik Messenger" is Kik); the spelling found is kept as `named_as`.
 - **Every page except docket sheets.** Docket sheets record court business ("hearing held via Zoom").
 - **Each observation holds:** document, page, the sentence's character span and hash, the page text hash, the document's legal standing, and the term's own span. No quote text, no free text.
-- **Checked on every build** (`observe.check`): each span is re-read from the page and re-hashed, each name and phrase is on its list, and each relationship's act cites that sentence.
+- **Checked on every build** (`observe.check`): each span is re-read from the page and re-hashed, each name and phrase is on its list or has its fixed form, each relationship's act cites that sentence, and no description carries a relationship.
 
 ## Supported relationships
 
 `relate` ties an observation to a published offender act only when all of these hold:
 
-1. the observed term lies inside the sentence the act cites, and no other published act cites that sentence;
+1. the observed term lies inside the sentence the act cites, no other published act cites that sentence, and the act's cited passage does not run past the observation's own sentence;
 2. a cue and the term stand together in one clause of it;
 3. that clause is not a third party's doing, and nothing before the cue in it negates or denies it.
 
@@ -73,6 +76,8 @@ What gives no relationship:
 | "... after she used a fake name" | a feature someone else used |
 | "He had the Snapwire application installed" | present, not a means |
 | "He wrote to her through Kitebox and later drove to her home" (two published acts cite it) | the sentence does not say which act the means belongs to |
+| "Another user wrote to her through Website A. The defendant sent the files in March." (one act cites both sentences) | the cited passage runs across two sentences, so which one is the act's own is unknown |
+| "He asked her for images through a social media application" | a generic description is never tied to an act |
 
 A platform carries both sides of a conversation, so a clause about the victim ("when Minor Victim 1 wrote back via Kitebox") can still state the means of the offender's act. A feature cannot be borrowed that way.
 
@@ -86,20 +91,31 @@ No new vocabulary. An observation is a W3C Web Annotation, the pattern the evide
 
 | Record | Graph |
 |---|---|
-| platform observation | `oa:Annotation`, `oa:motivatedBy oa:identifying`, `oa:hasBody` the platform (`uco-observable:ObservableObject`, the IRI the evidence graph uses) |
+| platform observation | `oa:Annotation`, `oa:motivatedBy oa:identifying`, `oa:hasBody` the platform (`uco-observable:ObservableObject`, the IRI the evidence graph uses, under `https://w3id.org/caselinker/resource/platform/`) |
+| service under a placeholder | the same, with a body node local to the case graph (not under `/resource/platform/`) named with the record's label and "(name withheld)" |
+| generic service description | `oa:Annotation`, `oa:motivatedBy oa:describing`, `oa:hasBody` an `oa:TextualBody` of its own whose `rdf:value` is the phrase. No platform node, no class, no relationship |
 | feature observation | `oa:Annotation`, `oa:motivatedBy oa:classifying`, `oa:hasBody` the CAC affordance class, `clt:featureTerm` the phrase. The passage is classified; no individual of the class is created |
 | source | `oa:SpecificResource` on the document, page `oa:FragmentSelector` refined by `oa:TextPositionSelector`; `clt:quoteSha256`, `clt:pageTextSha256`, `clt:sourceStatus` |
-| rule | `clt:derivationRule "observe-1.2.0"` on every observation |
+| rule | `clt:derivationRule "observe-1.3.0"` on every observation |
 | supported relationship | the canonical relationship (`Carried_Out_Through`, `Moved_To`, `Supports_Action`) under the IRI the evidence graph would use, plus an evidence `oa:Annotation` on the observation's own target |
 
 Graph IRI: `urn:caselinker:pacer:<case>:observations`. A case with nothing observed has no observation graph.
 
 ## Queries
 
-[`queries.py`](queries.py) holds one query per level; each release's `REPORT.md` prints them with their results.
+[`queries.py`](queries.py) holds the queries; each release's `REPORT.md` prints them with their results.
+
+| Query | Answers |
+|---|---|
+| `documented` | Which listed platforms do the records name, in how many cases? |
+| `withheld` | Which services does a record refer to by a placeholder, case by case? |
+| `described` | Which generic service descriptions do the records use? |
+| `features` | Which feature phrases do the records state, under which class? |
+| `reconstructed` | Which acts did both coders agree on? |
+| `supported` | Where does a record state that an act was done by means of a platform or feature? |
 
 ```bash
-python -m state_machines.observations.queries pacer-v2
+python -m state_machines.observations.queries pacer-v1
 ```
 
 ```sparql
@@ -107,6 +123,7 @@ PREFIX oa: <http://www.w3.org/ns/oa#>
 PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
 SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE {
   GRAPH ?g { ?obs oa:motivatedBy oa:identifying ; oa:hasBody ?p . ?p core:name ?platform }
+  FILTER(STRSTARTS(STR(?p), "https://w3id.org/caselinker/resource/platform/"))   # listed platforms; placeholders are case-local nodes
 } GROUP BY ?platform ORDER BY DESC(?cases)
 ```
 
@@ -117,22 +134,53 @@ SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE
 | Column group | Meaning |
 |---|---|
 | `platform_named` | Listed services the record mentions, with mentions and the standing of the documents. A mention, not use |
+| `platform_withheld` | Services the record refers to by a placeholder. The label means nothing outside the case, and a withheld name is not evidence of anonymity or of any feature |
+| `service_described` | Generic descriptions of an online service. Cited phrases, not platforms, never tied to an act |
 | `feature_stated` | Codebook feature phrases the record states, by affordance class. A mention, not use |
-| `used_in_act` | The only rows that tie technology to conduct: an agreed act whose own sentence states it was done by means of that platform or feature |
+| `used_in_act` | The only rows where the observation rule ties technology to conduct: an agreed act whose own sentence states it was done by means of that platform or feature |
 | `acts` | Agreed acts, offender acts, dated acts, offender action codes, harm codes |
 
-The three are different kinds of evidence and must not be added together. A case with five platforms named and nothing in `used_in_act` documents five mentions, not five platform-mediated acts. The 30 cases are a selected collection of prosecutions with available records, not a sample of offending.
+These are different kinds of evidence and must not be added together. A case with five platforms named and nothing in `used_in_act` documents five mentions, not five platform-mediated acts. The 30 cases are a selected collection of prosecutions with available records, not a sample of offending.
 
-The `/lifecycle` page shows the same three things per case ("names 2 platforms, 1 feature" opens the list; a diamond marks an act whose sentence states its means), and the API and MCP payloads carry them under `observed` with the sentence "mentions, not use".
+The table's totals also sort the cases by the strongest thing each record gives about a service: a listed name, else a placeholder, else a generic description, else nothing.
+
+The `/lifecycle` page shows the same things per case ("names 2 platforms, 1 feature" opens the list; a diamond marks an act whose sentence states its means), and the API and MCP payloads carry them under `observed` with the sentence "mentions, not use".
+
+## Affordance evidence matrix
+
+[`affordance_matrix.py`](affordance_matrix.py) writes `affordance_matrix.json`, `affordance_matrix.csv` (one row per affordance class) and `affordance_case_grid.csv` (one row per case) into the release, from the committed release files alone (`python -m state_machines.observations.affordance_matrix <release> --check`).
+
+| Column group | Kind of evidence |
+|---|---|
+| `phrase_stated` | A listed feature phrase of the class is stated in a cited sentence, by the legal standing of the document. A mention |
+| `means_stated_in_act_sentence` | The observation rule found an agreed act's own sentence stating the act was done by means of that phrase |
+| `coder_agreed_on_act` | Both model coders attached the class to an act they agreed on |
+
+Each case and class gets one mechanical reading:
+
+| Reading | Meaning |
+|---|---|
+| `means_stated` | an act's own sentence states the feature as its means |
+| `coder_agreed_only` | coders attached the class to an act; the rule found no sentence stating it as the means |
+| `stated_only` | the phrase is stated, tied to no act by either layer |
+| `none` | no listed phrase and no coder-agreed act |
+
+A class `needs_researcher_interpretation` when some case reads `coder_agreed_only` or `stated_only`: the record says something a person has to read. `no_evidence_in_these_records` means every case reads `none`.
+
+How not to read it:
+- **Not prevalence.** The classes have phrase lists of different sizes, and the cases are a selected collection. There is no total row and no percentage.
+- **Not use.** Only `means_stated` and `coder_agreed_only` concern an act, and the second is two models agreeing, not a person.
+- **Platforms never count.** A platform name, a withheld name or a generic description never feeds a row.
+- **`none` has two causes.** A case whose narrative filings are sealed or were not collected reads `none` like a case where nothing of the kind happened.
 
 ## Review on the real text
 
 ```bash
-python -m state_machines.observations.validation packet pacer-v2     # local/validation/pacer-v2.review.html (court text; never committed)
-python -m state_machines.observations.validation score pacer-v2 <downloaded decisions.json>
+python -m state_machines.observations.validation packet pacer-v1     # local/validation/pacer-v1.review.html (court text; never committed)
+python -m state_machines.observations.validation score pacer-v1 <downloaded decisions.json>
 ```
 
-[`validation.py`](validation.py) draws a fixed, stratified set of items from the release: every observation tied to an act, every feature observation, and platform observations sampled one per platform and standing, then at random up to 60. The reviewer answers two questions per item, kept apart: is the term in the sentence as cited (grounding), and does it mean what the observation says (meaning). `score` writes counts and 95% intervals per stratum to `validation.json`, with no text, and the release report prints them.
+[`validation.py`](validation.py) draws a fixed, stratified set of items from the release: every observation tied to an act, every feature observation, one placeholder label and one generic description per case, term and standing, and listed-platform observations sampled one per platform and standing, then at random up to 60. The reviewer answers two questions per item, kept apart: is the term in the sentence as cited (grounding), and does it mean what the observation says (meaning). `score` writes counts and 95% intervals per stratum to `validation.json`, with no text, and the release report prints them.
 
 ## Measured
 

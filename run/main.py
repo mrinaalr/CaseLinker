@@ -4076,6 +4076,8 @@ def get_lifecycle_analysis(request: Request, case_id: str = "", threshold: str =
 
     try:
         return release_analysis(threshold=threshold, case_id=case_id)
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Trajectory analysis unavailable: {e}") from e
 
