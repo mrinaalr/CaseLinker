@@ -66,3 +66,11 @@ Two existing vocabularies model offence trajectories. Neither is used yet, for t
 | CAC 3.1.0 `cac-platforms:AffordanceMisuse` (`affordanceClass`, `enablesTransitionFrom`, `enablesTransitionTo`, `platform`) | An affordance on a trajectory edge, enabling the transition from one `cac-core:Phase` to another | The closest existing term to a level-3 feature relationship | It states that the affordance *enabled* a phase transition. The record supports "the act was done by means of this feature"; enablement and phases are claims of the model, not of the source |
 
 The evidence terms that make up most of `clt:` (assertion status, legal standing, partial dates, codes) are outside both.
+
+**The SDK extension is the intended target for the trajectory view.** It was contributed from this project (CASE-UCO-SDK PRs 104 and 135) and shipped in SDK v1.31.0 with status `candidate`. Its own definition of `traj:Trajectory` prefers `traj:sequenceIndex` over `ArrayOfAction`, which it describes as modelling planned action sequences; the PACER trajectory graph still uses `uco-action:ActionLifecycle` and `ArrayOfAction`. Moving to it needs three things:
+
+1. **A stable namespace.** The SDK keeps `http://example.org/ontology/trajectories/` until the CASE community agrees an IRI. Graphs emitted before that would have to be re-emitted, and a test here refuses `example.org` IRIs.
+2. **A decision on what a state is.** A `traj:Trajectory` orders `traj:PhaseAssertion`s, each saying a subject occupied a `traj:State`. The record gives dated acts. The candidate mapping is: each agreed act enacts a `traj:Transition` (`traj:enactsAction`), and a state is the codebook's action group, which is a classification by rule and not a reading of the source.
+3. **Vendoring** the extension and its PROV-O and OWL-Time dependencies under [`ontology/vendor/`](../../vendor/) so SHACL can run against them.
+
+It would retire the step terms (`stepIndex`, `immediateAfterPrevious`, `trackKind`) and give the theory layer's transition systems a published form (`traj:StateMachineModel`, `traj:TransitionEstimate`).
