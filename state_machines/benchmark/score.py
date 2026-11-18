@@ -1,6 +1,6 @@
 """Score coded bundles against the synthetic gold.
 
-    python -m state_machines.benchmark.score <coded_dir> [--split dev|heldout|all] [--json out.json]
+    python -m state_machines.benchmark.score <coded_dir> [--split dev|heldout|confirm|all] [--json out.json]
 
 ``coded_dir`` holds ``<case_id>.json`` bundles (a coder's output, or a resolved bundle). Events are
 matched to gold events by the overlap of the passages they cite (``workflow.match_events``),
@@ -12,6 +12,12 @@ participants by the matched events they act in (``resolve.align_participants``).
     standing      share of matched acts whose cited passage has the gold legal standing
     dates         share of dated gold acts whose coded dates include the gold date exactly
     order         recall and precision of gold BEFORE/MEETS relations between matched acts
+                  (the relations the gold lists, one per sequence sentence)
+    order_claims  every coded order relation judged against the gold's full documented order
+                  (listed relations and cited dates, closed transitively): correct, reversed,
+                  not documented, or touching an act that is not a gold act
+    order_pairs   gold-ordered pairs of acts that the coded bundle also orders (stated relations
+                  and cited dates together), out of the pairs with both acts coded, and out of all
     level_c       recall and precision of gold level-C affordances on matched acts
     harms         recall and precision of gold H0 harms on matched acts
     same_act      share of gold SAME_ACT pairs the coded bundle links
@@ -30,6 +36,7 @@ from typing import Dict, List, Optional
 from state_machines.evidence import vocab as V
 from state_machines.coding.resolve import align_participants
 from state_machines.coding.workflow import match_events
+from state_machines.trajectories.derive import _closure, _order_edges
 
 DATA = Path(__file__).resolve().parent / "data"
 
@@ -81,6 +88,21 @@ def score_case(gold: dict, coded: dict) -> Counter:
     c2g = {v: k for k, v in g2c.items()}
     c["order_coded"] += len(coded_order)
     c["order_correct"] += sum((c2g.get(a), c2g.get(b)) in set(gold_order) for a, b in coded_order)
+    # the gold's full documented order: listed relations and cited dates, closed transitively
+    admitted = V.ADMISSIBLE["INFERRED"]
+    gold_after = _closure(_order_edges(gold, admitted), list(eg))
+    coded_after = _closure(_order_edges(coded, admitted), list(ec))
+    for a, b in coded_order:
+        ga, gb = c2g.get(a), c2g.get(b)
+        kind = ("endpoint_not_gold" if ga is None or gb is None else "correct" if gb in gold_after.get(ga, ()) else
+                "reversed" if ga in gold_after.get(gb, ()) else "not_documented")
+        c[f"claim_{kind}"] += 1
+    for ga in eg:
+        for gb in gold_after.get(ga, ()):
+            c["pairs_gold"] += 1
+            if ga in g2c and gb in g2c:
+                c["pairs_both_coded"] += 1
+                c["pairs_recovered"] += g2c[gb] in coded_after.get(g2c[ga], ())
     same = {frozenset((r["from_event"], r["to_event"])) for r in coded["relations"] if r["type"] == "SAME_ACT"}
     gs = [(r["from_event"], r["to_event"]) for r in gold["relations"] if r["type"] == "SAME_ACT"]
     c["same_gold"] += len(gs)
@@ -101,6 +123,10 @@ def summarize(c: Counter) -> dict:
         "action": _rate(c["action_ok"], c["matched"]), "actor": _rate(c["actor_ok"], c["matched"]),
         "standing": _rate(c["standing_ok"], c["matched"]), "dates": _rate(c["dates_ok"], c["dated"]),
         "order": {"recall": _rate(c["order_found"], c["order_gold"]), "precision": _rate(c["order_correct"], c["order_coded"])},
+        "order_claims": {"correct": _rate(c["claim_correct"], c["order_coded"]), "reversed": c["claim_reversed"],
+                         "not_documented": c["claim_not_documented"], "endpoint_not_gold": c["claim_endpoint_not_gold"]},
+        "order_pairs": {"of_pairs_with_both_acts_coded": _rate(c["pairs_recovered"], c["pairs_both_coded"]),
+                        "of_all_gold_pairs": _rate(c["pairs_recovered"], c["pairs_gold"])},
         "level_c": {"recall": _rate(c["aff_hit"], c["aff_gold"]), "precision": _rate(c["aff_hit"], c["aff_coded"])},
         "harms": {"recall": _rate(c["harm_hit"], c["harm_gold"]), "precision": _rate(c["harm_hit"], c["harm_coded"])},
         "same_act": _rate(c["same_found"], c["same_gold"]),
@@ -136,7 +162,7 @@ def score_dir(coded_dir: Path, split: str = "all", data: Path = DATA) -> dict:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("coded_dir", type=Path)
-    ap.add_argument("--split", choices=("dev", "heldout", "all"), default="all")
+    ap.add_argument("--split", choices=("dev", "heldout", "confirm", "all"), default="all")
     ap.add_argument("--json", type=Path)
     args = ap.parse_args(argv)
     out = score_dir(args.coded_dir, args.split)

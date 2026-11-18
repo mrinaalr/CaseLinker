@@ -11,7 +11,7 @@ Synthetic gold PACER cases for measuring the automated coder's accuracy on known
 ## What is in it
 
 ```bash
-python -m state_machines.benchmark.generate            # writes data/ (deterministic: seed 7, 40 cases)
+python -m state_machines.benchmark.generate            # writes data/ (deterministic: seed 7, 40 cases; confirm seed 4099, 20 cases)
 python -m state_machines.coding.pipeline bench --split dev
 python -m state_machines.benchmark.score local/bench/resolved --split heldout
 ```
@@ -20,8 +20,8 @@ python -m state_machines.benchmark.score local/bench/resolved --split heldout
 
 | | |
 |---|---|
-| Cases | 40: sextortion, enticement with a meeting, undercover sting, distribution |
-| Gold events | 470 across 19 action codes |
+| Cases | 60 (20 dev, 20 held-out, 20 confirm): sextortion, enticement with a meeting, undercover sting, distribution |
+| Gold events | 717 across 19 action codes (242 dev, 228 held-out, 247 confirm) |
 | Documents | docket, indictment, statement of offense or factual basis, often a sentencing memorandum |
 
 Every gold event carries tags (in `notes`) for the hard cases built in on purpose:
@@ -41,6 +41,8 @@ Every gold event carries tags (in `notes`) for the hard cases built in on purpos
 
 Cases 1–20 are **dev**: prompts and rules may be tuned on them. Cases 21–40 are **heldout**: they are scored once, with the final prompt, and never used for tuning. Held-out cases are written in a register the dev cases never use ("DEFENDANT", "MV-1", "initiated contact with", "on or about", statutory phrasing), so a prompt fitted to the dev wording does not carry over for free.
 
+Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-confirm`): a third register for the final check, added after the held-out score had been looked at. Its wording was written without sight of the coding rules (`state_machines/coding/` and its tests were not read), from how federal indictments, statements of facts, complaint affidavits and sentencing memoranda phrase the same acts: other party designations, other verbs and constructions, dates inside or at the end of the sentence, other sequence wording, and a few extra boilerplate sentences that use conduct words without describing an act. Confirm cases come from their own seed (`confirm_seed` in [`data/MANIFEST.json`](data/MANIFEST.json)), so cases 1–40 are byte-identical with or without them. The confirm split is scored once; do not read its pages or tune on it before that run.
+
 ## Scoring
 
 [`score.py`](score.py) matches coded events to gold events by the overlap of the passages they cite, and participants by the matched events they act in. Every rate is reported with its numerator and denominator.
@@ -58,7 +60,7 @@ Cases 1–20 are **dev**: prompts and rules may be tuned on them. Cases 21–40 
 
 ## Limits
 
-- **Same generator.** Dev and held-out cases come from one generator; the held-out register changes the wording, not the scenario shapes. Accuracy here is accuracy on these shapes.
+- **Same generator.** Dev, held-out and confirm cases come from one generator; the held-out and confirm registers change the wording, not the scenario shapes. Accuracy here is accuracy on these shapes.
 - **Cleaner than real filings.** No OCR errors inside quoted sentences, no tables, no redactions. Real-record accuracy is likely lower.
 - **What it does not measure.** Whether a model would find acts these templates never express.
 

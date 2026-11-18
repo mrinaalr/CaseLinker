@@ -1,6 +1,7 @@
 """Synthetic gold PACER cases: the coding is written first, the court documents are rendered from it.
 
     python -m state_machines.benchmark.generate [--n 40] [--seed 7] [--out state_machines/benchmark/data]
+                                                [--confirm 20] [--confirm-seed 4099]
 
 Every case is fictional: invented platforms, "the defendant", "Minor Victim 1", no real names,
 dates or places, and clinical court wording only. For each case the generator writes
@@ -32,6 +33,9 @@ from state_machines.evidence import vocab as V
 
 OUT = Path(__file__).resolve().parent / "data"
 BENCHMARK_VERSION = "benchmark-1.0"
+CONFIRM_VERSION = "benchmark-1.1-confirm"     # cases after the first n: a third register, scored once
+CONFIRM_SEED = 4099
+STYLES = ("dev", "heldout", "confirm")
 PLATFORMS = ["Chirpline", "Vellum Chat", "Snapwire", "Kitebox", "Orbit Messenger", "Loopit", "Pinehollow"]
 STANDING = {d: V.DOC_TYPES[d][0] for d in V.DOC_TYPES}
 MONTHS = list(calendar.month_name)[1:]
@@ -44,8 +48,12 @@ def _day(d: date) -> str:
 class Case:
     """Accumulates documents, participants, events and relations; renders pages; emits gold."""
 
-    def __init__(self, case_id: str, rng: random.Random, heldout: bool = False):
-        self.id, self.rng, self.heldout = case_id, rng, heldout
+    def __init__(self, case_id: str, rng: random.Random, heldout: bool = False, style: Optional[str] = None):
+        style = style or ("heldout" if heldout else "dev")
+        if style not in STYLES:
+            raise ValueError(f"unknown style {style!r}")
+        self.id, self.rng, self.style, self.heldout = case_id, rng, style, style == "heldout"
+        self.version = CONFIRM_VERSION if style == "confirm" else BENCHMARK_VERSION
         self.docs: Dict[str, dict] = {}
         self.sentences: Dict[str, List[str]] = {}
         self.participants: List[dict] = []
@@ -65,12 +73,20 @@ class Case:
         """Add a sentence to a document; returns its passage id (the whole sentence is the quote)."""
         self._n += 1
         pid = f"s{self._n:03d}"
-        self.sentences[doc_id].append(heldout_style(sentence) if self.heldout else sentence)
+        self.sentences[doc_id].append(styled(sentence, self.style))
         self.passages.append({"passage_id": pid, "doc_id": doc_id, "index": len(self.sentences[doc_id]) - 1})
         return pid
 
     def filler(self, doc_id: str, sentence: str) -> None:
-        self.sentences[doc_id].append(heldout_style(sentence) if self.heldout else sentence)
+        self.sentences[doc_id].append(styled(sentence, self.style))
+
+    def insert_filler(self, doc_id: str, index: int, sentence: str) -> None:
+        """Put a filler sentence at ``index`` of a document, keeping every passage on its own sentence."""
+        index = max(0, min(index, len(self.sentences[doc_id])))
+        self.sentences[doc_id].insert(index, sentence)
+        for p in self.passages:
+            if p["doc_id"] == doc_id and p["index"] >= index:
+                p["index"] += 1
 
     def participant(self, ref: str, kind: str, status: str, pid: str, **extra) -> None:
         p = {"participant_ref": ref, "kind": kind,
@@ -89,7 +105,7 @@ class Case:
              "time": {"assertions": []}, "repetition": {"kind": "single"},
              "platform_mentions": [], "platform_interactions": [], "channels": [],
              "affordances": [], "candidate_affordances": [], "access": [], "harms": [],
-             "review": {"status": "adjudicated", "coders": ["coder_gold"], "adjudicator": BENCHMARK_VERSION}}
+             "review": {"status": "adjudicated", "coders": ["coder_gold"], "adjudicator": self.version}}
         if when:
             expression, lo, hi, precision = when
             e["time"]["assertions"].append({"expression": expression, "precision": precision, "earliest": lo.isoformat(),
@@ -161,7 +177,7 @@ class Case:
                              "verification": {"status": "VERIFIED", "method": "text_layer_exact", "checked_by": "coder_gold"}})
         gold = {"schema_version": V.SCHEMA_VERSION, "codebook_version": V.CODEBOOK_VERSION, "case_id": self.id,
                 "coding": {"coder_id": "coder_gold", "method": "human", "model": None, "coded_on": "2026-11-17",
-                           "blind_to": [], "note": f"{BENCHMARK_VERSION}: synthetic gold, written before the documents"},
+                           "blind_to": [], "note": f"{self.version}: synthetic gold, written before the documents"},
                 "documents": docs, "passages": passages, "participants": self.participants,
                 "events": self.events, "relations": self.relations,
                 "tracks": [{k: v for k, v in t.items() if v is not None} for t in self.tracks.values()]}
@@ -203,14 +219,191 @@ def heldout_style(sentence: str) -> str:
     return sentence
 
 
+# --- the confirm register ----------------------------------------------------------------------
+# Confirm cases are scored exactly once. Their wording was written without sight of the coding
+# rules, from how federal indictments, statements of facts, complaint affidavits and sentencing
+# memoranda read, and differs from both registers above: other party designations, other verbs
+# and constructions for each act, dates inside or at the end of the sentence, other sequence
+# wording. Each template is rewritten whole; what the gold records verbatim (date expressions,
+# platform names, feature terms) is carried over unchanged, and the act, actor, target, date,
+# stated order and outcome are the same.
+_D = r"([A-Z][a-z]+ \d{1,2}, \d{4})"          # a day, as _day() writes it
+_M = r"([A-Z][a-z]+ \d{4})"                   # a month
+_P = r"([A-Z][A-Za-z]+(?: [A-Z][A-Za-z]+)?)"  # a platform name
+_CONFIRM = [
+    # docket
+    (r"^(\S+) INDICTMENT returned as to the defendant \(1\) on counts 1-3\.$",
+     r"\1 INDICTMENT filed as to the accused (1), count(s) 1-3."),
+    (r"^(\S+) PLEA AGREEMENT; the defendant \(1\) pleaded guilty to count 1 before the court\.$",
+     r"\1 Minute Entry for proceedings held before the court: Change of Plea Hearing as to the accused (1), "
+     r"who entered a plea of guilty to count 1 pursuant to a PLEA AGREEMENT."),
+    (r"^(\S+) ORDER setting sentencing hearing\.$", r"\1 SCHEDULING ORDER: sentencing hearing set."),
+    # openers
+    (r"^THE GRAND JURY CHARGES THAT: at all times relevant to this Indictment, the following facts applied\.$",
+     "The Grand Jury charges that, at all times material to this Indictment, the facts set out below were true."),
+    (r"^The parties stipulate that the following facts are true and that the government would prove them at trial\.$",
+     "The accused admits, and the United States agrees, that the facts below are true and could have been "
+     "established beyond a reasonable doubt had the matter gone to trial."),
+    (r"^The government respectfully submits this memorandum in aid of sentencing\.$",
+     "The United States files this memorandum to set out its position on the sentence to be imposed."),
+    (r"^The defendant's conduct warrants a sentence at the top of the guidelines range\.$",
+     "A sentence at the high end of the advisory guidelines range is warranted by what the accused did."),
+    # the victim
+    (rf"^Minor Victim 1 was a fourteen-year-old girl who used the {_P} application\.$",
+     r"Jane Doe 1, a girl who was fourteen years of age, was a user of the \1 application."),
+    (rf"^At the relevant times, Minor Victim 1 was a minor girl who lived in another state and used {_P}\.$",
+     r"At all times material to the offense, Jane Doe 1 was a girl under the age of eighteen who resided "
+     r"in a different state and held an account on \1."),
+    # undercover
+    (rf"^In {_M}, the defendant posted a message in a public {_P} group seeking to meet a young girl\.$",
+     r"Sometime in \1, the accused placed a message in a public \2 group in which he said he was looking to meet a young girl."),
+    (rf"^During {_M}, the defendant published a public post on {_P} asking whether any young girls wanted to talk\.$",
+     r"A public post that the accused put up on \2 in the course of \1 inquired whether any young girls were interested in talking."),
+    (rf"^An undercover agent posing as a thirteen-year-old girl responded to the post on {_P}\.$",
+     r"A reply to that post was sent on \1 by an undercover employee using the persona of a thirteen-year-old girl."),
+    (r"^After that response, the defendant asked the undercover agent to send sexually explicit images\.$",
+     "Once that reply had been received, the accused requested that the undercover employee transmit "
+     "sexually explicit visual depictions."),
+    (rf"^On {_D}, the defendant arranged to meet the undercover agent at a restaurant\.$",
+     r"Plans for an in-person meeting at a restaurant were made by the accused with the undercover employee on \1."),
+    (rf"^On {_D}, the defendant drove to the restaurant to meet the undercover agent\.$",
+     r"The accused traveled by car to the restaurant on \1 for the purpose of meeting the undercover employee."),
+    (rf"^Agents arrested the defendant at the restaurant on {_D}\.$",
+     r"The accused was taken into custody by law enforcement officers at the restaurant on \1."),
+    # first contact
+    (rf"^In {_M}, the defendant found Minor Victim 1 through the public group search feature on {_P} and first contacted her there\.$",
+     r"The accused located Jane Doe 1 in \1 by means of the public group search feature on \2, "
+     r"which is also where his initial contact with her took place."),
+    (rf"^In {_M}, the defendant used the public group search feature on {_P} to find Minor Victim 1 and sent her a first message\.$",
+     r"By running the public group search feature on \2 during the month of \1, the accused came across "
+     r"Jane Doe 1, to whom he then wrote for the first time."),
+    (rf"^In {_M}, the defendant first contacted Minor Victim 1 through the {_P} application\.$",
+     r"The accused initially reached out to Jane Doe 1 via the \2 application in \1."),
+    (rf"^Minor Victim 1 first communicated with the defendant on {_P} in {_M}\.$",
+     r"The earliest communications between Jane Doe 1 and the accused took place on \1 in \2."),
+    # false age
+    (r"^The defendant told Minor Victim 1 that he was seventeen years old, which was not true\.$",
+     "The accused represented to Jane Doe 1 that his age was seventeen, which was untrue."),
+    (r"^The defendant falsely told Minor Victim 1 that he was a sixteen-year-old boy\.$",
+     "The accused held himself out to Jane Doe 1 as a boy of sixteen, which he was not."),
+    # change of platform
+    (rf"^After that first contact, the defendant told Minor Victim 1 to continue their conversation on {_P}\.$",
+     r"Subsequent to that initial contact, the accused instructed Jane Doe 1 that the two of them should carry on their exchange over \1."),
+    (rf"^After their first conversation, the defendant directed Minor Victim 1 to move their chat to {_P}\.$",
+     r"Once the two had spoken for the first time, the accused had Jane Doe 1 switch their communications over to \1."),
+    # request for images, and what followed
+    (rf"^On {_D}, the defendant used the disappearing-message feature on {_P} to ask Minor Victim 1 to send sexually explicit images of herself\.$",
+     r"By way of the disappearing-message feature on \2, the accused on \1 requested that Jane Doe 1 "
+     r"provide him with sexually explicit visual depictions of herself."),
+    (rf"^On {_D}, the defendant asked Minor Victim 1 to send sexually explicit images of herself over {_P}\.$",
+     r"A request that Jane Doe 1 transmit sexually explicit pictures of herself was made by the accused over \2 on \1."),
+    (r"^In response, Minor Victim 1 sent the defendant two sexually explicit images of herself\.$",
+     "Jane Doe 1 complied by transmitting to the accused two sexually explicit visual depictions of herself."),
+    (r"^Minor Victim 1 then sent the defendant three sexually explicit images, as he had asked\.$",
+     "The accused thereafter received three sexually explicit pictures from Jane Doe 1, as he had requested."),
+    (r"^Minor Victim 1 then blocked the defendant's account\.$",
+     "Jane Doe 1 next put a block on the account belonging to the accused."),
+    (r"^After Minor Victim 1 blocked his account, the defendant created a new account under a different name to conceal his identity and contacted her again\.$",
+     "Once his account had been blocked by Jane Doe 1, the accused, in order to keep his identity from "
+     "being known, set up a new account under a different name and resumed contact with her."),
+    (r"^Following the block, the defendant made a new account under a false name to hide his identity and messaged Minor Victim 1 again\.$",
+     "The block having been put in place, the accused registered a new account under a false name so as "
+     "to disguise who he was and again sent messages to Jane Doe 1."),
+    (rf"^On {_D}, the defendant threatened to send the images to the friends of Minor Victim 1 unless she sent more\.$",
+     r"The accused told Jane Doe 1 on \1 that, unless she produced more images, he would forward the ones he had to her friends."),
+    (rf"^The defendant later posted the images in a {_P} group chat with (\d+) members\.$",
+     r"At a later time, the accused uploaded the images to a \1 group chat that had \2 members."),
+    (rf"^The defendant later sent the images to at least (\d+) other users of {_P}\.$",
+     r"At a later time, the images were forwarded by the accused to no fewer than \1 other \2 users."),
+    # meeting
+    (rf"^On {_D}, the defendant arranged to meet Minor Victim 1 at a hotel\.$",
+     r"The accused made arrangements on \1 for an in-person meeting with Jane Doe 1 at a hotel."),
+    (r"^The next day, the defendant drove to the hotel to meet Minor Victim 1\.$",
+     "On the following day, the accused traveled by car to the hotel for the purpose of meeting Jane Doe 1."),
+    (r"^At the hotel, the defendant engaged in sexual contact with Minor Victim 1\.$",
+     "While at the hotel, the accused had sexual contact with Jane Doe 1."),
+    # device examination, counts, memorandum
+    (rf"^A forensic examination of the defendant's phone found the {_P} application installed\.$",
+     r"The \1 application was among those found installed on the phone of the accused when it was forensically examined."),
+    (rf"^COUNT ONE\. On or about {_D}, the defendant asked Minor Victim 1 to send sexually explicit images of herself\.$",
+     r"COUNT ONE. The Grand Jury further charges that, on or about \1, the accused did request of Jane Doe 1 "
+     r"that she send sexually explicit visual depictions of herself."),
+    (rf"^COUNT ONE\. On or about {_D}, the defendant solicited sexually explicit images from Minor Victim 1\.$",
+     r"COUNT ONE. It is charged that, on or about \1, the accused did make a request to Jane Doe 1 for sexually explicit pictures."),
+    (r"^COUNT THREE\. The defendant also threatened to harm Minor Victim 1 if she told anyone about their messages\.$",
+     "COUNT THREE. It is further charged that the accused told Jane Doe 1 that he would hurt her if she "
+     "disclosed their messages to anyone."),
+    (r"^The defendant threatened to expose the images of Minor Victim 1 to her friends, which the government contends caused her fear\.$",
+     "It is the position of the United States that Jane Doe 1 was placed in fear when the accused said he "
+     "would reveal her images to her friends."),
+    # anything a template above did not rewrite still changes its party designations
+    (r"\bThe defendant\b", "The accused"), (r"\bthe defendant\b", "the accused"),
+    (r"\bMinor Victim 1\b", "Jane Doe 1"), (r"\bundercover agent\b", "undercover employee"),
+]
+
+# Distractors for confirm cases only: boilerplate that uses conduct words and describes no act.
+_CONFIRM_FILLERS = {
+    "indictment": [
+        "Title 18, United States Code, Section 2422(b) makes it a crime to use any facility of interstate commerce "
+        "to persuade, induce, entice or coerce a person under the age of eighteen to engage in unlawful sexual activity.",
+        "As used in this Indictment, the term minor means any person who has not attained the age of eighteen years.",
+        "Upon conviction, any device used to send or receive the material described in this Indictment is subject to forfeiture.",
+    ],
+    "sof": [
+        "The accused understands that the offense of conviction requires proof that a person used a means of "
+        "interstate commerce to entice a minor.",
+        "This statement does not contain every fact known to the parties about the offense and is offered only "
+        "to provide a basis for the plea.",
+        "The accused acknowledges that the internet and cellular telephone networks are facilities of interstate commerce.",
+    ],
+    "memo": [
+        "Under the advisory guidelines, a two-level increase applies where an offense involved the use of a "
+        "computer to solicit a minor.",
+        "The factors in Title 18, United States Code, Section 3553(a) include the need for a sentence to reflect "
+        "the seriousness of the offense and to deter others from threatening or enticing children online.",
+        "Courts have observed that the distribution of images of a child causes harm each time the images are viewed.",
+    ],
+}
+
+
+def confirm_style(sentence: str) -> str:
+    for pat, rep in _CONFIRM:
+        sentence = re.sub(pat, rep, sentence)
+    return sentence
+
+
+def styled(sentence: str, style: str) -> str:
+    return {"dev": lambda s: s, "heldout": heldout_style, "confirm": confirm_style}[style](sentence)
+
+
+def _confirm_fillers(c: "Case", charge: date) -> None:
+    """Confirm-only distractors, drawn from their own RNG so the case's scenario draws are untouched."""
+    rng = random.Random(f"{c.id}:confirm-fillers")
+    c.insert_filler("docket", 1, f"{charge + timedelta(days=2):%m/%d/%Y} NOTICE OF ATTORNEY APPEARANCE on behalf of the accused (1).")
+    for doc_id, pool in _CONFIRM_FILLERS.items():
+        if doc_id not in c.docs:
+            continue
+        first, *rest = rng.sample(pool, rng.randint(1, 3))
+        c.insert_filler(doc_id, 1, first)             # after the opener, before any act
+        for s in rest:
+            c.insert_filler(doc_id, len(c.sentences[doc_id]), s)   # after the last act
+
+
 # --- scenarios ---------------------------------------------------------------------------------
 
 def _pick(rng: random.Random, options: List[str], **kw) -> str:
     return rng.choice(options).format(**kw)
 
 
-def build_case(case_id: str, rng: random.Random, heldout: bool = False) -> Case:
-    c = Case(case_id, rng, heldout)
+def build_case(case_id: str, rng: random.Random, heldout: bool = False, style: Optional[str] = None) -> Case:
+    c = _build_case(case_id, rng, heldout, style)
+    if c.style == "confirm":
+        _confirm_fillers(c, date.fromisoformat(c.events[0]["time"]["assertions"][0]["earliest"]))
+    return c
+
+
+def _build_case(case_id: str, rng: random.Random, heldout: bool = False, style: Optional[str] = None) -> Case:
+    c = Case(case_id, rng, heldout, style)
     kind = rng.choice(["sextortion", "sextortion", "meeting", "undercover", "distribution"])
     p1, p2 = rng.sample(PLATFORMS, 2)
     start = date(rng.randint(2019, 2024), rng.randint(1, 10), rng.randint(1, 20))
@@ -378,7 +571,7 @@ def build_case(case_id: str, rng: random.Random, heldout: bool = False) -> Case:
     return c
 
 
-def generate(n: int = 40, seed: int = 7, out: Path = OUT) -> List[dict]:
+def generate(n: int = 40, seed: int = 7, out: Path = OUT, confirm: int = 20, confirm_seed: int = CONFIRM_SEED) -> List[dict]:
     rng = random.Random(seed)
     golds, splits = [], {}
     for i in range(1, n + 1):
@@ -386,7 +579,13 @@ def generate(n: int = 40, seed: int = 7, out: Path = OUT) -> List[dict]:
         case_id = f"synth_{i:03d}"
         splits[case_id] = "heldout" if heldout else "dev"
         golds.append(build_case(case_id, random.Random(rng.randrange(1 << 30)), heldout).render(out))
-    (out / "MANIFEST.json").write_text(json.dumps({"benchmark": BENCHMARK_VERSION, "seed": seed, "cases": [g["case_id"] for g in golds],
+    crng = random.Random(confirm_seed)     # its own stream: cases 1..n are the same with or without a confirm split
+    for i in range(n + 1, n + confirm + 1):
+        case_id = f"synth_{i:03d}"
+        splits[case_id] = "confirm"
+        golds.append(build_case(case_id, random.Random(crng.randrange(1 << 30)), style="confirm").render(out))
+    (out / "MANIFEST.json").write_text(json.dumps({"benchmark": BENCHMARK_VERSION, "seed": seed,
+                                                   "confirm": CONFIRM_VERSION, "confirm_seed": confirm_seed, "cases": [g["case_id"] for g in golds],
                                                    "splits": splits,
                                                    "schema_version": V.SCHEMA_VERSION, "codebook_version": V.CODEBOOK_VERSION},
                                                   indent=1) + "\n", encoding="utf-8")
@@ -398,8 +597,10 @@ def main(argv=None) -> int:
     ap.add_argument("--n", type=int, default=40)
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--confirm", type=int, default=20, help="confirm cases written after the first n")
+    ap.add_argument("--confirm-seed", type=int, default=CONFIRM_SEED)
     args = ap.parse_args(argv)
-    golds = generate(args.n, args.seed, args.out)
+    golds = generate(args.n, args.seed, args.out, args.confirm, args.confirm_seed)
     print(f"{len(golds)} synthetic cases, {sum(len(g['events']) for g in golds)} gold events → {args.out}")
     return 0
 
