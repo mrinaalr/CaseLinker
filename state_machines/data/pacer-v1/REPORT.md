@@ -6,17 +6,17 @@ Review mode **machine**: two local models coded every case independently; a fixe
 
 | Content | Count |
 |---|---:|
-| acts | 258 |
-| acts with a cited date | 133 |
-| acts: law_enforcement | 13 |
-| acts: offender | 152 |
-| acts: procedure | 90 |
+| acts | 285 |
+| acts with a cited date | 143 |
+| acts: law_enforcement | 27 |
+| acts: offender | 163 |
+| acts: procedure | 92 |
 | acts: response | 3 |
 | cases | 30 |
 | cases with offender acts | 24 |
 | harms recorded: victim minor | 15 |
 | harms recorded: victim unknown | 1 |
-| level-C affordances (feature stated in the sentence) | 4 |
+| level-C affordances (feature stated in the sentence) | 6 |
 | offender acts naming a victim or an undercover persona | 71 |
 | offender acts with a documented platform | 9 |
 | relations: possibly the same act | 7 |
@@ -41,32 +41,32 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 |---|---|---:|---:|---:|---:|---:|---:|---|
 | `anchorage_pd_2022_004` | yes | 6 | 0 | 108 | 214 | 52 | 0.168 | fails |
 | `anchorage_pd_2022_006` | yes | 15 | 0 | 166 | 407 | 64 | 0.273 | fails |
+| `anchorage_pd_2022_007` | yes | 27 | 0 | 302 | 348 | 100 | 0.323 | fails |
 | `doj_ceos_2025_004` | yes | 1 | 0 | 14 | 107 | 3 | 0.25 | partial |
+| `doj_ceos_2025_007` | yes | 5 | 0 | 81 | 173 | 27 | 0.346 | fails |
 | `doj_ceos_2025_014` | yes | 6 | 0 | 50 | 163 | 20 | 0.223 | partial |
 | `doj_ceos_2025_023` | yes | 10 | 0 | 45 | 164 | 30 | 0.333 | fails |
-| `doj_ceos_2025_025` | yes | 2 | 0 | 25 | 118 | 10 | 0.241 | fails |
-| `doj_ceos_2025_031` | yes | 13 | 0 | 125 | 217 | 49 | 0.181 | fails |
+| `doj_ceos_2025_025` | yes | 20 | 0 | 442 | 655 | 217 | 0.224 | fails |
+| `doj_ceos_2025_026` | yes | 15 | 0 | 32 | 27 | 21 | 0.439 | fails |
+| `doj_ceos_2025_031` | yes | 15 | 0 | 184 | 291 | 74 | 0.238 | fails |
+| `doj_ceos_2026_001` | yes | 32 | 0 | 146 | 105 | 56 | 0.446 | fails |
 | `doj_ceos_2026_003` | yes | 1 | 0 | 112 | 411 | 19 | 0.339 | partial |
-| `doj_ceos_2026_007` | yes | 1 | 0 | 20 | 189 | 5 | 0.348 | partial |
+| `doj_ceos_2026_006` | yes | 11 | 0 | 180 | 354 | 87 | 0.201 | fails |
+| `doj_ceos_2026_007` | yes | 3 | 0 | 53 | 399 | 17 | 0.318 | partial |
 | `doj_ceos_2026_008` | yes | 4 | 0 | 46 | 244 | 17 | 0.356 | fails |
 | `doj_ceos_2026_012` | yes | 9 | 0 | 16 | 142 | 10 | 0.462 | fails |
-| `enterprise` | yes | 5 | 0 | 81 | 173 | 27 | 0.346 | fails |
-| `enticement` | yes | 15 | 0 | 32 | 27 | 21 | 0.439 | fails |
+| `doj_safe_childhood_2023_420` | yes | 5 | 0 | 53 | 123 | 22 | 0.268 | fails |
 | `external_extortion` | yes | 1 | 0 | 22 | 99 | 15 | 0.227 | fails |
 | `ky_sp_2025_038` | yes | 2 | 0 | 65 | 123 | 32 | 0.186 | fails |
 | `ncis_2022_002` | yes | 4 | 0 | 22 | 152 | 15 | 0.207 | fails |
-| `ncis_2023_001` | yes | 5 | 0 | 58 | 85 | 17 | 0.224 | fails |
-| `ncmec_2022_586` | yes | 19 | 0 | 92 | 185 | 43 | 0.465 | fails |
-| `ncmec_2023_190` | yes | 5 | 0 | 53 | 123 | 22 | 0.268 | fails |
-| `ncmec_2023_224` | yes | 1 | 0 | 14 | 66 | 1 | None | partial |
-| `ncmec_2025_1116` | yes | 1 | 0 | 18 | 100 | 4 | 0.2 | fails |
-| `production` | yes | 32 | 0 | 146 | 105 | 56 | 0.446 | fails |
-| `sextortion` | yes | 27 | 0 | 302 | 348 | 100 | 0.323 | fails |
+| `ncis_2023_001` | yes | 5 | 0 | 58 | 85 | 18 | 0.215 | fails |
+| `ncmec_2022_575` | yes | 19 | 0 | 92 | 185 | 43 | 0.465 | fails |
+| `ncmec_2023_222` | yes | 1 | 0 | 14 | 66 | 1 | None | partial |
+| `ncmec_2025_1035` | yes | 1 | 0 | 18 | 100 | 4 | 0.2 | fails |
 | `svicac_2022_009` | yes | 19 | 0 | 58 | 92 | 15 | 0.534 | fails |
-| `texas_ag_2019_013` | yes | 14 | 0 | 29 | 117 | 7 | 0.829 | fails |
-| `trafficking` | yes | 11 | 0 | 180 | 354 | 87 | 0.201 | fails |
+| `texas_ag_2019_013` | yes | 19 | 0 | 102 | 225 | 45 | 0.344 | fails |
 | `usss_2017_006` | yes | 13 | 0 | 99 | 85 | 38 | 0.294 | fails |
-| `usss_2021_019` | yes | 7 | 0 | 88 | 178 | 32 | 0.354 | fails |
+| `usss_2021_017` | yes | 7 | 0 | 88 | 178 | 32 | 0.354 | fails |
 | `usss_2023_004` | yes | 3 | 0 | 43 | 126 | 21 | 0.255 | fails |
 | `wy_dci_2023_005` | yes | 6 | 0 | 7 | 113 | 3 | 0.143 | partial |
 
@@ -74,24 +74,24 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 
 | Measure | Count |
 |---|---:|
-| coder_A acts dropped: procedure act repeating a dated anchor | 240 |
-| coder_A acts dropped: procedure act without a stated date | 2729 |
-| coder_A acts dropped: quote not located on the page | 980 |
+| coder_A acts dropped: procedure act repeating a dated anchor | 241 |
+| coder_A acts dropped: procedure act without a stated date | 2978 |
+| coder_A acts dropped: quote not located on the page | 1037 |
 | coder_A acts proposed: docket parser | 84 |
-| coder_A acts proposed: model | 6085 |
+| coder_A acts proposed: model | 6974 |
 | coder_A acts proposed: skipped: judgment form page | 0 |
 | coder_A pages: docket parser | 201 |
-| coder_A pages: model | 766 |
+| coder_A pages: model | 886 |
 | coder_A pages: skipped: judgment form page | 60 |
 | coder_B acts dropped: procedure act repeating a dated anchor | 6 |
-| coder_B acts dropped: procedure act without a stated date | 543 |
-| coder_B acts dropped: quote not located on the page | 1605 |
+| coder_B acts dropped: procedure act without a stated date | 586 |
+| coder_B acts dropped: quote not located on the page | 1840 |
 | coder_B acts proposed: docket parser | 84 |
-| coder_B acts proposed: model | 7181 |
+| coder_B acts proposed: model | 8388 |
 | coder_B acts proposed: skipped: first coder found no act | 0 |
 | coder_B acts proposed: skipped: judgment form page | 0 |
 | coder_B pages: docket parser | 201 |
-| coder_B pages: model | 758 |
+| coder_B pages: model | 878 |
 | coder_B pages: skipped: first coder found no act | 8 |
 | coder_B pages: skipped: judgment form page | 60 |
 
@@ -100,22 +100,289 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 ```json
 {
  "cases": 30,
- "events_coder_A": 2136,
- "events_coder_B": 5027,
- "matched": 835,
- "mean_event_f1": 0.226,
+ "events_coder_A": 2718,
+ "events_coder_B": 5956,
+ "matched": 1118,
+ "mean_event_f1": 0.242,
  "pooled_action_agreement": {
-  "exact": 291,
-  "of": 835
+  "exact": 375,
+  "of": 1118
  },
- "mean_action_kappa": 0.314,
+ "mean_action_kappa": 0.298,
  "note": "agreement on acts the models coded; the docket parser's acts are excluded"
 }
 ```
 
+## What the records name (observation layer)
+
+Read by rule from every page except docket sheets, independent of the coders. An observation says that a cited sentence names a listed platform, refers to a service by a placeholder ("Website A", name withheld, a label that means nothing outside its case), uses a generic description of an online service ("social media application"), or states a codebook feature phrase. It does not say anyone used it, and a withheld name is not evidence of anonymity or of any feature. A relationship exists only where a published act's own sentence states the means; a generic description is never tied to an act.
+
+| Content | Count |
+|---|---:|
+| cases | 30 |
+| observations | 875 |
+| observations of a listed platform's name | 539 |
+| observations of a platform under a placeholder (name withheld) | 176 |
+| observations of a generic service description | 73 |
+| feature observations | 87 |
+| cases naming at least one listed platform | 25 |
+| cases with a platform whose name is withheld | 2 |
+| cases with a generic service description | 18 |
+| cases with no listed platform, a withheld one | 0 |
+| cases with neither, a generic service description | 2 |
+| cases with none of the three | 3 |
+| cases stating at least one feature phrase | 13 |
+| distinct case and listed-platform pairs | 70 |
+| distinct case and withheld-platform pairs | 5 |
+| observations tied to a published act by a stated means | 10 |
+| cases with at least one such relationship | 7 |
+| observations in documents with standing ADVOCACY | 147 |
+| observations in documents with standing ALLEGATION | 221 |
+| observations in documents with standing COURT_RECORD | 27 |
+| observations in documents with standing ADMITTED | 197 |
+| observations in documents with standing SWORN_AFFIDAVIT | 282 |
+| observations in documents with standing ADMITTED_UNDER_OATH | 1 |
+
+**Machine-read; no person reviewed these observations on the real text.** The release is complete without such a review. A researcher who wants one can draw a stratified local packet (`python -m state_machines.observations.validation packet`); its score is printed here when a decisions file is scored.
+
+On the reference cases (another coding, not truth): cases 5; listed platforms the reference coding names 3; of which observed 3; platform surfaces in the reference that are not on the list 4; listed platforms observed 6.
+
+### Level 1. Which listed platforms do the records name, in how many cases?
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE {
+  GRAPH ?g { ?obs oa:motivatedBy oa:identifying ; oa:hasBody ?p . ?p core:name ?platform }
+  FILTER(STRSTARTS(STR(?p), "https://w3id.org/caselinker/resource/platform/"))
+} GROUP BY ?platform ORDER BY DESC(?cases) DESC(?mentions) ?platform
+```
+
+| platform | cases | mentions |
+|---|---|---|
+| Facebook | 12 | 41 |
+| Snapchat | 10 | 173 |
+| Instagram | 8 | 104 |
+| Kik | 6 | 49 |
+| Omegle | 4 | 6 |
+| Grindr | 3 | 22 |
+| Facebook Messenger | 2 | 39 |
+| Dropbox | 2 | 38 |
+| FaceTime | 2 | 13 |
+| Google Drive | 2 | 3 |
+| WhatsApp | 2 | 3 |
+| TikTok | 2 | 2 |
+| Wickr | 2 | 2 |
+| YouTube | 2 | 2 |
+| Pinterest | 1 | 10 |
+| Skype | 1 | 8 |
+| Discord | 1 | 7 |
+| PayPal | 1 | 6 |
+| Telegram | 1 | 4 |
+| Imgsrc | 1 | 2 |
+| Flickr | 1 | 1 |
+| Hotmail | 1 | 1 |
+| Tumblr | 1 | 1 |
+| Twitter | 1 | 1 |
+| iCloud | 1 | 1 |
+
+### Level 1. Which services does a record refer to by a placeholder, case by case? (A label means nothing outside its case.)
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+SELECT ?case ?label (COUNT(?obs) AS ?mentions) WHERE {
+  GRAPH ?g { ?obs oa:motivatedBy oa:identifying ; oa:hasBody ?p . ?p core:name ?label }
+  FILTER(!STRSTARTS(STR(?p), "https://w3id.org/caselinker/resource/platform/"))
+  BIND(REPLACE(REPLACE(STR(?g), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
+} GROUP BY ?case ?label ORDER BY ?case ?label
+```
+
+| case | label | mentions |
+|---|---|---|
+| doj_ceos_2025_025 | Website A (name withheld) | 26 |
+| doj_ceos_2025_025 | Website B (name withheld) | 27 |
+| doj_ceos_2025_025 | Website C (name withheld) | 29 |
+| doj_ceos_2025_025 | Website D (name withheld) | 30 |
+| doj_ceos_2025_031 | Website A (name withheld) | 64 |
+
+### Level 1. Which generic descriptions of an online service do the records use? (Not platforms; no use claimed.)
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?description (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE {
+  GRAPH ?g { ?obs oa:motivatedBy oa:describing ; oa:hasBody ?b . ?b rdf:value ?description }
+} GROUP BY ?description ORDER BY DESC(?cases) DESC(?mentions) ?description
+```
+
+| description | cases | mentions |
+|---|---|---|
+| chat room | 6 | 18 |
+| messaging application | 5 | 8 |
+| social media platform | 5 | 7 |
+| social networking service | 3 | 3 |
+| social media app | 2 | 5 |
+| online social media application | 2 | 3 |
+| instant messaging service | 2 | 2 |
+| online forum | 2 | 2 |
+| social media website | 2 | 2 |
+| social networking forum | 2 | 2 |
+| chat site | 1 | 3 |
+| online messaging platform | 1 | 3 |
+| internet forum | 1 | 2 |
+| online dating application | 1 | 2 |
+| chat program | 1 | 1 |
+| electronic bulletin board | 1 | 1 |
+| instant messaging application | 1 | 1 |
+| internet cloud storage service | 1 | 1 |
+| live-streaming platform | 1 | 1 |
+| online chat room | 1 | 1 |
+| online gaming platform | 1 | 1 |
+| photo-sharing website | 1 | 1 |
+| social media application | 1 | 1 |
+| social networking application | 1 | 1 |
+| social networking website | 1 | 1 |
+
+### Level 1. Which feature phrases do the records state, under which CAC class?
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+SELECT ?class ?phrase (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE {
+  GRAPH ?g { ?obs oa:motivatedBy oa:classifying ; oa:hasBody ?c ; clt:featureTerm ?phrase }
+  BIND(REPLACE(STR(?c), "^.*#", "") AS ?class)
+} GROUP BY ?class ?phrase ORDER BY ?class DESC(?mentions) ?phrase
+```
+
+| class | phrase | cases | mentions |
+|---|---|---|---|
+| Anonymity | Tor | 1 | 56 |
+| Anonymity | VPN | 1 | 1 |
+| Anonymity | burner phone | 1 | 1 |
+| ContactDiscovery | public group | 1 | 1 |
+| DistributionInfrastructure | uploaded | 7 | 10 |
+| DistributionInfrastructure | cloud storage | 3 | 3 |
+| DistributionInfrastructure | peer-to-peer | 1 | 1 |
+| Ephemerality | self-destructing | 1 | 1 |
+| UnmonitoredCommunication | encrypted | 4 | 9 |
+| UnmonitoredCommunication | private messages | 3 | 4 |
+
+### Level 2. Which acts did both coders agree on?
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+SELECT ?action (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?act) AS ?acts) WHERE {
+  GRAPH ?g { ?act a action:Action ; clt:actionCode ?action ; clt:reviewStatus "agreed" }
+  FILTER(STRENDS(STR(?g), ":evidence"))
+} GROUP BY ?action ORDER BY DESC(?acts) ?action
+```
+
+| action | cases | acts |
+|---|---|---|
+| DISTRIBUTE_MATERIAL | 12 | 36 |
+| PROC_PLEA | 10 | 31 |
+| PROC_CHARGE | 11 | 26 |
+| PROC_SENTENCE | 13 | 26 |
+| DIRECT_CONDUCT | 7 | 14 |
+| LE_ARREST | 10 | 14 |
+| SOLICIT_IMAGERY | 8 | 11 |
+| ACQUIRE_MATERIAL | 5 | 10 |
+| SEEK_TARGETS | 5 | 10 |
+| COMMUNICATE | 4 | 9 |
+| PROC_VERDICT | 8 | 9 |
+| THREATEN_EXPOSURE | 5 | 9 |
+| TRAVEL_TO_MEET | 6 | 9 |
+| INITIATE_CONTACT | 5 | 7 |
+| ADMINISTER_SPACE | 2 | 5 |
+| IN_PERSON_SEXUAL_ABUSE | 4 | 5 |
+| OFFER_INDUCEMENT | 3 | 5 |
+| RECEIVE_SELF_GENERATED | 5 | 5 |
+| RECORD_LIVE_SESSION | 2 | 5 |
+| LE_RECEIVE_TIP | 3 | 4 |
+| LE_SURVEIL | 1 | 4 |
+| STORE_MATERIAL | 4 | 4 |
+| ACQUIRE_REPRESENTATION | 2 | 3 |
+| ARRANGE_MEETING | 2 | 3 |
+| LE_SEARCH_SEIZE | 2 | 3 |
+| EVADE_DETECTION | 1 | 2 |
+| LE_LEGAL_PROCESS | 1 | 2 |
+| PAY_THIRD_PARTY | 1 | 2 |
+| RESP_BLOCK | 1 | 2 |
+| SET_RULES | 2 | 2 |
+| CONCEAL_OR_DESTROY_EVIDENCE | 1 | 1 |
+| FLEE | 1 | 1 |
+| MISREPRESENT_IDENTITY | 1 | 1 |
+| PRODUCE_IN_PERSON | 1 | 1 |
+| RECONTACT | 1 | 1 |
+| RECREATE_ACCOUNT | 1 | 1 |
+| RESP_REPORT | 1 | 1 |
+| THREATEN_HARM | 1 | 1 |
+
+### Level 3. Where does a record state that an act was done by means of a platform or feature?
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+SELECT DISTINCT ?case ?action ?relationship ?what ?phrase ?standing WHERE {
+  GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .
+              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)
+              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
+  GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }
+  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), ":evidence"))
+  FILTER(?m != oa:describing)
+  FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))
+  BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
+  BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
+} ORDER BY ?case ?action ?what
+```
+
+| case | action | relationship | platform_or_class | phrase | standing |
+|---|---|---|---|---|---|
+| anchorage_pd_2022_006 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Snapchat |  | ADVOCACY |
+| anchorage_pd_2022_007 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ALLEGATION |
+| anchorage_pd_2022_007 | STORE_MATERIAL | Carried_Out_Through | Dropbox |  | ALLEGATION |
+| doj_ceos_2025_026 | SOLICIT_IMAGERY | Carried_Out_Through | Snapchat |  | ADMITTED |
+| doj_ceos_2026_001 | ACQUIRE_MATERIAL | Carried_Out_Through | Instagram |  | ADMITTED |
+| doj_ceos_2026_001 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ADMITTED |
+| doj_safe_childhood_2023_420 | DIRECT_CONDUCT | Carried_Out_Through | Snapchat |  | ADMITTED |
+| ky_sp_2025_038 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Facebook Messenger |  | ADMITTED |
+| ncmec_2022_575 | INITIATE_CONTACT | Carried_Out_Through | Snapchat |  | ADMITTED |
+
 ## Accuracy on the synthetic benchmark
 
 Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.
+
+### Observation layer (observe-1.3.0)
+
+Platform names and feature terms are kept verbatim in every split, so these rates measure finding listed terms in new sentence constructions, not recognising unlisted wording.
+
+| Measure | development cases | held-out cases | confirmation cases |
+|---|---:|---:|---:|
+| gold platform mentions found | 1.0 (71/71) | 1.0 (63/63) | 1.0 (71/71) |
+| gold feature statements found | 1.0 (27/27) | 1.0 (30/30) | 1.0 (32/32) |
+| observed platforms the gold names in that sentence | 0.973 (71/73) | 0.926 (63/68) | 0.947 (71/75) |
+| observed feature phrases the gold codes as an affordance there | 0.973 (36/37) | 0.905 (38/42) | 0.947 (36/38) |
+| relationships that the gold also holds | 0.985 (65/66) | 0.903 (65/72) | 0.97 (32/33) |
+| relationships to the right platform, wrong kind | 1 | 0 | 1 |
+| relationships to a platform the gold says is only named | 0 | 0 | 0 |
+| relationships on an act that is not a gold act | 0 | 3 | 0 |
+| gold relationships found, on published acts | 0.903 (65/72) | 0.915 (65/71) | 0.762 (32/42) |
+| observations outside gold act sentences (not judged) | 20 | 20 | 20 |
 
 ### resolve-1.0.0, held-out cases
 
@@ -222,44 +489,41 @@ Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0
 
 ## Agreement with reference coding of real cases
 
-Cases `anchorage_pd_2022_006`, `enticement`, `ncis_2023_001`, `svicac_2022_009`, `texas_ag_2019_013` were coded earlier by two agent coders of a larger model (their agreed coding, not adjudicated). For each non-procedure act published here: did the reference code an act in the same sentence, and did it give the same action code there. The reference is another coding and does not code every act; this is agreement, not accuracy.
+Cases `anchorage_pd_2022_006`, `doj_ceos_2025_026`, `ncis_2023_001`, `svicac_2022_009`, `texas_ag_2019_013` were coded earlier by two agent coders of a larger model (their agreed coding, not adjudicated). For each non-procedure act published here: did the reference code an act in the same sentence, and did it give the same action code there. The reference is another coding and does not code every act; this is agreement, not accuracy.
 
 | Measure | Released | Candidate 2b |
 |---|---:|---:|
-| agreed: published acts | 32 | 32 |
-| agreed: reference coded an act in the same sentence | 24 | 24 |
-| agreed: reference gave the same action code there | 19 | 19 |
-| reference acts | 115 | 115 |
-| reference acts in a sentence the release also cites | 28 | 39 |
-| settled: published acts | 0 | 12 |
-| settled: reference coded an act in the same sentence | 0 | 11 |
-| settled: reference gave the same action code there | 0 | 7 |
+| agreed: published acts | 37 |  |
+| agreed: reference coded an act in the same sentence | 24 |  |
+| agreed: reference gave the same action code there | 19 |  |
+| reference acts | 115 |  |
+| reference acts in a sentence the release also cites | 28 |  |
 
 ## Privacy
 
-124 committed files checked against 248 deny-list terms (names from the case captions) and 5693 stored quotes; 13 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
+189 committed files checked against 248 deny-list terms (names from the case captions) and 6940 stored quotes; 988 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
 
 ## Runtime
 
 ```json
 {
  "llama3.2:3b": {
-  "calls": 991,
-  "seconds_per_page": 30.0,
-  "prompt_tokens": 1357,
-  "prompt_seconds": 2.5,
-  "output_tokens": 351,
-  "output_seconds": 27.3,
-  "output_tokens_per_second": 12.9
+  "calls": 1111,
+  "seconds_per_page": 42.7,
+  "prompt_tokens": 1369,
+  "prompt_seconds": 6.04,
+  "output_tokens": 359,
+  "output_seconds": 36.4,
+  "output_tokens_per_second": 9.9
  },
  "qwen3:4b": {
-  "calls": 999,
-  "seconds_per_page": 46.1,
-  "prompt_tokens": 1371,
-  "prompt_seconds": 3.38,
-  "output_tokens": 356,
-  "output_seconds": 42.3,
-  "output_tokens_per_second": 8.4
+  "calls": 1119,
+  "seconds_per_page": 45.8,
+  "prompt_tokens": 1383,
+  "prompt_seconds": 3.45,
+  "output_tokens": 361,
+  "output_seconds": 41.9,
+  "output_tokens_per_second": 8.6
  },
  "qwen3:8b": {
   "calls": 16,

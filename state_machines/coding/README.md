@@ -18,8 +18,7 @@ python -m state_machines.coding.workflow extract <case> [...]        # page text
 python -m state_machines.coding.pipeline code <case> [...]           # coder_A, coder_B → local/auto/
 python -m state_machines.coding.pipeline resolve <case> [...]        # local/auto/resolved, reports
 python -m state_machines.coding.pipeline bench --split confirm --record   # score a benchmark split → benchmark/results/
-python -m state_machines.coding.pipeline release pacer-v1 <case> [...]
-python -m state_machines.coding.pipeline release pacer-v2 <case> [...] --observations   # the same bundles plus what the record names
+python -m state_machines.coding.pipeline release pacer-v1 <case> [...] --observations   # bundles, graphs, and what the record names
 ```
 
 | Part | What it does |
@@ -31,6 +30,8 @@ python -m state_machines.coding.pipeline release pacer-v2 <case> [...] --observa
 | [`resolve.py`](resolve.py) | Publishes what both coders coded (see [machine resolution](#machine-resolution)). |
 | [`cues.py`](cues.py) | Cue words per action code for candidate rule 2b (off by default). |
 | [`pipeline.py`](pipeline.py) | Runs both coders (cached, resumable, a failed case recorded rather than forced), resolves, scores the [benchmark](../benchmark/README.md), builds the release. |
+
+**Case ids and files.** A case id is the corpus id of the press release for the same prosecution, where the corpus holds one (checked 2026-11-18: 27 of 30 matched by the defendant's name in the press text; `doj_ceos_2025_023` and `svicac_2022_009` agree with their press release on state and sentence term only; `external_extortion` has no press release in the corpus and keeps its name). The PDFs keep the file names they were collected under; `COLLECTED_AS` in [`workflow.py`](workflow.py) maps the five ids that have since been renumbered or moved to another source. Corpus ids can move again on a rebuild until 1.0, and this map is then updated. `extract` adds a newly collected filing without rewriting the page text of the old ones, and a bundle records each document under a normalized `source_path` and its SHA-256; the name on disk stays in the local store, because a file name can carry a surname.
 
 **Court text never leaves the machine.** The models run in a local Ollama server, and page text, quotes, model answers and the response cache stay in `local/`. People are named by role; the labels exist only in memory and are never stored. The coders can make mistakes a human would not; their reliability is the agreement between them, and their accuracy is measured on the synthetic benchmark.
 

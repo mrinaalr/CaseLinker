@@ -22,7 +22,7 @@ The graphs bind to existing vocabulary first. `clt:` carries only what those voc
 | affordance classes | `cac-platforms:Anonymity`, `Ephemerality`, `ContactDiscovery`, `UnmonitoredCommunication`, `DistributionInfrastructure`, `GenerativeSynthesis` |
 | citations and observations | W3C Web Annotation: `oa:Annotation`, `oa:SpecificResource`, `oa:FragmentSelector`, `oa:TextPositionSelector`, `oa:motivatedBy` |
 
-The observation layer (`pacer-v2`) added no `clt:` term.
+The observation layer added no `clt:` term: placeholder-labelled services and generic service descriptions are W3C Web Annotations (`oa:identifying`, `oa:describing` with an `oa:TextualBody`).
 
 ## Why each local term exists
 

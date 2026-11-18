@@ -8,7 +8,8 @@ Computed only from committed release files (``lifecycle.json``, ``observations/*
 1. ``phrase_stated``: a listed feature phrase of the class is stated in a cited sentence. A mention.
 2. ``means_stated_in_act_sentence``: the observation rule found an agreed act's own sentence stating
    the act was done by means of that phrase.
-3. ``coder_agreed_on_act``: both model coders attached the class to an act they agreed on.
+3. ``coder_agreed_on_act``: an act both model coders agreed on whose own cited sentence holds a listed
+   phrase of the class (codebook rule B0, the act layer's level C).
 
 Platform observations are never read here, whether named, under a placeholder or generic: a platform
 name, a withheld name or a description is not evidence of an affordance. Each case and class gets one

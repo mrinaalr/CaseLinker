@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -200,7 +201,7 @@ def wait_for_memory(minimum: Optional[int] = None, poll: int = 30, limit: int = 
     swapping the machine out of disk or failing writes. Gives up waiting after ``limit`` seconds."""
     import shutil
     floor = minimum if minimum is not None else MODELS["runtime"].get("min_free_memory_percent", 20)
-    disk_floor = MODELS["runtime"].get("min_free_disk_gb", 3)
+    disk_floor = float(os.environ.get("CASELINKER_MIN_FREE_DISK_GB") or MODELS["runtime"].get("min_free_disk_gb", 3))   # the env value is for a nearly full disk
     waited = 0
     while waited < limit:
         free = free_memory_percent()

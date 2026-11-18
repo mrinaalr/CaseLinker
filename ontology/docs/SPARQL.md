@@ -104,10 +104,14 @@ Press-release case graphs and PACER court-record graphs are different datasets:
 
 | Family | Named graph | Source | Load |
 |---|---|---|---|
-| Case / `pacer_{slug}` | `https://w3id.org/caselinker/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` | `rebuild_oxigraph.py` bulk load (see [Reloading the store](#reloading-the-store)) |
+| Case | `https://w3id.org/caselinker/resource/case/{case_id}` | Canonical Turtle under `ontology/graph_output/` | `rebuild_oxigraph.py` bulk load (see [Reloading the store](#reloading-the-store)) |
 | PACER release | `urn:caselinker:pacer:<case_id>:evidence`, `…:trajectories` and, in releases built with them, `…:observations` (`--pacer-graphs evidence` loads the first only) | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
 
-The three graph kinds hold three levels of evidence: what the record names (`:observations`), the acts both coders agreed on (`:evidence`), and the relationships a sentence supports. One query per level, with results on the 30 cases, is in [`state_machines/observations/queries.py`](../../state_machines/observations/queries.py) and in each release's `REPORT.md`.
+The three graph kinds hold three levels of evidence: what the record names (`:observations`), the acts both coders agreed on (`:evidence`), and the relationships a sentence supports. The queries, with results on the 30 cases, are in [`state_machines/observations/queries.py`](../../state_machines/observations/queries.py) and in each release's `REPORT.md`.
+
+- **Same id, two datasets.** `<case_id>` in a PACER graph IRI is the corpus id of the press release for the same prosecution, where the corpus holds one (27 of 30 matched by the defendant's name in the press text; `doj_ceos_2025_023` and `svicac_2022_009` agree on state and sentence term only; `external_extortion` has no press release in the corpus). A query can join `urn:caselinker:pacer:<case_id>:evidence` with `https://w3id.org/caselinker/resource/case/<case_id>` on that id. Corpus ids can be renumbered by a rebuild until 1.0; after one, check the PACER ids against the corpus before joining.
+- **Listed platforms are shared nodes; placeholder services are not.** A listed platform has one IRI under `https://w3id.org/caselinker/resource/platform/` across all cases. A service a record calls "Website A" is a node local to that case's graph, named with the record's label and "(name withheld)"; filter on the IRI prefix to keep the two apart, and never group placeholder labels across cases.
+- **Generic descriptions are text.** `?obs oa:motivatedBy oa:describing ; oa:hasBody [ rdf:value ?phrase ]` lists phrases such as "social media application". They are not platforms and have no relationship to an act.
 
 `--verify` checks the loaded store against the release manifest: every manifest graph present and non-empty, no PACER graph outside the release, no legacy `urn:pacer:kg:*` graph left.
 

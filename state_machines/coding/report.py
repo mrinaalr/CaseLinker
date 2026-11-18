@@ -258,9 +258,9 @@ def _observed_md(ob: dict) -> list:
         L += [f"| {k} | {x['reviewed']} | {x['grounded']} | {x['meaning_yes']} / {x['meaning_no']} / {x['meaning_unclear']} | "
               f"{x['meaning_yes_interval_95'][0]} to {x['meaning_yes_interval_95'][1]} |" for k, x in v["strata"].items()] + [""]
     else:
-        L += ["**Not yet reviewed on the real text.** A stratified local packet (`python -m state_machines.observations.validation packet`) "
-              "covers every relationship, every feature observation and a sample of platform observations; its score is printed here once a "
-              "reviewer has answered it.", ""]
+        L += ["**Machine-read; no person reviewed these observations on the real text.** The release is complete without such a review. "
+              "A researcher who wants one can draw a stratified local packet (`python -m state_machines.observations.validation packet`); "
+              "its score is printed here when a decisions file is scored.", ""]
     if ob.get("reference"):
         L += ["On the reference cases (another coding, not truth): " + "; ".join(f"{k} {v}" for k, v in ob["reference"].items()) + ".", ""]
     for q in ob["queries"].values():

@@ -65,13 +65,12 @@ The manifest records the schema, codebook, derivation rule, extension and SDK ve
 ```
 urn:caselinker:pacer:<case_id>:evidence        actions, participants, roles, relations, provenance
 urn:caselinker:pacer:<case_id>:trajectories    derived order and affordance views; every lifecycle and step names its derivation rule and threshold
-urn:caselinker:pacer:<case_id>:observations    platforms and feature phrases the record names, each cited; relationships a sentence supports (releases built with observations)
+urn:caselinker:pacer:<case_id>:observations    platforms, placeholder-labelled services, generic service descriptions and feature phrases the record names, each cited; relationships a sentence supports (releases built with observations)
 ```
 
 | Release | Holds |
 |---|---|
-| `pacer-v1` | 30 cases, 258 agreed acts: evidence and trajectory graphs. The baseline, kept as built |
-| `pacer-v2` | The same bundles and graphs, byte for byte, plus `observations/`, an observation graph per case and the case-level research table |
+| `pacer-v1` | 30 cases, 285 agreed acts: evidence, trajectory and observation graphs per case, `observations/`, the case-level research table and the affordance evidence matrix |
 
 ## Oxigraph
 

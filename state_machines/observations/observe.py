@@ -40,13 +40,8 @@ from state_machines.coding.coder import _ABBREV, pages_of
 RULE_VERSION = "observe-1.3.0"
 SCHEMA_VERSION = "observations-1.1.0"
 
-# Feature phrases per affordance class: the codebook's list (enrich.FEATURES), with two changes.
-# A bare "recommended" is everyday legal wording ("the government recommended ...") and is replaced
-# by the phrases that name the recommendation feature. A bare "website" names a place on the
-# internet, not a capability of one, and is dropped (it was 97 of 116 feature observations in the
-# 30 real cases).
-FEATURES: Dict[str, List[str]] = {cls: [p for p in phrases if p not in ("recommended", "website")] for cls, phrases in N.FEATURES.items()}
-FEATURES["contact_discovery"] += ["recommended friends", "suggested friends", "friend suggestions", "people you may know"]
+# Feature phrases per affordance class: the codebook's list, the same one the coders' level C uses (rule B0).
+FEATURES: Dict[str, List[str]] = N.FEATURES
 
 
 def _breakable(text: str) -> str:

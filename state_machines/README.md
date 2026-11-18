@@ -35,7 +35,7 @@ flowchart LR
 | [`evidence/`](evidence/) | The canonical record: coded events, participants and their event roles, dated assertions, relations, provenance, validation rules | [evidence](evidence/README.md) |
 | [`trajectories/`](trajectories/) | Views derived from it: the documented partial order, maximal chains, affordance levels, the AfH sets, the `/lifecycle` payload | [trajectories](trajectories/README.md) |
 | [`graphs/`](graphs/) | CASE/UCO/CAC emission with the CASE-UCO SDK, SHACL against the full CAC shape set, releases, Oxigraph loading | [graphs](graphs/README.md) |
-| [`observations/`](observations/) | What the record names, read by rule from the pages: listed platforms and codebook feature phrases, each cited to its sentence; and the relationships an act's own sentence supports | [observations](observations/README.md) |
+| [`observations/`](observations/) | What the record names, read by rule from the pages: listed platforms, services named only by a placeholder or a generic description, and codebook feature phrases, each cited to its sentence; the relationships an act's own sentence supports; the research table and the affordance evidence matrix | [observations](observations/README.md) |
 | [`coding/`](coding/) | The workflow that produces bundles: page text, two pinned local model coders, agreement, machine resolution, optional adjudication | [coding](coding/README.md) |
 | [`benchmark/`](benchmark/) | Synthetic gold cases (dev, held-out and a blind confirmation split) and the scorer that measures the coders' accuracy on known truth | [benchmark](benchmark/README.md) |
 | [`theory/`](theory/) | Finite transition systems for feasible pathways (AfH Appendix X) | [theory](theory/README.md) |
@@ -46,16 +46,17 @@ A record supports three different kinds of claim, and each has its own gate. The
 
 | Level | Claim | Gate | Graph |
 |---|---|---|---|
-| 1. Observation | The record names this platform, or states this feature phrase, in this sentence | The term is on a fixed list and on the page | `urn:caselinker:pacer:<case>:observations` |
+| 1. Observation | The record names this platform, refers to a service without naming it, or states this feature phrase, in this sentence | The term is on a fixed list or has a fixed form, and is on the page | `urn:caselinker:pacer:<case>:observations` |
 | 2. Act | The record states someone did this | Two model coders agree on the sentence, the action and the actor | `…:evidence` |
 | 3. Supported relationship | The record states the act was done by means of the platform or feature | The observation lies in the act's cited sentence, and that sentence states the means | `…:observations`, pointing at the act |
 
 - **A mention is not use.** A platform named in a filing says nothing about what it was used for.
 - **A platform name is not an affordance.** Only a stated feature can count toward one, and only a stated means ties it to an act.
+- **A withheld name is not an affordance either.** "Website A" documents that a service was involved and that the record does not say which. It is not evidence of anonymity.
 - **A sparse graph is a correct graph.** A case may have observations and no relationship, or acts and no platform.
 - **The record is not the model.** A stated feature documents that the capability appears in the case. Whether it enabled the offence is a question for the [theory](theory/README.md) layer, not a fact in the graph.
 
-Release `pacer-v1` holds level 2 and the level-3 relationships its agreed acts carried. Release `pacer-v2` holds the same bundles, byte for byte, and adds level 1, the level-3 relationships derived from it, and a case-level [research table](observations/README.md#research-table) that keeps the three apart. The cases are a selected collection of prosecutions, not a sample of offending.
+Release `pacer-v1` holds all three levels for 30 cases (98 documents): 285 agreed acts, 875 observations, 10 acts tied to a platform by a stated means, a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
 
 ## The documented event graph
 

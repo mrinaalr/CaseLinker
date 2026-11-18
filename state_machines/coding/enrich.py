@@ -64,6 +64,8 @@ _NOT_PLATFORM = {"Minor", "Victim", "MV", "January", "February", "March", "April
                  "United", "Court", "Agent", "Agents", "Officer", "Detective", "In", "On", "At", "After", "Before"}
 CHANNELS = [(re.compile(r"\btext messages?\b|\bSMS\b", re.I), "sms"), (re.compile(r"\b(?:phone|telephone) calls?\b", re.I), "voice_call"),
             (re.compile(r"\be-?mails?\b", re.I), "email")]
+# A bare "website" names a place on the internet, not a capability of one (and "Website A" is a withheld name, not
+# evidence of distribution infrastructure); a bare "recommended" is everyday legal wording. Neither is a feature phrase.
 FEATURES = {   # class -> phrases a sentence must contain for level C (rule B0)
     "anonymity": ["new account under a different name", "new account under a false name", "fake profile", "false name", "fake name",
                   "fictitious name", "different name", "burner phone", "anonymous account", "conceal his identity", "hide his identity",
@@ -71,11 +73,12 @@ FEATURES = {   # class -> phrases a sentence must contain for level C (rule B0)
     "ephemerality": ["disappearing-message", "disappearing message", "view-once", "view once", "self-destructing", "expiring messages",
                      "messages set to disappear", "disappear after"],
     "contact_discovery": ["public group search", "search feature", "public group", "public post", "friend suggestion",
-                          "recommended", "people nearby", "location feature", "follower list"],
+                          "recommended friends", "suggested friends", "friend suggestions", "people you may know",
+                          "people nearby", "location feature", "follower list"],
     "unmonitored_communication": ["encrypted", "private messages", "private direct messages", "secret chat", "hidden from his parents",
                                   "hidden from her parents", "vault app"],
     "distribution_infrastructure": ["group chat", "shared link", "cloud storage", "uploaded", "file-sharing", "peer-to-peer", "torrent",
-                                    "website", "channel with"],
+                                    "channel with"],
     "generative_synthesis": ["artificial intelligence", "AI-generated", "AI generated", "morphed", "deepfake", "digitally altered"],
 }
 HARM_OF_ACTION = {   # codebook definitions: the act documents the harm when its target is a minor
