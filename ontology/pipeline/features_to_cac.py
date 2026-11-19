@@ -3,10 +3,14 @@
 CaseLinker → CAC Ontology mapper.
 
 Transforms a CaseLinker case dict (as returned by CaseStorage.get_case()) into a
-typed RDF knowledge graph using the CAC Ontology v3.0.0 class vocabulary.
+typed RDF knowledge graph using the CAC Ontology vocabulary, pinned at 3.1.0
+(ontology/CAC_ONTOLOGY_VERSION; shapes from ontology/vendor/cac-3.1.0).
 
-Uses rdflib 7.x with manual CAC namespace bindings.
-(case-uco and case-uco-cac are not published on PyPI as of May 2026.)
+The mapping from CaseLinker's extracted features to CAC classes and properties is
+CaseLinker's own; the graph is built with rdflib 7.x and manual CAC namespace bindings.
+The CASE-UCO SDK (ontology/SDK_VERSION) would only serialize the same mapping, so it is
+used where its builders add structure: the PACER court-record graphs
+(state_machines/graphs/emit.py). Both are validated against the same pinned shapes.
 
 Entry points
 ------------
@@ -1412,7 +1416,7 @@ class CaseToCAC:
             ):
                 victim_ages = [int(age_range["min"])]
         # victim_gender / perpetrator_gender: no CAC Person gender property in TTL yet
-        # (MAPPING_PLAN Q7.5d). Omit RDF triples until Cory adds VictimGender / OffenderGender.
+        # (an open CAC coverage question). Omit RDF triples until CAC adds VictimGender / OffenderGender.
 
         for n in range(1, max(victim_count, len(victim_ages)) + 1):
             person_uri = BASE[f"case/{case_id}/person/victim/{n}"]
@@ -2971,7 +2975,7 @@ AZICAC_2011_006_FIXTURE: Dict[str, Any] = {
     "updated_at": "2026-05-26T00:00:00",
 }
 
-# Expected node types from MAPPING_PLAN.md §6.2
+# Expected node types for the sample case azicac_2011_006 (fixed here; the planning draft that first listed them is in git history)
 _EXPECTED_NODE_TYPES = {
     "CACInvestigation",
     "ProductionOffense",
@@ -3057,7 +3061,7 @@ def run_test(case_dict: Dict[str, Any], output_dir: Path) -> None:
     """
     Map a case, validate, write output, and print a summary report.
 
-    Compares actual node types against expected types from MAPPING_PLAN.md §6.2.
+    Compares actual node types against the expected types above.
     """
     case_id = case_dict.get("id", "unknown")
     print(f"\n{'='*60}")
@@ -3119,7 +3123,7 @@ def run_test(case_dict: Dict[str, Any], output_dir: Path) -> None:
         "IncriminatingStatement",
     }
 
-    print("MAPPING_PLAN.md §6.2 node type comparison:")
+    print("Expected node type comparison:")
     if not missing:
         print("  ✓ All expected node types present")
     else:

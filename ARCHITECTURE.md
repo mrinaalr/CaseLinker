@@ -6,8 +6,8 @@
 |---|---|
 | Corpus | **10,802** case reports from **76** public sources, 2002–2026: ICAC task forces, state attorneys general, state police, NCMEC, DOJ, federal and international agencies |
 | Extracted | **131,910** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
-| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus 297 PACER court-record graphs |
-| Lifecycles | 30 federal cases modeled as CAC phase state machines with L\* trajectories |
+| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus the PACER release's court-record graphs once the store is rebuilt with it (81 named graphs for 30 cases; until then production still holds the 297 legacy PACER graphs this replaces) |
+| Lifecycles | Federal court records coded as evidence, read as documented trajectories; a separate theory layer implements the AfH transition-system model they can be checked against |
 | Analysis | Platform harm (Q1 affordance → misuse → harm evidence), similarity clusters and automated insights, rule and model triage, 11-dimension facet cohorts |
 | Agents | 62 MCP tools locally, 47 hosted, over stdio, SSE and Streamable HTTP |
 | Code | ~47k lines of Python, ~31k lines of HTML/JS, 61 test files (421 tests) |
@@ -81,7 +81,7 @@ flowchart TD
   end
 
   subgraph SM["Lifecycle · state_machines/"]
-    LSTAR["CAC phase machines → L*"]
+    LSTAR["court records → documented trajectories<br/>AfH transition systems"]
   end
 
   subgraph SERVE["Serving · run/ · caselinker_mcp/"]
@@ -108,7 +108,7 @@ Three stores, one corpus:
 |---|---|---|
 | Relational (SQLite locally, PostgreSQL on Railway) | Case rows, satellites, every reader's assertion, resolutions, review queue, provenance tables, precomputed analysis | REST API, facet search, triage, MCP |
 | RDF (Oxigraph) | One named graph per case plus one provenance graph per case; PACER court-record graphs | `GET\|POST /sparql`, `/resource/…` dereferencing, graph explorer |
-| Files in the repo | Per-case Turtle and JSON-LD, PACER JSON-LD, 30 state machines, L\* export, research evidence JSON, case studies | Graph explorer pools, `/lifecycle`, Q1–Q3 pages, fresh clones with an empty DB |
+| Files in the repo | Per-case Turtle and JSON-LD, PACER releases (bundles, derived views, graphs, manifest), research evidence JSON, case studies | Graph explorer pools, `/lifecycle`, Q1–Q3 pages, fresh clones with an empty DB |
 
 ---
 
@@ -118,7 +118,7 @@ Three stores, one corpus:
 - **Deterministic first.** Regex, grammar and NER are the witnesses. The LLM is optional, reads sentence windows, must quote its source, and cannot finalize a value alone.
 - **No span, no value.** Every stored assertion points at a character span of the original text. Assertions are append-only; resolution is versioned and re-runnable without re-extraction.
 - **A wrong final is worse than review.** Disagreement between evidence families vetoes a value. Open items go to a review queue, not to a column.
-- **Standard vocabularies.** CAC, UCO and CASE for cases; PROV-O and Web Annotation for provenance; Census FIPS and FBI CDE for grounding; persistent `w3id.org/caselinker` IRIs. CaseLinker binds, it does not invent.
+- **Standard vocabularies.** CAC, UCO and CASE for cases; PROV-O and Web Annotation for provenance; Census FIPS and FBI CDE for grounding; persistent `w3id.org/caselinker` IRIs. CaseLinker binds, it does not invent. Two small local vocabularies carry only what those cannot say: the provenance terms in [`caselinker-provenance.ttl`](ontology/caselinker-provenance.ttl) and the experimental `clt:` terms of the PACER graphs, each justified term by term in the [extension's README](ontology/extensions/caselinker-trajectory/README.md).
 - **Agents read; humans investigate.** MCP tools let an agent ask complex relational questions over the corpus: cohorts, facet trees, session graphs, SPARQL and comparisons across the whole corpus in a single call. Answers come from stored assertions and graphs, never from the agent's own inference, and no tool writes a claim back into the database.
 
 ---
@@ -395,7 +395,7 @@ flowchart LR
 | Analysis | [`analysis_ids.txt`](ontology/pools/analysis_ids.txt) (124) | `graph_output/analysis/` | MCP exports, research cohorts |
 | Compare | [`selected_200_ids.txt`](ontology/pools/selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
 
-**Oxigraph.** [`oxigraph_rebuild.py`](ontology/pipeline/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis > pacer), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/oxigraph/rebuild_oxigraph.py`](scripts/oxigraph/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs modeled with the CASE-UCO SDK are named graphs `urn:pacer:kg:…`, written by [`scripts/oxigraph/load_pacer_jsonld.py`](scripts/oxigraph/load_pacer_jsonld.py) `--output` and loaded in the same bulk load through `--extra-nq`.
+**Oxigraph.** [`oxigraph_rebuild.py`](ontology/pipeline/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/oxigraph/rebuild_oxigraph.py`](scripts/oxigraph/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs come from a release ([`state_machines/graphs`](state_machines/graphs/README.md)) as `urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and, where the release has them, `:observations` (or evidence only, `--pacer-graphs evidence`), loaded in the same bulk load with `--pacer-release` and checked against the manifest with `--verify`.
 
 **Public SPARQL** ([`run/sparql_proxy.py`](run/sparql_proxy.py)). SPARQL 1.1 Query only, classified with rdflib's parser rather than regex. Update and `SERVICE` are rejected; a missing outer `LIMIT` becomes 1000 and anything above 10,000 is a 400. 30 requests per minute per IP, 32 s store timeout. While a rebuild holds the lock ([`sparql_rebuild_lock.py`](run/sparql_rebuild_lock.py)) the endpoint returns 503. When the Railway store is asleep, [`oxigraph_wake.py`](run/oxigraph_wake.py) retries once and then answers HTTP 200 with `status: "waking"`, `retry: true` and `Retry-After`, so agents never see a raw 502.
 
@@ -409,20 +409,15 @@ Hand-off: [`ontology/README.md`](ontology/README.md) · [`ontology/docs/SPARQL.m
 
 ## 9. Lifecycle state machines
 
-The press-release corpus answers *what happened at scale*. [`state_machines/`](state_machines/) answers *how an offense moved* using federal court records: an Exploitation State Machine over CAC phase classes,
+The press-release corpus answers *what happened at scale*. [`state_machines/`](state_machines/) answers *how an offense moved*, from federal court records.
 
-```
-M = (S, A, T, R_g, s0, F)
-```
+- **Evidence.** Each case is coded by two coders into a bundle $D=(\Pi,E,R,P,U)$: participants, events with their event roles and dated assertions, relations, page-level provenance with the legal standing of each passage, and an assertion status on every claim. The published release is machine-coded: two pinned local models code each case and a fixed rule publishes what both coded, labelled as such; a human-adjudicated release is a second mode of the same gate and is not what `pacer-v1` is.
+- **Trajectories.** The documented order is the transitive closure of cited order and dates; trajectories are its maximal chains of offender acts, each step carrying the affordances the record ties to it. Unordered pairs are reported, never forced.
+- **Graphs.** Bundles are emitted as CASE/UCO/CAC with the CASE-UCO SDK, checked with SHACL (no violations of CaseLinker's own shapes; every case fails or is partial only on the upstream CAC `ActionSemanticsShape` defect, CAC-Ontology#74; SHACL checks structure, not whether an act happened), and released with a manifest under stable IRIs `urn:caselinker:pacer:<case>:evidence|trajectories|observations`.
+- **Theory.** Finite transition systems for AfH Appendix X; a documented trajectory can be checked for compatibility with a specified model (`theory.admits_partial_order`); the release does not run that check.
+- **Serving.** `/lifecycle` (public; the current release, machine-coded and labelled as such), the trusted `/api/lifecycle/cases` and `/api/lifecycle/analysis`, and the public manifest at `/api/ontology/pacer`.
 
-with phases as states, platform affordances on transitions, empirical transition counts across case graphs, goal-conditioned rewards, `InitialContactPhase` as the start and terminal exploitation or maintenance phases.
-
-- **Corpus:** 5 anchor cases (enticement, production, sextortion, enterprise, trafficking) plus 25 expansion cases, each a JSON-LD phase graph under [`graphs/`](state_machines/graphs/) authored from the narratives and facts under [`ontology/PACER/`](ontology/PACER/).
-- **Backbone:** every complete trajectory passes `InitialContact → Conditioning → Exploitation → Maintenance`; variant stages (Sexualization, ChannelMigration, CoercionCycle, …) appear only for some goals. Blocking a backbone state degrades every goal; blocking a variant degrades only the modalities that use it. [`bellman.py`](state_machines/bellman.py) computes that delta.
-- **Two L\*:** the empirical max-weight path ([`trajectory.py`](state_machines/trajectory.py)) and the goal-conditioned Bellman optimum ([`bellman.py`](state_machines/bellman.py)). Both ship in [`data/lstar_all_cases.json`](state_machines/data/lstar_all_cases.json), rebuilt by `python3 -m state_machines.compute_lstar`.
-- **Serving:** [`lifecycle_api.py`](state_machines/lifecycle_api.py) feeds `/lifecycle` (public, payload embedded), `/api/lifecycle/anchors` (public, five cases) and the trusted `/api/lifecycle/cases` and `/api/lifecycle/lstar`.
-
-These machines describe the observable enforcement record only. They map capability to phase progression, nothing about why people offend.
+These describe the observable enforcement record only: what the court documents say happened, at the standing they say it.
 
 Hand-off: [`state_machines/README.md`](state_machines/README.md).
 
@@ -438,7 +433,7 @@ Hand-off: [`state_machines/README.md`](state_machines/README.md).
 | `/analysis` | `analysis.html` | Question → SPARQL (templates, or Groq for the rest) → rows → passages in the released text; LLM mode runs read-only SQL over the case table |
 | `/patterns` (+ `/patterns/graph`, `/patterns/questions/q01–q03`) | `patterns-graph.html`, `questions/` | Graph viewer: find cases by class / platform / agency / id, load or compare them on the canvas, filter by spine; Q1–Q3 findings |
 | `/explore` | `explore.html` | Walk w3id IRIs by hand: case → steps, agencies, platforms → provenance graph → annotation → passage, with the source text highlighted |
-| `/lifecycle` | `lifecycle.html` | PACER state machines: swimlanes per offence, the machine and its estimators ([`state_machines/README.md`](state_machines/README.md)) |
+| `/lifecycle` | `lifecycle.html` | PACER court records as documented acts per case, with what each record names, and the theory view ([`state_machines/README.md`](state_machines/README.md)) |
 | `/visualization` | `visualization.html` | Platform affordances: platforms on six lifecycle lanes; affordances, misuse surface, harm vectors, case evidence |
 | `/search` | `search.html` | Facet decision tree; copy a cohort as SPARQL or open it in the graph viewer |
 | `/audit` | `audit.html` | Feature-by-feature review with the passage highlighted |
@@ -456,8 +451,8 @@ API families (full list with parameters in the README and at [`/docs`](https://c
 | Search and cohorts | `/api/facet-tree`, `/api/facet-distinct`, `/api/facet-cohort-members`, `/api/cohort-sparql`, `/api/return-tagged-cases`, `/api/tag-threader` | Public; small cohorts behind `COHORT_DEMO_ACCESS_KEY` |
 | Analysis | `/api/automated-analysis`, `/api/cluster-groups`, `/api/stats`, `/api/stats-detailed`, `/api/location-stats`, `/api/technology-revolver`, `/api/triage-eval`, `/api/triage-model-corpus`, `/api/triage-live` | Public, served from precomputed caches |
 | Graphs | `/api/ontology/cases`, `/api/ontology/merged`, `/api/ontology/lookup`, `/api/ontology/pacer`, static `/ontology/graph_output/…`, `GET\|POST /sparql`, `/resource/{path}`, `/ns/provenance` | Public; SPARQL 30/min |
-| Research | `/api/platform-affordance-evidence`, `/api/lifecycle/anchors`, `/api/case-studies` | Public |
-| Bulk and sensitive | `/api/corpus`, `/api/cases`, `/api/lifecycle/cases`, `/api/lifecycle/lstar` | Localhost or `CaseLinker-Key` in `CASELINKER_TRUSTED_KEYS` |
+| Research | `/api/platform-affordance-evidence`, `/api/case-studies` | Public |
+| Bulk and sensitive | `/api/corpus`, `/api/cases`, `/api/lifecycle/cases`, `/api/lifecycle/analysis` | Localhost or `CaseLinker-Key` in `CASELINKER_TRUSTED_KEYS` |
 | LLM | `/api/llm/chat`, `/api/sparql/from-nl` | 15/min and 50/day per IP; trusted key lifts the daily cap |
 | Admin | `/api/cache/clear`, `/api/ontology/cache/warm`, `/api/oxigraph/warm`, `/healthz` | Rate limited |
 
@@ -481,7 +476,7 @@ Runtime details worth knowing: slowapi rate limits per route; GZip and proxy-hea
 | Repair and expand (local) | 5 | 0 | `describe_pipeline`, `diagnose_case`, `profile_new_source`, `scaffold_extension`, `run_gate` |
 | **Total** | **62** | **47** | |
 
-Six tools are trusted-key sensitive: `get_all_cases`, `get_lifecycle_cases` and `get_lifecycle_lstar` return 403 without one; `get_case` and `get_case_assertions` return sanitized payloads; `llm_chat` keeps the daily cap.
+Six tools are trusted-key sensitive: `get_all_cases`, `get_lifecycle_cases` and `get_trajectory_analysis` return 403 without one; `get_case` and `get_case_assertions` return sanitized payloads; `llm_chat` keeps the daily cap.
 
 | Transport | Where | Auth |
 |---|---|---|
@@ -544,8 +539,7 @@ Runbook for a corpus change, from the repo root with `.venv` active:
 SKIP_PRECOMPUTE_CLUSTERS=1 ./scripts/run/ingest_all_pdfs.sh     # or python3 src/main.py <pdf>
 python3 scripts/run/precompute_clusters.py                       # slim caches + Redis
 python3 -c "from ontology.pipeline.graph_generate import generate_graphs; generate_graphs()"   # TTL, JSON-LD, provenance
-python3 scripts/oxigraph/load_pacer_jsonld.py --output pacer.nq           # urn:pacer:kg graphs
-python3 scripts/oxigraph/rebuild_oxigraph.py --no-load --output caselinker.nq.gz   # then wipe the volume and load from the web service (ontology/docs/SPARQL.md#reloading-the-store)
+python3 scripts/oxigraph/rebuild_oxigraph.py --no-load --output caselinker.nq.gz --pacer-release <id>   # then wipe the volume and load from the web service (ontology/docs/SPARQL.md#reloading-the-store)
 ```
 
 Locally, `python3 run/main.py` serves on port 8000, `scripts/run/local_oxigraph.sh` runs a read-only store from an N-Quads backup, and `scripts/run/reresolve_assertions.py` re-votes stored assertions under a new rule set without touching the PDFs.
@@ -608,17 +602,16 @@ CaseLinker/
 │   ├── vendor/                        pinned CAC, UCO, CASE, gUFO, OA copies (CAC_ONTOLOGY_VERSION)
 │   ├── caselinker-provenance.ttl      provenance vocabulary and shapes
 │   ├── graph_output/                  staging + universe/ big_bang/ analysis/ (TTL, JSON-LD, provenance)
-│   ├── PACER/                         court-record narratives, facts, CASE-UCO JSON-LD by offense family
+│   ├── PACER/                         local court-record PDFs (never committed)
 │   ├── platform_affordance_evidence/  q2/  q3/   research evidence indexes
 │   └── docs/SPARQL.md
-├── state_machines/                    iris.py, sparql_queries.py, trajectory.py, bellman.py,
-│                                      compute_lstar.py, lifecycle_api.py, graphs/, data/
+├── state_machines/                    evidence/, trajectories/, graphs/, coding/, theory/
 ├── collector/                         press and court collection suite, pacer/
 ├── scripts/                           README.md: what each script does and writes
 │   ├── run/                           ingest_all_pdfs.sh, import_corpus_from_api.py, precompute_clusters.py,
 │   │                                  reresolve_assertions.py, llm_residue_pass.py, train_*.py, backfill_*.py
 │   ├── verify/                        extraction/ precision + holdouts, phase_3/, paper/ claims, verify_cac.py
-│   ├── oxigraph/                      rebuild_oxigraph.py, load_pacer_jsonld.py, warm_oxigraph.py
+│   ├── oxigraph/                      rebuild_oxigraph.py, warm_oxigraph.py
 │   ├── stats/  ontology_audit/
 ├── visualization/                     11 HTML pages, assets/ (v4 shell, D3 viewers), questions/
 ├── data/                              case_studies.json, gazetteer/, agency_registry/
@@ -626,7 +619,7 @@ CaseLinker/
 ├── models/                            triage_bundle.joblib (tracked), translation and student bundles (local)
 ├── tests/                             collection/ extraction/ grounding/ graphs/ storage/ api/ mcp/ privacy/ research/
 ├── extensions/                        rehearsal-only readers (restitution/)
-├── Procfile  setup.sh  requirements.txt  requirements-ml.txt  config.py  .mcp.json
+├── Procfile  setup.sh  requirements.txt  requirements-sdk.txt  config.py  .mcp.json
 └── README.md  ARCHITECTURE.md  search.md  triage.md
 ```
 
@@ -640,8 +633,8 @@ CaseLinker/
 | [`src/Processing Layer/README.md`](src/Processing%20Layer/README.md) | Readers, span gate, resolver rules, LLM and student passes, how to run extraction |
 | [`ontology/README.md`](ontology/README.md) | Vocabulary, pins, pools, graph pipeline, w3id, regeneration |
 | [`ontology/docs/SPARQL.md`](ontology/docs/SPARQL.md) | Public SPARQL protocol, named graphs, limits, errors, examples |
-| [`ontology/MAPPING_PLAN.md`](ontology/MAPPING_PLAN.md) | Feature-by-feature mapping to CAC classes, unmappable gaps |
-| [`state_machines/README.md`](state_machines/README.md) | Lifecycle machines, backbone, two L\*, recompute |
+| [`ontology/MAPPING_PLAN.md`](ontology/MAPPING_PLAN.md) | Feature-to-CAC mapping as implemented, generated from the mapper |
+| [`state_machines/README.md`](state_machines/README.md) | Court-record evidence, trajectories, graphs and releases, AfH theory |
 | [`caselinker_mcp/README.md`](caselinker_mcp/README.md) | MCP setup, transports, keys, graph workflow |
 | [`caselinker_mcp/tool_registry.md`](caselinker_mcp/tool_registry.md) | Every tool, backend, READ vs WRITE, host split |
 | [`collector/README.md`](collector/README.md) | Collecting a new source, quality gates, court records |

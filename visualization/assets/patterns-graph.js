@@ -2391,6 +2391,11 @@
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         const payload = await resp.json();
         PACER_CATALOG = Array.isArray(payload.investigations) ? payload.investigations : [];
+        if (!PACER_CATALOG.length && Array.isArray(payload.cases)) {
+            // the per-document PACER graphs this view browsed were replaced by a graph release (documented acts, sources)
+            throw new Error('PACER records are shown on the Lifecycle page (' + payload.cases.length + ' cases in release ' +
+                (payload.release || '') + '). This view reads the corpus graphs.');
+        }
 
         const classSelect = document.getElementById('pacer-class');
         if (classSelect) {

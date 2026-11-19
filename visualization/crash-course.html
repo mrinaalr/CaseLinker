@@ -459,7 +459,7 @@
           <div class="col">
             <h2>Collect</h2>
             <button class="node" data-go="collect"><strong>Press-release suite</strong><span>Listing, URL list, or DOJ API → merged PDF</span></button>
-            <button class="node" data-go="pacer"><strong>PACER / RECAP</strong><span>CourtListener free archive; court docs collected at $3–5 each (41 records, 128 documents, 297 graphs)</span></button>
+            <button class="node" data-go="pacer"><strong>PACER / RECAP</strong><span>CourtListener free archive; court docs collected at $3–5 each (release pacer-v1: 30 cases, 98 documents)</span></button>
           </div>
           <div class="arrow" aria-hidden="true">→</div>
           <div class="col">
@@ -480,7 +480,7 @@
             <h2>Analyze</h2>
             <button class="node" data-go="questions"><strong>Q1–Q3</strong><span>Technology misuse, offense subsets, Affordances for Harm</span></button>
             <button class="node" data-go="harm"><strong>Platform harm</strong><span>/visualization · affordance → misuse → harm</span></button>
-            <button class="node" data-go="lstar"><strong>Lifecycle / L*</strong><span>PACER state machines · Bellman L*</span></button>
+            <button class="node" data-go="lstar"><strong>State machines</strong><span>Documented trajectories · formal model</span></button>
           </div>
         </div>
       </section>
@@ -673,7 +673,7 @@
         lede: "Same data, three entry points.",
         points: [
           ["Web — pick by job", "Filtering and Look-ups: Search. Tag intersection and grouping: Analysis. Rank a narrative: Triage. Extraction QA: Audit. Platform affordances: Visualization. Court-record phases: Lifecycle. Typed relations: Ontology & Graphs. Era narratives: Case Studies. Tech-by-era: Tech Landscape. NL over stats: LLM. Browser API lab: Query."],
-          ["REST API", "Interactive docs at /docs. The UI and MCP wrap the same routes. Public is rate limited. CaseLinker-Key unlocks bulk export, full narratives, lifecycle JSON, and L*."],
+          ["REST API", "Interactive docs at /docs. The UI and MCP wrap the same routes. Public is rate limited. CaseLinker-Key unlocks bulk export, full narratives, and the lifecycle and trajectory-analysis JSON."],
           ["MCP", "37 tools, read-only, no database mutation. 29 REST wrappers, 8 MCP-only. 32 public, 5 trusted-key sensitive. SPARQL stays on curl, /docs, or the CASE/UCO SDK."]
         ],
         figure: "Job  →  Web page  ·  same job  →  /api/*  ·  agent  →  MCP tool",
@@ -781,18 +781,18 @@
         lede: "Federal dockets are a court-record overlay beside the 10,362 press-release case graphs. Collection goes through CourtListener’s RECAP archive.",
         points: [
           ["Who might have a docket", "corpus2pacer.py. Tier A: federal ingestion source. B: federal prosecuting or investigating agency. C: narrative signals (U.S. District Court, federal indictment language, criminal docket pattern). Any tier includes the case; confidence is high / medium / low."],
-          ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; current collection is 41 records, 128 documents, 297 graphs. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
-          ["What lands in the repo", "ontology/PACER/ family folders: BULK_FOLDER, ENTICEMENT, ENTERPRISE, PRODUCTION, SEXTORTION, TRAFFICKING. 41 investigations, 128 documents, modeled by the CASE-UCO SDK. Loaded as 297 named graphs urn:pacer:kg:… via scripts/oxigraph/load_pacer_jsonld.py --post."],
-          ["Lifecycle", "Those graphs feed CAC state machines under state_machines/ (30 cases) and the /lifecycle UI. Five anchor PACER federal cases as offense-type state machines, plus expansion cases from full federal dockets."]
+          ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; release pacer-v1 holds 30 cases and 98 documents. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
+          ["What stays local", "PDFs land in ontology/PACER/ on your machine; they are never committed."],
+          ["Coding and graphs", "Cases are coded into evidence bundles under state_machines/ (events, participants, order, sources). A release emits CASE/UCO/CAC graphs, loaded as urn:caselinker:pacer:<case>:evidence, :trajectories and :observations by rebuild_oxigraph.py --pacer-release."]
         ],
-        figure: "corpus2pacer.py  →  cases2records.py (RECAP, free default)  →  ontology/PACER/*.jsonld  →  load_pacer_jsonld.py --post  →  /lifecycle  ·  /patterns",
+        figure: "corpus2pacer.py  →  cases2records.py (RECAP, free default)  →  coded bundles  →  release graphs  →  Oxigraph  ·  /lifecycle",
         links: [
-          repo("ontology/PACER/corpus2pacer.py", "corpus2pacer.py"),
-          repo("ontology/PACER/cases2records.py", "cases2records.py"),
+          repo("collector/pacer/corpus2pacer.py", "corpus2pacer.py"),
+          repo("collector/pacer/cases2records.py", "cases2records.py"),
           repo("ontology/PACER/BULK_FOLDER/pacer_cost.csv", "pacer_cost.csv"),
-          repo("scripts/oxigraph/load_pacer_jsonld.py", "load_pacer_jsonld.py"),
+          repo("state_machines/README.md", "state_machines/README.md"),
           repo("ontology/README.md#pacer-and-lifecycle", "ontology/README.md · PACER"),
-          repo("ontology/docs/SPARQL.md#two-pacer-named-graph-families", "SPARQL.md · two PACER families"),
+          repo("ontology/docs/SPARQL.md", "SPARQL.md"),
           app("/lifecycle", "/lifecycle"),
           app("/patterns", "/patterns")
         ]
@@ -826,7 +826,7 @@
           ["NER", "Stanza is primary; transformers is true fallback only if Stanza is unavailable. Perp/victim ages are routed by extraction pattern context."],
           ["Semantic scores", "Most concept scores are kept for analysis. Merge-layer examples: possession_csam ≥ 0.5 appends possession; grooming ≥ 0.35 appends grooming to severity_indicators."]
         ],
-        links: [repo("README.md#case-schema--feature-extraction", "Case Schema & Feature Extraction"), repo("ARCHITECTURE.md#5-extraction-four-readers-one-decision", "ARCHITECTURE.md · Extraction"), repo("ontology/MAPPING_PLAN.md#4-nlp--semantic-features", "MAPPING_PLAN.md · NLP / semantic")]
+        links: [repo("README.md#case-schema--feature-extraction", "Case Schema & Feature Extraction"), repo("ARCHITECTURE.md#5-extraction-four-readers-one-decision", "ARCHITECTURE.md · Extraction"), repo("ontology/MAPPING_PLAN.md#nlp-concepts", "MAPPING_PLAN.md · NLP / semantic")]
       },
       {
         id: "merge",
@@ -904,7 +904,7 @@
         points: [
           ["PDF ingest", "python3 src/main.py path.pdf — or scripts/run/ingest_all_pdfs.sh after PDFs are in the repo. --no-aggregate skips NCMEC/DOJ on a first pass."],
           ["Trusted API export", "CASELINKER_KEY then python3 scripts/run/import_corpus_from_api.py. Request a key at mramachandra@umass.edu."],
-          ["What a clone already has", "Ontology graphs, PACER KGs, lifecycle machines, L* JSON, case studies, triage bundle — even with an empty SQLite file."]
+          ["What a clone already has", "Ontology graphs, the state-machine code, case studies, triage bundle — even with an empty SQLite file."]
         ],
         figure: "PDFs → src/main.py    or    CASELINKER_KEY → import_corpus_from_api.py",
         links: [repo("README.md#option-2-local-setup-works-out-of-the-box", "README.md · Reproduce the local corpus"), repo("scripts/run/import_corpus_from_api.py", "import_corpus_from_api.py"), repo("scripts/run/ingest_all_pdfs.sh", "ingest_all_pdfs.sh")]
@@ -923,7 +923,7 @@
           ["IRIs", "https://w3id.org/caselinker/resource/{case|platform|agency}/…. dcterms:identifier on cac:CACInvestigation is the CaseLinker case id. Provenance is named graph …/case/{case_id}/provenance."]
         ],
         figure: "CACInvestigation ─hasStep→ Event ─usesChannel→ Platform\n                ─involvesAgency→ Agency\n                ─hasStep→ LegalProceeding ─hasCharge→ CriminalCharge",
-        links: [repo("ontology/README.md#what-a-case-graph-contains", "What a case graph contains"), repo("ontology/MAPPING_PLAN.md#five-spine-branches", "Five Spine Branches"), repo("ontology/docs/SPARQL.md#namespaces", "Namespaces")]
+        links: [repo("ontology/README.md#what-a-case-graph-contains", "What a case graph contains"), repo("ontology/MAPPING_PLAN.md#topics", "Five Spine Branches"), repo("ontology/docs/SPARQL.md#namespaces", "Namespaces")]
       },
       {
         id: "pools",
@@ -935,10 +935,10 @@
         lede: "Two PACER named-graph families. Do not treat them as one store.",
         points: [
           ["Press-release graphs", "10,362 CACInvestigation graphs, one named graph per case, from ontology/graph_output/. Wholesale reload: python3 scripts/oxigraph/rebuild_oxigraph.py (PUT /store). Remap-and-overwrite, not incremental."],
-          ["CASE-UCO PACER KGs", "urn:pacer:kg:… from ontology/PACER/ JSON-LD. Incremental POST via load_pacer_jsonld.py. rebuild_oxigraph.py does not read those JSON-LD files. A full PUT does not restore them — re-run load_pacer_jsonld.py --post."],
+          ["PACER graphs", "urn:caselinker:pacer:<case>:evidence and :trajectories, from a PACER release (state_machines/graphs/release.py). rebuild_oxigraph.py --pacer-release loads them with the corpus and --verify checks the store against the release manifest."],
           ["Viz pools", "Viz pools and Big Bang are accessible on Ontology & Graphs."],
         ],
-        links: [repo("ontology/README.md#graph-pools", "Graph pools"), repo("ontology/docs/SPARQL.md#two-pacer-named-graph-families", "Two PACER named-graph families"), repo("scripts/oxigraph/rebuild_oxigraph.py", "rebuild_oxigraph.py"), app("/patterns", "Ontology & Graphs")]
+        links: [repo("ontology/README.md#graph-pools", "Graph pools"), repo("ontology/docs/SPARQL.md#pacer-graphs", "PACER graphs"), repo("scripts/oxigraph/rebuild_oxigraph.py", "rebuild_oxigraph.py"), app("/patterns", "Ontology & Graphs")]
       },
       {
         id: "questions",
@@ -990,7 +990,7 @@
         points: [
           ["Partition", "Search: facet decision tree. Analysis: tag intersection (ALL selected tags) plus automated grouping."],
           ["Rank and QA", "Clusters: precomputed similarity. Triage: rules plus optional classifier; live paste never writes. Audit: extraction highlighting."],
-          ["Research UIs", "Visualization (Q1), Tech Landscape, Lifecycle / L*, Case Studies, Query lab, LLM, Stats, Sources."]
+          ["Research UIs", "Visualization (Q1), Tech Landscape, State machines, Case Studies, Query lab, LLM, Stats, Sources."]
         ],
         figure: "SQLite / PostgreSQL  →  every page and every MCP tool",
         links: [app("/search", "/search"), app("/analysis", "/analysis"), app("/visualization", "/visualization"), app("/patterns", "/patterns")]
@@ -1079,21 +1079,21 @@
         id: "lstar",
         chapter: "deeper",
         station: "lstar",
-        kicker: "Deeper · lifecycle",
-        nav: "L* / Bellman",
-        title: "Lifecycle state machines and L*",
-        lede: "PACER graphs become CAC phase sequences. L* is computed over those sequences — not over press-release tags.",
+        kicker: "Deeper · state machines",
+        nav: "State machines",
+        title: "Documented trajectories and the formal model",
+        lede: "Court records are coded as events with sources; trajectories are read from the order the record establishes.",
         points: [
-          ["Machines", "state_machines/: five offense types as anchor PACER cases, plus expansion from full federal dockets (30 cases in the UI payload)."],
-          ["L*", "compute_lstar.py + bellman.py. Goal-conditioned values for enticement, sextortion, production, enterprise, trafficking. Transition matrix, intervention deltas, trajectories."],
-          ["APIs", "/lifecycle is public (payload embedded). GET /api/lifecycle/anchors is public. Full cases and L* JSON need CaseLinker-Key or localhost."]
+          ["Evidence", "state_machines/evidence: coded events, participants with event roles, dated assertions, relations, page-level provenance."],
+          ["Trajectories", "state_machines/trajectories: the documented partial order, maximal chains L, affordance levels, Aff and ψ."],
+          ["Theory", "state_machines/theory: AfH Appendix X transition systems, Δ_path and Δ_supp, tested on fictional systems."],
+          ["APIs", "/lifecycle is public (payload embedded). /api/lifecycle/cases and /api/lifecycle/analysis need CaseLinker-Key or localhost; MCP get_lifecycle_cases and get_trajectory_analysis wrap them."]
         ],
-        figure: "PACER JSON-LD  →  phase sequence  →  L*_{g,A}  →  /lifecycle",
+        figure: "court record  →  coded events  →  documented order  →  trajectories  →  /lifecycle",
         links: [
           app("/lifecycle", "/lifecycle"),
-          repo("state_machines/compute_lstar.py", "compute_lstar.py"),
-          repo("state_machines/bellman.py", "bellman.py"),
-          repo("state_machines/data/lstar_all_cases.json", "lstar_all_cases.json")
+          repo("state_machines/README.md", "state_machines/README.md"),
+          repo("state_machines/theory/README.md", "theory/README.md")
         ]
       },
       {
@@ -1221,7 +1221,7 @@
       { id: "pacer", label: "PACER / RECAP" },
       { id: "questions", label: "Q1–Q3" },
       { id: "harm", label: "Platform harm" },
-      { id: "lstar", label: "Lifecycle / L*" }
+      { id: "lstar", label: "State machines" }
     ];
 
     const state = {

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thirty records</title>
+<style>
+  :root {
+    --desk: #c9d0d4;
+    --sheet: #f6f7f4;
+    --ink: #1b242c;
+    --quiet: #5e6972;
+    --rule: #c3cbcf;
+    --stated: #1e3f66;
+    --registry: #6e4b16;
+    --saved: #1a5c42;
+    --focus: #1e3f66;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--desk);
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .bench {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr) 20rem;
+    grid-template-rows: auto 1fr;
+  }
+  header {
+    grid-column: 1 / -1;
+    padding: 1rem 1.25rem 0.75rem;
+    background: var(--sheet);
+    border-bottom: 1px solid var(--rule);
+  }
+  header h1 {
+    margin: 0;
+    font-family: "Iowan Old Style", Palatino, "Palatino Linotype", serif;
+    font-weight: 500;
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+  }
+  header p { margin: 0.25rem 0 0; max-width: 42rem; color: var(--quiet); }
+  nav, main, aside { min-width: 0; min-height: 0; overflow: auto; }
+  nav { padding: 0.75rem 0.5rem 2rem; }
+  nav button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-left: 2px solid transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+  }
+  nav button[aria-current="true"] { border-left-color: var(--stated); background: var(--sheet); }
+  nav button:focus-visible, .step:focus-visible, aside button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  main { background: var(--sheet); padding: 1.25rem 1.5rem 3rem; }
+  main h2 {
+    margin: 0 0 1rem;
+    font-family: "Iowan Old Style", Palatino, "Palatino Linotype", serif;
+    font-weight: 500;
+    font-size: 1.35rem;
+  }
+  .track { margin: 0 0 1.5rem; }
+  .track h3 { margin: 0 0 0.4rem; font-size: 0.95rem; font-weight: 600; }
+  .chain { margin: 0 0 0.8rem 0; padding-left: 0.9rem; border-left: 1px solid var(--rule); }
+  .step {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    color: inherit;
+    padding: 0.35rem 0.4rem;
+    cursor: pointer;
+    white-space: normal;
+  }
+  .step[aria-current="true"] { background: #e7eef3; }
+  .step .when { color: var(--quiet); }
+  .step .plat { color: var(--stated); }
+  .cand { margin: 0 0 0.2rem 1.4rem; color: var(--registry); font-size: 0.92rem; }
+  .phrases { margin-top: 1.5rem; color: var(--quiet); font-size: 0.92rem; }
+  .phrases li { margin: 0.15rem 0; }
+  aside {
+    padding: 1rem 1.1rem 2rem;
+    background: #e7ebed;
+    border-left: 1px solid var(--rule);
+  }
+  aside h2 { margin: 0 0 0.6rem; font-size: 1.05rem; font-weight: 600; }
+  aside p { margin: 0.4rem 0; }
+  .quiet { color: var(--quiet); }
+  .field { display: block; margin: 0.8rem 0 0.3rem; font-size: 0.92rem; }
+  input, textarea, select {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    padding: 0.4rem 0.5rem;
+  }
+  textarea { min-height: 5rem; resize: vertical; }
+  .choices { display: flex; gap: 0.4rem; margin: 0.6rem 0; }
+  .choices button, .export {
+    font: inherit;
+    background: var(--sheet);
+    border: 1px solid var(--stated);
+    color: var(--stated);
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+  }
+  .choices button[aria-pressed="true"] { background: var(--stated); color: var(--sheet); }
+  .export { margin-top: 1rem; background: var(--saved); color: white; border-color: var(--saved); }
+  .err { color: #8a2b2b; }
+  @media (max-width: 900px) {
+    .bench { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr auto; height: auto; }
+    nav { display: flex; gap: 0.25rem; overflow: auto; }
+    nav button { width: auto; white-space: nowrap; }
+    aside { border-left: 0; border-top: 1px solid var(--rule); }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="bench">
+  <header>
+    <h1>Thirty records</h1>
+    <p>Agreed acts, in the order the record supports. A platform is what the sentence names. A capability is what that platform offered. Use is the judgment you record, and it stays out of the machine result.</p>
+  </header>
+  <nav id="cases" aria-label="Cases"></nav>
+  <main id="chain"></main>
+  <aside id="decision" aria-label="Use judgment"></aside>
+</div>
+<script id="digest" type="application/json">__DIGEST__</script>
+<script>
+const digest = JSON.parse(document.getElementById("digest").textContent);
+const KEY = "caselinker-afh-use-notes";
+const state = { caseId: digest.cases[0] ? digest.cases[0].case_id : null, stepId: null, author: localStorage.getItem(KEY + ":author") || "" };
+let notes = [];
+try { notes = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { notes = []; }
+
+function offered(step, phrases) {
+  const caps = new Map();
+  for (const e of step.candidate_capabilities) caps.set(e.affordance, "relevant to this act, from the registry");
+  for (const e of step.available_on_platform) if (!caps.has(e.affordance)) caps.set(e.affordance, "the platform offered it; not relevant to this kind of act");
+  for (const name of step.documented_feature_use) caps.set(name, "the sentence states it as the means");
+  for (const p of phrases) if (!caps.has(p.feature_class)) caps.set(p.feature_class, "a phrase of this class is stated somewhere in the case");
+  return caps;
+}
+function currentCase() { return digest.cases.find(c => c.case_id === state.caseId); }
+function findStep(id) {
+  const c = currentCase();
+  if (!c) return null;
+  for (const t of c.tracks) for (const L of t.chains) for (const s of L.steps) if (s.event_id === id) return s;
+  return null;
+}
+
+function renderCases() {
+  const nav = document.getElementById("cases");
+  nav.replaceChildren();
+  for (const c of digest.cases) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = c.case_id;
+    if (c.case_id === state.caseId) b.setAttribute("aria-current", "true");
+    b.addEventListener("click", () => { state.caseId = c.case_id; state.stepId = null; draw(); });
+    nav.appendChild(b);
+  }
+}
+function renderChain() {
+  const main = document.getElementById("chain");
+  const c = currentCase();
+  main.replaceChildren();
+  if (!c) return;
+  const h = document.createElement("h2");
+  h.textContent = c.case_id;
+  main.appendChild(h);
+  for (const t of c.tracks) {
+    const block = document.createElement("section");
+    block.className = "track";
+    const h3 = document.createElement("h3");
+    h3.textContent = t.kind.replaceAll("_", " ");
+    block.appendChild(h3);
+    for (const L of t.chains) {
+      const chain = document.createElement("div");
+      chain.className = "chain";
+      L.steps.forEach((s, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "step";
+        if (s.event_id === state.stepId) b.setAttribute("aria-current", "true");
+        const when = s.date ? s.date.earliest : "undated";
+        const plat = s.stated_platform_means.length ? s.stated_platform_means.join(", ") : "no platform";
+        b.innerHTML = "";
+        b.append(document.createTextNode((i + 1) + ". " + s.label + " (" + s.event_id + ") "));
+        const w = document.createElement("span");
+        w.className = "when";
+        w.textContent = when;
+        const p = document.createElement("span");
+        p.className = "plat";
+        p.textContent = " " + plat;
+        b.append(w, p);
+        b.addEventListener("click", () => { state.stepId = s.event_id; draw(); });
+        chain.appendChild(b);
+        if (s.candidate_capabilities.length) {
+          const line = document.createElement("p");
+          line.className = "cand";
+          line.textContent = "offered for this act: " + s.candidate_capabilities.map(e => e.affordance.replaceAll("_", " ") + " (" + e.availability + ")").join(", ");
+          chain.appendChild(line);
+        }
+      });
+      block.appendChild(chain);
+    }
+    if (t.unordered_pairs.length) {
+      const u = document.createElement("p");
+      u.className = "quiet";
+      u.textContent = "No order in the record: " + t.unordered_pairs.map(pair => pair.join(" and ")).join("; ");
+      block.appendChild(u);
+    }
+    main.appendChild(block);
+  }
+  if (c.stated_feature_phrases.length) {
+    const box = document.createElement("div");
+    box.className = "phrases";
+    const t = document.createElement("p");
+    t.textContent = "Phrases the record states. A phrase is not use.";
+    const ul = document.createElement("ul");
+    const grouped = new Map();
+    for (const p of c.stated_feature_phrases) {
+      const k = p.feature_class + "|" + p.feature_term;
+      grouped.set(k, (grouped.get(k) || 0) + 1);
+    }
+    for (const [k, n] of grouped) {
+      const [cls, term] = k.split("|");
+      const li = document.createElement("li");
+      li.textContent = cls.replaceAll("_", " ") + ": " + term + (n > 1 ? " (" + n + ")" : "");
+      ul.appendChild(li);
+    }
+    box.append(t, ul);
+    main.appendChild(box);
+  }
+}
+function renderDecision() {
+  const aside = document.getElementById("decision");
+  aside.replaceChildren();
+  const h = document.createElement("h2");
+  h.textContent = "Your judgment";
+  aside.appendChild(h);
+  const author = document.createElement("label");
+  author.className = "field";
+  author.textContent = "Your name";
+  const input = document.createElement("input");
+  input.value = state.author;
+  input.autocomplete = "name";
+  input.addEventListener("change", () => { state.author = input.value.trim(); localStorage.setItem(KEY + ":author", state.author); });
+  author.appendChild(input);
+  aside.appendChild(author);
+  const step = findStep(state.stepId);
+  if (!step) {
+    const p = document.createElement("p");
+    p.className = "quiet";
+    p.textContent = "Select an act. The page does not show the filing text.";
+    aside.appendChild(p);
+  } else {
+    const c = currentCase();
+    const caps = offered(step, c.stated_feature_phrases);
+    const intro = document.createElement("p");
+    intro.textContent = step.label + (step.stated_platform_means.length ? " through " + step.stated_platform_means.join(", ") : ", with no platform named as the means");
+    aside.appendChild(intro);
+    if (!caps.size) {
+      const p = document.createElement("p");
+      p.className = "quiet";
+      p.textContent = "Nothing on this act to judge. No platform means, and this case states no feature phrase.";
+      aside.appendChild(p);
+    } else {
+      const lab = document.createElement("label");
+      lab.className = "field";
+      lab.textContent = "Capability";
+      const sel = document.createElement("select");
+      for (const [name, why] of caps) {
+        const o = document.createElement("option");
+        o.value = name;
+        o.textContent = name.replaceAll("_", " ");
+        o.title = why;
+        sel.appendChild(o);
+      }
+      lab.appendChild(sel);
+      aside.appendChild(lab);
+      const why = document.createElement("p");
+      why.className = "quiet";
+      const showWhy = () => { why.textContent = caps.get(sel.value); };
+      sel.addEventListener("change", showWhy);
+      showWhy();
+      aside.appendChild(why);
+      const choices = document.createElement("div");
+      choices.className = "choices";
+      let judgment = "unclear";
+      for (const [value, label] of [["used", "Used"], ["not_used", "Not used"], ["unclear", "Unclear"]]) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = label;
+        b.setAttribute("aria-pressed", value === judgment ? "true" : "false");
+        b.addEventListener("click", () => {
+          judgment = value;
+          for (const other of choices.querySelectorAll("button")) other.setAttribute("aria-pressed", other === b ? "true" : "false");
+        });
+        choices.appendChild(b);
+      }
+      aside.appendChild(choices);
+      const noteLab = document.createElement("label");
+      noteLab.className = "field";
+      noteLab.textContent = "How it was used in this act";
+      const note = document.createElement("textarea");
+      note.maxLength = 240;
+      note.placeholder = "One short line. No names, no graphic detail.";
+      noteLab.appendChild(note);
+      aside.appendChild(noteLab);
+      const err = document.createElement("p");
+      err.className = "err";
+      const save = document.createElement("button");
+      save.type = "button";
+      save.className = "export";
+      save.textContent = "Save judgment";
+      save.addEventListener("click", () => {
+        err.textContent = "";
+        if (!/^[A-Za-z][A-Za-z .'-]{0,79}$/.test(state.author)) { err.textContent = "Enter your name as the author. A model id is not accepted."; return; }
+        if (judgment === "used" && note.value.trim().length < 8) { err.textContent = "Say how, in one short line."; return; }
+        const row = { case_id: c.case_id, event_id: step.event_id, affordance: sel.value, judgment, basis: "researcher_inference", author: state.author, note: note.value.trim() };
+        notes = notes.filter(n => !(n.case_id === row.case_id && n.event_id === row.event_id && n.affordance === row.affordance && n.author === row.author));
+        notes.push(row);
+        localStorage.setItem(KEY, JSON.stringify(notes));
+        const count = document.getElementById("saved-count");
+        if (count) count.textContent = notes.length + (notes.length === 1 ? " judgment saved" : " judgments saved");
+        err.style.color = "var(--saved)";
+        err.textContent = "Saved on this computer. Download the file when the set is ready.";
+      });
+      aside.append(save, err);
+    }
+  }
+  const exp = document.createElement("button");
+  exp.type = "button";
+  exp.className = "export";
+  exp.textContent = "Download notes";
+  exp.addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(notes, null, 1) + "\n"], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "use_notes.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  const count = document.createElement("p");
+  count.id = "saved-count";
+  count.className = "quiet";
+  count.textContent = notes.length + (notes.length === 1 ? " judgment saved" : " judgments saved");
+  aside.append(exp, count);
+}
+function draw() { renderCases(); renderChain(); renderDecision(); }
+draw();
+</script>
+</body>
+</html>
