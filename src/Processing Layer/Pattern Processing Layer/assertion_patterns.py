@@ -593,11 +593,18 @@ def sentence_assertions(text: str) -> List[Dict]:
 # CyberTip scope (investigation_type)
 # ---------------------------------------------------------------------------
 
-_TIP_TOKEN_RE = re.compile(_pp._CYBERTIP_PATTERN + r"|Cyber\s*Tips?|cybertips?", re.IGNORECASE)
+_TIP_TOKEN_RE = re.compile(
+    _pp._CYBERTIP_PATTERN + r"|Cyber\s*Tips?|cybertips?"
+    # A tip named without the word (#71): "a tip from the National Center for Missing …",
+    # "a report from … (NCMEC)". "by NCMEC" is left out: it introduces NCMEC statistics.
+    r"|\b(?:tips?|reports?|leads?|referrals?)\s+(?:\w+\s+){0,3}?(?:from|through|via)\s+(?:the\s+)?"
+    r"(?:NCMEC\b|National\s+Center\s+for\s+Missing)",
+    re.IGNORECASE,
+)
 _TIP_BOILERPLATE = re.compile(
     r"\b(?:can|may|should)\s+be\s+(?:made|reported|submitted)|\breport(?:s|ed)?\s+(?:it\s+)?(?:to|at|online)\b[^.]{0,60}"
     r"(?:cybertip|missingkids)|1-800|\bmissingkids\.org\b|\bonline\s+reports\s+of\b|\bsteadily\s+increased\b"
-    r"|\breceives?\s+(?:thousands\s+of\s+)?CyberTips\b|\bhas\s+received\s+more\s+than\b|\b\d{1,3}(?:,\d{3})+\s+(?:cyber\s*tips?|reports)\b"
+    r"|\breceives?\s+(?:thousands\s+of\s+)?CyberTips\b|\bhas\s+received\s+more\s+than\b|\b\d{1,3}(?:,\d{3})+\s+(?:cyber\s*tips?|tips|leads|reports)\b|\b(?:hundreds|thousands)\s+of\s+(?:cyber\s*)?tips\b"
     r"|\bmore\s+than\s+[\d,]+\s+(?:cyber\s*tips?|reports)\b|\bnation'?s\s+centralized\b|\bthe\s+public\b|\bincreased\s+by\b|\bin\s+20\d\d,\s+(?:the\s+)?(?:task\s+force|ICAC|NCMEC|reports)\b"
     r"|\b(?:file|submit|make|report)\s+a\s+cyber\s*tip|\breceives?\s+(?:thousands\s+of\s+|hundreds\s+of\s+)?(?:online\s+)?cyber\s*tip"
     r"|\bclearing\s*house\b|\bcan\s+be\s+reported\b|\bif\s+you\s+have\s+(?:a\s+|any\s+)?(?:tip|information)\b|\bplease\s+(?:submit|report|contact)\b",
@@ -610,7 +617,14 @@ _TIP_CASE_ACTION = re.compile(
     r"|\bregarding\b|\brelated\s+to\b|\binvolving\b|\bassociated\s+with\b|\bin\s+connection\s+with\b|\bled\s+(?:to|investigators)\b"
     r"|\bprompted\b|\binitiated\b|\bbegan\b|\bstarted\b|\bafter\s+(?:a|an|the)\b|\breported\s+(?:that|to\s+NCMEC)\b"
     r"|\bthrough\s+(?:a|an|the|multiple|several)?\s*cyber\s*tip|\bcame\s+to\s+the\s+attention\b|\bstemm(?:ed|ing)\s+from\b"
-    r"|\bbased\s+(?:on|upon)\b|\bresulted?\s+from\b|\bin\s+regards?\s+to\b|\bfrom\s+(?:a|an|the)\s+cyber\s*tip",
+    r"|\bbased\s+(?:on|upon)\b|\bresulted?\s+from\b|\bin\s+regards?\s+to\b|\bfrom\s+(?:a|an|the)\s+cyber\s*tip"
+    # Verbs the list missed (#71): "followed up on a CyberTip", "following a … cyber tip",
+    # "launched over a cyber tip", "sent a cyber tip to", "as a result of a cyber tip",
+    # "stem from a … CyberTip", "acting on a tip", "in response to a CyberTip".
+    r"|\bfollow(?:ed|ing)?\s+up\s+on\b|\bfollowing\s+(?:a|an|the|two|several|multiple)\b"
+    r"|\bover\s+(?:a|an)\s+(?:\w+\s+){0,2}?cyber\s*tip|\bas\s+a\s+result\s+of\b|\bstems?\s+from\b"
+    r"|\bacting\s+on\b|\bsent\s+(?:a|an|the)\s+(?:\w+\s+){0,2}?cyber\s*tip|\bleads?\s+to\b"
+    r"|\blaunched\b|\btriggered\b|\bin\s+response\s+to\b|\bupon\s+receipt\b",
     re.IGNORECASE,
 )
 
@@ -685,7 +699,9 @@ _ARTICLE = (
 # "{ESP} submitted a CyberTip", "Kik, a messaging app, reported … to NCMEC"
 _ESP_SUBJECT = re.compile(
     rf"(?<![\w-]){_ESP_RE}\b(?:,[^,.]{{0,60}},)?\s+(?:had\s+|has\s+|later\s+)?(?:{_REPORT_VERB}\b[^.]{{0,80}}?"
-    r"(?:cyber\s*tip|tip(?:line)?\b|report|NCMEC|National\s+Center)|reported\s+(?:that|to)\b)",
+    r"(?:cyber\s*tip|tip(?:line)?\b|report|NCMEC|National\s+Center)|reported\s+(?:that|to)\b"
+    # "Google had reported a user had uploaded …" (#71, ncmec_2023_408)
+    r"|reported\s+(?:a|an|the)\s+(?:\w+\s+)?(?:user|account|subscriber|customer)s?\b)",
     re.IGNORECASE,
 )
 # "a CyberTip sent by Microsoft", "CyberTips from Google", "CyberTipline reports from the app Kik"

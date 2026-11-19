@@ -22,7 +22,7 @@ from storage import CaseStorage
 
 A = R._pipeline().assertions_module
 
-TIP = "Detectives followed up on a CyberTip and contacted Corin Ashcombe, 34, at his workplace."
+TIP = "Detectives looked into a CyberTip and contacted Corin Ashcombe, 34, at his workplace."
 DECOY = "Officer used screen name Jake, a 14-year-old from Boise, during the chat. Reese Thistlewood, 41, was arrested."
 PAID = "Rowan Brambleton, 52, was sentenced to 8 years in prison and ordered to pay $4,000 in restitution."
 CASES = {"tip_case": TIP, "decoy_case": DECOY, "paid_case": PAID}
@@ -33,9 +33,9 @@ SCREEN_RULE = {
     "positives": ["used screen name Jake, a 14-year-old from Boise"], "negatives": ["a 14-year-old victim"],
 }
 TIP_RULE = {
-    "id": "followed_up_tip", "field": "investigation_type", "role": "case_action",
-    "regex": r"followed\s+up\s+on\s+an?\s+(Cyber\s*Tip)",
-    "positives": ["detectives followed up on a CyberTip"], "negatives": ["report a CyberTip online"],
+    "id": "looked_into_tip", "field": "investigation_type", "role": "case_action",
+    "regex": r"looked\s+into\s+an?\s+(Cyber\s*Tip)",
+    "positives": ["detectives looked into a CyberTip"], "negatives": ["report a CyberTip online"],
 }
 
 
@@ -109,7 +109,7 @@ def test_diagnose_shows_the_unscoped_tip_with_a_masked_excerpt(corpus):
     assert field["stored"]["status"] == "needs_review" and field["replay"]["status"] == "needs_review"
     [cand] = field["candidates"]
     assert cand["detector"] == "press_cybertip" and cand["role"] == "unscoped" and cand["in_store"]
-    assert "followed up on a CyberTip" in cand["excerpt"]
+    assert "looked into a CyberTip" in cand["excerpt"]
     assert "Ashcombe" not in json.dumps(out)
     assert field["changed_if_reextracted"] is False
 
