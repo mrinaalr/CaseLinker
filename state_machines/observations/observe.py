@@ -183,6 +183,10 @@ _THIRD_PARTY = (r"(?:her\s+\w+|his\s+(?:mother|father|parents?)|(?:the\s+)?(?:mo
 _OTHER_PARTY = (r"(?:she|they|(?:the\s+)?(?:victim|minor)\b|Minor Victim|MV-?\d|Victim\s+\w|Jane Doe|John Doe|an?\s+undercover|the undercover)")
 _OTHER_SUBJECT = {"platform": re.compile(_LEAD + _THIRD_PARTY, re.I), "feature": re.compile(_LEAD + "(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + ")", re.I)}
 _NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies|deny|declined|refused)\b", re.I)
+# conduct that is supposed, intended, asked about or only possible is not conduct the sentence states happened
+_UNREAL = re.compile(r"\b(?:would|could|might|should|if|whether|unless|planned|plans|plan|intended|intends|intend|wanted|wants|"
+                     r"hoped|offered|promised|threatened|agreed|going\s+to|able\s+to|attempt(?:ed|s|ing)?\s+to|tried\s+to|in\s+order\s+to)\b", re.I)
+_QUOTE = re.compile(r'["\u201c\u201d]')
 # who a clause is about, anywhere before the cue: someone other than the offender, and the offender
 # a feature of the service itself ("the site operated on the Tor network") is what the technology is, not what anyone did
 _SERVICE_SUBJECT = r"(?:(?:the|this|that|each|a)\s+(?:web\s?site|site|forum|service|network|application|app|board|server)\b|Website\s(?:[A-Z]|\d{1,2})\b)"
@@ -312,6 +316,8 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
         patterns = [(rel, pat.format(name=name), 0) for rel, pat in _PLATFORM_CUES]
     else:
         patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), 0 if o["feature_term"] in ("Tor", "VPN") else re.I)]
+    if N.states_a_rule_not_conduct(sentence):               # "the Terms of Service prohibit storing such material on ..."
+        return None
     for rel, pattern, flags in patterns:
         for m in re.finditer(pattern, sentence, flags):
             own = _own_clause(sentence, m.end(), kind)
@@ -320,31 +326,56 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
             before = sentence[own[0]:m.start("cue")]
             if _NEGATED.search(before) or _NEGATED.search(sentence[m.start("cue"):m.end()]):    # "did not ... through", "used no VPN"
                 continue
+            near = " ".join(before.split()[-8:])       # a modal or an intention governs the verb it stands by, not the whole clause
+            if _UNREAL.search(near) or sentence.rstrip().endswith("?"):                         # "said he would contact her through ...", a question
+                continue
+            if len(_QUOTE.findall(sentence[:m.start("cue")])) % 2:                              # inside quoted words: someone's statement, not the record's
+                continue
             if _OTHER_BEFORE[kind].search(before) and not _OFFENDER.search(before):             # "Agents served a warrant on ...": no offender in the clause
                 continue
             return rel, m.group("cue").lower()
     return None
 
 
-def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
+# who a coder says did an act, as a category (never a label): the first that applies
+_ACTOR_CATEGORY = (("law_enforcement", "law_enforcement"), ("court", "court"), ("named_victim", "victim"), ("undercover_persona", "undercover"),
+                   ("charged_defendant", "charged_defendant"), ("uncharged_coconspirator", "coconspirator"))
+NOT_THE_OFFENDER = {"law_enforcement", "court", "victim", "undercover"}
+
+
+def _actor_category(participant: Optional[dict], role: str = "offender") -> str:
+    held = {x["status"] for x in (participant or {}).get("legal_status", [])}
+    for status, name in _ACTOR_CATEGORY:
+        if status in held:
+            return "co_offender" if role == "co_offender" and name not in NOT_THE_OFFENDER else name
+    if role == "co_offender":
+        return "co_offender"
+    return "collective" if (participant or {}).get("kind") == "collective" else "third_party"
+
+
+def _offender_acts(b: dict) -> List[tuple]:
+    """(document, page, start, end, event id, action code, actor category) of each offender-coded act's cited sentence."""
+    P = {p["passage_id"]: p for p in b["passages"]}
+    who = {p["participant_ref"]: p for p in b.get("participants", [])}
+    return [(P[s["passage_id"]]["doc_id"], P[s["passage_id"]]["pdf_page"], P[s["passage_id"]]["char_start"], P[s["passage_id"]]["char_end"],
+             e["event_id"], e["action"], _actor_category(who.get((e.get("actor") or {}).get("participant_ref")), (e.get("actor") or {}).get("role")))
+            for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
+
+
+def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, dict]] = None) -> dict:
     """Level 3: tie an observation to a published offender act whose cited sentence holds it and states
     the act was done by means of it. Where several published acts cite that sentence, the sentence
     does not say which of them the means belongs to, and nothing is tied (``several_acts`` is set).
     Returns the document with ``relations`` filled."""
-    P = {p["passage_id"]: p for p in bundle["passages"]}
-    acts = []
-    for e in bundle["events"]:
-        if V.FAMILY_OF[e["action"]] != "offender":
-            continue
-        for s in e["support"]:
-            if s["facet"] == "action":
-                p = P[s["passage_id"]]
-                acts.append((p["doc_id"], p["pdf_page"], p["char_start"], p["char_end"], e["event_id"]))
+    acts = [t[:5] for t in _offender_acts(bundle)]
+    by_coder = {name: _offender_acts(b) for name, b in sorted((coded or {}).items())}
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
         o.pop("several_acts", None)
         o.pop("act_passage_runs_on", None)
+        o.pop("contested_act", None)
+        o.pop("actor_conflict", None)
         if o["kind"] == "service_description":                  # a description is never tied to an act
             continue
         citing = {eid for d, pg, a, b, eid in acts if (d, pg) == (o["doc_id"], o["pdf_page"]) and a <= o["term_start"] and o["term_end"] <= b}
@@ -367,6 +398,35 @@ def relate(doc: dict, bundle: dict, text_root: Path) -> dict:
             hit = _means(o["kind"], pages[(d, pg)][a:b], o)
             if hit and all(r["event_id"] != eid for r in o["relations"]):
                 o["relations"].append({"event_id": eid, "relationship": hit[0], "cue": hit[1], "basis": "means_stated_in_act_sentence"})
+    # The disputed tier. The sentence states the means, each coder coded an offender act in that sentence, and
+    # no act was published there because the coders differ on what the act is or on who did it. Nothing is tied
+    # to an act: the record says how something was done, and the two coders disagree on what was done.
+    for o in doc["observations"] if len(by_coder) == 2 else []:
+        if o["kind"] == "service_description" or o["relations"] or o.get("several_acts") or o.get("act_passage_runs_on") or o.get("in_act_sentence"):
+            continue
+        key = (o["doc_id"], o["pdf_page"])
+        here = {name: [t for t in spans if (t[0], t[1]) == key and t[2] <= o["term_start"] and o["term_end"] <= t[3]
+                       and t[2] >= o["char_start"] - 1 and t[3] <= o["char_end"] + 1] for name, spans in by_coder.items()}
+        if not all(here.values()):
+            continue
+        inside = {name: sorted({t[5] for t in ts}) for name, ts in here.items()}
+        actors = {name: sorted({t[6] for t in ts}) for name, ts in here.items()}
+        if key not in pages:
+            pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
+        hit = _means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o)
+        if not hit:
+            continue
+        a_codes, b_codes = (set(v) for v in inside.values())
+        a_who, b_who = (set(v) for v in actors.values())
+        record = {"relationship": hit[0], "cue": hit[1], "action_codes": inside, "actors": actors,
+                  "dispute": [k for k, differs in (("action_code", a_codes != b_codes), ("actor", a_who != b_who)) if differs]
+                             or ["not_paired"]}       # same code and actor category, yet resolution did not pair the two acts as one
+        if (a_who | b_who) & NOT_THE_OFFENDER:
+            # one coder gives the act to an investigator, the court, a victim or a persona: whose conduct it was is itself
+            # in dispute, so this is not offender use by any reading and stays out of every count of it
+            o["actor_conflict"] = dict(record, basis="means_stated_in_sentence_coders_differ_on_whether_the_offender_acted")
+        else:
+            o["contested_act"] = dict(record, basis="means_stated_in_sentence_each_coder_coded_an_offender_act")
     doc["bundle_case_id"] = bundle["case_id"]
     return doc
 
@@ -384,6 +444,8 @@ def summary(doc: dict) -> dict:
             "feature_terms": dict(sorted(Counter(o["feature_term"] for o in obs if o["kind"] == "feature").items())),
             "by_standing": dict(sorted(Counter(o["source_status"] for o in obs).items())),
             "observations_tied_to_an_act": sum(bool(o["relations"]) for o in obs),
+            "observations_stating_a_means_where_the_coders_dispute_the_act": sum(bool(o.get("contested_act")) for o in obs),
+            "observations_stating_a_means_where_a_coder_gives_the_act_to_a_non_offender": sum(bool(o.get("actor_conflict")) for o in obs),
             "observations_in_a_sentence_several_acts_cite": sum(bool(o.get("several_acts")) for o in obs),
             "observations_in_an_act_passage_that_runs_across_sentences": sum(bool(o.get("act_passage_runs_on")) for o in obs),
             "observations_with_a_date_in_the_sentence": sum(bool(o["dates_in_sentence"]) for o in obs)}
@@ -430,6 +492,23 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
                 problems.append(f"{where}: a service description is tied to an act or carries a platform or feature field")
         elif (o["feature_class"], o["feature_term"]) not in terms or not _same(term, o["feature_term"]):
             problems.append(f"{where}: not a listed feature phrase at that span")
+        if o.get("contested_act") is not None and o.get("actor_conflict") is not None:
+            problems.append(f"{where}: one observation is both a disputed act and an actor conflict")
+        for field in ("contested_act", "actor_conflict"):
+            c = o.get(field)
+            if c is None:
+                continue
+            codes = [code for per in c.get("action_codes", {}).values() for code in per]
+            cats = {x for per in c.get("actors", {}).values() for x in per}
+            known = {name for _, name in _ACTOR_CATEGORY} | {"collective", "third_party", "co_offender"}
+            if (o["relations"] or o["kind"] == "service_description" or o.get("in_act_sentence")
+                    or set(c.get("action_codes", {})) != {"coder_A", "coder_B"} or set(c.get("actors", {})) != {"coder_A", "coder_B"}
+                    or not codes or any(V.FAMILY_OF.get(code) != "offender" for code in codes) or not cats <= known
+                    or c.get("relationship") not in ("Carried_Out_Through", "Moved_To", "Supports_Action")
+                    or not c.get("dispute") or not set(c["dispute"]) <= {"action_code", "actor", "not_paired"}):
+                problems.append(f"{where}: the disputed-act record is not two coders' offender codes and actor categories on an untied observation")
+            if (field == "contested_act") == bool(cats & NOT_THE_OFFENDER):       # the invariant: offender use is never read from an actor conflict
+                problems.append(f"{where}: a record where a coder gives the act to a non-offender must be an actor conflict, and only then")
         for r in o["relations"]:
             e = events.get(r["event_id"])
             if e is None or V.FAMILY_OF[e["action"]] != "offender":

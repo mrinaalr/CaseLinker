@@ -71,7 +71,7 @@ def _review_summary(bundle: dict) -> Dict[str, int]:
 
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
           deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
-          mode: str = "adjudicated", observations: bool = False) -> dict:
+          mode: str = "adjudicated", observations: bool = False, coders_root: Optional[Path] = None) -> dict:
     """Validate, derive, emit and SHACL-check every bundle of a release; write the manifest.
 
     ``observations`` also reads every page of each case for the platforms and features it names
@@ -118,7 +118,12 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
                 if stored != {d["sha256"] for d in bundle["documents"]}:
                     raise SystemExit(f"{case_id}: the coded bundle and the text store list different documents; "
                                      "recode the case before building (a filing was added or removed)")
-            doc = O.relate(O.observe(case_id, text_root), bundle, text_root)
+            coded = {}
+            for name in ("coder_A", "coder_B"):       # each coder's own bundle, for the disputed tier; absent in an adjudicated build
+                coder_file = (coders_root / name / f"{case_id}.json") if coders_root else None
+                if coder_file and coder_file.is_file():
+                    coded[name] = json.loads(coder_file.read_text(encoding="utf-8"))
+            doc = O.relate(O.observe(case_id, text_root), bundle, text_root, coded if len(coded) == 2 else None)
             unsound = O.check(doc, text_root, bundle)
             if unsound:
                 raise SystemExit(f"{case_id}: observations not sound:\n  " + "\n  ".join(unsound[:20]))

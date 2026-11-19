@@ -55,6 +55,15 @@ SELECT ?description (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WH
   GRAPH ?g { ?act a action:Action ; clt:actionCode ?action ; clt:reviewStatus "agreed" }
   FILTER(STRENDS(STR(?g), ":evidence"))
 } GROUP BY ?action ORDER BY DESC(?acts) ?action"""},
+    "disputed": {
+        "title": "Between levels 1 and 3. Where does a sentence state a platform or feature as a means while the two coders dispute the act? (No act is published there.)",
+        "columns": ["case", "platform_or_class", "phrase", "standing", "sentences"],
+        "sparql": PREFIXES + """SELECT ?case ?what ?phrase ?standing (COUNT(DISTINCT ?span) AS ?sentences) WHERE {
+  GRAPH ?og { ?obs clt:reviewStatus "disputed" ; oa:hasBody ?body ; oa:hasTarget ?span ; clt:sourceStatus ?standing .
+              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
+  BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
+  BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
+} GROUP BY ?case ?what ?phrase ?standing ORDER BY ?case ?what"""},
     "supported": {
         "title": "Level 3. Where does a record state that an act was done by means of a platform or feature?",
         "columns": ["case", "act", "action", "relationship", "platform_or_class", "phrase", "standing"],

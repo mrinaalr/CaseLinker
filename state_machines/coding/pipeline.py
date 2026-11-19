@@ -191,7 +191,7 @@ def release(release_id: str, cases: List[str], out: Path, text_root: Path, obser
             shutil.copy(src, root / f"{case_id}.json")
             included.append(case_id)
     manifest = build(release_id, text_root=text_root, deny_lists={c: _deny(text_root, c) for c in included}, mode="machine",
-                     observations=observations)
+                     observations=observations, coders_root=out)
     return {"release": release_id, "cases": len(manifest["cases"]), "left_out": sorted(set(cases) - set(included))}
 
 

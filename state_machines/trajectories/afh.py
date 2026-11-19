@@ -93,4 +93,5 @@ def release_analysis(root=None, threshold: str = "INFERRED", case_id: str = "") 
             "cases": per_case,
             "psi": {o: [{"harm": h, "cases": ids} for h, ids in pairs] for o, pairs in psi(rows).items()},
             "coverage_identity_holds": coverage_identity_holds(rows),
+            "cases_with_an_affordance": sum(bool(affs) for _, affs, _ in rows),      # 0 makes the identity hold vacuously
             "note": "Aff and psi use level-C (instrumental) affordances only; psi is co-occurrence, not causation."}

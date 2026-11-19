@@ -223,6 +223,17 @@ def enrich(act: dict, sentence: str, family: str) -> dict:
     return out
 
 
+# A sentence that states a rule (what a service's terms prohibit, what a policy allows) describes no one's conduct.
+RULE_STATEMENT = re.compile(r"\b(?:prohibit\w*|forbid\w*|forbade|terms\s+of\s+(?:service|use)|acceptable\s+use|polic(?:y|ies)|guidelines|"
+                            r"not\s+(?:allowed|permitted)|may\s+not|must\s+not)\b", re.I)
+_ACTING = re.compile(r"\b(?:defendants?|accused|he|she|they)\b", re.I)
+
+
+def states_a_rule_not_conduct(sentence: str) -> bool:
+    """The sentence is a rule or policy statement that names no one acting ("the Terms of Service prohibit storing ...")."""
+    return bool(RULE_STATEMENT.search(sentence)) and not _ACTING.search(sentence)
+
+
 def feature_as_means(sentence: str) -> Optional[Tuple[str, str]]:
     """(class, phrase) when the sentence states a listed feature as the means of what it describes ("used the
     disappearing-message feature to ...", "created a new account under a false name"). Level C is instrumental

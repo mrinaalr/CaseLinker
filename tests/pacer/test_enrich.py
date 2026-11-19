@@ -100,3 +100,11 @@ def test_stated_order_links_the_named_act_or_the_sentence_just_before():
     assert N.stated_prior("The defendant sent the images to other users.", 181, earlier) is None
     header = "Case 1:24-cr-00229 Document 21 Filed 03/13/24 Page 2 of 3 After the block, the defendant made a new account."
     assert N.stated_prior(header, 0, [("e4", "RESP_BLOCK", 700, False)]) == "e4"                               # across a page
+
+
+def test_a_rule_or_policy_statement_is_not_conduct():
+    rule = N.states_a_rule_not_conduct
+    assert rule("The Terms of Service prohibited users from storing such material on Dropbox.")
+    assert rule("Snapwire's acceptable use policy forbids sexual content involving minors.")
+    assert not rule("In violation of the platform's terms of service, the defendant stored the images on Dropbox.")   # someone acts
+    assert not rule("The defendant stored the images on Dropbox.")

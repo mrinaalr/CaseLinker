@@ -70,7 +70,7 @@ urn:caselinker:pacer:<case_id>:observations    platforms, placeholder-labelled s
 
 | Release | Holds |
 |---|---|
-| `pacer-v1` | 30 cases, 285 agreed acts: evidence, trajectory and observation graphs per case, `observations/`, the case-level research table and the affordance evidence matrix |
+| `pacer-v1` | 30 cases, 284 agreed acts: evidence, trajectory and observation graphs per case, `observations/`, the case-level research table and the affordance evidence matrix |
 
 ## Oxigraph
 

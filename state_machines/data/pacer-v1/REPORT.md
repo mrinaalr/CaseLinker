@@ -6,10 +6,10 @@ Review mode **machine**: two local models coded every case independently; a fixe
 
 | Content | Count |
 |---|---:|
-| acts | 285 |
+| acts | 284 |
 | acts with a cited date | 143 |
 | acts: law_enforcement | 27 |
-| acts: offender | 163 |
+| acts: offender | 162 |
 | acts: procedure | 92 |
 | acts: response | 3 |
 | cases | 30 |
@@ -18,11 +18,11 @@ Review mode **machine**: two local models coded every case independently; a fixe
 | harms recorded: victim unknown | 1 |
 | level-C affordances (sentence states the feature as the means) | 0 |
 | offender acts naming a victim or an undercover persona | 71 |
-| offender acts with a documented platform | 9 |
+| offender acts with a documented platform | 8 |
 | relations: possibly the same act | 7 |
 | relations: stated order | 1 |
 
-Order between acts comes mostly from cited dates; stated order is published only where a sentence names the earlier act or follows it directly. An act with no date and no stated order is unordered, not placed.
+Order between acts comes mostly from cited dates; stated order is published only where a sentence names the earlier act or follows it directly. An act with no date and no stated order is unordered, not placed. Act counts are lower bounds: an act is published only where both coders give the same sentence, action code and actor, and on the blind benchmark split that finds 104 of 247 gold acts.
 
 ## Models
 
@@ -39,36 +39,36 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 
 | Case | Published | Events | Relations both coders asserted | Coder A acts | Coder B acts | Matched | Action κ | SHACL |
 |---|---|---:|---:|---:|---:|---:|---:|---|
-| `anchorage_pd_2022_004` | yes | 6 | 0 | 108 | 214 | 52 | 0.168 | fails |
-| `anchorage_pd_2022_006` | yes | 15 | 0 | 166 | 407 | 64 | 0.273 | fails |
-| `anchorage_pd_2022_007` | yes | 27 | 0 | 302 | 348 | 100 | 0.323 | fails |
-| `doj_ceos_2025_004` | yes | 1 | 0 | 14 | 107 | 3 | 0.25 | partial |
+| `anchorage_pd_2022_004` | yes | 6 | 0 | 106 | 213 | 51 | 0.171 | fails |
+| `anchorage_pd_2022_006` | yes | 15 | 0 | 166 | 405 | 64 | 0.273 | fails |
+| `anchorage_pd_2022_007` | yes | 26 | 0 | 295 | 341 | 95 | 0.308 | fails |
+| `doj_ceos_2025_004` | yes | 1 | 0 | 14 | 106 | 3 | 0.25 | partial |
 | `doj_ceos_2025_007` | yes | 5 | 0 | 81 | 173 | 27 | 0.346 | fails |
-| `doj_ceos_2025_014` | yes | 6 | 0 | 50 | 163 | 20 | 0.223 | partial |
-| `doj_ceos_2025_023` | yes | 10 | 0 | 45 | 164 | 30 | 0.333 | fails |
-| `doj_ceos_2025_025` | yes | 20 | 0 | 442 | 655 | 217 | 0.224 | fails |
+| `doj_ceos_2025_014` | yes | 6 | 0 | 49 | 161 | 19 | 0.236 | partial |
+| `doj_ceos_2025_023` | yes | 10 | 0 | 45 | 163 | 30 | 0.333 | fails |
+| `doj_ceos_2025_025` | yes | 20 | 0 | 442 | 652 | 217 | 0.224 | fails |
 | `doj_ceos_2025_026` | yes | 15 | 0 | 32 | 27 | 21 | 0.439 | fails |
 | `doj_ceos_2025_031` | yes | 15 | 0 | 184 | 291 | 74 | 0.238 | fails |
 | `doj_ceos_2026_001` | yes | 32 | 0 | 146 | 105 | 56 | 0.446 | fails |
-| `doj_ceos_2026_003` | yes | 1 | 0 | 112 | 411 | 19 | 0.339 | partial |
+| `doj_ceos_2026_003` | yes | 1 | 0 | 112 | 405 | 19 | 0.339 | partial |
 | `doj_ceos_2026_006` | yes | 11 | 0 | 180 | 354 | 87 | 0.201 | fails |
-| `doj_ceos_2026_007` | yes | 3 | 0 | 53 | 399 | 17 | 0.318 | partial |
-| `doj_ceos_2026_008` | yes | 4 | 0 | 46 | 244 | 17 | 0.356 | fails |
-| `doj_ceos_2026_012` | yes | 9 | 0 | 16 | 142 | 10 | 0.462 | fails |
-| `doj_safe_childhood_2023_420` | yes | 5 | 0 | 53 | 123 | 22 | 0.268 | fails |
-| `external_extortion` | yes | 1 | 0 | 22 | 99 | 15 | 0.227 | fails |
-| `ky_sp_2025_038` | yes | 2 | 0 | 65 | 123 | 32 | 0.186 | fails |
-| `ncis_2022_002` | yes | 4 | 0 | 22 | 152 | 15 | 0.207 | fails |
+| `doj_ceos_2026_007` | yes | 3 | 0 | 53 | 394 | 17 | 0.318 | partial |
+| `doj_ceos_2026_008` | yes | 4 | 0 | 44 | 238 | 17 | 0.356 | fails |
+| `doj_ceos_2026_012` | yes | 9 | 0 | 16 | 136 | 10 | 0.462 | fails |
+| `doj_safe_childhood_2023_420` | yes | 5 | 0 | 51 | 121 | 20 | 0.257 | fails |
+| `external_extortion` | yes | 1 | 0 | 22 | 97 | 15 | 0.227 | fails |
+| `ky_sp_2025_038` | yes | 2 | 0 | 64 | 120 | 31 | 0.195 | fails |
+| `ncis_2022_002` | yes | 4 | 0 | 22 | 150 | 15 | 0.207 | fails |
 | `ncis_2023_001` | yes | 5 | 0 | 58 | 85 | 17 | 0.224 | fails |
-| `ncmec_2022_575` | yes | 19 | 0 | 92 | 185 | 43 | 0.465 | fails |
-| `ncmec_2023_222` | yes | 1 | 0 | 14 | 66 | 1 | None | partial |
-| `ncmec_2025_1035` | yes | 1 | 0 | 18 | 100 | 4 | 0.2 | fails |
+| `ncmec_2022_575` | yes | 19 | 0 | 92 | 184 | 43 | 0.465 | fails |
+| `ncmec_2023_222` | yes | 1 | 0 | 14 | 63 | 1 | None | partial |
+| `ncmec_2025_1035` | yes | 1 | 0 | 18 | 96 | 4 | 0.2 | fails |
 | `svicac_2022_009` | yes | 19 | 0 | 58 | 92 | 15 | 0.534 | fails |
-| `texas_ag_2019_013` | yes | 19 | 0 | 102 | 225 | 45 | 0.344 | fails |
+| `texas_ag_2019_013` | yes | 19 | 0 | 102 | 223 | 45 | 0.344 | fails |
 | `usss_2017_006` | yes | 13 | 0 | 99 | 85 | 38 | 0.294 | fails |
-| `usss_2021_017` | yes | 7 | 0 | 88 | 178 | 32 | 0.354 | fails |
-| `usss_2023_004` | yes | 3 | 0 | 43 | 126 | 21 | 0.255 | fails |
-| `wy_dci_2023_005` | yes | 6 | 0 | 7 | 113 | 3 | 0.143 | partial |
+| `usss_2021_017` | yes | 7 | 0 | 88 | 177 | 32 | 0.354 | fails |
+| `usss_2023_004` | yes | 3 | 0 | 42 | 122 | 21 | 0.255 | fails |
+| `wy_dci_2023_005` | yes | 6 | 0 | 7 | 112 | 3 | 0.143 | partial |
 
 Relations made by rule from agreed acts (stated order, possible retellings) are counted under "What is published", not in this column. **SHACL:** our own shapes have 0 violations in every case. `fails` means a violation only of an upstream CAC shape listed in `state_machines/graphs/shacl_upstream_defects.json`; `partial` means upstream constraints that apply could not be run (see [graphs](../../graphs/README.md)).
 
@@ -80,6 +80,7 @@ Relations made by rule from agreed acts (stated order, possible retellings) are 
 | coder_A acts dropped: procedure act repeating a dated anchor | 241 |
 | coder_A acts dropped: procedure act without a stated date | 2978 |
 | coder_A acts dropped: quote not located on the page | 1037 |
+| coder_A acts dropped: the sentence states a rule or policy, not conduct | 16 |
 | coder_A acts proposed: docket parser | 84 |
 | coder_A acts proposed: model | 6974 |
 | coder_A acts proposed: skipped: judgment form page | 0 |
@@ -89,6 +90,7 @@ Relations made by rule from agreed acts (stated order, possible retellings) are 
 | coder_B acts dropped: procedure act repeating a dated anchor | 6 |
 | coder_B acts dropped: procedure act without a stated date | 586 |
 | coder_B acts dropped: quote not located on the page | 1840 |
+| coder_B acts dropped: the sentence states a rule or policy, not conduct | 65 |
 | coder_B acts proposed: docket parser | 84 |
 | coder_B acts proposed: model | 8388 |
 | coder_B acts proposed: skipped: first coder found no act | 0 |
@@ -103,13 +105,13 @@ Relations made by rule from agreed acts (stated order, possible retellings) are 
 ```json
 {
  "cases": 30,
- "events_coder_A": 2718,
- "events_coder_B": 5956,
- "matched": 1117,
+ "events_coder_A": 2702,
+ "events_coder_B": 5891,
+ "matched": 1107,
  "mean_event_f1": 0.242,
  "pooled_action_agreement": {
-  "exact": 375,
-  "of": 1117
+  "exact": 371,
+  "of": 1107
  },
  "mean_action_kappa": 0.298,
  "note": "agreement on acts the models coded; the docket parser's acts are excluded"
@@ -118,7 +120,7 @@ Relations made by rule from agreed acts (stated order, possible retellings) are 
 
 ## What the records name (observation layer)
 
-Read by rule from every page except docket sheets, independent of the coders. An observation says that a cited sentence names a listed platform, refers to a service by a placeholder ("Website A", name withheld, a label that means nothing outside its case), uses a generic description of an online service ("social media application"), or states a codebook feature phrase. It does not say anyone used it, and a withheld name is not evidence of anonymity or of any feature. A relationship exists only where a published act's own sentence states the means; a generic description is never tied to an act.
+Read by rule from every page except docket sheets, independent of the coders. An observation says that a cited sentence names a listed platform, refers to a service by a placeholder ("Website A", name withheld, a label that means nothing outside its case), uses a generic description of an online service ("social media application"), or states a codebook feature phrase. It does not say anyone used it, and a withheld name is not evidence of anonymity or of any feature. A relationship exists only where a published act's own sentence states the means; a generic description is never tied to an act. A disputed-act sentence is a separate kind: the sentence states the means and each coder coded an offender act in it, but they differ on the act, so no act is published and nothing is tied.
 
 | Content | Count |
 |---|---:|
@@ -137,7 +139,10 @@ Read by rule from every page except docket sheets, independent of the coders. An
 | cases stating at least one feature phrase | 13 |
 | distinct case and listed-platform pairs | 70 |
 | distinct case and withheld-platform pairs | 5 |
-| observations tied to a published act by a stated means | 10 |
+| observations tied to a published act by a stated means | 9 |
+| observations stating a means in a sentence where each coder coded an offender act and they dispute the act (no act published) | 64 |
+| cases with at least one such disputed-act sentence | 14 |
+| observations stating a means where one coder gives the act to an investigator, the court, a victim or a persona (not counted as offender use) | 12 |
 | cases with at least one such relationship | 7 |
 | observations in documents with standing ADVOCACY | 147 |
 | observations in documents with standing ALLEGATION | 221 |
@@ -316,10 +321,10 @@ SELECT ?action (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?act) AS ?acts) WHERE {
 | RECORD_LIVE_SESSION | 2 | 5 |
 | LE_RECEIVE_TIP | 3 | 4 |
 | LE_SURVEIL | 1 | 4 |
-| STORE_MATERIAL | 4 | 4 |
 | ACQUIRE_REPRESENTATION | 2 | 3 |
 | ARRANGE_MEETING | 2 | 3 |
 | LE_SEARCH_SEIZE | 2 | 3 |
+| STORE_MATERIAL | 3 | 3 |
 | EVADE_DETECTION | 1 | 2 |
 | LE_LEGAL_PROCESS | 1 | 2 |
 | PAY_THIRD_PARTY | 1 | 2 |
@@ -333,6 +338,46 @@ SELECT ?action (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?act) AS ?acts) WHERE {
 | RECREATE_ACCOUNT | 1 | 1 |
 | RESP_REPORT | 1 | 1 |
 | THREATEN_HARM | 1 | 1 |
+
+### Between levels 1 and 3. Where does a sentence state a platform or feature as a means while the two coders dispute the act? (No act is published there.)
+
+```sparql
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
+PREFIX clt: <https://w3id.org/caselinker/trajectory#>
+SELECT ?case ?what ?phrase ?standing (COUNT(DISTINCT ?span) AS ?sentences) WHERE {
+  GRAPH ?og { ?obs clt:reviewStatus "disputed" ; oa:hasBody ?body ; oa:hasTarget ?span ; clt:sourceStatus ?standing .
+              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
+  BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
+  BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)
+} GROUP BY ?case ?what ?phrase ?standing ORDER BY ?case ?what
+```
+
+| case | platform_or_class | phrase | standing | sentences |
+|---|---|---|---|---|
+| anchorage_pd_2022_007 | Instagram |  | ALLEGATION | 11 |
+| anchorage_pd_2022_007 | Snapchat |  | ALLEGATION | 26 |
+| doj_ceos_2025_014 | Snapchat |  | ADVOCACY | 1 |
+| doj_ceos_2025_023 | UnmonitoredCommunication | encrypted | ADMITTED | 1 |
+| doj_ceos_2025_025 | Anonymity | Tor | SWORN_AFFIDAVIT | 2 |
+| doj_ceos_2025_025 | DistributionInfrastructure | uploaded | SWORN_AFFIDAVIT | 1 |
+| doj_ceos_2025_025 | Website C (name withheld) |  | ADVOCACY | 1 |
+| doj_ceos_2025_025 | Website D (name withheld) |  | SWORN_AFFIDAVIT | 1 |
+| doj_ceos_2025_026 | Snapchat |  | ADMITTED | 2 |
+| doj_ceos_2025_031 | Website A (name withheld) |  | ADVOCACY | 1 |
+| doj_ceos_2025_031 | Website A (name withheld) |  | ADMITTED | 1 |
+| doj_ceos_2026_001 | Facebook Messenger |  | ADMITTED | 2 |
+| doj_ceos_2026_001 | Instagram |  | ADMITTED | 4 |
+| doj_ceos_2026_001 | Skype |  | ADMITTED | 1 |
+| doj_ceos_2026_006 | Grindr |  | ADVOCACY | 2 |
+| ky_sp_2025_038 | Facebook Messenger |  | ADMITTED | 1 |
+| ncis_2023_001 | ContactDiscovery | public group | ADMITTED | 1 |
+| ncmec_2022_575 | Snapchat |  | ADMITTED | 1 |
+| svicac_2022_009 | Kik |  | ALLEGATION | 1 |
+| texas_ag_2019_013 | Snapchat |  | SWORN_AFFIDAVIT | 1 |
+| usss_2017_006 | FaceTime |  | SWORN_AFFIDAVIT | 1 |
+| usss_2017_006 | Kik |  | SWORN_AFFIDAVIT | 1 |
 
 ### Level 3. Where does a record state that an act was done by means of a platform or feature?
 
@@ -358,14 +403,13 @@ SELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE
 | case | act | action | relationship | platform_or_class | phrase | standing |
 |---|---|---|---|---|---|---|
 | anchorage_pd_2022_006 | e133 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Snapchat |  | ADVOCACY |
-| anchorage_pd_2022_007 | e077 | STORE_MATERIAL | Carried_Out_Through | Dropbox |  | ALLEGATION |
-| anchorage_pd_2022_007 | e176 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ALLEGATION |
+| anchorage_pd_2022_007 | e169 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ALLEGATION |
 | doj_ceos_2025_026 | e035 | SOLICIT_IMAGERY | Carried_Out_Through | Snapchat |  | ADMITTED |
 | doj_ceos_2026_001 | e050 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ADMITTED |
 | doj_ceos_2026_001 | e056 | INITIATE_CONTACT | Carried_Out_Through | Instagram |  | ADMITTED |
 | doj_ceos_2026_001 | e121 | ACQUIRE_MATERIAL | Carried_Out_Through | Instagram |  | ADMITTED |
-| doj_safe_childhood_2023_420 | e034 | DIRECT_CONDUCT | Carried_Out_Through | Snapchat |  | ADMITTED |
-| ky_sp_2025_038 | e052 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Facebook Messenger |  | ADMITTED |
+| doj_safe_childhood_2023_420 | e032 | DIRECT_CONDUCT | Carried_Out_Through | Snapchat |  | ADMITTED |
+| ky_sp_2025_038 | e051 | DISTRIBUTE_MATERIAL | Carried_Out_Through | Facebook Messenger |  | ADMITTED |
 | ncmec_2022_575 | e077 | INITIATE_CONTACT | Carried_Out_Through | Snapchat |  | ADMITTED |
 
 ## Accuracy on the synthetic benchmark
@@ -382,8 +426,8 @@ Platform names and feature terms are kept verbatim in every split, so these rate
 | gold feature statements found | 1.0 (27/27) | 1.0 (30/30) | 1.0 (32/32) |
 | observed platforms the gold names in that sentence | 0.973 (71/73) | 0.926 (63/68) | 0.947 (71/75) |
 | observed feature phrases the gold codes as an affordance there | 0.973 (36/37) | 0.905 (38/42) | 0.947 (36/38) |
-| relationships that the gold also holds | 0.985 (65/66) | 0.942 (65/69) | 0.97 (32/33) |
-| relationships to the right platform, wrong kind | 1 | 0 | 1 |
+| relationships that the gold also holds | 0.985 (65/66) | 0.942 (65/69) | 1.0 (32/32) |
+| relationships to the right platform, wrong kind | 1 | 0 | 0 |
 | relationships to a platform the gold says is only named | 0 | 0 | 0 |
 | relationships on an act that is not a gold act | 0 | 0 | 0 |
 | gold relationships found, on published acts | 0.903 (65/72) | 0.915 (65/71) | 0.762 (32/42) |
@@ -494,12 +538,12 @@ Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0
 
 ### resolve-1.2.0, confirmation cases (wording written without sight of the rules; the only blind split)
 
-resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule of the observation layer, which also refuses negated, supposed, intended, questioned and quoted conduct, a rule or policy statement, and a clause with no offender acting in it); an offender act coded on a rule or policy statement is dropped. Acts, action codes, actors, dates and order are unchanged from 1.1.0 on every split; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
 | gold acts found (recall) | 0.794 (196/247) | 0.733 (181/247) | 0.421 (104/247) | 0.457 (113/247) |
-| coded acts that are gold acts (precision) | 0.827 (196/237) | 0.595 (181/304) | 0.945 (104/110) | 0.95 (113/119) |
+| coded acts that are gold acts (precision) | 0.827 (196/237) | 0.611 (181/296) | 0.945 (104/110) | 0.95 (113/119) |
 | action code | 0.929 (182/196) | 0.818 (148/181) | 0.971 (101/104) | 0.973 (110/113) |
 | actor | 0.974 (191/196) | 0.757 (137/181) | 1.0 (104/104) | 0.991 (112/113) |
 | legal standing | 1.0 (196/196) | 1.0 (181/181) | 1.0 (104/104) | 1.0 (113/113) |
@@ -521,7 +565,7 @@ Recall of the released coding by hard-case tag: advocacy 0.273 (3/11); allegatio
 
 ### resolve-1.2.0, development cases (rules were tuned on these)
 
-resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule of the observation layer, which also refuses negated, supposed, intended, questioned and quoted conduct, a rule or policy statement, and a clause with no offender acting in it); an offender act coded on a rule or policy statement is dropped. Acts, action codes, actors, dates and order are unchanged from 1.1.0 on every split; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
@@ -548,7 +592,7 @@ Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation
 
 ### resolve-1.2.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
 
-resolve-1.2.0: level C now needs the sentence to state the feature as the means (the stated-means rule of the observation layer); under 1.1.0 a listed phrase anywhere in the act's sentence was enough, which a sign-off review showed asserts use the text does not state. Acts, action codes, actors, dates and order are unchanged from 1.1.0; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule of the observation layer, which also refuses negated, supposed, intended, questioned and quoted conduct, a rule or policy statement, and a clause with no offender acting in it); an offender act coded on a rule or policy statement is dropped. Acts, action codes, actors, dates and order are unchanged from 1.1.0 on every split; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
@@ -587,18 +631,18 @@ Cases `anchorage_pd_2022_006`, `doj_ceos_2025_026`, `ncis_2023_001`, `svicac_202
 
 ## Privacy
 
-189 committed files checked against 248 deny-list terms (names from the case captions) and 6940 stored quotes; 982 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
+189 committed files checked against 248 deny-list terms (names from the case captions) and 6938 stored quotes; 981 platform names and feature words checked against the fixed lists they must come from: **0 hits**.
 
 ## Runtime
 
 ```json
 {
  "llama3.2:3b": {
-  "calls": 1111,
+  "calls": 1114,
   "seconds_per_page": 42.7,
   "prompt_tokens": 1369,
   "prompt_seconds": 6.04,
-  "output_tokens": 359,
+  "output_tokens": 360,
   "output_seconds": 36.4,
   "output_tokens_per_second": 9.9
  },

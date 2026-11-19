@@ -152,3 +152,15 @@ def test_a_word_broken_across_a_line_is_still_found_exactly():
         C.locate_sentence(page, "On May 2, 2020, the defendant asked Minor Victim 1 to send sexually explicit videos")
     with pytest.raises(E.QuoteNotFound):                                    # and an ambiguous start is still refused
         C.locate_sentence("He asked for expl-\nicit images now. He asked for explicit images now.", "He asked for explicit images")
+
+
+def test_an_offender_act_coded_on_a_rule_statement_is_dropped_and_logged(monkeypatch):
+    case = "synth_001"
+    pg, first = _sentence(case, "sof", "first contacted")
+    sources, answers = _answers(case, {("sof", pg): [{"s": first, "a": "INITIATE_CONTACT", "by": "the defendant", "r": "offender"}]})
+    spec = C.MODELS["coders"]["coder_A"]
+    kept, _, _ = C.assemble(case, sources, answers, "coder_A", spec)
+    assert [e["action"] for e in kept["events"]] == ["INITIATE_CONTACT"]
+    monkeypatch.setattr(C, "states_a_rule_not_conduct", lambda sentence: True)      # as if the sentence were "the Terms of Service prohibit ..."
+    dropped, _, log = C.assemble(case, sources, answers, "coder_A", spec)
+    assert dropped["events"] == [] and any("states a rule or policy, not conduct" in line for line in log)

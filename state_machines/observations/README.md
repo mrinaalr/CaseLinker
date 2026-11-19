@@ -81,6 +81,25 @@ What gives no relationship:
 
 A platform carries both sides of a conversation, so a clause about the victim ("when Minor Victim 1 wrote back via Kitebox") can still state the means of the offender's act. A feature cannot be borrowed that way.
 
+## Disputed acts
+
+The agreement gate publishes an act only when both coders give the same sentence, action code and actor. A sentence can state a means clearly while the coders disagree on what the act is. Dropping the observation's tie there loses evidence; attaching it to one coder's act would assert something only one model said. So it is kept as its own kind, on the observation:
+
+| Field | Holds |
+|---|---|
+| `contested_act` | the stated means (`relationship`, `cue`), each coder's `action_codes` and `actors` (categories: `charged_defendant`, `co_offender`, `coconspirator`, `third_party`, `collective`), and `dispute`: `action_code`, `actor`, or `not_paired` |
+| `actor_conflict` | the same record where one coder gives the act to `law_enforcement`, the `court`, a `victim` or an `undercover` persona |
+
+Invariants, each checked on every build (`observe.check`) and by tests:
+
+1. **Nothing is tied.** A disputed record has no relationship, makes no act, and creates no affordance individual. It appears in no trajectory, no $O_{i}$, and no count of agreed acts or of use.
+2. **Disagreement is kept, not resolved.** Both coders' codes and actor categories are stored. An actor is never defaulted to the defendant.
+3. **An actor conflict is not offender use.** If either coder attributes the act to a non-offender party, the record is an `actor_conflict`: listed, and excluded from the disputed counts, the graph marker and the affordance matrix.
+4. **The same stated-means rule applies,** in the observation's own sentence, so a denial, a supposed or intended act, a question, quoted words and a rule or policy statement give nothing.
+5. **Only where the coders both acted on the sentence.** Each coder must have coded an offender act citing that sentence. A sentence only one coder coded gives nothing.
+
+A disputed record says: the record states how something was done, two models agree an offender did something there, and they do not agree what. Reading the sentence settles it; the machine does not.
+
 ## Dates
 
 Dates stated in an observation's sentence are kept in the observations file as `dates_in_sentence`: calendar bounds, with no claim about what the date refers to (the act, an account, the investigation, the filing). They are not written to the graph and never enter a timeline. Chronology comes only from the dated acts of level 2.
@@ -97,6 +116,7 @@ No new vocabulary. An observation is a W3C Web Annotation, the pattern the evide
 | feature observation | `oa:Annotation`, `oa:motivatedBy oa:classifying`, `oa:hasBody` the CAC affordance class, `clt:featureTerm` the phrase. The passage is classified; no individual of the class is created |
 | source | `oa:SpecificResource` on the document, page `oa:FragmentSelector` refined by `oa:TextPositionSelector`; `clt:quoteSha256`, `clt:pageTextSha256`, `clt:sourceStatus` |
 | rule | `clt:derivationRule "observe-1.3.0"` on every observation |
+| disputed reading | `clt:reviewStatus "disputed"` on the observation's own annotation. No relationship, no act, no affordance individual. Both coders' action codes and actor categories stay in the observations file and the research table |
 | supported relationship | the canonical relationship (`Carried_Out_Through`, `Moved_To`, `Supports_Action`) under the IRI the evidence graph would use, plus an evidence `oa:Annotation` on the observation's own target |
 
 Graph IRI: `urn:caselinker:pacer:<case>:observations`. A case with nothing observed has no observation graph.
@@ -112,6 +132,7 @@ Graph IRI: `urn:caselinker:pacer:<case>:observations`. A case with nothing obser
 | `described` | Which generic service descriptions do the records use? |
 | `features` | Which feature phrases do the records state, under which class? |
 | `reconstructed` | Which acts did both coders agree on? |
+| `disputed` | Where does a sentence state a means while the two coders dispute the act? |
 | `supported` | Where does a record state that an act was done by means of a platform or feature? |
 
 ```bash
@@ -137,6 +158,8 @@ SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE
 | `platform_withheld` | Services the record refers to by a placeholder. The label means nothing outside the case, and a withheld name is not evidence of anonymity or of any feature |
 | `service_described` | Generic descriptions of an online service. Cited phrases, not platforms, never tied to an act |
 | `feature_stated` | Codebook feature phrases the record states, by affordance class. A mention, not use |
+| `means_stated_act_disputed` | Sentences that state a platform or feature as a means where each coder coded an offender act and they differ on the act; with both coders' codes and actor categories, document, page and offsets. A disputed machine reading, never established conduct |
+| `means_stated_actor_conflict` | The same, where one coder gives the act to an investigator, the court, a victim or a persona. Not offender use by any reading |
 | `used_in_act` | The only rows where the observation rule ties technology to conduct: an agreed act whose own sentence states it was done by means of that platform or feature |
 | `acts` | Agreed acts, offender acts, dated acts, offender action codes, harm codes |
 
@@ -154,6 +177,7 @@ The `/lifecycle` page shows the same things per case ("names 2 platforms, 1 feat
 |---|---|
 | `phrase_stated` | A listed feature phrase of the class is stated in a cited sentence, by the legal standing of the document. A mention |
 | `means_stated_in_act_sentence` | An agreed act's own sentence states the act was done by means of that phrase. This is level C, and it is one rule in both layers |
+| `means_stated_act_disputed` | The sentence states the phrase as a means and each coder coded an offender act in it, but they differ on the act. Counted in sentences, not acts. See [Disputed acts](#disputed-acts) |
 | `in_agreed_act_sentence` | The phrase stands in a sentence that an agreed offender act cites. Co-occurrence only: the sentence may describe what the technology is, another person's use, or a denial |
 
 Each case and class gets one mechanical reading:
@@ -161,11 +185,12 @@ Each case and class gets one mechanical reading:
 | Reading | Meaning |
 |---|---|
 | `means_stated` | an act's own sentence states the feature as its means |
+| `means_stated_act_disputed` | a sentence states the feature as a means; the coders dispute the act, so none is published |
 | `in_act_sentence_only` | the phrase and an agreed act share a sentence; the sentence does not state the feature as the act's means |
 | `stated_only` | the phrase is stated, tied to no act by either layer |
 | `none` | no listed phrase and no coder-agreed act |
 
-A class `needs_researcher_interpretation` when some case reads `in_act_sentence_only` or `stated_only`: the record says something a person has to read. `no_evidence_in_these_records` means every case reads `none`.
+A class `needs_researcher_interpretation` when some case reads `means_stated_act_disputed`, `in_act_sentence_only` or `stated_only`: the record says something a person has to read. `no_evidence_in_these_records` means every case reads `none`.
 
 How not to read it:
 - **Not prevalence.** The classes have phrase lists of different sizes, and the cases are a selected collection. There is no total row and no percentage.
@@ -192,19 +217,19 @@ On the [synthetic benchmark](../benchmark/README.md) (`pipeline bench-observatio
 |---|---:|---:|---:|
 | Gold platform mentions found | 71/71 | 63/63 | 71/71 |
 | Gold feature statements found | 27/27 | 30/30 | 32/32 |
-| Relationships the gold also holds, same kind | 65/66 | 65/69 | 32/33 |
-| Relationships to the right platform, wrong kind | 1 | 0 | 1 |
+| Relationships the gold also holds, same kind | 65/66 | 65/69 | 32/32 |
+| Relationships to the right platform, wrong kind | 1 | 0 | 0 |
 | Relationships to a platform the gold says is only named | 0 | 0 | 0 |
 | Relationships on an act that is not a gold act | 0 | 0 | 0 |
 | Gold relationships found, on published acts | 65/72 | 65/71 | 32/42 |
 
-The benchmark's gold holds no placeholder label and no generic description, and its text holds none, so these rows check that 1.3.0 did not move the platform, feature and relationship results. The two new kinds are covered by unit tests on invented sentences and by the counts below, not by a scored benchmark.
+The benchmark's gold holds no placeholder label, no generic description and no disputed act, and its text holds none, so these rows check that 1.3.0 did not harm the platform, feature and relationship results. The new kinds are covered by unit tests on invented sentences and by the counts below, not by a scored benchmark.
 
 History of the rule, so the numbers can be read correctly:
 - **1.0.0** was developed on dev and scored once on held-out and confirm.
 - **1.1.0** merged aliases and dropped "website", from the audit of the real cases.
 - **1.2.0** followed an independent review that found relationships asserted without a stated means. The relationship rule was rewritten on the reviewer's examples, the dev cases and the structure of the real cases' relationships, and the scorer was made to require the relationship kind. Held-out and confirm are therefore a later look, not a first one.
-- **1.3.0** added placeholder labels and generic descriptions, ties a means only when the act's cited passage stays inside the observation's own sentence, and rejects a clause with no offender in it and a negation between cue and term. Two reviews found these gaps on invented sentences; none had a hit in the 30 cases. Dev and confirm score as under 1.2.0; held-out loses three relationships on acts that are not gold acts (65/72 became 65/69).
+- **1.3.0** added placeholder labels, generic descriptions and the disputed-act record; ties a means only when the act's cited passage stays inside the observation's own sentence; and refuses a clause with no offender acting in it, a negation between cue and term, supposed, intended, questioned and quoted conduct, and a rule or policy statement. Reviews found these gaps on invented sentences, and one in the release: a Terms of Service sentence read as the defendant storing material (`anchorage_pd_2022_007`), now refused in both layers. Dev scores as under 1.2.0; held-out loses three relationships on acts that are not gold acts (65/72 became 65/69); confirm loses its one wrong-kind relationship (32/33 became 32/32).
 
 On the 30 real cases (`pacer-v1`, 98 documents):
 
@@ -215,8 +240,14 @@ On the 30 real cases (`pacer-v1`, 98 documents):
 | of a platform under a placeholder | 176, in 2 cases (5 labels) |
 | of a generic service description | 73, in 18 cases |
 | of a feature phrase | 87, in 13 cases |
-| Acts tied to a platform by a stated means | 10, in 7 cases |
+| Acts tied to a platform by a stated means | 9, in 7 cases |
 | Acts tied to a feature by a stated means | 0 |
+| Sentences stating a platform as a means, act disputed | 59 |
+| Sentences stating a feature as a means, act disputed | 5 |
+| Cases with a disputed-act sentence | 14 |
+| Sentences where one coder gives the act to a non-offender (not counted above) | 12 |
+
+Of the 64 disputed sentences the coders differ on the action code in 25, on the actor in 9, on both in 29, and in 1 they give the same code and actor category without the resolution pairing them. By standing: 38 allegation, 14 admitted, 7 sworn affidavit, 5 advocacy.
 
 By the strongest thing each record gives about a service: 25 cases name a listed platform, 2 give only a generic description, and 3 give nothing (`ncmec_2023_222`, `usss_2023_004`, `wy_dci_2023_005`). Both cases with placeholder labels also name a listed platform.
 
@@ -227,6 +258,6 @@ By the standing of the document: 282 observations are in sworn affidavits, 221 i
 - **Listed terms and fixed forms only.** A service or a feature wording that is not on the lists is not observed, and a placeholder other than "Website" with a letter or number is not taken. All benchmark splits keep platform names and feature terms verbatim, so the rates above measure finding listed terms in new sentence constructions, not recognising new wording.
 - **Machine-read.** No person reviewed these observations on the real text; the release does not depend on such a review. On the five reference cases the three listed platforms the reference coding names were all observed, and the reference names four platform surfaces that are not on the list.
 - **Feature statements are concentrated.** 87 statements in 13 cases, 56 of them one word in one document. The affordance evidence matrix counts cases beside statements for that reason.
-- **Relationships are few because acts are few, and the rule prefers silence.** A relationship needs a published act in that sentence (the release publishes 163 offender acts) and a construction the rule recognises. A true means stated another way is not tied. Six agreed acts share a sentence with a feature phrase (the matrix's `in_agreed_act_sentence` column); in none does the sentence state the feature as the act's means, and a sign-off review showed that three of them describe the technology and not the defendant's use.
+- **Relationships are few because acts are few, and the rule prefers silence.** A relationship needs a published act in that sentence (the release publishes 162 offender acts) and a construction the rule recognises. A true means stated another way is not tied. Six agreed acts share a sentence with a feature phrase (the matrix's `in_agreed_act_sentence` column). A sign-off review showed that three of them describe the technology and not the defendant's use, and a second review read one that does state the feature as the means and that the rule misses: `doj_ceos_2026_001`, act `e149`, observation `o0093` (anonymity, "VPN", admitted): the cue stands 13 words before the term. The rule's finding is "no tie made", not "no record states one".
 - **Three records give nothing about a service.** One case's narrative filings are sealed, and for two CourtListener holds no docket sheet to collect from. A thin record is represented as thin.
 - **Known rough edges with no hit in the 30 cases:** "Line 7" or a surname "Tor" would be observed; a hyphenated feature phrase broken across a line stops the build; a relationship can take a different IRI from the evidence graph's when the two rules disagree on "through" versus "moved to"; "Websites A and B" yields only "Website A".

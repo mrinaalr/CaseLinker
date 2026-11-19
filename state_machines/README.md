@@ -27,7 +27,7 @@ flowchart LR
   traj --> graphs
   graphs --> ox[("Oxigraph<br/>urn:caselinker:pacer:*")]
   traj --> ui["/lifecycle, API, MCP"]
-  theory["theory/<br/>transition systems"] -. "compatibility checks" .-> traj
+  theory["theory/<br/>transition systems"] -. "can be checked against<br/>(not run on the release)" .-> traj
 ```
 
 | Layer | What it holds | README |
@@ -56,7 +56,7 @@ A record supports three different kinds of claim, and each has its own gate. The
 - **A sparse graph is a correct graph.** A case may have observations and no relationship, or acts and no platform.
 - **The record is not the model.** A stated feature documents that the capability appears in the case. Whether it enabled the offence is a question for the [theory](theory/README.md) layer, not a fact in the graph.
 
-Release `pacer-v1` holds all three levels for 30 cases (98 documents): 285 agreed acts, 875 observations, 10 acts tied to a platform by a stated means, a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
+Release `pacer-v1` holds all three levels for 30 cases (98 documents): 284 agreed acts, 875 observations, 9 acts tied to a platform by a stated means, 64 sentences that state a means where the two coders dispute the act (kept apart, as disputed machine readings), a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. Act counts are lower bounds: on the blind benchmark split the release finds 104 of 247 gold acts. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
 
 ## The documented event graph
 
@@ -93,13 +93,13 @@ Three layers of checking, each answering a different question. Passing one says 
 | Layer | Question | Checked by |
 |---|---|---|
 | **Structural** | Is the bundle well formed, and are its views and graphs derived from it deterministically? | JSON Schema, rules T01–T19, CASE-UCO SDK emission, SHACL, `tests/pacer` |
-| **Evidence fidelity** | Does each coded claim say what its cited passage says, with the right standing? | Quote and page hashes (T04), standing per passage (T06), two independent coders and their agreement |
+| **Evidence fidelity** | Does each coded claim say what its cited passage says, with the right standing? | Quote and page hashes (T04), standing per passage (T06), two model coders and their agreement (agreement is not correctness: mean action κ on the real cases is 0.30) |
 | **Resolution** | How were disagreements, open roles and possible retellings settled? | `machine`: a fixed rule publishes only what both coders coded, links possible retellings, keeps open roles open. `adjudicated`: a named reviewer decided each item |
 
 | `review_mode` | Published items | Served on `/lifecycle` and loaded into Oxigraph |
 |---|---|---|
 | `adjudicated` | decided by a named reviewer | yes |
-| `machine` | agreed by two independent coders, resolved by rule | yes, labelled "Machine-coded" |
+| `machine` | agreed by two model coders, resolved by rule | yes, labelled "Machine-coded · two model coders, no human review" |
 | `preview` | anything that validates | no (local stores only) |
 
 A machine-coded release reports reliability (agreement between the coders) and, separately, accuracy on the [synthetic benchmark](benchmark/README.md); neither is accuracy on the real cases. Level-C affordances are documented instrumental support, not causal effects; $\psi$ is co-occurrence within a case.

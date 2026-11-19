@@ -101,7 +101,7 @@ An allegation stays an allegation when the case ends in a conviction. Coder revi
 | T18 | `SAME_ACT` is never DIRECT; an ordered pair warns |
 | T19 | Telephony, email and mail are channels, not platforms |
 
-`release_errors()` adds the release gate: no errors, verified passages, every event and relation adjudicated, no undecided role.
+`release_errors()` adds the release gate: no errors, verified passages, no undecided role, and a review state that fits the mode. In `adjudicated` mode every event and relation is adjudicated; in `machine` mode every event is one both model coders agreed on (`review.status = agreed`), and the release is labelled machine-coded, never adjudicated.
 
 ## Migrating older bundles
 

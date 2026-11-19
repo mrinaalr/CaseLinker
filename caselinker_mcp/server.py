@@ -1322,7 +1322,13 @@ async def get_lifecycle_cases() -> dict[str, Any]:
     feature. ``service_descriptions`` are generic phrases ("social media application"), not
     platforms, and are never tied to an act. Only ``observed.used_in_act`` ties technology to
     conduct: there the act's own sentence states it was done by means of that platform or
-    feature. ``case_id`` is the id of the press release for the same prosecution where the
+    feature. ``observed.means_stated_act_disputed`` is a separate, weaker kind: the sentence
+    states the means and each model coded an offender act in it, but they differ on which act
+    or which offender (both coders' action codes and actor categories are given); no act is
+    published there, and it must be reported as a disputed machine reading, never as
+    established conduct. ``observed.means_stated_actor_conflict`` lists sentences where one
+    model gives the act to an investigator, the court, a victim or a persona: not offender use
+    by any reading. ``case_id`` is the id of the press release for the same prosecution where the
     corpus holds one.
     """
     try:

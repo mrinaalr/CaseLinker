@@ -31,6 +31,8 @@ MEANING = ("platforms, service descriptions and features are what the record nam
 READING = [
     "platform_named, feature_stated and used_in_act are three kinds of evidence; do not add them together",
     "platform_withheld holds services the record refers to by a placeholder (\"Website A\"); the label is the record's and means nothing outside its case; a withheld name is not evidence of anonymity or of any feature",
+    "means_stated_act_disputed is a fourth kind: the sentence states the platform or feature as a means, each coder coded an offender act in that sentence by an offender-side actor, and they differ on which act or which offender; both coders' action codes and actor categories are kept, no act is published there and nothing is tied to one. It is a disputed machine reading, not established conduct, and it never enters an agreed-act count or a trajectory",
+    "means_stated_actor_conflict holds the sentences where one coder gives the act to an investigator, the court, a victim or an undercover persona: whose conduct it was is in dispute, so it is not counted as offender use anywhere",
     "service_described holds generic descriptions (\"social media application\"): cited phrases, not platforms, never tied to an act",
     "a case with platforms named and nothing in used_in_act documents mentions only, not platform-mediated acts",
     "acts are those two model coders agreed on; an absent act is not evidence the act did not happen",
@@ -38,7 +40,11 @@ READING = [
 ]
 CSV_COLUMNS = ["case_id", "documents", "agreed_acts", "offender_acts", "dated_acts", "offender_action_codes", "harm_codes",
                "platforms_named", "platform_mentions", "platforms_withheld", "withheld_platform_mentions", "service_description_mentions", "feature_classes_stated", "feature_statements",
-               "platforms_used_in_an_act", "features_used_in_an_act", "platforms_named_list", "platforms_withheld_list", "service_descriptions_list", "features_stated_list", "used_in_act_list"]
+               "platforms_used_in_an_act", "features_used_in_an_act", "platform_means_stated_act_disputed", "feature_means_stated_act_disputed", "platforms_named_list", "platforms_withheld_list", "service_descriptions_list", "features_stated_list", "used_in_act_list", "means_stated_act_disputed_list", "means_stated_actor_conflict"]
+
+
+def _where(r: dict) -> tuple:
+    return (r["doc_id"], r["pdf_page"], r["char_start"], r["kind"], r.get("platform") or r.get("feature_class"))
 
 
 def case_observed(doc: dict, actions: Dict[str, str] = None) -> dict:
@@ -47,7 +53,19 @@ def case_observed(doc: dict, actions: Dict[str, str] = None) -> dict:
     features: Dict[str, Counter] = {}
     described: Counter = Counter()
     used: List[dict] = []
+    disputed: List[dict] = []
+    conflicts: List[dict] = []
     for o in doc["observations"]:
+        for field, rows in (("contested_act", disputed), ("actor_conflict", conflicts)):
+            c = o.get(field)
+            if not c:
+                continue
+            row = {"relationship": c["relationship"], "kind": o["kind"], "standing": o["source_status"],
+                   "doc_id": o["doc_id"], "pdf_page": o["pdf_page"], "char_start": o["char_start"], "char_end": o["char_end"],
+                   "action_codes": c["action_codes"], "actors": c["actors"], "dispute": c["dispute"],
+                   **({"platform": o["platform"]} if o["kind"] == "platform" else {"feature_class": o["feature_class"], "feature_term": o["feature_term"]})}
+            if row not in rows:
+                rows.append(row)
         if o["kind"] == "platform":
             p = platforms.setdefault(o["platform"], {"mentions": 0, "standing": Counter(), "withheld": bool(o.get("withheld"))})
             p["mentions"] += 1
@@ -69,7 +87,9 @@ def case_observed(doc: dict, actions: Dict[str, str] = None) -> dict:
                           for k, v in sorted(platforms.items())},
             "features": {k: dict(sorted(v.items())) for k, v in sorted(features.items())},
             "service_descriptions": dict(sorted(described.items())),
-            "used_in_act": sorted(used, key=lambda r: (r["event_id"], r["kind"], r.get("platform") or r.get("feature_class")))}
+            "used_in_act": sorted(used, key=lambda r: (r["event_id"], r["kind"], r.get("platform") or r.get("feature_class"))),
+            "means_stated_act_disputed": sorted(disputed, key=_where),
+            "means_stated_actor_conflict": sorted(conflicts, key=_where)}
 
 
 def build(root: Path) -> dict:
@@ -96,6 +116,8 @@ def build(root: Path) -> dict:
             "service_described": observed["service_descriptions"],
             "feature_stated": observed["features"],
             "used_in_act": observed["used_in_act"],
+            "means_stated_act_disputed": observed["means_stated_act_disputed"],
+            "means_stated_actor_conflict": observed["means_stated_actor_conflict"],
             "counts": {"platforms_named": sum(not p.get("withheld") for p in observed["platforms"].values()),
                        "platforms_withheld": sum(bool(p.get("withheld")) for p in observed["platforms"].values()),
                        "platform_mentions": sum(p["mentions"] for p in observed["platforms"].values() if not p.get("withheld")),
@@ -104,7 +126,10 @@ def build(root: Path) -> dict:
                        "feature_classes_stated": len(observed["features"]),
                        "feature_statements": sum(sum(t.values()) for t in observed["features"].values()),
                        "platforms_used_in_an_act": sum(r["kind"] == "platform" for r in observed["used_in_act"]),
-                       "features_used_in_an_act": sum(r["kind"] == "feature" for r in observed["used_in_act"])},
+                       "features_used_in_an_act": sum(r["kind"] == "feature" for r in observed["used_in_act"]),
+                       "platform_means_stated_act_disputed": sum(r["kind"] == "platform" for r in observed["means_stated_act_disputed"]),
+                       "feature_means_stated_act_disputed": sum(r["kind"] == "feature" for r in observed["means_stated_act_disputed"]),
+                       "means_stated_actor_conflict": len(observed["means_stated_actor_conflict"])},
         })
     totals: Counter = Counter()
     for r in rows:
@@ -117,6 +142,7 @@ def build(root: Path) -> dict:
         totals["cases with none of the three"] += not (r["platform_named"] or r["platform_withheld"] or r["service_described"])
         totals["cases stating a feature"] += bool(r["feature_stated"])
         totals["cases with a platform or feature used in an act"] += bool(r["used_in_act"])
+        totals["cases with a means stated where the coders dispute the act"] += bool(r["means_stated_act_disputed"])
         totals["agreed acts"] += r["acts"]["agreed"]
         totals["offender acts"] += r["acts"]["offender"]
         for k, v in r["counts"].items():
@@ -135,13 +161,18 @@ def to_csv(table: dict) -> str:
                     "; ".join(f"{k}={v}" for k, v in r["acts"]["offender_action_codes"].items()), "; ".join(r["acts"]["harm_codes"]),
                     c["platforms_named"], c["platform_mentions"], c["platforms_withheld"], c["withheld_platform_mentions"],
                     c["service_description_mentions"], c["feature_classes_stated"], c["feature_statements"],
-                    c["platforms_used_in_an_act"], c["features_used_in_an_act"],
+                    c["platforms_used_in_an_act"], c["features_used_in_an_act"], c["platform_means_stated_act_disputed"], c["feature_means_stated_act_disputed"],
                     "; ".join(f"{k}={v['mentions']}" for k, v in r["platform_named"].items()),
                     "; ".join(f"{k}={v['mentions']}" for k, v in r["platform_withheld"].items()),
                     "; ".join(f"{k}={v}" for k, v in r["service_described"].items()),
                     "; ".join(f"{cls}:{t}={n}" for cls, terms in r["feature_stated"].items() for t, n in terms.items()),
                     "; ".join(f"{x['action']} {x['relationship']} {x.get('platform') or x['feature_class'] + ':' + x['feature_term']} [{x['standing']}]"
-                              for x in r["used_in_act"])])
+                              for x in r["used_in_act"]),
+                    "; ".join(f"{x['relationship']} {x.get('platform') or x['feature_class'] + ':' + x['feature_term']} "
+                              f"[{x['standing']}; A {'/'.join(x['action_codes']['coder_A'])} by {'/'.join(x['actors']['coder_A'])}; "
+                              f"B {'/'.join(x['action_codes']['coder_B'])} by {'/'.join(x['actors']['coder_B'])}; differ on {' and '.join(x['dispute'])}]"
+                              for x in r["means_stated_act_disputed"]),
+                    len(r["means_stated_actor_conflict"])])
     return out.getvalue()
 
 

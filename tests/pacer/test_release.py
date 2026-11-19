@@ -322,8 +322,20 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
         assert not (c["needs_researcher_interpretation"] and c["no_evidence_in_these_records"])
         assert c["no_evidence_in_these_records"] == (not c["phrase_stated"]["statements"] and not c["means_stated_in_act_sentence"]["acts"])
         assert set(c["in_agreed_act_sentence"]["cases"]) <= set(c["phrase_stated"]["cases"])       # co-occurrence needs a statement
+        assert set(c["means_stated_act_disputed"]["cases"]) <= set(c["phrase_stated"]["cases"])   # a disputed-act sentence is a statement too
+        assert c["means_stated_act_disputed"]["sentences"] == 0                                    # no coder bundles in this build: no tier
     import re
     assert re.fullmatch(r"v\d+\.\d+\.\d+ [0-9a-f]{40}", m["sdk"])                               # the SDK that wrote the graphs, not a comment line
+    import hashlib
+    assert case["bundle_sha256"] == hashlib.sha256((root / "test-v1" / "cases" / f"{F.CASE}.json").read_bytes()).hexdigest()   # the bundle's own hash
+    # with the two coders' bundles at hand the build is the same release plus the disputed tier, and the manifest still names the agreed bundle
+    coders = tmp_path / "coders"
+    for name in ("coder_A", "coder_B"):
+        (coders / name).mkdir(parents=True)
+        (coders / name / f"{F.CASE}.json").write_text(json.dumps(b), encoding="utf-8")
+    m2 = build("test-v1", data_root=root, text_root=tmp_path / "text", observations=True, coders_root=coders)
+    assert m2["cases"][0]["bundle_sha256"] == case["bundle_sha256"]
+    assert {k: v["sha256"] for k, v in m2["cases"][0]["graphs"].items() if k != "observations"} == before
     assert {n: (root / "test-v1" / n).read_text() for n in AM.FILES} == AM.rendered(root / "test-v1")
     assert len((root / "test-v1" / "affordance_case_grid.csv").read_text().splitlines()) == 2
     shutil.rmtree(root / "test-v1" / "cases")                       # no local bundle is needed

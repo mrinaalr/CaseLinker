@@ -48,7 +48,7 @@ from typing import Dict, List, Optional, Tuple
 from state_machines.evidence import evidence as E
 from state_machines.evidence import vocab as V
 from state_machines.evidence.validate import errors, validate
-from state_machines.coding.enrich import enrich, feature, known_platform, stated_prior
+from state_machines.coding.enrich import enrich, feature, known_platform, stated_prior, states_a_rule_not_conduct
 
 HERE = Path(__file__).resolve().parent
 MODELS = json.loads((HERE / "models.json").read_text(encoding="utf-8"))
@@ -497,6 +497,9 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             if action not in _DEF:
                 continue
             fam = V.FAMILY_OF[action]
+            if fam == "offender" and states_a_rule_not_conduct(qn):
+                log.append(f"dropped {doc['doc_id']} p{page_no} {action}: the sentence states a rule or policy, not conduct")
+                continue
             if not act.get("actor"):
                 act["actor"] = {"procedure": "the court", "law_enforcement": "law enforcement",
                                 "response": "minor victim 1"}.get(fam, "the defendant")

@@ -385,6 +385,8 @@ def observation_graph(bundle: dict, doc: dict) -> CASEGraph:
         else:
             body, extra = V.AFFORDANCE_CLASSES[o["feature_class"]], {"oa:motivatedBy": _ref("oa:classifying"), "clt:supportFacet": _CL("feature"),
                                                                     "clt:featureTerm": _CL(o["feature_term"])}
+        if o.get("contested_act"):       # the sentence states this as a means; the coders dispute which act. No relationship is made.
+            extra = {**extra, "clt:reviewStatus": _CL("disputed")}
         g.upsert_node(f"kb:observation-{o['observation_id']}", types=["oa:Annotation"], properties={
             "oa:hasBody": _ref(body), "oa:hasTarget": _ref(target), "clt:assertionStatus": _CL("DIRECT"),
             "clt:derivationRule": _CL(doc["rule"]), **extra, **source})

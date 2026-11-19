@@ -48,7 +48,7 @@ $$
 \psi_{\mathcal{C}}(o)=\{h\in\mathcal{H}_{0}:\exists c\in\mathcal{C},\ o\in\mathrm{Aff}(c)\wedge h\in H(c)\}
 $$
 
-$\mathrm{Aff}(c)$ is the union over a case's chains. $H(c)$ holds the case's minor-directed harm categories $h_{1}$–$h_{6}$. $\psi_{\mathcal{C}}$ records co-occurrence within a case. [`afh.py`](afh.py) also checks the coverage identity $\bigcup_{o}\psi_{\mathcal{C}}(o)=\bigcup_{c:\mathrm{Aff}(c)\neq\varnothing}H(c)$.
+In `pacer-v1` no agreed act's sentence states a feature as its means, so $O_{i}$ and $\mathrm{Aff}(c)$ are empty for every case, $\psi_{\mathcal{C}}$ is empty, and the coverage identity holds vacuously; `release_analysis` reports `cases_with_an_affordance` so that this is visible. $\mathrm{Aff}(c)$ is the union over a case's chains. $H(c)$ holds the case's minor-directed harm categories $h_{1}$–$h_{6}$. $\psi_{\mathcal{C}}$ records co-occurrence within a case. [`afh.py`](afh.py) also checks the coverage identity $\bigcup_{o}\psi_{\mathcal{C}}(o)=\bigcup_{c:\mathrm{Aff}(c)\neq\varnothing}H(c)$.
 
 ## Outputs
 

@@ -7,7 +7,7 @@
 | Corpus | **10,802** case reports from **76** public sources, 2002–2026: ICAC task forces, state attorneys general, state police, NCMEC, DOJ, federal and international agencies |
 | Extracted | **131,910** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
 | Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus 297 PACER court-record graphs |
-| Lifecycles | Federal court records coded as evidence, read as documented trajectories, and checked against the AfH transition-system model |
+| Lifecycles | Federal court records coded as evidence, read as documented trajectories; a separate theory layer implements the AfH transition-system model they can be checked against |
 | Analysis | Platform harm (Q1 affordance → misuse → harm evidence), similarity clusters and automated insights, rule and model triage, 11-dimension facet cohorts |
 | Agents | 62 MCP tools locally, 47 hosted, over stdio, SSE and Streamable HTTP |
 | Code | ~47k lines of Python, ~31k lines of HTML/JS, 61 test files (421 tests) |
@@ -411,10 +411,10 @@ Hand-off: [`ontology/README.md`](ontology/README.md) · [`ontology/docs/SPARQL.m
 
 The press-release corpus answers *what happened at scale*. [`state_machines/`](state_machines/) answers *how an offense moved*, from federal court records.
 
-- **Evidence.** Each case is coded by two coders into a bundle $D=(\Pi,E,R,P,U)$: participants, events with their event roles and dated assertions, relations, page-level provenance with the legal standing of each passage, and an assertion status on every claim. Disagreements, open roles and possible retellings of one act are adjudicated before release.
+- **Evidence.** Each case is coded by two coders into a bundle $D=(\Pi,E,R,P,U)$: participants, events with their event roles and dated assertions, relations, page-level provenance with the legal standing of each passage, and an assertion status on every claim. The published release is machine-coded: two pinned local models code each case and a fixed rule publishes what both coded, labelled as such; a human-adjudicated release is a second mode of the same gate and is not what `pacer-v1` is.
 - **Trajectories.** The documented order is the transitive closure of cited order and dates; trajectories are its maximal chains of offender acts, each step carrying the affordances the record ties to it. Unordered pairs are reported, never forced.
 - **Graphs.** Bundles are emitted as CASE/UCO/CAC with the CASE-UCO SDK, validated with SHACL, and released with a manifest under stable IRIs `urn:caselinker:pacer:<case>:evidence|trajectories|observations`.
-- **Theory.** Finite transition systems for AfH Appendix X; documented trajectories are checked for compatibility with a specified model.
+- **Theory.** Finite transition systems for AfH Appendix X; a documented trajectory can be checked for compatibility with a specified model (`theory.admits_partial_order`); the release does not run that check.
 - **Serving.** `/lifecycle` (public; the current release, machine-coded and labelled as such), the trusted `/api/lifecycle/cases` and `/api/lifecycle/analysis`, and the public manifest at `/api/ontology/pacer`.
 
 These describe the observable enforcement record only: what the court documents say happened, at the standing they say it.

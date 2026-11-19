@@ -164,6 +164,8 @@
     if (parts.length) return parts.join(", ");
     return d ? "describes an online service, names none" : "";
   }
+  const plain = c => c.toLowerCase().replace(/_/g, " ");
+  const coderLine = u => ["coder_A", "coder_B"].map(k => `${k.replace("_", " ")}: ${u.action_codes[k].map(plain).join(", ")} by ${u.actors[k].map(plain).join(", ")}`).join("; ");
   const meansOf = (cs, id) => ((cs.observed || {}).used_in_act || []).filter(u => u.event_id === id);
   const meansText = u => `${RELATION[u.relationship] || u.relationship} ${u.platform || (AFF[u.feature_class].label.toLowerCase() + " (" + u.feature_term + ")")}`;
 
@@ -344,7 +346,7 @@
         toyDiagram(),
         el("p", { class: "eq-note" }, "The worked comparison from Appendix X. Adding ephemerality to the request gives existing sequences new support, ",
           tex("\\Delta_{\\mathrm{path}}(e;P)=\\varnothing"), "; adding generative synthesis opens a sequence with no contact, ",
-          tex("(\\text{synthesize})\\in\\Delta_{\\mathrm{path}}(g;P)"), ". Documented trajectories are checked for compatibility with a specified model.")),
+          tex("(\\text{synthesize})\\in\\Delta_{\\mathrm{path}}(g;P)"), ". A documented trajectory can be checked for compatibility with a specified model; this release does not run that check.")),
       el("div", { class: "theory-links" },
         el("a", { href: REPO + "state_machines/README.md", target: "_blank", rel: "noopener", text: "State machines README" }),
         el("a", { href: REPO + "state_machines/theory/README.md", target: "_blank", rel: "noopener", text: "Theory README" }),
@@ -422,6 +424,16 @@
       features.length ? el("ul", { class: "prov" }, features.map(([cls, terms]) =>
         el("li", { text: `${AFF[cls].label}: ${Object.entries(terms).map(([t, n]) => n > 1 ? `${t} ×${n}` : t).join(", ")}` })))
         : el("p", { class: "detail-none", text: "No listed feature phrase is stated." }),
+      ...((o.means_stated_act_disputed || []).length ? [
+        el("div", { class: "detail-sub", text: "Stated as a means; the coders dispute the act" }),
+        el("ul", { class: "prov" }, o.means_stated_act_disputed.map(u =>
+          el("li", { text: `${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing} · ${coderLine(u)}` }))),
+        el("p", { class: "detail-note", text: "A disputed machine reading, not established conduct. The sentence says how something was done, and each model coded an offender act in it, but they differ on what the act is or which offender did it. No act is shown for these sentences and they enter no trajectory." })] : []),
+      ...((o.means_stated_actor_conflict || []).length ? [
+        el("div", { class: "detail-sub", text: "Stated as a means; the coders differ on whether the offender acted" }),
+        el("ul", { class: "prov" }, o.means_stated_actor_conflict.map(u =>
+          el("li", { text: `${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing} · ${coderLine(u)}` }))),
+        el("p", { class: "detail-note", text: "One model gives the act to an investigator, the court, a victim or an undercover persona. Not counted as offender use anywhere." })] : []),
       el("div", { class: "detail-sub", text: "Stated as the means of an act" }),
       o.used_in_act.length ? el("ul", { class: "prov" }, o.used_in_act.map(u =>
         el("li", { text: `${(cs.events[u.event_id] || {}).label || u.action} · ${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing}` })))

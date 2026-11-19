@@ -141,6 +141,11 @@ def observed_content(release_id: str, pilot: Path = None) -> dict:
         c["distinct case and listed-platform pairs"] += len(o["platforms"])
         c["distinct case and withheld-platform pairs"] += len(o["withheld_platforms"])
         c["observations tied to a published act by a stated means"] += o["observations_tied_to_an_act"]
+        c["observations stating a means in a sentence where each coder coded an offender act and they dispute the act (no act published)"] += o[
+            "observations_stating_a_means_where_the_coders_dispute_the_act"]
+        c["cases with at least one such disputed-act sentence"] += o["observations_stating_a_means_where_the_coders_dispute_the_act"] > 0
+        c["observations stating a means where one coder gives the act to an investigator, the court, a victim or a persona (not counted as offender use)"] += o[
+            "observations_stating_a_means_where_a_coder_gives_the_act_to_a_non_offender"]
         c["cases with at least one such relationship"] += o["observations_tied_to_an_act"] > 0
         for k, v in o["by_standing"].items():
             c[f"observations in documents with standing {k}"] += v
@@ -250,7 +255,9 @@ def _observed_md(ob: dict) -> list:
          "listed platform, refers to a service by a placeholder (\"Website A\", name withheld, a label that means nothing outside its "
          "case), uses a generic description of an online service (\"social media application\"), or states a codebook feature phrase. It "
          "does not say anyone used it, and a withheld name is not evidence of anonymity or of any feature. A relationship exists only "
-         "where a published act's own sentence states the means; a generic description is never tied to an act.", "", "| Content | Count |", "|---|---:|"]
+         "where a published act's own sentence states the means; a generic description is never tied to an act. A disputed-act sentence is a "
+         "separate kind: the sentence states the means and each coder coded an offender act in it, but they differ on the act, so no act is "
+         "published and nothing is tied.", "", "| Content | Count |", "|---|---:|"]
     L += [f"| {k} | {v} |" for k, v in ob["counts"].items()] + [""]
     v = ob.get("validation")
     if v:
@@ -326,7 +333,8 @@ def markdown(r: dict) -> str:
          "on synthetic records ([benchmark](../../benchmark/README.md)). Neither is accuracy on these cases.", "",
          "## What is published", "", "| Content | Count |", "|---|---:|"] + [f"| {k} | {v} |" for k, v in (r.get("published") or {}).items()] + [
          "", "Order between acts comes mostly from cited dates; stated order is published only where a sentence names the earlier act "
-         "or follows it directly. An act with no date and no stated order is unordered, not placed.", "",
+         "or follows it directly. An act with no date and no stated order is unordered, not placed. Act counts are lower bounds: an act is "
+         "published only where both coders give the same sentence, action code and actor, and on the blind benchmark split that finds 104 of 247 gold acts.", "",
          "## Models", "", "| Coder | Model | Digest | Quantization |", "|---|---|---|---|"]
     for name, spec in r["models"]["coders"].items():
         L.append(f"| {name} | `{spec['model']}` | `{spec['digest'][:19]}…` | {spec.get('quantization', '')} |")
