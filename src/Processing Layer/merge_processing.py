@@ -84,7 +84,7 @@ def _gender_extraction():
 def _pattern_processing():
     global _pattern_processing_mod
     if _pattern_processing_mod is None:
-        proc_path = Path(__file__).parent / "Pattern Processing Layer" / "processing.py"
+        proc_path = Path(__file__).parent / "Pattern Processing Layer" / "pattern_processing.py"
         spec = importlib.util.spec_from_file_location("pattern_processing", proc_path)
         mod = importlib.util.module_from_spec(spec)
         assert spec.loader
