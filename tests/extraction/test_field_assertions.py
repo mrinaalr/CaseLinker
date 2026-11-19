@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import sqlite3
+from contextlib import closing
 import sys
 from pathlib import Path
 
@@ -864,7 +865,19 @@ def _hard_case(conn, label):
     return rows[0][0], json.loads(rows[0][1])
 
 
-@pytest.mark.skipif(not DB.exists(), reason="local caselinker.db not present")
+def _corpus_present() -> bool:
+    """A local corpus with cases. Importing run/main.py elsewhere in a whole-suite run creates an
+    empty caselinker.db during collection, so existence alone does not mean a corpus is there."""
+    if not DB.exists():
+        return False
+    try:
+        with closing(sqlite3.connect(f"file:{DB}?mode=ro", uri=True)) as conn:
+            return conn.execute("SELECT COUNT(*) FROM cases").fetchone()[0] > 0
+    except sqlite3.Error:
+        return False
+
+
+@pytest.mark.skipif(not _corpus_present(), reason="no local corpus in caselinker.db")
 @pytest.mark.parametrize("label", sorted(HARD_EXPECTED))
 def test_hard_ten_full_text(label):
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
