@@ -62,6 +62,9 @@ def test_O_i_holds_instrumental_annotations_only(bundle):
     e02 = L["steps"][1]
     assert e02["affordances"] == ["unmonitored_communication"]
     assert e02["action_relevant_affordances"] == [] and e02["available_affordances"] == []   # no registry, no A/B
+    assert e02["claims"]["documented_feature_use"] == ["unmonitored_communication"]
+    assert e02["claims"]["candidate_capabilities"] == [] and e02["claims"]["how_used"] is None
+    assert "unmonitored_communication" not in e02["candidate_affordances"]
 
 
 def test_order_cycle_is_an_error(bundle):

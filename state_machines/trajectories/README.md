@@ -45,6 +45,8 @@ The registry is the one the AfH Q1 work maintains (`research/afh_q1/config/capab
 
 $O_{i}$ is level C only. On `pacer-v1` it is empty: no agreed act's sentence states a feature as the means. That column stays empty. A platform name, and a capability the registry says the platform offered, are not written into it.
 
+Each derived step stores that split in `claims`: `stated_platform_means`, `candidate_capabilities` (level B), `available_on_platform` (level A, excluding B), `documented_feature_use` ($O_{i}$), and `how_used` (always null). `candidate_affordances` on the same step is a coder annotation. It is not a registry candidate and it is not copied into `claims`. The derivation record names the act policy, `intersection-1.0`: an act is in the bundle only when both coders cited the same sentence, action, and actor. The acts in `pacer-v1` were not recoded. `capability_registry_loaded` is false on those files, so their `candidate_capabilities` are empty. That is the registry being absent, not a finding that the platforms offered nothing.
+
 The thing you analyze is the frame beside that column. [`digest.py`](digest.py) reads the committed release and the registry and writes three files. It does not modify the release and it does not emit graphs.
 
 ```bash

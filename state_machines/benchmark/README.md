@@ -75,6 +75,8 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 
 All rows are the resolved coding a machine release publishes. No coded order relation was reversed or undocumented on any split; the ones not counted correct touch an act that is not a gold act.
 
+Re-run on 2026-11-19 from the local coder cache, under the current rules, on all three splits. The resolved event rows were unchanged: dev 187/242 found at 187/188 published, held-out 153/228 at 153/157, confirm 104/247 at 104/110. Confirm observations were unchanged: 71/71 platform mentions found, 32/32 feature statements found, 32/32 supported relationships correct, 32/42 gold relationships found on a published act. This re-run is a check that the current code still produces these rates. Confirm had already been scored, so it is not a new blind result. The 30 real cases were not recoded.
+
 **Reading the confirm row.** On wording the rules had never met, what is published stays right and much less is published. The lost acts, of 247: neither model coded it (34); only one model did (49); both did but named different actors (27) or different codes (31); cited spans that did not pair (2). Victim responses (0 of 14), platform-mention-only acts (0 of 11) and docket procedure entries (20 of 40) are the weakest categories.
 
 ## Limits

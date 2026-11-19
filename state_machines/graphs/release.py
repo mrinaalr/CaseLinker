@@ -79,6 +79,8 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     from state_machines.evidence.validate import release_errors
     from state_machines.graphs.emit import evidence_graph, observation_graph, serialize, trajectory_graph
     from state_machines.graphs.shacl import validation_report
+    from state_machines.trajectories.act_policy import POLICY_ID
+    from state_machines.trajectories.affordances import load as load_registry
     from state_machines.trajectories.derive import RULE_VERSION, derive, derived_json
 
     root = data_root / release_id
@@ -153,7 +155,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     manifest = {
         "manifest_version": MANIFEST_VERSION, "release_id": release_id,
         "schema_version": V.SCHEMA_VERSION, "codebook_version": V.CODEBOOK_VERSION,
-        "derivation_rule": RULE_VERSION, "extension": EXTENSION.name,
+        "derivation_rule": RULE_VERSION, "act_policy": POLICY_ID,
+        "capability_registry_loaded": bool(load_registry().get("platforms")),
+        "extension": EXTENSION.name,
         "sdk": sdk_pin(),
         "review_mode": "preview" if allow_unreviewed else mode,
         "adjudicated": all(set(c["review"]) <= {"adjudicated"} for c in cases),

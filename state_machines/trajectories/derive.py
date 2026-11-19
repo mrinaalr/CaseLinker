@@ -40,6 +40,8 @@ from datetime import date
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 from state_machines.evidence import vocab as V
+from state_machines.trajectories.act_policy import POLICY_ID
+from state_machines.trajectories.claims import claims
 
 RULE_VERSION = "derive-2.0.0"
 MAX_CHAINS_PER_TRACK = 256
@@ -150,6 +152,28 @@ def _step_candidates(event: dict, admissible: Tuple[str, ...]) -> List[str]:
     return sorted({c["candidate"] for c in event.get("candidate_affordances", []) if c["status"] in admissible})
 
 
+def _step(event, index, eid, admissible, registry, event_levels, meets, chain, interrupts) -> Dict[str, Any]:
+    """One chain step. ``claims`` is the same split, under the names the analysis uses.
+
+    ``candidate_affordances`` is what the coders annotated. It is not a registry
+    candidate and it is not O_i. ``claims`` never copies it into either list.
+    """
+    step = {
+        "index": index,
+        "event_id": eid,
+        "action": event["action"],
+        "affordances": step_affordances(event, admissible),   # O_i: level C only
+        **_levels(event, registry, admissible, event_levels),
+        "candidate_affordances": _step_candidates(event, admissible),
+        "outcome": event["outcome"],
+        "immediate_after_previous": bool(index and (chain[index - 1], eid) in meets),
+        "interrupted_by": sorted(interrupts.get(eid, [])),
+        "repetition": (event.get("repetition") or {}).get("kind", "single"),
+    }
+    step["claims"] = claims(step)
+    return step
+
+
 def _levels(event: dict, registry, admissible, event_levels) -> Dict[str, Any]:
     lv = event_levels(event, registry, admissible)
     return {
@@ -229,18 +253,8 @@ def derive(bundle: dict, threshold: str = "DIRECT", registry=None) -> Dict[str, 
         for n, chain in enumerate(chains, 1):
             trajectories.append({
                 "trajectory_id": f"{track['track_id']}.L{n}",
-                "steps": [{
-                    "index": i,
-                    "event_id": eid,
-                    "action": events[eid]["action"],
-                    "affordances": step_affordances(events[eid], admissible),   # O_i: level C only
-                    **_levels(events[eid], registry, admissible, event_levels),
-                    "candidate_affordances": _step_candidates(events[eid], admissible),
-                    "outcome": events[eid]["outcome"],
-                    "immediate_after_previous": bool(i and (chain[i - 1], eid) in meets),
-                    "interrupted_by": sorted(interrupts.get(eid, [])),
-                    "repetition": (events[eid].get("repetition") or {}).get("kind", "single"),
-                } for i, eid in enumerate(chain)],
+                "steps": [_step(events[eid], i, eid, admissible, registry, event_levels, meets, chain, interrupts)
+                          for i, eid in enumerate(chain)],
             })
         unordered = sorted((a, b) for a in steps for b in steps
                            if a < b and b not in reach[a] and a not in reach[b])
@@ -257,7 +271,9 @@ def derive(bundle: dict, threshold: str = "DIRECT", registry=None) -> Dict[str, 
         })
     return {
         "case_id": bundle["case_id"],
-        "derivation": {"rule_version": RULE_VERSION, "threshold": threshold, "date_order_pairs": len(dated),
+        "derivation": {"rule_version": RULE_VERSION, "act_policy": POLICY_ID, "threshold": threshold,
+                       "date_order_pairs": len(dated),
+                       "capability_registry_loaded": bool(registry.data.get("platforms")),
                        "capability_registry_sha256": hashlib.sha256(json.dumps(registry.data, sort_keys=True, default=str).encode()).hexdigest(),
                        "codebook_version": bundle["codebook_version"], "input_sha256": bundle_sha256(bundle)},
         "tracks": tracks_out,
