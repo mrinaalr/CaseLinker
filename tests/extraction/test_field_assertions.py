@@ -25,6 +25,11 @@ for sub in ("src", "src/Processing Layer", "src/Storage Layer", "src/Ingestion L
 import processing  # noqa: E402
 
 A = processing.assertions_module
+
+# spaCy-dependent results: skip, with the loader's reason, where spaCy cannot load
+# (Python 3.14 today: its pydantic.v1 layer does not support 3.14). Ingest needs spaCy; use 3.12.
+needs_spacy = pytest.mark.skipif(A.spacy_patterns.load_spacy() is None,
+                                 reason=f"spaCy unavailable: {A.spacy_patterns._nlp_error}")
 LLM = processing.llm_module
 
 # --- verbatim excerpts ------------------------------------------------------
@@ -353,6 +358,7 @@ def test_self_contradiction_hold_is_not_labeled_unknown():
     assert reasons == ["self_contradiction"]
 
 
+@needs_spacy
 def test_imposed_sentence_attaches_to_the_person_sentenced_not_the_judge():
     text = (
         "U.S. District Judge Drew K. Bredar sentenced Parker Jordan Underhay, 38, of Parkville, "
@@ -366,6 +372,7 @@ def test_imposed_sentence_attaches_to_the_person_sentenced_not_the_judge():
     assert by_value.get("27 years") and by_value["27 years"].split()[-1] != defendant[-1]
 
 
+@needs_spacy
 def test_imposed_sentences_attach_to_the_subject_defendant():
     """Each imposed term keeps a defendant on the assertion. The legacy list stays strings."""
     case, res = run(SR_AND_SON, "suffix_father_son")
@@ -468,6 +475,7 @@ def test_pictured_child_who_was_later_found_stays_depicted():
     assert (3, "depicted_in_material") in excluded(res)
 
 
+@needs_spacy
 def test_adult_crime_victim_is_not_a_csea_victim():
     # us_marshals_2025_016 class: "sexual assault of a 76-year-old woman"
     text = (
