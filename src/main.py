@@ -73,11 +73,13 @@ def main():
         traceback.print_exc()
 
 
-def run_pipeline(file_paths: List[str]) -> None:
+def run_pipeline(file_paths: List[str]) -> Dict[str, int]:
     """
     Run ingest → process → store → optional clusters for the given PDF paths.
 
     Safe to call repeatedly in one process (models stay warm after first group).
+    Returns ``{"parsed", "attempted", "stored"}``: cases found, cases left after the
+    duplicate-URL gate, and cases written. A run is complete when ``stored == attempted``.
     """
     print("\n" + "="*60)
     print("Step 1: Ingesting PDF(s)...")
@@ -121,7 +123,8 @@ def run_pipeline(file_paths: List[str]) -> None:
     print("Step 3: Storing cases in database...")
     print("="*60)
     db_path = get_database_path()
-    stored_count = store_cases(cases, db_path, ingest_paths=file_paths)
+    counts: Dict[str, int] = {}
+    stored_count = store_cases(cases, db_path, ingest_paths=file_paths, counts=counts)
     print(f"✓ Stored {stored_count}/{len(cases)} cases in database")
 
     print("\n" + "="*60)
@@ -178,6 +181,8 @@ def run_pipeline(file_paths: List[str]) -> None:
             print(f"⚠️  Warning: Could not pre-compute clusters: {e}")
             import traceback
             traceback.print_exc()
+    return {"parsed": len(cases), "attempted": counts.get("attempted", len(cases)),
+            "stored": counts.get("stored", stored_count)}
 
 
 def get_database_path() -> Optional[str]:
@@ -205,6 +210,7 @@ def store_cases(
     db_path: Optional[str],
     *,
     ingest_paths: Optional[Sequence[str]] = None,
+    counts: Optional[Dict[str, int]] = None,
 ) -> int:
     """
     Store cases in the database.
@@ -218,6 +224,8 @@ def store_cases(
         db_path: Path to database file (SQLite) or None (PostgreSQL)
         ingest_paths: Original PDF paths supplied to the ingest command. These
             retain the directories that case source_file basenames omit.
+        counts: When given, filled with ``attempted`` (cases left after the
+            duplicate-URL gate) and ``stored``.
         
     Returns:
         Number of successfully stored cases
@@ -268,6 +276,8 @@ def store_cases(
         print(f"⚠️  Provenance attach skipped (ingest continues): {exc}")
 
     stored_count = storage.store_cases(cases_to_store)
+    if counts is not None:
+        counts.update(attempted=len(cases_to_store), stored=stored_count)
     return stored_count
 
 

@@ -97,7 +97,6 @@ def _grounding(case_id: str):
     )
     out["charge_inferred_events"] = sum(1 for s in {s for s, _p, _o in triples} if "/offense-event/" in str(s))
     out["cybertip_reports"] = sum(1 for _s, p, o in triples if p == RDF.type and str(o).endswith("#NCMECCybertipReport"))
-    out["shared_ungrounded_locations"] = 0  # ungrounded mentions are case-scoped by construction
     out["triples"] = len(triples)
     return dict(out)
 
