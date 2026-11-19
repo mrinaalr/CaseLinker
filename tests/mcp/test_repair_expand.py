@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import sqlite3
 import subprocess
 import sys
@@ -297,3 +298,138 @@ def test_the_tools_are_registered_on_local_mcp(corpus):
     assert out["tool_kind"] == "READ" and out["corpus"]["cases"] == 3
     for name in ("diagnose_case", "profile_new_source", "scaffold_extension", "run_gate"):
         assert callable(getattr(server, name))
+
+
+# --- pattern-layer fields ----------------------------------------------------------
+
+PRIOR = ("Corin Ashcombe, 34, a previously convicted sex offender, was arrested. "
+         "He has two prior felony convictions.")
+
+
+@pytest.fixture
+def prior_corpus(tmp_path: Path, monkeypatch) -> Path:
+    path = tmp_path / "prior.db"
+    storage = CaseStorage(str(path))
+    assert storage.store_case({"id": "prior_case", "source": "TEST",
+                               "raw_data": {"source_file": "t.pdf", "case_text": PRIOR, "case_id": "prior_case"},
+                               "extracted_features": {"previous_conviction": None}})
+    monkeypatch.setenv("CASELINKER_DB", str(path))
+    return path
+
+
+def test_describe_lists_pattern_layer_fields_with_their_extractor(corpus):
+    d = R.describe_pipeline()
+    fields = {f["field"]: f for f in d["pattern_layer_fields"]["fields"]}
+    prev = fields["previous_conviction"]
+    assert prev["extractor"] == "extract_previous_conviction"
+    assert re.search(r"processing\.py:\d+$", prev["defined_in"])
+    assert "processing.py:" in prev["set_in"]
+    stored_fields = next(r for r in d["reserved_for_maintainer"] if r["decision"].startswith("a new stored field"))
+    assert "previous_conviction" in stored_fields["today"]
+
+
+def test_diagnose_replays_a_pattern_layer_field_with_masked_matches(prior_corpus):
+    out = R.diagnose_case("prior_case", field="previous_conviction")
+    f = out["fields"]["previous_conviction"]
+    assert f["kind"] == "pattern_layer"
+    assert f["stored"] is None and f["replay"]["has_prior_conviction"] is True
+    assert f["changed_if_reextracted"] is True
+    names = {p["pattern"] for p in f["patterns"]}
+    assert "_PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE" in names
+    excerpts = " ".join(m["excerpt"] for p in f["patterns"] for m in p["matches"])
+    assert "Ashcombe" not in excerpts and "previously convicted sex offender" in excerpts
+    assert out["where_to_look"]["extractor"] == "extract_previous_conviction"
+    assert out["write"] is False
+
+
+def test_diagnose_names_pattern_layer_fields_when_a_field_is_unknown(prior_corpus):
+    out = R.diagnose_case("prior_case", field="no_such_field")
+    assert "error" in out and "previous_conviction" in out["pattern_layer_fields"]
+
+
+def test_replay_values_are_short_and_never_release_text():
+    assert R._moved_value("admissions", '"he said"', '"she said"') == {
+        "shown": False, "reason": "may hold release text; read it with diagnose_case"}
+    long = '"' + "x" * 1000 + '"'
+    shown = R._moved_value("relationship_to_victim", None, long)
+    assert shown["before"] is None and len(shown["after"]) == R._MAX_VALUE + 1
+
+
+def test_replay_values_say_what_moved_in_lists_and_dicts():
+    moved = R._moved_value("agencies_involved", json.dumps(["Sheriff's Office", "FBI"]),
+                           json.dumps(["Camden County Sheriff's Office", "FBI"]))
+    assert moved == {"removed": ["Sheriff's Office"], "added": ["Camden County Sheriff's Office"], "count": [2, 2]}
+    moved = R._moved_value("previous_conviction", json.dumps(None),
+                           json.dumps({"is_registered": False, "has_prior_conviction": True}))
+    assert moved == {"before": "null", "after": '{"is_registered": false, "has_prior_conviction": true}'}
+    moved = R._moved_value("previous_conviction", json.dumps({"is_registered": True, "has_prior_conviction": False}),
+                           json.dumps({"is_registered": True, "has_prior_conviction": True}))
+    assert moved == {"keys": {"has_prior_conviction": {"before": "false", "after": "true"}}}
+
+
+AGENCIES = ("Detectives with the Riverton Police Department and the Kentucky State Police arrested "
+            "Corin Ashcombe, 34, after a tip from the Federal Bureau of Investigation.")
+
+
+@pytest.fixture
+def agency_corpus(tmp_path: Path, monkeypatch) -> Path:
+    path = tmp_path / "agency.db"
+    storage = CaseStorage(str(path))
+    assert storage.store_case({"id": "agency_case", "source": "TEST",
+                               "raw_data": {"source_file": "t.pdf", "case_text": AGENCIES, "case_id": "agency_case"}})
+    monkeypatch.setenv("CASELINKER_DB", str(path))
+    return path
+
+
+def test_pattern_layer_replay_goes_through_the_merge_and_full_adds_ner(agency_corpus):
+    fast = R.diagnose_case("agency_case", field="agencies_involved")
+    assert "pattern_layer_only" in fast["fields"]["agencies_involved"]
+    assert "ner_stanza" in fast["readers_not_replayed"]
+    if R._pipeline().create_primary_ner_extractor() is None:
+        pytest.skip("Stanza NER not installed")
+    full = R.diagnose_case("agency_case", field="agencies_involved", full=True)
+    assert "ner_stanza" not in full["readers_not_replayed"]
+    replay = full["fields"]["agencies_involved"]["replay"]
+    assert any("Riverton" in a for a in replay), replay
+    assert len(replay) > len(fast["fields"]["agencies_involved"]["replay"] or [])
+
+
+def test_replay_shards_keep_order_and_a_failed_child_fails_its_side(monkeypatch):
+    calls = []
+
+    def fake_child(payload, timeout):
+        calls.append((payload["root"], [d["case_id"] for d in payload["docs"]]))
+        if payload["root"] == "bad" and "c3" in [d["case_id"] for d in payload["docs"]]:
+            return {"failed": "boom"}
+        return {"cases": [{"case_id": d["case_id"]} for d in payload["docs"]], "errors": []}
+
+    monkeypatch.setattr(R, "_run_child", fake_child)
+    docs = [{"case_id": f"c{i}"} for i in range(7)]
+    out = R._run_replay({"base": {"root": "ok", "docs": docs}, "checkout": {"root": "bad", "docs": docs}},
+                        shards=3, timeout=5)
+    assert [c["case_id"] for c in out["base"]["cases"]] == [f"c{i}" for i in range(7)]
+    assert out["checkout"]["failed"] == "boom"
+    assert len(calls) == 6 and all(len(ids) <= 3 for _, ids in calls)
+    assert R._shards(full=True) == 1 and R._shards(full=False) >= 1
+
+
+def test_a_resolved_field_the_change_adds_reads_as_none_before():
+    moved = R._moved_resolutions({"age": ["resolved", "a"]},
+                                 {"age": ["resolved", "a"], "prior_history": ["resolved", "b"]})
+    assert moved == {"prior_history": {"before": None, "after": "resolved"}}
+    assert R._moved_resolutions({"x": ["resolved", "c"]}, {}) == {"x": {"before": "resolved", "after": None}}
+
+
+def test_a_new_field_that_finds_nothing_is_not_a_change():
+    assert R._moved_resolutions({}, {"prior_history": ["empty", "x"]}) == {}
+
+
+def test_the_base_replay_tree_holds_files_extraction_reads_outside_src():
+    cmd = R._base_archive_cmd("HEAD")
+    listed = subprocess.run(cmd[:3] + ["--format=tar", "--", *cmd[4:]], capture_output=True,
+                            cwd=R._REPO_ROOT, check=True).stdout
+    import io
+    import tarfile
+    names = tarfile.open(fileobj=io.BytesIO(listed)).getnames()
+    assert "scripts/verify/extraction/hint_source_policy.json" in names
+    assert not any(n.startswith("ontology/graph_output/") for n in names)

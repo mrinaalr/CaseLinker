@@ -4,6 +4,7 @@ Provides fast, shared caching for static visualization endpoints
 """
 import json
 import os
+import sys
 import redis
 from typing import Any, Optional
 from functools import wraps
@@ -57,11 +58,11 @@ try:
     
     # Log connection info (without sensitive data)
     redis_host = REDIS_URL.split('@')[-1] if '@' in REDIS_URL else REDIS_URL.split('://')[-1]
-    print(f"✅ Redis cache connected successfully ({redis_host})")
+    print(f"✅ Redis cache connected successfully ({redis_host})", file=sys.stderr)
 except Exception as e:
-    print(f"⚠️  Redis not available: {e}")
-    print("   Falling back to direct database queries (slower)")
-    print("   To enable caching: Add Redis service in Railway or set REDIS_URL environment variable")
+    print(f"⚠️  Redis not available: {e}", file=sys.stderr)
+    print("   Falling back to direct database queries (slower)", file=sys.stderr)
+    print("   To enable caching: Add Redis service in Railway or set REDIS_URL environment variable", file=sys.stderr)
     REDIS_AVAILABLE = False
     redis_client = None
 
@@ -99,7 +100,7 @@ def get_case_count(storage_instance=None) -> int:
             db_conn.close()
             return count
     except Exception as e:
-        print(f"⚠️  Error getting case count: {e}")
+        print(f"⚠️  Error getting case count: {e}", file=sys.stderr)
         return 0
 
 
@@ -128,11 +129,11 @@ def get_cached(key: str) -> Optional[Any]:
                 return json.loads(cached)
     except redis.ConnectionError as e:
         # Connection lost - mark as unavailable for this request
-        print(f"⚠️  Redis connection lost: {e}")
+        print(f"⚠️  Redis connection lost: {e}", file=sys.stderr)
         return None
     except Exception as e:
         # Other errors - log but don't crash
-        print(f"⚠️  Redis get error: {e}")
+        print(f"⚠️  Redis get error: {e}", file=sys.stderr)
     return None
 
 
@@ -152,11 +153,11 @@ def set_cached(key: str, value: Any, ttl: int = 3600) -> bool:
         return True
     except redis.ConnectionError as e:
         # Connection lost - mark as unavailable
-        print(f"⚠️  Redis connection lost: {e}")
+        print(f"⚠️  Redis connection lost: {e}", file=sys.stderr)
         return False
     except Exception as e:
         # Other errors - log but don't crash
-        print(f"⚠️  Redis set error: {e}")
+        print(f"⚠️  Redis set error: {e}", file=sys.stderr)
     return False
 
 
@@ -171,7 +172,7 @@ def invalidate_cache_pattern(pattern: str) -> int:
             return redis_client.delete(*keys)
         return 0
     except Exception as e:
-        print(f"⚠️  Redis invalidation error: {e}")
+        print(f"⚠️  Redis invalidation error: {e}", file=sys.stderr)
     return 0
 
 

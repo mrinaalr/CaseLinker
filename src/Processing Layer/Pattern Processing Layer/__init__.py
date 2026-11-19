@@ -11,7 +11,7 @@ This layer handles:
 - Comparison value assignment for similarity calculation
 """
 
-from .processing import (
+from .pattern_processing import (
     case_batching,
     process_cases,
     extract_features,

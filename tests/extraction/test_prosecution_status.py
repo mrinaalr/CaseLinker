@@ -79,6 +79,13 @@ def test_stage_words_that_are_not_this_cases_outcome(text, expected):
         ("The judge ordered 1 to 15 years in prison. Vantreece had previously pleaded guilty to two counts.",
          "pleaded_guilty"),
         ("Local man pleads guilty to receiving child pornography", "pleaded_guilty"),
+        # #61, nz_dia / scotland_police / nca: a term with no "sentenced"
+        ("A Tauranga man was jailed yesterday for two years and two months after pleading guilty.", "sentenced"),
+        ("He pleaded guilty and was jailed for three-and-a-half years.", "sentenced"),
+        ("Halvorsen was convicted and imprisoned for 18 months.", "sentenced"),
+        # A headline or a maximum penalty is not a term
+        ("Man jailed for possessing child sex abuse images. He pleaded guilty in May.", "pleaded_guilty"),
+        ("He pleaded guilty and could be jailed for 10 years.", "pleaded_guilty"),
     ],
 )
 def test_real_outcomes_are_kept(text, expected):

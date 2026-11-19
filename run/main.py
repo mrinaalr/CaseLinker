@@ -40,7 +40,7 @@ if str(_RUN_DIR) not in sys.path:
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Storage Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Clustering & Analysis Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Visualization Layer"))
-# Processing Layer only — not Pattern Processing Layer (would shadow processing.py wrapper).
+# Processing Layer (the processing.py wrapper and its siblings).
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Processing Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "scripts" / "run"))
 
@@ -3440,7 +3440,7 @@ def _technology_revolver_payload_dict(
         "chambers": chambers_out,
         "bucket_keys": list(_TECH_REVOLVER_BUCKETS),
         "extraction_code_hook": (
-            "src/Processing Layer/Pattern Processing Layer/processing.py — "
+            "src/Processing Layer/Pattern Processing Layer/pattern_processing.py — "
             "extract_platforms() (column platforms_used) and extract_technology_signals() "
             "(investigation_technology, anonymization_network, p2p_clients in extracted_features)."
         ),
@@ -3565,7 +3565,7 @@ def get_technology_revolver(request: Request):
             "chambers": [],
             "bucket_keys": list(_TECH_REVOLVER_BUCKETS),
             "extraction_code_hook": (
-                "src/Processing Layer/Pattern Processing Layer/processing.py — "
+                "src/Processing Layer/Pattern Processing Layer/pattern_processing.py — "
                 "extract_platforms() / extract_technology_signals()"
             ),
             "coverage_note": None,
