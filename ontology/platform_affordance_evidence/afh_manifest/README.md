@@ -12,21 +12,25 @@ flowchart LR
   A --> O[outputs/*.json, records.csv]
   D --> O
   O --> R[RUN_IDENTITY.json<br/>snapshot + code + output hashes]
+  S -->|classify| P[public/<br/>text-free, committed]
+  P -->|--public| O
 ```
 
 ## Reproduce
 
-Needs Python 3.12 with PyYAML 6.0.3 (nothing else: verified in a fresh virtualenv) and a CaseLinker SQLite corpus. Tests need pytest; the LaTeX check needs pdflatex and skips without it.
+Needs Python 3.12 with PyYAML 6.0.3 (nothing else: verified in a fresh virtualenv). Tests need pytest; the LaTeX check needs pdflatex and skips without it.
 
-```bash
-python ontology/platform_affordance_evidence/afh_manifest/run_all.py --export
-```
+| Command | Needs | Does |
+|---|---|---|
+| `run_all.py --public` | this repo | Rebuilds every output from the committed text-free `public/` snapshot |
+| `run_all.py --verify --public` | this repo | The same into a temp directory; prints `identical` or the files that differ |
+| `run_all.py --snapshot afh-2.0` | a `CaseLinker-Key` | Downloads that era's frozen full-text snapshot, checks its sha256 against [`snapshots.json`](snapshots.json), and rebuilds everything, the classifier included |
+| `run_all.py --export` | a CaseLinker SQLite corpus | Snapshots the current corpus and builds a new release from it |
+| `run_all.py --verify` | `data/snapshot.sqlite` | Reruns the classifier from the full snapshot and compares with `outputs/` |
 
-```bash
-python ontology/platform_affordance_evidence/afh_manifest/run_all.py --verify
-```
+`public/` holds each case's id, `fp-1` fingerprint, source, URL, publication year, platform labels, topics and date roles, every platform-case record's classification (tiers, conduct, affordance levels, harm flags, sentence offsets), and the exclusions. It holds no release text and no person spans. A `--public` build writes every output except `legacy_afh1_exemplars.json`, which resolves old case ids against release text. Each record's evidence sentence is served masked in [`platform_affordance_evidence.json`](../platform_affordance_evidence.json); the release itself is at its source URL.
 
-`--export` copies the columns the analysis reads from `../CaseLinker/caselinker.db` (or `AFH_Q1_SOURCE_DB=/path/to/caselinker.db`), opened read-only, into `ontology/platform_affordance_evidence/afh_manifest/data/snapshot.sqlite`. `--verify` refuses to run unless that snapshot's `dataset_identity` equals the one in [outputs/RUN_IDENTITY.json](outputs/RUN_IDENTITY.json), rebuilds every output in a temp directory and prints `identical` or the files that differ. A plain `run_all.py` rewrites `outputs/`.
+`--export` copies the columns the analysis reads from `../CaseLinker/caselinker.db` (or `AFH_Q1_SOURCE_DB=/path/to/caselinker.db`), opened read-only, into `data/snapshot.sqlite`, and a full build rewrites `public/` from it. `--verify` refuses to run unless the snapshot's `dataset_identity` equals the one in `outputs/RUN_IDENTITY.json`.
 
 | Pin | Where |
 |---|---|
@@ -35,9 +39,9 @@ python ontology/platform_affordance_evidence/afh_manifest/run_all.py --verify
 | Rules | `config/platforms.yaml`, `config/codebook.yaml`; evidence tiers `tiers-1` (baseline) and `tiers-1+linewrap-3` (primary); sha256 in `RUN_IDENTITY.json` |
 | Outputs | `RUN_IDENTITY.json` `outputs_sha256`, checked by `--verify` |
 
-### Snapshot archive
+### Frozen eras
 
-Figures are reproducible only from the snapshot that produced them. A corpus rebuild renumbers case ids and changes `dataset_identity`, so `--export` from a rebuilt corpus is a new release, not a reproduction. `--verify` needs only `data/snapshot.sqlite`, not the corpus DB. The file holds full release text: it is gitignored and belongs in a restricted-access deposit cited by its sha256. To reproduce, place it at `data/snapshot.sqlite`, check `shasum -a 256`, and run `run_all.py --verify`.
+The corpus keeps changing after a release, so `--export` from a later corpus is a new release, not a reproduction. Each era's full-text snapshot is frozen when its outputs are committed: the file is served to `CaseLinker-Key` holders at `GET /api/snapshots/<era>` (from `CASELINKER_SNAPSHOT_DIR` on the server, same access as `/api/corpus`), and [`snapshots.json`](snapshots.json) records its sha256, `dataset_identity`, case count and date. The file holds full release text and is never committed. `--snapshot <era>` refuses a download whose sha256 differs from the registry.
 
 Tests (pytest and the repo requirements; corpus-dependent tests skip without `caselinker.db`):
 
@@ -45,7 +49,7 @@ Tests (pytest and the repo requirements; corpus-dependent tests skip without `ca
 DATABASE_URL='' python -m pytest -q tests/research tests/privacy tests/api tests/extraction/test_program_boilerplate_dates.py tests/extraction/test_field_assertions.py
 ```
 
-A different corpus gives a different `dataset_identity`; the outputs are then a new release, not a reproduction. Output tests skip until outputs are built; snapshot tests skip without the snapshot.
+A different corpus gives a different `dataset_identity`; the outputs are then a new release, not a reproduction. Output tests skip until `outputs/` is built; snapshot tests skip without `data/snapshot.sqlite`.
 
 The snapshot holds source text and stays out of git. Share it only under the same access rules as `caselinker.db`.
 
@@ -71,7 +75,7 @@ Generated locally by `run_all.py` and not committed. `\input{}` each table insid
 | `config/codebook.yaml` | Six-class definitions, conduct categories, instrumental cues, exclusions, harm cues |
 | `config/review_exemplars.csv`, `review_round3_tier_variants.csv`, `review_round4_promoted_cases.csv`, `capability_sources/manuscript_claims_verified.csv` | Blind review of every manifest exemplar; stated, co-occurrence and line-wrap-promoted samples behind the headline rates; 25 manuscript platform claims checked on fetched dated pages |
 | `config/validation_reviews.csv`, `review_round2_*.csv`, `validation_adjudication.csv` | First and second blind AI reviews (classification, harm, tiers, inferred facilitation) and the author agent's resolution of disagreements; no human adjudication. Ids, fingerprints, verdicts and short notes only. |
-| `afhq1/snapshot.py` | Read-only export and `dataset_identity` |
+| `afhq1/snapshot.py` | Read-only export, `dataset_identity`, and the text-free `public/` snapshot |
 | `afhq1/pipeline.py` | Eligibility, tiers (via the published Q1 builder), A/B/C levels, harm flags |
 | `afhq1/temporal.py` | Date roles from `temporal_tags` 1.1.0 |
 | `afhq1/identity.py`, `citations.py` | Content crosswalk for AfH 1.0 ids; fingerprint-bound citations |

@@ -15,9 +15,13 @@ from . import identity as idn
 from . import pipeline as pl
 from . import review as rv
 from . import temporal as tmp
+from . import snapshot as snap
 from .snapshot import REPO, RESEARCH, connect, iter_cases, snapshot_meta
 
 OUT = RESEARCH / "outputs"
+PUBLIC = snap.PUBLIC
+# Written only from the full snapshot: it resolves old ids against release text.
+TEXT_ONLY_OUTPUTS = ("legacy_afh1_exemplars.json",)
 ERAS = (("2002-2014", 2002, 2014), ("2015-2019", 2015, 2019), ("2020-2022", 2020, 2022), ("2023-2026", 2023, 2026))
 USED = ("stated", "inferred")
 MIN_MANIFEST_CASES = 3
@@ -453,12 +457,12 @@ def write_records_csv(records: List[pl.Record]) -> Path:
     return path
 
 
-def build(log=print) -> dict:
+def classify_snapshot(log=print):
+    """Classify every case in the full snapshot (needs release text)."""
     con = connect()
     meta = snapshot_meta(con)
     fingerprints = dict(con.execute("SELECT case_id, fingerprint FROM fingerprints"))
     cases = list(iter_cases(con))
-    texts = {c["id"]: c["text"] for c in cases}
     reg = pl.platform_registry()
     cb = pl.Codebook.load()
     records, excluded = [], []
@@ -471,6 +475,19 @@ def build(log=print) -> dict:
         raise SystemExit(f"platform labels missing from config/platforms.yaml: {unregistered}")
     log(f"records={len(records)}")
     dates = {c["id"]: tmp.case_dates(c["text"], c["pub_year"]) for c in cases}
+    return meta, cases, fingerprints, records, excluded, dates
+
+
+def build(log=print, public: bool = False) -> dict:
+    """Write every output. ``public=True`` reads the committed text-free snapshot instead of
+    data/snapshot.sqlite and skips TEXT_ONLY_OUTPUTS; the full build also rewrites the public snapshot."""
+    if public:
+        meta, cases, fingerprints, records, excluded, dates = snap.load_public(PUBLIC)
+    else:
+        meta, cases, fingerprints, records, excluded, dates = classify_snapshot(log)
+        snap.write_public(PUBLIC, meta, cases, fingerprints, records, excluded, dates)
+    texts = {c["id"]: c["text"] for c in cases}
+    cb = pl.Codebook.load()
     OUT.mkdir(parents=True, exist_ok=True)
     dump("inventory.json", inventory(cases, records, excluded, dates))
     dump("affordance_coverage.json", affordance_coverage(records))
@@ -484,7 +501,8 @@ def build(log=print) -> dict:
     dump("exemplar_inventory.json", exemplar_inventory(man))
     dump("registry_checks.json", {**registry_checks(), "uncertain_impact": uncertain_registry_impact(records)})
     cit.dump(cites, OUT / "citations.json")
-    dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
+    if not public:
+        dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
     dump("validation_round2.json", validation_round2(records))
     dump("validation_sample.json", rv.sample_rows(records))

@@ -24,6 +24,10 @@ RESEARCH = HERE.parent
 REPO = RESEARCH.parents[2]
 DATA = RESEARCH / "data"
 SNAPSHOT = DATA / "snapshot.sqlite"
+# Text-free public snapshot, committed: case metadata, fingerprints, every record's classification,
+# exclusions and date roles. Every output except legacy_afh1_exemplars.json rebuilds from it exactly.
+PUBLIC = RESEARCH / "public"
+PUBLIC_CASE_FIELDS = ("id", "fingerprint", "source", "source_url", "pub_year", "platforms", "topics")
 
 # The main checkout holds the corpus DB; a worktree does not (gitignored).
 DEFAULT_SOURCE_DB = Path(
@@ -152,3 +156,52 @@ def iter_cases(conn: sqlite3.Connection) -> Iterator[Dict[str, Any]]:
             "platforms": json.loads(plats or "[]"), "topics": json.loads(topics or "[]"),
             "person_spans": json.loads(spans) if spans else None,
         }
+
+
+def _jsonl(path: Path, rows) -> None:
+    with path.open("w", encoding="utf-8", newline="\n") as f:
+        for row in rows:
+            f.write(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n")
+
+
+def _read_jsonl(path: Path):
+    with path.open(encoding="utf-8") as f:
+        return [json.loads(line) for line in f if line.strip()]
+
+
+def write_public(out: Path, meta: Dict[str, str], cases, fingerprints: Dict[str, str],
+                 records, excluded, dates: Dict[str, dict]) -> None:
+    """Write the text-free public snapshot. ``records`` are pipeline.Record objects."""
+    from dataclasses import asdict
+
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "meta.json").write_text(json.dumps(
+        {"dataset_identity": meta["dataset_identity"], "case_count": int(meta["case_count"])},
+        indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    _jsonl(out / "cases.jsonl", ({"id": c["id"], "fingerprint": fingerprints.get(c["id"], ""), "source": c["source"],
+                                 "source_url": c["source_url"], "pub_year": c["pub_year"], "platforms": c["platforms"],
+                                 "topics": c["topics"], "dates": dates[c["id"]]} for c in cases))
+    _jsonl(out / "records.jsonl", (asdict(r) for r in records))
+    _jsonl(out / "excluded.jsonl", excluded)
+
+
+def load_public(src: Path = PUBLIC):
+    """(meta, cases, fingerprints, records, excluded, dates) from the public snapshot."""
+    from . import pipeline as pl
+
+    if not (src / "meta.json").is_file():
+        raise FileNotFoundError(f"{src} has no public snapshot. Build once from data/snapshot.sqlite to write it.")
+    meta = json.loads((src / "meta.json").read_text(encoding="utf-8"))
+    rows = _read_jsonl(src / "cases.jsonl")
+    cases = [{k: r[k] for k in PUBLIC_CASE_FIELDS if k != "fingerprint"} | {"text": None, "person_spans": None}
+             for r in rows]
+    fingerprints = {r["id"]: r["fingerprint"] for r in rows if r["fingerprint"]}
+    dates = {r["id"]: r["dates"] for r in rows}
+    records = []
+    for d in _read_jsonl(src / "records.jsonl"):
+        d["sentence_spans"] = [tuple(x) for x in d["sentence_spans"]]
+        d["instrumental_span"] = {k: tuple(v) for k, v in d["instrumental_span"].items()}
+        records.append(pl.Record(**d))
+    excluded = _read_jsonl(src / "excluded.jsonl")
+    return ({"dataset_identity": meta["dataset_identity"], "case_count": str(meta["case_count"])},
+            cases, fingerprints, records, excluded, dates)

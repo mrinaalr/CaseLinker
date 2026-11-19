@@ -1789,6 +1789,31 @@ def get_corpus(request: Request):
     )
 
 
+_SNAPSHOT_ERAS = _REPO_ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "snapshots.json"
+
+
+@app.get("/api/snapshots/{era}")
+@limiter.limit("10/minute")
+def get_frozen_snapshot(request: Request, era: str):
+    """
+    A frozen full-text corpus snapshot (SQLite) for one research era, for byte-for-byte
+    reproduction (``run_all.py --snapshot <era>``). Same access as /api/corpus. Only eras listed
+    in afh_manifest/snapshots.json are served, from CASELINKER_SNAPSHOT_DIR/<era>.sqlite; the
+    registered sha256 is returned in X-Snapshot-SHA256.
+    """
+    if not _has_bulk_corpus_access(request):
+        raise HTTPException(status_code=403, detail=_CORPUS_FORBIDDEN_DETAIL)
+    eras = json.loads(_SNAPSHOT_ERAS.read_text(encoding="utf-8")).get("eras", {})
+    if era not in eras:
+        raise HTTPException(status_code=404, detail=f"unknown snapshot era {era!r}")
+    base = os.environ.get("CASELINKER_SNAPSHOT_DIR", "").strip()
+    path = Path(base) / f"{era}.sqlite" if base else None
+    if path is None or not path.is_file():
+        raise HTTPException(status_code=404, detail=f"snapshot {era!r} is not hosted on this server")
+    return FileResponse(str(path), media_type="application/vnd.sqlite3", filename=f"{era}.sqlite",
+                        headers={"Cache-Control": "no-store", "X-Snapshot-SHA256": eras[era]["sha256"]})
+
+
 @app.get("/api/cases-summaries-chunk")
 @limiter.limit("240/minute")
 def cases_summaries_chunk(
