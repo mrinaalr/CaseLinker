@@ -395,7 +395,7 @@ CaseLinker/
 │   ├── pipeline/                     # features_to_cac.py (case → CAC RDF), graph_generate.py, oxigraph_rebuild.py
 │   ├── pools/                        # *_ids.txt case pools + the scripts that select them
 │   ├── platform_affordance_evidence/ q2/ q3/  # Research evidence
-│   ├── PACER/                        # local court-record PDFs, never committed (fetchers live in collector/pacer/)
+│   ├── PACER/                        # local court-record PDFs, never committed; the PACER cost log is tracked (fetchers live in collector/pacer/)
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
 ├── state_machines/                   # Court-record evidence, trajectories, graphs, AfH theory
 │   ├── evidence/                     # Bundle schema, codebook, validator
@@ -489,10 +489,9 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/ontology/cases` — graph pool catalog (`pool=compare|full|all|universe|analysis`; metadata only)
 - `GET /api/ontology/merged` — pre-merged flat nodes for a pool (public, cached; not `full`)
 - `GET /api/ontology/lookup` — find cases across full staging (`pool=full` default, max 2000); class/platform/agency/case text
-- `GET /api/ontology/pacer` — PACER investigation catalog (`ontology/PACER/`)
+- `GET /api/ontology/pacer` — the PACER release manifest (cases, named graphs, review mode)
 - `POST /api/ontology/cache/warm` — rebuild/warm merged-graph cache (`pool=compare|all|universe|analysis|both`)
 - `GET /ontology/graph_output/{case_id}.jsonld|.ttl` — staging (full corpus); also `{pool}/{case_id}…` for universe/big_bang/analysis
-- `GET /ontology/PACER/...` — static PACER CASE-UCO JSON-LD
 - `GET /ontology/platform-affordance-evidence/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` — platform affordance evidence and Q2–Q3 evidence JSON
 - `GET /ontology/q_results.json` — aggregated question results when present
 - `GET|POST /sparql` — SPARQL 1.1 over CASE/UCO/CAC graphs (public, 30/min; [SPARQL.md](ontology/docs/SPARQL.md))

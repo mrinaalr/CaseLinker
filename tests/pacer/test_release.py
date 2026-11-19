@@ -185,7 +185,7 @@ def test_privacy_scan_finds_a_name_or_quote_in_committed_files(tmp_path):
 def test_privacy_scan_refuses_an_unlisted_platform_name_in_a_machine_coded_bundle(tmp_path):
     from state_machines.graphs.release import privacy_scan
     b = _adjudicated(F.build()[0])
-    b["coding"]["note"] = "machine resolution (resolve-1.1.0) of two independent codings; not adjudicated"
+    b["coding"]["note"] = "machine resolution (resolve-1.2.0) of two independent codings; not adjudicated"
     root = _release(tmp_path, b)
     build("test-v1", data_root=root, text_root=tmp_path / "text")
     path = root / "test-v1" / "cases" / f"{F.CASE}.json"

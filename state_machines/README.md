@@ -56,7 +56,7 @@ A record supports three different kinds of claim, and each has its own gate. The
 - **A sparse graph is a correct graph.** A case may have observations and no relationship, or acts and no platform.
 - **The record is not the model.** A stated feature documents that the capability appears in the case. Whether it enabled the offence is a question for the [theory](theory/README.md) layer, not a fact in the graph.
 
-Release `pacer-v1` holds all three levels for 30 cases (98 documents): 284 agreed acts, 875 observations, 9 acts tied to a platform by a stated means, 64 sentences that state a means where the two coders dispute the act (kept apart, as disputed machine readings), a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. Act counts are lower bounds: on the blind benchmark split the release finds 104 of 247 gold acts. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
+Release `pacer-v1` holds all three levels for 30 cases (98 documents): 284 agreed acts, 875 observations, 9 acts tied to a platform by a stated means, 48 sentences in 10 cases that state a means where the two coders dispute the act (kept apart, as disputed machine readings), a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. Act counts are lower bounds: on the blind benchmark split the release finds 104 of 247 gold acts. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
 
 ## The documented event graph
 
@@ -80,7 +80,7 @@ The bundle is the canonical artifact. Everything else is a view of it at an evid
 
 ## From record to release
 
-1. **Collect.** [`collector/pacer/`](../collector/pacer/) fetches public dockets into `ontology/PACER/` (local, never committed).
+1. **Collect.** [`collector/pacer/`](../collector/pacer/) fetches public dockets into `ontology/PACER/` (the PDFs are local and never committed; the cost log there is tracked). The research build needs `pip install -r requirements.txt -r requirements-research.txt` (the CASE-UCO SDK, rdflib, pyshacl, pymupdf).
 2. **Code.** Two local models (pinned by digest) read the page text and each write a bundle; [`coding/`](coding/README.md) measures their agreement. Court text never leaves the machine.
 3. **Resolve.** A fixed rule publishes what both coded (`machine`), or a named reviewer decides every disagreement (`adjudicated`).
 4. **Release.** [`graphs/release.py`](graphs/release.py) validates each bundle, derives its views, emits its graphs, runs SHACL, and writes a manifest with hashes and the release's `review_mode`. A bundle with any validation error is refused in every mode.

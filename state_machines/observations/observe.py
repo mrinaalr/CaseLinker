@@ -309,8 +309,10 @@ def observe(case_id: str, text_root: Path) -> dict:
     return {"schema_version": SCHEMA_VERSION, "rule": RULE_VERSION, "case_id": case_id, "observations": observations}
 
 
-def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
-    """(relationship kind, cue word) when the sentence states the act was done by means of the observation."""
+def _means(kind: str, sentence: str, o: dict, subject: Optional[str] = None) -> Optional[Tuple[str, str]]:
+    """(relationship kind, cue word) when the sentence states the act was done by means of the observation.
+    ``subject`` names whose subject test applies ("feature" is the stricter one: a victim's clause states no offender means)."""
+    who = subject or kind
     if kind == "platform":
         name = "(?:" + _breakable(o["named_as"]) + "|" + _breakable(o["named_as"].upper()) + ")"
         patterns = [(rel, pat.format(name=name), 0) for rel, pat in _PLATFORM_CUES]
@@ -320,7 +322,7 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
         return None
     for rel, pattern, flags in patterns:
         for m in re.finditer(pattern, sentence, flags):
-            own = _own_clause(sentence, m.end(), kind)
+            own = _own_clause(sentence, m.end(), who)
             if own is None or m.start() < own[0]:           # another subject's clause, or cue and term in different clauses
                 continue
             before = sentence[own[0]:m.start("cue")]
@@ -331,7 +333,7 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
                 continue
             if len(_QUOTE.findall(sentence[:m.start("cue")])) % 2:                              # inside quoted words: someone's statement, not the record's
                 continue
-            if _OTHER_BEFORE[kind].search(before) and not _OFFENDER.search(before):             # "Agents served a warrant on ...": no offender in the clause
+            if _OTHER_BEFORE[who].search(before) and not _OFFENDER.search(before):              # "Agents served a warrant on ...": no offender in the clause
                 continue
             return rel, m.group("cue").lower()
     return None
@@ -341,16 +343,30 @@ def _means(kind: str, sentence: str, o: dict) -> Optional[Tuple[str, str]]:
 _ACTOR_CATEGORY = (("law_enforcement", "law_enforcement"), ("court", "court"), ("named_victim", "victim"), ("undercover_persona", "undercover"),
                    ("charged_defendant", "charged_defendant"), ("uncharged_coconspirator", "coconspirator"))
 NOT_THE_OFFENDER = {"law_enforcement", "court", "victim", "undercover"}
+# a coder attributes the act to an identified offender: the defendant (named so, named by a caption name, or not named,
+# which the prompt defines as the defendant), a co-defendant or a co-conspirator
+OFFENDER_SIDE = {"charged_defendant", "defendant_named_in_caption", "defendant_not_named", "co_offender", "coconspirator"}
+_DEFENDANT = {"charged_defendant", "defendant_named_in_caption", "defendant_not_named"}
+ACTOR_CATEGORIES = OFFENDER_SIDE | NOT_THE_OFFENDER | {"unrecognised_label", "collective"}
 
 
-def _actor_category(participant: Optional[dict], role: str = "offender") -> str:
+def _actor_category(participant: Optional[dict], role: str = "offender", note: str = "") -> str:
+    """Who a coder says did the act. ``note`` is the coder's own record of how the actor was set (coder.ACTOR_NOTES)."""
+    if note == "actor-renamed-from-victim":
+        return "victim"                    # the model named a victim; the coder's codebook rule wrote the defendant
+    if note == "actor-renamed-from-undercover":
+        return "undercover"
+    if note == "actor-named-in-caption":
+        return "defendant_named_in_caption"
     held = {x["status"] for x in (participant or {}).get("legal_status", [])}
     for status, name in _ACTOR_CATEGORY:
         if status in held:
-            return "co_offender" if role == "co_offender" and name not in NOT_THE_OFFENDER else name
+            if role == "co_offender" and name not in NOT_THE_OFFENDER:
+                return "co_offender"
+            return "defendant_not_named" if name == "charged_defendant" and note == "actor-not-named" else name
     if role == "co_offender":
         return "co_offender"
-    return "collective" if (participant or {}).get("kind") == "collective" else "third_party"
+    return "collective" if (participant or {}).get("kind") == "collective" else "unrecognised_label"   # a label the coder did not recognise
 
 
 def _offender_acts(b: dict) -> List[tuple]:
@@ -358,7 +374,8 @@ def _offender_acts(b: dict) -> List[tuple]:
     P = {p["passage_id"]: p for p in b["passages"]}
     who = {p["participant_ref"]: p for p in b.get("participants", [])}
     return [(P[s["passage_id"]]["doc_id"], P[s["passage_id"]]["pdf_page"], P[s["passage_id"]]["char_start"], P[s["passage_id"]]["char_end"],
-             e["event_id"], e["action"], _actor_category(who.get((e.get("actor") or {}).get("participant_ref")), (e.get("actor") or {}).get("role")))
+             e["event_id"], e["action"], _actor_category(who.get((e.get("actor") or {}).get("participant_ref")), (e.get("actor") or {}).get("role"),
+                                                         str(e.get("notes") or "")))
             for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
 
 
@@ -401,10 +418,15 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
     # The disputed tier. The sentence states the means, each coder coded an offender act in that sentence, and
     # no act was published there because the coders differ on what the act is or on who did it. Nothing is tied
     # to an act: the record says how something was done, and the two coders disagree on what was done.
+    P = {p["passage_id"]: p for p in bundle["passages"]}
+    published = [(P[s["passage_id"]]["doc_id"], P[s["passage_id"]]["pdf_page"], P[s["passage_id"]]["char_start"], P[s["passage_id"]]["char_end"])
+                 for e in bundle["events"] for s in e["support"] if s["facet"] == "action"]
     for o in doc["observations"] if len(by_coder) == 2 else []:
         if o["kind"] == "service_description" or o["relations"] or o.get("several_acts") or o.get("act_passage_runs_on") or o.get("in_act_sentence"):
             continue
         key = (o["doc_id"], o["pdf_page"])
+        if any((d, pg) == key and a < o["char_end"] and o["char_start"] < b for d, pg, a, b in published):
+            continue                       # a published act of any kind cites this sentence: it is not a sentence with no agreed act
         here = {name: [t for t in spans if (t[0], t[1]) == key and t[2] <= o["term_start"] and o["term_end"] <= t[3]
                        and t[2] >= o["char_start"] - 1 and t[3] <= o["char_end"] + 1] for name, spans in by_coder.items()}
         if not all(here.values()):
@@ -413,20 +435,23 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
         actors = {name: sorted({t[6] for t in ts}) for name, ts in here.items()}
         if key not in pages:
             pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
-        hit = _means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o)
+        # no agreed act vouches for the reading here, so the stricter subject test applies to platforms too: a clause
+        # about the victim, with no offender acting in it, states the victim's conduct
+        hit = _means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature")
         if not hit:
             continue
         a_codes, b_codes = (set(v) for v in inside.values())
         a_who, b_who = (set(v) for v in actors.values())
+        same_actor = {("defendant" if c in _DEFENDANT else c) for c in a_who} == {("defendant" if c in _DEFENDANT else c) for c in b_who}
         record = {"relationship": hit[0], "cue": hit[1], "action_codes": inside, "actors": actors,
-                  "dispute": [k for k, differs in (("action_code", a_codes != b_codes), ("actor", a_who != b_who)) if differs]
-                             or ["not_paired"]}       # same code and actor category, yet resolution did not pair the two acts as one
-        if (a_who | b_who) & NOT_THE_OFFENDER:
-            # one coder gives the act to an investigator, the court, a victim or a persona: whose conduct it was is itself
-            # in dispute, so this is not offender use by any reading and stays out of every count of it
-            o["actor_conflict"] = dict(record, basis="means_stated_in_sentence_coders_differ_on_whether_the_offender_acted")
+                  "dispute": [k for k, differs in (("action_code", a_codes != b_codes), ("actor", not same_actor)) if differs]
+                             or ["not_paired"]}       # same code and actor, yet resolution did not pair the two acts as one
+        if (a_who | b_who) <= OFFENDER_SIDE:
+            o["contested_act"] = dict(record, basis="means_stated_in_sentence_each_coder_gave_an_offender_act_to_an_identified_offender")
         else:
-            o["contested_act"] = dict(record, basis="means_stated_in_sentence_each_coder_coded_an_offender_act")
+            # a coder gives the act to an investigator, the court, a victim or a persona, or to a label the coder did not
+            # recognise: that an offender acted is itself not agreed, so this is not offender use by any reading
+            o["actor_conflict"] = dict(record, basis="means_stated_in_sentence_coders_do_not_both_name_an_identified_offender")
     doc["bundle_case_id"] = bundle["case_id"]
     return doc
 
@@ -445,6 +470,7 @@ def summary(doc: dict) -> dict:
             "by_standing": dict(sorted(Counter(o["source_status"] for o in obs).items())),
             "observations_tied_to_an_act": sum(bool(o["relations"]) for o in obs),
             "observations_stating_a_means_where_the_coders_dispute_the_act": sum(bool(o.get("contested_act")) for o in obs),
+            "sentences_stating_a_means_where_the_coders_dispute_the_act": len({(o["doc_id"], o["pdf_page"], o["char_start"]) for o in obs if o.get("contested_act")}),
             "observations_stating_a_means_where_a_coder_gives_the_act_to_a_non_offender": sum(bool(o.get("actor_conflict")) for o in obs),
             "observations_in_a_sentence_several_acts_cite": sum(bool(o.get("several_acts")) for o in obs),
             "observations_in_an_act_passage_that_runs_across_sentences": sum(bool(o.get("act_passage_runs_on")) for o in obs),
@@ -500,15 +526,18 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
                 continue
             codes = [code for per in c.get("action_codes", {}).values() for code in per]
             cats = {x for per in c.get("actors", {}).values() for x in per}
-            known = {name for _, name in _ACTOR_CATEGORY} | {"collective", "third_party", "co_offender"}
+            known = ACTOR_CATEGORIES
             if (o["relations"] or o["kind"] == "service_description" or o.get("in_act_sentence")
                     or set(c.get("action_codes", {})) != {"coder_A", "coder_B"} or set(c.get("actors", {})) != {"coder_A", "coder_B"}
                     or not codes or any(V.FAMILY_OF.get(code) != "offender" for code in codes) or not cats <= known
                     or c.get("relationship") not in ("Carried_Out_Through", "Moved_To", "Supports_Action")
                     or not c.get("dispute") or not set(c["dispute"]) <= {"action_code", "actor", "not_paired"}):
                 problems.append(f"{where}: the disputed-act record is not two coders' offender codes and actor categories on an untied observation")
-            if (field == "contested_act") == bool(cats & NOT_THE_OFFENDER):       # the invariant: offender use is never read from an actor conflict
-                problems.append(f"{where}: a record where a coder gives the act to a non-offender must be an actor conflict, and only then")
+            if any(p["doc_id"] == o["doc_id"] and p["pdf_page"] == o["pdf_page"] and p["char_start"] < o["char_end"] and o["char_start"] < p["char_end"]
+                   for e in events.values() for s in e["support"] if s["facet"] == "action" for p in [passages[s["passage_id"]]]):
+                problems.append(f"{where}: a disputed record sits in a sentence a published act cites")
+            if (field == "contested_act") != (cats <= OFFENDER_SIDE):             # the invariant: disputed means both coders name an identified offender
+                problems.append(f"{where}: a record is a disputed act only when both coders give it to an identified offender; otherwise an actor conflict")
         for r in o["relations"]:
             e = events.get(r["event_id"])
             if e is None or V.FAMILY_OF[e["action"]] != "offender":

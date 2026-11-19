@@ -74,7 +74,7 @@ urn:caselinker:pacer:<case_id>:observations    platforms, placeholder-labelled s
 
 ## Oxigraph
 
-The full corpus is rebuilt into an empty store; PACER graphs come from a release. `--pacer-graphs all` (default) loads evidence and trajectory graphs, `--pacer-graphs evidence` the evidence graphs only. Adjudicated and machine-coded releases load; a preview is refused unless `--allow-preview`, which accepts only a local store.
+The full corpus is rebuilt into an empty store; PACER graphs come from a release. `--pacer-graphs all` (default) loads evidence, trajectory and observation graphs, `--pacer-graphs evidence` the evidence graphs only. Adjudicated and machine-coded releases load; a preview is refused unless `--allow-preview`, which accepts only a local store.
 
 ```bash
 # build the corpus and PACER N-Quads without touching a store

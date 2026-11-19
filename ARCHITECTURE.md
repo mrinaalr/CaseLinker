@@ -6,7 +6,7 @@
 |---|---|
 | Corpus | **10,802** case reports from **76** public sources, 2002–2026: ICAC task forces, state attorneys general, state police, NCMEC, DOJ, federal and international agencies |
 | Extracted | **131,910** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
-| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus 297 PACER court-record graphs |
+| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus the PACER release's court-record graphs once the store is rebuilt with it (81 named graphs for 30 cases; until then production still holds the 297 legacy PACER graphs this replaces) |
 | Lifecycles | Federal court records coded as evidence, read as documented trajectories; a separate theory layer implements the AfH transition-system model they can be checked against |
 | Analysis | Platform harm (Q1 affordance → misuse → harm evidence), similarity clusters and automated insights, rule and model triage, 11-dimension facet cohorts |
 | Agents | 62 MCP tools locally, 47 hosted, over stdio, SSE and Streamable HTTP |

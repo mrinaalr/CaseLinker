@@ -164,3 +164,31 @@ def test_an_offender_act_coded_on_a_rule_statement_is_dropped_and_logged(monkeyp
     monkeypatch.setattr(C, "states_a_rule_not_conduct", lambda sentence: True)      # as if the sentence were "the Terms of Service prohibit ..."
     dropped, _, log = C.assemble(case, sources, answers, "coder_A", spec)
     assert dropped["events"] == [] and any("states a rule or policy, not conduct" in line for line in log)
+
+
+def test_a_coders_event_records_how_its_actor_was_set_and_the_agreed_act_does_not():
+    """The disputed record needs to know whether a model named the defendant, named a caption name, named no one, or named a victim."""
+    from state_machines.coding.resolve import resolve
+    case = "synth_001"
+    pg, first = _sentence(case, "sof", "first contacted")
+    pg2, second = _sentence(case, "sof", "told Minor Victim 1 that he was")
+    spec = C.MODELS["coders"]["coder_A"]
+
+    def coded(by_first, by_second):
+        acts = {("sof", pg): [dict({"s": first, "a": "INITIATE_CONTACT"}, **({"by": by_first} if by_first else {}))]}
+        acts.setdefault(("sof", pg2), []).append(dict({"s": second, "a": "MISREPRESENT_IDENTITY"}, **({"by": by_second} if by_second else {})))
+        sources, answers = _answers(case, acts)
+        bundle, _, _ = C.assemble(case, sources, answers, "coder_A", spec, caption_names={"jordan", "example"})
+        return bundle, {e["action"]: e.get("notes") for e in bundle["events"]}
+    _, notes = coded(None, "Jordan Example")
+    assert notes == {"INITIATE_CONTACT": "actor-not-named", "MISREPRESENT_IDENTITY": "actor-named-in-caption"}
+    _, notes = coded("the defendant", "Minor Victim 1")
+    assert notes == {"INITIATE_CONTACT": None, "MISREPRESENT_IDENTITY": "actor-renamed-from-victim"}     # named as the defendant: no note
+    _, notes = coded("Sam Other", "an undercover officer")
+    assert notes["INITIATE_CONTACT"] is None and notes["MISREPRESENT_IDENTITY"] == "actor-renamed-from-undercover"
+    assert set(n for n in notes.values() if n) <= set(C.ACTOR_NOTES)
+    a, _ = coded(None, None)
+    b = json.loads(json.dumps(a))
+    b["coding"]["coder_id"] = "coder_B"
+    agreed, _ = resolve(a, b)
+    assert agreed["events"] and all("notes" not in e or not str(e["notes"]).startswith("actor-") for e in agreed["events"])

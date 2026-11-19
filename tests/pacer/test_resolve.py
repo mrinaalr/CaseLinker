@@ -51,7 +51,9 @@ def test_resolution_publishes_only_what_both_coders_coded(tmp_path):
     e02 = next(e for e in out["events"] if e["event_id"] == "e02")
     assert any(t["basis"] == "relative_statement" for t in e02["time"]["assertions"])   # coder B's date kept
     assert all(e["review"]["status"] == "agreed" for e in out["events"])
-    assert all(r["review"]["status"] == "agreed" for r in out["relations"])
+    made = [r for r in out["relations"] if "made by the resolution rule" in r.get("note", "")]
+    assert all(r["review"] == {"status": "rule_derived", "coders": [], "adjudicator": None} for r in made)     # no coder asserted these
+    assert all(r["review"]["status"] == "agreed" and r["review"]["coders"] for r in out["relations"] if r not in made)
     # an affordance only one coder annotated on an act both coded is left out and counted
     a2, b2 = _coders()
     shared = next(e for e in a2["events"] if e["event_id"] in ids and e.get("affordances"))
@@ -64,6 +66,16 @@ def test_resolution_publishes_only_what_both_coders_coded(tmp_path):
     F.write_pages(tmp_path)
     assert release_errors(out, text_root=tmp_path, mode="machine") == []
     assert any("not adjudicated" in p for p in release_errors(out, text_root=tmp_path, mode="adjudicated"))
+    # a relation the rule made is published by a machine release under its own status; an act can never carry that status
+    ruled = copy.deepcopy(out)
+    pair = [e["event_id"] for e in ruled["events"]][:2]
+    ruled["relations"].append({"relation_id": "same-x", "type": "SAME_ACT", "from_event": pair[0], "to_event": pair[1], "basis": "coder_inference",
+                               "status": "INFERRED", "support": [dict(s, status="INFERRED") for s in ruled["events"][0]["support"][:1]],
+                               "note": "made by the resolution rule", "review": {"status": "rule_derived", "coders": [], "adjudicator": None}})
+    assert not any("not adjudicated or agreed" in p for p in release_errors(ruled, text_root=tmp_path, mode="machine"))
+    assert any("not adjudicated" in p for p in release_errors(ruled, text_root=tmp_path, mode="adjudicated"))
+    ruled["events"][0]["review"] = {"status": "rule_derived", "coders": [], "adjudicator": None}
+    assert any("not adjudicated or agreed" in p for p in release_errors(ruled, text_root=tmp_path, mode="machine"))
 
 
 def test_actor_disagreement_and_date_conflict():

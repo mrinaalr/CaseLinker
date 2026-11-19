@@ -158,6 +158,8 @@ def resolve(a: dict, b: dict, text_root=None, settle_codes: bool = False) -> Tup
             report["left out: coders named different actors"] += 1
             continue
         e = copy.deepcopy(x)
+        if str(e.get("notes", "")).startswith("actor-"):      # how one coder's actor was established is that coder's, not the agreed act's
+            e.pop("notes")
         e["status"] = _weaker(x["status"], y["status"])
         yb = {o["affordance"]: o for o in y.get("affordances", [])}
         e["affordances"] = []
@@ -223,7 +225,7 @@ def resolve(a: dict, b: dict, text_root=None, settle_codes: bool = False) -> Tup
         core["relations"].append({"relation_id": f"same-{x}-{y}", "type": "SAME_ACT", "from_event": x, "to_event": y,
                                   "basis": "coder_inference", "status": "INFERRED", "support": sup,
                                   "note": "made by the resolution rule from two agreed acts, not asserted by a coder: same action, overlapping dates, possibly one act told twice; both kept",
-                                  "review": {"status": "agreed", "coders": list(CODERS), "adjudicator": None}})
+                                  "review": {"status": "rule_derived", "coders": [], "adjudicator": None}})
         report["linked: possibly the same act (SAME_ACT)"] += 1
     report["published: relations in all (asserted by both coders, or made by rule from agreed acts)"] = len(core["relations"])
     report["open roles kept open"] = sum(len(e.get("unresolved_participants", [])) for e in core["events"])
@@ -285,7 +287,7 @@ def restate_order(bundle: dict, text_root) -> int:
                 "basis": "explicit_sequence_language", "status": "DIRECT",
                 "support": [{"passage_id": pid, "facet": "time", "status": "DIRECT"}],
                 "note": "made by the resolution rule from two agreed acts, not asserted by a coder: stated order, sentence rule applied to agreed acts",
-                "review": {"status": "agreed", "coders": list(CODERS), "adjudicator": None}})
+                "review": {"status": "rule_derived", "coders": [], "adjudicator": None}})
             have.add((prior, e["event_id"]))
             added += 1
     return added

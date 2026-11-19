@@ -437,7 +437,7 @@
       el("div", { class: "detail-sub", text: "Stated as the means of an act" }),
       o.used_in_act.length ? el("ul", { class: "prov" }, o.used_in_act.map(u =>
         el("li", { text: `${(cs.events[u.event_id] || {}).label || u.action} · ${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing}` })))
-        : el("p", { class: "detail-none", text: "None. No agreed act's own sentence states a platform or feature as its means." }),
+        : el("p", { class: "detail-none", text: "None tied by the rule: it found no agreed act whose own sentence states a platform or feature as its means." }),
     ]);
   }
 

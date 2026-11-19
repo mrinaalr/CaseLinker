@@ -405,19 +405,25 @@ def test_an_observation_carries_its_documents_standing_and_never_another(tmp_pat
 
 
 def _coder(tmp_path, case, text, acts):
-    """A coder's bundle for ``case``: offender-coded acts as (event id, action, opening words, actor status, actor role)."""
-    _, bundle = _case(tmp_path, case, text, [(eid, action, words, ".") for eid, action, words, _, _ in acts])
+    """A coder's bundle for ``case``: offender-coded acts as (event id, action, opening words, actor status, actor role[, actor note])."""
+    _, bundle = _case(tmp_path, case, text, [(a[0], a[1], a[2], ".") for a in acts])
     bundle["participants"] = []
-    for i, (eid, _, _, status, role) in enumerate(acts, 1):
+    for i, (eid, _, _, status, role, *note) in enumerate(acts, 1):
         bundle["participants"].append({"participant_ref": f"P{i}", "kind": "organization" if status in ("law_enforcement", "court") else "person",
                                        "legal_status": [{"status": status}]})
-        next(e for e in bundle["events"] if e["event_id"] == eid)["actor"] = {"participant_ref": f"P{i}", "role": role}
+        event = next(e for e in bundle["events"] if e["event_id"] == eid)
+        event["actor"] = {"participant_ref": f"P{i}", "role": role}
+        if note:
+            event["notes"] = note[0]
     return bundle
 
 
 DISPUTE = ("The defendant sent the files to other members through Kitebox. He used a fake name to open the account. "
            "The defendant did not post on Snapwire. He later wrote to Minor Victim 1 via Kitebox. "
-           "Agents learned that the defendant uploaded the images to Dropbox. The defendant contacted the buyer on Chirpline.")
+           "Agents learned that the defendant uploaded the images to Dropbox. The defendant contacted the buyer on Chirpline. "
+           "Jane Doe 1 sent the images via Loopit. The defendant messaged the group through Pinehollow. "
+           "The defendant traded the files using Vellum Chat. Minor Victim 2 replied to him over Orbit Messenger. "
+           "The defendant sold the files via Chirpline.")
 
 
 def _disputed(tmp_path):
@@ -426,10 +432,20 @@ def _disputed(tmp_path):
     a = _coder(tmp_path, "dispute", DISPUTE, [("e1", "DISTRIBUTE_MATERIAL", "The defendant sent", D, O_), ("e2", "MISREPRESENT_IDENTITY", "He used", D, O_),
                                               ("e3", "DISTRIBUTE_MATERIAL", "The defendant did not", D, O_), ("e4", "COMMUNICATE", "He later", D, O_),
                                               ("e5", "STORE_MATERIAL", "Agents learned", "law_enforcement", O_),
-                                              ("e6", "COMMUNICATE", "The defendant contacted", D, "co_offender")])
+                                              ("e6", "COMMUNICATE", "The defendant contacted", D, "co_offender"),
+                                              ("e7", "DISTRIBUTE_MATERIAL", "Jane Doe 1 sent", "third_party", O_),          # a label the coder did not recognise
+                                              ("e8", "COMMUNICATE", "The defendant messaged", D, O_, "actor-renamed-from-victim"),
+                                              ("e9", "DISTRIBUTE_MATERIAL", "The defendant traded", "third_party", O_, "actor-named-in-caption"),
+                                              ("e10", "COMMUNICATE", "Minor Victim 2 replied", D, O_),
+                                              ("e11", "DISTRIBUTE_MATERIAL", "The defendant sold", "third_party", O_)])   # an unrecognised label
     b = _coder(tmp_path, "dispute", DISPUTE, [("e1", "STORE_MATERIAL", "The defendant sent", D, O_), ("e2", "EVADE_DETECTION", "He used", D, O_),
                                               ("e3", "ADVERTISE_COMMERCIAL_SEX", "The defendant did not", D, O_),
-                                              ("e5", "STORE_MATERIAL", "Agents learned", D, O_), ("e6", "COMMUNICATE", "The defendant contacted", D, O_)])
+                                              ("e5", "STORE_MATERIAL", "Agents learned", D, O_), ("e6", "COMMUNICATE", "The defendant contacted", D, O_),
+                                              ("e7", "DISTRIBUTE_MATERIAL", "Jane Doe 1 sent", D, O_, "actor-not-named"),
+                                              ("e8", "COMMUNICATE", "The defendant messaged", D, O_, "actor-not-named"),
+                                              ("e9", "STORE_MATERIAL", "The defendant traded", D, O_, "actor-not-named"),
+                                              ("e10", "INITIATE_CONTACT", "Minor Victim 2 replied", D, O_, "actor-not-named"),
+                                              ("e11", "DISTRIBUTE_MATERIAL", "The defendant sold", D, O_, "actor-not-named")])
     return O.relate(O.observe("dispute", tmp_path), agreed, tmp_path, {"coder_A": a, "coder_B": b}), agreed
 
 
@@ -441,7 +457,8 @@ def test_a_stated_means_with_a_disputed_act_keeps_both_coders_and_ties_nothing(t
     for o in sorted(doc["observations"], key=lambda o: o["char_start"]):
         by.setdefault(o.get("platform") or o["feature_term"], []).append(o)
     first, last = by["Kitebox"]
-    assert first["contested_act"] == {"relationship": "Carried_Out_Through", "cue": "through", "basis": "means_stated_in_sentence_each_coder_coded_an_offender_act",
+    assert first["contested_act"] == {"relationship": "Carried_Out_Through", "cue": "through",
+                                      "basis": "means_stated_in_sentence_each_coder_gave_an_offender_act_to_an_identified_offender",
                                       "action_codes": {"coder_A": ["DISTRIBUTE_MATERIAL"], "coder_B": ["STORE_MATERIAL"]},
                                       "actors": {"coder_A": ["charged_defendant"], "coder_B": ["charged_defendant"]}, "dispute": ["action_code"]}
     assert by["fake name"][0]["contested_act"]["relationship"] == "Supports_Action"
@@ -454,12 +471,27 @@ def test_a_stated_means_with_a_disputed_act_keeps_both_coders_and_ties_nothing(t
     dropbox = by["Dropbox"][0]
     assert "contested_act" not in dropbox and dropbox["actor_conflict"]["actors"] == {"coder_A": ["law_enforcement"], "coder_B": ["charged_defendant"]}
     assert dropbox["actor_conflict"]["dispute"] == ["actor"]
+    # a label the coder did not recognise (here a victim's pseudonym) is not an identified offender: an actor conflict, never a disputed act
+    loopit = by["Loopit"][0]
+    assert "contested_act" not in loopit and "actor_conflict" not in loopit           # and the sentence's subject is not the offender: no means at all
+    # the same code from both coders, one of them for a label the coder did not recognise: not an identified offender, so a conflict
+    sold = by["Chirpline"][1]
+    assert "contested_act" not in sold and sold["actor_conflict"]["actors"] == {"coder_A": ["unrecognised_label"], "coder_B": ["defendant_not_named"]}
+    assert sold["actor_conflict"]["dispute"] == ["actor"]
+    # the coder's own rule had rewritten a victim-labelled actor to the defendant: the record says victim, and it is a conflict
+    assert by["Pinehollow"][0]["actor_conflict"]["actors"] == {"coder_A": ["victim"], "coder_B": ["defendant_not_named"]}
+    # the defendant named by a caption name against the defendant not named: the same actor, a dispute on the code only
+    vellum = by["Vellum Chat"][0]["contested_act"]
+    assert vellum["actors"] == {"coder_A": ["defendant_named_in_caption"], "coder_B": ["defendant_not_named"]} and vellum["dispute"] == ["action_code"]
+    # with no agreed act behind it, a sentence about the victim's conduct states no offender means, whatever the coders coded
+    assert "contested_act" not in by["Orbit Messenger"][0] and "actor_conflict" not in by["Orbit Messenger"][0]
     assert all(o["relations"] == [] for o in doc["observations"]) and O.check(doc, tmp_path, agreed) == []
     assert not any(o.get("contested_act") or o.get("actor_conflict")
                    for o in O.relate(O.observe("dispute", tmp_path), agreed, tmp_path)["observations"])   # no coder bundles: no tier
     for breakage, word in ((lambda d: d["observations"][0]["contested_act"]["action_codes"].update(coder_B=["CHARGE"]), "disputed-act"),   # not an offender act
                            (lambda d: d["observations"][0]["contested_act"]["actors"].update(coder_B=["court"]), "actor conflict"),        # the invariant
                            (lambda d: next(o for o in d["observations"] if o.get("actor_conflict"))["actor_conflict"]["actors"].update(coder_A=["charged_defendant"]), "actor conflict"),
+                           (lambda d: d["observations"][0]["contested_act"]["actors"].update(coder_B=["unrecognised_label"]), "actor conflict"),
                            (lambda d: d["observations"][0].update(relations=[{"event_id": "e1", "relationship": "Carried_Out_Through"}]), "disputed-act")):
         bad = copy.deepcopy(doc)
         breakage(bad)
@@ -475,8 +507,22 @@ def test_disputed_readings_stay_out_of_acts_trajectories_and_use_counts(tmp_path
     seen = case_observed(doc)
     assert seen["used_in_act"] == []                                                               # nothing is "used in an act"
     assert [(r["kind"], r.get("platform") or r["feature_term"]) for r in seen["means_stated_act_disputed"]] == [
-        ("platform", "Kitebox"), ("feature", "fake name"), ("platform", "Chirpline")]
-    assert [r["platform"] for r in seen["means_stated_actor_conflict"]] == ["Dropbox"]
+        ("platform", "Kitebox"), ("feature", "fake name"), ("platform", "Chirpline"), ("platform", "Vellum Chat")]
+    assert [r["platform"] for r in seen["means_stated_actor_conflict"]] == ["Dropbox", "Pinehollow", "Chirpline"]
+    # a disputed or conflicting record is never counted as use: the table row a release would write has zero of both
+    from state_machines.observations import table as T
+    release = tmp_path / "rel"
+    (release / "observations").mkdir(parents=True)
+    (release / "observations" / "dispute.json").write_text(json.dumps(doc), encoding="utf-8")
+    (release / "manifest.json").write_text(json.dumps({"cases": [{"case_id": "dispute", "graphs": {"observations": {}}}]}), encoding="utf-8")
+    (release / "lifecycle.json").write_text(json.dumps({"release": {"id": "t", "review_mode": "machine"},
+                                                        "cases": [{"case_id": "dispute", "documents": [], "events": {}}]}), encoding="utf-8")
+    built = T.build(release)
+    counts = built["cases"][0]["counts"]
+    assert counts["platforms_used_in_an_act"] == 0 and counts["features_used_in_an_act"] == 0
+    assert counts["platform_means_stated_act_disputed"] == 3 and counts["feature_means_stated_act_disputed"] == 1 and counts["means_stated_actor_conflict"] == 3
+    assert counts["sentences_means_stated_act_disputed"] == 4
+    assert built["totals"]["platforms_used_in_an_act"] == 0 and built["totals"]["agreed acts"] == 0 and built["totals"]["offender acts"] == 0
     assert all({"action_codes", "actors", "dispute", "doc_id", "pdf_page", "char_start", "char_end", "standing"} <= set(r)
                for r in seen["means_stated_act_disputed"] + seen["means_stated_actor_conflict"])   # both coders and the source, on every row
     cell = AM._cell(doc, {}, "anonymity")
@@ -486,12 +532,12 @@ def test_disputed_readings_stay_out_of_acts_trajectories_and_use_counts(tmp_path
     g.parse(data=serialize(observation_graph(agreed, doc)), format="json-ld")
     CLT = rdflib.Namespace("https://w3id.org/caselinker/trajectory#")
     UCO = "https://ontology.unifiedcyberontology.org/uco/"
-    assert len(list(g.subjects(CLT.reviewStatus, rdflib.Literal("disputed")))) == 3               # the actor conflict carries no marker
+    assert len(list(g.subjects(CLT.reviewStatus, rdflib.Literal("disputed")))) == 4               # an actor conflict carries no marker
     assert not list(g.subjects(rdflib.RDF.type, rdflib.URIRef(UCO + "core/Relationship")))        # nothing is tied
     assert not list(g.subjects(rdflib.RDF.type, rdflib.URIRef(UCO + "action/Action")))            # no act is made
     assert not any("cacontology" in str(o) and p == rdflib.RDF.type for _, p, o in g)             # and no affordance individual
     rows = [[str(v) for v in r] for r in ds.query(QUERIES["disputed"]["sparql"])]
-    assert sorted(r[1] for r in rows) == ["Anonymity", "Chirpline", "Kitebox"]
+    assert sorted(r[1] for r in rows) == ["Anonymity", "Chirpline", "Kitebox", "Vellum Chat"]
     assert [list(r) for r in ds.query(QUERIES["supported"]["sparql"])] == [] and [list(r) for r in ds.query(QUERIES["reconstructed"]["sparql"])] == []
 
 

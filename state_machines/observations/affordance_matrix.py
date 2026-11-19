@@ -36,7 +36,7 @@ READING = [
     "phrase_stated, in_agreed_act_sentence, means_stated_act_disputed and means_stated_in_act_sentence are four kinds of evidence; do not add them together",
     "means_stated_act_disputed counts sentences, not acts: the record states the feature as a means and each of two model coders coded an offender act there, but they differ on what the act is, so the release publishes no act for it",
     "in_agreed_act_sentence is co-occurrence: the phrase and an agreed act share a sentence; the sentence may describe the technology, another person's use, or a denial",
-    "needs_researcher_interpretation is mechanical: in some case the class is stated and no agreed act's sentence states it as the means; a disputed-act sentence is the strongest of these and still needs a person to say what the act was",
+    "needs_researcher_interpretation is mechanical: in some case the class is stated and the rule ties it to no agreed act; a disputed-act sentence is the strongest of these and still needs a person to say what the act was. The rule can miss a stated means, so this is the rule's result, not a finding that no record states one",
     "no_evidence_in_these_records means no listed phrase in the cases read; it is not evidence the affordance played no part",
     "a case whose narrative filings are sealed or were not collected reads none for the same reason as a case where nothing happened; the grid cannot tell them apart",
     "cases_by_standing can exceed cases stating, since a case can state a phrase in documents of several standings",
@@ -53,8 +53,10 @@ def _cell(doc: dict, events: dict, cls: str) -> dict:
     beside = sorted({e for o in stated for e in o.get("in_act_sentence", [])})
     means = sorted({r["event_id"] for o in stated for r in o["relations"]}
                    | {k for k, e in events.items() if any(a["class"] == cls for a in e["affordances"])})
-    disputed = [{"doc_id": o["doc_id"], "pdf_page": o["pdf_page"], "feature_term": o["feature_term"], "standing": o["source_status"],
-                 "action_codes": o["contested_act"]["action_codes"]} for o in stated if o.get("contested_act")]
+    disputed = [{"doc_id": o["doc_id"], "pdf_page": o["pdf_page"], "char_start": o["char_start"], "feature_term": o["feature_term"],
+                 "standing": o["source_status"], "action_codes": o["contested_act"]["action_codes"], "actors": o["contested_act"]["actors"]}
+                for o in stated if o.get("contested_act")]
+    disputed = list({(d["doc_id"], d["pdf_page"], d["char_start"]): d for d in disputed}.values())       # one entry per sentence
     reading = ("means_stated" if means else "means_stated_act_disputed" if disputed else "in_act_sentence_only" if beside
                else "stated_only" if stated else "none")
     return {"statements": len(stated), "by_standing": dict(sorted(Counter(o["source_status"] for o in stated).items())),

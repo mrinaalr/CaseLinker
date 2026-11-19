@@ -87,18 +87,32 @@ The agreement gate publishes an act only when both coders give the same sentence
 
 | Field | Holds |
 |---|---|
-| `contested_act` | the stated means (`relationship`, `cue`), each coder's `action_codes` and `actors` (categories: `charged_defendant`, `co_offender`, `coconspirator`, `third_party`, `collective`), and `dispute`: `action_code`, `actor`, or `not_paired` |
-| `actor_conflict` | the same record where one coder gives the act to `law_enforcement`, the `court`, a `victim` or an `undercover` persona |
+| `contested_act` | the stated means (`relationship`, `cue`), each coder's `action_codes` and `actors`, and `dispute`: `action_code`, `actor`, or `not_paired`. Both coders give the act to an identified offender |
+| `actor_conflict` | the same record where the coders do not both name an identified offender |
+
+Actor categories, as each coder's own bundle records them (the coder keeps a fixed note on its event saying how the actor was set):
+
+| Category | Meaning | Side |
+|---|---|---|
+| `charged_defendant` | the model named the actor as the defendant | offender |
+| `defendant_named_in_caption` | the model named the actor by a name in the case caption | offender |
+| `defendant_not_named` | the model named no actor; the coder's prompt asks for one only when it is not the defendant | offender |
+| `co_offender`, `coconspirator` | the model named a co-defendant or co-conspirator | offender |
+| `law_enforcement`, `court` | the model named an investigator or the court as actor of an offender-coded act | not the offender |
+| `victim`, `undercover` | the model named a victim or a persona; the coder's codebook rule then wrote the defendant, and the note keeps what the model said | not the offender |
+| `unrecognised_label`, `collective` | a label the coder did not recognise (a pseudonym, a username, "another user") or a group | not established |
 
 Invariants, each checked on every build (`observe.check`) and by tests:
 
 1. **Nothing is tied.** A disputed record has no relationship, makes no act, and creates no affordance individual. It appears in no trajectory, no $O_{i}$, and no count of agreed acts or of use.
-2. **Disagreement is kept, not resolved.** Both coders' codes and actor categories are stored. An actor is never defaulted to the defendant.
-3. **An actor conflict is not offender use.** If either coder attributes the act to a non-offender party, the record is an `actor_conflict`: listed, and excluded from the disputed counts, the graph marker and the affordance matrix.
-4. **The same stated-means rule applies,** in the observation's own sentence, so a denial, a supposed or intended act, a question, quoted words and a rule or policy statement give nothing.
-5. **Only where the coders both acted on the sentence.** Each coder must have coded an offender act citing that sentence. A sentence only one coder coded gives nothing.
+2. **Disagreement is kept, not resolved.** Both coders' codes and actor categories are stored, and the record never picks one coder's actor over the other. What a category means is in the table above: `defendant_not_named` is a model that named no actor, which the prompt defines as the defendant, and it is the commonest category in these records.
+3. **Disputed means both coders name an identified offender.** If either coder attributes the act to an investigator, the court, a victim, a persona, or a label the coder did not recognise, the record is an `actor_conflict`: listed, and excluded from the disputed counts, the graph marker and the affordance matrix.
+4. **The same stated-means rule applies, more strictly,** in the observation's own sentence: a denial, a supposed or intended act, a question, quoted words and a rule or policy statement give nothing, and with no agreed act behind the reading a clause about the victim gives nothing for a platform either.
+5. **Only where the coders both acted on the sentence, and no published act cites it.** Each coder must have coded an offender act citing that sentence. A sentence only one coder coded gives nothing.
 
-A disputed record says: the record states how something was done, two models agree an offender did something there, and they do not agree what. Reading the sentence settles it; the machine does not.
+A disputed record says: the record states how something was done, each of two models gave an offender act in that sentence to an identified offender, and they do not agree what the act was or which offender. Reading the sentence settles it; the machine does not. It does not establish that an offender acted.
+
+Two acts of the agreed layer rest on the coder's victim-to-defendant rewrite (one model named a victim as actor of an offender-coded act, the other named no one, and the coder's codebook rule recorded the defendant for the first). The rewrite is logged per act in the coder's log and noted on the coder's event.
 
 ## Dates
 
@@ -132,7 +146,7 @@ Graph IRI: `urn:caselinker:pacer:<case>:observations`. A case with nothing obser
 | `described` | Which generic service descriptions do the records use? |
 | `features` | Which feature phrases do the records state, under which class? |
 | `reconstructed` | Which acts did both coders agree on? |
-| `disputed` | Where does a sentence state a means while the two coders dispute the act? |
+| `disputed` | Where does a sentence state a means while the two coders dispute the act? (observations per case and platform or class) |
 | `supported` | Where does a record state that an act was done by means of a platform or feature? |
 
 ```bash
@@ -242,12 +256,13 @@ On the 30 real cases (`pacer-v1`, 98 documents):
 | of a feature phrase | 87, in 13 cases |
 | Acts tied to a platform by a stated means | 9, in 7 cases |
 | Acts tied to a feature by a stated means | 0 |
-| Sentences stating a platform as a means, act disputed | 59 |
-| Sentences stating a feature as a means, act disputed | 5 |
-| Cases with a disputed-act sentence | 14 |
-| Sentences where one coder gives the act to a non-offender (not counted above) | 12 |
+| Observations stating a platform as a means, act disputed | 44 |
+| Observations stating a feature as a means, act disputed | 4 |
+| Distinct sentences holding those 48 observations | 48 |
+| Cases with a disputed-act sentence | 10 |
+| Observations where the coders do not both name an identified offender (actor conflict; not counted above) | 18 |
 
-Of the 64 disputed sentences the coders differ on the action code in 25, on the actor in 9, on both in 29, and in 1 they give the same code and actor category without the resolution pairing them. By standing: 38 allegation, 14 admitted, 7 sworn affidavit, 5 advocacy.
+Of the 48 disputed observations the coders differ on the action code in 23, on the actor in 4, on both in 20, and in 1 they give the same code and actor without the resolution pairing them. By standing: 31 allegation, 11 admitted, 4 advocacy, 2 sworn affidavit. 30 of the 48 are in one case's indictment (`anchorage_pd_2022_007`). In one record neither coder names the defendant (both name co-offenders). Among the 18 actor conflicts, the non-offender or unrecognised side is an unrecognised label in 12 coder readings, law enforcement in 7, the court in 5 and a victim in 1.
 
 By the strongest thing each record gives about a service: 25 cases name a listed platform, 2 give only a generic description, and 3 give nothing (`ncmec_2023_222`, `usss_2023_004`, `wy_dci_2023_005`). Both cases with placeholder labels also name a listed platform.
 

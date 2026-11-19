@@ -459,7 +459,12 @@ def _date(d: Optional[dict], quote: str) -> Optional[dict]:
             "basis": "date_range" if precision == "range" else "explicit_date", "status": "DIRECT"}
 
 
-def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, dict]], coder: str, spec: dict) -> Tuple[dict, Dict[str, str], List[str]]:
+# How an offender act's actor was established, kept on the coder's own event as a fixed note (never on a published act):
+ACTOR_NOTES = ("actor-not-named", "actor-named-in-caption", "actor-renamed-from-victim", "actor-renamed-from-undercover")
+
+
+def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, dict]], coder: str, spec: dict,
+             caption_names: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
     """answers: (document, page number, page text, model answer). Returns (bundle, quotes, log)."""
     log: List[str] = []
     participants: Dict[str, dict] = {}
@@ -500,11 +505,20 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             if fam == "offender" and states_a_rule_not_conduct(qn):
                 log.append(f"dropped {doc['doc_id']} p{page_no} {action}: the sentence states a rule or policy, not conduct")
                 continue
+            actor_note = None
             if not act.get("actor"):
                 act["actor"] = {"procedure": "the court", "law_enforcement": "law enforcement",
                                 "response": "minor victim 1"}.get(fam, "the defendant")
+                actor_note = "actor-not-named" if fam == "offender" else None      # the prompt asks for the actor only when it is not the defendant
             if fam == "offender" and re.search(r"victim|minor|child|undercover|agent|officer", _label(act["actor"])):
+                actor_note = "actor-renamed-from-undercover" if "undercover" in _label(act["actor"]) else "actor-renamed-from-victim"
+                log.append(f"actor rewritten {doc['doc_id']} p{page_no} {action}: the model named a victim or a persona as actor of an offender act; "
+                           "the offender is recorded (codebook A)")
                 act["actor"], act["actor_role"] = "the defendant", None   # an offender act's actor is the offender (codebook A)
+            elif fam == "offender" and actor_note is None and caption_names:
+                words = [w for w in _label(act["actor"]).split() if len(w) > 2]
+                if words and all(w in caption_names for w in words):
+                    actor_note = "actor-named-in-caption"                 # the model named the actor by a name in the case caption
             if not act.get("actor_role"):
                 lab = _label(act["actor"])
                 act["actor_role"] = ({"procedure": "court", "response": "victim" if "victim" in lab else "third_party"}.get(fam)
@@ -557,6 +571,8 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                  "review": {"status": "single_coder", "coders": [coder], "adjudicator": None}}
             if act.get("parser"):
                 e["notes"] = "docket-parser"
+            elif actor_note:
+                e["notes"] = actor_note
             d = _date(act.get("date"), qn)
             if d:
                 e["time"]["assertions"].append(dict(d, passage_ids=[pid]))
@@ -739,7 +755,8 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         if progress:
             progress(doc["doc_id"], page_no, len(ans.get("acts", [])))
     answers = [tuple(a[:4]) for a in answers]
-    bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec)
+    bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
+                                   caption_names={w.lower() for term in (deny or []) for w in term.split()})
     log = coverage + log
     bundle, rlog = repair(bundle, text_root, deny or [])
     return bundle, quotes, log + rlog

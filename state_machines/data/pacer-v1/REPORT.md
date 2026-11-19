@@ -140,10 +140,11 @@ Read by rule from every page except docket sheets, independent of the coders. An
 | distinct case and listed-platform pairs | 70 |
 | distinct case and withheld-platform pairs | 5 |
 | observations tied to a published act by a stated means | 9 |
-| observations stating a means in a sentence where each coder coded an offender act and they dispute the act (no act published) | 64 |
-| cases with at least one such disputed-act sentence | 14 |
-| observations stating a means where one coder gives the act to an investigator, the court, a victim or a persona (not counted as offender use) | 12 |
-| cases with at least one such relationship | 7 |
+| observations stating a means where each coder gave an offender act to an identified offender and they dispute the act (no act published) | 48 |
+| distinct sentences holding those observations | 48 |
+| cases with a disputed-act sentence | 10 |
+| observations stating a means where the coders do not both name an identified offender (actor conflict; not counted as offender use) | 18 |
+| cases with a supported relationship | 7 |
 | observations in documents with standing ADVOCACY | 147 |
 | observations in documents with standing ALLEGATION | 221 |
 | observations in documents with standing COURT_RECORD | 27 |
@@ -346,7 +347,7 @@ PREFIX oa: <http://www.w3.org/ns/oa#>
 PREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>
 PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
 PREFIX clt: <https://w3id.org/caselinker/trajectory#>
-SELECT ?case ?what ?phrase ?standing (COUNT(DISTINCT ?span) AS ?sentences) WHERE {
+SELECT ?case ?what ?phrase ?standing (COUNT(DISTINCT ?obs) AS ?observations) WHERE {
   GRAPH ?og { ?obs clt:reviewStatus "disputed" ; oa:hasBody ?body ; oa:hasTarget ?span ; clt:sourceStatus ?standing .
               OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
   BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
@@ -354,30 +355,22 @@ SELECT ?case ?what ?phrase ?standing (COUNT(DISTINCT ?span) AS ?sentences) WHERE
 } GROUP BY ?case ?what ?phrase ?standing ORDER BY ?case ?what
 ```
 
-| case | platform_or_class | phrase | standing | sentences |
+| case | platform_or_class | phrase | standing | observations |
 |---|---|---|---|---|
-| anchorage_pd_2022_007 | Instagram |  | ALLEGATION | 11 |
-| anchorage_pd_2022_007 | Snapchat |  | ALLEGATION | 26 |
-| doj_ceos_2025_014 | Snapchat |  | ADVOCACY | 1 |
+| anchorage_pd_2022_007 | Instagram |  | ALLEGATION | 9 |
+| anchorage_pd_2022_007 | Snapchat |  | ALLEGATION | 21 |
 | doj_ceos_2025_023 | UnmonitoredCommunication | encrypted | ADMITTED | 1 |
 | doj_ceos_2025_025 | Anonymity | Tor | SWORN_AFFIDAVIT | 2 |
-| doj_ceos_2025_025 | DistributionInfrastructure | uploaded | SWORN_AFFIDAVIT | 1 |
 | doj_ceos_2025_025 | Website C (name withheld) |  | ADVOCACY | 1 |
-| doj_ceos_2025_025 | Website D (name withheld) |  | SWORN_AFFIDAVIT | 1 |
 | doj_ceos_2025_026 | Snapchat |  | ADMITTED | 2 |
 | doj_ceos_2025_031 | Website A (name withheld) |  | ADVOCACY | 1 |
-| doj_ceos_2025_031 | Website A (name withheld) |  | ADMITTED | 1 |
 | doj_ceos_2026_001 | Facebook Messenger |  | ADMITTED | 2 |
-| doj_ceos_2026_001 | Instagram |  | ADMITTED | 4 |
+| doj_ceos_2026_001 | Instagram |  | ADMITTED | 3 |
 | doj_ceos_2026_001 | Skype |  | ADMITTED | 1 |
 | doj_ceos_2026_006 | Grindr |  | ADVOCACY | 2 |
 | ky_sp_2025_038 | Facebook Messenger |  | ADMITTED | 1 |
 | ncis_2023_001 | ContactDiscovery | public group | ADMITTED | 1 |
-| ncmec_2022_575 | Snapchat |  | ADMITTED | 1 |
 | svicac_2022_009 | Kik |  | ALLEGATION | 1 |
-| texas_ag_2019_013 | Snapchat |  | SWORN_AFFIDAVIT | 1 |
-| usss_2017_006 | FaceTime |  | SWORN_AFFIDAVIT | 1 |
-| usss_2017_006 | Kik |  | SWORN_AFFIDAVIT | 1 |
 
 ### Level 3. Where does a record state that an act was done by means of a platform or feature?
 
@@ -538,7 +531,7 @@ Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0
 
 ### resolve-1.2.0, confirmation cases (wording written without sight of the rules; the only blind split)
 
-resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule of the observation layer, which also refuses negated, supposed, intended, questioned and quoted conduct, a rule or policy statement, and a clause with no offender acting in it); an offender act coded on a rule or policy statement is dropped. Acts, action codes, actors, dates and order are unchanged from 1.1.0 on every split; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule shared with the observation layer); an offender act coded on a rule or policy statement is dropped. Re-scored from the cached model answers with the earlier results already seen, so no split is a first look, and the rule was not tuned on held-out or confirm. In the resolved coding only the level-C rows differ from 1.1.0 on every split; each coder's own rows can differ where an act on a rule statement is dropped (coder B precision on confirm 181/304 becomes 181/296).
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
@@ -565,7 +558,7 @@ Recall of the released coding by hard-case tag: advocacy 0.273 (3/11); allegatio
 
 ### resolve-1.2.0, development cases (rules were tuned on these)
 
-resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule of the observation layer, which also refuses negated, supposed, intended, questioned and quoted conduct, a rule or policy statement, and a clause with no offender acting in it); an offender act coded on a rule or policy statement is dropped. Acts, action codes, actors, dates and order are unchanged from 1.1.0 on every split; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule shared with the observation layer); an offender act coded on a rule or policy statement is dropped. Re-scored from the cached model answers with the earlier results already seen, so no split is a first look, and the rule was not tuned on held-out or confirm. In the resolved coding only the level-C rows differ from 1.1.0 on every split; each coder's own rows can differ where an act on a rule statement is dropped (coder B precision on confirm 181/304 becomes 181/296).
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|
@@ -592,7 +585,7 @@ Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation
 
 ### resolve-1.2.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
 
-resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule of the observation layer, which also refuses negated, supposed, intended, questioned and quoted conduct, a rule or policy statement, and a clause with no offender acting in it); an offender act coded on a rule or policy statement is dropped. Acts, action codes, actors, dates and order are unchanged from 1.1.0 on every split; only the level-C rows differ. Model answers are the cached ones. All three splits had been scored before, so none is a first look; the rule was not tuned on held-out or confirm.
+resolve-1.2.0: level C needs the sentence to state the feature as the means (the stated-means rule shared with the observation layer); an offender act coded on a rule or policy statement is dropped. Re-scored from the cached model answers with the earlier results already seen, so no split is a first look, and the rule was not tuned on held-out or confirm. In the resolved coding only the level-C rows differ from 1.1.0 on every split; each coder's own rows can differ where an act on a rule statement is dropped (coder B precision on confirm 181/304 becomes 181/296).
 
 | Measure | coder_A | coder_B | resolved | resolved_2b |
 |---|---:|---:|---:|---:|

@@ -1,6 +1,6 @@
 # Coding
 
-How a court record becomes a coded bundle. Two coders work from the page text independently and their agreement is measured. Then either a fixed rule publishes what both coded (**machine-coded**), or a named reviewer decides every disagreement (**adjudicated**).
+How a court record becomes a coded bundle. Two coders work from the page text and their agreement is measured; neither sees the other's answers (with the selective second pass the second is not asked to read a page where the first found no act). Then either a fixed rule publishes what both coded (**machine-coded**), or a named reviewer decides every disagreement (**adjudicated**).
 
 **Contents:**
 - [Automated coding](#automated-coding)

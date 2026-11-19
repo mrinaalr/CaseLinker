@@ -1,4 +1,4 @@
-"""The case-level research table of a release: one row per case, three kinds of evidence kept apart.
+"""The case-level research table of a release: one row per case, the kinds of evidence kept apart.
 
     python -m state_machines.observations.table <release_id> [--check]
 
@@ -6,12 +6,18 @@ Built from the committed release files only (``lifecycle.json`` and ``observatio
 so anyone with the repository can rebuild it; ``--check`` fails when the stored table differs.
 Written to ``<release>/research_table.json`` and ``research_table.csv`` by the release build.
 
-Per case the table keeps three things apart, and they must not be added together:
+Per case the table keeps these apart, and they must not be added together:
 
     platform named            the record mentions a listed service (a mention, not use)
+    platform withheld         the record refers to a service by a placeholder ("Website A")
+    service described         a generic description of an online service; not a platform
     feature stated            the record states a codebook feature phrase (a mention, not use)
     used in an act            the cited sentence of an agreed act states the act was done by means
                               of that platform or feature (the only rows that tie technology to conduct)
+    means stated, act disputed   the sentence states a means and each coder gave an offender act there to an
+                              identified offender, but they differ on the act; a disputed machine reading
+    means stated, actor conflict the same where the coders do not both name an identified offender; never
+                              counted as offender use
 
 The cases are a selected collection of prosecutions with available court records. Counts
 describe these records; they are not rates of offending and not a sample of anything.
@@ -31,8 +37,8 @@ MEANING = ("platforms, service descriptions and features are what the record nam
 READING = [
     "platform_named, feature_stated and used_in_act are three kinds of evidence; do not add them together",
     "platform_withheld holds services the record refers to by a placeholder (\"Website A\"); the label is the record's and means nothing outside its case; a withheld name is not evidence of anonymity or of any feature",
-    "means_stated_act_disputed is a fourth kind: the sentence states the platform or feature as a means, each coder coded an offender act in that sentence by an offender-side actor, and they differ on which act or which offender; both coders' action codes and actor categories are kept, no act is published there and nothing is tied to one. It is a disputed machine reading, not established conduct, and it never enters an agreed-act count or a trajectory",
-    "means_stated_actor_conflict holds the sentences where one coder gives the act to an investigator, the court, a victim or an undercover persona: whose conduct it was is in dispute, so it is not counted as offender use anywhere",
+    "means_stated_act_disputed is a fourth kind, counted in observations (two platforms in one sentence are two rows): the sentence states the platform or feature as a means, each coder gave an offender act in that sentence to an identified offender (the defendant, named so, named by a caption name, or not named, which the coder's prompt defines as the defendant; a co-defendant; a co-conspirator), and they differ on which act or which offender; both coders' action codes and actor categories are kept, no act is published there and nothing is tied to one. It is a disputed machine reading, not established conduct, and it never enters an agreed-act count or a trajectory",
+    "means_stated_actor_conflict holds the observations where the coders do not both name an identified offender: one gives the act to an investigator, the court, a victim or an undercover persona, or to a label the coder did not recognise. Whose conduct it was is in dispute, so it is not counted as offender use anywhere",
     "service_described holds generic descriptions (\"social media application\"): cited phrases, not platforms, never tied to an act",
     "a case with platforms named and nothing in used_in_act documents mentions only, not platform-mediated acts",
     "acts are those two model coders agreed on; an absent act is not evidence the act did not happen",
@@ -40,7 +46,8 @@ READING = [
 ]
 CSV_COLUMNS = ["case_id", "documents", "agreed_acts", "offender_acts", "dated_acts", "offender_action_codes", "harm_codes",
                "platforms_named", "platform_mentions", "platforms_withheld", "withheld_platform_mentions", "service_description_mentions", "feature_classes_stated", "feature_statements",
-               "platforms_used_in_an_act", "features_used_in_an_act", "platform_means_stated_act_disputed", "feature_means_stated_act_disputed", "platforms_named_list", "platforms_withheld_list", "service_descriptions_list", "features_stated_list", "used_in_act_list", "means_stated_act_disputed_list", "means_stated_actor_conflict"]
+               "platforms_used_in_an_act", "features_used_in_an_act", "platform_means_stated_act_disputed", "feature_means_stated_act_disputed",
+               "sentences_means_stated_act_disputed", "platforms_named_list", "platforms_withheld_list", "service_descriptions_list", "features_stated_list", "used_in_act_list", "means_stated_act_disputed_list", "means_stated_actor_conflict"]
 
 
 def _where(r: dict) -> tuple:
@@ -129,6 +136,7 @@ def build(root: Path) -> dict:
                        "features_used_in_an_act": sum(r["kind"] == "feature" for r in observed["used_in_act"]),
                        "platform_means_stated_act_disputed": sum(r["kind"] == "platform" for r in observed["means_stated_act_disputed"]),
                        "feature_means_stated_act_disputed": sum(r["kind"] == "feature" for r in observed["means_stated_act_disputed"]),
+                       "sentences_means_stated_act_disputed": len({(r["doc_id"], r["pdf_page"], r["char_start"]) for r in observed["means_stated_act_disputed"]}),
                        "means_stated_actor_conflict": len(observed["means_stated_actor_conflict"])},
         })
     totals: Counter = Counter()
@@ -161,16 +169,16 @@ def to_csv(table: dict) -> str:
                     "; ".join(f"{k}={v}" for k, v in r["acts"]["offender_action_codes"].items()), "; ".join(r["acts"]["harm_codes"]),
                     c["platforms_named"], c["platform_mentions"], c["platforms_withheld"], c["withheld_platform_mentions"],
                     c["service_description_mentions"], c["feature_classes_stated"], c["feature_statements"],
-                    c["platforms_used_in_an_act"], c["features_used_in_an_act"], c["platform_means_stated_act_disputed"], c["feature_means_stated_act_disputed"],
+                    c["platforms_used_in_an_act"], c["features_used_in_an_act"], c["platform_means_stated_act_disputed"], c["feature_means_stated_act_disputed"], c["sentences_means_stated_act_disputed"],
                     "; ".join(f"{k}={v['mentions']}" for k, v in r["platform_named"].items()),
                     "; ".join(f"{k}={v['mentions']}" for k, v in r["platform_withheld"].items()),
                     "; ".join(f"{k}={v}" for k, v in r["service_described"].items()),
                     "; ".join(f"{cls}:{t}={n}" for cls, terms in r["feature_stated"].items() for t, n in terms.items()),
                     "; ".join(f"{x['action']} {x['relationship']} {x.get('platform') or x['feature_class'] + ':' + x['feature_term']} [{x['standing']}]"
                               for x in r["used_in_act"]),
-                    "; ".join(f"{x['relationship']} {x.get('platform') or x['feature_class'] + ':' + x['feature_term']} "
-                              f"[{x['standing']}; A {'/'.join(x['action_codes']['coder_A'])} by {'/'.join(x['actors']['coder_A'])}; "
-                              f"B {'/'.join(x['action_codes']['coder_B'])} by {'/'.join(x['actors']['coder_B'])}; differ on {' and '.join(x['dispute'])}]"
+                    " | ".join(f"{x['relationship']} {x.get('platform') or x['feature_class'] + ':' + x['feature_term']} "
+                               f"[{x['standing']}, A {'/'.join(x['action_codes']['coder_A'])} by {'/'.join(x['actors']['coder_A'])}, "
+                               f"B {'/'.join(x['action_codes']['coder_B'])} by {'/'.join(x['actors']['coder_B'])}, differ on {' and '.join(x['dispute'])}]"
                               for x in r["means_stated_act_disputed"]),
                     len(r["means_stated_actor_conflict"])])
     return out.getvalue()

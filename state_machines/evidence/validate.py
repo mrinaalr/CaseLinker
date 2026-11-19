@@ -400,8 +400,9 @@ def release_errors(bundle: dict, *, text_root: Optional[Path] = None, deny_list:
     if mode == "preview":
         return out
     ok = ("adjudicated",) if mode == "adjudicated" else ("adjudicated", "agreed")
-    pending = [e["event_id"] for e in bundle["events"] if e["review"]["status"] not in ok]
-    pending += [r["relation_id"] for r in bundle["relations"] if (r.get("review") or {}).get("status", "adjudicated") not in ok]
+    pending = [e["event_id"] for e in bundle["events"] if e["review"]["status"] not in ok]      # an act is never rule-derived
+    ok_relation = ok + (("rule_derived",) if mode == "machine" else ())                          # a machine release makes some relations by rule, and says so
+    pending += [r["relation_id"] for r in bundle["relations"] if (r.get("review") or {}).get("status", "adjudicated") not in ok_relation]
     if pending:
         out.append(f"{len(pending)} events/relations not {' or '.join(ok)} (first: {', '.join(pending[:5])})")
     unresolved = [e["event_id"] for e in bundle["events"] if e.get("unresolved_participants")]

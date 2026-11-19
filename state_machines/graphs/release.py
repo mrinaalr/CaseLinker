@@ -140,7 +140,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "bundle_sha256": _sha(path.read_bytes()),
             "source_documents": sorted({d["sha256"] for d in bundle["documents"]}),
             "review": _review_summary(bundle),
-            "relations": len(bundle["relations"]),
+            "relations": dict(sorted(Counter((r.get("review") or {}).get("status", "adjudicated") for r in bundle["relations"]).items())),
             "passages": {"total": len(bundle["passages"]),
                          "ocr_text_only": sum(p["verification"].get("method") == "ocr_text_exact" for p in bundle["passages"])},
             "graphs": graphs,
@@ -340,7 +340,7 @@ def main(argv=None) -> int:
     b.add_argument("--allow-unreviewed", action="store_true", help="same as --mode preview")
     n = sub.add_parser("nquads")
     n.add_argument("release_id")
-    n.add_argument("--graphs", choices=sorted(SELECTIONS), default="all", help="evidence only, or evidence plus trajectories")
+    n.add_argument("--graphs", choices=sorted(SELECTIONS), default="all", help="evidence only, or evidence, trajectories and observations")
     args = ap.parse_args(argv)
     if args.cmd == "build":
         m = build(args.release_id, allow_unreviewed=args.allow_unreviewed, mode=args.mode)

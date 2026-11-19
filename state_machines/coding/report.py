@@ -141,12 +141,13 @@ def observed_content(release_id: str, pilot: Path = None) -> dict:
         c["distinct case and listed-platform pairs"] += len(o["platforms"])
         c["distinct case and withheld-platform pairs"] += len(o["withheld_platforms"])
         c["observations tied to a published act by a stated means"] += o["observations_tied_to_an_act"]
-        c["observations stating a means in a sentence where each coder coded an offender act and they dispute the act (no act published)"] += o[
+        c["observations stating a means where each coder gave an offender act to an identified offender and they dispute the act (no act published)"] += o[
             "observations_stating_a_means_where_the_coders_dispute_the_act"]
-        c["cases with at least one such disputed-act sentence"] += o["observations_stating_a_means_where_the_coders_dispute_the_act"] > 0
-        c["observations stating a means where one coder gives the act to an investigator, the court, a victim or a persona (not counted as offender use)"] += o[
+        c["distinct sentences holding those observations"] += o["sentences_stating_a_means_where_the_coders_dispute_the_act"]
+        c["cases with a disputed-act sentence"] += o["observations_stating_a_means_where_the_coders_dispute_the_act"] > 0
+        c["observations stating a means where the coders do not both name an identified offender (actor conflict; not counted as offender use)"] += o[
             "observations_stating_a_means_where_a_coder_gives_the_act_to_a_non_offender"]
-        c["cases with at least one such relationship"] += o["observations_tied_to_an_act"] > 0
+        c["cases with a supported relationship"] += o["observations_tied_to_an_act"] > 0
         for k, v in o["by_standing"].items():
             c[f"observations in documents with standing {k}"] += v
     from state_machines.observations.queries import QUERIES, run

@@ -331,7 +331,7 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
 
 **An allegation stays an allegation when the case ends in conviction** (T06). `VERDICT_ELEMENT` is allowed only on a judgment passage, with a reason, for the elements of a count of conviction.
 
-**Coder review status** (`single_coder`, `agreed`, `adjudicated`, `disputed`) records agreement between coders. It is never the court's adjudication.
+**Coder review status** (`single_coder`, `agreed`, `adjudicated`, `disputed`) records agreement between coders. It is never the court's adjudication. A relation that the machine resolution makes by rule from two agreed acts (stated order, a possible retelling) carries `rule_derived` and no coders: no coder asserted it.
 
 ## H. Citation and verification
 
@@ -345,7 +345,7 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
 
 ## I. Double coding and adjudication
 
-- **Two coders code each case independently,** blind to each other and to any earlier coding. Each records `coding.method`: `human`, `agent_assisted` or `agent`. Agent coders are disclosed as agents and are never described as independent human reviewers.
+- **Two coders code each case independently,** blind to each other and to any earlier coding. In the automated run the second model never sees the first model's answers, with one stated dependence: under the selective second pass it is not asked to read a page on which the first model found no act (8 of 886 model pages in `pacer-v1`). No act can be published from such a page either way, since publication needs both. Each records `coding.method`: `human`, `agent_assisted` or `agent`. Agent coders are disclosed as agents and are never described as independent human reviewers.
 - **Agreement:**
   - event matching by passage overlap → precision, recall and F1;
   - action code κ on matched events;

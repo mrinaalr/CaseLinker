@@ -64,7 +64,8 @@ PAGE_LIMITATIONS = (
 )
 
 # Coder adjudication: who agreed on this coded assertion. Separate from SOURCE_STATUS.
-REVIEW_STATUS = ("single_coder", "agreed", "adjudicated", "disputed")
+# rule_derived: a relation the resolution rule made from two agreed acts; no coder asserted it
+REVIEW_STATUS = ("single_coder", "agreed", "adjudicated", "disputed", "rule_derived")
 CODER_METHOD = ("human", "agent_assisted", "agent")
 
 # --- participants and roles (R04/R10) ----------------------------------------------------

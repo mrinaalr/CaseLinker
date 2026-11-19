@@ -393,7 +393,7 @@ def verify_claim(claim: Claim, ctx: VerifyContext) -> VerifyResult:
     if claim.id == "s3.q2_anchor_five":
         n = _pacer_release_cases(ctx.root)
         obs = str(n)
-        notes.append("Cases in the current adjudicated PACER release (state_machines/data/<release>/manifest.json).")
+        notes.append("Cases in the current machine-coded PACER release (state_machines/data/<release>/manifest.json).")
         return VerifyResult(claim.id, "pass" if n >= 5 else "warn", f"release cases={n}", obs, "5", "PACER release manifest", notes)
 
     # --- Paper substring ---
