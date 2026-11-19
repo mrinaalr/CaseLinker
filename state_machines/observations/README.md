@@ -187,6 +187,8 @@ The `/lifecycle` page shows the same things per case ("names 2 platforms, 1 feat
 
 [`affordance_matrix.py`](affordance_matrix.py) writes `affordance_matrix.json`, `affordance_matrix.csv` (one row per affordance class) and `affordance_case_grid.csv` (one row per case) into the release, from the committed release files alone (`python -m state_machines.observations.affordance_matrix <release> --check`).
 
+The matrix says what the pages state. It does not say which capability an offender used. That reading is the [analysis frame](../trajectories/README.md#the-analysis-frame): the same phrases, beside the trajectory step, with a person's note kept out of $O_{i}$.
+
 | Column group | Kind of evidence |
 |---|---|
 | `phrase_stated` | A listed feature phrase of the class is stated in a cited sentence, by the legal standing of the document. A mention |

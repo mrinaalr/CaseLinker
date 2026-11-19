@@ -55,6 +55,7 @@ A record supports three different kinds of claim, and each has its own gate. The
 - **A withheld name is not an affordance either.** "Website A" documents that a service was involved and that the record does not say which. It is not evidence of anonymity.
 - **A sparse graph is a correct graph.** A case may have observations and no relationship, or acts and no platform.
 - **The record is not the model.** A stated feature documents that the capability appears in the case. Whether it enabled the offence is a question for the [theory](theory/README.md) layer, not a fact in the graph.
+- **$O_{i}$ is documented feature use, and on `pacer-v1` it is empty.** The analysis of the 30 does not stop there. The [analysis frame](trajectories/README.md#the-analysis-frame) puts each step next to the platform the sentence names, the capabilities the registry says that platform offered, and the feature phrases the record states. A person records use in a separate note. The note is not written into $O_{i}$.
 
 Release `pacer-v1` holds all three levels for 30 cases (98 documents): 284 agreed acts, 875 observations, 9 acts tied to a platform by a stated means, 48 sentences in 10 cases that state a means where the two coders dispute the act (kept apart, as disputed machine readings), a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. Act counts are lower bounds: on the blind benchmark split the release finds 104 of 247 gold acts. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
 
@@ -120,6 +121,10 @@ python -m state_machines.evidence.migrate old.json new.json
 
 # tests
 DATABASE_URL='' python -m pytest tests/pacer
+
+# the analysis frame for a release: trajectories, stated platforms, registry capabilities.
+# does not modify the release and does not emit graphs. <dir> receives digest.json, digest.md, index.html
+python -m state_machines.trajectories.digest pacer-v1 --registry <capability_sources> --out <dir>
 ```
 
 | Surface | Access | Returns |
@@ -142,6 +147,9 @@ DATABASE_URL='' python -m pytest tests/pacer
 | [`evidence/CODEBOOK.md`](evidence/CODEBOOK.md), [`evidence/CODER_GUIDE.md`](evidence/CODER_GUIDE.md) | What each code means; how to code a case |
 | [`trajectories/derive.py`](trajectories/derive.py) | Partial order, chains, interruptions, derivation metadata |
 | [`trajectories/affordances.py`](trajectories/affordances.py) | Affordance levels A and B from the shared capability registry |
+| [`trajectories/claims.py`](trajectories/claims.py) | One step, split into stated platform, registry candidates, and documented feature use |
+| [`trajectories/digest.py`](trajectories/digest.py) | The analysis frame for a release, and the coding bench |
+| [`trajectories/use_notes.py`](trajectories/use_notes.py) | Researcher judgments of use. They sit beside a step and never enter $O_{i}$ |
 | [`trajectories/afh.py`](trajectories/afh.py) | $\mathrm{Aff}$, $H(c)$, $\psi$, coverage identity, release analysis |
 | [`trajectories/payload.py`](trajectories/payload.py) | The `/lifecycle` payload |
 | [`graphs/emit.py`](graphs/emit.py), [`graphs/shacl.py`](graphs/shacl.py), [`graphs/release.py`](graphs/release.py) | Emission, SHACL, releases |

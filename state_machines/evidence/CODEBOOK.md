@@ -356,3 +356,13 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
 - **Machine resolution** instead publishes only what both coders coded, by a fixed rule (`review.status = agreed`); see [coding](../coding/README.md#machine-resolution).
 - **Victim designations in automated coding.** "Minor Victim 1", "MV-1", "Victim 3" and "Minor Victim B" are read as minors: an assumption that holds for this child-exploitation case set and is not to be carried to cases with adult victims. A pseudonym ("Jane Doe 2") is a minor only where the sentence says so.
 - **Observations** are not coded and need no agreement. A listed platform named, a service referred to by a placeholder ("Website A"), a generic service description ("social media application") or a listed feature phrase stated in a sentence of the record is published as a mention with its source ([observations](../observations/README.md)). A feature becomes level C only through a relationship: the act's own sentence states the means. A withheld name is never evidence of anonymity or of any other affordance, and a generic description is never tied to an act.
+
+## J. Researcher use notes
+
+This layer does not change codebook 0.3.0, and it does not change what the machine publishes as an act, a date, a platform, or \(O_i\).
+
+The machine already produces the analysis frame: agreed acts, the partial order from cited dates and stated sequence, the platform the sentence names as the means, the registry's statement of what that platform offered, and any feature phrase the record states. A registry row is a capability the platform offered. It is not a finding that the offender used it.
+
+**Use is a person's judgment**, recorded in a separate file and shown beside the step. A model may help the person read. A model is not the author of a published note, and a note never enters \(O_i\).
+
+Code a note only for a capability the digest already puts on that step (a candidate, or a capability the platform offered), or for a feature phrase the same case states. The note says how that capability was used in the act. It names no person, and it carries no graphic detail. Judgments are `used`, `not_used`, or `unclear`. A second person codes a sample of the same steps, blind, and the paper reports agreement on the judgment. The note file is the published variable. The model's draft, if any, is not.

@@ -72,6 +72,8 @@ urn:caselinker:pacer:<case_id>:observations    platforms, placeholder-labelled s
 |---|---|
 | `pacer-v1` | 30 cases, 284 agreed acts: evidence, trajectory and observation graphs per case, `observations/`, the case-level research table and the affordance evidence matrix |
 
+An affordance individual in these graphs is level C: the sentence states the feature as the means. On `pacer-v1` there are none. Registry candidates and researcher use notes are not emitted here. They are the [analysis frame](../trajectories/README.md#the-analysis-frame), computed when you want to read the 30, and a later rebuild of the release reproduces the graphs from the same bundles.
+
 ## Oxigraph
 
 The full corpus is rebuilt into an empty store; PACER graphs come from a release. `--pacer-graphs all` (default) loads evidence, trajectory and observation graphs, `--pacer-graphs evidence` the evidence graphs only. Adjudicated and machine-coded releases load; a preview is refused unless `--allow-preview`, which accepts only a local store.

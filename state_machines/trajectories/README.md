@@ -41,6 +41,26 @@ Availability (A) at an event is **supported** when the registry entry is native 
 
 The registry is the one the AfH Q1 work maintains (`research/afh_q1/config/capability_sources/*.yaml`, or `CASELINKER_CAPABILITY_SOURCES`). Every level here is **event-level** (`level_unit: event`). Q1's levels are **case-level**: a press release's sentence about a platform. Case-level associations are never promoted to event-level claims.
 
+## The analysis frame
+
+$O_{i}$ is level C only. On `pacer-v1` it is empty: no agreed act's sentence states a feature as the means. That column stays empty. A platform name, and a capability the registry says the platform offered, are not written into it.
+
+The thing you analyze is the frame beside that column. [`digest.py`](digest.py) reads the committed release and the registry and writes three files. It does not modify the release and it does not emit graphs.
+
+```bash
+python -m state_machines.trajectories.digest pacer-v1 --registry <capability_sources> --out <dir>
+```
+
+| File | What it is |
+|---|---|
+| `digest.json` | Every chain, with the date when the act has one, the platform the sentence names, registry candidates, capabilities the platform offered that are not relevant to this act, documented feature use, and any researcher notes |
+| `digest.md` | The same, as a page |
+| `index.html` | A coding bench. No filing text. You record Used, Not used, or Unclear for a capability the frame already shows |
+
+[`claims.py`](claims.py) is the split. [`use_notes.py`](use_notes.py) accepts a note only from a person (`basis` is `researcher_inference`), only for a capability already on that step or a feature phrase stated in that case, and never copies the note into $O_{i}$. The codebook's rules for the note are in [section J](../evidence/CODEBOOK.md).
+
+Run against the Q1 registry, the frame for these 30 is 202 steps, 8 of them naming a platform as the means, each of those 8 carrying at least one registry candidate, 87 stated feature phrases, and 0 documented feature uses. Two candidates are `supported`: unmonitored communication on `doj_ceos_2026_001` `e050` and `e056`, both dated inside a documented registry period. The other candidates are `uncertain` because the act is undated or the registry date is approximate. Ephemerality is a candidate on a communications act through Snapchat, and it is not a candidate on contact or distribution. It is availability, not use.
+
 ## AfH sets
 
 $$
@@ -58,3 +78,6 @@ In `pacer-v1` the stated-means rule ties no feature to an agreed act (one known 
 | `derive.derived_json(...)` | The same, as deterministic JSON |
 | `afh.release_analysis(threshold, case_id)` | $\mathrm{Aff}(c)$, $H(c)$, $\psi$, coverage identity and per-track chain counts for a release (`/api/lifecycle/analysis`) |
 | `payload.build_payload()` | The `/lifecycle` payload: events with roles, standing, dates, affordances, harms and page provenance; relations; per-track chains at both thresholds (`/api/lifecycle/cases`) |
+| `digest.release_digest(root, registry)` | The analysis frame: chains, stated platforms, registry candidates, documented feature use, researcher notes |
+| `claims.claims(step)` | The same step split into stated platform, candidates, and documented use. Candidates are not copied into $O_{i}$ |
+| `use_notes.validate(notes, offered)` | Researcher use notes. A model basis is refused. A note cannot name a capability the frame does not contain |
