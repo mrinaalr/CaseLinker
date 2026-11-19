@@ -43,7 +43,7 @@ The registry is the one the AfH Q1 work maintains (`research/afh_q1/config/capab
 
 ## The analysis frame
 
-$O_{i}$ is level C only. On `pacer-v1` it is empty: no agreed act's sentence states a feature as the means. That column stays empty. A platform name, and a capability the registry says the platform offered, are not written into it.
+$O_{i}$ is level C only. On `pacer-v1` the stated-means rule ties no feature to an agreed act, so it is empty. That is the rule's output, not a finding that no record states one: the rule misses `doj_ceos_2026_001` `e149`, where an admitted statement gives VPN use as the means (`o0093`; the cue is too far from the term). That column stays empty. A platform name, and a capability the registry says the platform offered, are not written into it.
 
 Each derived step stores that split in `claims`: `stated_platform_means`, `candidate_capabilities` (level B), `available_on_platform` (level A, excluding B), `documented_feature_use` ($O_{i}$), and `how_used` (always null). `candidate_affordances` on the same step is a coder annotation. It is not a registry candidate and it is not copied into `claims`. The derivation record names the act policy, `intersection-1.0`: an act is in the bundle only when both coders cited the same sentence, action, and actor. The acts in `pacer-v1` were not recoded. `capability_registry_loaded` is false on those files, so their `candidate_capabilities` are empty. That is the registry being absent, not a finding that the platforms offered nothing.
 
@@ -61,7 +61,7 @@ python -m state_machines.trajectories.digest pacer-v1 --registry <capability_sou
 
 [`claims.py`](claims.py) is the split. [`use_notes.py`](use_notes.py) accepts a note only from a person (`basis` is `researcher_inference`), only for a capability already on that step or a feature phrase stated in that case, and never copies the note into $O_{i}$. The codebook's rules for the note are in [section J](../evidence/CODEBOOK.md).
 
-Run against the Q1 registry, the frame for these 30 is 202 steps, 8 of them naming a platform as the means, each of those 8 carrying at least one registry candidate, 87 stated feature phrases, and 0 documented feature uses. Two candidates are `supported`: unmonitored communication on `doj_ceos_2026_001` `e050` and `e056`, both dated inside a documented registry period. The other candidates are `uncertain` because the act is undated or the registry date is approximate. Ephemerality is a candidate on a communications act through Snapchat, and it is not a candidate on contact or distribution. It is availability, not use.
+Run against the Q1 registry, the frame for these 30 is 202 steps, 8 of them carrying a platform interaction both coders coded (the observation layer ties a 9th, `ncmec_2022_575` `e077`, from the sentence; the split reads coder annotations only), each of those 8 carrying at least one registry candidate, 87 stated feature phrases, and 0 documented feature uses. Two candidates are `supported`: unmonitored communication on `doj_ceos_2026_001` `e050` and `e056`, both dated inside a documented registry period. The other candidates are `uncertain` because the act is undated or the registry date is approximate. Ephemerality is a candidate on a communications act through Snapchat, and it is not a candidate on contact or distribution. It is availability, not use.
 
 ## AfH sets
 

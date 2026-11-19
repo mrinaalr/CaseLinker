@@ -16,9 +16,9 @@ Review mode **machine**: two local models coded every case independently; a fixe
 | cases with offender acts | 24 |
 | harms recorded: victim minor | 15 |
 | harms recorded: victim unknown | 1 |
-| level-C affordances (sentence states the feature as the means) | 0 |
+| level-C affordances tied by the stated-means rule | 0 |
 | offender acts naming a victim or an undercover persona | 71 |
-| offender acts with a documented platform | 8 |
+| offender acts where both coders coded a platform interaction | 8 |
 | relations: possibly the same act | 7 |
 | relations: stated order | 1 |
 
@@ -140,10 +140,10 @@ Read by rule from every page except docket sheets, independent of the coders. An
 | distinct case and listed-platform pairs | 70 |
 | distinct case and withheld-platform pairs | 5 |
 | observations tied to a published act by a stated means | 9 |
-| observations stating a means where each coder gave an offender act to an identified offender and they dispute the act (no act published) | 48 |
-| distinct sentences holding those observations | 48 |
+| observations stating a means where each coder gave an offender act to an identified offender and they dispute the act (no act published) | 45 |
+| distinct sentences holding those observations | 45 |
 | cases with a disputed-act sentence | 10 |
-| observations stating a means where the coders do not both name an identified offender (actor conflict; not counted as offender use) | 18 |
+| observations stating a means where the coders do not both name an identified offender (actor conflict; not counted as offender use) | 16 |
 | cases with a supported relationship | 7 |
 | observations in documents with standing ADVOCACY | 147 |
 | observations in documents with standing ALLEGATION | 221 |
@@ -357,10 +357,9 @@ SELECT ?case ?what ?phrase ?standing (COUNT(DISTINCT ?obs) AS ?observations) WHE
 
 | case | platform_or_class | phrase | standing | observations |
 |---|---|---|---|---|
-| anchorage_pd_2022_007 | Instagram |  | ALLEGATION | 9 |
+| anchorage_pd_2022_007 | Instagram |  | ALLEGATION | 8 |
 | anchorage_pd_2022_007 | Snapchat |  | ALLEGATION | 21 |
 | doj_ceos_2025_023 | UnmonitoredCommunication | encrypted | ADMITTED | 1 |
-| doj_ceos_2025_025 | Anonymity | Tor | SWORN_AFFIDAVIT | 2 |
 | doj_ceos_2025_025 | Website C (name withheld) |  | ADVOCACY | 1 |
 | doj_ceos_2025_026 | Snapchat |  | ADMITTED | 2 |
 | doj_ceos_2025_031 | Website A (name withheld) |  | ADVOCACY | 1 |

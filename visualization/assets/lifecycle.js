@@ -430,10 +430,10 @@
           el("li", { text: `${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing} · ${coderLine(u)}` }))),
         el("p", { class: "detail-note", text: "A disputed machine reading, not established conduct. The sentence says how something was done, and each model coded an offender act in it, but they differ on what the act is or which offender did it. No act is shown for these sentences and they enter no trajectory." })] : []),
       ...((o.means_stated_actor_conflict || []).length ? [
-        el("div", { class: "detail-sub", text: "Stated as a means; the coders differ on whether the offender acted" }),
+        el("div", { class: "detail-sub", text: "Stated as a means; the coders do not both name an identified offender" }),
         el("ul", { class: "prov" }, o.means_stated_actor_conflict.map(u =>
           el("li", { text: `${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing} · ${coderLine(u)}` }))),
-        el("p", { class: "detail-note", text: "One model gives the act to an investigator, the court, a victim or an undercover persona. Not counted as offender use anywhere." })] : []),
+        el("p", { class: "detail-note", text: "One model gives the act to an investigator, the court, a victim, an undercover persona or a label it did not recognise. Not counted as offender use anywhere." })] : []),
       el("div", { class: "detail-sub", text: "Stated as the means of an act" }),
       o.used_in_act.length ? el("ul", { class: "prov" }, o.used_in_act.map(u =>
         el("li", { text: `${(cs.events[u.event_id] || {}).label || u.action} · ${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing}` })))

@@ -106,8 +106,8 @@ def published_content(release_id: str) -> dict:
             c["acts with a cited date"] += bool(e["time"]["assertions"])
             if fam == "offender":
                 c["offender acts naming a victim or an undercover persona"] += bool(e["targets"])
-                c["offender acts with a documented platform"] += bool(e["platform_interactions"])
-                c["level-C affordances (sentence states the feature as the means)"] += len(e["affordances"])
+                c["offender acts where both coders coded a platform interaction"] += bool(e["platform_interactions"])
+                c["level-C affordances tied by the stated-means rule"] += len(e["affordances"])
             for h in e["harms"]:
                 c[f"harms recorded: victim {h['victim_kind']}"] += 1
         for r in b["relations"]:

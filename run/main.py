@@ -4922,13 +4922,16 @@ def api_ontology_pacer():
         return JSONResponse(content={"release": None, "cases": [], "n": 0},
                             headers={"Cache-Control": "public, max-age=300"})
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
-    cases = [{"case_id": c["case_id"], "graphs": {k: v["iri"] for k, v in c["graphs"].items()},
+    # Only graphs a store holds: an empty trajectory or observation graph is not loaded.
+    cases = [{"case_id": c["case_id"],
+              "graphs": {k: v["iri"] for k, v in c["graphs"].items() if 0 not in (v.get("chains"), v.get("observations"))},
               "shacl": c["shacl"]["conformance"], "review": c["review"]} for c in manifest["cases"]]
     return JSONResponse(
         content={"release": manifest["release_id"], "adjudicated": manifest["adjudicated"],
                  "review_mode": manifest.get("review_mode") or ("adjudicated" if manifest["adjudicated"] else "preview"),
                  "schema_version": manifest["schema_version"], "cases": cases, "n": len(cases),
-                 "note": "Query these named graphs through /sparql."},
+                 "release_graph": f"urn:caselinker:pacer-release:{manifest['release_id']}",
+                 "note": "Query these named graphs through /sparql; the release graph states how their acts were published."},
         headers={"Cache-Control": "public, max-age=600"},
     )
 

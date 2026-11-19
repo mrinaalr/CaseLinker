@@ -189,7 +189,12 @@ _UNREAL = re.compile(r"\b(?:would|could|might|should|if|whether|unless|planned|p
 _QUOTE = re.compile(r'["\u201c\u201d]')
 # who a clause is about, anywhere before the cue: someone other than the offender, and the offender
 # a feature of the service itself ("the site operated on the Tor network") is what the technology is, not what anyone did
-_SERVICE_SUBJECT = r"(?:(?:the|this|that|each|a)\s+(?:web\s?site|site|forum|service|network|application|app|board|server)\b|Website\s(?:[A-Z]|\d{1,2})\b)"
+_SERVICE_SUBJECT = r"(?:(?:the|this|that|each|a)\s+(?:web\s?site|site|forum|service|network|application|app|board|server|browser)\b|Website\s(?:[A-Z]|\d{1,2})\b)"
+# a sentence about how a technology works or what users in general do, with no offender in it, states no one's act
+# ("Users have several ways to search for friends ... on Instagram", "as with all Tor communications", "Tor is a browser that ...")
+_GENERIC_DESCRIPTION = re.compile(r"^\s*(?:\(?(?:[a-z]|\d{1,2}|[ivx]{1,4})[.)]\s+)?(?:users?|a user|people|individuals|persons|customers|members|anyone|someone)\b|\bas with (?:all|any|other)\b"
+                                  r"|\b(?:is|are)\s+(?:a|an)\s+(?:[\w-]+\s+){0,3}(?:browser|network|application|app|service|platform|software|program|tool|protocol)\b"
+                                  r"|\brefers? to\b|\bby default\b", re.I)
 _OTHER_BEFORE = {"platform": re.compile(_THIRD_PARTY, re.I),
                  "feature": re.compile("(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + "|" + _SERVICE_SUBJECT + ")", re.I)}
 _OFFENDER = re.compile(r"(?<!\bwith\s)(?<!\bto\s)(?<!\bfrom\s)(?<!\bagainst\s)(?<!\bwith\sthe\s)(?<!\bto\sthe\s)(?<!\bfrom\sthe\s)"
@@ -319,6 +324,8 @@ def _means(kind: str, sentence: str, o: dict, subject: Optional[str] = None) -> 
     else:
         patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), 0 if o["feature_term"] in ("Tor", "VPN") else re.I)]
     if N.states_a_rule_not_conduct(sentence):               # "the Terms of Service prohibit storing such material on ..."
+        return None
+    if _GENERIC_DESCRIPTION.search(sentence) and not _OFFENDER.search(sentence):   # how the technology works, not anyone's act
         return None
     for rel, pattern, flags in patterns:
         for m in re.finditer(pattern, sentence, flags):

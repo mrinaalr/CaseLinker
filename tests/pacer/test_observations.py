@@ -557,3 +557,19 @@ def test_disputed_readings_stay_out_of_acts_trajectories_and_use_counts(tmp_path
 ])
 def test_supposed_intended_questioned_and_quoted_conduct_states_no_means(kind, sentence, term):
     assert O._means(kind, sentence, {"kind": kind, "named_as": term, "platform": term, "feature_term": term}) is None
+
+
+def test_a_description_of_the_technology_or_its_users_states_no_means():
+    """Reviewer cases (doj_ceos_2025_025 o0015/o0034, anchorage_pd_2022_007 o0011), rewritten synthetically."""
+    from state_machines.observations import observe as O
+    for sentence, o, kind in [
+        ("Users have several ways to search for friends and associates to follow on Kitebox.", {"named_as": "Kitebox"}, "platform"),
+        ("c. Users have several ways to search for friends to follow on Kitebox.", {"named_as": "Kitebox"}, "platform"),
+        ("As with all Tor communications, traffic is routed through Tor to hide the user.", {"feature_term": "Tor"}, "feature"),
+        ("Signal messages are sent using encrypted channels by default.", {"feature_term": "encrypted"}, "feature"),
+        ("Users trafficked material via Website A by posting links.", {"named_as": "Website A"}, "platform"),
+    ]:
+        assert O._means(kind, sentence, o) is None, sentence
+    # the offender's own act still states the means, even in a sentence that also describes the technology
+    assert O._means("platform", "The defendant contacted Minor Victim 1 on Kitebox.", {"named_as": "Kitebox"})
+    assert O._means("feature", "He used Tor, which is a browser that hides addresses, to reach the site.", {"feature_term": "Tor"})

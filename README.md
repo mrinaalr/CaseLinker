@@ -293,10 +293,10 @@ A deterministic mapping layer translates each case's extracted features into CAC
 1. **CaseLinker case features** — already extracted (platforms, topics, investigation signals, prosecution outcomes).
 2. **Mapping layer** — deterministic translation to CAC entities and relationships (`ontology/pipeline/graph_generate.py`).
 3. **RDF emission** — per-case graphs as Turtle and JSON-LD under `ontology/graph_output/`.
-4. **SHACL validation** — only conformant graphs enter the merged corpus.
+4. **SHACL validation** — only conformant press-release case graphs enter the merged corpus.
 5. **SPARQL-queryable corpus** — canonical per-case graphs are loaded into Oxigraph (named graph per case; union default graph) and served at `GET|POST /sparql`.
 
-The live store holds **10,802** press-release case graphs (`…/resource/case/{case_id}`) and, once it is rebuilt with `--pacer-release`, an evidence, a trajectory and an observation graph per released PACER case (`urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and `:observations`; see [state_machines/graphs](state_machines/graphs/README.md)). Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
+The live store holds **10,802** press-release case graphs (`…/resource/case/{case_id}`) and, once it is rebuilt with `--pacer-release`, an evidence graph per released PACER case and, where the case has any, a trajectory and an observation graph (`urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and `:observations`; see [state_machines/graphs](state_machines/graphs/README.md)). Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
 
 > **[Graph Interface](https://caselinker.up.railway.app/patterns)**: browse and compare case graphs, look up by CAC class / platform / agency, open PACER investigations, and explore CaseLinker data.
 

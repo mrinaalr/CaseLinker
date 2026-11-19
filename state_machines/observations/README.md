@@ -258,13 +258,13 @@ On the 30 real cases (`pacer-v1`, 98 documents):
 | of a feature phrase | 87, in 13 cases |
 | Acts tied to a platform by a stated means | 9, in 7 cases |
 | Acts tied to a feature by a stated means | 0 |
-| Observations stating a platform as a means, act disputed | 44 |
-| Observations stating a feature as a means, act disputed | 4 |
-| Distinct sentences holding those 48 observations | 48 |
+| Observations stating a platform as a means, act disputed | 43 |
+| Observations stating a feature as a means, act disputed | 2 |
+| Distinct sentences holding those 45 observations | 45 |
 | Cases with a disputed-act sentence | 10 |
-| Observations where the coders do not both name an identified offender (actor conflict; not counted above) | 18 |
+| Observations where the coders do not both name an identified offender (actor conflict; not counted above) | 16 |
 
-Of the 48 disputed observations the coders differ on the action code in 23, on the actor in 4, on both in 20, and in 1 they give the same code and actor without the resolution pairing them. By standing: 31 allegation, 11 admitted, 4 advocacy, 2 sworn affidavit. 30 of the 48 are in one case's indictment (`anchorage_pd_2022_007`). In one record neither coder names the defendant (both name co-offenders). Among the 18 actor conflicts, the non-offender or unrecognised side is an unrecognised label in 12 coder readings, law enforcement in 7, the court in 5 and a victim in 1.
+Of the 45 disputed observations the coders differ on the action code in 22, on the actor in 4, on both in 18, and in 1 they give the same code and actor without the resolution pairing them. By standing: 30 allegation, 11 admitted, 4 advocacy. 29 of the 45 are in one case's indictment (`anchorage_pd_2022_007`). In one record neither coder names the defendant (both name co-offenders). Among the 16 actor conflicts, the non-offender or unrecognised side is an unrecognised label in 11 coder readings, law enforcement in 7, the court in 4 and a victim in 1. A sentence that describes how a technology works or what its users in general do, with no offender in it, is not read as stating a means.
 
 By the strongest thing each record gives about a service: 25 cases name a listed platform, 2 give only a generic description, and 3 give nothing (`ncmec_2023_222`, `usss_2023_004`, `wy_dci_2023_005`). Both cases with placeholder labels also name a listed platform.
 

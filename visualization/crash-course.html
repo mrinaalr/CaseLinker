@@ -459,7 +459,7 @@
           <div class="col">
             <h2>Collect</h2>
             <button class="node" data-go="collect"><strong>Press-release suite</strong><span>Listing, URL list, or DOJ API → merged PDF</span></button>
-            <button class="node" data-go="pacer"><strong>PACER / RECAP</strong><span>CourtListener free archive; court docs collected at $3–5 each (41 records, 128 documents, 297 graphs)</span></button>
+            <button class="node" data-go="pacer"><strong>PACER / RECAP</strong><span>CourtListener free archive; court docs collected at $3–5 each (release pacer-v1: 30 cases, 98 documents)</span></button>
           </div>
           <div class="arrow" aria-hidden="true">→</div>
           <div class="col">
@@ -781,9 +781,9 @@
         lede: "Federal dockets are a court-record overlay beside the 10,362 press-release case graphs. Collection goes through CourtListener’s RECAP archive.",
         points: [
           ["Who might have a docket", "corpus2pacer.py. Tier A: federal ingestion source. B: federal prosecuting or investigating agency. C: narrative signals (U.S. District Court, federal indictment language, criminal docket pattern). Any tier includes the case; confidence is high / medium / low."],
-          ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; current collection is 41 records, 128 documents, 297 graphs. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
+          ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; release pacer-v1 holds 30 cases and 98 documents. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
           ["What stays local", "PDFs land in ontology/PACER/ on your machine; they are never committed."],
-          ["Coding and graphs", "Cases are coded into evidence bundles under state_machines/ (events, participants, order, sources). A release emits CASE/UCO/CAC graphs, loaded as urn:caselinker:pacer:<case>:evidence and :trajectories by rebuild_oxigraph.py --pacer-release."]
+          ["Coding and graphs", "Cases are coded into evidence bundles under state_machines/ (events, participants, order, sources). A release emits CASE/UCO/CAC graphs, loaded as urn:caselinker:pacer:<case>:evidence, :trajectories and :observations by rebuild_oxigraph.py --pacer-release."]
         ],
         figure: "corpus2pacer.py  →  cases2records.py (RECAP, free default)  →  coded bundles  →  release graphs  →  Oxigraph  ·  /lifecycle",
         links: [

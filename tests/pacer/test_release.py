@@ -350,7 +350,7 @@ def test_a_release_with_observations_adds_a_third_graph_and_leaves_the_other_two
     assert any("without a derivation rule" in p for p in verify_store(m, _query(ds)))
     only = rdflib.Dataset()
     only.parse(nquads("test-v1", data_root=root, out=tmp_path / "ev.nq", select="evidence"), format="nquads")
-    assert verify_store(m, _query(only), select="evidence") == [] and len(list(only.graphs())) <= 2
+    assert verify_store(m, _query(only), select="evidence") == [] and len(list(only.graphs())) <= 3   # default, evidence, release graph
 
 
 def test_a_build_refuses_a_bundle_that_does_not_cover_the_stored_documents(tmp_path):
@@ -374,3 +374,40 @@ def test_a_rebuild_without_observations_leaves_none_behind(tmp_path):
     assert "observed" not in (rel / "lifecycle.json").read_text()
     left = [p.name for p in rel.rglob("*") if "observations" in p.name or p.name.startswith(("research_table", "affordance_"))]
     assert left in ([], ["observations"]) and not list((rel / "observations").glob("*"))
+
+
+def test_store_says_how_the_release_was_reviewed(tmp_path):
+    """A query over the store can tell how the acts were published: the release graph states the review mode."""
+    from state_machines.graphs.release import release_graph_iri
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    m = build("test-v1", data_root=root, text_root=tmp_path / "text")
+    ds = rdflib.Dataset()
+    ds.parse(nquads("test-v1", data_root=root, out=tmp_path / "all.nq"), format="nquads")
+    rel = rdflib.URIRef(release_graph_iri("test-v1"))
+    clt = rdflib.Namespace("https://w3id.org/caselinker/trajectory#")
+    g = ds.graph(rel)
+    assert [str(o) for o in g.objects(rel, clt.reviewMode)] == [m["review_mode"]]
+    parts = {str(o) for o in g.objects(rel, rdflib.namespace.DCTERMS.hasPart)}
+    assert m["cases"][0]["graphs"]["evidence"]["iri"] in parts
+    ds.remove_graph(g)
+    assert any("missing release graph" in p for p in verify_store(m, _query(ds)))
+    m2 = dict(m, review_mode="machine")
+    ds.parse(nquads("test-v1", data_root=root, out=tmp_path / "all2.nq"), format="nquads")
+    assert any("review mode" in p for p in verify_store(m2, _query(ds)))
+
+
+def test_release_graph_terms_are_declared(tmp_path):
+    """Every clt: term on the pacer-v1 release graph is declared in the trajectory extension."""
+    from state_machines.graphs.release import release_graph_iri
+    from state_machines.graphs.shacl import EXTENSION
+    ds = rdflib.Dataset()
+    ds.parse(nquads("pacer-v1", out=tmp_path / "r.nq", select="evidence"), format="nquads")
+    rel = rdflib.URIRef(release_graph_iri("pacer-v1"))
+    g = ds.graph(rel)
+    clt = "https://w3id.org/caselinker/trajectory#"
+    assert (rel, rdflib.URIRef(clt + "reviewMode"), rdflib.Literal("machine")) in g
+    ext = rdflib.Graph().parse(EXTENSION / "caselinker-trajectory.ttl")
+    declared = {str(s_) for s_ in ext.subjects(rdflib.RDF.type, None)}
+    used = {str(p) for p in g.predicates() if str(p).startswith(clt)}
+    assert used and used <= declared, used - declared

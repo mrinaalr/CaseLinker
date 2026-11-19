@@ -42,7 +42,22 @@ clt:verificationStatus a owl:DatatypeProperty ;
 
 clt:reviewStatus a owl:DatatypeProperty ;
     rdfs:label "coder review status" ;
-    rdfs:comment "Agreement between coders (single_coder, agreed, adjudicated, disputed). Not a court's adjudication." ;
+    rdfs:comment "Agreement between the release's coders (single_coder, agreed, adjudicated, disputed). Not a court's adjudication. Who the coders were is on the release graph (clt:reviewMode): in a machine release, agreed means two model coders agreed." ;
+    rdfs:range xsd:string .
+
+clt:reviewMode a owl:DatatypeProperty ;
+    rdfs:label "release review mode" ;
+    rdfs:comment "How a release's acts were published: machine (two model coders agreed, no human review), adjudicated (a named reviewer decided every disagreement) or preview. Stated once per release, on the release graph." ;
+    rdfs:range xsd:string .
+
+clt:actPolicy a owl:DatatypeProperty ;
+    rdfs:label "act policy" ;
+    rdfs:comment "The rule that decides which coded acts a release publishes (for example intersection-1.0: both coders coded the same sentence, action and actor)." ;
+    rdfs:range xsd:string .
+
+clt:coderModel a owl:DatatypeProperty ;
+    rdfs:label "coder model" ;
+    rdfs:comment "A model coder used for a release, as name@content-digest." ;
     rdfs:range xsd:string .
 
 clt:supportFacet a owl:DatatypeProperty ;

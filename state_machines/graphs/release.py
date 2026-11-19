@@ -44,6 +44,7 @@ from state_machines.evidence import vocab as V
 REPO = Path(__file__).resolve().parents[2]
 DATA = REPO / "state_machines" / "data"
 GRAPH_PREFIX = "urn:caselinker:pacer:"
+RELEASE_GRAPH_PREFIX = "urn:caselinker:pacer-release:"   # one graph per release: how its case graphs were made
 LEGACY_PREFIX = "urn:pacer:kg:"
 MANIFEST_VERSION = "1"
 GRAPH_KINDS = ("evidence", "trajectories", "observations")
@@ -179,13 +180,56 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     return manifest
 
 
+def release_graph_iri(release_id: str) -> str:
+    return f"{RELEASE_GRAPH_PREFIX}{release_id}"
+
+
+_REVIEW_MODE_TEXT = {
+    "machine": "Machine-coded: two local model coders coded every case independently and a fixed rule "
+               "published only what both coded; no person reviewed the real cases. clt:reviewStatus "
+               "\"agreed\" on an act means the two model coders agreed.",
+    "adjudicated": "Adjudicated: a named reviewer decided every disagreement between the coders.",
+    "preview": "Preview: unreviewed coding, not for a public store.",
+}
+
+
+def release_graph(manifest: dict, ds, *, models: Optional[dict] = None, select: str = "all") -> None:
+    """Add the release graph: review mode, act policy, coder models, and every case graph it covers,
+    so a query over the store can tell how the acts in a case graph were published."""
+    import rdflib
+    from rdflib.namespace import DCTERMS, PROV
+
+    clt = rdflib.Namespace(CLT)
+    rid = manifest["release_id"]
+    node = rdflib.URIRef(release_graph_iri(rid))
+    g = ds.graph(node)
+    mode = manifest["review_mode"]
+    g.add((node, rdflib.RDF.type, PROV.Entity))
+    g.add((node, DCTERMS.identifier, rdflib.Literal(rid)))
+    g.add((node, clt.reviewMode, rdflib.Literal(mode)))
+    g.add((node, DCTERMS.description, rdflib.Literal(_REVIEW_MODE_TEXT.get(mode, mode))))
+    for key, prop in (("act_policy", clt.actPolicy), ("derivation_rule", clt.derivationRule)):
+        if manifest.get(key):
+            g.add((node, prop, rdflib.Literal(manifest[key])))
+    for coder in sorted(((models or {}).get("coders") or {}).values(), key=lambda c: c.get("model", "")):
+        g.add((node, clt.coderModel, rdflib.Literal(f"{coder['model']}@{coder['digest']}")))
+    for c in manifest["cases"]:
+        for kind, meta in c["graphs"].items():
+            if kind in SELECTIONS[select] and 0 not in (meta.get("chains"), meta.get("observations")):
+                g.add((node, DCTERMS.hasPart, rdflib.URIRef(meta["iri"])))
+
+
 def nquads(release_id: str, *, data_root: Path = DATA, out: Optional[Path] = None, select: str = "all") -> Path:
-    """Write the selected graph kinds of a release as N-Quads, one named graph per case and kind."""
+    """Write the selected graph kinds of a release as N-Quads, one named graph per case and kind,
+    plus the release graph (``release_graph``)."""
     import rdflib
 
     root = data_root / release_id
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    report = root / "report.json"
+    models = json.loads(report.read_text(encoding="utf-8")).get("models") if report.is_file() else None
     ds = rdflib.Dataset()
+    release_graph(manifest, ds, models=models, select=select)
     for c in manifest["cases"]:
         for kind, meta in c["graphs"].items():
             if kind not in SELECTIONS[select] or 0 in (meta.get("chains"), meta.get("observations")):   # an empty graph has nothing to load
@@ -218,6 +262,13 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
     for g in sorted(expected & present):
         if counts[g] == 0:
             problems.append(f"empty PACER graph {g}")
+    rel = release_graph_iri(manifest["release_id"])
+    if rel not in counts:
+        problems.append(f"missing release graph {rel}")
+    else:
+        modes = [r["m"] for r in query("SELECT ?m WHERE { GRAPH <%s> { <%s> <%sreviewMode> ?m } }" % (rel, rel, CLT))]
+        if modes != [manifest["review_mode"]]:
+            problems.append(f"{rel}: review mode {modes} does not match the manifest's {manifest['review_mode']!r}")
     legacy = sorted(g for g in counts if g.startswith(LEGACY_PREFIX))
     if legacy:
         problems.append(f"{len(legacy)} superseded {LEGACY_PREFIX} graphs are still loaded")

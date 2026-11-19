@@ -1327,7 +1327,7 @@ async def get_lifecycle_cases() -> dict[str, Any]:
     or which offender (both coders' action codes and actor categories are given); no act is
     published there, and it must be reported as a disputed machine reading, never as
     established conduct. ``observed.means_stated_actor_conflict`` lists sentences where one
-    model gives the act to an investigator, the court, a victim or a persona: not offender use
+    model gives the act to an investigator, the court, a victim, a persona or an unrecognised label: not offender use
     by any reading. ``case_id`` is the id of the press release for the same prosecution where the
     corpus holds one.
     """

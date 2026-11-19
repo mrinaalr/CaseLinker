@@ -1,6 +1,6 @@
 # Graphs
 
-CASE/UCO/CAC graphs emitted from coded bundles with the CASE-UCO SDK, validated with SHACL, released with a manifest, and loaded into Oxigraph.
+CASE/UCO/CAC graphs emitted from coded bundles with the CASE-UCO SDK, checked with SHACL (CaseLinker's own shapes pass; the upstream CAC `ActionSemanticsShape` defect is reported apart, [CAC-Ontology#74](https://github.com/Project-VIC-International/CAC-Ontology/issues/74)), released with a manifest, and loaded into Oxigraph.
 
 **Contents:**
 - [Emission](#emission)
