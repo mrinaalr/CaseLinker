@@ -73,6 +73,34 @@ def test_documented_messaging_makes_communication_relevant_but_not_anonymity(tmp
     assert s["level_unit"] == "event"
 
 
+def test_contact_through_a_platform_does_not_establish_that_ephemerality_was_used(tmp_path):
+    """The platform was the stated means. Ephemerality stays a capability the platform offered.
+    It is not action-relevant for contact, and it does not enter O_i. A person may later say how."""
+    from state_machines.trajectories.claims import claims
+
+    reg = registry(tmp_path, ephemerality=cap())
+    bundle = scenario("messaging")
+    event = next(e for e in bundle["events"] if e["event_id"] == "e02")
+    event["action"] = "INITIATE_CONTACT"
+    got = claims(step(bundle, reg))
+    assert got["stated_platform_means"] == ["Chirpline"]
+    assert got["documented_feature_use"] == []
+    assert "ephemerality" in got["available_on_platform"]
+    assert "ephemerality" not in got["candidate_capabilities"]
+    assert set(got["candidate_capabilities"]) <= {"contact_discovery", "unmonitored_communication"}
+    assert got["how_used"] is None
+
+
+def test_a_communications_act_may_carry_ephemerality_as_a_candidate_only(tmp_path):
+    from state_machines.trajectories.claims import claims
+
+    reg = registry(tmp_path, ephemerality=cap())
+    got = claims(step(scenario("messaging"), reg))
+    assert "ephemerality" in got["candidate_capabilities"]
+    assert got["documented_feature_use"] == []
+    assert got["how_used"] is None
+
+
 def test_documented_identity_concealment_enters_O_i(tmp_path):
     s = step(scenario("concealment"), registry(tmp_path))
     assert s["affordances"] == ["anonymity"]                                    # C, from the court record
