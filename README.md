@@ -1,6 +1,6 @@
 # CaseLinker
 
-**CaseLinker** is a project designed to group and visualize **statistical** and **contextual** information from cases involving crimes against children and child sexual exploitation & abuse (CSEA).
+**CaseLinker** is a project designed to group and visualize **statistical** and **contextual** information from cases involving Internet Crimes Against Children.
 
 ## Live Demo
 
