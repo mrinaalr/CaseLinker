@@ -243,11 +243,11 @@ Five local tools ([`repair_expand.py`](repair_expand.py)) let an agent propose a
 
 | Tool | Answers | Writes |
 |---|---|---|
-| `describe_pipeline` | What can be extended, read from the code: layers, document kinds, every detector with the file and line that defines it, the fields the resolver settles, families and the 0.7 line, approved compiled rules, extensions found, the gate's files, the decisions reserved for the maintainer, open review counts | no |
-| `diagnose_case` | Why a stored value is what it is: stored rows and resolution beside a replay of today's readers on the stored text; every candidate with its detector, role, gate reason and a people-masked excerpt; field-shaped spans no reader raised; stored rows today's readers no longer raise | no |
+| `describe_pipeline` | What can be extended, read from the code: layers, document kinds, every detector with the file and line that defines it, the fields the resolver settles, the pattern-layer fields with the function behind each (`previous_conviction`, `platforms_used`, `agencies_involved`, …), families and the 0.7 line, approved compiled rules, extensions found, the gate's files, the decisions reserved for the maintainer, open review counts | no |
+| `diagnose_case` | Why a stored value is what it is: stored rows and resolution beside a replay of today's readers on the stored text; every candidate with its detector, role, gate reason and a people-masked excerpt; field-shaped spans no reader raised; stored rows today's readers no longer raise. A pattern-layer field is replayed through the same merge ingest runs, with the compiled patterns its extractor reads and a masked excerpt of each match. `full=true` adds Stanza NER and spaCy | no |
 | `profile_new_source` | What today's readers make of a new PDF or `.txt`: source detected, cases split, columns filled, raised / kept / dropped per detector, resolution status, review reasons, cases already in the corpus by fingerprint | no |
 | `scaffold_extension` | `extensions/<name>/` with a detector stub and a test that fails until the pattern and the sample are written. `dry_run` by default | the folder only |
-| `run_gate` | Fixed checks, and every case a proposed change would move | no |
+| `run_gate` | Fixed checks, and every case a proposed change would move: for a code change, the before and after of each moved column and every changed case id per column. `full=true` replays with Stanza NER and spaCy | no |
 
 ```mermaid
 flowchart LR
