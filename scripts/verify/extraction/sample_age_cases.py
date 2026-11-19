@@ -55,7 +55,7 @@ else:
     from storage import CaseStorage  # type: ignore
 
 try:
-    from processing import PERP_AGE_MULTI_THRESHOLD  # type: ignore
+    from pattern_processing import PERP_AGE_MULTI_THRESHOLD  # type: ignore
 except ImportError:
     PERP_AGE_MULTI_THRESHOLD = 3
 

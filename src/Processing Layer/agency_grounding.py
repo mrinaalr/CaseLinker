@@ -454,6 +454,86 @@ def _try_county_sheriff(
     }
 
 
+_STATE_POLICE_KEY = re.compile(r"^(?:(?P<state>.+) )?state police(?: department)?$")
+
+
+def _state_police_state(key: str, state_hint: str | None) -> str | None:
+    """USPS code a state-police mention names, or the source state for a bare "State Police"."""
+    from location_grounding import STATE_NAME_TO_USPS
+
+    m = _STATE_POLICE_KEY.match(key)
+    if not m:
+        return None
+    named = (m.group("state") or "").strip()
+    if not named:
+        return state_hint.upper() if state_hint else None
+    if named in STATE_NAME_TO_USPS:
+        return STATE_NAME_TO_USPS[named]
+    compact = named.replace(" ", "").upper()
+    return compact if len(compact) == 2 and compact in set(STATE_NAME_TO_USPS.values()) else None
+
+
+def match_state_police(mention: str, *, state_hint: str | None, cde_by_state: dict) -> dict | None:
+    """Ground "<State> State Police" to that state's CDE state police (#59).
+
+    CDE lists state police three ways: one statewide row (NY, IN, IL, AR, CT, LA), a
+    "Headquarters" row (DE), or posts and counties only (KY, NJ, MI, PA, ...). The first two
+    ground to that row's ORI. Posts-only states ground to the statewide agency with no ORI,
+    as the federal table does. A state whose CDE state police is not named "State Police"
+    (a highway patrol, a state patrol) is left ungrounded: the mention does not name it.
+    """
+    raw = (mention or "").strip()
+    key = _norm_key(raw)
+    if not _STATE_POLICE_KEY.match(key):
+        return None
+    st = _state_police_state(key, state_hint)
+    if not st:
+        return None
+    from location_grounding import STATE_NAME_TO_USPS
+
+    rows: dict[str, dict] = {}
+    for bucket_rows in (cde_by_state.get(st) or {}).values():
+        for row in bucket_rows:
+            if row.get("agency_type_name") == "State Police" and row.get("ori"):
+                rows[row["ori"]] = row
+    named = [r for r in rows.values() if "state police" in (r.get("agency_name") or "").lower()]
+    state_name = next((n.title() for n, c in STATE_NAME_TO_USPS.items() if c == st), st)
+    base = {"mention": raw, "state_hint": st, "hint_source": "mention" if _names_a_state(raw) else "source"}
+    if not named:
+        return {**base, "status": "ungrounded", "reason": "no_cde_state_police"}
+    hit = None
+    if len(named) == 1:
+        hit = named[0]
+    else:
+        hq = [r for r in named if "headquarters" in (r.get("agency_name") or "").lower()]
+        if len(hq) == 1:
+            hit = hq[0]
+    name = f"{state_name} State Police"
+    if hit is not None:
+        return {
+            **base,
+            "status": "grounded",
+            "reason": "cde_state_police",
+            "ori": hit["ori"],
+            "agency_name": name,
+            "cde_agency_name": (hit.get("agency_name") or "").strip(),
+            "agency_type": hit.get("agency_type_name"),
+            "agency_kind": "state",
+            "slug": readable_agency_slug(agency_name=name, state_hint=st, ori=hit["ori"]),
+        }
+    return {
+        **base,
+        "status": "grounded",
+        "reason": "state_police_statewide",
+        "ori": None,
+        "agency_name": name,
+        "agency_type": "State Police",
+        "agency_kind": "state",
+        "cde_posts": len(named),
+        "slug": readable_agency_slug(agency_name=name, state_hint=st, ori=None),
+    }
+
+
 def match_agency(
     mention: str,
     *,
@@ -514,6 +594,10 @@ def match_agency(
             "hint_source": "federal",
             "slug": slug,
         }
+
+    sp = match_state_police(raw, state_hint=state_hint, cde_by_state=cde_by_state)
+    if sp is not None:
+        return sp
 
     # Generic bare labels
     if is_generic_agency_mention(raw):

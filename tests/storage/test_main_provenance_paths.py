@@ -79,7 +79,7 @@ def test_main_forwards_cli_paths_to_store_cases(monkeypatch):
 
     captured = {}
 
-    def _store_cases(cases, db_path, *, ingest_paths=None):
+    def _store_cases(cases, db_path, *, ingest_paths=None, counts=None):
         captured["cases"] = cases
         captured["db_path"] = db_path
         captured["ingest_paths"] = ingest_paths
