@@ -1073,6 +1073,12 @@ class MergeProcessing:
                         normalized.append('FBI')
                     continue
 
+                # "New Jersey State Police" stays as written: the release names no
+                # department, and the grounding table keys on the state (#59).
+                if re.search(r"\bstate\s+police$", org_lower.strip()):
+                    normalized.append(re.sub(r"\s+", " ", org_clean.strip()))
+                    continue
+
                 # Normalize "Police Department" to consistent format
                 if 'police' in org_lower:
                     police_match = re.match(r'^(.+?)\s+police', org_clean, re.IGNORECASE)
