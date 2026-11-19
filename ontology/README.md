@@ -151,7 +151,7 @@ Rebuild tables: `python3 ontology/platform_affordance_evidence/platform_affordan
 
 ## PACER and lifecycle
 
-[`PACER/`](PACER/) is the local store of public federal court records (PDFs, never committed). [`state_machines/`](../state_machines/README.md) codes them into evidence bundles, emits CASE/UCO/CAC graphs with the CASE-UCO SDK and serves each case as `urn:caselinker:pacer:<case_id>:evidence` and `:trajectories`; the same release feeds `/lifecycle`. They are a **court-record overlay**, not a substitute for the 10,802 press-release case graphs.
+[`PACER/`](PACER/) is the local store of public federal court records (PDFs, never committed). [`state_machines/`](../state_machines/README.md) codes them into evidence bundles, emits CASE/UCO/CAC graphs with the CASE-UCO SDK and serves each case as `urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and, where the release has them, `:observations`; the same release feeds `/lifecycle`. They are a **court-record overlay**, not a substitute for the 10,802 press-release case graphs.
 
 ## MCP (on-demand cohorts)
 

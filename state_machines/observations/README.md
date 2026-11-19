@@ -102,7 +102,7 @@ Actor categories, as each coder's own bundle records them (the coder keeps a fix
 | `victim`, `undercover` | the model named a victim or a persona; the coder's codebook rule then wrote the defendant, and the note keeps what the model said | not the offender |
 | `unrecognised_label`, `collective` | a label the coder did not recognise (a pseudonym, a username, "another user") or a group | not established |
 
-Invariants, each checked on every build (`observe.check`) and by tests:
+Invariants of a disputed record. `observe.check` enforces three of them on every build: nothing on the record is tied to an act, a disputed record is one only when both coders name an identified offender, and no published act cites that sentence. The record never picks one coder's actor, and it never becomes an act, an affordance or a trajectory step: those two hold by how the record is written, and tests cover them. The stated-means rule in 4 is applied when the record is built, not re-derived by `check`.
 
 1. **Nothing is tied.** A disputed record has no relationship, makes no act, and creates no affordance individual. It appears in no trajectory, no $O_{i}$, and no count of agreed acts or of use.
 2. **Disagreement is kept, not resolved.** Both coders' codes and actor categories are stored, and the record never picks one coder's actor over the other. What a category means is in the table above: `defendant_not_named` is a model that named no actor, which the prompt defines as the defendant, and it is the commonest category in these records.
