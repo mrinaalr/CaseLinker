@@ -509,8 +509,10 @@ INVESTIGATION_TYPE_MAP: Dict[str, Optional[URIRef]] = {
     # NCMEC CyberTipline referral origin (tip-driven → reactive operation).
     # Complements NCMECCybertipReport when agencies_involved includes NCMEC.
     "cybertip":   CAC_TASKFORCE.ReactiveOperation,
-    "online":     CAC_TASKFORCE.TaskForceOperation,
-    "unknown":    None,  # No operation node: an unknown type is not a fact about the case
+    # No operation node: "online" says where the conduct happened, not that a
+    # task force ran an operation, and an unknown type is not a fact about the case.
+    "online":     None,
+    "unknown":    None,
 }
 
 # ---------------------------------------------------------------------------
@@ -1154,8 +1156,10 @@ class CaseToCAC:
         # in that graph; this triple is only the pointer.
         g.add((inv_uri, DCTERMS.provenance, URIRef(str(inv_uri) + "/provenance")))
 
+        # dcterms:source is the release URL only; the agency that published it
+        # is dcterms:publisher.
         if case.get("source"):
-            g.add((inv_uri, DCTERMS.source, Literal(case["source"])))
+            g.add((inv_uri, DCTERMS.publisher, Literal(case["source"])))
         if case.get("source_url"):
             g.add((inv_uri, DCTERMS.source, _source_url_term(str(case["source_url"]))))
         if case.get("notes"):
@@ -1591,7 +1595,7 @@ class CaseToCAC:
 
         op_class = INVESTIGATION_TYPE_MAP.get(inv_type)
         if op_class is None:
-            if inv_type != "unknown":
+            if inv_type not in INVESTIGATION_TYPE_MAP:
                 warnings.append(f"INVESTIGATION_TYPE_MAP: unmapped type '{inv_type}' — skipped")
             return None
 
@@ -1953,11 +1957,10 @@ class CaseToCAC:
         When ``location_grounds`` is present (ingest linker) or the Census gazetteer
         is on disk, grounded mentions mint readable ``location/{name}-{st}``
         singletons (GEOID suffix on collision) so "Cumberland County" in NJ and NC
-        do not collapse. Ungrounded mentions keep the string slug. Link via
-        ``dcterms:spatial``. A mention the gazetteer did not ground (ungrounded,
-        ambiguous, outside the US registry) is a node of this case only,
-        ``case/{id}/location/{slug}``, so one "Springfield" never joins cases
-        in different states.
+        do not collapse. Link via ``dcterms:spatial``. A mention the gazetteer
+        did not ground (ungrounded, ambiguous, outside the US registry) gets no
+        node: it stays in the provenance graph as a ``location_ground`` with its
+        ``groundStatus``.
         """
         locations_raw = case.get("locations") or []
         if isinstance(locations_raw, str):
@@ -1980,7 +1983,6 @@ class CaseToCAC:
             if isinstance(gnd, dict) and gnd.get("mention")
         }
 
-        case_id = case.get("id", "unknown")
         uris: List[URIRef] = []
         seen_slugs: set = set()
 
@@ -1995,38 +1997,25 @@ class CaseToCAC:
             fips = (gnd.get("fips") or gnd.get("geoid") or "").strip()
             entity_name = (gnd.get("entity_name") or "").strip()
             display = entity_name or label
-            if status == "grounded" and fips:
-                slug = (gnd.get("slug") or "").strip() or self._readable_location_slug(
-                    entity_name=display,
-                    state_hint=gnd.get("state_hint"),
-                    fips=fips,
-                    used=seen_slugs,
-                )
-            else:
-                slug = _slug(label)
-                status = status if status != "grounded" else "ungrounded"
-            grounded = status == "grounded" and bool(fips)
+            if status != "grounded" or not fips:
+                continue
+            slug = (gnd.get("slug") or "").strip() or self._readable_location_slug(
+                entity_name=display,
+                state_hint=gnd.get("state_hint"),
+                fips=fips,
+                used=seen_slugs,
+            )
             if slug in seen_slugs:
-                loc_uri = (
-                    (self._location_registry.get(slug) or BASE[f"location/{slug}"])
-                    if grounded else BASE[f"case/{case_id}/location/{slug}"]
-                )
-                if grounded and label and label != display:
+                loc_uri = self._location_registry.get(slug) or BASE[f"location/{slug}"]
+                if label and label != display:
                     self._add_alt_label(g, loc_uri, label)
                 g.add((inv_uri, DCTERMS.spatial, loc_uri))
                 continue
             seen_slugs.add(slug)
 
-            if grounded:
-                loc_uri = self._get_or_create_location(
-                    g, slug, display, fips=fips, article_mention=label,
-                )
-            else:
-                loc_uri = BASE[f"case/{case_id}/location/{slug}"]
-                g.add((loc_uri, RDF.type, UCO_LOCATION.Location))
-                g.add((loc_uri, RDF.type, CAC_CORE.PlaceLikeEntity))
-                g.add((loc_uri, RDFS.label, Literal(display)))
-                g.add((loc_uri, UCO_CORE.name, Literal(display)))
+            loc_uri = self._get_or_create_location(
+                g, slug, display, fips=fips, article_mention=label,
+            )
             g.add((inv_uri, DCTERMS.spatial, loc_uri))
             uris.append(loc_uri)
 

@@ -508,7 +508,7 @@ Platforms are shared singletons in the graph (e.g., `ex:platform/snapchat` is on
 | `undercover` | `cacontology-taskforce:UndercoverUnit` + `cacontology-taskforce:ProactiveOperation` | `cacontology-taskforce:` | Investigation involved undercover officer/decoy |
 | `proactive` | `cacontology-taskforce:ProactiveOperation` | `cacontology-taskforce:` | Proactive sting or monitoring operation |
 | `reactive` | `cacontology-taskforce:ReactiveOperation` | `cacontology-taskforce:` | Reactive to a complaint or CyberTip |
-| `online` | `cacontology-taskforce:TaskForceOperation` | `cacontology-taskforce:` | Generic online investigation — use base class |
+| `online` | `cacontology:CACInvestigation` only | `cacontology:` | Do not create operation node; the release states no task-force operation |
 | `unknown` | `cacontology:CACInvestigation` only | `cacontology:` | Do not create operation node; set `investigationStatus=unknown` |
 
 ---
@@ -797,7 +797,7 @@ These exist purely for ML similarity computation and represent no independent ca
 | Feature | Why Unmappable |
 |---|---|
 | `id` | CaseLinker primary key; use as `dcterms:identifier` on `CACInvestigation` node (literal, not a class) |
-| `source` | Source corpus label (AZICAC, SVICAC, etc.); use as `dcterms:source` literal |
+| `source` | Source corpus label (AZICAC, SVICAC, etc.); use as `dcterms:publisher` literal |
 | `source_url` | URL; use as `dcterms:source` URL literal |
 | `created_at` / `updated_at` | DB row timestamps; use as `dcterms:created` / `dcterms:modified` |
 | `notes` | Free-text editorial; use as `rdfs:comment` |
