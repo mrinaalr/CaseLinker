@@ -63,13 +63,28 @@ def _new_human(stored, text, case_id):
 
 
 # Detectors added after a case's run; their assertions are appended to that run.
-_NEW_DETECTORS = ("cybertip_reporter",)
+_NEW_DETECTORS = ("cybertip_reporter", "prior_history")
+
+
+def _year(stored):
+    """The release year the stored date resolution recorded, for dated prior convictions."""
+    for a in stored:
+        if a.get("field") == "date" and a.get("role") == "publication" and str(a.get("value") or "")[:4].isdigit():
+            return int(str(a["value"])[:4])
+    return None
 
 
 def _new_detected(stored, text):
     amod = processing.assertions_module
     have = {(a["field"], a["value"], a["role"], a["span_start"]) for a in stored}
     fresh = [amod.gate_assertion(text, a) for a in amod.patterns.cybertip_reporter_assertions(text)]
+    # Prior history (#64) is appended without a defendant: per-case name tokens are numbered over
+    # the whole original run, so a name tokenised here alone would not match the stored ones, and
+    # a raw name is never stored. A re-extract attributes each record to its defendant.
+    fresh += [amod.gate_assertion(text, a) for a in amod.patterns.prior_history_assertions(text, _year(stored))]
+    for a in fresh:
+        if a["field"] == "prior_history":
+            (a.get("extras") or {}).pop("defendant_entity", None)
     return [a for a in fresh if a["field"] in _NEW_DETECTORS
             and (a["field"], a["value"], a["role"], a["span_start"]) not in have]
 
@@ -86,6 +101,7 @@ def _rederive_case(case: dict, assertions: list, resolutions: dict) -> dict:
     merger._apply_resolved_cybertip(rebuilt, resolutions.get("investigation_type") or {})
     merger._apply_resolved_cybertip_reporter(rebuilt, resolutions.get("cybertip_reporter") or {})
     merger._apply_resolved_dates(rebuilt, resolutions.get("date") or {})
+    merger._apply_resolved_prior_history(rebuilt, resolutions.get("prior_history") or {})
     rebuilt.pop("assertions", None)
     rebuilt.pop("resolutions", None)
     return processing.assign_comparison_values(rebuilt)

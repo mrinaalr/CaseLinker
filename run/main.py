@@ -2299,7 +2299,7 @@ def get_case(request: Request, case_id: str):
     return case
 
 
-_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date")
+_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date", "prior_history")
 _REVIEW_STATUSES = ("needs_review", "disagreement", "partial")
 
 

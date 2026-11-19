@@ -125,14 +125,104 @@ PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE = re.compile(
     """,
     re.IGNORECASE | re.VERBOSE,
 )
-# Prior conviction language (previous_conviction.has_prior_conviction) — not RSO alone.
-PRIOR_CONVICTION_RE = re.compile(
+# Prior conviction language (previous_conviction.has_prior_conviction) — not RSO alone (#64).
+# Plurals and up to two words between ("two prior felony convictions", "a previous federal
+# felony conviction"), but not "prior to his conviction". Supervision at the time of the
+# offense and "convicted felon" / failure to register imply an earlier conviction.
+# Negations, hypotheticals and this case's own conviction are dropped in
+# processing.extract_previous_conviction, which reads the words before each match.
+# The parts below give prior_history its kinds; PRIOR_CONVICTION_RE is their union.
+PRIOR_CONVICTION_WORDING_RE = re.compile(
     r"""
-    \b(?:previous(?:ly)?|prior)\s+conviction\b
+    \b(?:previous|prior)\s+(?:(?!to\b)[a-z][a-z-]*\s+){0,2}convictions?\b
     | \bpreviously\s+(?:been\s+)?convicted\b
-    | \bprior\s+conviction\b
     | \brepeat\s+(?:CSAM\s+|child\s+pornograph\w*\s+|sex\s+)?offenses?\b
-    | \bdue\s+to\s+(?:his|her|their)\s+prior\s+conviction\b
     """,
     re.IGNORECASE | re.VERBOSE,
 )
+PRIOR_STATUS_RE = re.compile(
+    r"\bconvicted\s+felon\b|\bfail(?:ure|ed|ing)?\s+to\s+register\s+as\s+a\s+sex\s+offender\b",
+    re.IGNORECASE,
+)
+PRIOR_SUPERVISION_RE = re.compile(
+    r"\b(?:while|was|were|is|been|already)\s+(?:on|serving)\s+(?:federal\s+|state\s+)?"
+    r"(?:parole|probation|supervised\s+release|supervision)\b",
+    re.IGNORECASE,
+)
+PRIOR_CONVICTION_RE = re.compile(
+    "|".join(f"(?:{rx.pattern})" for rx in (PRIOR_CONVICTION_WORDING_RE, PRIOR_STATUS_RE, PRIOR_SUPERVISION_RE)),
+    re.IGNORECASE | re.VERBOSE,
+)
+# "was convicted in 1996 of …": an earlier conviction only when the year is at least two
+# years before the release's own year (a year-only match is this case's conviction otherwise).
+DATED_CONVICTION_RE = re.compile(
+    r"\b(?:was|had\s+been|been|were)\s+(?:previously\s+|also\s+)?convicted\s+in\s+((?:19|20)\d\d)\b",
+    re.IGNORECASE,
+)
+# Words before a match that make it not this defendant's earlier conviction (#64): a negation
+# ("no prior convictions", "neither defendant has a"), or a generic hypothetical about a class of
+# people ("if he has a prior conviction", "defendants with prior convictions"). The singular
+# "an individual with a previous conviction" is a charge naming this defendant, so it counts.
+PRIOR_CONVICTION_NOT_BEFORE_RE = re.compile(
+    r"""
+    (?:\b(?:no|without|never\s+had\s+(?:a|any)|not\s+have\s+(?:a|any)|lacks?\s+(?:a|any)
+        |neither\s+(?:\w+\s+){0,2}?(?:has|had)\s+(?:a|any)
+        |(?:does|did)(?:\s+not|n['\u2019]?t)\s+(?:appear\s+to\s+|seem\s+to\s+)?have\s+(?:a|any))\s+(?:\w+\s+){0,2}
+     | \b(?:if|whether(?:\s+or\s+not)?)\s+(?:he|she|they|the\s+defendant)\s+(?:has|had|have)\s+(?:a\s+|any\s+|two\s+or\s+more\s+)?(?:\w+\s+){0,2}
+     | \b(?:defendants|offenders|those|anyone|individuals|people|persons)\s+(?:with|who\s+have)\s+(?:been\s+)?(?:a\s+|any\s+)?(?:\w+\s+){0,2}
+    )$
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+# "sentenced … following his previous conviction" is this case's own conviction; "on supervision
+# following his prior conviction" is not. Only a sentencing verb earlier in the sentence makes it own.
+_OWN_CASE_BEFORE_RE = re.compile(r"\b(?:following|after)\s+(?:his|her|their)\s+$", re.IGNORECASE)
+_SENTENCED_RE = re.compile(r"\bsentenc", re.IGNORECASE)
+
+
+# Supervision as a term of this case's sentence, from the words just before it: "suspended …
+# to be served while on probation", "placed on probation … While on probation, he will be",
+# "subject to monitoring while he is on supervised release". "At the time of the offense, he was
+# on supervised release for a 2013 conviction" has none, and is supervision at the time.
+_THIS_CASE_TERMS_RE = re.compile(
+    r"\b(?:suspended|placed\s+on|to\s+be\s+served|will\s+(?:\w+\s+)?be|subject\s+to|monitoring|conditions?)\b",
+    re.IGNORECASE)
+# "While on probation, he will be subject to special conditions" (vt_ag_2020_010).
+_FUTURE_TERM_RE = re.compile(r"\b(?:will|must|shall)\s+(?:\w+\s+)?be\s+subject\b", re.IGNORECASE)
+# Registration as a term of this case: "lifetime supervision as a registered sex offender".
+_REGISTRATION_AS_TERM_RE = re.compile(
+    r"\b(?:supervision|required|ordered|must|will|shall)\b[^.]{0,50}\bas\s+an?\s+$", re.IGNORECASE)
+
+
+def prior_match_excluded(text: str, start: int) -> str:
+    """Why a prior-history match at ``start`` is not this defendant's earlier conviction, or ""."""
+    before = text[max(0, start - 60): start]
+    if PRIOR_CONVICTION_NOT_BEFORE_RE.search(before):
+        return "negated_or_hypothetical"
+    sup = PRIOR_SUPERVISION_RE.match(text, start)
+    if sup:
+        # Within this sentence only: the sentence before can describe supervision conditions
+        # ("… under the conditions of his supervised release. He was on federal supervision
+        # following a 2012 conviction") without making this one a term of this case.
+        lead = text[max(_sentence_start(text, start), start - 80): start]
+        tail = text[sup.end(): sup.end() + 80]
+        if _THIS_CASE_TERMS_RE.search(lead) or _FUTURE_TERM_RE.search(tail):
+            return "this_case_sentence"
+    if REGISTERED_SEX_OFFENDER_RE.match(text, start) and _REGISTRATION_AS_TERM_RE.search(before):
+        return "this_case_sentence"
+    if _OWN_CASE_BEFORE_RE.search(before) and _SENTENCED_RE.search(text[_sentence_start(text, start): start]):
+        return "this_case_conviction"
+    return ""
+
+
+# A period that ends a sentence: not after an initial ("J."), "U.S." or a title.
+_SENTENCE_END_RE = re.compile(r"[.!?]\s+(?=[A-Z\"\u201c])|\n\s*\n")
+_NOT_AN_END = re.compile(r"(?:\b[A-Z]|\bU\.S|\bMrs?|\bMs|\bDr|\bJr|\bSr|\bSt|\bNo|\bInc|\bCo)$")
+
+
+def _sentence_start(text: str, start: int) -> int:
+    """Start of the sentence holding ``start``, within the 400 characters before it."""
+    lo = max(0, start - 400)
+    ends = [m.end() for m in _SENTENCE_END_RE.finditer(text, lo, start)
+            if m.group(0).startswith("\n") or not _NOT_AN_END.search(text[max(lo, m.start() - 4): m.start()])]
+    return ends[-1] if ends else lo

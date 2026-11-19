@@ -163,6 +163,8 @@ def evidence_targets(
             ok = _norm(value) == "cybertip" and role == n_role
         elif field == "cybertip_reporter":
             ok = role == n_role and _norm(value) == _norm(n_value)
+        elif field == "prior_history":
+            ok = role == n_role
         else:
             ok = False
         if ok and node not in out:
