@@ -1,5 +1,6 @@
 """Stage 1: Build candidates.json — platform → case IDs with per-platform counts."""
 import json
+import os
 import sqlite3
 import sys
 from collections import defaultdict
@@ -13,7 +14,7 @@ from ai_extraction_patterns import (  # noqa: E402
     GEN_AI_TOOL_RE,
 )
 
-DB = "caselinker.db"
+DB = os.environ.get("CASELINKER_DB", "caselinker.db")
 OUT = "ontology/platform_affordance_evidence/candidates.json"
 
 PLATFORM_TYPE = {
@@ -149,8 +150,12 @@ def gen_ai_candidate_valid(case_id: str, case_text: str) -> bool:
     return True
 
 
-def main():
-    conn = sqlite3.connect(DB)
+def compute_candidates(conn: sqlite3.Connection) -> dict:
+    """Candidate pool from the live ``cases`` table. Pure: reads ``conn``, writes nothing.
+
+    The evidence builder calls this directly so it can never consume a stale
+    candidates.json; the file is written only as a record of the pool used.
+    """
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
@@ -196,11 +201,9 @@ def main():
             pass
         platform_to_cases[p].add(row["id"])
 
-    conn.close()
-
     # Build output grouped by platform_type
     by_type = defaultdict(list)
-    for platform, case_ids in sorted(platform_to_cases.items(), key=lambda x: -len(x[1])):
+    for platform, case_ids in sorted(platform_to_cases.items(), key=lambda x: (-len(x[1]), x[0])):
         ptype = PLATFORM_TYPE.get(platform, "Unknown")
         by_type[ptype].append({
             "platform": platform,
@@ -211,14 +214,15 @@ def main():
 
     # Sort within each type by count desc
     for ptype in by_type:
-        by_type[ptype].sort(key=lambda x: -x["case_count"])
+        by_type[ptype].sort(key=lambda x: (-x["case_count"], x["platform"]))
 
     output = {
         "summary": {
             "total_candidate_cases": len({cid for cases in platform_to_cases.values() for cid in cases}),
             "total_platform_case_pairs": sum(len(v) for v in platform_to_cases.values()),
             "platforms_with_named_label": len(platform_to_cases),
-            "skipped_generic_labels": dict(skipped_platforms),
+            "skipped_generic_labels": dict(sorted(skipped_platforms.items())),
+            "skipped_gen_ai_embed_cases": sorted(set(skipped_gen_ai_embed)),
         },
         "by_platform_type": dict(by_type),
         "flat": [
@@ -228,9 +232,20 @@ def main():
                 "case_count": len(case_ids),
                 "case_ids": sorted(case_ids),
             }
-            for platform, case_ids in sorted(platform_to_cases.items(), key=lambda x: -len(x[1]))
+            for platform, case_ids in sorted(platform_to_cases.items(), key=lambda x: (-len(x[1]), x[0]))
         ],
     }
+    return output
+
+
+def main():
+    conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    try:
+        output = compute_candidates(conn)
+    finally:
+        conn.close()
+    skipped_platforms = output["summary"]["skipped_generic_labels"]
+    skipped_gen_ai_embed = output["summary"]["skipped_gen_ai_embed_cases"]
 
     with open(OUT, "w") as f:
         json.dump(output, f, indent=2)

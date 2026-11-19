@@ -5,7 +5,7 @@ Purpose: ML/NLP enhancements for case processing.
 Provides semantic similarity, NER extraction, and content sanitization.
 
 These components are designed to enhance (not replace) the existing
-regex-based processing in processing.py.
+regex-based extraction in Pattern Processing Layer/pattern_processing.py.
 
 Usage:
     from ml_models import MLModelManager

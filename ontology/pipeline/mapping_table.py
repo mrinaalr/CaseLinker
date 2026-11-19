@@ -1,0 +1,206 @@
+#!/usr/bin/env python3
+"""Write ontology/MAPPING_PLAN.md: the feature-to-CAC mapping as implemented, generated from the mapper.
+
+    python ontology/pipeline/mapping_table.py            # writes ontology/MAPPING_PLAN.md
+    python ontology/pipeline/mapping_table.py --check    # exit 1 when MAPPING_PLAN.md is out of date
+
+Every table comes from the mapping dictionaries in ``features_to_cac.py``; the last section lists
+the classes and properties the mapper emits for the test fixtures (``tests/ontology_fixtures.py``,
+fictional cases). The document cannot drift from the code: ``tests/graphs/test_mapping_table.py``
+fails when it does.
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any, Iterable, List
+
+HERE = Path(__file__).resolve().parent
+ONTOLOGY = HERE.parent
+REPO = ONTOLOGY.parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(REPO / "tests"))
+
+import features_to_cac as M  # noqa: E402
+
+OUT = ONTOLOGY / "MAPPING_PLAN.md"
+PREFIXES = [
+    ("https://cacontology.projectvic.org#", "cacontology:"),
+    ("https://ontology.unifiedcyberontology.org/uco/", "uco-"),
+    ("https://ontology.caseontology.org/case/", "case-"),
+    ("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:"),
+    ("http://www.w3.org/2000/01/rdf-schema#", "rdfs:"),
+    ("http://www.w3.org/2004/02/skos/core#", "skos:"),
+    ("http://purl.org/dc/terms/", "dcterms:"),
+    ("http://www.w3.org/ns/prov#", "prov:"),
+    ("http://www.w3.org/ns/oa#", "oa:"),
+]
+
+
+def curie(term: Any) -> str:
+    """https://cacontology.projectvic.org/platforms#Kik -> cac-platforms:Kik; other namespaces shortened."""
+    if term is None:
+        return "—"
+    s = str(term)
+    if s.startswith("https://cacontology.projectvic.org/"):
+        module, _, name = s[len("https://cacontology.projectvic.org/"):].partition("#")
+        return f"`cac-{module}:{name}`"
+    for base, prefix in PREFIXES:
+        if s.startswith(base):
+            rest = s[len(base):]
+            if prefix.endswith("-") and "/" in rest:
+                module, _, name = rest.partition("/")
+                return f"`{prefix}{module}:{name}`"
+            return f"`{prefix}{rest}`"
+    return f"`{s}`"
+
+
+def table(header: List[str], rows: Iterable[List[str]]) -> List[str]:
+    out = ["| " + " | ".join(header) + " |", "|" + "|".join("---" for _ in header) + "|"]
+    out += ["| " + " | ".join(str(c).replace("|", "\\|") for c in r) + " |" for r in rows]
+    return out
+
+
+def section(title: str, source: str, note: str, header: List[str], rows: List[List[str]]) -> List[str]:
+    return [f"### {title}", "", f"Source: `{source}` ({len(rows)} entries). {note}", "", *table(header, rows), ""]
+
+
+def platform_rows() -> List[List[str]]:
+    rows = []
+    for name, (cls, props) in sorted(M.PLATFORM_MAP.items(), key=lambda kv: kv[0].lower()):
+        if cls == M._SKIP:
+            rows.append([name, "no node: no CAC class for this kind of service", ""])
+        else:
+            rows.append([name, f"`cac-platforms:{cls}`", ", ".join(f"{k}={v}" for k, v in sorted(props.items()))])
+    return rows
+
+
+def emitted_terms() -> List[str]:
+    import ontology_fixtures as FX
+    from rdflib import RDF, URIRef
+    classes, predicates = Counter(), Counter()
+    for c in FX.CASES:
+        graph, _ = M.CaseToCAC().map_case(FX.case(c["id"]))
+        quads = graph.quads((None, None, None, None)) if hasattr(graph, "quads") else ((s, p, o, None) for s, p, o in graph)
+        for s, p, o, _ in quads:
+            predicates[curie(p)] += 1
+            if p == RDF.type and isinstance(o, URIRef):
+                classes[curie(o)] += 1
+    lines = ["## Terms the mapper emits", "",
+             f"Mapping the {len(FX.CASES)} fictional fixture cases of `tests/ontology_fixtures.py` (a full case, an arrest-only case and an "
+             "empty case) produces these classes and properties. Every one is declared in the pinned ontologies "
+             "(`tests/graphs/test_term_resolution.py`).", "", "**Classes**", "",
+             *table(["Class", "Nodes"], [[k, v] for k, v in sorted(classes.items())]), "", "**Properties**", "",
+             *table(["Property", "Triples"], [[k, v] for k, v in sorted(predicates.items())]), ""]
+    return lines
+
+
+# Why the mapping is shaped this way. Hand-written, and checked against features_to_cac.py when
+# changed; carried over from the planning draft only where the code does it.
+DECISIONS = [
+    "## Modelling decisions", "",
+    "- **One investigation per case.** Each case is a `cacontology:CACInvestigation`, with the CaseLinker case id as "
+    "`dcterms:identifier`; everything else hangs off it.",
+    "- **People are masked, never named.** Names are masked before mapping (`_mask_case_people`); offenders and victims appear as "
+    "unnamed `uco-identity:Person` nodes with their roles.",
+    "- **Shared nodes for platforms and places.** A platform or a place is one node shared across cases (platforms by name; places "
+    "as `uco-location:Location` and `cac-core:PlaceLikeEntity`, linked by `dcterms:spatial`), so the corpus can be queried by them.",
+    "- **First match wins for charges and sentences.** Charge and sentence text is matched against ordered patterns; the first "
+    "matching pattern decides the class, so more specific patterns come first.",
+    "- **NLP concepts are thresholded and carry their confidence.** A semantic concept is mapped only at or above its threshold, "
+    "and the node records the score as `cac-core:hasConfidence`.",
+    "- **Not mapped on purpose:** the clustering vectors (`comparison_values`, which duplicate mapped fields), raw model scores "
+    "other than concept confidence, and evidence volume.",
+    "- **Where CAC has no class, nothing is invented:**",
+    "  - victim and offender gender: no CAC property, so omitted;",
+    "  - fiat payment apps (Cash App): no CAC platform class, so no platform node (`PLATFORM_MAP` marks them skipped);",
+    "  - classified-ads sites (Craigslist): mapped to the nearest class, `cac-platforms:SocialMediaPlatform`, with "
+    "`platformType=classifieds`;",
+    "  - peer-to-peer clients: mapped to `cac-platforms:FileHostingService` with `platformType=p2p`.",
+    "",
+    "These gaps are the ones to raise with Project VIC for future CAC versions.", "",
+]
+
+
+def render() -> str:
+    charges = defaultdict(list)
+    for pattern, cls in M.CHARGE_PATTERN_MAP:
+        charges[curie(cls)].append(pattern)
+    L = ["# CaseLinker → CAC mapping, as implemented", "",
+         "Generated by `ontology/pipeline/mapping_table.py` from `ontology/pipeline/features_to_cac.py`; do not edit by hand "
+         "(`--check` fails when this file and the code disagree). The earlier planning draft is in git history.", "",
+         "Each press-release case becomes one `cacontology:CACInvestigation` graph. CaseLinker's extraction gives the case's fields "
+         "(platforms, topics, charges, sentences, relationships, agencies, investigative technology, NLP concepts); the tables below "
+         "are the deterministic dictionaries that turn each value into a CAC class or property. CAC is pinned at 3.1.0 "
+         "([CAC_ONTOLOGY_VERSION](CAC_ONTOLOGY_VERSION)); graphs are serialized with rdflib and validated with pyshacl against the "
+         "vendored shapes. People are masked before mapping and never become named nodes.", "",
+         "**Contents:**",
+         "- [Platforms](#platforms)", "- [Topics](#topics)", "- [Investigation types](#investigation-types)",
+         "- [Prosecution](#prosecution)", "- [Charges](#charges)", "- [Contact-cluster events](#contact-cluster-events)",
+         "- [Sentences](#sentences)", "- [Severity](#severity)", "- [Relationship to the victim](#relationship-to-the-victim)",
+         "- [Investigative technology](#investigative-technology)", "- [NLP concepts](#nlp-concepts)",
+         "- [Modelling decisions](#modelling-decisions)", "- [Terms the mapper emits](#terms-the-mapper-emits)", "",
+         "## Platforms", "",
+         *section("Platform names", "PLATFORM_MAP", "A platform name from `platforms_used` becomes a node of this class (one shared node per platform).",
+                  ["CaseLinker platform", "CAC class", "Properties"], platform_rows()),
+         *section("Anonymity networks", "ANON_NETWORK_MAP", "", ["CaseLinker value", "CAC class"],
+                  [[k, curie(v)] for k, v in M.ANON_NETWORK_MAP.items()]),
+         "## Topics", "",
+         *section("Offense topics", "TOPIC_MAP", "A deterministic topic adds the offense class; `secondary charge` is added when the prosecution supports it.",
+                  ["Topic", "CAC class", "Severity", "Secondary charge"],
+                  [[k, curie(v.get("class")), v.get("severity", ""), curie(v.get("secondary_charge_class"))] for k, v in M.TOPIC_MAP.items()]),
+         "## Investigation types", "",
+         *section("Investigation type", "INVESTIGATION_TYPE_MAP", "", ["CaseLinker value", "CAC class"],
+                  [[k, curie(v)] for k, v in M.INVESTIGATION_TYPE_MAP.items()]),
+         "## Prosecution", "",
+         *section("Prosecution phase", "PROSECUTION_PHASE_MAP", "", ["CaseLinker value", "CAC class"],
+                  [[k, curie(v)] for k, v in M.PROSECUTION_PHASE_MAP.items()]),
+         *section("Prosecution step", "PROSECUTION_STEP_MAP", "", ["CaseLinker value", "CAC class"],
+                  [[k, curie(v)] for k, v in M.PROSECUTION_STEP_MAP.items()]),
+         "## Charges", "",
+         f"Source: `CHARGE_PATTERN_MAP` ({len(M.CHARGE_PATTERN_MAP)} patterns, first match wins). A charge whose text matches a pattern "
+         "becomes a charge node of that class. Patterns per class, with up to three examples:", "",
+         *table(["CAC class", "Patterns", "Examples"],
+                [[cls, len(pats), "; ".join(f"“{p}”" for p in pats[:3])] for cls, pats in sorted(charges.items())]), "",
+         "## Contact-cluster events", "",
+         *section("Contact-cluster events", "CONTACT_CLUSTER_EVENT_MAP", "", ["CaseLinker value", "CAC class"],
+                  [[k, curie(v)] for k, v in M.CONTACT_CLUSTER_EVENT_MAP.items()]),
+         "## Sentences", "",
+         *section("Sentence patterns", "SENTENCE_PATTERN_MAP", "First match wins.", ["Pattern", "CAC class"],
+                  [[p, curie(c)] for p, c in M.SENTENCE_PATTERN_MAP]),
+         "## Severity", "",
+         *section("Severity indicators", "SEVERITY_MAP", "A score, and a class where CAC has one.", ["Indicator", "Score", "CAC class"],
+                  [[k, s, curie(c)] for k, (s, c) in M.SEVERITY_MAP.items()]),
+         "## Relationship to the victim", "",
+         *section("Relationship to the victim", "ROLE_MAP", "", ["CaseLinker value", "Custodial class", "Relationship class"],
+                  [[k, curie(a), curie(b)] for k, (a, b) in M.ROLE_MAP.items()]),
+         "## Investigative technology", "",
+         *section("Investigative technology", "INVESTIGATION_TECH_MAP", "", ["CaseLinker value", "CAC class"],
+                  [[k, curie(v)] for k, v in M.INVESTIGATION_TECH_MAP.items()]),
+         "## NLP concepts", "",
+         *section("Semantic concepts", "NLP_CONCEPT_MAP", "A concept is mapped only at or above its score threshold.",
+                  ["Concept", "Threshold", "CAC class"], [[k, t, curie(c)] for k, (t, c) in M.NLP_CONCEPT_MAP.items()]),
+         *DECISIONS,
+         *emitted_terms()]
+    return "\n".join(L).rstrip() + "\n"
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--check", action="store_true")
+    a = ap.parse_args(argv)
+    text = render()
+    if a.check:
+        if not OUT.is_file() or OUT.read_text(encoding="utf-8") != text:
+            print(f"{OUT} is out of date: run python ontology/pipeline/mapping_table.py", file=sys.stderr)
+            return 1
+        return 0
+    OUT.write_text(text, encoding="utf-8")
+    print(OUT)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

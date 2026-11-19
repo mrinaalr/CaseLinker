@@ -24,7 +24,7 @@ if str(_ML_LAYER) not in sys.path:
     sys.path.insert(0, str(_ML_LAYER))
 
 _spec = importlib.util.spec_from_file_location(
-    "pattern_processing", _PATTERN_LAYER / "processing.py"
+    "pattern_processing", _PATTERN_LAYER / "pattern_processing.py"
 )
 _pp = importlib.util.module_from_spec(_spec)
 assert _spec.loader

@@ -26,7 +26,7 @@ from __future__ import annotations
 import json
 import re
 from collections import defaultdict
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
 RULE_SET_VERSION = "resolve_v3.0"
 
@@ -291,7 +291,8 @@ def _merge_same_unnamed(entities: List[Dict], text: Optional[str]) -> List[Dict]
     return named + groups
 
 
-def _collapse_perpetrators(perp_mentions: List[Tuple[int, Dict]], text: Optional[str] = None) -> List[Dict]:
+def _collapse_perpetrators(perp_mentions: List[Tuple[int, Dict]], text: Optional[str] = None,
+                           keys_out: Optional[List[Optional[str]]] = None) -> List[Dict]:
     """One age per perpetrator entity; time-qualified ages ("then 27") are kept as other_ages.
 
     A suffix distinguishes people. A nameless mention joins the only named
@@ -338,6 +339,8 @@ def _collapse_perpetrators(perp_mentions: List[Tuple[int, Dict]], text: Optional
         kept.append(ent)
     entities = _merge_same_unnamed(kept, text)
     out = []
+    if keys_out is not None:
+        keys_out.extend(ent["entity"] for ent in entities)
     for n, ent in enumerate(entities, start=1):
         unqualified = [v for v, q in zip(ent["ages"], ent["qualified"]) if not q]
         age = unqualified[0] if unqualified else ent["ages"][0]
@@ -350,7 +353,8 @@ def _collapse_perpetrators(perp_mentions: List[Tuple[int, Dict]], text: Optional
     return out
 
 
-def resolve_age(assertions: List[Dict], text: Optional[str] = None) -> Dict:
+def resolve_age(assertions: List[Dict], text: Optional[str] = None,
+                keys_out: Optional[List[Optional[str]]] = None) -> Dict:
     mentions = _mentions(assertions, "age")
     if not mentions:
         return _result("age", "empty", None, "no_assertions")
@@ -446,7 +450,7 @@ def resolve_age(assertions: List[Dict], text: Optional[str] = None) -> Dict:
 
     settled_values = set(victims) | {v for v, _ in perp_mentions} | {v for v, _ in excluded} | range_ends
     needs = [u for u in unresolved if u["value"] not in settled_values]
-    perp_entities = _collapse_perpetrators(perp_mentions, text)
+    perp_entities = _collapse_perpetrators(perp_mentions, text, keys_out)
     final = {
         "victims": sorted(victims),
         "victim_ranges": [{"min": lo, "max": hi} for lo, hi in sorted(victim_ranges)],
@@ -661,6 +665,57 @@ def resolve_date(assertions: List[Dict], batch_date: Optional[str] = None) -> Di
     return _result("date", "resolved", final, "temporal_roles", pub)
 
 
+PRIOR_KINDS = ("prior_conviction", "registered_offender", "on_supervision")
+
+
+def resolve_prior_history(assertions: List[Dict], perp_keys: Sequence[Optional[str]] = (),
+                          perp_entities: Sequence[Dict] = ()) -> Dict:
+    """Earlier convictions, registration and supervision, one record per masked defendant (#64).
+
+    Each record is labelled with the age resolver's person (``p1``, ``p2``, with that person's
+    age, which is how the graph mapper finds the offender node) when its
+    defendant token names the same person, ``None`` when the sentence named nobody, and
+    ``unmatched`` when it names someone the age readers did not find. Phrases read as
+    negated, hypothetical or this case's own (role ``not_prior``) are counted, never kept.
+    """
+    field = "prior_history"
+    hits = [a for a in assertions if a.get("field") == field and a.get("span_ok")]
+    kept = [a for a in hits if a.get("role") in PRIOR_KINDS]
+    dropped = [a for a in hits if a.get("role") == "not_prior"]
+    if not kept:
+        return _result(field, "empty", None, "no_prior_history" if not dropped else "only_not_prior",
+                       disagreement={"not_prior": len(dropped)} if dropped else None)
+    records: Dict[str, Dict[str, Any]] = {}
+    for a in sorted(kept, key=lambda x: x.get("span_start") or 0):
+        extras = a.get("extras") or {}
+        key = (extras.get("defendant_key") or extras.get("defendant_entity") or "").strip()
+        person = None
+        if key:
+            person = next((f"p{i}" for i, k in enumerate(perp_keys, start=1) if k and _same_named_person(key, k)),
+                          "unmatched")
+        age = next((e.get("age") for e in perp_entities if e.get("person") == person), None)
+        rec = records.setdefault(str(person), {"person": person, "age": age, "kinds": set(), "count": None,
+                                               "years": set(), "sex_offense": False, "spans": []})
+        rec["kinds"].add(a["role"])
+        if extras.get("count"):
+            rec["count"] = max(rec["count"] or 0, int(extras["count"]))
+        if extras.get("year"):
+            rec["years"].add(int(extras["year"]))
+        rec["sex_offense"] = rec["sex_offense"] or bool(extras.get("sex_offense"))
+        rec["spans"].append([a.get("span_start"), a.get("span_end")])
+    out = [{**r, "kinds": sorted(r["kinds"]), "years": sorted(r["years"])}
+           for r in sorted(records.values(), key=lambda r: (r["person"] is None, str(r["person"])))]
+    final = {
+        "records": out,
+        # Supervision at the time follows an earlier conviction, as previous_conviction counts it.
+        "has_prior_conviction": any({"prior_conviction", "on_supervision"} & set(r["kinds"]) for r in out),
+        "registered": any("registered_offender" in r["kinds"] for r in out),
+        "on_supervision": any("on_supervision" in r["kinds"] for r in out),
+    }
+    return _result(field, "resolved", final, "prior_history_phrases", kept,
+                   disagreement={"not_prior": len(dropped)} if dropped else None)
+
+
 def resolve_case(
     assertions: List[Dict],
     *,
@@ -669,12 +724,16 @@ def resolve_case(
 ) -> Dict[str, Dict]:
     """Resolve every field. ``text`` drives narrative-aware age collapse."""
     tip = resolve_investigation_type(assertions)
+    perp_keys: List[Optional[str]] = []
+    age = resolve_age(assertions, text, perp_keys)
     return {
-        "age": resolve_age(assertions, text),
+        "age": age,
         "sentence": resolve_sentence(assertions),
         "investigation_type": tip,
         "cybertip_reporter": resolve_cybertip_reporter(assertions, tip),
         "date": resolve_date(assertions, batch_date),
+        "prior_history": resolve_prior_history(
+            assertions, perp_keys, ((age.get("final_value") or {}).get("perpetrator_entities") or [])),
     }
 
 

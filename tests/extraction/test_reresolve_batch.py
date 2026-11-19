@@ -186,3 +186,15 @@ def test_batch_of_one_still_commits(tmp_path: Path):
     # The ingest resolution plus the re-resolve.
     assert conn.execute("SELECT COUNT(*) FROM field_resolutions WHERE field = 'age'").fetchone()[0] == 2
     conn.close()
+
+
+def test_new_tip_spans_are_appended_but_a_stored_span_is_never_given_a_second_role():
+    module = _reresolve()
+    text = ("Detectives followed up on a CyberTip. Later, officers received a tip from the National Center "
+            "for Missing and Exploited Children.")
+    cyber = text.index("CyberTip")
+    stored = [{"field": "investigation_type", "value": "cybertip", "role": "unscoped",
+               "span_start": cyber, "span_end": cyber + len("CyberTip")}]
+    fresh = [a for a in module._new_detected(stored, text) if a["field"] == "investigation_type"]
+    assert [a["role"] for a in fresh] == ["case_action"]
+    assert fresh[0]["span_start"] > cyber

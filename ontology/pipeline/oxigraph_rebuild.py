@@ -1,7 +1,7 @@
 """Build a wholesale N-Quads dataset from canonical per-case Turtle graphs.
 
 Canonical source priority (first match wins):
-  universe > staging (graph_output/*.ttl) > big_bang > analysis > pacer
+  universe > staging (graph_output/*.ttl) > big_bang > analysis
 
 Each case is loaded into named graph
   https://w3id.org/caselinker/resource/case/{case_id}
@@ -11,10 +11,11 @@ into named graph
   https://w3id.org/caselinker/resource/case/{case_id}/provenance
 It is not a case. A sidecar in a lower-priority pool is not substituted.
 
-PACER court-record graphs live in graph_output/pacer/pacer_{slug}.ttl and
-therefore become named graph …/resource/case/pacer_{slug}. The glob is
-per-directory `*.ttl` (not recursive); pacer is an explicit pool so those
-files are included without swallowing universe/big_bang/analysis.
+PACER court-record graphs are not a pool here. They come from a PACER release
+(state_machines/graphs/release.py) as N-Quads in named graphs
+urn:caselinker:pacer:{case_id}:{evidence|trajectories}, passed to the loader
+with ``rebuild_oxigraph.py --pacer-release``. The glob is per-directory `*.ttl`
+(not recursive).
 
 The public Oxigraph service is expected to run with --union-default-graph so
 default-graph SPARQL still sees the union of those named graphs.
@@ -42,7 +43,6 @@ POOL_PRIORITY: Tuple[Optional[str], ...] = (
     None,
     "big_bang",
     "analysis",
-    "pacer",
 )
 
 
@@ -60,7 +60,7 @@ def provenance_sidecar(case_path: Path) -> Path:
 
 
 def canonical_ttl_paths(graph_root: Optional[Path] = None) -> Dict[str, Path]:
-    """Return case_id -> TTL path using universe > staging > big_bang > analysis > pacer.
+    """Return case_id -> TTL path using universe > staging > big_bang > analysis.
 
     ``*.provenance.ttl`` is excluded. Those files are sidecars, not cases.
     """
@@ -85,7 +85,7 @@ def pool_label_for_path(path: Path, graph_root: Optional[Path] = None) -> str:
     parent = path.resolve().parent
     if graph_root is not None and parent == graph_root.resolve():
         return "staging"
-    if parent.name in ("universe", "big_bang", "analysis", "pacer"):
+    if parent.name in ("universe", "big_bang", "analysis"):
         return parent.name
     return "staging"
 

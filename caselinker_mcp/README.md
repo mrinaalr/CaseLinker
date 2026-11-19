@@ -91,8 +91,8 @@ Use `filter_cases_by_tags` for current database cohorts and `get_corpus_stats` f
 | Tool | Without trusted key | With trusted key |
 |------|---------------------|------------------|
 | `get_all_cases` | **403** (bulk export blocked) | Full corpus via `GET /api/corpus` (every column) |
-| `get_lifecycle_cases` | **403** (lifecycle export blocked) | Lifecycle swimlane / visualization payload |
-| `get_lifecycle_lstar` | **403** (L* export blocked) | Full `lstar_all_cases.json` (transition matrix, global L*, per-case details) |
+| `get_lifecycle_cases` | **403** (lifecycle export blocked) | Documented PACER event graphs and derived trajectories (the `/lifecycle` payload) |
+| `get_trajectory_analysis` | **403** (lifecycle export blocked) | Trajectory analysis of the release: chains, unordered pairs, Aff(c), minor-directed H(c), ψ, coverage identity |
 | `get_case` | Sanitized case: no `raw_data`; `case_text_redacted` (full release, people masked); features and admission excerpts with people masked | Full case including narratives |
 | `get_case_assertions` | Per-method assertions and resolutions with offsets, no span excerpts, no person names | Includes span excerpts and LLM quotes; still no person names |
 | `llm_chat` | 50 requests/IP/day | Daily cap exempt (slowapi 15/min still applies) |
@@ -185,7 +185,7 @@ Add `.cursor/mcp.json` to `.gitignore` if it contains secrets.
 
 ## Local corpus
 
-Useful once you are pointing MCP at localhost. The live corpus is **10,802 case reports**, **131,910 extracted features**, and **4,462 distinct law-enforcement agencies** (**76** sources).
+Useful once you are pointing MCP at localhost. The live corpus is **10,802 case reports**, **131,910 extracted features**, and **4,278 distinct law-enforcement agencies** (**76** sources).
 
 - **Railway:** same deployed snapshot, public rate limits. Set `CASELINKER_API_URL=https://caselinker.up.railway.app`.
 - **Localhost:** set `CASELINKER_API_URL=http://localhost:8000` after `python3 run/main.py`. The local DB starts empty unless you populate it.
@@ -243,11 +243,11 @@ Five local tools ([`repair_expand.py`](repair_expand.py)) let an agent propose a
 
 | Tool | Answers | Writes |
 |---|---|---|
-| `describe_pipeline` | What can be extended, read from the code: layers, document kinds, every detector with the file and line that defines it, the fields the resolver settles, families and the 0.7 line, approved compiled rules, extensions found, the gate's files, the decisions reserved for the maintainer, open review counts | no |
-| `diagnose_case` | Why a stored value is what it is: stored rows and resolution beside a replay of today's readers on the stored text; every candidate with its detector, role, gate reason and a people-masked excerpt; field-shaped spans no reader raised; stored rows today's readers no longer raise | no |
+| `describe_pipeline` | What can be extended, read from the code: layers, document kinds, every detector with the file and line that defines it, the fields the resolver settles, the pattern-layer fields with the function behind each (`previous_conviction`, `platforms_used`, `agencies_involved`, …), families and the 0.7 line, approved compiled rules, extensions found, the gate's files, the decisions reserved for the maintainer, open review counts | no |
+| `diagnose_case` | Why a stored value is what it is: stored rows and resolution beside a replay of today's readers on the stored text; every candidate with its detector, role, gate reason and a people-masked excerpt; field-shaped spans no reader raised; stored rows today's readers no longer raise. A pattern-layer field is replayed through the same merge ingest runs, with the compiled patterns its extractor reads and a masked excerpt of each match. `full=true` adds Stanza NER and spaCy | no |
 | `profile_new_source` | What today's readers make of a new PDF or `.txt`: source detected, cases split, columns filled, raised / kept / dropped per detector, resolution status, review reasons, cases already in the corpus by fingerprint | no |
 | `scaffold_extension` | `extensions/<name>/` with a detector stub and a test that fails until the pattern and the sample are written. `dry_run` by default | the folder only |
-| `run_gate` | Fixed checks, and every case a proposed change would move | no |
+| `run_gate` | Fixed checks, and every case a proposed change would move: for a code change, the before and after of each moved column and every changed case id per column. `full=true` replays with Stanza NER and spaCy | no |
 
 ```mermaid
 flowchart LR
@@ -346,7 +346,7 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|
 | Public (trusted key irrelevant) | 56 | 41 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
-| Trusted-key sensitive | 6 | 6 | `get_all_cases`, `get_lifecycle_cases`, `get_lifecycle_lstar`, `get_case`, `get_case_assertions`, `llm_chat` |
+| Trusted-key sensitive | 6 | 6 | `get_all_cases`, `get_lifecycle_cases`, `get_trajectory_analysis`, `get_case`, `get_case_assertions`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.
 

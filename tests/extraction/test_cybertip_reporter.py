@@ -122,3 +122,62 @@ def test_every_reporter_assertion_passes_the_span_gate():
     rows = [gate(text, a) for a in P.cybertip_reporter_assertions(text)]
     assert rows and all(r["span_ok"] for r in rows), rows
     assert not gate(text, {**rows[0], "value": "Google"})["span_ok"]
+
+
+# --- #71: tips the scope reader missed ------------------------------------------------
+# Shapes from the issue's seeded read (case ids in comments). Every person is made up.
+
+def _scope(text):
+    return [a["role"] for a in P.cybertip_assertions(text)]
+
+
+@pytest.mark.parametrize("text", [
+    "Detectives followed up on a CyberTip and contacted Ashcombe at work.",          # fresno_so_2026_004
+    "Following a Kik cyber tip, investigators served a search warrant.",             # arkansas_dps_2024_005
+    "The investigation was launched over a cyber tip about the account.",            # ncmec_2024_819
+    "Snapchat sent a cyber tip to NCMEC in March.",                                  # ncmec_2025_948
+    "The arrest came as a result of a cyber tip from a social media company.",       # ncmec_2024_272
+    "The charges stem from a 2023 CyberTip.",                                        # ncmec_2024_665
+    "Officers received a tip from the National Center for Missing and Exploited Children.",   # ncmec_2025_110
+    "The case began with a report from the National Center for Missing & Exploited Children (NCMEC).",  # la_ag_2026_020
+])
+def test_case_tips_the_reader_missed_are_case_actions(text):
+    assert "case_action" in _scope(text), _scope(text)
+
+
+@pytest.mark.parametrize("text", [
+    "In 2023, the task force received 13,451 CyberTips.",                     # yearly statistics
+    "Anyone with information can report it at 1-800-THE-LOST or CyberTipline.org.",
+    "NCMEC has received more than 36 million reports this year.",
+])
+def test_statistics_and_reporting_footers_stay_out(text):
+    assert "case_action" not in _scope(text)
+
+
+def test_reports_by_ncmec_are_not_a_tip():
+    assert _scope("According to reports by NCMEC, sextortion is rising.") == []
+
+
+def test_reporter_from_a_tip_named_without_the_word():
+    # ncmec_2023_408
+    text = ("A detective received 19 Internet Crimes Against Children Task Force tips from the National "
+            "Center for Missing and Exploited Children (NCMEC). The tips indicated that Google had reported "
+            "a user had uploaded 3,284 files to a Google Drive account.")
+    assert _found(text) == [("named_esp", "Google")]
+    assert _found("Officers received a CyberTip. The user uploaded files to a Google Drive account.") == []
+
+
+@pytest.mark.parametrize("text", [
+    # gbi_2016_001, gbi_2016_002: a yearly count is not this case's tip
+    "The GA ICAC TF received almost 3,000 tips from the National Center for Missing and Exploited Children (NCMEC) "
+    "in 2015 and worked 3,872 investigations related to child exploitation.",
+    "The task force receives thousands of tips from NCMEC every year.",
+])
+def test_yearly_tip_counts_are_statistics(text):
+    assert "case_action" not in _scope(text)
+
+
+def test_a_small_count_of_this_cases_tips_is_still_a_tip():
+    # ncmec_2023_408
+    text = "A detective received 19 Internet Crimes Against Children Task Force tips from the National Center for Missing and Exploited Children."
+    assert "case_action" in _scope(text)

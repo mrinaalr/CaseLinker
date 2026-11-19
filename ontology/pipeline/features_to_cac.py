@@ -3,10 +3,14 @@
 CaseLinker → CAC Ontology mapper.
 
 Transforms a CaseLinker case dict (as returned by CaseStorage.get_case()) into a
-typed RDF knowledge graph using the CAC Ontology v3.0.0 class vocabulary.
+typed RDF knowledge graph using the CAC Ontology vocabulary, pinned at 3.1.0
+(ontology/CAC_ONTOLOGY_VERSION; shapes from ontology/vendor/cac-3.1.0).
 
-Uses rdflib 7.x with manual CAC namespace bindings.
-(case-uco and case-uco-cac are not published on PyPI as of May 2026.)
+The mapping from CaseLinker's extracted features to CAC classes and properties is
+CaseLinker's own; the graph is built with rdflib 7.x and manual CAC namespace bindings.
+The CASE-UCO SDK (ontology/SDK_VERSION) would only serialize the same mapping, so it is
+used where its builders add structure: the PACER court-record graphs
+(state_machines/graphs/emit.py). Both are validated against the same pinned shapes.
 
 Entry points
 ------------
@@ -509,8 +513,10 @@ INVESTIGATION_TYPE_MAP: Dict[str, Optional[URIRef]] = {
     # NCMEC CyberTipline referral origin (tip-driven → reactive operation).
     # Complements NCMECCybertipReport when agencies_involved includes NCMEC.
     "cybertip":   CAC_TASKFORCE.ReactiveOperation,
-    "online":     CAC_TASKFORCE.TaskForceOperation,
-    "unknown":    None,  # No operation node: an unknown type is not a fact about the case
+    # No operation node: "online" says where the conduct happened, not that a
+    # task force ran an operation, and an unknown type is not a fact about the case.
+    "online":     None,
+    "unknown":    None,
 }
 
 # ---------------------------------------------------------------------------
@@ -1154,8 +1160,10 @@ class CaseToCAC:
         # in that graph; this triple is only the pointer.
         g.add((inv_uri, DCTERMS.provenance, URIRef(str(inv_uri) + "/provenance")))
 
+        # dcterms:source is the release URL only; the agency that published it
+        # is dcterms:publisher.
         if case.get("source"):
-            g.add((inv_uri, DCTERMS.source, Literal(case["source"])))
+            g.add((inv_uri, DCTERMS.publisher, Literal(case["source"])))
         if case.get("source_url"):
             g.add((inv_uri, DCTERMS.source, _source_url_term(str(case["source_url"]))))
         if case.get("notes"):
@@ -1408,7 +1416,7 @@ class CaseToCAC:
             ):
                 victim_ages = [int(age_range["min"])]
         # victim_gender / perpetrator_gender: no CAC Person gender property in TTL yet
-        # (MAPPING_PLAN Q7.5d). Omit RDF triples until Cory adds VictimGender / OffenderGender.
+        # (an open CAC coverage question). Omit RDF triples until CAC adds VictimGender / OffenderGender.
 
         for n in range(1, max(victim_count, len(victim_ages)) + 1):
             person_uri = BASE[f"case/{case_id}/person/victim/{n}"]
@@ -1473,8 +1481,15 @@ class CaseToCAC:
             offender_uris.append(role_uri)
             offender_people.append(person_uri)
 
-        # Registration is stated once per case; it attributes only to a sole offender.
-        if bool(case.get("perpetrator_registered_sex_offender", False)):
+        prior = _case_feature(case, "prior_history")
+        rso_mapped = False
+        if isinstance(prior, dict) and prior.get("records"):
+            rso_mapped = self._map_prior_history(g, case_id, prior["records"], offender_people, perp_ages,
+                                                 status in _CONVICTED_STATUSES, warnings)
+        # Registration is stated once per case; it attributes only to a sole offender. It still
+        # applies when prior history mapped no registered role (e.g. "a convicted sex offender",
+        # which prior_history reads as a prior conviction), so no case loses the role (#64).
+        if not rso_mapped and bool(case.get("perpetrator_registered_sex_offender", False)):
             if len(offender_people) == 1:
                 rso_uri = BASE[f"case/{case_id}/role/registered-sex-offender/1"]
                 g.add((rso_uri, RDF.type, CAC_REGISTRY.RegisteredSexOffender))
@@ -1559,6 +1574,68 @@ class CaseToCAC:
         g.add((rel_uri, UCO_CORE.kindOfRelationship, Literal("Has_Role")))
         g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
 
+    def _map_prior_history(self, g: Graph, case_id: str, records: List[Dict[str, Any]],
+                           offender_people: List[URIRef], perp_ages: List[int], convicted: bool,
+                           warnings: List[str]) -> bool:
+        """Earlier convictions, registration and supervision the release states (#64).
+
+        Returns whether a registered-offender role was attached to an offender.
+
+        Each record becomes a UCO ``Annotation`` on its defendant, one ``uco-core:tag`` per
+        kind and a structured ``statement`` (count, years, sex offense; never release text).
+        A registered offender also takes a CAC ``RegisteredSexOffender`` role, or
+        ``RecidivistSexOffender`` when this case ended in a conviction, with
+        ``priorConvictionCount`` only when the release states how many earlier sex-offense
+        convictions there were. A record goes on the offender node whose stated age is its
+        defendant's and no one else's; on the sole offender when the sentence named nobody;
+        and on the case otherwise. CAC declares no term for a person's earlier conviction or
+        supervision, so those stay on the annotation.
+        """
+        case_uri = BASE[f"case/{case_id}"]
+        rso_mapped = False
+        for i, rec in enumerate(records, start=1):
+            person = None
+            if rec.get("person") and rec.get("person") != "unmatched" and rec.get("age") is not None:
+                idx = [n for n, a in enumerate(perp_ages) if a == rec["age"]]
+                if len(idx) == 1 and idx[0] < len(offender_people) and perp_ages.count(rec["age"]) == 1:
+                    person = offender_people[idx[0]]
+            elif rec.get("person") is None and len(offender_people) == 1:
+                person = offender_people[0]
+            if person is None and offender_people:
+                warnings.append(f"prior_history record {i} ({rec.get('person')}) not attributed to one offender; "
+                                f"kept on the case")
+            subject = person or case_uri
+            ann = URIRef(f"{subject}/prior-history") if person else BASE[f"case/{case_id}/prior-history/{i}"]
+            kinds = [k for k in rec.get("kinds") or [] if k in ("prior_conviction", "registered_offender",
+                                                                 "on_supervision")]
+            if not kinds:
+                continue
+            g.add((ann, RDF.type, UCO_CORE.Annotation))
+            g.add((ann, UCO_CORE.object, subject))
+            g.add((ann, RDFS.label, Literal("prior history")))
+            parts = list(kinds)
+            if rec.get("count"):
+                parts.append(f"count={int(rec['count'])}")
+            if rec.get("years"):
+                parts.append("years=" + ",".join(str(int(y)) for y in rec["years"]))
+            parts.append(f"sex_offense={'true' if rec.get('sex_offense') else 'false'}")
+            g.add((ann, UCO_CORE.statement, Literal("; ".join(parts))))
+            for kind in kinds:
+                g.add((ann, UCO_CORE.tag, Literal(kind)))
+                self._evidence("prior_history", kind, kind, ann)
+            if "registered_offender" in kinds and person is not None:
+                n = offender_people.index(person) + 1
+                rso = BASE[f"case/{case_id}/role/registered-sex-offender/{n}"]
+                g.add((rso, RDF.type, CAC_REGISTRY.RecidivistSexOffender if convicted
+                       else CAC_REGISTRY.RegisteredSexOffender))
+                self._has_role(g, person, rso)
+                if convicted and rec.get("count") and rec.get("sex_offense"):
+                    g.add((rso, CAC_REGISTRY.priorConvictionCount,
+                           Literal(int(rec["count"]), datatype=XSD.nonNegativeInteger)))
+                self._evidence("prior_history", "registered_offender", "registered_offender", rso)
+                rso_mapped = True
+        return rso_mapped
+
     def _evidence(self, field: str, role: str, value: Any, node: URIRef) -> None:
         if not hasattr(self, "evidence_nodes"):
             self.evidence_nodes = []
@@ -1591,7 +1668,7 @@ class CaseToCAC:
 
         op_class = INVESTIGATION_TYPE_MAP.get(inv_type)
         if op_class is None:
-            if inv_type != "unknown":
+            if inv_type not in INVESTIGATION_TYPE_MAP:
                 warnings.append(f"INVESTIGATION_TYPE_MAP: unmapped type '{inv_type}' — skipped")
             return None
 
@@ -1953,11 +2030,10 @@ class CaseToCAC:
         When ``location_grounds`` is present (ingest linker) or the Census gazetteer
         is on disk, grounded mentions mint readable ``location/{name}-{st}``
         singletons (GEOID suffix on collision) so "Cumberland County" in NJ and NC
-        do not collapse. Ungrounded mentions keep the string slug. Link via
-        ``dcterms:spatial``. A mention the gazetteer did not ground (ungrounded,
-        ambiguous, outside the US registry) is a node of this case only,
-        ``case/{id}/location/{slug}``, so one "Springfield" never joins cases
-        in different states.
+        do not collapse. Link via ``dcterms:spatial``. A mention the gazetteer
+        did not ground (ungrounded, ambiguous, outside the US registry) gets no
+        node: it stays in the provenance graph as a ``location_ground`` with its
+        ``groundStatus``.
         """
         locations_raw = case.get("locations") or []
         if isinstance(locations_raw, str):
@@ -1980,7 +2056,6 @@ class CaseToCAC:
             if isinstance(gnd, dict) and gnd.get("mention")
         }
 
-        case_id = case.get("id", "unknown")
         uris: List[URIRef] = []
         seen_slugs: set = set()
 
@@ -1995,38 +2070,25 @@ class CaseToCAC:
             fips = (gnd.get("fips") or gnd.get("geoid") or "").strip()
             entity_name = (gnd.get("entity_name") or "").strip()
             display = entity_name or label
-            if status == "grounded" and fips:
-                slug = (gnd.get("slug") or "").strip() or self._readable_location_slug(
-                    entity_name=display,
-                    state_hint=gnd.get("state_hint"),
-                    fips=fips,
-                    used=seen_slugs,
-                )
-            else:
-                slug = _slug(label)
-                status = status if status != "grounded" else "ungrounded"
-            grounded = status == "grounded" and bool(fips)
+            if status != "grounded" or not fips:
+                continue
+            slug = (gnd.get("slug") or "").strip() or self._readable_location_slug(
+                entity_name=display,
+                state_hint=gnd.get("state_hint"),
+                fips=fips,
+                used=seen_slugs,
+            )
             if slug in seen_slugs:
-                loc_uri = (
-                    (self._location_registry.get(slug) or BASE[f"location/{slug}"])
-                    if grounded else BASE[f"case/{case_id}/location/{slug}"]
-                )
-                if grounded and label and label != display:
+                loc_uri = self._location_registry.get(slug) or BASE[f"location/{slug}"]
+                if label and label != display:
                     self._add_alt_label(g, loc_uri, label)
                 g.add((inv_uri, DCTERMS.spatial, loc_uri))
                 continue
             seen_slugs.add(slug)
 
-            if grounded:
-                loc_uri = self._get_or_create_location(
-                    g, slug, display, fips=fips, article_mention=label,
-                )
-            else:
-                loc_uri = BASE[f"case/{case_id}/location/{slug}"]
-                g.add((loc_uri, RDF.type, UCO_LOCATION.Location))
-                g.add((loc_uri, RDF.type, CAC_CORE.PlaceLikeEntity))
-                g.add((loc_uri, RDFS.label, Literal(display)))
-                g.add((loc_uri, UCO_CORE.name, Literal(display)))
+            loc_uri = self._get_or_create_location(
+                g, slug, display, fips=fips, article_mention=label,
+            )
             g.add((inv_uri, DCTERMS.spatial, loc_uri))
             uris.append(loc_uri)
 
@@ -2913,7 +2975,7 @@ AZICAC_2011_006_FIXTURE: Dict[str, Any] = {
     "updated_at": "2026-05-26T00:00:00",
 }
 
-# Expected node types from MAPPING_PLAN.md §6.2
+# Expected node types for the sample case azicac_2011_006 (fixed here; the planning draft that first listed them is in git history)
 _EXPECTED_NODE_TYPES = {
     "CACInvestigation",
     "ProductionOffense",
@@ -2999,7 +3061,7 @@ def run_test(case_dict: Dict[str, Any], output_dir: Path) -> None:
     """
     Map a case, validate, write output, and print a summary report.
 
-    Compares actual node types against expected types from MAPPING_PLAN.md §6.2.
+    Compares actual node types against the expected types above.
     """
     case_id = case_dict.get("id", "unknown")
     print(f"\n{'='*60}")
@@ -3061,7 +3123,7 @@ def run_test(case_dict: Dict[str, Any], output_dir: Path) -> None:
         "IncriminatingStatement",
     }
 
-    print("MAPPING_PLAN.md §6.2 node type comparison:")
+    print("Expected node type comparison:")
     if not missing:
         print("  ✓ All expected node types present")
     else:

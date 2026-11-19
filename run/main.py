@@ -40,7 +40,7 @@ if str(_RUN_DIR) not in sys.path:
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Storage Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Clustering & Analysis Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Visualization Layer"))
-# Processing Layer only — not Pattern Processing Layer (would shadow processing.py wrapper).
+# Processing Layer (the processing.py wrapper and its siblings).
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Processing Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "scripts" / "run"))
 
@@ -73,7 +73,7 @@ else:
 from case_jurisdiction import derive_jurisdiction
 from corpus_export import iter_corpus_json
 from platform_affordance_evidence_freshness import (
-    read_corpus_identity,
+    read_live_identity,
     require_fresh_block,
     with_snapshot_freshness,
 )
@@ -1789,6 +1789,31 @@ def get_corpus(request: Request):
     )
 
 
+_SNAPSHOT_ERAS = _REPO_ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "snapshots.json"
+
+
+@app.get("/api/snapshots/{era}")
+@limiter.limit("10/minute")
+def get_frozen_snapshot(request: Request, era: str):
+    """
+    A frozen full-text corpus snapshot (SQLite) for one research era, for byte-for-byte
+    reproduction (``run_all.py --snapshot <era>``). Same access as /api/corpus. Only eras listed
+    in afh_manifest/snapshots.json are served, from CASELINKER_SNAPSHOT_DIR/<era>.sqlite; the
+    registered sha256 is returned in X-Snapshot-SHA256.
+    """
+    if not _has_bulk_corpus_access(request):
+        raise HTTPException(status_code=403, detail=_CORPUS_FORBIDDEN_DETAIL)
+    eras = json.loads(_SNAPSHOT_ERAS.read_text(encoding="utf-8")).get("eras", {})
+    if era not in eras:
+        raise HTTPException(status_code=404, detail=f"unknown snapshot era {era!r}")
+    base = os.environ.get("CASELINKER_SNAPSHOT_DIR", "").strip()
+    path = Path(base) / f"{era}.sqlite" if base else None
+    if path is None or not path.is_file():
+        raise HTTPException(status_code=404, detail=f"snapshot {era!r} is not hosted on this server")
+    return FileResponse(str(path), media_type="application/vnd.sqlite3", filename=f"{era}.sqlite",
+                        headers={"Cache-Control": "no-store", "X-Snapshot-SHA256": eras[era]["sha256"]})
+
+
 @app.get("/api/cases-summaries-chunk")
 @limiter.limit("240/minute")
 def cases_summaries_chunk(
@@ -2299,7 +2324,7 @@ def get_case(request: Request, case_id: str):
     return case
 
 
-_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date")
+_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date", "prior_history")
 _REVIEW_STATUSES = ("needs_review", "disagreement", "partial")
 
 
@@ -3440,7 +3465,7 @@ def _technology_revolver_payload_dict(
         "chambers": chambers_out,
         "bucket_keys": list(_TECH_REVOLVER_BUCKETS),
         "extraction_code_hook": (
-            "src/Processing Layer/Pattern Processing Layer/processing.py — "
+            "src/Processing Layer/Pattern Processing Layer/pattern_processing.py — "
             "extract_platforms() (column platforms_used) and extract_technology_signals() "
             "(investigation_technology, anonymization_network, p2p_clients in extracted_features)."
         ),
@@ -3565,7 +3590,7 @@ def get_technology_revolver(request: Request):
             "chambers": [],
             "bucket_keys": list(_TECH_REVOLVER_BUCKETS),
             "extraction_code_hook": (
-                "src/Processing Layer/Pattern Processing Layer/processing.py — "
+                "src/Processing Layer/Pattern Processing Layer/pattern_processing.py — "
                 "extract_platforms() / extract_technology_signals()"
             ),
             "coverage_note": None,
@@ -3997,11 +4022,11 @@ def api_sparql_from_nl(request: Request, body: SparqlFromNlBody):
 
 
 def _lifecycle_payload_html_snippet() -> str:
-    """Embed L* payload in /lifecycle HTML so the public page needs no API key."""
+    """Embed the documented-trajectory payload in /lifecycle so the public page needs no API key."""
     try:
-        from state_machines.lifecycle_api import build_lifecycle_payload
+        from state_machines.trajectories.payload import build_payload
 
-        raw = json.dumps(build_lifecycle_payload(), ensure_ascii=False)
+        raw = json.dumps(build_payload(), ensure_ascii=False)
         safe = raw.replace("</", "<\\/")
         return (
             f'  <script id="lifecycle-payload" type="application/json">{safe}</script>\n'
@@ -4045,57 +4070,59 @@ async def serve_lifecycle():
 @limiter.limit("100/minute")
 def get_lifecycle_cases(request: Request):
     """
-    L* visualization payload for all 5 PACER state-machine cases.
-    Trusted key or localhost only (same gate as GET /api/cases).
-    Public /lifecycle page embeds this payload server-side.
+    Documented PACER event graphs and their derived trajectories, from the current release
+    (state_machines/trajectories/payload.py). Codes, roles, statuses, dates and page
+    provenance; no quotes, descriptions or names. Trusted key or localhost only; the public
+    /lifecycle page embeds the same payload server-side.
     """
     if not _has_bulk_corpus_access(request):
         raise HTTPException(status_code=403, detail=_LIFECYCLE_API_FORBIDDEN_DETAIL)
-    from state_machines.lifecycle_api import build_lifecycle_payload
+    from state_machines.trajectories.payload import build_payload
 
     try:
-        return build_lifecycle_payload()
+        return build_payload()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lifecycle data unavailable: {e}") from e
+
+
+@app.get("/api/lifecycle/analysis")
+@limiter.limit("60/minute")
+def get_lifecycle_analysis(request: Request, case_id: str = "", threshold: str = "INFERRED"):
+    """
+    AfH quantities over the current PACER release: per case Aff(c) and minor-directed H(c),
+    psi_C(o) across cases, the coverage identity, and per track the derived chains, unordered
+    pairs and possible-identity links. Trusted key or localhost only.
+    """
+    if not _has_bulk_corpus_access(request):
+        raise HTTPException(status_code=403, detail=_LIFECYCLE_API_FORBIDDEN_DETAIL)
+    if threshold not in ("DIRECT", "INFERRED"):
+        raise HTTPException(status_code=400, detail="threshold must be DIRECT or INFERRED")
+    from state_machines.trajectories.afh import release_analysis
+
+    try:
+        return release_analysis(threshold=threshold, case_id=case_id)
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Trajectory analysis unavailable: {e}") from e
+
+
+_LIFECYCLE_GONE = (
+    "Retired. PACER lifecycles are documented event graphs; use GET /api/lifecycle/cases "
+    "(see state_machines/README.md)."
+)
 
 
 @app.get("/api/lifecycle/lstar")
-@limiter.limit("60/minute")
 def get_lifecycle_lstar(request: Request):
-    """
-    Full L* computation output (state_machines/data/lstar_all_cases.json).
-    Trusted key or localhost only.
-    """
-    if not _has_bulk_corpus_access(request):
-        raise HTTPException(status_code=403, detail=_LIFECYCLE_API_FORBIDDEN_DETAIL)
-    from state_machines.lifecycle_api import load_lstar_raw
-
-    try:
-        return load_lstar_raw()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lifecycle L* output unavailable: {e}") from e
+    """Retired endpoint: 410 Gone with a pointer to /api/lifecycle/cases."""
+    raise HTTPException(status_code=410, detail=_LIFECYCLE_GONE)
 
 
 @app.get("/api/lifecycle/anchors")
-@limiter.limit("60/minute")
 def get_lifecycle_anchors(request: Request):
-    """
-    Public: the 5 anchor PACER state-machine cases (enticement, production,
-    sextortion, enterprise, trafficking) with phases, transitions, and
-    affordance annotations. Same data the public /lifecycle page embeds
-    server-side, minus the expansion-case records. No CaseLinker-Key required;
-    intended for external embeds (e.g. partner research sites).
-    """
-    from state_machines.lifecycle_api import build_lifecycle_payload
-
-    try:
-        payload = build_lifecycle_payload()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lifecycle data unavailable: {e}") from e
-
-    payload.pop("expansion_cases", None)
-    payload["cases"] = payload.get("anchor_cases", [])
-    return payload
+    """Retired endpoint: 410 Gone with a pointer to /api/lifecycle/cases."""
+    raise HTTPException(status_code=410, detail=_LIFECYCLE_GONE)
 
 
 
@@ -4304,7 +4331,7 @@ _CASE_STUDIES_NOTES_MAX_TEXT = 1500
 
 
 def _live_platform_affordance_corpus() -> Optional[Dict[str, Any]]:
-    """Case count and extraction-run fingerprint for the database this process serves.
+    """Case count, extraction-run fingerprint, platform pairs and code versions for the served database.
 
     None means the comparison was not run. Callers must treat that as unverified,
     not as a match.
@@ -4317,11 +4344,11 @@ def _live_platform_affordance_corpus() -> Optional[Dict[str, Any]]:
 
             conn = get_connection()
             pooled = True
-            return read_corpus_identity(conn)
+            return read_live_identity(conn)
         from storage import get_connection
 
         conn = get_connection(str(storage.db_path))
-        return read_corpus_identity(conn)
+        return read_live_identity(conn)
     except Exception:
         logger.exception("platform affordance corpus identity unavailable")
         return None
@@ -4656,15 +4683,6 @@ app.mount(
     name="graph_output",
 )
 
-# CASE-UCO SDK modeled PACER investigation / document JSON-LD.
-_pacer_root = Path(__file__).resolve().parent.parent / "ontology" / "PACER"
-if _pacer_root.is_dir():
-    app.mount(
-        "/ontology/PACER",
-        StaticFiles(directory=str(_pacer_root)),
-        name="pacer_kg",
-    )
-
 # Serve ontology/question_data/ JSON files for interactive question pages.
 _question_data = Path(__file__).resolve().parent.parent / "ontology" / "question_data"
 if _question_data.is_dir():
@@ -4674,14 +4692,21 @@ if _question_data.is_dir():
         name="question_data",
     )
 
-# Platform affordance evidence: platform_affordance_evidence.json and the manual harm-vector file.
+# Platform affordance evidence: only the two files the pages fetch. The directory also holds the
+# builder, candidates and the AfH manifest (with a local corpus snapshot), which are not served.
 _platform_affordance_evidence_data = Path(__file__).resolve().parent.parent / "ontology" / "platform_affordance_evidence"
-if _platform_affordance_evidence_data.is_dir():
-    app.mount(
-        "/ontology/platform-affordance-evidence",
-        StaticFiles(directory=str(_platform_affordance_evidence_data)),
-        name="platform_affordance_evidence_data",
-    )
+_PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES = frozenset({
+    "platform_affordance_evidence.json",
+    "platform_affordance_evidence_harm_analysis.json",
+})
+
+
+@app.api_route("/ontology/platform-affordance-evidence/{name}", methods=["GET", "HEAD"], include_in_schema=False)
+def platform_affordance_evidence_file(name: str):
+    path = _platform_affordance_evidence_data / name
+    if name not in _PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES or not path.is_file():
+        raise HTTPException(status_code=404, detail="Not Found")
+    return FileResponse(str(path), media_type="application/json")
 
 # Q02 lifecycle table: q2_evidence.json, q2_lifecycle.json (manual pathway synthesis).
 _q2_data = Path(__file__).resolve().parent.parent / "ontology" / "q2"
@@ -4917,109 +4942,28 @@ def api_ontology_cases(
 @app.get("/api/ontology/pacer")
 def api_ontology_pacer():
     """
-    Catalog of CASE-UCO SDK modeled PACER investigation graphs under ontology/PACER/.
-
-    Returns metadata (path, family, CASE/UCO/CAC classes, agencies, search text)
-    for client-side lookup. Bodies remain static JSON-LD under /ontology/PACER/...
+    The current PACER graph release: one entry per case with its named graphs
+    (urn:caselinker:pacer:<case_id>:evidence, :trajectories and, where the release has them, :observations), review mode, SHACL conformance and
+    review status, read from the release manifest (state_machines/graphs/release.py).
     """
     from fastapi.responses import JSONResponse
+    from state_machines.trajectories.payload import release_dir
 
-    pacer_root = Path(__file__).resolve().parent.parent / "ontology" / "PACER"
-    if not pacer_root.is_dir():
-        return JSONResponse(
-            content={"investigations": [], "n": 0, "class_facets": []},
-            headers={"Cache-Control": "public, max-age=300"},
-        )
-
-    def _local_type(value: Any) -> str:
-        s = str(value or "")
-        if "#" in s:
-            s = s.rsplit("#", 1)[-1]
-        if "/" in s:
-            s = s.rsplit("/", 1)[-1]
-        if ":" in s:
-            s = s.rsplit(":", 1)[-1]
-        return s
-
-    def _as_list(value: Any) -> list:
-        if value is None:
-            return []
-        if isinstance(value, list):
-            return value
-        return [value]
-
-    skip_classes = {
-        "Relationship",
-        "UcoObject",
-        "ObservableObject",
-        "ProvenanceRecord",
-        "FunctionalComplex",
-    }
-    class_facets: Dict[str, int] = {}
-    investigations = []
-
-    for path in sorted(pacer_root.rglob("*-investigation.jsonld")):
-        rel = path.relative_to(pacer_root).as_posix()
-        family = rel.split("/", 1)[0] if "/" in rel else "PACER"
-        slug = path.name.replace("-investigation.jsonld", "")
-        classes: set[str] = set()
-        agencies: list[str] = []
-        text_bits: list[str] = [slug, family, rel]
-
-        try:
-            doc = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            doc = {}
-
-        for node in doc.get("@graph") or []:
-            if not isinstance(node, dict):
-                continue
-            for typ in _as_list(node.get("@type")):
-                local = _local_type(typ)
-                if not local or local in skip_classes:
-                    continue
-                classes.add(local)
-                class_facets[local] = class_facets.get(local, 0) + 1
-            name = node.get("uco-core:name")
-            if isinstance(name, str) and name.strip():
-                text_bits.append(name.strip())
-                types = {_local_type(t) for t in _as_list(node.get("@type"))}
-                if "Organization" in types:
-                    agencies.append(name.strip())
-            for key, val in node.items():
-                if key in ("@id", "@type"):
-                    continue
-                if isinstance(val, str) and len(val) < 120:
-                    lk = key.lower()
-                    if any(tok in lk for tok in ("name", "label", "platform", "channel", "account")):
-                        text_bits.append(val)
-
-        investigations.append(
-            {
-                "id": slug,
-                "family": family,
-                "relpath": rel,
-                "path": f"/ontology/PACER/{rel}",
-                "label": slug.replace("_", " ").replace("-", " "),
-                "classes": sorted(classes),
-                "agencies": sorted(set(agencies)),
-                "search_text": " ".join(text_bits).casefold(),
-            }
-        )
-
+    root = release_dir()
+    if root is None:
+        return JSONResponse(content={"release": None, "cases": [], "n": 0},
+                            headers={"Cache-Control": "public, max-age=300"})
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    # Only graphs a store holds: an empty trajectory or observation graph is not loaded.
+    cases = [{"case_id": c["case_id"],
+              "graphs": {k: v["iri"] for k, v in c["graphs"].items() if 0 not in (v.get("chains"), v.get("observations"))},
+              "shacl": c["shacl"]["conformance"], "review": c["review"]} for c in manifest["cases"]]
     return JSONResponse(
-        content={
-            "investigations": investigations,
-            "n": len(investigations),
-            "class_facets": [
-                {"name": name, "count": count}
-                for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:60]
-            ],
-            "note": (
-                "CASE-UCO compact JSON-LD (CASE/UCO/CAC). Also queryable in Oxigraph as "
-                "urn:pacer:kg:… after scripts/oxigraph/load_pacer_jsonld.py --post."
-            ),
-        },
+        content={"release": manifest["release_id"], "adjudicated": manifest["adjudicated"],
+                 "review_mode": manifest.get("review_mode") or ("adjudicated" if manifest["adjudicated"] else "preview"),
+                 "schema_version": manifest["schema_version"], "cases": cases, "n": len(cases),
+                 "release_graph": f"urn:caselinker:pacer-release:{manifest['release_id']}",
+                 "note": "Query these named graphs through /sparql; the release graph states how their acts were published."},
         headers={"Cache-Control": "public, max-age=600"},
     )
 

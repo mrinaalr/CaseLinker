@@ -1,0 +1,1525 @@
+{
+  "$defs": {
+    "access": {
+      "additionalProperties": false,
+      "properties": {
+        "form": {
+          "enum": [
+            "person_physical",
+            "person_communicative",
+            "representation",
+            "material"
+          ]
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "target_ref": {
+          "pattern": "^P[0-9]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "form",
+        "target_ref",
+        "status",
+        "support"
+      ],
+      "type": "object"
+    },
+    "affordance": {
+      "additionalProperties": false,
+      "properties": {
+        "affordance": {
+          "enum": [
+            "anonymity",
+            "ephemerality",
+            "contact_discovery",
+            "unmonitored_communication",
+            "distribution_infrastructure",
+            "generative_synthesis"
+          ]
+        },
+        "basis": {
+          "enum": [
+            "feature_stated",
+            "mechanism_stated"
+          ]
+        },
+        "counterparty_is_undercover": {
+          "type": "boolean"
+        },
+        "feature_term": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "platform_surface": {
+          "maxLength": 60,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "affordance",
+        "basis",
+        "status",
+        "support"
+      ],
+      "type": "object"
+    },
+    "candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "enum": [
+            "feature_stated",
+            "mechanism_stated"
+          ]
+        },
+        "candidate": {
+          "enum": [
+            "persistent_storage",
+            "multi_party_coordination"
+          ]
+        },
+        "feature_term": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "platform_surface": {
+          "maxLength": 60,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "would_otherwise_map_to": {
+          "enum": [
+            "anonymity",
+            "ephemerality",
+            "contact_discovery",
+            "unmonitored_communication",
+            "distribution_infrastructure",
+            "generative_synthesis",
+            null
+          ]
+        }
+      },
+      "required": [
+        "candidate",
+        "basis",
+        "status",
+        "support"
+      ],
+      "type": "object"
+    },
+    "coding": {
+      "additionalProperties": false,
+      "properties": {
+        "blind_to": {
+          "items": {
+            "maxLength": 60,
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "coded_on": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        "coder_id": {
+          "pattern": "^coder_[A-Za-z0-9]+$",
+          "type": "string"
+        },
+        "method": {
+          "enum": [
+            "human",
+            "agent_assisted",
+            "agent"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "maxLength": 600,
+          "type": "string"
+        }
+      },
+      "required": [
+        "coder_id",
+        "method",
+        "coded_on"
+      ],
+      "type": "object"
+    },
+    "document": {
+      "additionalProperties": false,
+      "properties": {
+        "doc_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "doc_type": {
+          "enum": [
+            "docket",
+            "complaint",
+            "information",
+            "indictment",
+            "superseding_indictment",
+            "plea_agreement",
+            "statement_of_offense",
+            "statement_of_facts",
+            "stipulation_of_facts",
+            "factual_basis",
+            "factual_proffer",
+            "plea_transcript",
+            "findings_of_fact",
+            "judgment",
+            "amended_judgment",
+            "statement_of_reasons",
+            "sentencing_memorandum",
+            "trial_brief",
+            "brief",
+            "opinion",
+            "other"
+          ]
+        },
+        "ecf_document_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filed_date": {
+          "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "page_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "pages": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "court_page_label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "image_checked": {
+                "type": "boolean"
+              },
+              "limitations": {
+                "items": {
+                  "enum": [
+                    "strikethrough",
+                    "handwriting",
+                    "redaction",
+                    "stamp_overlap",
+                    "low_contrast",
+                    "multi_column",
+                    "table",
+                    "line_numbers",
+                    "rotated",
+                    "partial_page"
+                  ]
+                },
+                "minItems": 0,
+                "type": "array"
+              },
+              "ocr_engine": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ocr_mean_confidence": {
+                "maximum": 100,
+                "minimum": 0,
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "page_text_sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "pdf_page": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "text_method": {
+                "enum": [
+                  "text_layer",
+                  "ocr",
+                  "manual_transcription",
+                  "none"
+                ]
+              }
+            },
+            "required": [
+              "pdf_page",
+              "text_method",
+              "page_text_sha256"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "source_path": {
+          "maxLength": 300,
+          "type": "string"
+        }
+      },
+      "required": [
+        "doc_id",
+        "doc_type",
+        "source_path",
+        "sha256",
+        "page_count",
+        "pages"
+      ],
+      "type": "object"
+    },
+    "event": {
+      "additionalProperties": false,
+      "properties": {
+        "access": {
+          "items": {
+            "$ref": "#/$defs/access"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "action": {
+          "enum": [
+            "SEEK_TARGETS",
+            "INITIATE_CONTACT",
+            "ACQUIRE_REPRESENTATION",
+            "ACQUIRE_MATERIAL",
+            "COMMUNICATE",
+            "MISREPRESENT_IDENTITY",
+            "BUILD_RAPPORT",
+            "OFFER_INDUCEMENT",
+            "SEXUALIZE_COMMUNICATION",
+            "SOLICIT_IMAGERY",
+            "DIRECT_CONDUCT",
+            "THREATEN_EXPOSURE",
+            "THREATEN_HARM",
+            "DIRECT_VICTIM_TO_RECRUIT",
+            "MOVE_CHANNEL",
+            "RECREATE_ACCOUNT",
+            "RECONTACT",
+            "RECEIVE_SELF_GENERATED",
+            "RECORD_LIVE_SESSION",
+            "PRODUCE_IN_PERSON",
+            "SYNTHESIZE_OR_ALTER_IMAGERY",
+            "STORE_MATERIAL",
+            "ORGANIZE_MATERIAL",
+            "DISTRIBUTE_MATERIAL",
+            "ADVERTISE_MATERIAL_OR_ACCESS",
+            "EXPOSE_TO_VICTIM_NETWORK",
+            "ADMINISTER_SPACE",
+            "GATEKEEP_MEMBERSHIP",
+            "SET_RULES",
+            "ASSIGN_ROLE",
+            "COORDINATE_CO_OFFENDERS",
+            "SHARE_TRADECRAFT",
+            "PAY_THIRD_PARTY",
+            "ARRANGE_MEETING",
+            "TRAVEL_TO_MEET",
+            "IN_PERSON_SEXUAL_ABUSE",
+            "ADVERTISE_COMMERCIAL_SEX",
+            "ARRANGE_COMMERCIAL_SEX",
+            "COLLECT_PROCEEDS",
+            "CONTROL_VICTIM",
+            "CONCEAL_OR_DESTROY_EVIDENCE",
+            "EVADE_DETECTION",
+            "OBSTRUCT_OR_TAMPER",
+            "FLEE",
+            "OTHER_OFFENDER_ACTION",
+            "RESP_REFUSE",
+            "RESP_BLOCK",
+            "RESP_REPORT",
+            "RESP_DISCLOSE",
+            "RESP_PLATFORM_ENFORCE",
+            "LE_RECEIVE_TIP",
+            "LE_UNDERCOVER_ENGAGE",
+            "LE_SURVEIL",
+            "LE_LEGAL_PROCESS",
+            "LE_SEARCH_SEIZE",
+            "LE_FORENSIC_EXAM",
+            "LE_INTERVIEW",
+            "LE_INTERDICT",
+            "LE_ARREST",
+            "PROC_CHARGE",
+            "PROC_PLEA",
+            "PROC_VERDICT",
+            "PROC_SENTENCE",
+            "PROC_OTHER"
+          ]
+        },
+        "actor": {
+          "additionalProperties": false,
+          "properties": {
+            "participant_ref": {
+              "pattern": "^P[0-9]+$",
+              "type": "string"
+            },
+            "role": {
+              "enum": [
+                "offender",
+                "co_offender",
+                "victim",
+                "undercover",
+                "law_enforcement",
+                "platform",
+                "guardian",
+                "third_party",
+                "court"
+              ]
+            }
+          },
+          "required": [
+            "participant_ref",
+            "role"
+          ],
+          "type": "object"
+        },
+        "affordances": {
+          "items": {
+            "$ref": "#/$defs/affordance"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "candidate_affordances": {
+          "items": {
+            "$ref": "#/$defs/candidate"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "channels": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "channel": {
+                "enum": [
+                  "sms",
+                  "voice_call",
+                  "email",
+                  "mail",
+                  "in_person",
+                  "unknown"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "DIRECT",
+                  "INFERRED",
+                  "UNSUPPORTED",
+                  "CONTRADICTED"
+                ]
+              },
+              "support": {
+                "items": {
+                  "$ref": "#/$defs/support"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "channel",
+              "status",
+              "support"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "co_actors": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "mode": {
+                "enum": [
+                  "performer",
+                  "directing",
+                  "assisting"
+                ]
+              },
+              "participant_ref": {
+                "pattern": "^P[0-9]+$",
+                "type": "string"
+              },
+              "role": {
+                "enum": [
+                  "offender",
+                  "co_offender",
+                  "victim",
+                  "undercover",
+                  "law_enforcement",
+                  "platform",
+                  "guardian",
+                  "third_party",
+                  "court"
+                ]
+              }
+            },
+            "required": [
+              "participant_ref",
+              "role",
+              "mode"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "description": {
+          "maxLength": 200,
+          "minLength": 5,
+          "type": "string"
+        },
+        "event_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "harms": {
+          "items": {
+            "$ref": "#/$defs/harm"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "notes": {
+          "maxLength": 600,
+          "type": "string"
+        },
+        "other_action_label": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "completed",
+            "attempted_not_completed",
+            "refused",
+            "blocked",
+            "interrupted",
+            "unknown"
+          ]
+        },
+        "platform_interactions": {
+          "items": {
+            "$ref": "#/$defs/interaction"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "platform_mentions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "passage_ids": {
+                "items": {
+                  "maxLength": 120,
+                  "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "platform_surface": {
+                "maxLength": 60,
+                "type": "string"
+              }
+            },
+            "required": [
+              "platform_surface",
+              "passage_ids"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "prior_artifact_refs": {
+          "items": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "repetition": {
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "minimum": 2,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "kind": {
+              "enum": [
+                "single",
+                "repeated_count_known",
+                "repeated_count_unknown",
+                "continuous_period"
+              ]
+            },
+            "passage_ids": {
+              "items": {
+                "maxLength": 120,
+                "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+                "type": "string"
+              },
+              "minItems": 0,
+              "type": "array"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "targets": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "participant_ref": {
+                "pattern": "^P[0-9]+$",
+                "type": "string"
+              },
+              "role": {
+                "enum": [
+                  "victim",
+                  "recipient",
+                  "counterparty",
+                  "subject"
+                ]
+              }
+            },
+            "required": [
+              "participant_ref",
+              "role"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "time": {
+          "$ref": "#/$defs/time"
+        },
+        "unresolved_participants": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "note": {
+                "maxLength": 300,
+                "type": "string"
+              },
+              "participant_ref": {
+                "pattern": "^P[0-9]+$",
+                "type": "string"
+              },
+              "passage_ids": {
+                "items": {
+                  "maxLength": 120,
+                  "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "participant_ref",
+              "note",
+              "passage_ids"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "event_id",
+        "actor",
+        "action",
+        "outcome",
+        "description",
+        "support",
+        "status",
+        "time",
+        "affordances",
+        "access",
+        "harms",
+        "review"
+      ],
+      "type": "object"
+    },
+    "harm": {
+      "additionalProperties": false,
+      "properties": {
+        "harm": {
+          "enum": [
+            "HARM_IN_PERSON_SEXUAL_ABUSE",
+            "HARM_COERCED_SELF_GENERATED_IMAGERY",
+            "HARM_PRODUCTION_IN_PERSON_RECORDED",
+            "HARM_DISTRIBUTION_RECIRCULATION",
+            "HARM_EXPOSURE_THREAT",
+            "HARM_EXPOSURE_REALIZED",
+            "HARM_COMMERCIAL_SEXUAL_EXPLOITATION",
+            "HARM_SYNTHETIC_LIKENESS",
+            "HARM_SEXUALIZED_CONTACT_ONLINE",
+            "HARM_PSYCHOLOGICAL_DISTRESS_DOCUMENTED",
+            "HARM_PHYSICAL_VIOLENCE_OR_CONTROL",
+            "HARM_OTHER"
+          ]
+        },
+        "other_label": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "victim_kind": {
+          "enum": [
+            "minor",
+            "adult",
+            "undercover_persona",
+            "unknown"
+          ]
+        },
+        "victim_ref": {
+          "pattern": "^P[0-9]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "harm",
+        "victim_ref",
+        "victim_kind",
+        "status",
+        "support"
+      ],
+      "type": "object"
+    },
+    "interaction": {
+      "additionalProperties": false,
+      "description": "Documented platform interaction: the act went through, from or to the platform, or was done to it.",
+      "properties": {
+        "audience": {
+          "enum": [
+            "one_to_one",
+            "group",
+            "public",
+            "unknown"
+          ]
+        },
+        "configuration": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "feature_term": {
+                "maxLength": 80,
+                "type": "string"
+              },
+              "setting": {
+                "enum": [
+                  "on",
+                  "off",
+                  "default_on",
+                  "default_off",
+                  "unknown"
+                ]
+              },
+              "support": {
+                "items": {
+                  "$ref": "#/$defs/support"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "feature_term",
+              "setting",
+              "support"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "feature_term": {
+          "maxLength": 80,
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "through",
+            "from",
+            "to",
+            "acted_on"
+          ]
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "platform_key": {
+          "pattern": "^(unnamed:[a-z0-9 _\\-]{1,50}|[A-Za-z0-9][A-Za-z0-9 ._+\\-]{0,59})$",
+          "type": "string"
+        },
+        "platform_surface": {
+          "maxLength": 60,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "platform_surface",
+        "platform_key",
+        "mode",
+        "audience",
+        "status",
+        "support"
+      ],
+      "type": "object"
+    },
+    "participant": {
+      "additionalProperties": false,
+      "description": "Role-neutral participant: a person, an undercover persona, a collective or an organization.",
+      "properties": {
+        "age_band": {
+          "enum": [
+            "0-5",
+            "6-9",
+            "10-12",
+            "13-15",
+            "16-17",
+            "adult",
+            "unknown",
+            null
+          ]
+        },
+        "count": {
+          "additionalProperties": false,
+          "properties": {
+            "max": {
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "min": {
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "stated": {
+              "enum": [
+                "exact",
+                "at_least",
+                "at_most",
+                "approximate",
+                "unknown"
+              ]
+            },
+            "support": {
+              "items": {
+                "$ref": "#/$defs/support"
+              },
+              "minItems": 0,
+              "type": "array"
+            }
+          },
+          "required": [
+            "stated"
+          ],
+          "type": "object"
+        },
+        "description": {
+          "maxLength": 120,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "person",
+            "persona",
+            "collective",
+            "organization"
+          ]
+        },
+        "legal_status": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "charged_defendant",
+                  "uncharged_coconspirator",
+                  "named_victim",
+                  "undercover_persona",
+                  "law_enforcement",
+                  "platform_provider",
+                  "third_party",
+                  "court"
+                ]
+              },
+              "support": {
+                "items": {
+                  "$ref": "#/$defs/support"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "status",
+              "support"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "members": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "participant_ref": {
+                "pattern": "^P[0-9]+$",
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "DIRECT",
+                  "INFERRED",
+                  "UNSUPPORTED",
+                  "CONTRADICTED"
+                ]
+              },
+              "support": {
+                "items": {
+                  "$ref": "#/$defs/support"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "participant_ref",
+              "status",
+              "support"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "participant_ref": {
+          "pattern": "^P[0-9]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "participant_ref",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "passage": {
+      "additionalProperties": false,
+      "properties": {
+        "char_end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "char_start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "court_locator": {
+          "maxLength": 60,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "doc_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "passage_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "pdf_page": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "quote_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "quote_word_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_status": {
+          "enum": [
+            "ALLEGATION",
+            "SWORN_AFFIDAVIT",
+            "ADMITTED",
+            "ADMITTED_UNDER_OATH",
+            "JUDICIAL_FINDING",
+            "VERDICT_ELEMENT",
+            "COURT_RECORD",
+            "ADVOCACY",
+            "PROCEDURAL"
+          ]
+        },
+        "source_status_reason": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "verification": {
+          "additionalProperties": false,
+          "properties": {
+            "checked_by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "method": {
+              "enum": [
+                "text_layer_exact",
+                "ocr_plus_page_image",
+                "manual_page_image",
+                "ocr_text_exact"
+              ]
+            },
+            "note": {
+              "maxLength": 300,
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "VERIFIED",
+                "UNVERIFIED",
+                "FAILED"
+              ]
+            }
+          },
+          "required": [
+            "status",
+            "method"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "passage_id",
+        "doc_id",
+        "pdf_page",
+        "char_start",
+        "char_end",
+        "quote_sha256",
+        "source_status",
+        "verification"
+      ],
+      "type": "object"
+    },
+    "relation": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "enum": [
+            "explicit_sequence_language",
+            "dated_events",
+            "count_windows",
+            "document_structure",
+            "coder_inference"
+          ]
+        },
+        "from_event": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "relation_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        },
+        "support": {
+          "items": {
+            "$ref": "#/$defs/support"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "to_event": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "BEFORE",
+            "MEETS",
+            "OVERLAPS",
+            "DURING",
+            "SAME_TIME",
+            "UNORDERED",
+            "PART_OF",
+            "REPEATS",
+            "RESPONDS_TO",
+            "BACKED_BY_THREAT",
+            "INTERRUPTS",
+            "RESUMES_AFTER",
+            "SAME_MATERIAL",
+            "SAME_ACT"
+          ]
+        }
+      },
+      "required": [
+        "relation_id",
+        "type",
+        "from_event",
+        "to_event",
+        "basis",
+        "status",
+        "support"
+      ],
+      "type": "object"
+    },
+    "review": {
+      "additionalProperties": false,
+      "description": "Coder adjudication: agreement between coders. Never the court's adjudication.",
+      "properties": {
+        "adjudicator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coders": {
+          "items": {
+            "pattern": "^coder_[A-Za-z0-9]+$",
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "single_coder",
+            "agreed",
+            "adjudicated",
+            "disputed",
+            "rule_derived"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "type": "object"
+    },
+    "support": {
+      "additionalProperties": false,
+      "properties": {
+        "facet": {
+          "enum": [
+            "action",
+            "actor",
+            "target",
+            "outcome",
+            "time",
+            "repetition",
+            "platform",
+            "feature",
+            "legal_status",
+            "membership",
+            "count",
+            "configuration",
+            "channel"
+          ]
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "passage_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        }
+      },
+      "required": [
+        "passage_id",
+        "facet",
+        "status"
+      ],
+      "type": "object"
+    },
+    "time": {
+      "additionalProperties": false,
+      "description": "Every dated assertion is kept. Disjoint assertions must be flagged as a conflict, never resolved.",
+      "properties": {
+        "assertions": {
+          "items": {
+            "$ref": "#/$defs/time_assertion"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "conflict_flagged": {
+          "type": "boolean"
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        }
+      },
+      "required": [
+        "assertions"
+      ],
+      "type": "object"
+    },
+    "time_assertion": {
+      "additionalProperties": false,
+      "description": "One dated assertion about when the act happened, with its source expression and normalized bounds.",
+      "properties": {
+        "basis": {
+          "enum": [
+            "explicit_date",
+            "date_range",
+            "count_window",
+            "enclosing_window",
+            "relative_statement"
+          ]
+        },
+        "earliest": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        "expression": {
+          "maxLength": 120,
+          "type": "string"
+        },
+        "latest": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        "passage_ids": {
+          "items": {
+            "maxLength": 120,
+            "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "precision": {
+          "enum": [
+            "day",
+            "month",
+            "season",
+            "year",
+            "range"
+          ]
+        },
+        "status": {
+          "enum": [
+            "DIRECT",
+            "INFERRED",
+            "UNSUPPORTED",
+            "CONTRADICTED"
+          ]
+        }
+      },
+      "required": [
+        "precision",
+        "earliest",
+        "latest",
+        "basis",
+        "status",
+        "passage_ids"
+      ],
+      "type": "object"
+    },
+    "track": {
+      "additionalProperties": false,
+      "properties": {
+        "anchor_ref": {
+          "pattern": "^P[0-9]+$",
+          "type": "string"
+        },
+        "event_ids": {
+          "items": {
+            "maxLength": 120,
+            "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "victim",
+            "undercover",
+            "material",
+            "co_offender_network",
+            "case_procedure"
+          ]
+        },
+        "note": {
+          "maxLength": 300,
+          "type": "string"
+        },
+        "track_id": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_.\\-]*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "track_id",
+        "kind",
+        "event_ids"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://w3id.org/caselinker/trajectory/schema/case_bundle/2.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "pattern": "^[a-z0-9_]+$",
+      "type": "string"
+    },
+    "codebook_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "type": "string"
+    },
+    "coding": {
+      "$ref": "#/$defs/coding"
+    },
+    "documents": {
+      "items": {
+        "$ref": "#/$defs/document"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/event"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "notes": {
+      "maxLength": 2000,
+      "type": "string"
+    },
+    "participants": {
+      "items": {
+        "$ref": "#/$defs/participant"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "passages": {
+      "items": {
+        "$ref": "#/$defs/passage"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "relations": {
+      "items": {
+        "$ref": "#/$defs/relation"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "schema_version": {
+      "enum": [
+        "2.0.0"
+      ]
+    },
+    "tracks": {
+      "items": {
+        "$ref": "#/$defs/track"
+      },
+      "minItems": 0,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "codebook_version",
+    "case_id",
+    "coding",
+    "documents",
+    "passages",
+    "participants",
+    "events",
+    "relations",
+    "tracks"
+  ],
+  "title": "CaseLinker coded case bundle (evidence layer)",
+  "type": "object"
+}

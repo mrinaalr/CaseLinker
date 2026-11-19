@@ -6,6 +6,10 @@ Models (Stanza NER + MiniLM) load once on the first PDF and stay warm.
 
 Usage (from repo root):
   python3 scripts/run/ingest_grouped.py --list /tmp/pdfs.txt --group-size 1
+  python3 scripts/run/ingest_grouped.py --list /tmp/pdfs.txt --done-file ingest_done.txt
+
+--done-file makes a bulk ingest resumable: each PDF is appended once its group is
+stored, and PDFs already listed are skipped on the next run.
 """
 
 from __future__ import annotations
@@ -42,6 +46,11 @@ def main() -> int:
         default=int(os.environ.get("INGEST_GROUP_SIZE", "1")),
         help="PDFs per run_pipeline call (default 1 = one-by-one, models stay warm)",
     )
+    parser.add_argument(
+        "--done-file",
+        default=os.environ.get("INGEST_DONE_FILE", ""),
+        help="Append each stored PDF here and skip PDFs already listed (resume after a crash)",
+    )
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parents[2]
@@ -57,6 +66,16 @@ def main() -> int:
     if not pdfs:
         print(f"No PDF paths in {list_path}", file=sys.stderr)
         return 1
+    done_path = Path(args.done_file) if args.done_file else None
+    if done_path and done_path.exists():
+        done = {line.strip() for line in done_path.read_text(encoding="utf-8").splitlines() if line.strip()}
+        skipped = [p for p in pdfs if p in done]
+        pdfs = [p for p in pdfs if p not in done]
+        if skipped:
+            print(f"Resuming: {len(skipped)} PDF(s) already in {done_path}, {len(pdfs)} left", flush=True)
+        if not pdfs:
+            print("Nothing left to ingest.", flush=True)
+            return 0
 
     group_size = max(1, args.group_size)
     print(
@@ -76,7 +95,7 @@ def main() -> int:
         print(f"\n>>> [{n}/{total_groups}] {names}", flush=True)
         t0 = time.perf_counter()
         try:
-            run_pipeline(group)
+            result = run_pipeline(group) or {}
         except Exception as exc:
             print(f"!!! [{n}/{total_groups}] FAILED: {exc}", flush=True)
             import traceback
@@ -86,6 +105,16 @@ def main() -> int:
             f"<<< [{n}/{total_groups}] done in {time.perf_counter() - t0:.1f}s",
             flush=True,
         )
+        # Done only when every case the group yielded was stored: a dropped connection
+        # can leave stored < attempted, and the next run must retry that group. A group
+        # that yielded no cases is retried too (a parse failure must not be skipped).
+        complete = bool(result.get("parsed")) and result.get("stored") == result.get("attempted")
+        if done_path and complete:
+            with done_path.open("a", encoding="utf-8") as handle:
+                handle.writelines(f"{p}\n" for p in group)
+        elif done_path:
+            print(f"!!! [{n}/{total_groups}] not marked done: stored {result.get('stored')} of "
+                  f"{result.get('attempted')} attempted ({result.get('parsed')} parsed)", flush=True)
 
     print(
         f"\n✓ All finished in one process ({time.perf_counter() - t_all:.1f}s wall)",

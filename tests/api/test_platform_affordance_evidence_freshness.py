@@ -20,6 +20,12 @@ from platform_affordance_evidence_freshness import (
 )
 
 
+FULL_INPUTS = {
+    "platform_pairs_sha256": "pairs-sha",
+    "code_versions": {"ontology/platform_affordance_evidence/build_candidates.py": "code-sha"},
+}
+
+
 class SnapshotFreshnessTests(unittest.TestCase):
     def test_recorded_build_scope_is_exposed_without_claiming_currentness(self):
         out = snapshot_freshness({
@@ -83,12 +89,14 @@ class SnapshotFreshnessTests(unittest.TestCase):
     def test_matching_identity_is_current_and_a_mismatch_rebuilds(self):
         groups = [("run-a", 2), ("", 1)]
         live = corpus_identity_from_groups(groups)
+        live.update(FULL_INPUTS)
         meta = {
             "generated": "2026-10-20",
             "cases_processed": 2,
             "db_gaps": 1,
             "corpus_case_count": live["case_count"],
             "extraction_run_fingerprint": live["extraction_run_fingerprint"],
+            **FULL_INPUTS,
         }
         out = snapshot_freshness(meta, live)
         self.assertFalse(out["stale"])
@@ -120,8 +128,9 @@ class SnapshotFreshnessTests(unittest.TestCase):
                 "db_gaps": 0,
                 "corpus_case_count": 100,
                 "extraction_run_fingerprint": "fp",
+                **FULL_INPUTS,
             },
-            {"case_count": 100, "extraction_run_fingerprint": "fp"},
+            {"case_count": 100, "extraction_run_fingerprint": "fp", **FULL_INPUTS},
         )
         self.assertFalse(current["stale"])
         self.assertEqual(current["coverage_pct"], 50.0)
@@ -132,8 +141,9 @@ class SnapshotFreshnessTests(unittest.TestCase):
                 "db_gaps": 0,
                 "corpus_case_count": 100,
                 "extraction_run_fingerprint": "fp",
+                **FULL_INPUTS,
             },
-            {"case_count": 100, "extraction_run_fingerprint": "fp"},
+            {"case_count": 100, "extraction_run_fingerprint": "fp", **FULL_INPUTS},
         )
         self.assertIsNone(require_fresh_block(covered))
 

@@ -1252,7 +1252,7 @@ async def export_case_graph_ttl(
 
 
 # REST helpers below are public (no trusted-key gate). get_all_cases and
-# get_lifecycle_* require a trusted CaseLinker-Key (403 without). get_case and
+# get_lifecycle_cases and get_trajectory_analysis require a trusted CaseLinker-Key (403 without). get_case and
 # llm_chat are public but return richer data / skip daily caps when trusted.
 
 
@@ -1281,13 +1281,55 @@ async def get_all_cases(include_raw_data: bool = False) -> dict[str, Any]:
 
 
 @mcp.tool()
-async def get_lifecycle_cases() -> dict[str, Any]:
-    """PACER exploitation lifecycle swimlanes payload (trusted key required).
+async def get_trajectory_analysis(case_id: str = "", threshold: str = "INFERRED") -> dict[str, Any]:
+    """Analysis of the documented PACER trajectories (trusted key required).
 
-    Wraps GET /api/lifecycle/cases — five offense types as CAC state machines with
-    fundamental stages, cross-case coverage, affordance annotations, and per-case
-    phase trajectories. The public /lifecycle page embeds this data; API access
-    requires CASELINKER_KEY in CASELINKER_TRUSTED_KEYS.
+    Wraps GET /api/lifecycle/analysis. For the current release, or one case: Aff(c) (level-C
+    affordances on derived trajectories), H(c) (minor-directed harm categories h1-h6),
+    psi_C(o) (which harms co-occur with each affordance, and in which cases), whether the
+    coverage identity holds, and per track the number of derived chains, unordered event
+    pairs and possible-identity links. threshold is DIRECT or INFERRED. psi_C records
+    co-occurrence, not causation; the response says whether the release is adjudicated.
+    """
+    try:
+        if err := require_caselinker_key():
+            return err
+        params = {"threshold": threshold, **({"case_id": case_id} if case_id else {})}
+        result = await api_get("/api/lifecycle/analysis", params=params, timeout=DEFAULT_TIMEOUT)
+        return result if isinstance(result, dict) else {"data": result}
+    except Exception as e:
+        logger.exception("get_trajectory_analysis failed")
+        return {"error": str(e)}
+
+
+@mcp.tool()
+async def get_lifecycle_cases() -> dict[str, Any]:
+    """Documented PACER event graphs and derived trajectories (trusted key required).
+
+    Wraps GET /api/lifecycle/cases: for each case in the current release, the coded events
+    (action, roles, evidence status, legal standing, dates, affordances, harms, page
+    provenance), their documented relations, and per track the derived chains at the
+    DIRECT and INFERRED thresholds. No quotes, descriptions or names. The public
+    /lifecycle page embeds the same payload; API access requires CASELINKER_KEY in
+    CASELINKER_TRUSTED_KEYS.
+
+    Three kinds of evidence, never to be added together. Events are acts two model coders
+    agreed on (machine-coded, not adjudicated; an absent act is not evidence it did not
+    happen). Each case's ``observed.platforms``, ``observed.service_descriptions`` and
+    ``observed.features`` are what the record NAMES (mentions, not use). A platform marked
+    ``withheld`` is one the record refers to by a placeholder ("Website A"): the label means
+    nothing outside that case, and a withheld name is not evidence of anonymity or of any
+    feature. ``service_descriptions`` are generic phrases ("social media application"), not
+    platforms, and are never tied to an act. Only ``observed.used_in_act`` ties technology to
+    conduct: there the act's own sentence states it was done by means of that platform or
+    feature. ``observed.means_stated_act_disputed`` is a separate, weaker kind: the sentence
+    states the means and each model coded an offender act in it, but they differ on which act
+    or which offender (both coders' action codes and actor categories are given); no act is
+    published there, and it must be reported as a disputed machine reading, never as
+    established conduct. ``observed.means_stated_actor_conflict`` lists sentences where one
+    model gives the act to an investigator, the court, a victim, a persona or an unrecognised label: not offender use
+    by any reading. ``case_id`` is the id of the press release for the same prosecution where the
+    corpus holds one.
     """
     try:
         if err := require_caselinker_key():
@@ -1296,24 +1338,6 @@ async def get_lifecycle_cases() -> dict[str, Any]:
         return result if isinstance(result, dict) else {"data": result}
     except Exception as e:
         logger.exception("get_lifecycle_cases failed")
-        return {"error": str(e)}
-
-
-@mcp.tool()
-async def get_lifecycle_lstar() -> dict[str, Any]:
-    """Full L* computation output for all PACER cases (trusted key required).
-
-    Wraps GET /api/lifecycle/lstar — raw state_machines/data/lstar_all_cases.json including
-    transition_matrix, global_lstar, cross_case_comparison, and per-case
-    phase_details. Use get_lifecycle_cases for the visualization-oriented payload.
-    """
-    try:
-        if err := require_caselinker_key():
-            return err
-        result = await api_get("/api/lifecycle/lstar", timeout=DEFAULT_TIMEOUT)
-        return result if isinstance(result, dict) else {"data": result}
-    except Exception as e:
-        logger.exception("get_lifecycle_lstar failed")
         return {"error": str(e)}
 
 
@@ -2136,7 +2160,7 @@ if _LOCAL_DISK_TOOLS:
             return {"error": str(e), "write": False}
 
     @mcp.tool()
-    async def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False) -> dict[str, Any]:
+    async def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False, full: bool = False) -> dict[str, Any]:
         """READ (local MCP only). Why one stored value is what it is.
 
         For each field (age | sentence | investigation_type | cybertip_reporter | date, empty = all):
@@ -2145,12 +2169,16 @@ if _LOCAL_DISK_TOOLS:
         role, whether the span gate kept it and why, and a people-masked excerpt; spans shaped like
         the field that no reader raised (unread); stored rows today's readers no longer raise.
         Stanza, the LLM and human verdicts are not replayed (their stored rows are carried); spaCy
-        only with use_spacy. A difference means the code changed, not which value is right.
+        only with use_spacy. full=true replays Stanza NER and spaCy too, as ingest runs.
+        Pattern-layer fields (previous_conviction, platforms_used, agencies_involved, … see
+        describe_pipeline.pattern_layer_fields) are replayed through the same merge ingest runs,
+        with the compiled patterns their extractor reads and people-masked excerpts of each match.
+        A difference means the code changed, not which value is right.
         """
         try:
             from caselinker_mcp.repair_expand import diagnose_case as _diagnose
 
-            return await asyncio.to_thread(_diagnose, case_id, field=field, use_spacy=use_spacy)
+            return await asyncio.to_thread(_diagnose, case_id, field=field, use_spacy=use_spacy, full=full)
         except Exception as e:
             logger.exception("diagnose_case failed")
             return {"error": str(e), "write": False}
@@ -2204,13 +2232,18 @@ if _LOCAL_DISK_TOOLS:
         case_ids: list[str] | None = None,
         sample: int = 200,
         checks: list[str] | None = None,
+        full: bool = False,
     ) -> dict[str, Any]:
         """READ (local MCP only). Fixed checks, and every case a proposed change would move.
 
         No rule or extension: grades this checkout. integrity (the gate's own files and the lines of
         its fixed tests unchanged from origin/main), the fixed test files, and, when extraction code
         differs from origin/main, a replay of both on a frozen sample (every k-th case id, plus
-        case_ids) listing each case whose columns, assertions or resolutions change.
+        case_ids) listing each case whose columns, assertions or resolutions change, with the before
+        and after of each moved column (columns that can hold release text are not shown) and every
+        changed case id per column (cases_by_column). Pattern-layer fields such as
+        previous_conviction are columns here. full=true runs that replay with Stanza NER and spaCy as
+        ingest does (agency and location changes act through NER); slow, so keep the sample small.
         rule: a compiled-rule candidate {id, field (age | sentence | investigation_type), role, regex,
         group?, document_kinds?, positives, negatives}; validated against its quotes, run over every
         stored case in a child process, each match span-gated, and the stored resolutions recomputed
@@ -2222,7 +2255,7 @@ if _LOCAL_DISK_TOOLS:
             from caselinker_mcp.repair_expand import run_gate as _gate
 
             return await asyncio.to_thread(
-                _gate, rule=rule, extension=extension, case_ids=case_ids, sample=sample, checks=checks
+                _gate, rule=rule, extension=extension, case_ids=case_ids, sample=sample, checks=checks, full=full
             )
         except Exception as e:
             logger.exception("run_gate failed")

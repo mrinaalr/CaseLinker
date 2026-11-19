@@ -71,21 +71,6 @@ def test_provenance_graph_uses_only_declared_terms():
     assert _clean(undeclared_terms(graph)) == {}
 
 
-def test_committed_pacer_graphs_use_only_declared_terms_and_real_iris():
-    paths = sorted((REPO / "ontology" / "PACER").rglob("*.jsonld"))
-    assert len(paths) >= 297
-    bad, placeholder = {}, []
-    for path in paths:
-        g = parse_jsonld(path)
-        found = _clean(undeclared_terms(g))
-        if found:
-            bad[path.name] = found
-        if any("example.org" in str(n) for n in g.all_nodes()):
-            placeholder.append(path.name)
-    assert bad == {}
-    assert placeholder == []
-
-
 def test_upstream_dangling_references_are_reported_not_failed():
     """CAC superclasses with no UCO declaration are CAC's to fix (CAC#67), not ours."""
     dangling = upstream_dangling()

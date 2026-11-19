@@ -1,13 +1,25 @@
 """Compare a platform-affordance evidence snapshot to the live corpus.
 
 Equal case counts do not prove freshness. ``stale`` is false only when the
-snapshot recorded both the corpus case count and the extraction-run
-fingerprint, and both still match the database being served.
+snapshot recorded, and the live side still reproduces, all of:
+
+- the corpus case count and extraction-run fingerprint;
+- ``platform_pairs_sha256``: every ``(case_id, platform)`` pair in
+  ``cases.platforms_used``. Re-resolving platforms in place keeps the
+  extraction-run fingerprint but changes the candidate pool; this catches it;
+- ``code_versions``: sha256 of the candidate builder, the evidence builder and
+  the Gen AI patterns they import, so a rule change also forces a rebuild.
+
+The 2026-11-12 snapshot passed the old two-key check while its candidate list
+was 23 days older than the corpus (3,183 listed vs 3,083 live). That is the
+case the extra keys exist for.
 """
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Mapping
+from pathlib import Path
 from typing import Any
 
 # Any positive recorded gap is a coverage warning. Zero gaps still do not
@@ -67,8 +79,64 @@ def read_corpus_identity(connection: Any) -> dict[str, Any] | None:
     return corpus_identity_from_groups(rows)
 
 
+CODE_FILES = (
+    "ontology/platform_affordance_evidence/build_candidates.py",
+    "ontology/platform_affordance_evidence/platform_affordance_evidence.py",
+    "src/Processing Layer/Pattern Processing Layer/ai_extraction_patterns.py",
+)
+_REPO = Path(__file__).resolve().parents[1]
+
+
+def platform_pairs_identity(rows: object) -> dict[str, Any]:
+    """sha256 over sorted ``case_id<TAB>platform`` from ``(case_id, platforms_used_json)`` rows."""
+    pairs: set[tuple[str, str]] = set()
+    for row in rows if isinstance(rows, (list, tuple)) else []:
+        if not isinstance(row, (list, tuple)) or len(row) < 2:
+            continue
+        case_id, raw = row[0], row[1]
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw) if raw.strip() else []
+            except ValueError:
+                raw = []
+        for platform in raw if isinstance(raw, list) else []:
+            if isinstance(platform, str) and platform:
+                pairs.add((str(case_id), platform))
+    payload = "\n".join(f"{c}\t{p}" for c, p in sorted(pairs))
+    return {"platform_pairs": len(pairs),
+            "platform_pairs_sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest()}
+
+
+def read_platform_pairs_identity(connection: Any) -> dict[str, Any]:
+    """Portable (SQLite and Postgres): parse ``platforms_used`` in Python."""
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT id, platforms_used FROM cases")
+        rows = [tuple(r) for r in cursor.fetchall()]
+    finally:
+        cursor.close()
+    return platform_pairs_identity(rows)
+
+
+def code_versions(root: Path | None = None) -> dict[str, str]:
+    root = root or _REPO
+    out = {}
+    for rel in CODE_FILES:
+        path = root / rel
+        out[rel] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else "missing"
+    return out
+
+
+def read_live_identity(connection: Any, root: Path | None = None) -> dict[str, Any]:
+    """Everything ``identity_matches`` compares: corpus, platform pairs, code."""
+    live = dict(read_corpus_identity(connection) or {})
+    live.update(read_platform_pairs_identity(connection))
+    live["code_versions"] = code_versions(root)
+    return live
+
+
 def identity_matches(meta: object, live: object) -> bool:
-    """True only when recorded count and extraction fingerprint both match."""
+    """True only when corpus identity, platform pairs and code versions all match."""
     if not isinstance(meta, Mapping) or not isinstance(live, Mapping):
         return False
     recorded_count = _count(meta, "corpus_case_count")
@@ -77,7 +145,45 @@ def identity_matches(meta: object, live: object) -> bool:
     live_fp = _text(live.get("extraction_run_fingerprint"))
     if recorded_count is None or type(live_count) is not int or recorded_fp is None or live_fp is None:
         return False
-    return recorded_count == live_count and recorded_fp == live_fp
+    if recorded_count != live_count or recorded_fp != live_fp:
+        return False
+    recorded_pairs = _text(meta.get("platform_pairs_sha256"))
+    live_pairs = _text(live.get("platform_pairs_sha256"))
+    if recorded_pairs is None or live_pairs is None or recorded_pairs != live_pairs:
+        return False
+    recorded_code = meta.get("code_versions")
+    live_code = live.get("code_versions")
+    if not isinstance(recorded_code, Mapping) or not isinstance(live_code, Mapping) or not recorded_code:
+        return False
+    return dict(recorded_code) == dict(live_code)
+
+
+def mismatched_inputs(meta: object, live: object) -> list[str]:
+    """Which recorded inputs differ from live, for the rebuild log."""
+    m = meta if isinstance(meta, Mapping) else {}
+    lv = live if isinstance(live, Mapping) else {}
+    out = []
+    if m.get("corpus_case_count") != lv.get("case_count"):
+        out.append("corpus_case_count")
+    if m.get("extraction_run_fingerprint") != lv.get("extraction_run_fingerprint"):
+        out.append("extraction_run_fingerprint")
+    if m.get("platform_pairs_sha256") != lv.get("platform_pairs_sha256"):
+        out.append("platform_pairs_sha256")
+    rc, lc = m.get("code_versions") or {}, lv.get("code_versions") or {}
+    out.extend(f"code:{k}" for k in sorted(set(rc) | set(lc)) if rc.get(k) != lc.get(k))
+    return out
+
+
+def candidate_pool_sha256(candidates: object) -> str | None:
+    """sha256 of the ``(case_id, platform)`` pool in a candidates.json payload."""
+    if not isinstance(candidates, Mapping) or not isinstance(candidates.get("flat"), list):
+        return None
+    pairs = sorted(
+        (str(cid), str(e.get("platform")))
+        for e in candidates["flat"] if isinstance(e, Mapping)
+        for cid in (e.get("case_ids") or [])
+    )
+    return hashlib.sha256("\n".join(f"{c}\t{p}" for c, p in pairs).encode("utf-8")).hexdigest()
 
 
 def coverage_percent(cases_processed: int | None, live_case_count: int | None) -> float | None:

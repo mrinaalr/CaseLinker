@@ -1,6 +1,6 @@
 # CaseLinker
 
-**CaseLinker** is a project designed to group and visualize **statistical** and **contextual** information from cases involving crimes against children and child sexual exploitation & abuse (CSEA).
+**CaseLinker** is a project designed to group and visualize **statistical** and **contextual** information from cases involving Internet Crimes Against Children.
 
 ## Live Demo
 
@@ -97,9 +97,8 @@ running locally, initially empty
 | Included | Path | Local use |
 |-------|------|-----------|
 | Ontology case graphs (~10k+ expressed via CASE/UCO/CAC) | `ontology/graph_output/` | `/patterns`, `/api/ontology/*` |
-| PACER knowledge graphs (41 investigations, 128 docs, 297 graphs, modeled by the CASE-UCO SDK) | `ontology/PACER/` | `/patterns` |
-| PACER lifecycle state machines (30 cases) | `state_machines/graphs/` | `/lifecycle` |
-| L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
+| PACER court-record graphs (CASE/UCO/CAC, emitted with the CASE-UCO SDK) | `state_machines/data/<release>/` | `/sparql`, `/api/ontology/pacer` |
+| Documented trajectories and AfH sets | `state_machines/data/<release>/` | `/lifecycle`, `/api/lifecycle/analysis` |
 | Triage model bundle | `models/triage_bundle.joblib` | `/api/triage-live`, `/api/triage-model-corpus` |
 
 
@@ -294,10 +293,10 @@ A deterministic mapping layer translates each case's extracted features into CAC
 1. **CaseLinker case features** — already extracted (platforms, topics, investigation signals, prosecution outcomes).
 2. **Mapping layer** — deterministic translation to CAC entities and relationships (`ontology/pipeline/graph_generate.py`).
 3. **RDF emission** — per-case graphs as Turtle and JSON-LD under `ontology/graph_output/`.
-4. **SHACL validation** — only conformant graphs enter the merged corpus.
+4. **SHACL validation** — only conformant press-release case graphs enter the merged corpus.
 5. **SPARQL-queryable corpus** — canonical per-case graphs are loaded into Oxigraph (named graph per case; union default graph) and served at `GET|POST /sparql`.
 
-The live store holds **10,802** press-release case graphs (`…/resource/case/{case_id}`) plus **297** PACER court-record graphs (`urn:pacer:kg:…`). Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
+The live store holds **10,802** press-release case graphs (`…/resource/case/{case_id}`) and, once it is rebuilt with `--pacer-release`, an evidence graph per released PACER case and, where the case has any, a trajectory and an observation graph (`urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and `:observations`; see [state_machines/graphs](state_machines/graphs/README.md)). Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
 
 > **[Graph Interface](https://caselinker.up.railway.app/patterns)**: browse and compare case graphs, look up by CAC class / platform / agency, open PACER investigations, and explore CaseLinker data.
 
@@ -327,7 +326,7 @@ LIMIT 8
 SPARQL
 ```
 
-Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**. PACER lifecycle state machines and L*: **[state_machines/README.md](state_machines/README.md)**.
+Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**. Court-record evidence, trajectories and the AfH model: **[state_machines/README.md](state_machines/README.md)**.
 
 **References**
 - [CAC Ontology repository](https://github.com/Project-VIC-International/CAC-Ontology)
@@ -396,14 +395,14 @@ CaseLinker/
 │   ├── pipeline/                     # features_to_cac.py (case → CAC RDF), graph_generate.py, oxigraph_rebuild.py
 │   ├── pools/                        # *_ids.txt case pools + the scripts that select them
 │   ├── platform_affordance_evidence/ q2/ q3/  # Research evidence
-│   ├── PACER/                        # PACER graphs + BULK_FOLDER (fetchers live in collector/pacer/)
+│   ├── PACER/                        # local court-record PDFs, never committed; the PACER cost log is tracked (fetchers live in collector/pacer/)
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
-├── state_machines/                   # PACER CAC state machines + L* (AfH Appendix X)
-│   ├── README.md                     # Lifecycle machines, backbone, recompute
-│   ├── graphs/                       # 30 case JSON-LD phase machines
-│   ├── data/lstar_all_cases.json     # Transition matrix + L* trajectories
-│   ├── compute_lstar.py              # Rebuild L* export
-│   └── lifecycle_api.py              # /lifecycle + trusted API payload
+├── state_machines/                   # Court-record evidence, trajectories, graphs, AfH theory
+│   ├── evidence/                     # Bundle schema, codebook, validator
+│   ├── trajectories/                 # Documented order, chains, affordance levels, AfH sets, /lifecycle payload
+│   ├── graphs/                       # CASE/UCO/CAC emission, SHACL, releases
+│   ├── coding/                       # Double coding, agreement, adjudication
+│   └── theory/                       # Transition systems (AfH Appendix X)
 ├── caselinker_mcp/                   # MCP server (62 local / 47 Railway; corpus + collector + RECAP)
 │   ├── server.py                     # MCPServer (mcp 2.x) entry point
 │   ├── collector_tools.py            # Collector wrappers (WRITE local-only)
@@ -416,7 +415,7 @@ CaseLinker/
 ├── data/                             # case_studies.json (served by /api/case-studies)
 ├── setup.sh
 ├── requirements.txt                  # Core deps
-├── requirements-ml.txt               # Optional ML / NER stack
+├── requirements-sdk.txt              # Heavy local stack: NER/ML, translation, CASE-UCO SDK
 ├── config.py
 ├── caselinker.db                     # SQLite (local; created on first ingest)
 ├── triage.md                         # Triage rules and model docs
@@ -476,10 +475,9 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /visualization` - Platform Harm Dashboard (Q1 affordance-misuse-harm analysis, tiered evidence, manual platform analysis)
 - `GET /api/platform-affordance-evidence` - platform affordance evidence index or per-platform cohort (`platform`, optional `tier`, optional `require_fresh=true`)
 - `GET /search` - Facet decision tree over stored cases (D3); prune filters; cohort case IDs via API
-- `GET /lifecycle` - Exploitation lifecycle visualization (public HTML; payload embedded server-side)
-- `GET /api/lifecycle/cases` - Lifecycle JSON (trusted `CaseLinker-Key` or localhost; same gate as `GET /api/cases`)
-- `GET /api/lifecycle/lstar` - Full L* output (`state_machines/data/lstar_all_cases.json`; trusted key or localhost)
-- `GET /api/lifecycle/anchors` - Public JSON for the 5 anchor PACER state-machine cases (no key; rate limited; intended for external embeds)
+- `GET /lifecycle` - State machines: documented trajectories from court records and the AfH model (public HTML; payload embedded server-side)
+- `GET /api/lifecycle/cases` - The page payload: events, roles, dates, standing, sources; no quotes or names (trusted `CaseLinker-Key` or localhost)
+- `GET /api/lifecycle/analysis` - Chains, unordered pairs, Aff(c), H(c), ψ and the coverage identity (trusted key or localhost)
 - `GET /analysis` - Analysis page: question → SPARQL over graph store → answers, with the passages behind them (templates, or Groq-written read-only SPARQL when no template matches)
 - `GET /api/facet-tree` - Build facet tree JSON (`max_depth`, optional prune query params)
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)
@@ -491,10 +489,9 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/ontology/cases` — graph pool catalog (`pool=compare|full|all|universe|analysis`; metadata only)
 - `GET /api/ontology/merged` — pre-merged flat nodes for a pool (public, cached; not `full`)
 - `GET /api/ontology/lookup` — find cases across full staging (`pool=full` default, max 2000); class/platform/agency/case text
-- `GET /api/ontology/pacer` — PACER investigation catalog (`ontology/PACER/`)
+- `GET /api/ontology/pacer` — the PACER release manifest (cases, named graphs, review mode)
 - `POST /api/ontology/cache/warm` — rebuild/warm merged-graph cache (`pool=compare|all|universe|analysis|both`)
 - `GET /ontology/graph_output/{case_id}.jsonld|.ttl` — staging (full corpus); also `{pool}/{case_id}…` for universe/big_bang/analysis
-- `GET /ontology/PACER/...` — static PACER CASE-UCO JSON-LD
 - `GET /ontology/platform-affordance-evidence/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` — platform affordance evidence and Q2–Q3 evidence JSON
 - `GET /ontology/q_results.json` — aggregated question results when present
 - `GET|POST /sparql` — SPARQL 1.1 over CASE/UCO/CAC graphs (public, 30/min; [SPARQL.md](ontology/docs/SPARQL.md))

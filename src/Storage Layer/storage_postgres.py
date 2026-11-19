@@ -87,19 +87,34 @@ def get_pool():
         if not database_url:
             raise ValueError("DATABASE_URL environment variable not set")
         
-        # Create connection pool
+        # Keepalives: a bulk ingest leaves the pooled connection idle for minutes
+        # while it extracts, and the Railway proxy drops idle connections.
         _pool = SimpleConnectionPool(
             minconn=1,
             maxconn=10,
-            dsn=database_url
+            dsn=database_url,
+            keepalives=1,
+            keepalives_idle=30,
+            keepalives_interval=10,
+            keepalives_count=5,
         )
     return _pool
 
 
 def get_connection():
-    """Get connection from pool"""
+    """Get a live connection from the pool; a connection the server closed is replaced."""
     pool = get_pool()
-    return pool.getconn()
+    conn = pool.getconn()
+    try:
+        if conn.closed:
+            raise psycopg2.OperationalError("pooled connection is closed")
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1")
+        conn.rollback()
+    except psycopg2.Error:
+        pool.putconn(conn, close=True)
+        conn = pool.getconn()
+    return conn
 
 
 def return_connection(conn):
@@ -604,15 +619,43 @@ class CaseStorage:
             conn = get_connection()
             cursor = conn.cursor()
             batch: List[Dict[str, Any]] = []
+            def commit(batch: List[Dict[str, Any]]) -> int:
+                # A connection the server dropped mid-batch fails every case after it on
+                # the dead cursor. Reconnect and store the batch again (an upsert by id).
+                nonlocal conn, cursor
+                stored = self._commit_case_batch(conn, cursor, batch)
+                if conn.closed and stored < len(batch):
+                    print("  … connection dropped; reconnecting and retrying the batch")
+                    try:
+                        cursor.close()
+                    except Exception:
+                        pass
+                    get_pool().putconn(conn, close=True)
+                    conn = get_connection()
+                    cursor = conn.cursor()
+                    # Per-case fallback commits may have landed before the drop; storing
+                    # those again under the same run would duplicate their assertion rows.
+                    landed = set()
+                    for run_id in {c.get("extraction_run_id") for c in batch if c.get("extraction_run_id")}:
+                        cursor.execute(
+                            "SELECT DISTINCT case_id FROM field_assertions WHERE run_id = %s AND case_id = ANY(%s)",
+                            (run_id, [c.get("id") for c in batch]),
+                        )
+                        landed.update(r[0] for r in cursor.fetchall())
+                    conn.rollback()
+                    retry = [c for c in batch if c.get("id") not in landed]
+                    stored = len(batch) - len(retry) + self._commit_case_batch(conn, cursor, retry)
+                return stored
+
             for i, case in enumerate(cases):
                 batch.append(case)
                 if len(batch) >= commit_every:
-                    stored_count += self._commit_case_batch(conn, cursor, batch)
+                    stored_count += commit(batch)
                     batch = []
                     if (i + 1) % (commit_every * 5) == 0 or (i + 1) == len(cases):
                         print(f"  … stored {stored_count}/{len(cases)} cases")
             if batch:
-                stored_count += self._commit_case_batch(conn, cursor, batch)
+                stored_count += commit(batch)
                 print(f"  … stored {stored_count}/{len(cases)} cases")
             return stored_count
         except CaseIdCollision:

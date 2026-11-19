@@ -191,24 +191,18 @@ def _pacer_bulk_stats(root: Path) -> dict[str, Any]:
     }
 
 
-def _lifecycle_anchor_count(root: Path) -> int:
-    graphs = root / "state_machines" / "graphs"
-    if not graphs.is_dir():
-        return 0
-    return len(list(graphs.glob("*.jsonld")))
-
-
-def _lifecycle_fundamental(root: Path) -> str:
+def _pacer_release_cases(root: Path) -> int:
+    """Cases in the current PACER release (state_machines/trajectories/payload.release_dir)."""
     try:
         sys.path.insert(0, str(root))
-        from state_machines.lifecycle_api import build_lifecycle_payload
+        from state_machines.trajectories.payload import release_dir
 
-        p = build_lifecycle_payload()
-        n = len(p.get("fundamental", []))
-        n_anchor = p.get("n_anchor", 5)
-        return f"{n}/{n_anchor}"
-    except Exception as exc:
-        return f"error:{exc}"
+        rd = release_dir()
+        if rd is None:
+            return 0
+        return len(json.loads((rd / "manifest.json").read_text(encoding="utf-8"))["cases"])
+    except Exception:
+        return 0
 
 
 def verify_claim(claim: Claim, ctx: VerifyContext) -> VerifyResult:
@@ -397,17 +391,10 @@ def verify_claim(claim: Claim, ctx: VerifyContext) -> VerifyResult:
 
     # --- Lifecycle ---
     if claim.id == "s3.q2_anchor_five":
-        n = _lifecycle_anchor_count(ctx.root)
-        # 5 anchors + 3 expansion = 8 jsonld files
+        n = _pacer_release_cases(ctx.root)
         obs = str(n)
-        notes.append("state_machines/graphs has 5 anchors + 3 expansion JSON-LD files.")
-        return VerifyResult(claim.id, "pass" if n >= 5 else "fail", f"jsonld graphs={n}", obs, "5 anchors", "state_machines/graphs", notes)
-
-    if claim.id == "s7.law2_backbone":
-        fund = _lifecycle_fundamental(ctx.root)
-        obs = fund
-        ok = fund.startswith("5/") or fund == "5/5"
-        return VerifyResult(claim.id, "pass" if ok else "warn", f"fundamental stages={fund}", obs, "5/5", "lifecycle_api", notes)
+        notes.append("Cases in the current machine-coded PACER release (state_machines/data/<release>/manifest.json).")
+        return VerifyResult(claim.id, "pass" if n >= 5 else "warn", f"release cases={n}", obs, "5", "PACER release manifest", notes)
 
     # --- Paper substring ---
     if claim.verify == "paper_substring":

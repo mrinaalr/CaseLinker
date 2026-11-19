@@ -1,0 +1,61 @@
+{
+ "note": "Local coder models for PACER coding. Court text never leaves the machine: models run through a local Ollama server and are pinned by content digest; the coder refuses a model whose digest differs. Pull with `ollama pull <name>`; weights live in Ollama's store (~/.ollama), not in the repository.",
+ "runtime": {
+  "server": "ollama",
+  "version": "0.32.6",
+  "base_url": "http://127.0.0.1:11435",
+  "keep_alive": "2m",
+  "env": {
+   "OLLAMA_HOST": "127.0.0.1:11435",
+   "OLLAMA_FLASH_ATTENTION": "1",
+   "OLLAMA_KV_CACHE_TYPE": "q8_0",
+   "OLLAMA_MAX_LOADED_MODELS": "1",
+   "OLLAMA_NUM_PARALLEL": "2"
+  },
+  "start": "env $(the env above) ollama serve   # a dedicated server for this pipeline; one model in memory at a time",
+  "min_free_memory_percent": 20,
+  "parallel": 2,
+  "note": "two requests in flight on a 16 GB machine: four were barely faster on real filings and added about 2.5 GB of KV cache",
+  "min_free_disk_gb": 3
+ },
+ "coders": {
+  "coder_A": {
+   "model": "qwen3:4b",
+   "digest": "sha256:359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+   "family": "qwen3",
+   "parameters": "4.0B",
+   "quantization": "Q4_K_M",
+   "size_bytes": 2497293931,
+   "why": "best accuracy of the candidates on dev cases (event F1 0.87, action 0.91) at 7.9 s per page",
+   "think": false
+  },
+  "coder_B": {
+   "model": "llama3.2:3b",
+   "digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+   "family": "llama",
+   "parameters": "3.2B",
+   "quantization": "Q4_K_M",
+   "size_bytes": 2019393189,
+   "why": "a second model family (Llama), so the coders do not share errors; 7.1 s per page"
+  }
+ },
+ "options": {
+  "temperature": 0,
+  "seed": 7,
+  "num_ctx": 8192,
+  "num_predict": 1500
+ },
+ "prompt": {
+  "version": "coder-prompt-2.0",
+  "file": "state_machines/coding/coder.py (PROMPT, SCHEMA); state_machines/coding/enrich.py (rules)"
+ },
+ "selection": {
+  "how": "python -m state_machines.coding.select_models on dev cases synth_001-005 (held-out never used)",
+  "prompt": "coder-prompt-2.0",
+  "rejected": {
+   "qwen3:8b": "29.6 s/page, event F1 0.80: slower and not better",
+   "llama3.1:8b": "about 50 s/page under prompt 1.1: too slow on 16 GB",
+   "qwen3:4b with prompt 1.2": "event F1 0.52: long structured answers"
+  }
+ }
+}

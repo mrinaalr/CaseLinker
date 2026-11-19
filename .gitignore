@@ -98,21 +98,8 @@ scripts/verify/paper/snapshot/
 !ontology/q2/*.json
 !ontology/q3/
 !ontology/q3/*.json
-# State machine workspace — ignore local dust; ship code, graphs, L* data, and docs.
-state_machines/*
-!state_machines/__init__.py
-!state_machines/iris.py
-!state_machines/lifecycle_api.py
-!state_machines/sparql_queries.py
-!state_machines/trajectory.py
-!state_machines/compute_lstar.py
-!state_machines/bellman.py
-!state_machines/estimators.py
-!state_machines/*.md
-!state_machines/graphs/
-!state_machines/graphs/*.jsonld
-!state_machines/data/
-!state_machines/data/lstar_all_cases.json
+# State machines: code, codebook, schema and released data are tracked; caches are not.
+state_machines/**/__pycache__/
 # NOTE: data/case_study_notes.json is intentionally NOT whitelisted. It holds
 # user-submitted community notes; committing it would overwrite live notes on every
 # deploy. The loader returns [] when the file is absent, which is the correct default
@@ -180,10 +167,31 @@ scripts/verify/extraction/output/
 # PACER — raw court OCR/screenshots stay local; CASE-UCO SDK JSON-LD ships.
 # PDFs at repo root / BULK_FOLDER are already covered by *.pdf above.
 # ---------------------------------------------------------------------------
-ontology/PACER/BULK_FOLDER/**/processed/
-ontology/PACER/BULK_FOLDER/outside/**
-!ontology/PACER/BULK_FOLDER/outside/**/
-!ontology/PACER/BULK_FOLDER/outside/**/*.jsonld
-ontology/PACER/**/*.extracted-content.json
-ontology/PACER/**/extracted-content.json
-ontology/PACER/**/annotations.jsonld
+# PACER source documents stay local (court records); graphs live in state_machines/data/<release>/
+ontology/PACER/**
+!ontology/PACER/
+!ontology/PACER/README.md
+!ontology/PACER/BULK_FOLDER/
+!ontology/PACER/BULK_FOLDER/pacer_cost.csv
+
+# PACER evidence work: page text, quote store and adjudication packets stay local (court text)
+.venv-*/
+local/
+!state_machines/evidence/schema/*.json
+!state_machines/data/**/*.json
+!state_machines/data/**/*.jsonld
+# coded bundles hold coder-written text: never committed (explicit, not via the case-insensitive Cases/ rule)
+state_machines/data/*/cases/
+!state_machines/graphs/*.json
+!state_machines/coding/models.json
+!state_machines/benchmark/data/**/*.json
+state_machines/benchmark/data/*/quotes.json
+!state_machines/benchmark/results/*.json
+
+# AfH 2.0 Q1 reconstruction: configs, outputs, the text-free public snapshot and the era registry
+# are committed; the full-text snapshot under ontology/platform_affordance_evidence/afh_manifest/data/ is not.
+!ontology/platform_affordance_evidence/afh_manifest/config/
+!ontology/platform_affordance_evidence/afh_manifest/outputs/*.json
+!ontology/platform_affordance_evidence/afh_manifest/public/*.json
+!ontology/platform_affordance_evidence/afh_manifest/snapshots.json
+!ontology/platform_affordance_evidence/afh_manifest/config/capability_sources/url_check.json

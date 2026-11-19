@@ -10,12 +10,14 @@ check catches the IRI itself.
 
 from __future__ import annotations
 
+import inspect
 import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Dict, Iterable, Set, Tuple
 
 from rdflib import Graph, Literal, URIRef
+
 from rdflib.namespace import DCTERMS, OWL, PROV, RDF, RDFS, SKOS, XSD
 
 _THIS_DIR = Path(__file__).resolve().parents[1]  # ontology/
@@ -43,8 +45,9 @@ def declared_terms() -> frozenset:
             if isinstance(s, URIRef):
                 declared.add(str(s))
     for ns in _W3C_CLOSED:
-        for name in getattr(ns, "__annotations__", {}):
-            declared.add(str(ns[name]))
+        for name in inspect.get_annotations(ns):   # not ns.__annotations__: on Python 3.14 that holds only rdflib internals
+            if not name.startswith("_"):
+                declared.add(str(ns[name]))
     return frozenset(declared)
 
 
