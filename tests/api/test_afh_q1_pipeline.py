@@ -119,13 +119,17 @@ def test_official_quote_about_ai_is_not_generative_use():
 # --- outputs (need the pinned snapshot) ----------------------------------------
 
 needs_snapshot = pytest.mark.skipif(not snapshot.SNAPSHOT.is_file(), reason="pinned snapshot not exported")
+needs_outputs = pytest.mark.skipif(not (OUT / "RUN_IDENTITY.json").is_file(),
+                                   reason="outputs not built; run afh_manifest/run_all.py on the release corpus")
 
 
+@needs_outputs
 def test_committed_outputs_reconcile():
     inv = json.loads((OUT / "inventory.json").read_text())
     assert all(inv["reconciliation"].values()), inv["reconciliation"]
 
 
+@needs_outputs
 @needs_snapshot
 def test_every_committed_citation_resolves_to_the_same_content():
     con = snapshot.connect()
@@ -134,6 +138,7 @@ def test_every_committed_citation_resolves_to_the_same_content():
     assert {v.status for v in verdicts} == {"ok"}
 
 
+@needs_outputs
 @needs_snapshot
 def test_committed_outputs_match_the_snapshot_they_name():
     con = snapshot.connect()
@@ -146,6 +151,7 @@ def test_committed_outputs_match_the_snapshot_they_name():
     assert res.stdout.strip() == "identical", res.stdout + res.stderr
 
 
+@needs_outputs
 @needs_snapshot
 def test_outputs_hold_no_source_text():
     """No string of 25+ characters in any output appears in any release (hashes aside)."""
@@ -158,7 +164,6 @@ def test_outputs_hold_no_source_text():
     with (OUT / "records.csv").open() as f:
         for row in csv.reader(f):
             strings |= set(row)
-    strings |= set((OUT / "TABLES.md").read_text().split("|"))
     long_ = {s.strip() for s in strings if len(s.strip()) >= 25 and not hexish.match(s.strip())}
     con = snapshot.connect()
     texts = [t.lower() for (t,) in con.execute("SELECT case_text FROM cases")]
@@ -237,22 +242,7 @@ def test_generative_capability_needs_production_conduct():
 
 # --- Decision 1: line-wrap repair ---------------------------------------------------
 
-def test_additive_linewrap_never_demotes_in_committed_outputs():
-    t = json.loads((OUT / "tier_variants.json").read_text())
-    moves = t["variants"]["Bplus_guarded"]["record_moves_from_A"]
-    rank = {"dropped": -1, "named_only": 0, "inferred": 1, "stated": 2}
-    assert moves and all(rank[m.split("->")[1]] > rank[m.split("->")[0]] for m in moves), moves
-
-
-def test_published_denominator_is_the_original_rule():
-    inv = json.loads((OUT / "inventory.json").read_text())
-    t = json.loads((OUT / "tier_variants.json").read_text())["variants"]
-    s = inv["tiers"]["strict"]
-    assert s["cases_stated"] + s["cases_inferred"] == t["A_original"]["use_documented_cases"]
-    alt = inv["tiers_linewrap_alternative"]["strict"]
-    assert alt["cases_stated"] + alt["cases_inferred"] == t["Bplus_guarded"]["use_documented_cases"]
-
-
+@needs_outputs
 def test_record_linewrap_tier_never_below_published():
     import csv
     rank = {"named_only": 0, "inferred": 1, "stated": 2}
@@ -273,6 +263,7 @@ def test_synthesis_needs_an_ai_instrument_and_an_actor():
     assert hit("He admitted taking photos from Instagram to morph into nude images.")
 
 
+@needs_outputs
 def test_every_manifest_exemplar_has_a_blind_review():
     ex = json.loads((OUT / "exemplar_inventory.json").read_text())
     assert ex["exemplars"] > 0
@@ -312,6 +303,7 @@ def test_linewrap_promotion_reaches_downstream_levels():
     assert r.harm_direct["h3_material_distributed"]                 # documented harm follows it too
 
 
+@needs_outputs
 def test_committed_levels_never_rest_on_named_only_primary_tier():
     import csv
     with (OUT / "records.csv").open() as f:
@@ -321,6 +313,7 @@ def test_committed_levels_never_rest_on_named_only_primary_tier():
                 assert not any(row[k] == "1" for k in row if k.endswith(".direct")), row["case_id"]
 
 
+@needs_outputs
 def test_manifest_use_documented_matches_primary_tier():
     man = json.loads((OUT / "manifest.json").read_text())["platforms"]
     import csv

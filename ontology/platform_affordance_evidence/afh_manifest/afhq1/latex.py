@@ -39,8 +39,8 @@ def tabular(cols: str, header: List[str], rows: List[List[Any]], note: str = "")
 
 def write(out: Path) -> List[Path]:
     j = lambda n: json.loads((out / n).read_text(encoding="utf-8"))  # noqa: E731
-    inv, cov, rec, man, tv, ex = (j(n) for n in ("inventory.json", "affordance_coverage.json", "recurrence.json",
-                                                 "manifest.json", "tier_variants.json", "exemplar_inventory.json"))
+    inv, cov, rec, man, ex = (j(n) for n in ("inventory.json", "affordance_coverage.json", "recurrence.json",
+                                             "manifest.json", "exemplar_inventory.json"))
     d = inv["denominators"]
     dest = out / "latex"
     dest.mkdir(exist_ok=True)
@@ -95,16 +95,6 @@ def write(out: Path) -> List[Path]:
         rows.append([esc(p), num(e["cases"]), num(e["use_documented_cases"]), esc(caps)])
     put("tab_platform_manifest.tex", tabular("lrrp{7cm}", ["Platform", "Cases", "Documented use", "Native capabilities (first year)"], rows,
                                              note="top 15 platforms by documented-use cases; full manifest in manifest.json"))
-
-    v = tv["variants"]
-    put("tab_tier_variants.tex", tabular("lr", ["Tier rule", "Documented-use cases"], [
-        ["Original rules", num(v["A_original"]["use_documented_cases"])],
-        ["Line-wrap repair, additive, boilerplate guard (primary)", num(v["Bplus_guarded"]["use_documented_cases"])],
-        ["Line-wrap repair, additive, no guard", num(v["Bplus_unwrap_additive"]["use_documented_cases"])],
-        ["Line-wrap repair, plain", num(v["B_unwrap"]["use_documented_cases"])],
-        ["Expanded verbs only", num(v["C_verbs"]["use_documented_cases"])],
-        ["Line-wrap + verbs", num(v["D_combined"]["use_documented_cases"])],
-    ], note="strict cases"))
 
     rows = [[esc(r["platform"]), esc(r["cited_for"]), esc(r["case_id"]), esc(r["verdict"])]
             for r in ex["rows"] if r["verdict"] == "supported"]

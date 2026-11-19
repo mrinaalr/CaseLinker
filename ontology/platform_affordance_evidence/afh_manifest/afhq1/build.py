@@ -164,39 +164,6 @@ def date_summary(cases: List[dict], dates: Dict[str, dict]) -> dict:
     }
 
 
-def june_reconciliation() -> dict:
-    ev = idn.git_json(idn.JUNE_COMMIT, idn.JUNE_EVIDENCE)
-    cand = idn.git_json(idn.JUNE_COMMIT, idn.JUNE_CANDIDATES)
-    best: Dict[str, set] = defaultdict(set)
-    for r in ev["records"]:
-        best[r["case_id"]].add(r["stated_vs_inferred"])
-    reg = pl.platform_registry()
-    pool = {cid for e in cand["flat"] for cid in e["case_ids"]}
-    specific_pool = {cid for e in cand["flat"] if pl.platform_info(e["platform"], reg).status == "specific" for cid in e["case_ids"]}
-    nongeneric_pool = {cid for e in cand["flat"] if pl.platform_info(e["platform"], reg).status != "generic" for cid in e["case_ids"]}
-    n = len(best)
-    stated = sum("stated" in t for t in best.values())
-    inf = sum("inferred" in t and "stated" not in t for t in best.values())
-    named = sum(t == {"named_only"} for t in best.values())
-    return {
-        "source": f"git {idn.JUNE_COMMIT}: {idn.JUNE_CANDIDATES}, {idn.JUNE_EVIDENCE} (generated {ev['_meta']['generated']})",
-        "candidate_cases": cand["summary"]["total_candidate_cases"],
-        "platform_case_pairs": cand["summary"]["total_platform_case_pairs"],
-        "labels": cand["summary"]["platforms_with_named_label"],
-        "cases_with_records": n,
-        "cases_lost_to_psa": cand["summary"]["total_candidate_cases"] - n,
-        "stated": stated, "inferred_only": inf, "named_only": named,
-        "percent_denominator_used_in_paper": n,
-        "percents": {"stated": round(100 * stated / n, 1), "inferred_only": round(100 * inf / n, 1), "named_only": round(100 * named / n, 1)},
-        "candidate_cases_non_generic": len(nongeneric_pool),
-        "candidate_cases_specific_only": len(specific_pool),
-        "note": ("The June paper text says 856 / 134 / 881 with percentages over 1,871 cases with records, "
-                 "while calling the evidence base 1,875 cases. 858 / 136 appear in no committed output or paper "
-                 "text in this repository; they cannot be reproduced. The 1,875 includes cases whose only labels "
-                 "are 'social media', 'chat' or 'Webcam platform'."),
-    }
-
-
 def affordance_coverage(records: List[pl.Record]) -> dict:
     out = {}
     pool = [r for r in records if r.status in ANALYSED_STATUSES]
@@ -506,7 +473,6 @@ def build(log=print) -> dict:
     dates = {c["id"]: tmp.case_dates(c["text"], c["pub_year"]) for c in cases}
     OUT.mkdir(parents=True, exist_ok=True)
     dump("inventory.json", inventory(cases, records, excluded, dates))
-    dump("june_2026_reconciliation.json", june_reconciliation())
     dump("affordance_coverage.json", affordance_coverage(records))
     dump("temporal.json", temporal_tables(cases, records))
     dump("recurrence.json", recurrence(records))
@@ -521,11 +487,9 @@ def build(log=print) -> dict:
     dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
     dump("validation_round2.json", validation_round2(records))
-    dump("tier_variants.json", tier_variant_report(cases))
     dump("validation_sample.json", rv.sample_rows(records))
     write_records_csv(records)
-    from . import latex, report
-    report.write(OUT)
+    from . import latex
     latex.write(OUT)
     # Shipped outputs only; outputs/latex/ is generated locally for the manuscript and not committed.
     files = sorted(p for p in OUT.rglob("*") if p.is_file() and p.name != "RUN_IDENTITY.json"
@@ -688,20 +652,6 @@ def validation_round2(records: List[pl.Record]) -> dict:
         "strict_cases": len(strict),
         "note": "Estimate applies record-level review rates to case-level tiers; treat as approximate.",
     }
-    return out
-
-
-def tier_variant_report(cases: List[dict]) -> dict:
-    """Decision 1: four tier variants plus the additive repair, with the round-3 blind review."""
-    from . import tier_variants as tv
-    rows = tv.all_variants(cases, pl.platform_registry())
-    out = {"variants": tv.summarize(rows)}
-    sample = _csv("review_round3_tier_variants.csv")
-    if sample:
-        codes = {i: {"case_id": r["case_id"], "code": r["r3_code"]} for i, r in enumerate(sample)}
-        for x in sample:
-            x.update(rows.get((x["case_id"], x["platform"]), {}))
-        out["review"] = tv.review_analysis(sample, codes, rows, wilson)
     return out
 
 
