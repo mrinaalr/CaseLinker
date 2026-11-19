@@ -415,7 +415,7 @@ CaseLinker/
 ├── data/                             # case_studies.json (served by /api/case-studies)
 ├── setup.sh
 ├── requirements.txt                  # Core deps
-├── requirements-ml.txt               # Optional ML / NER stack
+├── requirements-sdk.txt              # Heavy local stack: NER/ML, translation, CASE-UCO SDK
 ├── config.py
 ├── caselinker.db                     # SQLite (local; created on first ingest)
 ├── triage.md                         # Triage rules and model docs

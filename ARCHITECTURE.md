@@ -619,7 +619,7 @@ CaseLinker/
 ├── models/                            triage_bundle.joblib (tracked), translation and student bundles (local)
 ├── tests/                             collection/ extraction/ grounding/ graphs/ storage/ api/ mcp/ privacy/ research/
 ├── extensions/                        rehearsal-only readers (restitution/)
-├── Procfile  setup.sh  requirements.txt  requirements-ml.txt  config.py  .mcp.json
+├── Procfile  setup.sh  requirements.txt  requirements-sdk.txt  config.py  .mcp.json
 └── README.md  ARCHITECTURE.md  search.md  triage.md
 ```
 

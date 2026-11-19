@@ -13,8 +13,8 @@ def test_runtime_requirements_have_no_vcs_or_sdk_pins():
     assert "git+" not in text and "case-uco" not in text
 
 
-def test_research_requirements_pin_the_sdk_to_an_immutable_commit():
-    text = (ROOT / "requirements-research.txt").read_text()
+def test_sdk_is_pinned_to_an_immutable_commit_outside_the_railway_install():
+    text = (ROOT / "requirements-sdk.txt").read_text()
     line = next(l for l in text.splitlines() if l.startswith("case-uco @"))
     assert "@3455cc10682434fbff4ff95e6b9e887700287632#" in line
     assert "3455cc10682434fbff4ff95e6b9e887700287632" in (ROOT / "ontology" / "SDK_VERSION").read_text()

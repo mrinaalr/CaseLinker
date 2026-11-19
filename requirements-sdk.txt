@@ -1,0 +1,19 @@
+# Heavy local stack: ingest NER/ML, offline translation and the CASE-UCO SDK for the PACER graph
+# build. ./setup.sh installs it with requirements.txt. Railway installs requirements.txt only; the
+# web app, API and MCP never import these.
+
+# NER / ML stack used by ingest (torch ~2GB)
+spacy==3.8.11
+stanza==1.12.1
+sentence-transformers==5.5.1
+transformers==5.9.0
+torch==2.12.0
+
+# Offline Portuguese→English for international ingest. Weights live in models/ (not git).
+# Ingest never calls a translation API.
+ctranslate2==4.8.2
+sentencepiece==0.2.2
+
+# CASE-UCO SDK (state_machines/graphs/emit.py), pinned to the commit in ontology/SDK_VERSION
+case-uco @ git+https://github.com/vulnmaster/CASE-UCO-SDK@3455cc10682434fbff4ff95e6b9e887700287632#subdirectory=python
+cdo-local-uuid==0.5.0

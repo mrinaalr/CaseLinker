@@ -81,7 +81,7 @@ The bundle is the canonical artifact. Everything else is a view of it at an evid
 
 ## From record to release
 
-1. **Collect.** [`collector/pacer/`](../collector/pacer/) fetches public dockets into `ontology/PACER/` (the PDFs are local and never committed; the cost log there is tracked). The research build needs `pip install -r requirements.txt -r requirements-research.txt` (the CASE-UCO SDK, rdflib, pyshacl, pymupdf).
+1. **Collect.** [`collector/pacer/`](../collector/pacer/) fetches public dockets into `ontology/PACER/` (the PDFs are local and never committed; the cost log there is tracked). The research build needs `pip install -r requirements.txt -r requirements-sdk.txt` (`./setup.sh` does this).
 2. **Code.** Two local models (pinned by digest) read the page text and each write a bundle; [`coding/`](coding/README.md) measures their agreement. Court text never leaves the machine.
 3. **Resolve.** A fixed rule publishes what both coded (`machine`), or a named reviewer decides every disagreement (`adjudicated`).
 4. **Release.** [`graphs/release.py`](graphs/release.py) validates each bundle, derives its views, emits its graphs, runs SHACL, and writes a manifest with hashes and the release's `review_mode`. A bundle with any validation error is refused in every mode.
