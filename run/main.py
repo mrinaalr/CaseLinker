@@ -73,7 +73,7 @@ else:
 from case_jurisdiction import derive_jurisdiction
 from corpus_export import iter_corpus_json
 from platform_affordance_evidence_freshness import (
-    read_corpus_identity,
+    read_live_identity,
     require_fresh_block,
     with_snapshot_freshness,
 )
@@ -1787,6 +1787,31 @@ def get_corpus(request: Request):
         media_type="application/json",
         headers={"Cache-Control": "no-store"},
     )
+
+
+_SNAPSHOT_ERAS = _REPO_ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "snapshots.json"
+
+
+@app.get("/api/snapshots/{era}")
+@limiter.limit("10/minute")
+def get_frozen_snapshot(request: Request, era: str):
+    """
+    A frozen full-text corpus snapshot (SQLite) for one research era, for byte-for-byte
+    reproduction (``run_all.py --snapshot <era>``). Same access as /api/corpus. Only eras listed
+    in afh_manifest/snapshots.json are served, from CASELINKER_SNAPSHOT_DIR/<era>.sqlite; the
+    registered sha256 is returned in X-Snapshot-SHA256.
+    """
+    if not _has_bulk_corpus_access(request):
+        raise HTTPException(status_code=403, detail=_CORPUS_FORBIDDEN_DETAIL)
+    eras = json.loads(_SNAPSHOT_ERAS.read_text(encoding="utf-8")).get("eras", {})
+    if era not in eras:
+        raise HTTPException(status_code=404, detail=f"unknown snapshot era {era!r}")
+    base = os.environ.get("CASELINKER_SNAPSHOT_DIR", "").strip()
+    path = Path(base) / f"{era}.sqlite" if base else None
+    if path is None or not path.is_file():
+        raise HTTPException(status_code=404, detail=f"snapshot {era!r} is not hosted on this server")
+    return FileResponse(str(path), media_type="application/vnd.sqlite3", filename=f"{era}.sqlite",
+                        headers={"Cache-Control": "no-store", "X-Snapshot-SHA256": eras[era]["sha256"]})
 
 
 @app.get("/api/cases-summaries-chunk")
@@ -4304,7 +4329,7 @@ _CASE_STUDIES_NOTES_MAX_TEXT = 1500
 
 
 def _live_platform_affordance_corpus() -> Optional[Dict[str, Any]]:
-    """Case count and extraction-run fingerprint for the database this process serves.
+    """Case count, extraction-run fingerprint, platform pairs and code versions for the served database.
 
     None means the comparison was not run. Callers must treat that as unverified,
     not as a match.
@@ -4317,11 +4342,11 @@ def _live_platform_affordance_corpus() -> Optional[Dict[str, Any]]:
 
             conn = get_connection()
             pooled = True
-            return read_corpus_identity(conn)
+            return read_live_identity(conn)
         from storage import get_connection
 
         conn = get_connection(str(storage.db_path))
-        return read_corpus_identity(conn)
+        return read_live_identity(conn)
     except Exception:
         logger.exception("platform affordance corpus identity unavailable")
         return None
@@ -4674,14 +4699,21 @@ if _question_data.is_dir():
         name="question_data",
     )
 
-# Platform affordance evidence: platform_affordance_evidence.json and the manual harm-vector file.
+# Platform affordance evidence: only the two files the pages fetch. The directory also holds the
+# builder, candidates and the AfH manifest (with a local corpus snapshot), which are not served.
 _platform_affordance_evidence_data = Path(__file__).resolve().parent.parent / "ontology" / "platform_affordance_evidence"
-if _platform_affordance_evidence_data.is_dir():
-    app.mount(
-        "/ontology/platform-affordance-evidence",
-        StaticFiles(directory=str(_platform_affordance_evidence_data)),
-        name="platform_affordance_evidence_data",
-    )
+_PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES = frozenset({
+    "platform_affordance_evidence.json",
+    "platform_affordance_evidence_harm_analysis.json",
+})
+
+
+@app.api_route("/ontology/platform-affordance-evidence/{name}", methods=["GET", "HEAD"], include_in_schema=False)
+def platform_affordance_evidence_file(name: str):
+    path = _platform_affordance_evidence_data / name
+    if name not in _PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES or not path.is_file():
+        raise HTTPException(status_code=404, detail="Not Found")
+    return FileResponse(str(path), media_type="application/json")
 
 # Q02 lifecycle table: q2_evidence.json, q2_lifecycle.json (manual pathway synthesis).
 _q2_data = Path(__file__).resolve().parent.parent / "ontology" / "q2"

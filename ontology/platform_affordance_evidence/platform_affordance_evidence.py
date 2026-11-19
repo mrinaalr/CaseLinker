@@ -14,6 +14,7 @@ Outputs:
 from __future__ import annotations
 
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -22,7 +23,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-DB = "caselinker.db"
+DB = os.environ.get("CASELINKER_DB", "caselinker.db")
 CANDIDATES_FILE = "ontology/platform_affordance_evidence/candidates.json"
 OUTPUT_DIR = Path("ontology/platform_affordance_evidence")
 TEXT_CAP = 6000
@@ -276,6 +277,76 @@ _GEN_AI_CONDUCT_RE = re.compile(
     r"found|seized|uncovered|faces?|investigators state|used)\b",
     re.IGNORECASE,
 )
+
+
+# Published tier rules. Records carry stated_vs_inferred under these rules unchanged.
+TIER_RULES_VERSION = "tiers-1"
+# Line-wrap repair (Decision 1, 2026-11-17). Press-release PDFs are hard-wrapped, so a
+# sentence like "...communicated with a 15-year-old\nvia Discord..." reaches classify_sentence
+# as two fragments and the verb never meets the platform name. The repair joins a single
+# line break that does not end a sentence (no . ! ? : before it); blank-line paragraph
+# breaks stay. Its tier is reported in stated_vs_inferred_linewrap, beside the published one.
+LINEWRAP_RULES_VERSION = "tiers-1+linewrap-3"
+# linewrap-2: a promotion is refused when the sentence that earned it is agency social-media
+# boilerplate (an agency's own page, post, footer links or post URL). In a blind review of 45
+# of 269 promoted cases, all 6 non-use promotions were of this kind.
+# linewrap-3: the refusal applies only to the platform the boilerplate names (the same sentence can
+# be real evidence for another platform: "In a Facebook post, the sheriff's office said ... on Kik"),
+# and covers news-style attributions ("in / according to a Facebook post", "said on Facebook") and
+# statements that companies are required by law to report.
+_SOCIAL = r"(?:facebook|twitter|x|instagram|youtube|tiktok)"
+AGENCY_SOCIAL_BOILERPLATE = re.compile(
+    r"(?:posted|shared|announced|published|available)\b[^.]{0,80}\bon\s+(?:its|their|our|the\s+[\w.' ’]{0,60}?)\s*(?:official\s+)?"
+    r"(?:facebook|twitter|x|instagram|youtube|tiktok)\s+(?:page|account|feed|channel|profile)"
+    r"|(?:sheriff|police|department|office|attorney\s+general|agency|county|troop|bureau)\W{0,3}(?:\w+\W+){0,4}?"
+    r"(?:facebook|twitter|instagram|youtube)\s+(?:page|account|feed|channel|post)"
+    r"|(?:facebook|twitter|x|youtube|instagram)\.com/\S*"
+    r"|\bfacebook\s+x\s*\(formerly\s+twitter\)"
+    r"|\b(?:follow|like|find)\s+us\s+on\b"
+    rf"|\b(?:in|according\s+to|via)\s+an?\s+{_SOCIAL}\s+(?:post|statement|update|video)\b"
+    rf"|\b(?:said|announced|posted|wrote|shared|stated)\s+on\s+{_SOCIAL}\b"
+    r"|\bcompan(?:y|ies)\b[^.]{0,80}\brequired\s+by\s+law\s+to\s+report\b",
+    re.IGNORECASE,
+)
+
+
+def boilerplate_names_platform(sentence: str, platform: str) -> bool:
+    """True when an agency social-media / reporting-duty phrase in ``sentence`` names ``platform``."""
+    terms = [t.strip() for t in platform_text_terms(platform) if t.strip()]
+    for m in AGENCY_SOCIAL_BOILERPLATE.finditer(sentence or ""):
+        frag = m.group(0).lower()
+        if any(re.search(r"(?<![a-z])" + re.escape(t) + r"(?![a-z])", frag) for t in terms):
+            return True
+        if frag.startswith(("follow us", "like us", "find us", "facebook x")):
+            return True  # footer link lists: every platform in them is boilerplate
+    return False
+_LINE_WRAP = re.compile(r"(?<![.!?:\n])[ \t]*\n(?!\n)[ \t]*")
+
+
+def repair_line_wraps(text: str) -> str:
+    """Join mid-sentence hard wraps; keep sentence-final and paragraph line breaks."""
+    return _LINE_WRAP.sub(" ", text or "")
+
+
+def linewrap_tiers(case_id: str, platforms: List[str], case_text: str,
+                   published: List[Dict[str, Any]]) -> Dict[str, str]:
+    """Tier per platform under tiers-1+linewrap-3: the better of the published tier and the
+    tier on repaired text. Additive by design: in a blind review all 10 sampled records the
+    plain repair demoted were real offender use (joined lines trip the comma-list heuristic).
+    A promotion earned only by agency social-media boilerplate is refused."""
+    repaired_text = repair_line_wraps(case_text)
+    repaired = {r["platform"]: r["stated_vs_inferred"]
+                for r in process_case(case_id, platforms, repaired_text)["records"]}
+    offense = offense_lines(repaired_text)[0] if repaired_text else []
+    out = {}
+    for r in published:
+        a, b = r["stated_vs_inferred"], repaired.get(r["platform"], "named_only")
+        if TIER_RANK[b] > TIER_RANK[a]:
+            _tier, sentence = best_sentence(lines_with_platform(offense, r["platform"]), r["platform"])
+            if sentence and boilerplate_names_platform(sentence, r["platform"]):
+                b = a
+        out[r["platform"]] = a if TIER_RANK[a] >= TIER_RANK[b] else b
+    return out
 
 
 def psa_boundary(text: str) -> int:
@@ -801,6 +872,87 @@ def process_case(case_id: str, platforms: List[str], case_text: str) -> Dict[str
     }
 
 
+_QUOTED = re.compile(r'"(.+?)"')
+
+
+def _people_mask():
+    """The app's person-masking module (``src/Processing Layer/field_assertions/people_mask.py``)."""
+    layer = str(Path(__file__).resolve().parents[2] / "src" / "Processing Layer")
+    if layer not in sys.path:
+        sys.path.insert(0, layer)
+    from field_assertions import people_mask
+
+    return people_mask
+
+
+def person_name_patterns(case_text: str, spans: List[List[int]]) -> List["re.Pattern[str]"]:
+    """The case's stored person names (span text), longest first, as whole-word patterns."""
+    names = {" ".join(case_text[int(s):int(e)].split()) for s, e in spans or ()}
+    names = {n for n in names if len(n) >= 3}
+    return [re.compile(r"(?<![A-Za-z])" + r"\s+".join(map(re.escape, n.split())) + r"(?![A-Za-z])")
+            for n in sorted(names, key=len, reverse=True)]
+
+
+def mask_fragment(fragment: str, case_text: str, spans: List[List[int]], pm: Any,
+                  names: Optional[List["re.Pattern[str]"]] = None) -> str:
+    """``fragment`` (a piece of ``case_text``) with the case's people replaced by ``[PERSON]``.
+
+    First by stored span (``redact_excerpt``, as on case pages). Then any stored name still present is
+    replaced by string: ``harm`` and reasoning previews are cut from lines joined after short lines are
+    dropped, so they are not always a substring the spans can be placed on. A trailing ``...`` from
+    ``extract_quote`` is kept.
+    """
+    if not fragment:
+        return fragment
+    tail = "..." if fragment.endswith("...") else ""
+    core = fragment[: -len(tail)] if tail else fragment
+    out = pm.redact_excerpt(core, case_text, spans)
+    for pat in names if names is not None else person_name_patterns(case_text, spans):
+        out = pat.sub(pm.PERSON_MASK, out)
+    return out + tail
+
+
+def _platform_terms() -> Set[str]:
+    terms = {p.lower() for p in KNOWN_PLATFORM_NAMES}
+    for aliases in ALIASES.values():
+        terms.update(a.strip().lower() for a in aliases)
+    return terms
+
+
+def drop_platform_spans(case_text: str, spans: List[List[int]]) -> List[List[int]]:
+    """Stored spans minus those whose text is exactly a platform name ("Grindr", "Skout" and others
+    are sometimes stored as people). Masking them would hide the evidence and protect no one."""
+    terms = _platform_terms()
+    return [[s, e] for s, e in spans or () if " ".join(case_text[int(s):int(e)].split()).lower() not in terms]
+
+
+def mask_case_strings(result: Dict[str, Any], case_text: str, spans: List[List[int]], pm: Any) -> None:
+    """Mask every string copied from the release, in place. Tiers are computed before this, on the
+    unmasked text, so masking never changes a classification."""
+    spans = drop_platform_spans(case_text, spans)
+    names = person_name_patterns(case_text, spans)
+
+    def frag(s: str) -> str:
+        return mask_fragment(s, case_text, spans, pm, names)
+
+    def quoted(s: str) -> str:
+        # The preview can itself hold a '"', so the name pass also runs over the whole string.
+        out = _QUOTED.sub(lambda m: '"' + frag(m.group(1)) + '"', s or "")
+        for pat in names:
+            out = pat.sub(pm.PERSON_MASK, out)
+        return out
+
+    for rec in result["records"]:
+        rec["evidence_quote"] = frag(rec.get("evidence_quote") or "")
+        rec["harm"] = frag(rec.get("harm") or "")
+        rec["your_reasoning"] = quoted(rec.get("your_reasoning") or "")
+    for exc in result["exclusions"]:
+        exc["exclusion_reason"] = quoted(exc.get("exclusion_reason") or "")
+    for gap in result["db_gaps"]:
+        if gap.get("found_in") and gap["found_in"] != "(found in text)":
+            gap["found_in"] = frag(gap["found_in"])
+
+
 def md_cell(value: str, max_len: int = 60) -> str:
     v = str(value).replace("|", "\\|").replace("\n", " ")
     if len(v) > max_len:
@@ -907,9 +1059,21 @@ def write_affordance_md(
 def main() -> None:
     test_mode = "--test" in sys.argv
 
-    print("Loading candidates...", flush=True)
-    with open(CANDIDATES_FILE, encoding="utf-8") as f:
-        candidates = json.load(f)
+    # Candidates are recomputed from the database on every build. The 2026-11-12
+    # snapshot read a candidates.json 23 days older than the corpus; never again.
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "build_candidates", Path(__file__).resolve().parent / "build_candidates.py")
+    build_candidates = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_candidates)
+    print("Computing candidates from DB...", flush=True)
+    src = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    try:
+        candidates = build_candidates.compute_candidates(src)
+    finally:
+        src.close()
+    Path(CANDIDATES_FILE).write_text(json.dumps(candidates, indent=2), encoding="utf-8")
 
     case_to_platforms: Dict[str, List[str]] = defaultdict(list)
     for entry in candidates["flat"]:
@@ -924,32 +1088,39 @@ def main() -> None:
     print(f"Total cases to process: {len(all_case_ids)}", flush=True)
 
     print("Loading case texts from DB...", flush=True)
-    conn = sqlite3.connect(DB)
+    conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     db_rows: Dict[str, str] = {}
+    stored_spans: Dict[str, Optional[List[List[int]]]] = {}
+    # Stored person spans live in extracted_features; without them spans are computed from the text.
+    has_features = any(r[1] == "extracted_features" for r in conn.execute("PRAGMA table_info(cases)"))
+    spans_sql = "json_extract(extracted_features, '$.person_spans')" if has_features else "NULL"
     # SQLite's default variable limit is 32766. Chunk so a doubled corpus still fits.
     for start in range(0, len(all_case_ids), 5000):
         chunk = all_case_ids[start : start + 5000]
         placeholders = ",".join("?" * len(chunk))
         rows = conn.execute(
-            f"SELECT id, json_extract(raw_data, '$.case_text') "
+            f"SELECT id, json_extract(raw_data, '$.case_text'), {spans_sql} "
             f"FROM cases WHERE id IN ({placeholders})",
             chunk,
         ).fetchall()
         for row in rows:
             db_rows[row[0]] = row[1] or ""
+            stored_spans[row[0]] = json.loads(row[2]) if row[2] else None
     corpus_identity = None
     try:
         run_dir = Path(__file__).resolve().parents[2] / "run"
         if str(run_dir) not in sys.path:
             sys.path.insert(0, str(run_dir))
-        from platform_affordance_evidence_freshness import read_corpus_identity
+        from platform_affordance_evidence_freshness import candidate_pool_sha256, read_live_identity
 
-        corpus_identity = read_corpus_identity(conn)
+        corpus_identity = read_live_identity(conn, Path(__file__).resolve().parents[2])
+        corpus_identity["candidate_pool_sha256"] = candidate_pool_sha256(candidates)
     except Exception as exc:
         print(f"Corpus identity not recorded: {exc}", flush=True)
     conn.close()
     print(f"Loaded {len(db_rows)} case texts.", flush=True)
 
+    pm = _people_mask()
     all_records: List[Dict[str, Any]] = []
     all_exclusions: List[Dict[str, str]] = []
     all_db_gaps: List[Dict[str, Any]] = []
@@ -959,6 +1130,12 @@ def main() -> None:
         if test_mode or i % 200 == 0:
             print(f"  processing {i}/{len(all_case_ids)}: {case_id}", flush=True)
         result = process_case(case_id, case_to_platforms[case_id], db_rows.get(case_id, ""))
+        lw = linewrap_tiers(case_id, case_to_platforms[case_id], db_rows.get(case_id, ""), result["records"])
+        for rec in result["records"]:
+            rec["stated_vs_inferred_linewrap"] = lw.get(rec["platform"], rec["stated_vs_inferred"])
+        text = db_rows.get(case_id, "")
+        spans = pm.spans_for({"person_spans": stored_spans[case_id]} if stored_spans.get(case_id) is not None else {}, text)
+        mask_case_strings(result, text, spans, pm)
         all_records.extend(result["records"])
         all_exclusions.extend(result["exclusions"])
         for gap in result["db_gaps"]:
@@ -981,10 +1158,18 @@ def main() -> None:
             "db_gaps": len(all_db_gaps),
             "text_cap_hits": text_cap_hits,
             "text_cap": TEXT_CAP,
+            "tier_rules_version": TIER_RULES_VERSION,
+            "linewrap_rules_version": LINEWRAP_RULES_VERSION,
+            "tier_field_note": ("stated_vs_inferred is the published tiers-1 tier; "
+                                "stated_vs_inferred_linewrap adds evidence recovered from hard-wrapped lines"),
             **(
                 {
                     "corpus_case_count": corpus_identity["case_count"],
                     "extraction_run_fingerprint": corpus_identity["extraction_run_fingerprint"],
+                    "platform_pairs": corpus_identity["platform_pairs"],
+                    "platform_pairs_sha256": corpus_identity["platform_pairs_sha256"],
+                    "candidate_pool_sha256": corpus_identity["candidate_pool_sha256"],
+                    "code_versions": corpus_identity["code_versions"],
                 }
                 if corpus_identity
                 else {}
