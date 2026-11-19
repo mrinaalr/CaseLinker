@@ -2195,7 +2195,15 @@ _PROSECUTION_STATUS_PRECEDENCE: Tuple[Tuple[int, str, str], ...] = (
         'pleaded_guilty',
     ),
     (6, r'\bconvicted\b', 'convicted'),
-    (7, r'\bsentenced\b', 'sentenced'),
+    # NZ and UK releases report the term as "jailed for 18 months" / "imprisoned for four
+    # years". The duration is required: "jailed for possessing …" is a headline, not a term.
+    (
+        7,
+        r'\bsentenced\b|\b(?:jailed|imprisoned)(?:\s+(?:today|yesterday))?\s+for\s+(?:life\b|(?:\d+|a|one|two|three|four|five|six|seven'
+        r'|eight|nine|ten|eleven|twelve|fifteen|eighteen|twenty)(?:[\s-]+and[\s-]+(?:a[\s-]+)?half)?'
+        r'[\s-]+(?:years?|months?|weeks?)\b)',
+        'sentenced',
+    ),
 )
 
 # "N count(s) [of] CHARGE" — stop at newline (not comma-only) to avoid swallowing bylines.
