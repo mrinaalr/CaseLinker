@@ -2160,7 +2160,7 @@ if _LOCAL_DISK_TOOLS:
             return {"error": str(e), "write": False}
 
     @mcp.tool()
-    async def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False) -> dict[str, Any]:
+    async def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False, full: bool = False) -> dict[str, Any]:
         """READ (local MCP only). Why one stored value is what it is.
 
         For each field (age | sentence | investigation_type | cybertip_reporter | date, empty = all):
@@ -2169,12 +2169,16 @@ if _LOCAL_DISK_TOOLS:
         role, whether the span gate kept it and why, and a people-masked excerpt; spans shaped like
         the field that no reader raised (unread); stored rows today's readers no longer raise.
         Stanza, the LLM and human verdicts are not replayed (their stored rows are carried); spaCy
-        only with use_spacy. A difference means the code changed, not which value is right.
+        only with use_spacy. full=true replays Stanza NER and spaCy too, as ingest runs.
+        Pattern-layer fields (previous_conviction, platforms_used, agencies_involved, … see
+        describe_pipeline.pattern_layer_fields) are replayed through the same merge ingest runs,
+        with the compiled patterns their extractor reads and people-masked excerpts of each match.
+        A difference means the code changed, not which value is right.
         """
         try:
             from caselinker_mcp.repair_expand import diagnose_case as _diagnose
 
-            return await asyncio.to_thread(_diagnose, case_id, field=field, use_spacy=use_spacy)
+            return await asyncio.to_thread(_diagnose, case_id, field=field, use_spacy=use_spacy, full=full)
         except Exception as e:
             logger.exception("diagnose_case failed")
             return {"error": str(e), "write": False}
@@ -2228,13 +2232,18 @@ if _LOCAL_DISK_TOOLS:
         case_ids: list[str] | None = None,
         sample: int = 200,
         checks: list[str] | None = None,
+        full: bool = False,
     ) -> dict[str, Any]:
         """READ (local MCP only). Fixed checks, and every case a proposed change would move.
 
         No rule or extension: grades this checkout. integrity (the gate's own files and the lines of
         its fixed tests unchanged from origin/main), the fixed test files, and, when extraction code
         differs from origin/main, a replay of both on a frozen sample (every k-th case id, plus
-        case_ids) listing each case whose columns, assertions or resolutions change.
+        case_ids) listing each case whose columns, assertions or resolutions change, with the before
+        and after of each moved column (columns that can hold release text are not shown) and every
+        changed case id per column (cases_by_column). Pattern-layer fields such as
+        previous_conviction are columns here. full=true runs that replay with Stanza NER and spaCy as
+        ingest does (agency and location changes act through NER); slow, so keep the sample small.
         rule: a compiled-rule candidate {id, field (age | sentence | investigation_type), role, regex,
         group?, document_kinds?, positives, negatives}; validated against its quotes, run over every
         stored case in a child process, each match span-gated, and the stored resolutions recomputed
@@ -2246,7 +2255,7 @@ if _LOCAL_DISK_TOOLS:
             from caselinker_mcp.repair_expand import run_gate as _gate
 
             return await asyncio.to_thread(
-                _gate, rule=rule, extension=extension, case_ids=case_ids, sample=sample, checks=checks
+                _gate, rule=rule, extension=extension, case_ids=case_ids, sample=sample, checks=checks, full=full
             )
         except Exception as e:
             logger.exception("run_gate failed")

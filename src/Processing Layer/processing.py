@@ -39,7 +39,7 @@ consume_same_line_slug_after_url = batching.consume_same_line_slug_after_url
 
 # Import from Pattern Processing Layer (ai_extraction_patterns lives in same directory)
 _pattern_layer_dir = Path(__file__).parent / "Pattern Processing Layer"
-_pattern_processing_path = _pattern_layer_dir / "processing.py"
+_pattern_processing_path = _pattern_layer_dir / "pattern_processing.py"
 _pattern_dir = str(_pattern_layer_dir.resolve())
 if _pattern_dir not in sys.path:
     sys.path.insert(0, _pattern_dir)

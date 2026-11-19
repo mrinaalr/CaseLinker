@@ -26,7 +26,7 @@ for _p in (_PROCESSING_LAYER / "field_assertions", _PROCESSING_LAYER, _PATTERN_L
 
 import span_gate as sg  # noqa: E402
 
-_spec = importlib.util.spec_from_file_location("pattern_processing", _PATTERN_LAYER / "processing.py")
+_spec = importlib.util.spec_from_file_location("pattern_processing", _PATTERN_LAYER / "pattern_processing.py")
 _pp = importlib.util.module_from_spec(_spec)
 assert _spec.loader
 _spec.loader.exec_module(_pp)
@@ -593,11 +593,18 @@ def sentence_assertions(text: str) -> List[Dict]:
 # CyberTip scope (investigation_type)
 # ---------------------------------------------------------------------------
 
-_TIP_TOKEN_RE = re.compile(_pp._CYBERTIP_PATTERN + r"|Cyber\s*Tips?|cybertips?", re.IGNORECASE)
+_TIP_TOKEN_RE = re.compile(
+    _pp._CYBERTIP_PATTERN + r"|Cyber\s*Tips?|cybertips?"
+    # A tip named without the word (#71): "a tip from the National Center for Missing …",
+    # "a report from … (NCMEC)". "by NCMEC" is left out: it introduces NCMEC statistics.
+    r"|\b(?:tips?|reports?|leads?|referrals?)\s+(?:\w+\s+){0,3}?(?:from|through|via)\s+(?:the\s+)?"
+    r"(?:NCMEC\b|National\s+Center\s+for\s+Missing)",
+    re.IGNORECASE,
+)
 _TIP_BOILERPLATE = re.compile(
     r"\b(?:can|may|should)\s+be\s+(?:made|reported|submitted)|\breport(?:s|ed)?\s+(?:it\s+)?(?:to|at|online)\b[^.]{0,60}"
     r"(?:cybertip|missingkids)|1-800|\bmissingkids\.org\b|\bonline\s+reports\s+of\b|\bsteadily\s+increased\b"
-    r"|\breceives?\s+(?:thousands\s+of\s+)?CyberTips\b|\bhas\s+received\s+more\s+than\b|\b\d{1,3}(?:,\d{3})+\s+(?:cyber\s*tips?|reports)\b"
+    r"|\breceives?\s+(?:thousands\s+of\s+)?CyberTips\b|\bhas\s+received\s+more\s+than\b|\b\d{1,3}(?:,\d{3})+\s+(?:cyber\s*tips?|tips|leads|reports)\b|\b(?:hundreds|thousands)\s+of\s+(?:cyber\s*)?tips\b"
     r"|\bmore\s+than\s+[\d,]+\s+(?:cyber\s*tips?|reports)\b|\bnation'?s\s+centralized\b|\bthe\s+public\b|\bincreased\s+by\b|\bin\s+20\d\d,\s+(?:the\s+)?(?:task\s+force|ICAC|NCMEC|reports)\b"
     r"|\b(?:file|submit|make|report)\s+a\s+cyber\s*tip|\breceives?\s+(?:thousands\s+of\s+|hundreds\s+of\s+)?(?:online\s+)?cyber\s*tip"
     r"|\bclearing\s*house\b|\bcan\s+be\s+reported\b|\bif\s+you\s+have\s+(?:a\s+|any\s+)?(?:tip|information)\b|\bplease\s+(?:submit|report|contact)\b",
@@ -610,7 +617,14 @@ _TIP_CASE_ACTION = re.compile(
     r"|\bregarding\b|\brelated\s+to\b|\binvolving\b|\bassociated\s+with\b|\bin\s+connection\s+with\b|\bled\s+(?:to|investigators)\b"
     r"|\bprompted\b|\binitiated\b|\bbegan\b|\bstarted\b|\bafter\s+(?:a|an|the)\b|\breported\s+(?:that|to\s+NCMEC)\b"
     r"|\bthrough\s+(?:a|an|the|multiple|several)?\s*cyber\s*tip|\bcame\s+to\s+the\s+attention\b|\bstemm(?:ed|ing)\s+from\b"
-    r"|\bbased\s+(?:on|upon)\b|\bresulted?\s+from\b|\bin\s+regards?\s+to\b|\bfrom\s+(?:a|an|the)\s+cyber\s*tip",
+    r"|\bbased\s+(?:on|upon)\b|\bresulted?\s+from\b|\bin\s+regards?\s+to\b|\bfrom\s+(?:a|an|the)\s+cyber\s*tip"
+    # Verbs the list missed (#71): "followed up on a CyberTip", "following a … cyber tip",
+    # "launched over a cyber tip", "sent a cyber tip to", "as a result of a cyber tip",
+    # "stem from a … CyberTip", "acting on a tip", "in response to a CyberTip".
+    r"|\bfollow(?:ed|ing)?\s+up\s+on\b|\bfollowing\s+(?:a|an|the|two|several|multiple)\b"
+    r"|\bover\s+(?:a|an)\s+(?:\w+\s+){0,2}?cyber\s*tip|\bas\s+a\s+result\s+of\b|\bstems?\s+from\b"
+    r"|\bacting\s+on\b|\bsent\s+(?:a|an|the)\s+(?:\w+\s+){0,2}?cyber\s*tip|\bleads?\s+to\b"
+    r"|\blaunched\b|\btriggered\b|\bin\s+response\s+to\b|\bupon\s+receipt\b",
     re.IGNORECASE,
 )
 
@@ -685,7 +699,9 @@ _ARTICLE = (
 # "{ESP} submitted a CyberTip", "Kik, a messaging app, reported … to NCMEC"
 _ESP_SUBJECT = re.compile(
     rf"(?<![\w-]){_ESP_RE}\b(?:,[^,.]{{0,60}},)?\s+(?:had\s+|has\s+|later\s+)?(?:{_REPORT_VERB}\b[^.]{{0,80}}?"
-    r"(?:cyber\s*tip|tip(?:line)?\b|report|NCMEC|National\s+Center)|reported\s+(?:that|to)\b)",
+    r"(?:cyber\s*tip|tip(?:line)?\b|report|NCMEC|National\s+Center)|reported\s+(?:that|to)\b"
+    # "Google had reported a user had uploaded …" (#71, ncmec_2023_408)
+    r"|reported\s+(?:a|an|the)\s+(?:\w+\s+)?(?:user|account|subscriber|customer)s?\b)",
     re.IGNORECASE,
 )
 # "a CyberTip sent by Microsoft", "CyberTips from Google", "CyberTipline reports from the app Kik"
@@ -844,4 +860,117 @@ def cybertip_reporter_assertions(text: str) -> List[Dict]:
                 seen.add(key)
                 out.append(_raw("cybertip_reporter", "public", "public", key[0], key[1], 0.7,
                                 pattern="cybertip_reporter"))
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Prior history (#64): an earlier conviction, registration or supervision, per defendant
+# ---------------------------------------------------------------------------
+
+import ai_extraction_patterns as _ai  # noqa: E402  (the pattern folder is on sys.path above)
+
+PRIOR_KINDS = ("prior_conviction", "registered_offender", "on_supervision")
+_SEX_OFFENSE_RE = re.compile(
+    r"\b(?:sex\w*|child\w*|minors?|porn\w*|CSAM|abuse\s+material|indecen\w*|molest\w*|rape|lewd\w*"
+    r"|obscen\w*|entic\w*|exploitation)\b", re.IGNORECASE)
+_COUNT_BEFORE_RE = re.compile(r"\b(one|two|three|four|five|six|seven|eight|nine|ten|\d{1,2})\s+(?:\w+\s+)?$",
+                              re.IGNORECASE)
+_WORD_COUNT = {w: i for i, w in enumerate(
+    ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"))}
+_YEAR_RE = re.compile(r"\b((?:19|20)\d\d)\b")
+_CLAUSE_CUT_RE = re.compile(r",\s+(?!\d)|;")
+_PRIOR_SPAN_RES = (
+    _ai.REGISTERED_SEX_OFFENDER_RE, _ai.PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE, _ai.PRIOR_STATUS_RE,
+    _ai.PRIOR_SUPERVISION_RE, _ai.PRIOR_CONVICTION_WORDING_RE, _ai.DATED_CONVICTION_RE,
+)
+
+
+def prior_span_supports(span: str) -> bool:
+    """The span gate for ``prior_history``: the span is exactly one prior-history phrase."""
+    span = (span or "").strip()
+    return any(rx.fullmatch(span) for rx in _PRIOR_SPAN_RES)
+
+
+def _prior_matches(text: str, batch_year) -> List[Tuple[int, int, str, str]]:
+    """(start, end, kind, why_not) per phrase, longest first where two overlap.
+
+    ``why_not`` is empty for a record and names the reason otherwise: the words before
+    negate it, make it hypothetical or make it this case's own conviction, or a dated
+    conviction is not two years before the release.
+    """
+    found: List[Tuple[int, int, str, str]] = []
+    for rx, kind in ((_ai.REGISTERED_SEX_OFFENDER_RE, "registered_offender"),
+                     (_ai.PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE, "prior_conviction"),
+                     (_ai.PRIOR_STATUS_RE, None),
+                     (_ai.PRIOR_SUPERVISION_RE, "on_supervision"),
+                     (_ai.PRIOR_CONVICTION_WORDING_RE, "prior_conviction")):
+        for m in rx.finditer(text):
+            k = kind or ("registered_offender" if "register" in m.group(0).lower() else "prior_conviction")
+            why = _ai.prior_match_excluded(text, m.start())
+            found.append((m.start(), m.end(), k, why))
+    for m in _ai.DATED_CONVICTION_RE.finditer(text):
+        year = int(m.group(1))
+        if not batch_year:
+            continue
+        found.append((m.start(), m.end(), "prior_conviction", "" if year <= int(batch_year) - 2 else "this_case_year"))
+    found.sort(key=lambda f: (f[0], -(f[1] - f[0])))
+    kept: List[Tuple[int, int, str, str]] = []
+    for f in found:
+        if not any(f[0] < k[1] and k[0] < f[1] for k in kept):
+            kept.append(f)
+    return kept
+
+
+def _defendant_near(text: str, start: int, end: int, persons) -> str:
+    """The person named in the same sentence, closest to the phrase (before it first)."""
+    ss, se = sg.sentence_at(text, start, end)
+    near = [(ps, pe, name) for ps, pe, name in (tuple(p[:3]) for p in persons or [] if len(p) >= 3)
+            if ss <= ps and pe <= se and name]
+    if not near:
+        return ""
+    before = [p for p in near if p[1] <= start]
+    pick = max(before, key=lambda p: p[1]) if before else min(near, key=lambda p: p[0])
+    return str(pick[2]).strip()
+
+
+def prior_history_assertions(text: str, batch_year=None, persons=None) -> List[Dict]:
+    """One assertion per prior-history phrase (#64). Role is the kind, or ``not_prior``.
+
+    Kinds: ``prior_conviction`` (an earlier conviction, "convicted felon", a dated one),
+    ``registered_offender`` (registered sex offender, failure to register) and
+    ``on_supervision`` (on parole, probation or supervised release at the time). Extras
+    hold what the phrase states and nothing else: a count ("two prior convictions"), a
+    year, whether the clause names a sex offense, and the defendant the sentence names
+    (pseudonymised to a per-case token before storage).
+    """
+    out: List[Dict] = []
+    for s, e, kind, why in _prior_matches(text, batch_year):
+        ss, se = sg.sentence_at(text, s, e)
+        clause = text[s: min(se, e + 120)]
+        count = None
+        c = _COUNT_BEFORE_RE.search(text[max(ss, s - 20): s] + text[s:e].split()[0] + " ")
+        if c and kind == "prior_conviction" and re.search(r"convictions\b", text[s:e], re.IGNORECASE):
+            raw = c.group(1).lower()
+            count = int(raw) if raw.isdigit() else _WORD_COUNT.get(raw)
+        year = None
+        dated = _ai.DATED_CONVICTION_RE.fullmatch(text[s:e])
+        if dated:
+            year = int(dated.group(1))
+        else:
+            # The year in this clause only: stop at a comma that does not sit inside a date
+            # ("pleaded guilty on Aug. 29, 2023" is another event). A registered offender's year
+            # counts only when its clause names a conviction ("from a 2013 conviction"), since
+            # "a registered sex offender in October of 2019, when he began …" dates this case.
+            after = text[e: min(se, e + 80)]
+            cut = _CLAUSE_CUT_RE.search(after)
+            after = after[: cut.start()] if cut else after
+            y = _YEAR_RE.search(after) or _YEAR_RE.search(text[max(ss, s - 30): s])
+            if y and kind == "registered_offender" and not re.search(r"convict", after, re.IGNORECASE):
+                y = None
+            if y and batch_year and int(y.group(1)) <= int(batch_year) - 1:
+                year = int(y.group(1))
+        sex = kind == "registered_offender" or bool(_SEX_OFFENSE_RE.search(clause))
+        out.append(_raw("prior_history", "not_prior" if why else kind, "not_prior" if why else kind, s, e, 0.85,
+                        pattern="prior_history", kind=kind, why_not=why or None, count=count, year=year,
+                        sex_offense=sex, defendant_entity=_defendant_near(text, s, e, persons) or None))
     return out

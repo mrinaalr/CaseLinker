@@ -84,7 +84,7 @@ def _gender_extraction():
 def _pattern_processing():
     global _pattern_processing_mod
     if _pattern_processing_mod is None:
-        proc_path = Path(__file__).parent / "Pattern Processing Layer" / "processing.py"
+        proc_path = Path(__file__).parent / "Pattern Processing Layer" / "pattern_processing.py"
         spec = importlib.util.spec_from_file_location("pattern_processing", proc_path)
         mod = importlib.util.module_from_spec(spec)
         assert spec.loader
@@ -276,6 +276,7 @@ class MergeProcessing:
         merged = self._apply_resolved_cybertip(merged, resolutions.get("investigation_type") or {})
         merged = self._apply_resolved_cybertip_reporter(merged, resolutions.get("cybertip_reporter") or {})
         merged = self._apply_resolved_dates(merged, resolutions.get("date") or {})
+        merged = self._apply_resolved_prior_history(merged, resolutions.get("prior_history") or {})
 
         # Where the people are, never who: offsets every public surface redacts from.
         pk = _assertions().people_mask
@@ -426,6 +427,14 @@ class MergeProcessing:
             types.insert(0, "cybertip")
         merged["investigation_types"] = types
         merged["investigation_type"] = _pattern_processing()._primary_investigation_type(types)
+        return merged
+
+    def _apply_resolved_prior_history(self, merged: Dict[str, Any], res: Dict[str, Any]) -> Dict[str, Any]:
+        """Prior history per masked defendant (#64); absent when the release states none."""
+        if isinstance(res.get("final_value"), dict):
+            merged["prior_history"] = res["final_value"]
+        else:
+            merged.pop("prior_history", None)
         return merged
 
     def _apply_resolved_cybertip_reporter(self, merged: Dict[str, Any], res: Dict[str, Any]) -> Dict[str, Any]:
@@ -1071,6 +1080,12 @@ class MergeProcessing:
                         normalized.append('FBI Child Sexual Exploitation Unit')
                     else:
                         normalized.append('FBI')
+                    continue
+
+                # "New Jersey State Police" stays as written: the release names no
+                # department, and the grounding table keys on the state (#59).
+                if re.search(r"\bstate\s+police$", org_lower.strip()):
+                    normalized.append(re.sub(r"\s+", " ", org_clean.strip()))
                     continue
 
                 # Normalize "Police Department" to consistent format

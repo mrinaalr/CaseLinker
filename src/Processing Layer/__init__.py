@@ -9,12 +9,24 @@ This layer contains:
 
 # Import from Pattern Processing Layer (handles spaces in directory name)
 import importlib.util
+import sys
 from pathlib import Path
 
 _pattern_layer_path = Path(__file__).parent / "Pattern Processing Layer" / "__init__.py"
 if _pattern_layer_path.exists():
-    spec = importlib.util.spec_from_file_location("pattern_processing_layer", _pattern_layer_path)
+    # The layer's modules import their siblings by name (ai_extraction_patterns,
+    # agency_label_normalize, ...), so both folders go on the path.
+    for _dir in (Path(__file__).parent, _pattern_layer_path.parent):
+        if str(_dir) not in sys.path:
+            sys.path.append(str(_dir))
+    # Load it as a package so its relative imports (.pattern_processing) resolve.
+    spec = importlib.util.spec_from_file_location(
+        "pattern_processing_layer",
+        _pattern_layer_path,
+        submodule_search_locations=[str(_pattern_layer_path.parent)],
+    )
     pattern_module = importlib.util.module_from_spec(spec)
+    sys.modules["pattern_processing_layer"] = pattern_module
     spec.loader.exec_module(pattern_module)
     
     # Import all exports

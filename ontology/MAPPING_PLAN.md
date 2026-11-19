@@ -147,7 +147,7 @@ Source: `INVESTIGATION_TYPE_MAP` (6 entries).
 | proactive | `cac-taskforce:ProactiveOperation` |
 | reactive | `cac-taskforce:ReactiveOperation` |
 | cybertip | `cac-taskforce:ReactiveOperation` |
-| online | `cac-taskforce:TaskForceOperation` |
+| online | — |
 | unknown | — |
 
 ## Prosecution
@@ -337,7 +337,7 @@ Mapping the 3 fictional fixture cases of `tests/ontology_fixtures.py` (a full ca
 | `cac-core:LegalEvent` | 3 |
 | `cac-core:OrganizationLikeEntity` | 4 |
 | `cac-core:Phase` | 2 |
-| `cac-core:PlaceLikeEntity` | 2 |
+| `cac-core:PlaceLikeEntity` | 1 |
 | `cac-detection:ContentHashingAction` | 1 |
 | `cac-grooming:OnlineGrooming` | 1 |
 | `cac-hotlines:ESPReport` | 1 |
@@ -377,7 +377,7 @@ Mapping the 3 fictional fixture cases of `tests/ontology_fixtures.py` (a full ca
 | `cacontology:VictimRole` | 2 |
 | `uco-core:Relationship` | 6 |
 | `uco-identity:Person` | 4 |
-| `uco-location:Location` | 2 |
+| `uco-location:Location` | 1 |
 
 **Properties**
 
@@ -409,16 +409,17 @@ Mapping the 3 fictional fixture cases of `tests/ontology_fixtures.py` (a full ca
 | `dcterms:identifier` | 4 |
 | `dcterms:modified` | 1 |
 | `dcterms:provenance` | 3 |
-| `dcterms:source` | 5 |
-| `dcterms:spatial` | 2 |
+| `dcterms:publisher` | 3 |
+| `dcterms:source` | 2 |
+| `dcterms:spatial` | 1 |
 | `dcterms:subject` | 7 |
-| `rdf:type` | 96 |
-| `rdfs:label` | 59 |
+| `rdf:type` | 94 |
+| `rdfs:label` | 58 |
 | `skos:altLabel` | 4 |
 | `uco-core:description` | 1 |
 | `uco-core:isDirectional` | 6 |
 | `uco-core:kindOfRelationship` | 6 |
-| `uco-core:name` | 13 |
+| `uco-core:name` | 12 |
 | `uco-core:object` | 11 |
 | `uco-core:source` | 6 |
 | `uco-core:target` | 6 |

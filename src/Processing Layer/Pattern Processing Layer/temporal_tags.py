@@ -24,7 +24,57 @@ if str(_PROCESSING_LAYER) not in sys.path:
 
 import span_gate as sg  # noqa: E402
 
-TEMPORAL_VERSION = "temporal_1.0.1"
+TEMPORAL_VERSION = "temporal_1.1.0"
+
+# A program's history is not this case's timeline. "Project Safe Childhood, a nationwide
+# initiative launched in May 2006", "Since 2006, the Attorney General's ICAC Task Force has
+# been involved in 1,840 arrests", "Since the launch of Operation Predator in 2003": these
+# were stored as role=event (May 2006 alone in 2,358 cases of 10,802). They get role
+# ``program_boilerplate``.
+_PROGRAM_NOUN = re.compile(
+    r"\b(?:initiative|program(?:me)?|task\s+force|project\s+safe\s+childhood|operation\s+[A-Z][\w-]+"
+    r"|campaign|partnership|coalition|network|unit|cybertipline|tipline|hotline)\b",
+    re.I,
+)
+_LAUNCH_BEFORE_DATE = re.compile(
+    r"\b(?:launch(?:ed|ing)?|launch\s+of|establish(?:ed|ment)|creat(?:ed|ion)|form(?:ed|ation)|found(?:ed|ing)"
+    r"|began|started|introduced|inception|inaugurated|since)\b[^.;]{0,70}$",
+    re.I,
+)
+_LAUNCH_AFTER_DATE = re.compile(
+    r"^[^.;]{0,50}\b(?:launched|established|created|formed|founded|started|introduced|inaugurated)\b", re.I
+)
+# Aggregate program statistics: "Since 2019 ... has received more than 24,100 CyberTips".
+_AGGREGATE_AFTER = re.compile(
+    r"^[^.;]{0,140}\b(?:more\s+than|over|nearly|approximately|about)\s+[\d,]+\s+(?:\w+\s+){0,3}"
+    r"(?:arrests|cases|tips|cybertips|reports|investigations|children|victims|individuals|people|predators|offenders)\b",
+    re.I,
+)
+
+_ESTABLISHED_THAT = re.compile(r"\b(?:establish\w*\s+that|evidence\s+(?:\w+\s+){0,4}establish\w*)\b", re.I)
+_INVESTIGATION_BEGAN = re.compile(
+    r"(?:\b(?:investigation|probe|inquiry|case|undercover\s+operation)\b[^.;]{0,30}\b(?:began|started|was\s+launched)\b"
+    r"|\b(?:began|started|launched|opened|initiated)\s+(?:its|an|the|their|a)?\s*(?:\w+\s+)?investigation\b)[^.;]{0,25}$",
+    re.I,
+)
+
+# What a dated event in this case is, from the nearest cue in its clause.
+EVENT_KINDS = ("offense", "investigation", "arrest", "prosecution", "unknown")
+_EVENT_KIND_CUES = (
+    ("arrest", re.compile(r"\b(?:arrest\w*|taken\s+into\s+custody|apprehend\w*|booked|turned\s+(?:him|her)self\s+in|detained)\b", re.I)),
+    ("prosecution", re.compile(
+        r"\b(?:indict\w*|charged|charges|plead\w*|pled|guilty|convict\w*|sentenc\w*|trial|hearing|jury|verdict"
+        r"|complaint|arraign\w*|scheduled|court)\b", re.I)),
+    ("investigation", re.compile(
+        r"\b(?:investigat\w*|cybertips?|tips?|search\s+warrants?|warrants?|executed|undercover|forensic\w*"
+        r"|identified|reported|referred|referral|discovered|learned|seized|subpoena\w*|located)\b", re.I)),
+    ("offense", re.compile(
+        r"\b(?:possess\w*|receiv\w*|distribut\w*|produc\w*|communicat\w*|chat\w*|messag\w*|sent|contact\w*"
+        r"|abus\w*|assault\w*|groom\w*|entic\w*|solicit\w*|record\w*|upload\w*|download\w*|exploit\w*|met"
+        r"|travel\w*|trad(?:ed|ing)|shared|engaged|molest\w*|coerc\w*|extort\w*|began\s+(?:talking|communicating|chatting))\b",
+        re.I)),
+)
+EVENT_KIND_WINDOW = 90
 
 _MONTHS = {
     m: i for i, m in enumerate(
@@ -117,6 +167,50 @@ def date_mentions(text: str) -> List[Dict]:
             taken.append(span)
             out.append({"start": span[0], "end": span[1], "value": value, "year": int(value[:4])})
     return sorted(out, key=lambda d: d["start"])
+
+
+def is_program_boilerplate(text: str, ss: int, se: int, start: int, end: int) -> bool:
+    """The date tells when a program, operation or initiative began, or opens its statistics."""
+    sentence = text[ss:se]
+    nouns = {m.group(0).lower().split()[0] for m in _PROGRAM_NOUN.finditer(sentence)}
+    if not nouns:
+        return False
+    before = text[max(ss, start - 80):start]
+    after = text[end:min(se, end + 160)]
+    # "the evidence established that from 2015 ...": legal "established", not a founding.
+    if _ESTABLISHED_THAT.search(text[max(ss, start - 120):start]):
+        return False
+    # "The investigation began in February 2017": this case's investigation, an event.
+    if _INVESTIGATION_BEGAN.search(before):
+        return False
+    # A named operation alone is usually the one that caught this defendant ("Operation
+    # Nest Egg, launched in February 2008, targeted 26 defendants"). Boilerplate only when
+    # program-wide statistics follow ("Since the launch of Operation Predator in 2003, HSI
+    # has arrested more than 10,000 individuals").
+    if nouns <= {"operation"} and not _AGGREGATE_AFTER.search(after):
+        return False
+    if _LAUNCH_BEFORE_DATE.search(before):
+        # "since" alone needs program statistics after it; "began" needs a program noun near the date.
+        if re.search(r"\bsince\s*$", before, re.I):
+            return bool(_AGGREGATE_AFTER.search(after)) or bool(_PROGRAM_NOUN.search(after[:60]))
+        if re.search(r"\b(?:began|started)\b[^.;]{0,70}$", before, re.I):
+            return bool(_PROGRAM_NOUN.search(text[max(ss, start - 80):min(se, end + 40)]))
+        return True
+    if _LAUNCH_AFTER_DATE.search(after) and _PROGRAM_NOUN.search(after[:120]):
+        return True
+    return False
+
+
+def event_kind(text: str, ss: int, se: int, start: int, end: int) -> str:
+    """offense / investigation / arrest / prosecution / unknown, by the cue nearest the date."""
+    lo, hi = max(ss, start - EVENT_KIND_WINDOW), min(se, end + EVENT_KIND_WINDOW)
+    best: Tuple[int, str] = (10 ** 9, "unknown")
+    for kind, rx in _EVENT_KIND_CUES:
+        for m in rx.finditer(text, lo, hi):
+            dist = start - m.end() if m.end() <= start else max(0, m.start() - end)
+            if dist < best[0]:
+                best = (dist, kind)
+    return best[1]
 
 
 def publication_year(text: str, mentions: List[Dict], fallback: Optional[int]) -> Optional[int]:
@@ -220,13 +314,18 @@ def temporal_assertions(
             role = "publication"
             if pub_value is None and len(d["value"]) == 10:
                 pub_value = d["value"]
+        elif is_program_boilerplate(text, ss, se, d["start"], d["end"]):
+            role = "program_boilerplate"
         elif _BIOGRAPHY_CUES.search(sentence):
             role = "biography"
         elif _is_earlier(d, pub_value, pub_year) and _PRIOR_CUES.search(sentence):
             role = "prior_case"
         else:
             role = "event"
-        out.append(_raw("date", d["value"], role, d["start"], d["end"], 0.8, publication_year=pub_year))
+        extras = {"publication_year": pub_year}
+        if role == "event":
+            extras["event_kind"] = event_kind(text, ss, se, d["start"], d["end"])
+        out.append(_raw("date", d["value"], role, d["start"], d["end"], 0.8, **extras))
 
     spans = sg.sentence_spans(text)
     prior = _prior_sentence_ids(text, mentions, pub_value, pub_year, for_ages=False)

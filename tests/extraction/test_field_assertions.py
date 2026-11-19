@@ -9,7 +9,9 @@ by hand. The hard-10 full-text test reads caselinker.db when present.
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
+from contextlib import closing
 import sys
 from pathlib import Path
 
@@ -810,22 +812,32 @@ def test_storage_round_trip_append_only_and_reresolve(tmp_path):
 
 # --- hard 10, full text from the local corpus -------------------------------------------------
 
-# Phase 3 ids. Three rows moved when the corpus was re-split:
-# ncmec_2024_1175 → ncmec_2024_1136, ncmec_2023_105 → ncmec_2023_104,
-# ncmec_2022_512 → ncmec_2022_506. The 2007 DOJ release is still
-# doj_archives_2007_003. The old doj_safe_childhood_2026_001 sentencing
-# release is not in this corpus; south_florida_icac_2025_023 is the tenth real row.
+# Phase 3 cases, found by an anchor (a name-free phrase from the release that matches
+# exactly one stored text), not by case_id: corpus rebuilds renumber rows. The Nov 12
+# rebuild moved doj_safe_childhood_2025_131 / _325 / _327 to _130 / _324 / _326, and an
+# earlier re-split moved the three ncmec rows. Keys are the ids at the Nov 12 rebuild,
+# kept as readable labels. source_url cannot be the key: listing pages share one URL.
 HARD_EXPECTED = {
-    "doj_safe_childhood_2025_131": {"victims": [], "perps": [32], "imposed": ["240 months"]},
-    "doj_safe_childhood_2025_325": {"victims": [12], "perps": [30], "imposed": ["50 years"]},
-    "ncmec_2024_1136": {"victims": [], "perps": [55], "imposed": [], "cybertip": True},
-    "ncmec_2023_104": {"victims": [], "perps": [23], "imposed": [], "cybertip": True},
-    "illinois_ag_2023_015": {"victims": [], "perps": [38], "imposed": [], "cybertip": True},
-    "doj_archives_2007_003": {"victims": [5], "perps": [57], "imposed": []},
-    "ncmec_2022_506": {"victims": [], "perps": [56], "imposed": [], "cybertip": True},
-    "azicac_2011_001": {"victims": [], "perps": [25], "imposed": []},
-    "doj_safe_childhood_2025_327": {"victims": [13], "perps": [41], "imposed": ["25 years", "30 months"]},
-    "south_florida_icac_2025_023": {"victims": [10], "perps": [28], "imposed": []},
+    "doj_safe_childhood_2025_130": {"anchor": "and coerced a minor under the age of 18 to engage in",
+                                    "victims": [], "perps": [32], "imposed": ["240 months"]},
+    "doj_safe_childhood_2025_324": {"anchor": "numerous occasions to engage in sexual activity, some of which the victim",
+                                    "victims": [12], "perps": [30], "imposed": ["50 years"]},
+    "ncmec_2024_1136": {"anchor": "man was arrested for the second time after police caught him in",
+                        "victims": [], "perps": [55], "imposed": [], "cybertip": True},
+    "ncmec_2023_104": {"anchor": "allegedly said he was hoping that the victim was young enough not",
+                       "victims": [], "perps": [23], "imposed": [], "cybertip": True},
+    "illinois_ag_2023_015": {"anchor": "am pleased with this guilty verdict, as this offender will now be",
+                             "victims": [], "perps": [38], "imposed": [], "cybertip": True},
+    "doj_archives_2007_003": {"anchor": "sexually exploiting a minor to produce child pornography and receipt of child",
+                              "victims": [5], "perps": [57], "imposed": []},
+    "ncmec_2022_506": {"anchor": "former priest and registered sex offender has been arrested on child pornography",
+                       "victims": [], "perps": [56], "imposed": [], "cybertip": True},
+    "azicac_2011_001": {"anchor": "man stalked and followed the girl to her",
+                        "victims": [], "perps": [25], "imposed": []},
+    "doj_safe_childhood_2025_326": {"anchor": "man was sentenced to 25 years in prison for sexually exploiting a",
+                                    "victims": [13], "perps": [41], "imposed": ["25 years", "30 months"]},
+    "south_florida_icac_2025_023": {"anchor": "multiple federal charges after authorities said he was sharing child sexual abuse",
+                                    "victims": [10], "perps": [28], "imposed": []},
 }
 DB = REPO / "caselinker.db"
 
@@ -834,17 +846,45 @@ def test_hard_ten_lists_ten_cases():
     assert len(HARD_EXPECTED) == 10
 
 
-@pytest.mark.skipif(not DB.exists(), reason="local caselinker.db not present")
-@pytest.mark.parametrize("case_id", sorted(HARD_EXPECTED))
-def test_hard_ten_full_text(case_id):
+def test_hard_ten_anchors_hold_no_names():
+    # Anchors live in the repo, so they must not carry a name: lowercase words only.
+    for label, want in HARD_EXPECTED.items():
+        assert not re.search(r"[A-Z]", want["anchor"]), label
+        assert len(want["anchor"].split()) >= 8, label
+
+
+def _hard_case(conn, label):
+    """The one stored case whose text contains the label's anchor."""
+    rows = conn.execute(
+        "SELECT id, raw_data FROM cases WHERE json_extract(raw_data, '$.case_text') LIKE ?",
+        (f"%{HARD_EXPECTED[label]['anchor']}%",),
+    ).fetchall()
+    if len(rows) != 1:
+        pytest.fail(f"{label}: anchor matches {len(rows)} cases in caselinker.db "
+                    f"({[r[0] for r in rows][:5]}); lengthen it or re-pick it")
+    return rows[0][0], json.loads(rows[0][1])
+
+
+def _corpus_present() -> bool:
+    """A local corpus with cases. Importing run/main.py elsewhere in a whole-suite run creates an
+    empty caselinker.db during collection, so existence alone does not mean a corpus is there."""
+    if not DB.exists():
+        return False
+    try:
+        with closing(sqlite3.connect(f"file:{DB}?mode=ro", uri=True)) as conn:
+            return conn.execute("SELECT COUNT(*) FROM cases").fetchone()[0] > 0
+    except sqlite3.Error:
+        return False
+
+
+@pytest.mark.skipif(not _corpus_present(), reason="no local corpus in caselinker.db")
+@pytest.mark.parametrize("label", sorted(HARD_EXPECTED))
+def test_hard_ten_full_text(label):
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
-    row = conn.execute("SELECT raw_data FROM cases WHERE id = ?", (case_id,)).fetchone()
-    if row is None:
-        pytest.fail(f"{case_id} is not in caselinker.db")
-    raw = json.loads(row[0])
+    case_id, raw = _hard_case(conn, label)
     text = raw["case_text"]
     case, res = run(text, case_id, year=str(raw.get("year") or ""))
-    want = HARD_EXPECTED[case_id]
+    want = HARD_EXPECTED[label]
     assert age_final(res)["victims"] == want["victims"]
     assert age_final(res)["perpetrators"] == want["perps"]
     assert sentence_final(res)["imposed"] == want["imposed"]

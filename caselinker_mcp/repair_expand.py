@@ -79,6 +79,55 @@ _ROLE_RE = re.compile(r"[a-z][a-z0-9_]{0,39}")
 _EXCERPT = 70
 _MAX_LISTED = 200
 
+
+def _base_archive_cmd(base: str) -> List[str]:
+    """The base tree the replay runs: every tracked file but the generated graphs.
+
+    Extraction reads files outside ``src`` (``scripts/verify/extraction/hint_source_policy.json``
+    sets which location hints are demoted), so a base tree of ``src`` and ``data`` alone replays
+    different behaviour than the base commit had.
+    """
+    return ["git", "archive", base, "--", ".", ":!ontology/graph_output"]
+
+
+def _moved_resolutions(before: Dict[str, List], after: Dict[str, List]) -> Dict[str, Dict[str, Any]]:
+    """Status per resolved field that differs. A field one side does not resolve at all (a field
+    the change adds or removes) reads as ``None`` on that side; ``None`` against ``empty`` is no
+    change, since a new field that finds nothing says the same as no field."""
+    out = {}
+    for f in sorted(before.keys() | after.keys()):
+        b, a = (before.get(f) or [None])[0], (after.get(f) or [None])[0]
+        if before.get(f) != after.get(f) and {b, a} != {None, "empty"}:
+            out[f] = {"before": b, "after": a}
+    return out
+_MAX_VALUE = 300
+
+
+_MAX_ITEMS = 25
+
+
+def _moved_value(column: str, before: Optional[str], after: Optional[str]) -> Dict[str, Any]:
+    """What moved in one column. Lists give removed and added items, dicts the keys that changed,
+    anything else a short before and after. Columns that can carry release text are not shown."""
+    if any(part in column for part in _SKIP_VALUE_KEYS):
+        return {"shown": False, "reason": "may hold release text; read it with diagnose_case"}
+    cut = lambda v: v if v is None or len(v) <= _MAX_VALUE else v[:_MAX_VALUE] + "…"
+    try:
+        old, new = (json.loads(v) if v is not None else None for v in (before, after))
+    except ValueError:
+        return {"before": cut(before), "after": cut(after)}
+    if isinstance(old, list) and isinstance(new, list):
+        key = lambda x: json.dumps(x, sort_keys=True, default=str)
+        was, now = {key(x): x for x in old}, {key(x): x for x in new}
+        return {"removed": [was[k] for k in was if k not in now][:_MAX_ITEMS],
+                "added": [now[k] for k in now if k not in was][:_MAX_ITEMS],
+                "count": [len(old), len(new)]}
+    if isinstance(old, dict) and isinstance(new, dict):
+        keys = sorted(k for k in old.keys() | new.keys() if old.get(k) != new.get(k))
+        return {"keys": {k: {"before": cut(json.dumps(old.get(k), default=str)),
+                             "after": cut(json.dumps(new.get(k), default=str))} for k in keys[:_MAX_ITEMS]}}
+    return {"before": cut(before), "after": cut(after)}
+
 _pipeline_module = None
 
 
@@ -192,6 +241,38 @@ def _run_child(payload: Dict[str, Any], timeout: float) -> Dict[str, Any]:
         return json.loads(proc.stdout)
     except ValueError:
         return {"failed": "did not return JSON"}
+
+
+def _shards(full: bool) -> int:
+    """Replay children per side. Fast replays load ~0.4 GB each; a full one loads Stanza and spaCy."""
+    if full:
+        return 1
+    return max(1, min(4, (os.cpu_count() or 2) // 2))
+
+
+def _run_replay(payloads: Dict[str, Dict[str, Any]], shards: int, timeout: float) -> Dict[str, Dict[str, Any]]:
+    """Each side's replay split over ``shards`` children, every child of both sides at once.
+
+    Cases come back in input order per side; a side fails if any of its children fails.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    jobs = []
+    for side, payload in payloads.items():
+        docs = payload["docs"]
+        size = max(1, -(-len(docs) // shards))
+        for i in range(0, max(len(docs), 1), size):
+            jobs.append((side, {**payload, "docs": docs[i:i + size]}))
+    with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        results = list(pool.map(lambda job: (job[0], _run_child(job[1], timeout=timeout)), jobs))
+    out: Dict[str, Dict[str, Any]] = {side: {"cases": [], "errors": []} for side in payloads}
+    for side, result in results:
+        if result.get("failed"):
+            out[side]["failed"] = result["failed"]
+            continue
+        out[side]["cases"] += result.get("cases", [])
+        out[side]["errors"] += result.get("errors", [])
+    return out
 
 
 def read_manifest(name: str) -> Dict[str, Any]:
@@ -412,6 +493,7 @@ def describe_pipeline() -> Dict[str, Any]:
             registered.setdefault(det.name, {"name": det.name, "kinds": list(det.kinds), "order": det.order,
                                              "defined_in": _where(det.fn)})
     core = _core_fields(amod)
+    legacy = _legacy_fields()
     corpus = _corpus_summary()
     return {
         "layers": [{"layer": layer, "path": path, "exists": (_REPO_ROOT / path).exists(), "decision": decision,
@@ -420,6 +502,14 @@ def describe_pipeline() -> Dict[str, Any]:
         "detectors": sorted(registered.values(), key=lambda d: (d["order"], d["name"])),
         "fields": [{"field": f, "resolver": _where(getattr(res, f"resolve_{f}", None)),
                     "compiled_rule_or_extension": f in RULE_FIELDS} for f in core],
+        "pattern_layer_fields": {
+            "note": ("Set by extract_features with no assertion rows. Repair one by editing its extractor; "
+                     "diagnose_case(field=...) replays it on a case and run_gate() measures the edit over "
+                     "the corpus. Compiled rules and extensions do not reach these fields. Stanza NER feeds "
+                     "agencies_involved, organizations, locations and their grounds at the merge: a change "
+                     "that acts there moves only with full=true (slow; name the cases or keep the sample small)."),
+            "fields": legacy,
+        },
         "resolution": {"rule_set_version": res.RULE_SET_VERSION, "families": dict(res.FAMILY),
                        "single_family_min_confidence": res.SINGLE_FAMILY_MIN_CONFIDENCE,
                        "gate": _where(amod.gate_assertion)},
@@ -432,7 +522,8 @@ def describe_pipeline() -> Dict[str, Any]:
                  "sample": DEFAULT_SAMPLE},
         "reserved_for_maintainer": [
             {"decision": "a new document kind", "today": list(dets.DOCUMENT_KINDS)},
-            {"decision": "a new stored field or a change to what one means", "today": core},
+            {"decision": "a new stored field or a change to what one means",
+             "today": core + [f["field"] for f in legacy if f["field"] not in core]},
             {"decision": "cases table columns", "today": corpus.get("domain_columns") or "see src/Storage Layer/storage.py"},
             {"decision": "ontology mapping and pinned versions", "today": _ontology_pins()},
             {"decision": "any write to the corpus, the graphs or the SPARQL store", "today": "none of these tools write"},
@@ -440,9 +531,134 @@ def describe_pipeline() -> Dict[str, Any]:
         "corpus": corpus,
         "loops": {
             "repair": ["get_field_disagreements", "diagnose_case", "run_gate(rule=...) or run_gate()"],
+            "repair_pattern_layer_field": ["diagnose_case(field=...)", "edit the extractor", "run_gate()",
+                                           "diagnose_case on the cases run_gate lists"],
             "expand": ["profile_new_source", "scaffold_extension", "run_gate(extension=...)",
                        "profile_new_source(extension=...)"],
         },
+        "tool_kind": "READ", "write": False,
+    }
+
+
+# --- pattern-layer fields -----------------------------------------------------------
+# Most stored features are set by the pattern layer directly (previous_conviction, platforms,
+# agencies, topics, …), not by field assertions. They have no assertion rows, so the tools
+# read them from the code: the key in extract_features, the function behind it, and the
+# compiled patterns that function uses.
+
+_FEATURE_LINE_RE = re.compile(r"""^\s*['"](\w+)['"]\s*:\s*(.+?),?\s*$""")
+_CALL_RE = re.compile(r"^([A-Za-z_]\w*)\(")
+_SKIP_VALUE_KEYS = ("text", "quote", "admission", "context", "excerpt", "entities")
+# Keys extract_features carries through rather than extracts.
+_CARRIED_KEYS = frozenset({"id", "source", "raw_data", "case_text"})
+
+
+def _pattern_module() -> Any:
+    return _pipeline().pattern_processing
+
+
+def _legacy_fields() -> List[Dict[str, Any]]:
+    """Stored feature keys extract_features sets, each with the function that computes it.
+
+    Leaves out keys it only carries through and fields the resolver settles (those have
+    assertion rows and their own diagnosis).
+    """
+    import inspect
+
+    pp = _pattern_module()
+    lines, first = inspect.getsourcelines(pp.extract_features)
+    body = "".join(lines)
+    path = _where(pp.extract_features).rsplit(":", 1)[0]
+    resolved = set(_core_fields(_pipeline().assertions_module))
+    out, seen = [], set(_CARRIED_KEYS) | resolved
+    for i, line in enumerate(lines):
+        m = _FEATURE_LINE_RE.match(line)
+        if not m or m.group(1) in seen:
+            continue
+        key, expr = m.groups()
+        call = _CALL_RE.match(expr)
+        name = call.group(1) if call else None
+        if name is None:
+            var = re.match(r"^([A-Za-z_]\w*)", expr)
+            assigned = var and re.search(rf"^\s*{var.group(1)}\s*=\s*([A-Za-z_]\w*)\(", body, re.M)
+            name = assigned.group(1) if assigned else None
+        fn = getattr(pp, name, None) if name else None
+        seen.add(key)
+        out.append({"field": key, "set_in": f"{path}:{first + i}", "extractor": name if callable(fn) else None,
+                    "defined_in": _where(fn) if callable(fn) else None})
+    return out
+
+
+def _patterns_used(fn: Any, depth: int = 2) -> Dict[str, Any]:
+    """Compiled regexes a pattern-layer function reads, following its helpers in the same module."""
+    pp = _pattern_module()
+    found: Dict[str, Any] = {}
+    todo, done = [fn], set()
+    while todo and depth >= 0:
+        nxt = []
+        for f in todo:
+            code = getattr(f, "__code__", None)
+            if code is None or code in done:
+                continue
+            done.add(code)
+            for name in code.co_names:
+                obj = getattr(pp, name, None)
+                if isinstance(obj, re.Pattern):
+                    found[name] = obj
+                elif callable(obj) and getattr(obj, "__module__", None) == pp.__name__:
+                    nxt.append(obj)
+        todo, depth = nxt, depth - 1
+    return found
+
+
+def _diagnose_legacy(case_id: str, field: str, meta: Dict[str, Any], full: bool = False) -> Dict[str, Any]:
+    amod = _pipeline().assertions_module
+    pp = _pattern_module()
+    with closing(_connect()) as con:
+        case = _load_case(con.cursor(), case_id)
+    if case is None:
+        return {"error": f"case {case_id!r} is not in the local corpus", "case_id": case_id}
+    text = case["text"]
+    raw = dict(case["raw"])
+    raw.setdefault("case_text", text)
+    raw.setdefault("case_id", case_id)
+    features = pp.extract_features(raw)
+    ner = _ner_for(text) if full else None
+    assertions = amod.collect_assertions(text, case_id=case_id, use_spacy=full, overrides={}, ner_entities=ner,
+                                         batch_year=_batch_year(case["raw"]), doc_kind=case["doc_kind"])
+    resolutions = amod.resolve(assertions, batch_date=case["batch_date"], text=text)
+    merged = _pipeline().assign_comparison_values(
+        _pipeline().MergeProcessing().merge_features(features, ner, assertions=assertions, resolutions=resolutions))
+    replayed = merged.get(field)
+    stored = case["features"].get(field)
+    people = amod.people_mask.spans_for(case["features"], text)
+    fn = getattr(pp, meta["extractor"], None) if meta.get("extractor") else None
+    patterns = []
+    for name, rx in sorted(_patterns_used(fn).items()) if fn else []:
+        hits = [{"span": [m.start(), m.end()], "excerpt": _excerpt(amod, text, people, m.start(), m.end())}
+                for m in list(rx.finditer(text))[:10]]
+        patterns.append({"pattern": name, "matches": hits})
+    return {
+        "case_id": case_id, "doc_kind": case["doc_kind"], "text_length": len(text),
+        "fields": {field: {
+            "kind": "pattern_layer",
+            "stored": stored,
+            "replay": replayed,
+            "pattern_layer_only": features.get(field),
+            "changed_if_reextracted": _digest(stored) != _digest(replayed),
+            "patterns": patterns,
+        }},
+        "readers_not_replayed": (["semantic_concepts", "llm", "human"] if full and ner is not None
+                                 else ["ner_stanza", "spacy", "semantic_concepts", "llm", "human"]),
+        "where_to_look": {"set_in": meta["set_in"], "extractor": meta.get("extractor"),
+                          "defined_in": meta.get("defined_in")},
+        "interpretation_kind": "extraction_trace",
+        "interpretation_note": ("Pattern-layer fields have no assertion rows. 'replay' is today's pipeline "
+                                "on the stored text through the same merge ingest runs (with NER only when "
+                                "full); 'pattern_layer_only' is extract_features before the merge. A "
+                                "difference from 'stored' means the code changed, not which value is right; "
+                                "a field NER feeds differs without full. Pattern matches are shown even "
+                                "where an exclusion drops them."),
         "tool_kind": "READ", "write": False,
     }
 
@@ -479,15 +695,27 @@ def _brief(resolution: Optional[Dict]) -> Optional[Dict[str, Any]]:
             "final_value": resolution.get("final_value")}
 
 
-def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False) -> Dict[str, Any]:
-    """Stored evidence for one case beside a replay of today's readers on its stored text."""
+def _ner_for(text: str) -> Optional[Dict[str, Any]]:
+    """Stanza entities for one text, as ingest computes them; None when Stanza cannot load."""
+    extractor = _pipeline().create_primary_ner_extractor()
+    return extractor.extract_entities(text) if extractor is not None else None
+
+
+def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False, full: bool = False) -> Dict[str, Any]:
+    """Stored evidence for one case beside a replay of today's readers on its stored text.
+
+    ``full`` replays with Stanza NER and spaCy as well, as ingest runs.
+    """
     case_id = (case_id or "").strip()
     amod = _pipeline().assertions_module
     import assertion_store
 
     core = _core_fields(amod)
     if field and field not in core:
-        return {"error": f"unknown field {field!r}", "fields": core}
+        legacy = {f["field"]: f for f in _legacy_fields()}
+        if field in legacy:
+            return _diagnose_legacy(case_id, field, legacy[field], full=full)
+        return {"error": f"unknown field {field!r}", "fields": core, "pattern_layer_fields": sorted(legacy)}
     with closing(_connect()) as con:
         cur = con.cursor()
         case = _load_case(cur, case_id)
@@ -498,11 +726,14 @@ def diagnose_case(case_id: str, field: str = "", use_spacy: bool = False) -> Dic
     text = case["text"]
     people = amod.people_mask.spans_for(case["features"], text)
     trace: List[Dict] = []
+    use_spacy = use_spacy or full
+    ner = _ner_for(text) if full else None
     replayed = amod.collect_assertions(
         text, case_id=case_id, use_spacy=use_spacy, overrides={}, batch_year=_batch_year(case["raw"]),
-        doc_kind=case["doc_kind"], trace=trace,
+        doc_kind=case["doc_kind"], trace=trace, ner_entities=ner,
     )
-    skipped = NOT_REPLAYED + (() if use_spacy else SPACY_METHODS)
+    not_replayed = tuple(m for m in NOT_REPLAYED if not (full and ner is not None and m == "ner_stanza"))
+    skipped = not_replayed + (() if use_spacy else SPACY_METHODS)
     carried = [dict(a) for a in stored if a["method"] in skipped]
     from_stored = amod.resolve([dict(a) for a in stored], batch_date=case["batch_date"], text=text)
     from_replay = amod.resolve(replayed + carried, batch_date=case["batch_date"], text=text)
@@ -837,6 +1068,42 @@ def _integrity(root: Path = _REPO_ROOT) -> Dict[str, Any]:
     }
 
 
+# The gate's pytest children run with an allow-listed environment. Every key named in a
+# .env file, and every production-looking variable, is set to "" so that run/main.py's
+# load_dotenv(override=False) cannot fill it back in. An empty DATABASE_URL means SQLite.
+_TEST_ENV_PASS = ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "VIRTUAL_ENV", "CASELINKER_DB")
+_TEST_ENV_BLANK = (
+    "DATABASE_URL", "DATABASE_PRIVATE_URL", "DATABASE_PUBLIC_URL", "PGHOST", "PGPORT", "PGUSER", "PGPASSWORD",
+    "PGDATABASE", "PGSERVICE", "PGPASSFILE", "OXIGRAPH_URL", "CASELINKER_API_URL", "CASELINKER_KEY",
+    "CASELINKER_TRUSTED_KEYS", "REDIS_URL", "GROQ_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY", "JINA_API_KEY", "RAILWAY_ENVIRONMENT", "RAILWAY_SERVICE_NAME", "RAILWAY_TOKEN",
+)
+_DOTENV_KEY = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=")
+
+
+def _dotenv_keys(root: Path) -> List[str]:
+    """Variable names (never values) declared in the .env files run/main.py loads."""
+    keys: List[str] = []
+    for path in (root / ".env", root / "run" / ".env"):
+        if path.is_file():
+            for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+                m = _DOTENV_KEY.match(line)
+                if m:
+                    keys.append(m.group(1))
+    return keys
+
+
+def _test_env(root: Path = _REPO_ROOT, environ: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    """Environment for a gate pytest child: allow-listed basics, every secret and .env key blanked."""
+    source = os.environ if environ is None else environ
+    env = {k: source[k] for k in _TEST_ENV_PASS if k in source}
+    for key in (*_TEST_ENV_BLANK, *_dotenv_keys(root)):
+        env[key] = ""
+    env["PYTHONHASHSEED"] = "0"
+    env["CASELINKER_GATE_CHILD"] = "1"
+    return env
+
+
 def _run_tests(extension: str = "") -> Dict[str, Any]:
     """Each fixed test file in its own process (a whole-suite run collides on module names)."""
     targets = [t for t in TEST_TIER if (_REPO_ROOT / t).exists()]
@@ -850,7 +1117,7 @@ def _run_tests(extension: str = "") -> Dict[str, Any]:
         try:
             proc = subprocess.run(
                 [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "-rf", target],
-                cwd=_REPO_ROOT, capture_output=True, text=True, timeout=900,
+                cwd=_REPO_ROOT, capture_output=True, text=True, timeout=900, env=_test_env(_REPO_ROOT),
             )
             output = proc.stdout
         except subprocess.TimeoutExpired:
@@ -980,50 +1247,88 @@ def _measure_rule(amod: Any, proposal: Dict[str, Any], check: Dict[str, Any], do
             "dropped": dict(dropped), "cases_matched": len(added), "added": added}
 
 
-def _replay_code(docs: List[Dict], base: str) -> Dict[str, Any]:
-    """The deterministic pipeline of the base commit and of this checkout on the same stored texts."""
+def _replay_code(docs: List[Dict], base: str, full: bool = False) -> Dict[str, Any]:
+    """The pipeline of the base commit and of this checkout on the same stored texts.
+
+    Deterministic readers only by default; ``full`` adds Stanza NER and spaCy on both sides.
+    """
     payload_docs = [{"case_id": d["case_id"], "text": d["text"], "raw": d["raw"]} for d in docs]
     with tempfile.TemporaryDirectory(prefix="caselinker_gate_") as tmp:
-        archive = subprocess.run(["git", "archive", base, "src", "data", "config.py"], cwd=_REPO_ROOT,
-                                 capture_output=True, timeout=300)
+        archive = subprocess.run(_base_archive_cmd(base), cwd=_REPO_ROOT, capture_output=True, timeout=300)
         if archive.returncode != 0:
             return {"ran": False, "reason": f"git archive {base} failed"}
         subprocess.run(["tar", "-x", "-C", tmp], input=archive.stdout, check=True, timeout=300)
-        before = _run_child({"mode": "replay", "root": tmp, "docs": payload_docs}, timeout=3600)
-    after = _run_child({"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs}, timeout=3600)
-    for side, result in (("base", before), ("checkout", after)):
-        if result.get("failed"):
-            return {"ran": False, "reason": f"{side} replay {result['failed']}"}
+        # A small replay carries values in its first pass; a large one compares hashes and asks
+        # again only for the cases that moved, so neither side loads its models twice when it can help it.
+        upfront = len(payload_docs) <= _MAX_LISTED
+        shards = 1 if upfront else _shards(full)
+        both = _run_replay({
+            "base": {"mode": "replay", "root": tmp, "docs": payload_docs, "full": full, "values": upfront},
+            "checkout": {"mode": "replay", "root": str(_REPO_ROOT), "docs": payload_docs, "full": full,
+                         "values": upfront},
+        }, shards=shards, timeout=3600)
+        before, after = both["base"], both["checkout"]
+        for side, result in (("base", before), ("checkout", after)):
+            if result.get("failed"):
+                return {"ran": False, "reason": f"{side} replay {result['failed']}"}
+        # Hashes compare every case; values are fetched again only for the cases that moved.
+        old_hash = {c["case_id"]: c["columns"] for c in before["cases"]}
+        moved_ids = [c["case_id"] for c in after["cases"]
+                     if c["case_id"] in old_hash and c["columns"] != old_hash[c["case_id"]]][:_MAX_LISTED]
+        moved_docs = [d for d in payload_docs if d["case_id"] in set(moved_ids)]
+        values: Dict[str, Dict[str, Dict[str, str]]] = {"base": {}, "checkout": {}}
+        if upfront:
+            for side, result in (("base", before), ("checkout", after)):
+                values[side] = {c["case_id"]: c.get("values", {}) for c in result["cases"]
+                                if c["case_id"] in set(moved_ids)}
+        elif moved_docs:
+            got = _run_replay({
+                "base": {"mode": "replay", "root": tmp, "docs": moved_docs, "full": full, "values": True},
+                "checkout": {"mode": "replay", "root": str(_REPO_ROOT), "docs": moved_docs, "full": full,
+                             "values": True},
+            }, shards=1, timeout=3600)
+            values = {side: {c["case_id"]: c.get("values", {}) for c in got[side]["cases"]} for side in got}
     old = {c["case_id"]: c for c in before["cases"]}
     columns, fields, changes = Counter(), Counter(), []
+    column_cases: Dict[str, List[str]] = {}
     for case in after["cases"]:
         prior = old.get(case["case_id"])
         if prior is None:
             continue
         moved_columns = sorted(k for k in case["columns"].keys() | prior["columns"].keys()
                                if case["columns"].get(k) != prior["columns"].get(k))
-        moved_fields = {f: {"before": prior["resolutions"][f][0], "after": r[0]}
-                        for f, r in case["resolutions"].items() if prior["resolutions"].get(f) != r}
+        moved_fields = _moved_resolutions(prior["resolutions"], case["resolutions"])
         assertions_changed = case["assertions"] != prior["assertions"]
         if moved_columns or moved_fields or assertions_changed:
             columns.update(moved_columns)
+            for col in moved_columns:
+                column_cases.setdefault(col, []).append(case["case_id"])
             fields.update(f"{f}: {v['before']} -> {v['after']}" for f, v in moved_fields.items())
             changes.append({"case_id": case["case_id"], "columns": moved_columns, "resolutions": moved_fields,
-                            "assertions_changed": assertions_changed})
+                            "assertions_changed": assertions_changed,
+                            "values": {col: _moved_value(col, values["base"].get(case["case_id"], {}).get(col),
+                                                         values["checkout"].get(case["case_id"], {}).get(col))
+                                       for col in moved_columns}
+                            if case["case_id"] in values["checkout"] else {}})
     return {"ran": True, "base_commit": base[:9], "cases_compared": len(after["cases"]),
             "cases_changed": len(changes), "columns": dict(columns), "resolutions": dict(fields),
+            "cases_by_column": column_cases, "children_per_side": shards,
             "changes": changes[:_MAX_LISTED], "changes_truncated": len(changes) > _MAX_LISTED,
             "errors": {"base": before["errors"], "checkout": after["errors"]},
-            "readers_off": ["ner_stanza", *SPACY_METHODS, "semantic_concepts", "llm", "human"]}
+            "full": full,
+            "readers_off": (["semantic_concepts", "llm", "human"] if full
+                            else ["ner_stanza", *SPACY_METHODS, "semantic_concepts", "llm", "human"])}
 
 
 def run_gate(rule: Optional[Dict[str, Any]] = None, extension: str = "", case_ids: Optional[List[str]] = None,
-             sample: int = DEFAULT_SAMPLE, checks: Optional[List[str]] = None) -> Dict[str, Any]:
+             sample: int = DEFAULT_SAMPLE, checks: Optional[List[str]] = None, full: bool = False) -> Dict[str, Any]:
     """Fixed checks on this checkout, plus the cases a candidate rule or an extension would change.
 
     With no rule or extension the gate grades the checkout: integrity, the fixed tests and,
     when extraction code differs from the base, a replay of base and checkout on a frozen sample.
     ``checks`` picks a subset of ``integrity``, ``tests`` and ``replay`` (``replay`` forces one).
+    ``full`` runs the replay with Stanza NER and spaCy as ingest does, so changes that act
+    through NER output (agencies, locations) are measured; it is slow, so keep the sample small.
     """
     if rule and extension:
         return {"error": "pass a rule or an extension, not both", "write": False}
@@ -1078,7 +1383,7 @@ def run_gate(rule: Optional[Dict[str, Any]] = None, extension: str = "", case_id
             changed = integrity.get("extraction_code_changed")
             if changed or checks:
                 picked, how = _frozen_sample(docs, sample, case_ids)
-                out["checks"]["replay"] = {"scope": how, **_replay_code(picked, integrity["base_commit"])} \
+                out["checks"]["replay"] = {"scope": how, **_replay_code(picked, integrity["base_commit"], full=full)} \
                     if integrity.get("ran") else {"ran": False, "reason": integrity.get("reason")}
             else:
                 out["checks"]["replay"] = {"ran": False, "reason": "no extraction code differs from the base"}
