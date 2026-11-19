@@ -84,7 +84,7 @@ def _gender_extraction():
 def _pattern_processing():
     global _pattern_processing_mod
     if _pattern_processing_mod is None:
-        proc_path = Path(__file__).parent / "Pattern Processing Layer" / "processing.py"
+        proc_path = Path(__file__).parent / "Pattern Processing Layer" / "pattern_processing.py"
         spec = importlib.util.spec_from_file_location("pattern_processing", proc_path)
         mod = importlib.util.module_from_spec(spec)
         assert spec.loader
@@ -1080,6 +1080,12 @@ class MergeProcessing:
                         normalized.append('FBI Child Sexual Exploitation Unit')
                     else:
                         normalized.append('FBI')
+                    continue
+
+                # "New Jersey State Police" stays as written: the release names no
+                # department, and the grounding table keys on the state (#59).
+                if re.search(r"\bstate\s+police$", org_lower.strip()):
+                    normalized.append(re.sub(r"\s+", " ", org_clean.strip()))
                     continue
 
                 # Normalize "Police Department" to consistent format

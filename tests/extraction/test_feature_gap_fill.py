@@ -11,7 +11,7 @@ REPO = Path(__file__).resolve().parents[2]
 PROC = REPO / "src" / "Processing Layer"
 PATTERN = PROC / "Pattern Processing Layer"
 AI_PATTERNS = PATTERN / "ai_extraction_patterns.py"
-PROCESSING = PATTERN / "processing.py"
+PROCESSING = PATTERN / "pattern_processing.py"
 NORMALIZE = PROC / "agency_label_normalize.py"
 FEATURES_TO_CAC = REPO / "ontology" / "pipeline" / "features_to_cac.py"
 
@@ -159,6 +159,63 @@ class TestDistinctNamedAgenciesLeOnly(unittest.TestCase):
         self.assertIn("HSI", kept)
         self.assertFalse(any("fire" in x.casefold() for x in kept))
         self.assertFalse(any("child safety" in x.casefold() for x in kept))
+
+    def test_merges_sheriff_office_department_and_state_abbr(self):
+        kept = norm.distinct_named_agencies(
+            [
+                "Ada County Sheriff's Department",
+                "Ada County Sheriff's Office",
+                "N.C. State Bureau of Investigation",
+                "NC State Bureau of Investigation",
+                "North Carolina State Bureau of Investigation",
+                "Toms River PD",
+                "Toms River Police Department",
+                "The FBI",
+                "FBI",
+            ]
+        )
+        self.assertEqual(len(kept), 4)
+        self.assertTrue(any("ada county sheriff" in x.casefold() for x in kept))
+        self.assertTrue(any("north carolina" in x.casefold() for x in kept))
+        self.assertTrue(any("toms river" in x.casefold() for x in kept))
+        self.assertIn("FBI", kept)
+
+    def test_drops_task_force_and_detective_fragments(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "Task Force",
+                    "Bensalem Detectives",
+                    "Special Victims Detectives",
+                    "Radcliff PD Detective",
+                    "Austin Police Department",
+                    "Cyber Crimes Task Force",
+                ]
+            )
+        )
+        self.assertIn("Austin Police Department", kept)
+        self.assertTrue(any("cyber" in x.casefold() for x in kept))
+        self.assertNotIn("Task Force", kept)
+        self.assertFalse(any(x.casefold().endswith("detectives") for x in kept))
+        self.assertFalse(any(x.casefold().endswith("detective") for x in kept))
+
+    def test_keeps_county_detective_bureaus(self):
+        kept = set(norm.distinct_named_agencies(["Bucks County Detectives", "Chester County Detectives"]))
+        self.assertEqual(kept, {"Bucks County Detectives", "Chester County Detectives"})
+
+    def test_still_excludes_ncmec_and_courts(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "NCMEC",
+                    "NCMEC CyberTipline",
+                    "Federal District Court",
+                    "Bureau County Circuit Court",
+                    "FBI",
+                ]
+            )
+        )
+        self.assertEqual(kept, {"FBI"})
 
 
 class TestRsoAndPriorConviction(unittest.TestCase):
@@ -348,8 +405,8 @@ class TestLocationNerMapping(unittest.TestCase):
             spatial.update(ctx.objects(inv, cac.DCTERMS.spatial))
         self.assertIn(loc, spatial)
 
-    def test_ungrounded_mention_stays_in_its_case(self):
-        """An ungrounded mention is a node of this case only, so it joins no other case (#57)."""
+    def test_ungrounded_mention_gets_no_node(self):
+        """An ungrounded mention is not a Location in the case graph (#57)."""
         mapper = cac.CaseToCAC()
         case = {
             **cac.AZICAC_2011_006_FIXTURE,
@@ -359,8 +416,8 @@ class TestLocationNerMapping(unittest.TestCase):
         }
         graph, _ = mapper.map_case(case)
         self.assertNotIn("southern-district-of-texas", mapper._location_registry)
-        local = cac.BASE["case/dist_tx/location/southern-district-of-texas"]
-        self.assertTrue(any((local, cac.RDF.type, cac.UCO_LOCATION.Location) in ctx for ctx in graph.graphs()))
+        nodes = {str(n) for ctx in graph.graphs() for n in ctx.all_nodes()}
+        self.assertFalse([n for n in nodes if n.endswith("/location/southern-district-of-texas")])
 
     def test_shared_singleton_across_cases(self):
         mapper = cac.CaseToCAC()
