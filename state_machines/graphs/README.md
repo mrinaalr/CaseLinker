@@ -49,7 +49,7 @@ The trajectory graph is the derived view: one `uco-action:ActionLifecycle` per c
 | `partial` | Everything that ran passed, but applicable upstream constraints could not run as published (listed) |
 | `fails` | A constraint that ran was violated |
 
-Violations from upstream shapes known to reject valid UCO data ([`shacl_upstream_defects.json`](shacl_upstream_defects.json)) are counted apart from violations of our own output, and still mean `fails`. A release check passes only with no violations and every applicable skipped constraint waived in [`shacl_waivers.json`](shacl_waivers.json).
+Violations from upstream shapes known to reject valid UCO data ([`shacl_upstream_defects.json`](shacl_upstream_defects.json)) are counted apart from violations of our own output, and still mean `fails`. For `pacer-v1` the `fails` come from CAC's `ActionSemanticsShape`, which targets every `uco-action:Action`, including `ActionLifecycle`; it is filed upstream as Project-VIC-International/CAC-Ontology#74 with a patch in #75, and the graphs validate against that shape once the patch is in the vendored CAC. Nothing is added to a graph (a performer, an object, a start time) to make the check pass. A release check passes only with no violations and every applicable skipped constraint waived in [`shacl_waivers.json`](shacl_waivers.json).
 
 ## Releases
 
