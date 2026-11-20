@@ -716,6 +716,20 @@ def resolve_prior_history(assertions: List[Dict], perp_keys: Sequence[Optional[s
                    disagreement={"not_prior": len(dropped)} if dropped else None)
 
 
+def resolve_legal_context(assertions: List[Dict]) -> Dict:
+    """Statutes cited, federal districts prosecuting, named operations: every supported value."""
+    field = "legal_context"
+    hits = [a for a in assertions if a.get("field") == field and a.get("span_ok")]
+    if not hits:
+        return _result(field, "empty", None, "no_assertions")
+    final = {
+        key: sorted({str(a["value"]) for a in hits if a.get("role") == role})
+        for key, role in (("statutes", "statute"), ("federal_districts", "federal_district"),
+                          ("operations", "named_operation"))
+    }
+    return _result(field, "resolved", final, "named_in_text", hits)
+
+
 def resolve_case(
     assertions: List[Dict],
     *,
@@ -734,6 +748,7 @@ def resolve_case(
         "date": resolve_date(assertions, batch_date),
         "prior_history": resolve_prior_history(
             assertions, perp_keys, ((age.get("final_value") or {}).get("perpetrator_entities") or [])),
+        "legal_context": resolve_legal_context(assertions),
     }
 
 

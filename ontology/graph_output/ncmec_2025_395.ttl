@@ -1,86 +1,97 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_395> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+        ns5:EnduringEntity ;
     rdfs:label "Case ncmec_2025_395" ;
-    dcterms:created "2026-11-10T16:34:29.723436"^^xsd:dateTime ;
-    dcterms:date "2025-07-16"^^xsd:date ;
+    dcterms:created "2026-11-19T18:36:15.116823"^^xsd:dateTime ;
+    dcterms:date "2025-08-16"^^xsd:date ;
     dcterms:identifier "ncmec_2025_395" ;
-    dcterms:modified "2026-11-12T01:52:09.049120"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:36:15.116823"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_395/provenance> ;
-    dcterms:source <https://www.knoe.com/2025/07/16/lecompte-man-arrested-ruston-charges-sex-crimes-against-children-animals/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/lincoln-parish-la>,
-        <https://w3id.org/caselinker/resource/location/louisiana-la>,
-        <https://w3id.org/caselinker/resource/location/ruston-city-la> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.kplctv.com/2025/08/16/ponchatoula-man-arrested-child-porn-allegations-tangipahoa-sheriff-says/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/louisiana-la>,
+        <https://w3id.org/caselinker/resource/location/ponchatoula-city>,
+        <https://w3id.org/caselinker/resource/location/tangipahoa-village> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_395/phase/booked> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_395/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_395/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_395/legal-proceeding> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_395/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_395/narrative> ;
+    ns5:hasConfidence 0.5133 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 73.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_395/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_395/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_395/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "child pornography involving children under 13" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "pornography involving juveniles under the age" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_395/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "sexual abuse of animals" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_395/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked him into the Lincoln Parish Detention Center" ;
-    ns2:chargeCount "49"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_395/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_395/charge/2> .
+    ns4:chargeCount "62"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_395/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_395/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_395/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/lincoln-parish-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Lincoln Parish" ;
-    dcterms:identifier "fips:22061" ;
-    ns3:name "Lincoln Parish" .
-
-<https://w3id.org/caselinker/resource/location/louisiana-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/louisiana-la> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Louisiana" ;
     dcterms:identifier "fips:22" ;
     skos:altLabel "La." ;
-    ns3:name "Louisiana" .
+    ns2:name "Louisiana" .
 
-<https://w3id.org/caselinker/resource/location/ruston-city-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/ponchatoula-city> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ruston city" ;
-    dcterms:identifier "fips:2266655" ;
-    skos:altLabel "Ruston" ;
-    ns3:name "Ruston city" .
+    rdfs:label "Ponchatoula city" ;
+    dcterms:identifier "fips:2261615" ;
+    skos:altLabel "Ponchatoula" ;
+    ns2:name "Ponchatoula city" .
+
+<https://w3id.org/caselinker/resource/location/tangipahoa-village> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Tangipahoa village" ;
+    dcterms:identifier "fips:2274760" ;
+    skos:altLabel "Tangipahoa" ;
+    ns2:name "Tangipahoa village" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_395/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+        ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_395/phase/booked> a ns1:InitialPhase,
+        ns5:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_395/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_395/phase/booked> a ns1:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/booked" .
 

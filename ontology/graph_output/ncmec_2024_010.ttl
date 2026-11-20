@@ -1,27 +1,34 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_010> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_010" ;
-    dcterms:created "2026-11-10T15:49:46.542368"^^xsd:dateTime ;
-    dcterms:date "2024-02-02"^^xsd:date ;
+    dcterms:created "2026-11-19T18:22:28.565690"^^xsd:dateTime ;
+    dcterms:date "2024-08"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_010" ;
-    dcterms:modified "2026-11-12T00:10:24.998506"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:22:28.565690"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_010/provenance> ;
-    dcterms:source <https://www.wtvm.com/2024/02/02/eufaula-19-year-old-arrested-sharing-possessing-inappropriate-material/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/alabama-al>,
-        <https://w3id.org/caselinker/resource/location/eufaula-city-al> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_010/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_010/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/distribution>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/possession> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/alabama-al> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_010/phase/arrested> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_010/phase/arrested> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/possession>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_010/legal-proceeding> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_010/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_010/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 28.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_010/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -30,13 +37,20 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_010/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_010/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
-    rdfs:label "CSAM Distribution · event/distribution" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_010/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_010/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/possession> .
 
 <https://w3id.org/caselinker/resource/location/alabama-al> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -45,21 +59,14 @@
     skos:altLabel "Ala." ;
     ns1:name "Alabama" .
 
-<https://w3id.org/caselinker/resource/location/eufaula-city-al> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Eufaula city" ;
-    dcterms:identifier "fips:0124568" ;
-    skos:altLabel "Eufaula" ;
-    ns1:name "Eufaula city" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/possession> a ns2:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010/event/possession> a ns4:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_010/phase/arrested> a ns4:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_010/phase/charged> a ns2:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/charged" .
 

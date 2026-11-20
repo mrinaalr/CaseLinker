@@ -1,87 +1,95 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002> a ns2:CACInvestigation,
+        ns6:EnduringEntity ;
     rdfs:label "Case wy_dci_2026_002" ;
-    dcterms:created "2026-11-11T18:44:09.767169"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T20:28:55.871862"^^xsd:dateTime ;
     dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "wy_dci_2026_002" ;
-    dcterms:modified "2026-11-11T18:44:09.767169"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T20:28:55.871862"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/provenance> ;
-    dcterms:source <https://cowboystatedaily.com/2026/03/17/powell-man-facing-20-child-porn-charges-could-get-up-to-222-years/>,
-        "WY DCI" ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/distribution>,
+    dcterms:publisher "WY DCI" ;
+    dcterms:source <https://cowboystatedaily.com/2026/03/17/powell-man-facing-20-child-porn-charges-could-get-up-to-222-years/> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/phase/arrested> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/phase/arrested> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/distribution>,
         <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation-wy> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/person/offender/1>,
+    ns1:object <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/person/offender/1>,
         <https://w3id.org/caselinker/resource/platform/meganz> .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/role/offender/1/has-role> a ns3:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/role/offender/1> .
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/narrative> ;
+    ns6:hasConfidence 0.5066 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+        ns4:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation-wy> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation-wy> a ns6:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Wyoming Division of Criminal Investigation" ;
     dcterms:identifier "ori:WY0110400" ;
-    ns3:name "Wyoming Division of Criminal Investigation" .
+    ns1:name "Wyoming Division of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/distribution> a ns6:Event,
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "14"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/charge/1> .
+    ns3:chargeCount "14"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/possession> .
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/event/possession> a ns2:CSAMIncident,
+        ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/meganz> .
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/meganz> .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/phase/arrested> a ns1:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_002/phase/arrested> a ns2:InitialPhase,
+        ns6:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/platform/meganz> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+<https://w3id.org/caselinker/resource/platform/meganz> a ns6:DigitalSystemEntity,
         ns5:FileHostingService ;
     rdfs:label "Mega.nz" ;
     ns5:encryptionLevel "end-to-end" ;
-    ns3:name "Mega.nz" .
+    ns1:name "Mega.nz" .
 

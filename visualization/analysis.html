@@ -166,6 +166,32 @@
   var PLATFORMS = {"social media":"social-media","chat":"chat","Kik":"kik","Snapchat":"snapchat","Facebook":"facebook","Twitter / X":"twitter-x","Twitter":"twitter-x","X":null,"Instagram":"instagram","Dropbox":"dropbox","Discord":"discord","dark web":"dark-web","YouTube":"youtube","Gen AI":"gen-ai","generative AI":"gen-ai","Telegram":"telegram","Google Drive":"google-drive","WhatsApp":"whatsapp","webcam":"webcam-platform","Mega.nz":"meganz","Mega":"meganz","Facebook Messenger":"facebook-messenger","Messenger":"facebook-messenger","BitTorrent":"bittorrent","Reddit":"reddit","TikTok":"tiktok","Skype":"skype","Tumblr":"tumblr","iCloud":"icloud","Omegle":"omegle","Tor":"tor","IRC":"irc","Craigslist":"craigslist","Whisper":"whisper","Grindr":"grindr","cryptocurrency":"cryptocurrency","Wickr":"wickr","MeWe":"mewe","Xbox Live":"xbox-live","Xbox":"xbox-live","PlayStation":"playstation-network","Skout":"skout","LimeWire":"limewire","Kazaa":"kazaa","Roblox":"roblox","Minecraft":"minecraft","Fortnite":"fortnite","Twitch":"twitch","AOL":"aol-instant-messenger","OneDrive":"onedrive","Chat Avenue":"chat-avenue","MySpace":"myspace","Chatroulette":"chatroulette","Yubo":"yubo","Yahoo":"yahoo-chat","Steam":"steam","Oculus":"oculus","IMVU":"imvu","Gigatribe":"gigatribe","Stable Diffusion":"stable-diffusion","Monkey":"monkey"};
   var STATES = {"alabama":"al","alaska":"ak","arizona":"az","arkansas":"ar","california":"ca","colorado":"co","connecticut":"ct","delaware":"de","florida":"fl","georgia":"ga","hawaii":"hi","idaho":"id","illinois":"il","indiana":"in","iowa":"ia","kansas":"ks","kentucky":"ky","louisiana":"la","maine":"me","maryland":"md","massachusetts":"ma","michigan":"mi","minnesota":"mn","mississippi":"ms","missouri":"mo","montana":"mt","nebraska":"ne","nevada":"nv","new hampshire":"nh","new jersey":"nj","new mexico":"nm","new york":"ny","north carolina":"nc","north dakota":"nd","ohio":"oh","oklahoma":"ok","oregon":"or","pennsylvania":"pa","rhode island":"ri","south carolina":"sc","south dakota":"sd","tennessee":"tn","texas":"tx","utah":"ut","vermont":"vt","virginia":"va","washington":"wa","west virginia":"wv","wisconsin":"wi","wyoming":"wy","district of columbia":"dc"};
 
+  /* Platform nodes that are not a named app (AfH platforms.yaml: generic, technology, ambiguous alias). */
+  var PLATFORM_KIND = { 'social-media': 'generic tag', 'chat': 'generic tag', 'dark-web': 'category', 'cryptocurrency': 'category', 'webcam-platform': 'category', 'gen-ai': 'technology' };
+  /* A generic tag and the platform class its named apps carry, for "how many cases involve social media". */
+  var GENERIC_CLASS = { 'social-media': ['Social media', 'SocialMediaPlatform'], 'chat': ['Chat', 'MessagingService'] };
+  /* Offences as the case graphs type them. */
+  var OFFENSES = [
+    [/sextort/, 'Sextortion', ['https://cacontology.projectvic.org/sextortion#SextortionIncident', 'https://cacontology.projectvic.org/legal-outcomes#SextortionCharge']],
+    [/entic|\blur(?:e|ed|es|ing)\b|solicit/, 'Online enticement', ['https://cacontology.projectvic.org/legal-outcomes#OnlineEnticement']],
+    [/\bproduc/, 'Production', ['https://cacontology.projectvic.org/production#ProductionOffense']],
+    [/traffick/, 'Sex trafficking', ['https://cacontology.projectvic.org/legal-outcomes#SexTrafficking']],
+    [/distribut/, 'Distribution', ['https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution']],
+    [/undercover|\bstings?\b/, 'Undercover operation', ['https://cacontology.projectvic.org/undercover#UndercoverOperation']],
+    [/\bai[- ]generated|\bai[- ]csam|deepfake|synthetic (?:csam|images?|material)|artificial intelligence|digitally generated/, 'AI-generated CSAM', ['https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM', 'https://cacontology.projectvic.org#DigitallyGeneratedCSAMIncident']]
+  ];
+  function findOffenses(lower) { return OFFENSES.filter(function (o) { return o[0].test(lower); }); }
+  /* Release-date range: "since 2023", "after 2020", "before 2015", "in 2024", "between 2018 and 2021". */
+  function findYears(lower) {
+    var m;
+    if ((m = /between\s+((?:19|20)\d\d)\s+and\s+((?:19|20)\d\d)/.exec(lower))) return { filter: 'YEAR(?caseDate) >= ' + m[1] + ' && YEAR(?caseDate) <= ' + m[2], label: m[1] + '\u2013' + m[2] };
+    if ((m = /(?:since|from)\s+((?:19|20)\d\d)/.exec(lower))) return { filter: 'YEAR(?caseDate) >= ' + m[1], label: 'since ' + m[1] };
+    if ((m = /after\s+((?:19|20)\d\d)/.exec(lower))) return { filter: 'YEAR(?caseDate) > ' + m[1], label: 'after ' + m[1] };
+    if ((m = /(?:before|prior to)\s+((?:19|20)\d\d)/.exec(lower))) return { filter: 'YEAR(?caseDate) < ' + m[1], label: 'before ' + m[1] };
+    if ((m = /\bin\s+((?:19|20)\d\d)\b/.exec(lower))) return { filter: 'YEAR(?caseDate) = ' + m[1], label: 'in ' + m[1] };
+    return null;
+  }
+
   function findPlatforms(q) {
     var out = [], lower = q.toLowerCase();
     Object.keys(PLATFORMS).sort(function (a, b) { return b.length - a.length; }).forEach(function (label) {
@@ -179,9 +205,9 @@
     var lower = q.toLowerCase(), best = null;
     Object.keys(STATES).forEach(function (name) { if (lower.indexOf(name) >= 0 && (!best || name.length > best.name.length)) best = { name: name, abbr: STATES[name] }; });
     if (!best) return null;
-    return { label: best.name.replace(/\b\w/g, function (c) { return c.toUpperCase(); }), iri: RES + 'location/' + best.name.replace(/ /g, '-') + '-' + best.abbr };
+    return { label: best.name.replace(/\b\w/g, function (c) { return c.toUpperCase(); }), abbr: best.abbr, iri: RES + 'location/' + best.name.replace(/ /g, '-') + '-' + best.abbr };
   }
-  function findCase(q) { var m = /\b([a-z]+(?:_[a-z]+)*_\d{4}_\d{3})\b/i.exec(q); return m ? m[1].toLowerCase() : null; }
+  function findCase(q) { var m = /\b([a-z]+(?:_[a-z]+)*_\d{4}_\d{3,4})\b/i.exec(q); return m ? m[1].toLowerCase() : null; }
   function caseIri(id) { return RES + 'case/' + id; }
 
   /* ---------- verified query templates ---------- */
@@ -194,9 +220,26 @@
     var count = /how many|count|number of/.test(lower);
     var agency = /agenc|task force|police|sheriff|fbi|hsi|department/.test(lower);
     var subject = /sentenc|prison|years in|probation/.test(lower) ? 'sentence' : /\bage|aged|how old|years old|year-old|\bold\b/.test(lower) ? 'age' : /\bdate|when\b|what year/.test(lower) ? 'date' : null;
-    var wantPlatform = /platform|app|service|channel|where online|website|site/.test(lower) || plats.length > 0;
+    var asksPlatforms = /platforms?\b|\bapps?\b|\bservices?\b|channel|where online|website|\bsites?\b/.test(lower);
+    var wantPlatform = asksPlatforms || (plats.length > 0 && !count);
+    var wantApps = /\bapps?\b|named platform|specific platform/.test(lower);
+    var offs = findOffenses(lower), yr = findYears(lower);
 
     var oneCase = PREFIXES + 'SELECT ?caseId WHERE { GRAPH <' + (id ? caseIri(id) : '') + '> { ?case a cac:CACInvestigation ; dcterms:identifier ?caseId } }';
+    /* A case as a sequence: what started it, its dated events, its sentence. */
+    var askStart = /start|began|begin|origin|initiat|trigger|prompted|led to the investigation/.test(lower);
+    var askArrest = /arrest/.test(lower), askSentence = /sentenc/.test(lower);
+    if (id && (askStart + askArrest + askSentence) >= 2) return { how: 'Template: a case as a sequence (what started it, dated events, sentence)', kind: 'trajectory', casesSparql: oneCase, sparql: PREFIXES +
+      'PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\n' +
+      'PREFIX clp: <https://w3id.org/caselinker/ns/provenance#>\n' +
+      'SELECT ?field ?value ?role ?quote ?start WHERE {\n' +
+      '  GRAPH <' + caseIri(id) + '/provenance> {\n' +
+      '    ?a a oa:Annotation ; dcterms:subject ?field ; prov:value ?value ; oa:hasTarget ?t .\n' +
+      '    FILTER(?field IN ("investigation_type", "date", "sentence", "cybertip_reporter"))\n' +
+      '    ?t oa:hasSelector ?qs . ?qs oa:exact ?quote .\n' +
+      '    ?t oa:hasSelector ?ps . ?ps oa:start ?start .\n' +
+      '    OPTIONAL { ?a clp:assertionRole ?role }\n' +
+      '  }\n} ORDER BY ?start LIMIT 300', evidenceCase: id };
     if (id && subject) return { how: 'Template: passages for one field in one case', kind: 'field', field: subject, casesSparql: oneCase, sparql: PREFIXES +
       'PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX cacc: <https://cacontology.projectvic.org/core#>\n' +
       'PREFIX clp: <https://w3id.org/caselinker/ns/provenance#>\n' +
@@ -238,41 +281,77 @@
     if (id) return { casesSparql: oneCase, kind: 'case', how: 'Template: what the case graph records about this investigation', sparql: PREFIXES +
       'SELECT ?kind ?label ?node WHERE {\n  GRAPH <' + caseIri(id) + '> {\n    BIND(<' + caseIri(id) + '> AS ?case)\n    {\n      ?case cac:hasStep ?node . ?node a ?t FILTER(?t != <https://cacontology.projectvic.org/core#Event>)\n      BIND("step" AS ?kind) BIND(REPLACE(STR(?t), "^.*[#/]", "") AS ?label)\n    } UNION {\n      ?node a cac-core:DigitalSystemEntity ; rdfs:label ?label BIND("platform" AS ?kind)\n    } UNION {\n      ?case cac-multi:involvesAgency ?node . ?node rdfs:label ?label BIND("agency" AS ?kind)\n    } UNION {\n      ?case dcterms:spatial ?node . ?node rdfs:label ?label BIND("location" AS ?kind)\n    } UNION {\n      ?case dcterms:source ?node FILTER(isLiteral(?node)) BIND("source" AS ?kind) BIND(STR(?node) AS ?label)\n    }\n  }\n} ORDER BY ?kind ?label LIMIT 300', evidenceCase: id };
 
+
     var where = '    ?case a cac:CACInvestigation ; dcterms:identifier ?caseId .\n';
-    if (state) where += '    ?case dcterms:spatial <' + state.iri + '> .\n';
+    if (state) where += '    ?case dcterms:spatial ?place . FILTER(REGEX(STR(?place), "/location/[^/]*-' + state.abbr + '(-[0-9]+)?$"))\n';
     if (tip) where += '    ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport .\n';
     plats.forEach(function (p) { where += '    <' + RES + 'platform/' + p.slug + '> a cac-core:DigitalSystemEntity .\n'; });
     ags.forEach(function (a) { where += '    ?case cac-multi:involvesAgency <' + RES + 'agency/' + a + '> .\n'; });
+    offs.forEach(function (o, i) { where += '    ?off' + i + ' a ?offType' + i + ' . VALUES ?offType' + i + ' { ' + o[2].map(function (t) { return '<' + t + '>'; }).join(' ') + ' }\n'; });
+    if (yr) where += '    ?case dcterms:date ?caseDate . FILTER(' + yr.filter + ')\n';
     var casesQ = PREFIXES + 'SELECT DISTINCT ?caseId WHERE {\n  GRAPH ?g {\n' + where + '  }\n  ' + PRESS + '\n} ORDER BY ?caseId LIMIT 500';
-    var desc = [state ? state.label : null, tip ? 'CyberTip' : null].concat(plats.map(function (p) { return p.label; })).concat(ags.map(function (a) { return a.toUpperCase(); })).filter(Boolean).join(' · ');
+    var desc = [state ? state.label : null, tip ? 'CyberTip' : null].concat(offs.map(function (o) { return o[1]; })).concat(plats.map(function (p) { return p.label; })).concat(ags.map(function (a) { return a.toUpperCase(); })).concat(yr ? [yr.label] : []).filter(Boolean).join(' · ');
+    var filtered = state || tip || plats.length || ags.length || offs.length || yr;
 
-    if (agency && (state || plats.length || tip || ags.length)) return { casesSparql: casesQ, how: 'Template: agencies by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    var prior = /\bprior\b|previous(?:ly)?\s+(?:been\s+)?convict|registered\s+(?:sex\s+)?offender|recidivis|on\s+(?:probation|parole|supervised release|supervision)/.test(lower);
+    if (prior) {
+      var pw = where.replace('    ?case a cac:CACInvestigation ; dcterms:identifier ?caseId .\n', '    ?case a cac:CACInvestigation ; dcterms:identifier ?caseId .\n');
+      return { casesSparql: casesQ, kind: 'prior', how: 'Template: prior history per case (earlier conviction, registration, supervision at the time)' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+        'SELECT ?kind (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + pw +
+        '    ?ann a uco-core:Annotation ; rdfs:label "prior history" ; uco-core:tag ?kind .\n  }\n  ' + PRESS + '\n} GROUP BY ?kind ORDER BY DESC(?cases)' };
+    }
+    if (tip && /who\b|which (?:compan|provider|esp)|report(?:ed|ers?|ing)\b|filed|sent\b|c[ao]me from/.test(lower)) return { casesSparql: casesQ, kind: 'reporters', how: 'Template: who reported the CyberTips, when the release says' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+      'SELECT ?reporter (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
+      '    ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?reporter .\n  }\n  ' + PRESS + '\n} GROUP BY ?reporter ORDER BY DESC(?cases) LIMIT 30' };
+
+    // Conditions the corpus-wide templates cannot express (role, victim, outcome): answer through the
+    // language model instead of returning a broader answer that silently drops them.
+    if (/groom|livestream|convict|sentenc|plea|teacher|coach|pastor|priest|officer|female|wom[ae]n|girls?\b|boys?\b|juvenile|teen|infant|toddler/.test(lower)) return null;
+    if (/\b(?:19|20)\d\d\b/.test(lower) && !yr) return null;
+
+    // "How many cases involve social media?" separates the generic tag from the named apps of that kind.
+    var gen = plats.length === 1 && GENERIC_CLASS[plats[0].slug];
+    if (gen && (count || /involve|mention/.test(lower))) {
+      var base = where.replace('    <' + RES + 'platform/' + plats[0].slug + '> a cac-core:DigitalSystemEntity .\n', '');
+      var named = '?p a <https://cacontology.projectvic.org/platforms#' + gen[1] + '> FILTER(?p != <' + RES + 'platform/' + plats[0].slug + '>)';
+      var tag = '<' + RES + 'platform/' + plats[0].slug + '> a cac-core:DigitalSystemEntity';
+      return { casesSparql: casesQ, kind: 'generic', genLabel: gen[0], how: 'Template: ' + gen[0].toLowerCase() + ' as a generic tag versus named ' + gen[0].toLowerCase() + ' apps' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+        'SELECT ?kind (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n' +
+        '  { GRAPH ?g {\n' + base + '    ' + tag + ' . FILTER NOT EXISTS { ' + named + ' }\n  } BIND("generic tag only" AS ?kind) }\n' +
+        '  UNION { GRAPH ?g {\n' + base + '    ' + named + ' .\n  } BIND("names an app" AS ?kind) }\n' +
+        '  UNION { GRAPH ?g {\n' + base + '    { ' + tag + ' } UNION { ' + named + ' }\n  } BIND("either" AS ?kind) }\n' +
+        '  ' + PRESS + '\n} GROUP BY ?kind ORDER BY ?kind' };
+    }
+    var appsOnly = wantApps ? '    FILTER(?platform NOT IN (' + Object.keys(PLATFORM_KIND).map(function (k) { return '<' + RES + 'platform/' + k + '>'; }).join(', ') + '))\n' : '';
+
+    if (agency && filtered) return { casesSparql: casesQ, how: 'Template: agencies by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
       '    ?case cac-multi:involvesAgency ?agency . ?agency rdfs:label ?label .\n  }\n  ' + PRESS + '\n} GROUP BY ?label ORDER BY DESC(?cases) LIMIT 25' };
 
-    if (wantPlatform && (count || !state) && !(state && !count)) return { casesSparql: casesQ, how: 'Template: platforms by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
-      'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
-      '    ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label .\n  }\n  ' + PRESS + '\n} GROUP BY ?label ORDER BY DESC(?cases) LIMIT 30' };
+    if ((wantPlatform || wantApps) && (count || !state) && !(state && !count)) return { casesSparql: casesQ, kind: 'platforms', appsOnly: wantApps, how: 'Template: ' + (wantApps ? 'named apps' : 'platforms') + ' by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+      'SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
+      '    ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label .\n' + appsOnly + '  }\n  ' + PRESS + '\n} GROUP BY ?platform ?label ORDER BY DESC(?cases) LIMIT 30' };
 
-    if (count && (state || tip || plats.length || ags.length)) return { casesSparql: casesQ, how: 'Template: count of matching cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    if (count && filtered) return { casesSparql: casesQ, how: 'Template: count of matching cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where + '  }\n  ' + PRESS + '\n}' };
 
-    if (state || tip || plats.length || ags.length) return { casesSparql: casesQ, how: 'Template: matching cases with their platforms' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    if (filtered) return { casesSparql: casesQ, how: 'Template: matching cases with their platforms' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?caseId (GROUP_CONCAT(DISTINCT ?label; separator=", ") AS ?platforms) WHERE {\n  GRAPH ?g {\n' + where +
       '    OPTIONAL { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label }\n  }\n  ' + PRESS + '\n} GROUP BY ?caseId ORDER BY ?caseId LIMIT 50' };
 
     return null;
   }
 
-  var SCHEMA_HINT = '\n\nSchema notes for this store: a CyberTip report is `?case uco-core:object ?tip . ?tip a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport>` (there is no cac:CyberTip class); who sent it, when the release says, is `?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?name` with ESP IRIs https://w3id.org/caselinker/resource/esp/{slug}; a tip with no reportedBy means the release does not say. Platforms used in a case and the people in it are objects of the case node: `?case uco-core:object ?platform . ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label` and `?case uco-core:object ?person . ?person a uco-identity:Person` (cac:usesChannel links an event only when the case has one event), platform IRIs are https://w3id.org/caselinker/resource/platform/{slug} (e.g. snapchat, kik, discord, social-media). Locations: `?case dcterms:spatial <https://w3id.org/caselinker/resource/location/{state}-{abbr}>` e.g. maryland-md, texas-tx. Agencies: `?case cac-multi:involvesAgency ?a . ?a rdfs:label ?l`; agency IRIs are https://w3id.org/caselinker/resource/agency/{slug} (fbi, hsi, ncmec, icac, usao, usms, cbp, plus local departments like bayonne-police-department-nj); rdfs:label is the full name (e.g. "Federal Bureau of Investigation") and acronyms are skos:altLabel, so match a named agency by IRI, never by a literal acronym label. Case ids are dcterms:identifier on cac:CACInvestigation. Always wrap patterns in GRAPH ?g and exclude provenance graphs with FILTER(STRSTARTS(STR(?g),"https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g),"/provenance")). Provenance quotes live in GRAPH <case-iri/provenance> as oa:Annotation with dcterms:subject in {age,date,sentence,investigation_type,cybertip_reporter}, prov:value, oa:hasTarget/oa:hasSelector with oa:exact and oa:start/oa:end; an annotation a resolution used has uco-core:object pointing at the age, sentence, CyberTip or reporter-role node it supports.';
+  var SCHEMA_HINT = '\n\nSchema notes for this store: a CyberTip report is `?case uco-core:object ?tip . ?tip a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport>` (there is no cac:CyberTip class); who sent it, when the release says, is `?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?name` with ESP IRIs https://w3id.org/caselinker/resource/esp/{slug}; a tip with no reportedBy means the release does not say. Platforms used in a case and the people in it are objects of the case node: `?case uco-core:object ?platform . ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label` and `?case uco-core:object ?person . ?person a uco-identity:Person` (cac:usesChannel links an event only when the case has one event), platform IRIs are https://w3id.org/caselinker/resource/platform/{slug} (e.g. snapchat, kik, discord, social-media). Locations: `?case dcterms:spatial <https://w3id.org/caselinker/resource/location/{state}-{abbr}>` e.g. maryland-md, texas-tx. Agencies: `?case cac-multi:involvesAgency ?a . ?a rdfs:label ?l`; agency IRIs are https://w3id.org/caselinker/resource/agency/{slug} (fbi, hsi, ncmec, icac, usao, usms, cbp, plus local departments like bayonne-police-department-nj); rdfs:label is the full name (e.g. "Federal Bureau of Investigation") and acronyms are skos:altLabel, so match a named agency by IRI, never by a literal acronym label. Case ids are dcterms:identifier on cac:CACInvestigation; the release date is `?case dcterms:date ?d` (xsd:date, use YEAR(?d)). Offences are typed nodes inside the case graph: `?x a <https://cacontology.projectvic.org/sextortion#SextortionIncident>`, legal-outcomes#OnlineEnticement, legal-outcomes#SexTrafficking, legal-outcomes#CSAM_Distribution, production#ProductionOffense, ai-csam#AIGeneratedCSAM, undercover#UndercoverOperation (namespaces under https://cacontology.projectvic.org/); there is no offence-type literal. Cross-case nodes: a named operation the case was part of is `?case dcterms:isPartOf ?op . ?op a cac-multi:NamedMultiJurisdictionalOperation ; rdfs:label ?l` (labels like "Operation Glass House"); a federal district that prosecuted it is `?x dcterms:coverage ?d . ?d a cac-multi:FederalJurisdiction ; rdfs:label ?l` with IRIs https://w3id.org/caselinker/resource/jurisdiction/{slug} (e.g. eastern-district-of-virginia); a cited U.S. Code section is `?x dcterms:references ?s . ?s rdfs:label ?l` with IRIs https://w3id.org/caselinker/resource/statute/{slug} (e.g. 18-usc-2252a). ?x is the case node or its legal proceeding (`?case cac:hasStep ?x`), so match both. Always wrap patterns in GRAPH ?g and exclude provenance graphs with FILTER(STRSTARTS(STR(?g),"https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g),"/provenance")). Provenance quotes live in GRAPH <case-iri/provenance> as oa:Annotation with dcterms:subject in {age,date,sentence,investigation_type,cybertip_reporter}, prov:value, oa:hasTarget/oa:hasSelector with oa:exact and oa:start/oa:end; an annotation a resolution used has uco-core:object pointing at the age, sentence, CyberTip or reporter-role node it supports.';
 
   /* ---------- examples ---------- */
   var EXAMPLES = [
     'Which platform did the CyberTip in Maryland case doj_safe_childhood_2024_478 come from, and which source passage supports it?',
-    'Which Florida cases started with a CyberTip, and what platforms appear in them?',
-    'Which agencies appear most often in Texas cases involving Kik?',
+    'Which companies reported the CyberTips in Florida cases?',
+    'Which apps appear most often in sextortion cases since 2023?',
+    'How many cases involve social media?',
     'How old were the defendants in nj_ag_2017_001?',
-    'How many cases involve both Snapchat and Discord?'
+    'Which agencies appear most often in Texas cases involving Kik?'
   ];
   EXAMPLES.forEach(function (ex) {
     var b = document.createElement('button'); b.type = 'button'; b.textContent = ex;
@@ -281,7 +360,7 @@
   });
 
   /* ---------- run ---------- */
-  var lastEvidenceCase = null, lastKind = null, lastCasesSparql = null, lastField = null;
+  var lastEvidenceCase = null, lastKind = null, lastCasesSparql = null, lastField = null, lastTemplate = null;
   function show(id, on) { $(id).hidden = !on; }
   function status(el, html) { el.innerHTML = html; }
 
@@ -293,11 +372,11 @@
     show('s-query', true);
     if (t) {
       $('query-how').innerHTML = CL.esc(t.how) + ' <span class="pill-src">template</span>';
-      $('sparql').value = t.sparql; lastEvidenceCase = t.evidenceCase || null; lastKind = t.kind || null; lastField = t.field || null; lastCasesSparql = t.casesSparql || null;
+      $('sparql').value = t.sparql; lastEvidenceCase = t.evidenceCase || null; lastKind = t.kind || null; lastField = t.field || null; lastCasesSparql = t.casesSparql || null; lastTemplate = t;
       return run();
     }
     $('query-how').innerHTML = 'No template matched; asking the language model to write SPARQL. <span class="pill-src">Groq</span>';
-    $('sparql').value = ''; lastEvidenceCase = findCase(q); lastKind = null; lastCasesSparql = null;
+    $('sparql').value = ''; lastEvidenceCase = findCase(q); lastKind = 'llm'; lastCasesSparql = null; lastTemplate = null;
     status($('query-status'), '<span class="cl-spinner"></span> translating…');
     CL.fetch('/api/sparql/from-nl', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q + SCHEMA_HINT }) })
       .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(typeof d.detail === 'string' ? d.detail : JSON.stringify(d.detail || d)); return d; }); })
@@ -335,7 +414,7 @@
     var ids = {};
     (d.results && d.results.bindings || []).forEach(function (row) {
       Object.keys(row).forEach(function (k) {
-        var v = row[k].value; var id = CL.caseIdFromIri(v) || (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3}$/.test(v) ? v : null);
+        var v = row[k].value; var id = CL.caseIdFromIri(v) || (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3,4}$/.test(v) ? v : null);
         if (id) ids[id] = 1;
       });
     });
@@ -351,16 +430,63 @@
     }
     var vars = d.head && d.head.vars || [], rows = d.results && d.results.bindings || [];
     $('answer-how').textContent = rows.length + (rows.length === 1 ? ' row' : ' rows') + ' from the store';
+    var LLM_NOTE = '<div class="cl-notice">The language model wrote this query. Check it against the graph before relying on the result: a pattern the graphs do not use returns nothing, not an error.</div>';
+    var zero = rows.length === 1 && vars.length === 1 && rows[0][vars[0]] && rows[0][vars[0]].value === '0';
+    if (lastKind === 'llm' && (!rows.length || zero)) { host.innerHTML = LLM_NOTE + '<div class="cl-empty">' + (rows.length ? 'The query counted <b>0</b>.' : 'No rows.') + ' This may mean the model used a pattern the graphs do not contain, not that no case matches. Rephrase the question, or edit the SPARQL above.</div>'; return; }
     if (!rows.length) { host.innerHTML = '<div class="cl-empty">No rows. The graphs do not contain a match for this pattern. Edit the query above, or try a broader question.</div>'; return; }
+    if (lastKind === 'generic') {
+      var byKind = {}; rows.forEach(function (r) { byKind[r.kind.value] = +r.cases.value; });
+      var gl = lastTemplate && lastTemplate.genLabel || 'This category';
+      host.innerHTML = '<div class="answer-kicker"><b>' + CL.fmt(byKind['either'] || 0) + '</b> cases involve ' + CL.esc(gl.toLowerCase()) + '</div>' +
+        '<div class="case-sum">' +
+        '<div class="case-sum__row"><div class="case-sum__k">Name an app</div><div class="case-sum__v"><b>' + CL.fmt(byKind['names an app'] || 0) + '</b> cases name a specific ' + CL.esc(gl.toLowerCase()) + ' app</div></div>' +
+        '<div class="case-sum__row"><div class="case-sum__k">Generic tag only</div><div class="case-sum__v"><b>' + CL.fmt(byKind['generic tag only'] || 0) + '</b> cases say only \u201c' + CL.esc(gl.toLowerCase()) + '\u201d and name no app</div></div>' +
+        '</div><p class="answer-note">\u201c' + CL.esc(gl) + '\u201d is a generic tag: the release mentions the kind of platform without naming it. A case can carry both.</p>';
+      return;
+    }
+    var preface = '';
+    if (lastKind === 'platforms') {
+      rows.forEach(function (r) { var slug = r.platform && r.platform.value.slice((RES + 'platform/').length); if (slug && PLATFORM_KIND[slug] && r.label) r.label = { type: 'literal', value: r.label.value + ' (' + PLATFORM_KIND[slug] + ')' }; });
+      vars = vars.filter(function (v) { return v !== 'platform'; });
+      preface = '<p class="answer-note">' + (lastTemplate && lastTemplate.appsOnly
+        ? 'Named apps only. Generic tags (social media, chat) and categories (dark web, webcam, cryptocurrency, Gen AI) are left out.'
+        : 'A label marked generic tag or category means the release names the kind of platform, not the app.') + '</p>';
+    }
+    if (lastKind === 'prior') {
+      var PRIOR = { prior_conviction: 'Earlier conviction', registered_offender: 'Registered sex offender', on_supervision: 'On probation, parole or supervised release at the time' };
+      rows.forEach(function (r) { if (r.kind && PRIOR[r.kind.value]) r.kind = { type: 'literal', value: PRIOR[r.kind.value] }; });
+      preface = '<p class="answer-note">Cases whose release states a defendant\u2019s history. A case can count under more than one kind.</p>';
+    }
+    if (lastKind === 'reporters') preface = '<p class="answer-note">Tips whose release names who reported them. Most releases do not say, so these counts cover only the cases that do.</p>';
+    if (lastKind === 'llm') preface = LLM_NOTE;
     var kicker = '';
     if (lastKind === 'cybertip' && lastEvidenceCase) {
       var r0 = rows[0], tipIri = r0.tip && r0.tip.value, reporter = r0.reporterLabel && r0.reporterLabel.value, tipChan = r0.tipChannelLabel && r0.tipChannelLabel.value;
       var plats = rows.map(function (r) { return r.label && r.label.value; }).filter(function (v, i, a) { return v && a.indexOf(v) === i; });
       if (!tipIri) kicker = '<div class="answer-kicker">No CyberTip step is recorded in <b>' + CL.esc(lastEvidenceCase) + '</b>.</div>';
       else if (tipChan) kicker = '<div class="answer-kicker">The CyberTip in <b>' + CL.esc(lastEvidenceCase) + '</b> came from <b>' + CL.esc(tipChan) + '</b>' + (reporter ? ', reported through ' + CL.esc(reporter) : '') + '.</div>';
-      else kicker = '<div class="answer-kicker">The CyberTip in <b>' + CL.esc(lastEvidenceCase) + '</b>' + (reporter ? ' was filed through <b>' + CL.esc(reporter) + '</b>' : ' is recorded') + '; the graph attaches <b>no platform</b> to the tip itself.</div>' +
+      else if (reporter) kicker = '<div class="answer-kicker">The CyberTip in <b>' + CL.esc(lastEvidenceCase) + '</b> was reported by <b>' + CL.esc(reporter) + '</b>.</div>' +
+        (plats.length ? '<p class="answer-note">Platforms on the case\u2019s offence steps: <b>' + plats.map(CL.esc).join(', ') + '</b>.</p>' : '');
+      else kicker = '<div class="answer-kicker">The CyberTip in <b>' + CL.esc(lastEvidenceCase) + '</b> is recorded; the graph attaches <b>no platform</b> to the tip itself.</div>' +
         '<p class="answer-note">' + (plats.length ? 'Platforms on the case\u2019s offence steps: <b>' + plats.map(CL.esc).join(', ') + '</b>. Whether one of them was the reporting platform is a question for the passages below, not for the graph.' : 'No platform is attached to any step of this case either.') + '</p>';
       if (tipIri) kicker += '<p class="answer-note cl-small"><a href="/explore?iri=' + encodeURIComponent(tipIri) + '" class="cl-id">' + CL.esc(tipIri.slice(RES.length)) + '</a></p>';
+    }
+    else if (lastKind === 'trajectory' && lastEvidenceCase) {
+      var by = function (f, role) { return rows.filter(function (r) { return r.field && r.field.value === f && (!role || (r.role && r.role.value === role)); }); };
+      var uniq = function (rs) { return rs.map(function (r) { return String(r.value.value); }).filter(function (v, i, a) { return a.indexOf(v) === i; }); };
+      var tips = by('investigation_type', 'case_action'), boiler = by('investigation_type', 'boilerplate');
+      var events = uniq(by('date', 'event')).sort(), imposed = uniq(by('sentence', 'imposed'));
+      var esps = uniq(by('cybertip_reporter', 'named_esp'));
+      var started = tips.length ? 'A <b>CyberTip</b> (NCMEC report) about this case' + (esps.length ? ', reported by <b>' + esps.map(CL.esc).join(', ') + '</b>' : '')
+        : 'The release does not say' + (boiler.length ? '; its CyberTip mentions describe the task force’s work in general, not this case' : '');
+      var row = function (k, v) { return '<div class="case-sum__row"><div class="case-sum__k">' + k + '</div><div class="case-sum__v">' + v + '</div></div>'; };
+      var chips = function (vs) { return vs.map(function (v) { return '<span class="cl-chip">' + CL.esc(v) + '</span>'; }).join(''); };
+      host.innerHTML = '<div class="answer-kicker"><b>' + CL.esc(lastEvidenceCase) + '</b> as a sequence</div><div class="case-sum">' +
+        row('Started by', started) +
+        row('Dated events', events.length ? chips(events) : 'No event date recorded') +
+        row('Imposed sentence', imposed.length ? chips(imposed) : 'No imposed sentence recorded') + '</div>' +
+        '<p class="answer-note">The graph dates events but does not say which event each date belongs to; open Passages to see which date is the arrest.</p>';
+      return;
     }
     else if (lastKind === 'field' && lastEvidenceCase) {
       /* One passage can carry several readers' roles. A value is listed under a role only when
@@ -411,7 +537,7 @@
     var table = '<div class="result-wrap"><table class="cl-table"><thead><tr>' + vars.map(function (v) { return '<th>' + CL.esc(v) + '</th>'; }).join('') + '</tr></thead><tbody>' +
       rows.map(function (row) { return '<tr>' + vars.map(function (v) { return '<td' + (row[v] && row[v].datatype && /integer|decimal|double/.test(row[v].datatype) ? ' class="num"' : '') + '>' + cell(row[v]) + '</td>'; }).join('') + '</tr>'; }).join('') +
       '</tbody></table></div>';
-    host.innerHTML = kicker + table + (ids.length > 1 ? '<p class="cl-small cl-muted" style="margin-top:10px">' + ids.length + ' cases in this answer. Click a case id to see its passages.</p>' : '');
+    host.innerHTML = kicker + preface + table + (ids.length > 1 ? '<p class="cl-small cl-muted" style="margin-top:10px">' + ids.length + ' cases in this answer. Click a case id to see its passages.</p>' : '');
     Array.prototype.forEach.call(host.querySelectorAll('button[data-ev]'), function (b) {
       b.addEventListener('click', function () { Array.prototype.forEach.call(host.querySelectorAll('button[data-ev]'), function (x) { x.classList.remove('is-on'); }); b.classList.add('is-on'); loadEvidence(b.getAttribute('data-ev'), true); $('s-evidence').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     });
@@ -426,7 +552,7 @@
       if (/cacontology\.projectvic\.org|unifiedcyberontology\.org|caseontology\.org|purl\.org\/dc|w3\.org\/(ns|2000|1999|2004)/.test(v)) return '<a href="' + CL.esc(v) + '" class="cl-id" rel="noopener" title="' + CL.esc(v) + '">' + CL.esc(v.split(/[#\/]/).pop()) + '</a>';
       return '<a href="' + CL.esc(v) + '" rel="noopener">' + CL.esc(v.replace(/^https?:\/\//, '').slice(0, 72)) + (v.length > 80 ? '…' : '') + '</a>';
     }
-    if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3}$/.test(v)) return '<button type="button" class="case" data-ev="' + CL.esc(v) + '">' + CL.esc(v) + '</button>' + tools(v);
+    if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3,4}$/.test(v)) return '<button type="button" class="case" data-ev="' + CL.esc(v) + '">' + CL.esc(v) + '</button>' + tools(v);
     return CL.esc(v);
   }
   function tools(id) {

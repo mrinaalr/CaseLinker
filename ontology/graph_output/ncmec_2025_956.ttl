@@ -1,35 +1,29 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_956> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_956" ;
-    dcterms:created "2026-11-10T16:38:43.003719"^^xsd:dateTime ;
-    dcterms:date "2025-02-26"^^xsd:date ;
+    dcterms:created "2026-11-19T18:39:33.217216"^^xsd:dateTime ;
+    dcterms:date "2025-03-06"^^xsd:date ;
     dcterms:identifier "ncmec_2025_956" ;
-    dcterms:modified "2026-11-12T02:18:51.587089"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:39:33.217216"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_956/provenance> ;
-    dcterms:source <https://www.sovanow.com/articles/elementary-school-assistant-charged-with-child-porn-possession/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_956/location/mecklenburg-county> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_956/phase/indicted> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_956/phase/indicted> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_956/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_956/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://kimatv.com/news/local/yakima-man-charged-with-18-counts-of-child-sexual-assault-material-possession> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/washington-wa>,
+        <https://w3id.org/caselinker/resource/location/yakima-city-wa>,
+        <https://w3id.org/caselinker/resource/location/yakima-county-wa> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_956/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_956/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_956/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_956/legal-proceeding> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_956/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_956/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_956/admission/1> ;
-    ns3:hasConfidence 0.65 ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_956/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_956/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -38,42 +32,51 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_956/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_956/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "possession of child pornography" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_956/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "possession of child sexual" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/event/online-only> a ns2:ChildSexualAbuseEvent,
-        ns3:Event ;
-    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_956/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Yakima County jail" ;
+    ns3:chargeCount "18"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_956/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_956/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_956/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/washington-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Washington" ;
+    dcterms:identifier "fips:53" ;
+    skos:altLabel "Wash." ;
+    ns1:name "Washington" .
+
+<https://w3id.org/caselinker/resource/location/yakima-city-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Yakima city" ;
+    dcterms:identifier "fips:5380010" ;
+    skos:altLabel "Yakima" ;
+    ns1:name "Yakima city" .
+
+<https://w3id.org/caselinker/resource/location/yakima-county-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Yakima County" ;
+    dcterms:identifier "fips:53077" ;
+    ns1:name "Yakima County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_956/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    rdfs:label "CSAMIncident · event/possession" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
-    rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_956/charge/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/location/mecklenburg-county> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mecklenburg County" ;
-    ns1:name "Mecklenburg County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/role/offender/1> a ns4:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "was not at liberty to discuss what actions, if any, the school division has taken in light of the charges pending aga..." ;
-    dcterms:source <https://www.sovanow.com/articles/elementary-school-assistant-charged-with-child-porn-possession/> ;
-    ns1:description "was not at liberty to discuss what actions, if any, the school division has taken in light of the charges pending against Fitzgerald" .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_956/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_956/phase/indicted> a ns2:LegalProcessPhase,
-        ns3:Phase ;
-    rdfs:label "Legal Process Phase · phase/indicted" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_956/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 

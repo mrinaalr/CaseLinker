@@ -1,6 +1,6 @@
 # Coding
 
-How a court record becomes a coded bundle. Two coders work from the page text and their agreement is measured; neither sees the other's answers (with the selective second pass the second is not asked to read a page where the first found no act). Then either a fixed rule publishes what both coded (**machine-coded**), or a named reviewer decides every disagreement (**adjudicated**).
+How a court record becomes a coded bundle. Two coders work from the page text and their agreement is measured; neither sees the other's answers (with the selective second pass the second is not asked to read a page where the first found no act). Then either a fixed rule publishes what both coded (**machine-coded**), or a manual human reviewer decides every disagreement (**adjudicated**).
 
 **Contents:**
 - [Automated coding](#automated-coding)
@@ -29,7 +29,7 @@ python -m state_machines.coding.pipeline release pacer-v1 <case> [...] --observa
 | [`select_models.py`](select_models.py) | Scores candidate models on dev benchmark cases (accuracy and seconds per page); held-out cases are never used. |
 | [`resolve.py`](resolve.py) | Publishes what both coders coded (see [machine resolution](#machine-resolution)). |
 | [`cues.py`](cues.py) | Cue words per action code for candidate rule 2b (off by default). |
-| [`pipeline.py`](pipeline.py) | Runs both coders (cached, resumable, a failed case recorded rather than forced), resolves, scores the [benchmark](../benchmark/README.md), builds the release. |
+| [`pipeline.py`](pipeline.py) | Runs both coders (cached, resumable, a failed case recorded rather than forced), resolves, scores the [benchmark](../benchmark/README.md), builds the dataset. |
 
 **Rule statements.** An offender act coded on a sentence that states a rule or policy and names no one acting ("the Terms of Service prohibit …") is dropped and logged. One agreed act in the 30 cases was of this kind.
 
@@ -51,8 +51,8 @@ python -m state_machines.coding.pipeline release pacer-v1 <case> [...] --observa
 | 6. Agreed core | `release_report.py` | what both coders coded, labelled `agreed` |
 | 7. Dossier | `adjudication.py dossier` | every open item per case, with fixed decision options |
 | 8. Decide | `adjudication_packet.py` | a local HTML packet: both codings, passages, PDF page links, a choice per item; exports `<case>.decisions.json` |
-| 9. Apply | `adjudication.py apply` | the adjudicated bundle in the release, validated; refused while anything is undecided |
-| 10. Release | `graphs/release.py build` | derived views, graphs, SHACL, manifest; `ADJUDICATION.md` counts what was decided |
+| 9. Apply | `adjudication.py apply` | the adjudicated bundle in the dataset, validated; refused while anything is undecided |
+| 10. Publish | `graphs/release.py build` | derived views, graphs, SHACL, manifest; `ADJUDICATION.md` counts what was decided |
 
 Page text, quotes and the adjudication packet stay in `local/` (gitignored): they contain court text.
 
@@ -79,7 +79,7 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 - **Page routing for the 30 real cases:** 1,147 pages; 201 docket pages to the parser (procedure entries only), 60 judgment form pages skipped, 886 pages read by the first coder and 878 by the second (it skips a page where the first found no act). Every substantive filing is read.
 - **Rejected: a page prefilter.** On the pilot's real pages (agent-coded), the best keyword prefilter kept 90% of pages with acts while saving only 19% of model pages; the strictest kept 71%. Losing acts to save time is not acceptable, so every non-docket, non-form page is read.
 - **Memory:** a dedicated Ollama server (`models.json` `runtime`) with one model loaded, an 8-bit KV cache, flash attention and an 8k context; the coder pauses while free memory is under 20% instead of swapping.
-- **Selective second pass (`--selective`):** the second coder reads only pages where the first found acts. The release is unchanged (only acts both coded are published); reliability is then reported on those pages.
+- **Selective second pass (`--selective`):** the second coder reads only pages where the first found acts. The dataset is unchanged (only acts both coded are published); reliability is then reported on those pages.
 - **Scaling:** this laptop codes on the order of a hundred pages an hour per model. Hundreds of cases need a GPU host running the same pinned open models; the code does not change, only `runtime.base_url`.
 
 ## Machine resolution
@@ -99,9 +99,9 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 **Rule 2b, evaluated and not adopted.** Where both coders cite the same sentence and actor but give different codes, [`cues.py`](cues.py) reads the sentence against a cue table written from the codebook definitions and takes the one code it cues (`pipeline resolve --settle-codes`, output in `resolved_2b`).
 - On the synthetic benchmark it recovers acts at no cost in precision.
 - On five real cases its codes agreed with reference coding less often than codes both models gave (7 of 11 sentences against 19 of 24; the candidate's scores are in `benchmark/results/` under `resolved_2b`): real sentences are long and often state several acts.
-- A machine release states that two coders agreed on everything published. Settled codes are one coder's code confirmed by a word rule, so they are not published. The rule stays in the code, off, so the measurement can be repeated.
+- A machine-coded dataset states that two coders agreed on everything published. Settled codes are one coder's code confirmed by a word rule, so they are not published. The rule stays in the code, off, so the measurement can be repeated.
 
-Everything else is left out and counted. What the record names (platforms, feature phrases) does not depend on this rule: the [observation layer](../observations/README.md) reads it from the pages and publishes it apart from the acts. Published items carry `review.status = agreed`. A release built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
+Everything else is left out and counted. What the record names (platforms, feature phrases) does not depend on this rule: the [observation layer](../observations/README.md) reads it from the pages and publishes it apart from the acts. Published items carry `review.status = agreed`. A dataset built from these is `review_mode: machine`: served and labelled "Machine-coded", never called adjudicated.
 
 ## Adjudication
 
@@ -126,4 +126,4 @@ Each item is one question with a fixed set of answers that `apply` carries out:
 | `possible_same_act` | same action, overlapping dates, nothing linking them | same act (adds `SAME_ACT`, INFERRED; both events kept) / distinct |
 | `unresolved_role` | a participant whose role the source leaves open | a target role / a co-actor mode / not involved / edit |
 
-`edit` means the reviewer changes the frozen agreed core (`local/adjudication/<release>/agreed/<case>.json`) by hand; `apply` always rebuilds from that file and the decisions, so it can be rerun. `defer` blocks the release. `apply` marks every event and relation `adjudicated` with the reviewer's name and refuses a result that does not validate. Coder A's ids, participants and passages are the agreed core's own; coder B's passages are imported under a `b.` prefix, and anything needing coder B's participants is an `edit`.
+`edit` means the reviewer changes the frozen agreed core (`local/adjudication/<release>/agreed/<case>.json`) by hand; `apply` always rebuilds from that file and the decisions, so it can be rerun. `defer` blocks the dataset. `apply` marks every event and relation `adjudicated` with the reviewer's name and refuses a result that does not validate. Coder A's ids, participants and passages are the agreed core's own; coder B's passages are imported under a `b.` prefix, and anything needing coder B's participants is an `edit`.

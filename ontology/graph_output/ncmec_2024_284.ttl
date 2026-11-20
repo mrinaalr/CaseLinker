@@ -1,74 +1,119 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284> a ns3:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284> a ns4:CACInvestigation,
+        ns2:EnduringEntity ;
     rdfs:label "Case ncmec_2024_284" ;
-    dcterms:created "2026-11-10T21:25:00.230576"^^xsd:dateTime ;
-    dcterms:date "2024-09-05"^^xsd:date ;
+    dcterms:created "2026-11-19T18:24:03.372898"^^xsd:dateTime ;
+    dcterms:date "2024-08-08"^^xsd:date ;
     dcterms:identifier "ncmec_2024_284" ;
-    dcterms:modified "2026-11-12T00:24:22.881643"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:24:03.372898"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_284/provenance> ;
-    dcterms:source <https://www.mdjonline.com/news/police_fire/marietta-man-accused-of-sexual-exploitation-of-a-child/article_0ca50738-6b85-11ef-98e6-6ffdb7495a0d.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_284/location/marietta> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://thebrunswicknews.com/news/local_news/former-news-reporter-arrested-for-child-pornography/article_b8dffe98-55ca-11ef-8e9d-73d5aa74855e.html> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/glynn-county-ga> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_284/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_284/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_284/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_284/agency/cobb-county-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_284/agency/glynn-county-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1/age> a ns2:AgeAtTimeSituation ;
-    rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 31.0 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_284/narrative> ;
+    ns2:hasConfidence 0.4533 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_284/narrative> ;
+    ns2:hasConfidence 0.5278 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_284/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_284/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/agency/cobb-county-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/agency/glynn-county-police-department> a ns2:OrganizationLikeEntity,
         ns5:LocalAgency ;
-    rdfs:label "Cobb County Police Department" ;
-    ns1:name "Cobb County Police Department" .
+    rdfs:label "Glynn County Police Department" ;
+    ns3:name "Glynn County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
-    rdfs:label "sexual exploitation of a child" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/1> a ns1:CriminalCharge,
+        ns1:StateCharge ;
+    rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/2> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/3> a ns1:CSAM_Distribution,
+        ns1:CriminalCharge ;
+    rdfs:label "distribution of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/4> a ns1:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/distribution> a ns2:Event,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/2> .
+    ns1:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/2>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/3>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_284/charge/4> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/location/marietta> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Marietta" ;
-    ns1:name "Marietta" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/possession> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" .
+<https://w3id.org/caselinker/resource/location/glynn-county-ga> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Glynn County" ;
+    dcterms:identifier "fips:13127" ;
+    ns3:name "Glynn County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/event/possession> a ns4:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_284/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_284/phase/charged> a ns4:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
 

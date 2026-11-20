@@ -2,9 +2,10 @@
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-harmonization#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,13 +13,13 @@
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case doj_archives_2005_014" ;
-    dcterms:created "2026-11-10T18:24:02.867764"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:51:45.379024"^^xsd:dateTime ;
     dcterms:date "2005-06-13"^^xsd:date ;
     dcterms:identifier "doj_archives_2005_014" ;
-    dcterms:modified "2026-11-10T18:24:02.867764"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:51:45.379024"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/provenance> ;
-    dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DC%20Schiffer%20PR_061305.pdf>,
-        "DOJ ARCHIVES" ;
+    dcterms:publisher "DOJ ARCHIVES" ;
+    dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DC%20Schiffer%20PR_061305.pdf> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/district-of-columbia-dc>,
         <https://w3id.org/caselinker/resource/location/district-of-columbia-dc-11> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/phase/indicted> ;
@@ -30,16 +31,16 @@
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/legal-proceeding> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
+        <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-pa>,
+        <https://w3id.org/caselinker/resource/agency/usao-district-of-columbia> ;
     ns2:object <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/person/offender/1>,
         <https://w3id.org/caselinker/resource/platform/irc> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 34.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 34.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -59,26 +60,28 @@
     skos:altLabel "FBI" ;
     ns2:name "Federal Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-pa> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns3:StateAgency ;
-    rdfs:label "Pennsylvania State Police Department" ;
-    ns2:name "Pennsylvania State Police Department" .
+    rdfs:label "Pennsylvania State Police" ;
+    ns2:name "Pennsylvania State Police" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+<https://w3id.org/caselinker/resource/agency/usao-district-of-columbia> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns3:FederalAgency ;
-    rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
+    rdfs:label "U.S. Attorney's Office, District of Columbia" ;
+    skos:altLabel "U.S. Attorney's Office" ;
+    ns3:operatesInJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/district-of-columbia> ;
+    ns2:name "U.S. Attorney's Office, District of Columbia" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/2> a ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/2> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns6:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
@@ -95,14 +98,19 @@
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/1>,
+    dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/district-of-columbia> ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2005_014/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/jurisdiction/united-states> a ns3:FederalJurisdiction ;
+    rdfs:label "United States" ;
+    ns2:name "United States" .
 
 <https://w3id.org/caselinker/resource/location/district-of-columbia-dc> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -119,14 +127,19 @@
     ns2:name "District of Columbia" .
 
 <https://w3id.org/caselinker/resource/platform/irc> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns5:AnonymousChatPlatform ;
+        ns6:AnonymousChatPlatform ;
     rdfs:label "IRC" ;
-    ns5:platformType "legacy" ;
+    ns6:platformType "legacy" ;
     ns2:name "IRC" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/phase/indicted> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/jurisdiction/district-of-columbia> a ns3:FederalJurisdiction ;
+    rdfs:label "District of Columbia" ;
+    ns7:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
+    ns2:name "District of Columbia" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2005_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

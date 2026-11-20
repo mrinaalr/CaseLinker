@@ -1,80 +1,153 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_316> a ns3:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316> a ns4:CACInvestigation,
+        ns1:EnduringEntity ;
     rdfs:label "Case ncmec_2025_316" ;
-    dcterms:created "2026-11-10T16:33:56.912885"^^xsd:dateTime ;
-    dcterms:date "2025-11-11"^^xsd:date ;
+    dcterms:created "2026-11-19T18:35:47.032665"^^xsd:dateTime ;
+    dcterms:date "2025-01-16"^^xsd:date ;
     dcterms:identifier "ncmec_2025_316" ;
-    dcterms:modified "2026-11-12T01:48:33.001810"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:35:47.032665"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_316/provenance> ;
-    dcterms:source <https://www.yahoo.com/news/articles/indiana-state-police-child-abuse-151656924.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_316/location/bloomington-district>,
-        <https://w3id.org/caselinker/resource/location/bloomington-city-in>,
-        <https://w3id.org/caselinker/resource/location/ellettsville-town-in>,
-        <https://w3id.org/caselinker/resource/location/indiana-in>,
-        <https://w3id.org/caselinker/resource/location/indiana-in-18> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/possession> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/indiana-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usss> .
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://cbs4indy.com/news/indycrime/docs-hartford-city-man-charged-after-reportedly-making-ai-generated-child-porn-images/?nxsparam=1> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/blackford-county-in>,
+        <https://w3id.org/caselinker/resource/location/hartford-city-city-in>,
+        <https://w3id.org/caselinker/resource/location/indiana-in> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_316/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_316/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/ai-csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/hands-on>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/possession>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/production>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/legal-proceeding> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_316/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
-    rdfs:label "ICAC Task Force" ;
-    skos:altLabel "ICAC" ;
-    ns2:name "ICAC Task Force" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_316/narrative> ;
+    ns1:hasConfidence 0.4918 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/indiana-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:StateAgency ;
-    rdfs:label "Indiana State Police Department" ;
-    ns2:name "Indiana State Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_316/narrative> ;
+    ns1:hasConfidence 0.5697 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/usss> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:FederalAgency ;
-    rdfs:label "U.S. Secret Service" ;
-    ns2:name "U.S. Secret Service" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 49.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/possession> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1/prior-history> a ns2:Annotation ;
+    rdfs:label "prior history" ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1> ;
+    ns2:statement "prior_conviction; sex_offense=true",
+        "prior_conviction; years=2004; sex_offense=true" ;
+    ns2:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_316/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/charge/2> a ns3:CriminalCharge ;
+    rdfs:label "child molestation" ;
+    dcterms:subject <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/charge/3> a ns3:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns4:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns2:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/ai-csam> a ns4:DigitallyGeneratedCSAMIncident,
+        <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
+        ns1:Event ;
+    rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/hands-on> a ns4:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/possession> a ns4:CSAMIncident,
+        ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_316/location/bloomington-district> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bloomington District" ;
-    ns2:name "Bloomington District" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/event/production> a ns1:Event,
+        <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    rdfs:label "Production Offense · event/production" .
 
-<https://w3id.org/caselinker/resource/location/bloomington-city-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bloomington city" ;
-    dcterms:identifier "fips:1805860" ;
-    skos:altLabel "Bloomington" ;
-    ns2:name "Bloomington city" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_316/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/charge/2>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_316/charge/3> .
 
-<https://w3id.org/caselinker/resource/location/ellettsville-town-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ellettsville town" ;
-    dcterms:identifier "fips:1820800" ;
-    skos:altLabel "Ellettsville" ;
-    ns2:name "Ellettsville town" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/indiana-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/blackford-county-in> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Blackford County" ;
+    dcterms:identifier "fips:18009" ;
+    ns2:name "Blackford County" .
+
+<https://w3id.org/caselinker/resource/location/hartford-city-city-in> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Hartford City city" ;
+    dcterms:identifier "fips:1832242" ;
+    skos:altLabel "Hartford City" ;
+    ns2:name "Hartford City city" .
+
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indiana" ;
     dcterms:identifier "fips:18" ;
     skos:altLabel "Ind." ;
     ns2:name "Indiana" .
 
-<https://w3id.org/caselinker/resource/location/indiana-in-18> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Indiana" ;
-    dcterms:identifier "fips:18" ;
-    ns2:name "Indiana" .
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns1:DigitalSystemEntity,
+        ns5:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns5:platformType "generative-ai" ;
+    ns2:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns1:DigitalSystemEntity,
+        ns5:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/phase/charged> a ns4:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_316/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

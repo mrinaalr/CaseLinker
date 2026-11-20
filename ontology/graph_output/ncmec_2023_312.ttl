@@ -4,6 +4,7 @@
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,13 +12,13 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_312> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2023_312" ;
-    dcterms:created "2026-11-10T10:04:14.229725"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:14:38.650726"^^xsd:dateTime ;
     dcterms:date "2023-09-21"^^xsd:date ;
     dcterms:identifier "ncmec_2023_312" ;
-    dcterms:modified "2026-11-10T10:04:14.229725"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:14:38.650726"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_312/provenance> ;
-    dcterms:source <https://secureflorida.org/Family-Safety/BPParents.htm>,
-        "NCMEC" ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://secureflorida.org/Family-Safety/BPParents.htm> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/florida-fl>,
         <https://w3id.org/caselinker/resource/location/florida-fl-12>,
         <https://w3id.org/caselinker/resource/location/holmes-county-fl>,
@@ -25,11 +26,13 @@
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_312/phase/booked> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_312/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_312/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_312/legal-proceeding> ;
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_312/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_312/operation> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_312/agency/department-of-law-enforcement>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_312/agency/office-of-the-state-attorney> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_312/person/offender/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_312/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_312/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_312/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -43,12 +46,6 @@
     ns2:kindOfRelationship "Has_Role" ;
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_312/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_312/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_312/agency/department-of-law-enforcement> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns3:LocalAgency ;
@@ -64,6 +61,11 @@
         ns5:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_312/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2023_312/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
         ns5:LegalProceeding ;
@@ -71,6 +73,10 @@
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Walton County Jail" ;
     ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
     ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_312/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_312/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_312/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -101,6 +107,13 @@
     dcterms:identifier "fips:1276975" ;
     skos:altLabel "Westville" ;
     ns2:name "Westville town" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns6:HotlineOrganization,
+        ns3:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_312/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;

@@ -1,138 +1,157 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/2/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/2> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/assessment/semantic/registered-sex-offender> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_966/narrative> ;
+    ns1:hasConfidence 0.4732 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/prior-history/1> a ns4:Annotation ;
+    rdfs:label "prior history" ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_966> ;
+    ns4:statement "prior_conviction; sex_offense=true" ;
+    ns4:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/registered-sex-offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/registered-sex-offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-pa> a ns1:OrganizationLikeEntity,
+        ns2:StateAgency ;
+    rdfs:label "Pennsylvania State Police" ;
+    ns4:name "Pennsylvania State Police" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_966> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
+        ns1:EnduringEntity ;
     rdfs:label "Case ncmec_2024_966" ;
-    dcterms:created "2026-11-10T21:28:54.356469"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:28:04.360853"^^xsd:dateTime ;
     dcterms:date "2024-02-06"^^xsd:date ;
     dcterms:identifier "ncmec_2024_966" ;
-    dcterms:modified "2026-11-12T00:56:41.021569"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:28:04.360853"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_966/provenance> ;
-    dcterms:source <https://www.exploreclarion.com/local/2024/02/06/convicted-sex-offender-with-local-connections-faces-charges-for-megans-law-violations-808393/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/bethel-township>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/clarion-borough>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/ford-city>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/magisterial-district>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/marble>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/washington-township>,
-        <https://w3id.org/caselinker/resource/location/armstrong-county-pa>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.exploreclarion.com/local/2024/02/06/convicted-sex-offender-with-local-connections-faces-charges-for-megans-law-violations-808393/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/armstrong-county-pa>,
         <https://w3id.org/caselinker/resource/location/clarion-county-pa>,
         <https://w3id.org/caselinker/resource/location/pennsylvania-pa> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_966/phase/convicted> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_966/phase/convicted> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_966/legal-step/convicted> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/manor-township-police-department>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/southern-armstrong-regional-police-department>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/state-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> .
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_966/event/csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/event/multi-jurisdiction>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/legal-step/convicted> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-pa>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/manor-township-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/southern-armstrong-regional-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/2>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/assessment/semantic/registered-sex-offender> a ns2:AssessmentResult ;
-    rdfs:label "semantic similarity · registered_sex_offender" ;
-    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_966/narrative> ;
-    ns2:hasConfidence 0.4732 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/offender/1/has-role> a ns1:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
-    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/registered-sex-offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/manor-township-police-department> a ns2:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/manor-township-police-department> a ns1:OrganizationLikeEntity,
+        ns2:LocalAgency ;
     rdfs:label "Manor Township Police Department" ;
-    ns1:name "Manor Township Police Department" .
+    ns4:name "Manor Township Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/southern-armstrong-regional-police-department> a ns2:OrganizationLikeEntity,
-        ns4:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/southern-armstrong-regional-police-department> a ns1:OrganizationLikeEntity,
+        ns2:LocalAgency ;
     rdfs:label "Southern Armstrong Regional Police Department" ;
-    ns1:name "Southern Armstrong Regional Police Department" .
+    ns4:name "Southern Armstrong Regional Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/agency/state-police-department> a ns2:OrganizationLikeEntity,
-        ns4:StateAgency ;
-    rdfs:label "State Police Department" ;
-    ns1:name "State Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/legal-step/convicted> a ns2:Event,
-        ns2:LegalEvent,
-        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
-        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/event/multi-jurisdiction> a ns1:Event,
+        ns2:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Armstrong County Prison" ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_966/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/legal-step/convicted> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/bethel-township> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bethel Township" ;
-    ns1:name "Bethel Township" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/clarion-borough> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Clarion Borough" ;
-    ns1:name "Clarion Borough" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/ford-city> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ford City" ;
-    ns1:name "Ford City" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/magisterial-district> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Magisterial District" ;
-    ns1:name "Magisterial District" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/marble> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Marble" ;
-    ns1:name "Marble" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/location/washington-township> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Washington Township" ;
-    ns1:name "Washington Township" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/offender/1> a ns3:OffenderRole ;
-    rdfs:label "Offender Role · role/offender/1" .
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_966/event/csam> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_966/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
     rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
 
-<https://w3id.org/caselinker/resource/location/armstrong-county-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/armstrong-county-pa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Armstrong County" ;
     dcterms:identifier "fips:42005" ;
-    ns1:name "Armstrong County" .
+    ns4:name "Armstrong County" .
 
-<https://w3id.org/caselinker/resource/location/clarion-county-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/clarion-county-pa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clarion County" ;
     dcterms:identifier "fips:42031" ;
-    ns1:name "Clarion County" .
+    ns4:name "Clarion County" .
 
-<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
     dcterms:identifier "fips:42" ;
     skos:altLabel "Pa." ;
-    ns1:name "Pennsylvania" .
+    ns4:name "Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_966/phase/convicted> a ns2:Phase,
-        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "driving the vehicle at least one time because his primary vehicle was undergoing repairs, the complaint states" ;
+    dcterms:source <https://www.exploreclarion.com/local/2024/02/06/convicted-sex-offender-with-local-connections-faces-charges-for-megans-law-violations-808393/> ;
+    ns4:description "driving the vehicle at least one time because his primary vehicle was undergoing repairs, the complaint states" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "to driving the vehicle at least one time because his primary vehicle was undergoing repairs, the complaint states" ;
+    dcterms:source <https://www.exploreclarion.com/local/2024/02/06/convicted-sex-offender-with-local-connections-faces-charges-for-megans-law-violations-808393/> ;
+    ns4:description "to driving the vehicle at least one time because his primary vehicle was undergoing repairs, the complaint states" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/event/csam> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_966/phase/convicted> a ns1:Phase,
+        ns5:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_966/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

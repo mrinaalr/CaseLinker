@@ -4,6 +4,7 @@
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-harmonization#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,15 +12,14 @@
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007> a ns2:CACInvestigation,
         ns5:EnduringEntity ;
     rdfs:label "Case doj_ceos_2009_007" ;
-    dcterms:created "2026-11-10T18:43:40.328232"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:56:38.666232"^^xsd:dateTime ;
     dcterms:date "2009-02-20"^^xsd:date ;
     dcterms:identifier "doj_ceos_2009_007" ;
-    dcterms:modified "2026-11-10T18:43:40.328232"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:56:38.666232"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/provenance> ;
-    dcterms:source <https://www.justice.gov/archives/opa/pr/john-doe-17-indicted-child-pornography-case>,
-        "DOJ CEOS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/location/district-of-maryland>,
-        <https://w3id.org/caselinker/resource/location/calverton-cdp-md>,
+    dcterms:publisher "DOJ CEOS" ;
+    dcterms:source <https://www.justice.gov/archives/opa/pr/john-doe-17-indicted-child-pornography-case> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/calverton-cdp-md>,
         <https://w3id.org/caselinker/resource/location/maryland-md> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/phase/indicted> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/phase/indicted> ;
@@ -29,7 +29,7 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/legal-proceeding> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
+        <https://w3id.org/caselinker/resource/agency/usao-district-of-maryland> ;
     ns1:object <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/person/offender/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/person/victim/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/person/victim/10>,
@@ -297,10 +297,12 @@
     skos:altLabel "FBI" ;
     ns1:name "Federal Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/usao-district-of-maryland> a ns5:OrganizationLikeEntity,
         ns3:FederalAgency ;
-    rdfs:label "U.S. Attorney's Office" ;
-    ns1:name "U.S. Attorney's Office" .
+    rdfs:label "U.S. Attorney's Office, District of Maryland" ;
+    skos:altLabel "U.S. Attorney's Office" ;
+    ns3:operatesInJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/district-of-maryland> ;
+    ns1:name "U.S. Attorney's Office, District of Maryland" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -326,15 +328,11 @@
         ns5:LegalEvent,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
+    dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/district-of-maryland> ;
     ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/charge/3> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/location/district-of-maryland> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "District of Maryland" ;
-    ns1:name "District of Maryland" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -460,6 +458,10 @@
     rdfs:label "Victim Role · role/victim/9" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/event/possession> .
 
+<https://w3id.org/caselinker/resource/jurisdiction/united-states> a ns3:FederalJurisdiction ;
+    rdfs:label "United States" ;
+    ns1:name "United States" .
+
 <https://w3id.org/caselinker/resource/location/calverton-cdp-md> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Calverton CDP" ;
@@ -569,6 +571,11 @@
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/phase/indicted> a ns2:LegalProcessPhase,
         ns5:Phase ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/jurisdiction/district-of-maryland> a ns3:FederalJurisdiction ;
+    rdfs:label "District of Maryland" ;
+    ns6:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
+    ns1:name "District of Maryland" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_007/event/possession> a ns2:CSAMIncident,
         ns5:Event ;

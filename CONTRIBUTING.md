@@ -15,27 +15,23 @@ This file is everything you need to get started. For the day-to-day working proc
 
 ## Roadmap: where help is wanted
 
-### Phase 4: Ontology expansion, grounding, and the graph validation loop
-
-Phase 4 widens what CaseLinker can represent and tightens how the graph is checked against its sources.
-
-- **Ontology expansion**: extending coverage of entities, relationships, and case structures with CASE/UCO-aligned classes
-- **Grounding**: tying every node and edge back to the evidence it came from
-- **Graph validation loop**: checking generated graphs against source material, surfacing disagreements, and feeding the results back into processing
-
-### Phase 5: Data fidelity and extraction benchmarking
-
-Phase 5 measures how faithfully CaseLinker turns raw material into structure.
+Phase 5 measures how faithfully CaseLinker's extracted fields and graphs represent their source records.
 
 - **Data fidelity**: defining what a faithful extraction is, and detecting where output drifts from source
 - **Extraction benchmarking**: building reproducible benchmarks so changes to extraction can be compared on evidence
 - **Reporting**: making fidelity results easy to read and track over time
+- **Graph validation loop**: checking generated graphs against source material, surfacing disagreements, and feeding the results back into processing
+- **Stable case ids**: freezing the case-id map so ids no longer move when cases are re-ingested
+
+**Further out:** treating the corpus as a temporal, heterogeneous network of cases, platforms, agencies, and locations to study how documented ICAC offending and enforcement evolve, including how platforms spread across cases and regions, which platforms and offenses form communities, and how network structure might inform intervention.
 
 Not sure whether a task fits a phase? Open an issue and we will sort it out together.
 
 ## Other directions we are open to exploring
 
 The roadmap is a compass, and a rough one at that. Ideas within CaseLinker are welcome, such as new collectors, better entity resolution, performance work, new views over the graph, or improvements to the developer / analyst experience. Ideas outside the roadmap are welcome too. If you have a direction that is interesting, rigorous, and useful to the field, open an issue and pitch it!
+
+**Data beyond case reports?** Yes. CaseLinker starts from public case reports because anyone can access and verify them, and they record enough about each case (platforms, offenses, investigation and prosecution) to support cross-case analysis at scale. The same collect, extract and model pipeline could be applied to other ICAC data, such as forensic extractions from seized devices, peer-to-peer file-sharing measurements, cryptocurrency payment graphs or Tor onion-service crawls, but each new kind of data needs its own collection, extraction, and modeling in UCO, CASE and CAC, and their publication may carry adversarial risk (see [*Scaling*](https://mrinaalr.github.io/website/Scaling.pdf)). This repository and its human-subjects determination (UMass Amherst HRPO #7668) cover public case reports only, so work on other data would need its own ethics review and may not be publishable here. Open an issue to talk it through.
 
 ## How to contribute
 

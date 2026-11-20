@@ -1,42 +1,32 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_138> a ns3:CACInvestigation,
-        ns1:EnduringEntity ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_138" ;
-    dcterms:created "2026-11-10T16:32:43.713170"^^xsd:dateTime ;
-    dcterms:date "2025-06-25"^^xsd:date ;
+    dcterms:created "2026-11-19T18:34:45.409079"^^xsd:dateTime ;
+    dcterms:date "2025-03-04"^^xsd:date ;
     dcterms:identifier "ncmec_2025_138" ;
-    dcterms:modified "2026-11-12T01:39:27.498083"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:34:45.409079"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_138/provenance> ;
-    dcterms:source <https://www.wtnh.com/news/connecticut/fairfield/man-accused-of-sexual-extortion-in-stratford/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_138/location/stratford>,
-        <https://w3id.org/caselinker/resource/location/connecticut-ct> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.nbcconnecticut.com/news/local/bristol-school-paraprofessional-charged-with-possession-of-child-pornography/3512144/> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_138/phase/charged> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_138/phase/charged> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/distribution>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/sextortion> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/possession>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_138/legal-proceeding> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_138/assessment/semantic/sextortion> a ns1:AssessmentResult ;
-    rdfs:label "semantic similarity · sextortion" ;
-    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_138/narrative> ;
-    ns1:hasConfidence 0.5245 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 18.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 25.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_138/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -45,32 +35,28 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_138/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/distribution> a ns1:Event,
-        <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
-    rdfs:label "CSAM Distribution · event/distribution" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_138/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_138/location/stratford> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Stratford" ;
-    ns2:name "Stratford" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_138/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_138/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_138/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_138/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/sextortion> .
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/connecticut-ct> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Connecticut" ;
-    dcterms:identifier "fips:09" ;
-    skos:altLabel "Conn." ;
-    ns2:name "Connecticut" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/sextortion> a ns1:Event,
-        <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    rdfs:label "Sextortion Incident · event/sextortion" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_138/event/possession> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_138/phase/charged> a ns3:LegalProcessPhase,
-        ns1:Phase ;
+        <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_138/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

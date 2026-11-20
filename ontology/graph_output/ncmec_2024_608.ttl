@@ -1,86 +1,122 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608> a ns1:CACInvestigation,
+        ns4:EnduringEntity ;
     rdfs:label "Case ncmec_2024_608" ;
-    dcterms:created "2026-11-10T21:26:53.114835"^^xsd:dateTime ;
-    dcterms:date "2024-03-14"^^xsd:date ;
+    dcterms:created "2026-11-19T18:25:59.578485"^^xsd:dateTime ;
+    dcterms:date "2024-12-13"^^xsd:date ;
     dcterms:identifier "ncmec_2024_608" ;
-    dcterms:modified "2026-11-12T00:39:44.625641"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:25:59.578485"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_608/provenance> ;
-    dcterms:source <https://www.kjluradio.com/newsroom/lake-ozark-man-charged-with-multiple-counts-of-possession-of-child-pornography/article_ee42caaa-e21d-11ee-bf79-fb68448e6898.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/lake-ozark-city> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_608/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_608/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/distribution>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://stlouiscountypolice.com/department-news/press-releases/charges-issued-for-possession-of-child-pornography/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/ballwin-city>,
+        <https://w3id.org/caselinker/resource/location/missouri-mo> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_608/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_608/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_608/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_608/agency/camden-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_608/person/offender/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_608/agency/st-louis-county-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_608/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_608/narrative> ;
+    ns4:hasConfidence 0.4547 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_608/narrative> ;
+    ns4:hasConfidence 0.5132 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_608/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_608/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_608/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_608/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
+    ns2:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608/agency/camden-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
-    rdfs:label "Camden County Sheriff's Office" ;
-    ns1:name "Camden County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/agency/st-louis-county-police-department> a ns4:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "St. Louis County Police Department" ;
+    ns2:name "St. Louis County Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_608/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/distribution> a ns4:Event,
         ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/online-only> a ns1:ChildSexualAbuseEvent,
+        ns4:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/possession> a ns1:CSAMIncident,
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
         ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held without bond" ;
-    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_608/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_608/role/offender/1> a ns3:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/possession> .
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/lake-ozark-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/ballwin-city> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Lake Ozark city" ;
-    dcterms:identifier "fips:2940034" ;
-    skos:altLabel "Lake Ozark" ;
-    ns1:name "Lake Ozark city" .
+    rdfs:label "Ballwin city" ;
+    dcterms:identifier "fips:2903160" ;
+    skos:altLabel "Ballwin" ;
+    ns2:name "Ballwin city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns2:severityLevel 3 .
+<https://w3id.org/caselinker/resource/location/missouri-mo> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Missouri" ;
+    dcterms:identifier "fips:29" ;
+    ns2:name "Missouri" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_608/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_608/phase/charged> a ns2:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_608/phase/charged> a ns1:LegalProcessPhase,
+        ns4:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 

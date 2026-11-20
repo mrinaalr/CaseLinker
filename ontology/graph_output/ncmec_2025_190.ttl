@@ -1,99 +1,150 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190> a ns4:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/assessment/semantic/registered-sex-offender> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_190/narrative> ;
+    ns1:hasConfidence 0.4544 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1/prior-history> a ns2:Annotation ;
+    rdfs:label "prior history" ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> ;
+    ns2:statement "registered_offender; sex_offense=true" ;
+    ns2:tag "registered_offender" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/prior-history/1> a ns2:Annotation ;
+    rdfs:label "prior history" ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_190> ;
+    ns2:statement "prior_conviction; registered_offender; years=2009; sex_offense=true" ;
+    ns2:tag "prior_conviction",
+        "registered_offender" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/registered-sex-offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/registered-sex-offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/hsi> a ns1:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns2:name "Homeland Security Investigations" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190> a ns5:CACInvestigation,
         ns1:EnduringEntity ;
     rdfs:label "Case ncmec_2025_190" ;
-    dcterms:created "2026-11-10T16:33:05.735457"^^xsd:dateTime ;
-    dcterms:date "2025-04-02"^^xsd:date ;
+    dcterms:created "2026-11-19T18:35:02.963615"^^xsd:dateTime ;
+    dcterms:date "2025-02-05"^^xsd:date ;
     dcterms:identifier "ncmec_2025_190" ;
-    dcterms:modified "2026-11-12T01:41:57.497445"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:35:02.963615"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_190/provenance> ;
-    dcterms:source <https://police.stpete.org/2025/april/02/arrestMadeForPossessionOfChildPornography.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_190/location/petersburg>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_190/location/st-petersburg> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_190/phase/charged> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_190/phase/charged> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/distribution>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.sheriff-okaloosa.org/niceville-registered-sex-offender-charged-with-30-counts-of-possession-of-child-pornography/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/niceville-city>,
+        <https://w3id.org/caselinker/resource/location/okaloosa-county-fl> ;
+    ns5:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_190/phase/charged> ;
+    ns5:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_190/phase/charged> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_190/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/st-petersburg-police-department> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+        <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/crestview-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/niceville-polce-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/ocso-drug-task-force>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/okaloosa-county-sheriffs-office> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
-    rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns4:CSAMIncident ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_190/narrative> ;
-    ns1:hasConfidence 0.6061 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/crestview-police-department> a ns1:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Crestview Police Department" ;
+    ns2:name "Crestview Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/assessment/semantic/sextortion> a ns1:AssessmentResult ;
-    rdfs:label "semantic similarity · sextortion" ;
-    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_190/narrative> ;
-    ns1:hasConfidence 0.455 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/niceville-polce-department> a ns1:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Niceville Polce Department" ;
+    ns2:name "Niceville Polce Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1/age> a ns2:AgeAtTimeSituation ;
-    rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 45.0 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/ocso-drug-task-force> a ns1:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "OCSO Drug Task Force" ;
+    ns2:name "OCSO Drug Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/offender/1/has-role> a ns3:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_190/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/okaloosa-county-sheriffs-office> a ns1:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Okaloosa County Sheriff's Office" ;
+    ns2:name "Okaloosa County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/agency/st-petersburg-police-department> a ns1:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "St. Petersburg Police Department" ;
-    ns3:name "St. Petersburg Police Department" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "possession of child pornography" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography and one" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/distribution> a ns1:Event,
-        ns6:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_190/legal-proceeding> a ns1:Event,
         ns1:LegalEvent,
-        ns6:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "12"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_190/charge/1> .
+    ns4:chargeCount "62"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_190/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/location/petersburg> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Petersburg" ;
-    ns3:name "Petersburg" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/location/st-petersburg> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "St. Petersburg" ;
-    ns3:name "St. Petersburg" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/possession> .
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/possession> a ns4:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
+
+<https://w3id.org/caselinker/resource/location/niceville-city> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Niceville city" ;
+    dcterms:identifier "fips:1248750" ;
+    skos:altLabel "Niceville" ;
+    ns2:name "Niceville city" .
+
+<https://w3id.org/caselinker/resource/location/okaloosa-county-fl> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Okaloosa County" ;
+    dcterms:identifier "fips:12091" ;
+    ns2:name "Okaloosa County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/event/possession> a ns5:CSAMIncident,
         ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_190/phase/charged> a ns4:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_190/phase/charged> a ns5:LegalProcessPhase,
         ns1:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 

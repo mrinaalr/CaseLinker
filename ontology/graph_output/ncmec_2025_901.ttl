@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -10,27 +10,23 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_901> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_901" ;
-    dcterms:created "2026-11-10T16:38:17.005304"^^xsd:dateTime ;
-    dcterms:date "2025-04-24"^^xsd:date ;
+    dcterms:created "2026-11-19T18:39:13.385187"^^xsd:dateTime ;
+    dcterms:date "2025-03-27"^^xsd:date ;
     dcterms:identifier "ncmec_2025_901" ;
-    dcterms:modified "2026-11-12T02:16:13.086158"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:39:13.385187"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_901/provenance> ;
-    dcterms:source <https://abc13.com/post/houston-man-accused-producing-child-porn-police-find-hundreds-images-showing-sex-abuse/16240252/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/houston-city-tx>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.woodlandsonline.com/npps/story.cfm?nppage=81125> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/montgomery-county-tx>,
         <https://w3id.org/caselinker/resource/location/texas-tx> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_901/phase/charged> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_901/phase/charged> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_901/phase/booked> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_901/phase/booked> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_901/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_901/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_901/legal-proceeding> ;
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_901/agency/montgomery-county-sheriffs-office> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_901/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_901/person/offender/1/age> a ns4:AgeAtTimeSituation ;
-    rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_901/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 34.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_901/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -39,32 +35,42 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_901/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_901/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_901/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "child porn" .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns1:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_901/agency/montgomery-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns1:LocalAgency ;
+    rdfs:label "Montgomery County Sheriff's Office" ;
+    ns2:name "Montgomery County Sheriff's Office" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_901/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_901/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_901/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Harris County Jail" ;
-    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_901/charge/1> .
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Montgomery County Sheriff's Office Jail" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_901/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_901/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_901/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_901/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/houston-city-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/montgomery-county-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Houston city" ;
-    dcterms:identifier "fips:4835000" ;
-    skos:altLabel "Houston" ;
-    ns2:name "Houston city" .
+    rdfs:label "Montgomery County" ;
+    dcterms:identifier "fips:48339" ;
+    ns2:name "Montgomery County" .
 
 <https://w3id.org/caselinker/resource/location/texas-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -77,10 +83,10 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns3:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_901/phase/charged> a ns3:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/charged" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_901/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_901/phase/booked> a ns3:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
 

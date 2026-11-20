@@ -5,8 +5,8 @@
 | At a glance | |
 |---|---|
 | Corpus | **10,802** case reports from **76** public sources, 2002–2026: ICAC task forces, state attorneys general, state police, NCMEC, DOJ, federal and international agencies |
-| Extracted | **131,910** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
-| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus the PACER release's court-record graphs once the store is rebuilt with it (81 named graphs for 30 cases; until then production still holds the 297 legacy PACER graphs this replaces) |
+| Extracted | **132,676** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
+| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus the PACER dataset's court-record graphs (81 named graphs for 30 cases) |
 | Lifecycles | Federal court records coded as evidence, read as documented trajectories; a separate theory layer implements the AfH transition-system model they can be checked against |
 | Analysis | Platform harm (Q1 affordance → misuse → harm evidence), similarity clusters and automated insights, rule and model triage, 11-dimension facet cohorts |
 | Agents | 62 MCP tools locally, 47 hosted, over stdio, SSE and Streamable HTTP |
@@ -108,7 +108,7 @@ Three stores, one corpus:
 |---|---|---|
 | Relational (SQLite locally, PostgreSQL on Railway) | Case rows, satellites, every reader's assertion, resolutions, review queue, provenance tables, precomputed analysis | REST API, facet search, triage, MCP |
 | RDF (Oxigraph) | One named graph per case plus one provenance graph per case; PACER court-record graphs | `GET\|POST /sparql`, `/resource/…` dereferencing, graph explorer |
-| Files in the repo | Per-case Turtle and JSON-LD, PACER releases (bundles, derived views, graphs, manifest), research evidence JSON, case studies | Graph explorer pools, `/lifecycle`, Q1–Q3 pages, fresh clones with an empty DB |
+| Files in the repo | Per-case Turtle and JSON-LD, PACER datasets (bundles, derived views, graphs, manifest), research evidence JSON, case studies | Graph explorer pools, `/lifecycle`, Q1–Q3 pages, fresh clones with an empty DB |
 
 ---
 
@@ -214,7 +214,7 @@ flowchart LR
 | Age student | `student` | `student` | Off unless trained. Admits only roles whose held-out precision clears a 0.99 Wilson lower bound (today: `perpetrator`, `statutory_threshold`) |
 | Human | `human` | `human` | Verdicts in `config/victim_age_overrides.json`; win outright |
 
-Fields with assertions today: `age`, `sentence`, `date`, `investigation_type` (CyberTip scope). Local snapshot: 78,761 age, 51,721 date, 31,192 sentence and 4,110 investigation-type assertions.
+Fields with assertions today: `age`, `sentence`, `date`, `investigation_type` (CyberTip scope), `cybertip_reporter` (who filed the tip) and `prior_history` (earlier conviction, registration or supervision at the time, per masked defendant). Phase 4 corpus: 64,275 age, 36,798 date, 20,853 sentence, 4,885 investigation-type, 1,700 prior-history and 208 CyberTip-reporter assertions.
 
 ### Resolution rules ([`resolution.py`](src/Processing%20Layer/field_assertions/resolution.py), rule set `resolve_v3.0`)
 
@@ -235,7 +235,7 @@ Matching uses NFKC, casefold and straightened apostrophes; offsets always map ba
 
 ### What lands in the columns ([`merge_processing.py`](src/Processing%20Layer/merge_processing.py))
 
-The columns the API and graphs read hold the settled vote only. Decoy, claimed, statutory and depicted ages stay out of `perpetrator_age` and victim ages. "Faces up to" and prior-case terms stay out of `prosecution_outcome.sentences`. CyberTip origin counts only when the tip is about this case, not a "report a tip" footer. `date_range` takes the publication day when the batch date was only a year.
+The columns the API and graphs read hold the settled vote only. Decoy, claimed, statutory and depicted ages stay out of `perpetrator_age` and victim ages. "Faces up to" and prior-case terms stay out of `prosecution_outcome.sentences`. CyberTip origin counts only when the tip is about this case, not a "report a tip" footer. `date_range` takes the publication day when the batch date was only a year. `prior_history` holds one record per masked defendant (`p1`, `p2`): earlier conviction, registration or supervision at the time.
 
 Pattern extraction ([`Pattern Processing Layer/pattern_processing.py`](src/Processing%20Layer/Pattern%20Processing%20Layer/pattern_processing.py)) still produces the wide feature set in one pass: platforms (named apps plus generic `online` / `chat` / `social media`), technology signals (investigation tooling, anonymization, P2P), topics (`production`, `possession`, `distribution`, `trafficking`, `csam`, `ai_csam`, `sextortion`, `hands_on` vs `online_only`, `family` vs `stranger`, `international`, `multi_state`, `project_safe_childhood`), severity indicators and phrases, victim count, relationship, prior record, charges and booking stage, evidence volume, investigation types, agencies, perpetrator admissions. Semantic concept scores from `all-MiniLM-L6-v2` ([`semantic_concepts.py`](src/Processing%20Layer/ML%20Processing%20Layer/semantic_concepts.py)) add `grooming` as a severity tag above 0.35 and otherwise stay as analysis features.
 
@@ -252,7 +252,7 @@ Witnesses settle what the text said. Grounding settles which real-world thing it
 | [`location_grounding.py`](src/Processing%20Layer/location_grounding.py) | Pinned 2024 Census gazetteer (`data/gazetteer/`, `MANIFEST.json` checksums) | `location_grounds`: GEOID, state hint and its source. Hint priority: same sentence → trailing ", ST" → USAO district → case source |
 | [`agency_grounding.py`](src/Processing%20Layer/agency_grounding.py) | Pinned FBI CDE ORI registry plus a federal table (`data/agency_registry/`) | `agency_grounds`: ORI or federal id; `grounded`, `ambiguous`, `ungrounded`, `out_of_scope`, `out_of_registry` |
 
-Grounded rows mint readable IRIs (`location/fips/{geoid}`, agency by ORI) in the CAC mapper, so the same county name in two states never shares a slug. Agency strings are normalized before grounding by [`agency_label_normalize.py`](src/Processing%20Layer/agency_label_normalize.py), [`agency_context_gate.py`](src/Processing%20Layer/agency_context_gate.py) and [`agency_possessive_repair.py`](src/Processing%20Layer/agency_possessive_repair.py).
+Grounded rows mint readable IRIs (`location/fips/{geoid}`, agency by ORI) in the CAC mapper, so the same county name in two states never shares a slug. Agency strings are normalized before grounding by [`agency_label_normalize.py`](src/Processing%20Layer/agency_label_normalize.py), [`agency_context_gate.py`](src/Processing%20Layer/agency_context_gate.py) and [`agency_possessive_repair.py`](src/Processing%20Layer/agency_possessive_repair.py). State police ground to their state's CDE record or, where CDE lists only local stations, one shared statewide node; an ungrounded place gets no `Location` node.
 
 ### Document kinds
 
@@ -369,8 +369,12 @@ flowchart LR
 
   inv -->|"hasPhase / currentPhase"| phase
   inv -->|"hasStep"| event
-  inv -->|"involvesAgency"| agency
-  inv -->|"dcterms:spatial"| loc
+  prior["uco-core:Annotation<br/>prior history (tag per kind)"]
+  rso["cac-registry:RegisteredSexOffender<br/>/ RecidivistSexOffender"]
+  inv -->|"involvesAgency · dcterms:publisher"| agency
+  inv -->|"dcterms:spatial (grounded only)"| loc
+  prior -->|"uco-core:object"| person
+  person -->|"Has_Role"| rso
   event -->|"usesChannel (one event only)"| plat
   vRole -->|"participatesInEvent (one event only)"| event
   oRole -->|"participatesInEvent (one event only)"| event
@@ -395,7 +399,7 @@ flowchart LR
 | Analysis | [`analysis_ids.txt`](ontology/pools/analysis_ids.txt) (124) | `graph_output/analysis/` | MCP exports, research cohorts |
 | Compare | [`selected_200_ids.txt`](ontology/pools/selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
 
-**Oxigraph.** [`oxigraph_rebuild.py`](ontology/pipeline/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/oxigraph/rebuild_oxigraph.py`](scripts/oxigraph/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs come from a release ([`state_machines/graphs`](state_machines/graphs/README.md)) as `urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and, where the release has them, `:observations` (or evidence only, `--pacer-graphs evidence`), loaded in the same bulk load with `--pacer-release` and checked against the manifest with `--verify`.
+**Oxigraph.** [`oxigraph_rebuild.py`](ontology/pipeline/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/oxigraph/rebuild_oxigraph.py`](scripts/oxigraph/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs come from a dataset ([`state_machines/graphs`](state_machines/graphs/README.md)) as `urn:caselinker:pacer:<case_id>:evidence`, `:trajectories` and, where the dataset has them, `:observations` (or evidence only, `--pacer-graphs evidence`), loaded in the same bulk load with `--pacer-release` and checked against the manifest with `--verify`.
 
 **Public SPARQL** ([`run/sparql_proxy.py`](run/sparql_proxy.py)). SPARQL 1.1 Query only, classified with rdflib's parser rather than regex. Update and `SERVICE` are rejected; a missing outer `LIMIT` becomes 1000 and anything above 10,000 is a 400. 30 requests per minute per IP, 32 s store timeout. While a rebuild holds the lock ([`sparql_rebuild_lock.py`](run/sparql_rebuild_lock.py)) the endpoint returns 503. When the Railway store is asleep, [`oxigraph_wake.py`](run/oxigraph_wake.py) retries once and then answers HTTP 200 with `status: "waking"`, `retry: true` and `Retry-After`, so agents never see a raw 502.
 
@@ -411,11 +415,11 @@ Hand-off: [`ontology/README.md`](ontology/README.md) · [`ontology/docs/SPARQL.m
 
 The press-release corpus answers *what happened at scale*. [`state_machines/`](state_machines/) answers *how an offense moved*, from federal court records.
 
-- **Evidence.** Each case is coded by two coders into a bundle $D=(\Pi,E,R,P,U)$: participants, events with their event roles and dated assertions, relations, page-level provenance with the legal standing of each passage, and an assertion status on every claim. The published release is machine-coded: two pinned local models code each case and a fixed rule publishes what both coded, labelled as such; a human-adjudicated release is a second mode of the same gate and is not what `pacer-v1` is.
+- **Evidence.** Each case is coded by two coders into a bundle $D=(\Pi,E,R,P,U)$: participants, events with their event roles and dated assertions, relations, page-level provenance with the legal standing of each passage, and an assertion status on every claim. The published dataset is machine-coded: two pinned local models code each case and a fixed rule publishes what both coded; a human-adjudicated dataset is a second mode of the same gate and is not what `pacer-v1` is.
 - **Trajectories.** The documented order is the transitive closure of cited order and dates; trajectories are its maximal chains of offender acts, each step carrying the affordances the record ties to it. Unordered pairs are reported, never forced.
 - **Graphs.** Bundles are emitted as CASE/UCO/CAC with the CASE-UCO SDK, checked with SHACL (no violations of CaseLinker's own shapes; every case fails or is partial only on the upstream CAC `ActionSemanticsShape` defect, CAC-Ontology#74; SHACL checks structure, not whether an act happened), and released with a manifest under stable IRIs `urn:caselinker:pacer:<case>:evidence|trajectories|observations`.
-- **Theory.** Finite transition systems for AfH Appendix X; a documented trajectory can be checked for compatibility with a specified model (`theory.admits_partial_order`); the release does not run that check.
-- **Serving.** `/lifecycle` (public; the current release, machine-coded and labelled as such), the trusted `/api/lifecycle/cases` and `/api/lifecycle/analysis`, and the public manifest at `/api/ontology/pacer`.
+- **Theory.** Finite transition systems for AfH Appendix X; a documented trajectory can be checked for compatibility with a specified model (`theory.admits_partial_order`); the dataset does not run that check.
+- **Serving.** `/lifecycle` (public; the current dataset, machine-coded), the trusted `/api/lifecycle/cases` and `/api/lifecycle/analysis`, and the public manifest at `/api/ontology/pacer`.
 
 These describe the observable enforcement record only: what the court documents say happened, at the standing they say it.
 
@@ -484,7 +488,7 @@ Six tools are trusted-key sensitive: `get_all_cases`, `get_lifecycle_cases` and 
 | SSE | `https://caselinker.up.railway.app/mcp/sse` (+ `POST /mcp/messages`) | `Authorization: Bearer <MCP_ACCESS_KEY>`; optional per-request `CaseLinker-Key` header |
 | Streamable HTTP | `https://caselinker.up.railway.app/mcp-http/` | same |
 
-**Repair and expand.** Five local tools let an agent propose a change to extraction and measure it: a compiled rule over every stored case, an extension under [`extensions/`](extensions/) on a frozen sample, or the checkout's own code against `origin/main`. Proposals run in a child process ([`proposal_runner.py`](caselinker_mcp/proposal_runner.py)) and every candidate is re-gated in the parent, so a proposal cannot change the checks it is scored by. The gate lists the cases a change moves; it has no labelled answers, so a pass is not a verdict. Nothing writes to the corpus and nothing is admitted without a commit. Hand-off: [`caselinker_mcp/README.md` → Repair and expand](caselinker_mcp/README.md#repair-and-expand).
+**Repair and expand.** Five local tools let an agent propose a change to extraction and measure it: a compiled rule over every stored case, an extension under [`extensions/`](extensions/) on a frozen sample, or the checkout's own code against `origin/main`. Proposals run in a child process ([`proposal_runner.py`](caselinker_mcp/proposal_runner.py)) and every candidate is re-gated in the parent, so a proposal cannot change the checks it is scored by. The gate lists the cases a change moves; it has no labelled answers, so a pass is not a verdict. Resolved and pattern-layer fields are both covered; `run_gate` replays base and checkout over every case and reports each moved value (`full=true` adds NER). Nothing writes to the corpus and nothing is admitted without a commit. Hand-off: [`caselinker_mcp/README.md` → Repair and expand](caselinker_mcp/README.md#repair-and-expand).
 
 When MCP points at a local SQLite, [`facet_local.py`](caselinker_mcp/facet_local.py) builds facet trees straight from the file. Session graphs live in Redis (`caselinker:mcp:graph:{id}`, 2 h) or process memory. No resources or prompts are registered.
 
@@ -549,7 +553,7 @@ Locally, `python3 run/main.py` serves on port 8000, `scripts/run/local_oxigraph.
 ## 13. Data policy
 
 - **Sources.** Public, redacted press materials and public federal court records. UMass Amherst HRPO Determination #7668: not private or identifiable information under 45 CFR 46.102(e)(1), (4).
-- **Names stay in source text.** `raw_data.case_text`, the PDFs, process memory during extraction and verbatim review excerpts (`span_text`, LLM quotes, admission context) may hold a name. Structured derived fields, the public API, MCP responses, graph files, provenance graphs, exports, logs, issues, pull requests and commit messages never do. Excerpts are withheld from public assertion responses and returned only to a trusted key.
+- **Names stay in source text.** `raw_data.case_text`, the PDFs, process memory during extraction and verbatim review excerpts (`span_text`, LLM quotes, admission context) may hold a name. Structured derived fields, the public API, MCP responses, graph files, provenance graphs, exports, logs, issues, pull requests and commit messages never do. Excerpts are withheld from public assertion responses and returned only to a trusted key. Files built offline from release text, such as the platform-affordance evidence, are masked with `[PERSON]` from the stored person spans when they are written, and only their public files are served.
 - **Quasi-identifiers are research data.** Age, county or city, date, charge, occupation and relationship type are kept and published.
 - **Tiers.** Public (rate limited, sanitized), demo key (small cohort ids), trusted `CaseLinker-Key` (bulk export, narratives, excerpts, lifecycle data), `MCP_ACCESS_KEY` (who may connect to hosted MCP).
 - **When a name leaks.** Strip it from public output first, fix the writer, migrate stored rows, report counts and case ids only.
@@ -634,7 +638,7 @@ CaseLinker/
 | [`ontology/README.md`](ontology/README.md) | Vocabulary, pins, pools, graph pipeline, w3id, regeneration |
 | [`ontology/docs/SPARQL.md`](ontology/docs/SPARQL.md) | Public SPARQL protocol, named graphs, limits, errors, examples |
 | [`ontology/MAPPING_PLAN.md`](ontology/MAPPING_PLAN.md) | Feature-to-CAC mapping as implemented, generated from the mapper |
-| [`state_machines/README.md`](state_machines/README.md) | Court-record evidence, trajectories, graphs and releases, AfH theory |
+| [`state_machines/README.md`](state_machines/README.md) | Court-record evidence, trajectories, graphs and datasets, AfH theory |
 | [`caselinker_mcp/README.md`](caselinker_mcp/README.md) | MCP setup, transports, keys, graph workflow |
 | [`caselinker_mcp/tool_registry.md`](caselinker_mcp/tool_registry.md) | Every tool, backend, READ vs WRITE, host split |
 | [`collector/README.md`](collector/README.md) | Collecting a new source, quality gates, court records |
@@ -642,7 +646,7 @@ CaseLinker/
 | [`search.md`](search.md) | Which discovery surface answers which question |
 | [`triage.md`](triage.md) | Rule layer, model, evaluation, live paste contract |
 | [`config/victim_age_overrides.README.md`](config/victim_age_overrides.README.md) | Human verdicts and how to apply them |
-| [`.github/RELEASE_v1.md`](.github/RELEASE_v1.md) … [`RELEASE_v3.md`](.github/RELEASE_v3.md) | What each phase shipped and measured |
+| [`.github/RELEASE_v1.md`](.github/RELEASE_v1.md) … [`RELEASE_v4.md`](.github/RELEASE_v4.md) | What each phase shipped and measured |
 | [`scripts/verify/paper/claims.md`](scripts/verify/paper/claims.md) | Registered paper claims |
 
 ---
@@ -661,6 +665,6 @@ CaseLinker/
 | Aug 2026 | Contributor provenance capture and claim-snapshot drift (PRs #6, #7); public SPARQL on Oxigraph; 41 PACER investigations as 297 CASE-UCO graphs |
 | Sep 2026 | Ontology & Graphs explorer, LLM-assisted SPARQL, 10,000 cases. **Phase 2.5**: 10,282 cases, PyMuPDF ingest, crash course. Collector MCP tools, international sources with local translation, duplicate-URL gate |
 | Oct 2026 | **Phase 3**: four-layer extractor with span gate and `resolve_v3.0`, provenance graphs, w3id IRIs with dereferencing, content-locked case ids, Census and CDE grounding, snapshot freshness disclosure. 10,711 cases, 131,332 features |
-| Nov 2026 | Six new sources (Metro Nashville PD, Louisiana SP, Ocean County Prosecutor, Kentucky AG, Maricopa County Attorney, Sacramento SO) for 76 in all; full re-ingest, SQLite, graph and SPARQL rebuild. 10,802 cases, 131,910 features |
+| Nov 2026 | Six new sources (Metro Nashville PD, Louisiana SP, Ocean County Prosecutor, Kentucky AG, Maricopa County Attorney, Sacramento SO) for 76 in all. **Phase 4**: declared terms in case graphs, evidence linked to quotes, prior convictions per defendant, PACER rebuilt from machine-coded court records, repair-and-expand MCP. Full re-ingest, SQLite, graph and SPARQL rebuild. 10,802 cases, 132,676 features |
 
 Research outputs: five technical reports (listed in the [README](README.md#technical-reports)) and the companion paper *Affordances for Harm* ([DOI](https://doi.org/10.5281/zenodo.21347781)), whose questions CaseLinker was built to answer.

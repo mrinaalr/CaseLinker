@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,23 +12,31 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_362> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_362" ;
-    dcterms:created "2026-11-10T16:34:16.567823"^^xsd:dateTime ;
-    dcterms:date "2025-09-13"^^xsd:date ;
+    dcterms:created "2026-11-19T18:36:03.755533"^^xsd:dateTime ;
+    dcterms:date "2025-05-30"^^xsd:date ;
     dcterms:identifier "ncmec_2025_362" ;
-    dcterms:modified "2026-11-12T01:50:40.101491"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:36:03.755533"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_362/provenance> ;
-    dcterms:source <https://www.kwch.com/2025/09/13/el-dorado-man-arrested-23-counts-sexual-exploitation-child/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/el-dorado-city-ks>,
-        <https://w3id.org/caselinker/resource/location/kansas-ks> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.kwch.com/2025/05/30/kbi-arrests-law-enforcement-officer-child-sex-crimes/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/dodge-city-city-ks>,
+        <https://w3id.org/caselinker/resource/location/kansas-ks>,
+        <https://w3id.org/caselinker/resource/location/kansas-ks-20> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_362/phase/booked> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_362/phase/booked> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_362/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_362/event/online-only>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_362/legal-proceeding> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/kansas-bureau-of-investigation>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_362/agency/el-dorado-police-department> ;
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_362/agency/clark-county-attorneys-office> ;
     ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_362/cybertip>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_362/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_362/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 42.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_362/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -36,47 +45,47 @@
     ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_362/person/offender/1> ;
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_362/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
-    rdfs:label "ICAC Task Force" ;
-    skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+<https://w3id.org/caselinker/resource/agency/kansas-bureau-of-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:StateAgency ;
+    rdfs:label "Kansas Bureau of Investigation" ;
+    ns3:name "Kansas Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_362/agency/el-dorado-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
-    rdfs:label "El Dorado Police Department" ;
-    ns3:name "El Dorado Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/agency/clark-county-attorneys-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:StateAgency ;
+    rdfs:label "Clark County Attorney's Office" ;
+    ns3:name "Clark County Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
-    rdfs:label "sexual exploitation of children" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/1> a ns6:CriminalCharge,
+        ns6:StateCharge ;
+    rdfs:label "sexual exploitation of a child" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/2> a ns6:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_362/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns2:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_362/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Butler County Jail" ;
-    ns4:chargeCount "26"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/1>,
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Ford County Jail" ;
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_362/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_362/role/offender/1> a ns4:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_362/event/online-only> .
 
-<https://w3id.org/caselinker/resource/location/el-dorado-city-ks> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/dodge-city-city-ks> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "El Dorado city" ;
-    dcterms:identifier "fips:2020075" ;
-    skos:altLabel "El Dorado" ;
-    ns3:name "El Dorado city" .
+    rdfs:label "Dodge City city" ;
+    dcterms:identifier "fips:2018250" ;
+    skos:altLabel "Dodge City" ;
+    ns3:name "Dodge City city" .
 
 <https://w3id.org/caselinker/resource/location/kansas-ks> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -85,17 +94,27 @@
     skos:altLabel "Kan." ;
     ns3:name "Kansas" .
 
+<https://w3id.org/caselinker/resource/location/kansas-ks-20> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kansas" ;
+    dcterms:identifier "fips:20" ;
+    ns3:name "Kansas" .
+
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:HotlineOrganization,
-        ns5:FederalAgency ;
+        ns4:HotlineOrganization,
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns3:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_362/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/event/online-only> a ns1:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_362/phase/booked> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_362/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

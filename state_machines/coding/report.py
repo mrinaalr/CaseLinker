@@ -66,7 +66,7 @@ def reference_comparison(resolved: Path, pilot: Path) -> dict:
             c[f"{tier}: reference gave the same action code there"] += any(x["action"] == e["action"] for x in near)
         ref_acts = {e["event_id"] for _, e in ref_spans}
         c["reference acts"] += len(ref_acts)
-        c["reference acts in a sentence the release also cites"] += len({e["event_id"] for sp, e in ref_spans
+        c["reference acts in a sentence the dataset also cites"] += len({e["event_id"] for sp, e in ref_spans
                                                                           if any(hit(s, sp) for s, _ in our_spans)})
     return {"cases": cases, "counts": dict(sorted(c.items()))}
 
@@ -267,7 +267,7 @@ def _observed_md(ob: dict) -> list:
         L += [f"| {k} | {x['reviewed']} | {x['grounded']} | {x['meaning_yes']} / {x['meaning_no']} / {x['meaning_unclear']} | "
               f"{x['meaning_yes_interval_95'][0]} to {x['meaning_yes_interval_95'][1]} |" for k, x in v["strata"].items()] + [""]
     else:
-        L += ["**Machine-read; no person reviewed these observations on the real text.** The release is complete without such a review. "
+        L += ["**Machine-read; no person reviewed these observations on the real text.** The dataset is complete without such a review. "
               "A researcher who wants one can draw a stratified local packet (`python -m state_machines.observations.validation packet`); "
               "its score is printed here when a decisions file is scored.", ""]
     if ob.get("reference"):
@@ -297,8 +297,8 @@ def _benchmark_md(results: dict) -> list:
     if not results:
         return L
     L += ["## Accuracy on the synthetic benchmark", "",
-          "Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, "
-          "not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.", ""]
+          "Scores per rule version and split. `resolved` is what a machine-coded dataset publishes; `resolved_2b` is the candidate cue rule, "
+          "not published. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.", ""]
     observed = {k: v for k, v in results.items() if k.startswith("observe-")}
     results = {k: v for k, v in results.items() if k not in observed}
     if observed:
@@ -320,7 +320,7 @@ def _benchmark_md(results: dict) -> list:
                 L.append(f"| {label} | " + " | ".join(cells) + " |")
         tags = sorted({t for k in cols for t in systems[k].get("by_tag", {})})
         if tags and "resolved" in systems:
-            L += ["", "Recall of the released coding by hard-case tag: " +
+            L += ["", "Recall of the published coding by hard-case tag: " +
                   "; ".join(f"{t} {_cell(systems['resolved']['by_tag'][t])}" for t in tags if t in systems["resolved"]["by_tag"]) + ".", ""]
         L.append("")
     return L
@@ -364,7 +364,7 @@ def markdown(r: dict) -> str:
               f"Cases {', '.join('`' + c + '`' for c in ref['released']['cases'])} were coded earlier by two agent coders of a larger "
               "model (their agreed coding, not adjudicated). For each non-procedure act published here: did the reference code an act "
               "in the same sentence, and did it give the same action code there. The reference is another coding and does not code "
-              "every act; this is agreement, not accuracy.", "", "| Measure | Released | Candidate 2b |", "|---|---:|---:|"]
+              "every act; this is agreement, not accuracy.", "", "| Measure | Published | Candidate 2b |", "|---|---:|---:|"]
         keys = sorted(set(ref["released"]["counts"]) | set(ref.get("candidate_2b", {}).get("counts", {})))
         for k in keys:
             L.append(f"| {k} | {ref['released']['counts'].get(k, 0)} | {ref.get('candidate_2b', {}).get('counts', {}).get(k, '')} |")

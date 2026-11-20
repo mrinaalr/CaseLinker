@@ -50,18 +50,9 @@
     let PACER_CATALOG = [];
     let PACER_MATCHES = [];
     let PACER_LOADED = []; // [{ id, path, flat }] accumulate in Compare Open
-    const SPARQL_URL = (function resolveSparqlUrl() {
-        // Local uvicorn has no Oxigraph unless OXIGRAPH_URL is set. Prefer the
-        // public store so the Ontology & Graphs SPARQL panel works out of the box.
-        // Deployed same-origin keeps /sparql (and its rate limits / proxy).
-        try {
-            const host = (window.location && window.location.hostname) || '';
-            if (host === 'localhost' || host === '127.0.0.1') {
-                return 'https://caselinker.up.railway.app/sparql';
-            }
-        } catch (_) { /* ignore */ }
-        return '/sparql';
-    })();
+    // Same origin first. CL.sparql (v4.js) falls back to the live store when this server has no
+    // Oxigraph, which is how Analysis queries too; a cross-origin call from localhost is blocked by CORS.
+    const SPARQL_URL = '/sparql';
     const API_PACER_URL = '/api/ontology/pacer';
 
     // ---------- Vocabulary constants ----------
@@ -449,6 +440,64 @@
         return flat;
     }
 
+    // ---------- Shared classes (Compare) ----------
+    // Offence types, charge types, custodial relationships and registry roles
+    // are CAC classes, not instance nodes, so two cases never share an IRI for
+    // them. In RDF a class is itself a node reached by rdf:type; Compare draws
+    // each such class that two or more selected cases use, with an rdf:type
+    // edge from every typed node. Spine and generic classes would only add hubs.
+    const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+    const CLASS_NODE_KINDS = /\/case\/[^/]+\/(event|charge|relationship|role)\//;
+    const GENERIC_CLASSES = new Set([
+        'Event', 'EnduringEntity', 'Occurrent', 'Situation', 'Phase', 'Role',
+        'LegalEvent', 'LegalProceeding', 'CriminalCharge', 'StateCharge', 'FederalCharge',
+        'AssessmentResult', 'OrganizationLikeEntity', 'PersonLikeEntity',
+        'DefendantRole', 'VictimRole', 'OffenderRole', 'CustodialRelationship'
+    ]);
+    function isCacClass(t) {
+        return typeof t === 'string' &&
+            (t.startsWith('https://cacontology.projectvic.org') || /^cac(ontology)?[-a-z]*:/.test(t));
+    }
+    function classLabel(t) {
+        const words = localName(t)
+            .replace(/_/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+        const lower = words.toLowerCase().replace(/\bcsam\b/g, 'CSAM').replace(/\bai\b/g, 'AI');
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+    }
+    function withSharedClassNodes(flat) {
+        const casesByClass = new Map();
+        flat.forEach(n => {
+            if (!n['@id'] || !CLASS_NODE_KINDS.test(n['@id'])) return;
+            const types = Array.isArray(n['@type']) ? n['@type'] : (n['@type'] ? [n['@type']] : []);
+            types.forEach(t => {
+                if (!isCacClass(t) || GENERIC_CLASSES.has(localName(t))) return;
+                if (!casesByClass.has(t)) casesByClass.set(t, new Set());
+                (n._cases || []).forEach(c => casesByClass.get(t).add(c));
+            });
+        });
+        const shared = new Set([...casesByClass].filter(([, cs]) => cs.size > 1).map(([t]) => t));
+        if (!shared.size) return flat;
+        const out = flat.map(n => {
+            if (!n['@id'] || !CLASS_NODE_KINDS.test(n['@id'])) return n;
+            const types = Array.isArray(n['@type']) ? n['@type'] : (n['@type'] ? [n['@type']] : []);
+            const refs = types.filter(t => shared.has(t)).map(t => ({ '@id': t }));
+            return refs.length ? Object.assign({}, n, { [RDF_TYPE]: refs }) : n;
+        });
+        shared.forEach(t => {
+            out.push({
+                '@id': t,
+                '@type': ['http://www.w3.org/2002/07/owl#Class'],
+                [RDFS_LABEL]: [{ '@value': classLabel(t) }],
+                _cases: [...casesByClass.get(t)],
+                _isShared: true,
+                _isClass: true
+            });
+        });
+        return out;
+    }
+
     function createFlatStore() {
         return Object.create(null);
     }
@@ -553,8 +602,9 @@
         if (merged && merged.flat_nodes && merged.flat_nodes.length) {
             const n = merged.n_cases || caseEntries.length;
             titleEl.textContent = titleLabel + ' · ' + n + ' cases';
-            if (pool === 'compare') setTitleCompare(merged.flat_nodes, caseEntries.map(c => c.case_id));
-            renderGraphFromFlat(merged.flat_nodes);
+            const flatOut = pool === 'compare' ? withSharedClassNodes(merged.flat_nodes) : merged.flat_nodes;
+            if (pool === 'compare') setTitleCompare(flatOut, caseEntries.map(c => c.case_id));
+            renderGraphFromFlat(flatOut);
             return;
         }
 
@@ -575,7 +625,8 @@
             batch.forEach((c, j) => mergeOneCaseIntoStore(store, c.case_id, docs[j]));
             loaded += batch.length;
             batchIndex += 1;
-            const flat = flatStoreToArray(store);
+            const flatRaw = flatStoreToArray(store);
+            const flat = pool === 'compare' ? withSharedClassNodes(flatRaw) : flatRaw;
             titleEl.textContent = titleLabel + ' · ' + loaded + ' / ' + total + ' cases…';
             const shouldPaint =
                 flat.length &&
@@ -590,7 +641,8 @@
             await new Promise(resolve => requestAnimationFrame(resolve));
         }
 
-        const finalFlat = flatStoreToArray(store);
+        const finalRaw = flatStoreToArray(store);
+        const finalFlat = pool === 'compare' ? withSharedClassNodes(finalRaw) : finalRaw;
         titleEl.textContent = titleLabel + ' · ' + total + ' cases merged';
         if (pool === 'compare') setTitleCompare(finalFlat, caseEntries.map(c => c.case_id));
         renderGraphFromFlat(finalFlat);
@@ -1533,6 +1585,7 @@
     }
 
     async function runSparqlSelect(query) {
+        if (window.CL && typeof window.CL.sparql === 'function') return window.CL.sparql(query);
         const resp = await fetch(SPARQL_URL, {
             method: 'POST',
             headers: {
@@ -1779,9 +1832,7 @@
 
         const epLabel = document.getElementById('sparql-endpoint-label');
         if (epLabel) {
-            epLabel.textContent = SPARQL_URL.indexOf('http') === 0
-                ? 'caselinker.up.railway.app/sparql'
-                : '/sparql';
+            epLabel.textContent = '/sparql';
         }
 
         function isLlmMode() {
@@ -2701,7 +2752,7 @@
                 let id = null;
                 const m = /\/resource\/case\/([^\/]+)$/.exec(v);
                 if (m) id = m[1];
-                else if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3}$/.test(v)) id = v;
+                else if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3,4}$/.test(v)) id = v;
                 if (id && SEARCH_COHORT_ID_RE.test(id) && !seen.has(id)) { seen.add(id); ids.push(id); }
             });
         });
@@ -2927,7 +2978,7 @@
 
     /* An empty canvas is a dead canvas. With nothing asked for, open one balanced case graph
        (three hubs, four platforms, provenance on every value) so the page starts with something worth looking at. */
-    const SHOWCASE_CASE_ID = 'south_florida_icac_2023_010';
+    const SHOWCASE_CASE_ID = 'south_florida_icac_2023_009';
     /* ?case=<id> from another page: open that case in Single mode. */
     async function applyCaseParam() {
         let id = '';

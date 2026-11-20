@@ -1,62 +1,115 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2024_404" ;
-    dcterms:created "2026-11-10T21:25:42.567994"^^xsd:dateTime ;
-    dcterms:date "2024-08-15"^^xsd:date ;
+    dcterms:created "2026-11-19T18:24:44.834812"^^xsd:dateTime ;
+    dcterms:date "2024-09-27"^^xsd:date ;
     dcterms:identifier "ncmec_2024_404" ;
-    dcterms:modified "2026-11-12T00:30:16.053434"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:24:44.834812"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_404/provenance> ;
-    dcterms:source <https://fox59.com/news/indycrime/columbus-man-arrested-for-child-porn-solicitation/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_404/location/columbus> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_404/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_404/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/csam>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.wthitv.com/news/former-rose-hulman-staff-member-religious-leader-arrested-charged-with-child-sex-crimes/article_d8e9a9f0-7d1b-11ef-a9c4-d3cf516cf14f.html> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/indiana-in>,
+        <https://w3id.org/caselinker/resource/location/terre-haute-city-in> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_404/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_404/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/ai-csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_404/legal-proceeding> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_404/person/offender/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_404/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_404/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/discord>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_404/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_404/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_404/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_404/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_404/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child porn" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
-    rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_404/charge/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/ai-csam> a ns2:DigitallyGeneratedCSAMIncident,
+        <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
+        ns3:Event ;
+    rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/location/columbus> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Columbus" ;
-    ns2:name "Columbus" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/role/offender/1> a ns3:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/csam> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/csam> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/csam> a ns2:CSAMIncident,
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/distribution> a ns3:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/event/online-only> a ns2:ChildSexualAbuseEvent,
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_404/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Indiana" ;
+    dcterms:identifier "fips:18" ;
+    skos:altLabel "Ind." ;
+    ns1:name "Indiana" .
+
+<https://w3id.org/caselinker/resource/location/terre-haute-city-in> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Terre Haute city" ;
+    dcterms:identifier "fips:1875428" ;
+    skos:altLabel "Terre Haute" ;
+    ns1:name "Terre Haute city" .
+
+<https://w3id.org/caselinker/resource/platform/discord> a ns3:DigitalSystemEntity,
+        ns4:MessagingService ;
+    rdfs:label "Discord" ;
+    ns1:name "Discord" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns3:DigitalSystemEntity,
+        ns4:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns4:platformType "generative-ai" ;
+    ns1:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "knew the photos he was looking at involved underage children, adding he knew they were both AI-generated and real images" ;
+    dcterms:source <https://www.wthitv.com/news/former-rose-hulman-staff-member-religious-leader-arrested-charged-with-child-sex-crimes/article_d8e9a9f0-7d1b-11ef-a9c4-d3cf516cf14f.html> ;
+    ns1:description "knew the photos he was looking at involved underage children, adding he knew they were both AI-generated and real images" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_404/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_404/phase/arrested> a ns1:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_404/phase/charged> a ns2:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 

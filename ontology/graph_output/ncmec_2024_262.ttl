@@ -2,43 +2,27 @@
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_262> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_262" ;
-    dcterms:created "2026-11-10T21:24:52.985633"^^xsd:dateTime ;
-    dcterms:date "2024-08-02"^^xsd:date ;
+    dcterms:created "2026-11-19T18:23:55.514863"^^xsd:dateTime ;
+    dcterms:date "2024-07-11"^^xsd:date ;
     dcterms:identifier "ncmec_2024_262" ;
-    dcterms:modified "2026-11-12T00:23:23.904724"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:23:55.514863"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_262/provenance> ;
-    dcterms:source <https://www.teamhcso.com/News/PressRelease/0696c4cf-4ff8-4cd2-8c4d-2902ba80c1ef/en-US>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_262/location/hillsborough-county> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.nbc-2.com/article/north-port-man-arrested-child-pornography-charges/61570729> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/florida-fl>,
+        <https://w3id.org/caselinker/resource/location/north-port-city-fl> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_262/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_262/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/distribution>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_262/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_262/agency/hillsborough-county-sheriffs-office> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_262/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_262/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_262/admission/1> ;
-    ns4:hasConfidence 0.65 ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/person/offender/1/age> a ns5:AgeAtTimeSituation ;
-    rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_262/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 56.0 .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_262/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_262/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -47,49 +31,45 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_262/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_262/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/agency/hillsborough-county-sheriffs-office> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Hillsborough County Sheriff's Office" ;
-    ns2:name "Hillsborough County Sheriff's Office" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_262/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/distribution> a ns4:Event,
-        ns3:CSAM_Distribution ;
-    rdfs:label "CSAM Distribution · event/distribution" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_262/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Sarasota County Jail" ;
+    ns3:chargeCount "44"^^xsd:nonNegativeInteger ;
     ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_262/charge/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/location/hillsborough-county> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hillsborough County" ;
-    ns2:name "Hillsborough County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_262/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/csam> .
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "receiving Child Sexual Abuse Material" ;
-    dcterms:source <https://www.teamhcso.com/News/PressRelease/0696c4cf-4ff8-4cd2-8c4d-2902ba80c1ef/en-US> ;
-    ns2:description "receiving Child Sexual Abuse Material" .
+<https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Florida" ;
+    dcterms:identifier "fips:12" ;
+    skos:altLabel "Fla." ;
+    ns2:name "Florida" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/csam> a ns1:CSAMIncident,
-        ns4:Event ;
-    rdfs:label "CSAMIncident · event/csam" ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/location/north-port-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "North Port city" ;
+    dcterms:identifier "fips:1249675" ;
+    skos:altLabel "North Port" ;
+    ns2:name "North Port city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_262/phase/arrested> a ns1:InitialPhase,
-        ns4:Phase ;
-    rdfs:label "Initial Phase · phase/arrested" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_262/event/possession> a ns1:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 2 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_262/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_262/phase/arrested> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 

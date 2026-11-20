@@ -11,7 +11,7 @@ Stored assertions are never edited.
 
 Usage (repo root):
   python3 scripts/run/reresolve_assertions.py                     # every case with assertions
-  python3 scripts/run/reresolve_assertions.py --case-ids ncmec_2024_1175 azicac_2011_001
+  python3 scripts/run/reresolve_assertions.py --case-ids ncmec_2024_1168 azicac_2011_001
   python3 scripts/run/reresolve_assertions.py --resolutions-only  # leave legacy columns alone
   DATABASE_URL=... python3 scripts/run/reresolve_assertions.py    # Postgres
 """
@@ -63,7 +63,7 @@ def _new_human(stored, text, case_id):
 
 
 # Detectors added or widened after a case's run; their assertions are appended to that run.
-_NEW_DETECTORS = ("cybertip_reporter", "investigation_type", "prior_history")
+_NEW_DETECTORS = ("cybertip_reporter", "investigation_type", "prior_history", "legal_context")
 
 
 def _year(stored):
@@ -89,6 +89,7 @@ def _new_detected(stored, text):
     # the whole original run, so a name tokenised here alone would not match the stored ones, and
     # a raw name is never stored. A re-extract attributes each record to its defendant.
     fresh += [amod.gate_assertion(text, a) for a in amod.patterns.prior_history_assertions(text, _year(stored))]
+    fresh += [amod.gate_assertion(text, a) for a in amod.patterns.legal_context_assertions(text)]
     for a in fresh:
         if a["field"] == "prior_history":
             (a.get("extras") or {}).pop("defendant_entity", None)
@@ -109,6 +110,7 @@ def _rederive_case(case: dict, assertions: list, resolutions: dict) -> dict:
     merger._apply_resolved_cybertip_reporter(rebuilt, resolutions.get("cybertip_reporter") or {})
     merger._apply_resolved_dates(rebuilt, resolutions.get("date") or {})
     merger._apply_resolved_prior_history(rebuilt, resolutions.get("prior_history") or {})
+    merger._apply_resolved_legal_context(rebuilt, resolutions.get("legal_context") or {})
     rebuilt.pop("assertions", None)
     rebuilt.pop("resolutions", None)
     return processing.assign_comparison_values(rebuilt)

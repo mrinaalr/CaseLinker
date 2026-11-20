@@ -42,7 +42,7 @@ ANCHOR_DIRS = {"doj_ceos_2025_026": "ENTICEMENT", "doj_ceos_2026_001": "PRODUCTI
                "doj_ceos_2025_007": "ENTERPRISE", "doj_ceos_2026_006": "TRAFFICKING"}
 # case id -> the id written in the PDF file names, where the press release has since been renumbered or
 # the corpus now holds it under another source (checked 2026-11-18 by the defendant's full name in the press text)
-COLLECTED_AS = {"ncmec_2022_575": "ncmec_2022_586", "ncmec_2023_222": "ncmec_2023_224", "ncmec_2025_1035": "ncmec_2025_1116",
+COLLECTED_AS = {"ncmec_2022_575": "ncmec_2022_586", "ncmec_2023_222": "ncmec_2023_224", "ncmec_2025_1026": "ncmec_2025_1116",
                 "usss_2021_017": "usss_2021_019", "doj_safe_childhood_2023_420": "ncmec_2023_190"}
 DOC_TYPE_WORDS = [  # first match wins; order matters
     ("fourth superseding indictment", "superseding_indictment"), ("second superseding indictment", "superseding_indictment"),

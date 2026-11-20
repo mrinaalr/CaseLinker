@@ -277,6 +277,7 @@ class MergeProcessing:
         merged = self._apply_resolved_cybertip_reporter(merged, resolutions.get("cybertip_reporter") or {})
         merged = self._apply_resolved_dates(merged, resolutions.get("date") or {})
         merged = self._apply_resolved_prior_history(merged, resolutions.get("prior_history") or {})
+        merged = self._apply_resolved_legal_context(merged, resolutions.get("legal_context") or {})
 
         # Where the people are, never who: offsets every public surface redacts from.
         pk = _assertions().people_mask
@@ -435,6 +436,14 @@ class MergeProcessing:
             merged["prior_history"] = res["final_value"]
         else:
             merged.pop("prior_history", None)
+        return merged
+
+    def _apply_resolved_legal_context(self, merged: Dict[str, Any], res: Dict[str, Any]) -> Dict[str, Any]:
+        """Statutes, federal districts and named operations the release names."""
+        if isinstance(res.get("final_value"), dict):
+            merged["legal_context"] = res["final_value"]
+        else:
+            merged.pop("legal_context", None)
         return merged
 
     def _apply_resolved_cybertip_reporter(self, merged: Dict[str, Any], res: Dict[str, Any]) -> Dict[str, Any]:

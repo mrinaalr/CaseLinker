@@ -105,27 +105,27 @@ Press-release case graphs and PACER court-record graphs are different datasets:
 | Family | Named graph | Source | Load |
 |---|---|---|---|
 | Case | `https://w3id.org/caselinker/resource/case/{case_id}` | Canonical Turtle under `ontology/graph_output/` | `rebuild_oxigraph.py` bulk load (see [Reloading the store](#reloading-the-store)) |
-| PACER release | `urn:caselinker:pacer:<case_id>:evidence`, `…:trajectories` and, in releases built with them, `…:observations` (`--pacer-graphs evidence` loads the first only) | A release under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
+| PACER dataset | `urn:caselinker:pacer:<case_id>:evidence`, `…:trajectories` and, in datasets built with them, `…:observations` (`--pacer-graphs evidence` loads the first only) | A dataset under `state_machines/data/<release>/`, emitted with the CASE-UCO SDK ([state_machines/graphs](../../state_machines/graphs/README.md)) | `rebuild_oxigraph.py --pacer-release <release> --verify`, in the same bulk load |
 
-The three graph kinds hold three levels of evidence: what the record names (`:observations`), the acts both coders agreed on (`:evidence`), and the relationships a sentence supports. The queries, with results on the 30 cases, are in [`state_machines/observations/queries.py`](../../state_machines/observations/queries.py) and in each release's `REPORT.md`.
+The three graph kinds hold three levels of evidence: what the record names (`:observations`), the acts both coders agreed on (`:evidence`), and the relationships a sentence supports. The queries, with results on the 30 cases, are in [`state_machines/observations/queries.py`](../../state_machines/observations/queries.py) and in each dataset's `REPORT.md`.
 
 - **Same id, two datasets.** `<case_id>` in a PACER graph IRI is the corpus id of the press release for the same prosecution, where the corpus holds one (27 of 30 matched by the defendant's name in the press text; `doj_ceos_2025_023` and `svicac_2022_009` agree on state and sentence term only; `external_extortion` has no press release in the corpus). A query can join `urn:caselinker:pacer:<case_id>:evidence` with `https://w3id.org/caselinker/resource/case/<case_id>` on that id. Corpus ids can be renumbered by a rebuild until 1.0; after one, check the PACER ids against the corpus before joining.
 - **Listed platforms are shared nodes; placeholder services are not.** A listed platform has one IRI under `https://w3id.org/caselinker/resource/platform/` across all cases. A service a record calls "Website A" is a node local to that case's graph, named with the record's label and "(name withheld)"; filter on the IRI prefix to keep the two apart, and never group placeholder labels across cases.
 - **Disputed readings are marked, not related.** `?obs clt:reviewStatus "disputed"` on an observation annotation means: the sentence states this platform or feature as a means, each of the two model coders coded an offender act in it, and they differ on which act or which offender. No `uco-core:Relationship` and no act exists for it. An agreed act carries `clt:reviewStatus "agreed"` on the `uco-action:Action`; the two never share a subject.
 - **Generic descriptions are text.** `?obs oa:motivatedBy oa:describing ; oa:hasBody [ rdf:value ?phrase ]` lists phrases such as "social media application". They are not platforms and have no relationship to an act.
 
-`--verify` checks the loaded store against the release manifest: every manifest graph present and non-empty, no PACER graph outside the release, no legacy `urn:pacer:kg:*` graph left.
+`--verify` checks the loaded store against the dataset manifest: every manifest graph present and non-empty, no PACER graph outside the dataset, no legacy `urn:pacer:kg:*` graph left.
 
 ## Reloading the store
 
 The hosted store is `oxigraph serve` from `ghcr.io/oxigraph/oxigraph:0.5.13` on a 5 GB Railway volume (`/data/caselinker_oxigraph`). A reload is a bulk load into an empty store:
 
-1. Build the N-Quads anywhere: `python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`. The PACER release's N-Quads are built from the release's committed graph files (`state_machines/data/<release>/graphs/`) by the same script.
+1. Build the N-Quads anywhere: `python3 scripts/oxigraph/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`. The PACER dataset's N-Quads are built from the dataset's committed graph files (`state_machines/data/<release>/graphs/`) by the same script.
 2. Copy the corpus file to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`.
 3. Wipe the volume (Railway dashboard → `oxigraph-volume-S6Fs` → Settings → Wipe volume). The bulk loader refuses a store that is not empty.
 4. In the web service: `python3 scripts/oxigraph/rebuild_oxigraph.py --skip-build --output /tmp/caselinker.nq.gz --pacer-release <release> --verify --min-case-graphs 10000`.
 
-`bulk_load_nquads` posts 500,000-line slices to `POST /store?no_transaction`, Oxigraph's bulk loader, which writes sorted data files and no write-ahead log. It holds the rebuild lock, so `/sparql` answers 503 while the store is partial, and fails unless the store's quad count equals the lines sent. A failed load keeps the lock, so a partial store is never served; rerun the load after another wipe, or remove `/tmp/caselinker-sparql-rebuild.lock` in the web service to serve what is there. Between the wipe and the start of the load the store is empty and `/sparql` answers with no rows. A full load (6,151,655 quads) takes about 5 minutes and leaves about 2.1 GB on the volume.
+`bulk_load_nquads` posts 500,000-line slices to `POST /store?no_transaction`, Oxigraph's bulk loader, which writes sorted data files and no write-ahead log. It holds the rebuild lock, so `/sparql` answers 503 while the store is partial, and fails unless the store's quad count equals the lines sent. A failed load keeps the lock, so a partial store is never served; rerun the load after another wipe, or remove `/tmp/caselinker-sparql-rebuild.lock` in the web service to serve what is there. Between the wipe and the start of the load the store is empty and `/sparql` answers with no rows. A full load (6,353,604 quads) takes about 5 minutes and leaves about 2.1 GB on the volume.
 
 The transactional path (plain `PUT` or `POST /store`, or `CLEAR ALL` before a load) logs every quad before writing it. On this volume that log reached 3.87 GB and filled the disk before a full load finished.
 
@@ -170,12 +170,12 @@ LIMIT 50
 | Fact | How to read it |
 |---|---|
 | Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite / live Postgres **10,802**) |
-| Extracted features / agencies | `GET /api/stats` → `unique_features` **131,910**, `unique_organizations` **4,278** distinct LE agencies after ingest normalize, variant merge (PD/SO, Sheriff's Department/Office, state abbreviations, possessives, punctuation) and LE-only filter (`source_count` **76** = 74 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; `DOJ ARCHIVES` folds into CEOS; `DOJ AI CSAM` folds into Safe Childhood) |
+| Extracted features / agencies | `GET /api/stats` → `unique_features` **132,676**, `unique_organizations` **4,326** distinct LE agencies after ingest normalize, variant merge (PD/SO, Sheriff's Department/Office, state abbreviations, possessives, punctuation) and LE-only filter (`source_count` **76** = 74 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; `DOJ ARCHIVES` folds into CEOS; `DOJ AI CSAM` folds into Safe Childhood) |
 | Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/")) }` (live store **10,802**) |
 | Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance")) }` (live store **10,802**) |
 | Named graphs (press release) | one per case + one provenance graph; **10,802** cases live |
-| Triples (statements in named graphs) | `SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }` (live store **6,151,655** across **21,901** named graphs: 10,802 case + 10,802 provenance + 297 PACER) |
-| Distinct triples (graph ignored) | **5,639,508**, counted from the N-Quads export; a triple asserted in more than one named graph counts once |
+| Triples (statements in named graphs) | `SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }` (live store **6,353,604** across **21,686** named graphs: 10,802 case + 10,802 provenance + 82 PACER) |
+| Distinct triples (graph ignored) | **5,820,051**, counted from the N-Quads export; a triple asserted in more than one named graph counts once |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL); `dcterms:publisher` (source label) |
 | Reload | bulk load into an empty store, `python3 scripts/oxigraph/rebuild_oxigraph.py` ([Reloading the store](#reloading-the-store)) |
@@ -315,6 +315,27 @@ ORDER BY DESC(?tips)
 ```
 
 Add `GRAPH ?g { ?case uco-core:object ?tip ; dcterms:spatial ?loc . ?loc dcterms:identifier ?f FILTER(STRSTARTS(STR(?f), "fips:24")) }` to scope it to one state (24 = Maryland).
+
+### Prior convictions per defendant
+
+A prior-history record is a `uco-core:Annotation` on the defendant it names, or on the case when the release ties it to no one: one `uco-core:tag` per kind (`prior_conviction`, `registered_offender`, `on_supervision`) and a `statement` with what the release states (count, years, sex offense). A registered offender also holds a CAC registry role, `RecidivistSexOffender` when this case ended in a conviction. The quote is in the provenance graph (see *Quote behind a case node*).
+
+```sparql
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX cac-registry: <https://cacontology.projectvic.org/sex-offender-registry#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?g ?subject ?kind ?statement ?recidivist WHERE {
+  GRAPH ?g {
+    ?ann a uco-core:Annotation ; rdfs:label "prior history" ;
+         uco-core:object ?subject ; uco-core:tag ?kind ; uco-core:statement ?statement .
+    OPTIONAL { ?rel uco-core:source ?subject ; uco-core:target ?role .
+               ?role a cac-registry:RecidivistSexOffender . BIND(true AS ?recidivist) }
+  }
+  FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))
+}
+ORDER BY ?g ?subject ?kind
+LIMIT 50
+```
 
 ### One case (named graph)
 

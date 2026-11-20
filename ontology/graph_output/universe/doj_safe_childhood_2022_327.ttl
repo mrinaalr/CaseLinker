@@ -1,28 +1,92 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/2/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/2> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/cybertip/reporter/google/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · cybertip/reporter/google/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/esp/google> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/cybertip/reporter/google> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1/age> a ns7:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns7:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
+    ns7:concernsAgeQuality ns7:Age ;
+    ns7:hasAgeInYears 26.0 .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1/prior-history> a ns1:Annotation ;
+    rdfs:label "prior history" ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
+    ns1:statement "on_supervision; sex_offense=false" ;
+    ns1:tag "on_supervision" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/prior-history/2> a ns1:Annotation ;
+    rdfs:label "prior history" ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327> ;
+    ns1:statement "registered_offender; sex_offense=true" ;
+    ns1:tag "registered_offender" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/registered-sex-offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns5:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns1:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns5:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns1:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns1:name "U.S. Attorney's Office" .
+
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327> a ns4:CACInvestigation,
-        ns1:EnduringEntity ;
+        ns5:EnduringEntity ;
     rdfs:label "Case doj_safe_childhood_2022_327" ;
-    dcterms:created "2026-11-11T11:18:32.740071"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T19:31:09.256465"^^xsd:dateTime ;
     dcterms:date "2022-05-18"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2022_327" ;
-    dcterms:modified "2026-11-11T11:18:32.740071"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T19:31:09.256465"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/provenance> ;
-    dcterms:source <https://www.justice.gov/usao-edmo/pr/ferguson-sex-offender-sentenced-10-years-possession-child-pornography>,
-        "DOJ SAFE CHILDHOOD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/ferguson>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/st-louis>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/st-louis-county>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/united-states> ;
+    dcterms:publisher "DOJ SAFE CHILDHOOD" ;
+    dcterms:source <https://www.justice.gov/usao-edmo/pr/ferguson-sex-offender-sentenced-10-years-possession-child-pornography> ;
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/phase/sentenced> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/phase/sentenced> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/distribution>,
@@ -30,154 +94,103 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/legal-step/sentenced> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/usao>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/agency/st-louis-county-police-department> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1>,
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/2>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/cybertip>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1> ;
-    ns1:hasConfidence 0.65 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/2/extraction-confidence> a ns1:AssessmentResult ;
-    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/2> ;
-    ns1:hasConfidence 0.65 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1/age> a ns3:AgeAtTimeSituation ;
-    rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 26.0 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1/has-role> a ns2:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/registered-sex-offender/1/has-role> a ns2:Relationship ;
-    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/registered-sex-offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns1:OrganizationLikeEntity,
-        ns6:FederalAgency ;
-    rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns1:OrganizationLikeEntity,
-        ns6:FederalAgency ;
-    rdfs:label "Federal Bureau of Investigation" ;
-    skos:altLabel "FBI" ;
-    ns2:name "Federal Bureau of Investigation" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
-        ns6:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns1:OrganizationLikeEntity,
-        ns6:FederalAgency ;
-    rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/agency/st-louis-county-police-department> a ns1:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/agency/st-louis-county-police-department> a ns5:OrganizationLikeEntity,
+        ns3:LocalAgency ;
     rdfs:label "St. Louis County Police Department" ;
-    ns2:name "St. Louis County Police Department" .
+    ns1:name "St. Louis County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/2> a ns2:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/distribution> a ns1:Event,
-        ns5:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/cybertip> a ns6:ESPReport,
+        <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns6:reportedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/cybertip/reporter/google> ;
+    ns1:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/distribution> a ns5:Event,
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/project-safe-childhood> a ns1:Event,
-        ns6:ProjectSafeChildhoodOperation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/project-safe-childhood> a ns5:Event,
+        ns3:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/1>,
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/charge/2> ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/1>,
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/legal-step/sentenced> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/legal-step/sentenced> a ns5:Event,
+        ns5:LegalEvent,
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/ferguson> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ferguson" ;
-    ns2:name "Ferguson" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/st-louis> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "St. Louis" ;
-    ns2:name "St. Louis" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/st-louis-county> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "St. Louis County" ;
-    ns2:name "St. Louis County" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/location/united-states> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "United States" ;
-    ns2:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
     rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/1> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
     rdfs:label "10 years" ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> .
+    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/2> a ns5:CriminalSentence,
-        ns5:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/sentence/2> a ns2:CriminalSentence,
+        ns2:MonetaryPenalty ;
     rdfs:label "$11,000" ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> .
+    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/esp/google> a <https://cacontology.projectvic.org/platforms#ElectronicServiceProvider> ;
+    rdfs:label "Google" ;
+    ns1:name "Google" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns6:HotlineOrganization,
+        ns3:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "police having used the email linked to the uploads" ;
     dcterms:source <https://www.justice.gov/usao-edmo/pr/ferguson-sex-offender-sentenced-10-years-possession-child-pornography> ;
-    ns2:description "police having used the email linked to the uploads" .
+    ns1:description "police having used the email linked to the uploads" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "receiving child pornography on his cell phone and admitted that the files had been backed up to his Gmail account" ;
     dcterms:source <https://www.justice.gov/usao-edmo/pr/ferguson-sex-offender-sentenced-10-years-possession-child-pornography> ;
-    ns2:description "receiving child pornography on his cell phone and admitted that the files had been backed up to his Gmail account" .
+    ns1:description "receiving child pornography on his cell phone and admitted that the files had been backed up to his Gmail account" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/cybertip/reporter/google> a ns6:ReporterRole ;
+    rdfs:label "Reporter Role · cybertip/reporter/google" ;
+    ns6:isAnonymous false .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/event/possession> a ns4:CSAMIncident,
-        ns1:Event ;
+        ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/phase/sentenced> a ns1:Phase,
-        ns5:SentencingPhase ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/phase/sentenced> a ns5:Phase,
+        ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_327/role/offender/1> a ns4:OffenderRole ;

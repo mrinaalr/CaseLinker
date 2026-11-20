@@ -1,40 +1,72 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430> a ns3:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430> a ns4:CACInvestigation,
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2024_430" ;
-    dcterms:created "2026-11-10T21:25:51.833589"^^xsd:dateTime ;
-    dcterms:date "2024-01-18"^^xsd:date ;
+    dcterms:created "2026-11-19T18:24:54.107582"^^xsd:dateTime ;
+    dcterms:date "2024-12-09"^^xsd:date ;
     dcterms:identifier "ncmec_2024_430" ;
-    dcterms:modified "2026-11-12T00:31:30.391454"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:24:54.107582"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_430/provenance> ;
-    dcterms:source <https://www.wfft.com/news/crime/dekalb-county-sheriffs-office-arrests-man-accused-of-possession-of-child-pornography/article_56bee24c-b647-11ee-b864-0727c6c0be84.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_430/location/hudson>,
-        <https://w3id.org/caselinker/resource/location/dekalb-county-in>,
-        <https://w3id.org/caselinker/resource/location/indiana-in> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_430/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_430/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.14news.com/2024/12/09/man-arrested-child-sex-crimes-sheriffs-say/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/evansville-city-in>,
+        <https://w3id.org/caselinker/resource/location/indiana-in>,
+        <https://w3id.org/caselinker/resource/location/vanderburgh-county-in> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_430/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_430/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_430/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_430/agency/dekalb-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_430/agency/vanderburgh-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/dark-web>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_430/narrative> ;
+    ns3:hasConfidence 0.5044 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_430/narrative> ;
+    ns3:hasConfidence 0.552 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/assessment/semantic/registered-sex-offender> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_430/narrative> ;
+    ns3:hasConfidence 0.4686 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/assessment/semantic/sextortion> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_430/narrative> ;
+    ns3:hasConfidence 0.4563 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 39.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 71.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_430/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -43,70 +75,77 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_430/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
-    rdfs:label "ICAC Task Force" ;
-    skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/agency/dekalb-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
-    rdfs:label "DeKalb County Sheriff's Office" ;
-    ns1:name "DeKalb County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/agency/vanderburgh-county-sheriffs-office> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Vanderburgh County Sheriff's Office" ;
+    ns1:name "Vanderburgh County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "possession of child pornography" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/charge/1> a ns2:CriminalCharge ;
+    rdfs:label "the sex crime child exploitation" ;
+    dcterms:subject ns4:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/charge/2> a ns5:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns3:ChildSexualAbuseEvent .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/distribution> a ns3:Event,
+        ns2:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Kalb County Jail" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_430/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_430/charge/2> .
+    rdfs:comment "Pretrial detention facility (not a sentence): held at the Vanderburgh County Jail" ;
+    ns2:chargeCount "11"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_430/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/location/hudson> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hudson" ;
-    ns1:name "Hudson" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/dekalb-county-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/evansville-city-in> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "DeKalb County" ;
-    dcterms:identifier "fips:18033" ;
-    skos:altLabel "Dekalb County" ;
-    ns1:name "DeKalb County" .
+    rdfs:label "Evansville city" ;
+    dcterms:identifier "fips:1822000" ;
+    skos:altLabel "Evansville" ;
+    ns1:name "Evansville city" .
 
-<https://w3id.org/caselinker/resource/location/indiana-in> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indiana" ;
     dcterms:identifier "fips:18" ;
     skos:altLabel "Ind." ;
     ns1:name "Indiana" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/possession> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" .
+<https://w3id.org/caselinker/resource/location/vanderburgh-county-in> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Vanderburgh County" ;
+    dcterms:identifier "fips:18163" ;
+    ns1:name "Vanderburgh County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_430/phase/arrested> a ns3:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/event/possession> a ns4:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/dark-web>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_430/phase/charged> a ns4:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/dark-web> a ns3:DigitalSystemEntity,
+        ns7:DarkWebService ;
+    rdfs:label "dark web" ;
+    ns1:name "dark web" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns3:DigitalSystemEntity,
+        ns7:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns7:platformType "generative-ai" ;
+    ns1:name "Gen AI" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_430/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

@@ -1,31 +1,40 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_571> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2024_571" ;
-    dcterms:created "2026-11-10T21:26:40.624823"^^xsd:dateTime ;
-    dcterms:date "2024-01-10"^^xsd:date ;
+    dcterms:created "2026-11-19T18:25:46.796129"^^xsd:dateTime ;
+    dcterms:date "2024-02-02"^^xsd:date ;
     dcterms:identifier "ncmec_2024_571" ;
-    dcterms:modified "2026-11-12T00:38:09.919316"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:25:46.796129"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_571/provenance> ;
-    dcterms:source <https://www.wtva.com/news/local/parents-arrested-in-calhoun-county-after-children-found-living-in-deplorable-conditions/article_cea43396-aff5-11ee-acb9-b32301604c4b.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/calhoun-county-ms>,
-        <https://w3id.org/caselinker/resource/location/columbus-city-ms>,
-        <https://w3id.org/caselinker/resource/location/mississippi-ms>,
-        <https://w3id.org/caselinker/resource/location/pittsboro-village-ms>,
-        <https://w3id.org/caselinker/resource/location/tupelo-city-ms> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.wlbt.com/2024/02/02/desoto-co-sheriffs-dept-arrest-man-accused-child-pornography/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/horn-lake-city>,
+        <https://w3id.org/caselinker/resource/location/mississippi-ms> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_571/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_571/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_571/event/possession>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_571/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_571/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_571/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_571/agency/desoto-county-sheriffs-department> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_571/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_571/narrative> ;
+    ns3:hasConfidence 0.5032 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_571/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -34,63 +43,63 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_571/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_571/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_571/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "possession of child pornography" .
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_571/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/agency/desoto-county-sheriffs-department> a ns3:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Desoto County Sheriff's Department" ;
+    ns1:name "Desoto County Sheriff's Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/charge/2> a ns5:CSAM_Distribution,
+        ns5:CriminalCharge ;
+    rdfs:label "distribution of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/event/distribution> a ns3:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_571/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_571/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_571/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_571/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_571/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_571/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/calhoun-county-ms> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/horn-lake-city> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Calhoun County" ;
-    dcterms:identifier "fips:28013" ;
-    ns1:name "Calhoun County" .
+    rdfs:label "Horn Lake city" ;
+    dcterms:identifier "fips:2833700" ;
+    skos:altLabel "Horn Lake" ;
+    ns1:name "Horn Lake city" .
 
-<https://w3id.org/caselinker/resource/location/columbus-city-ms> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Columbus city" ;
-    dcterms:identifier "fips:2815380" ;
-    skos:altLabel "Columbus" ;
-    ns1:name "Columbus city" .
-
-<https://w3id.org/caselinker/resource/location/mississippi-ms> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/mississippi-ms> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mississippi" ;
     dcterms:identifier "fips:28" ;
     skos:altLabel "Miss." ;
     ns1:name "Mississippi" .
 
-<https://w3id.org/caselinker/resource/location/pittsboro-village-ms> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Pittsboro village" ;
-    dcterms:identifier "fips:2858360" ;
-    skos:altLabel "Pittsboro" ;
-    ns1:name "Pittsboro village" .
-
-<https://w3id.org/caselinker/resource/location/tupelo-city-ms> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Tupelo city" ;
-    dcterms:identifier "fips:2874840" ;
-    skos:altLabel "Tupelo" ;
-    ns1:name "Tupelo city" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_571/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_571/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_571/phase/charged> a ns2:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+        ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 

@@ -64,7 +64,7 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 
 ## Results
 
-[`results/`](results/) holds the scores of each rule version on each split (`pipeline bench --split <split> --record`), one file per `<rule version>.<split>`. Each release's `REPORT.md` prints them as tables.
+[`results/`](results/) holds the scores of each rule version on each split (`pipeline bench --split <split> --record`), one file per `<rule version>.<split>`. Each dataset's `REPORT.md` prints them as tables.
 
 | Rule version, split | Gold acts found | Published acts that are gold acts | Action code | Order relations correct |
 |---|---:|---:|---:|---:|
@@ -73,7 +73,7 @@ Cases 41–60 are **confirm** (`--split confirm`, gold version `benchmark-1.1-co
 | `resolve-1.1.0`, held-out (a later look; no rule written against it) | 0.671 (153/228) | 0.975 (153/157) | 0.915 | 6 of 7 |
 | `resolve-1.1.0`, confirm (the only blind split) | 0.421 (104/247) | 0.945 (104/110) | 0.971 | 1 of 1 |
 
-All rows are the resolved coding a machine release publishes. No coded order relation was reversed or undocumented on any split; the ones not counted correct touch an act that is not a gold act.
+All rows are the resolved coding a machine-coded dataset publishes. No coded order relation was reversed or undocumented on any split; the ones not counted correct touch an act that is not a gold act.
 
 Re-run on 2026-11-19 from the local coder cache, under the current rules, on all three splits. The resolved event rows were unchanged: dev 187/242 found at 187/188 published, held-out 153/228 at 153/157, confirm 104/247 at 104/110. Confirm observations were unchanged: 71/71 platform mentions found, 32/32 feature statements found, 32/32 supported relationships correct, 32/42 gold relationships found on a published act. This re-run is a check that the current code still produces these rates. Confirm had already been scored, so it is not a new blind result. The 30 real cases were not recoded.
 

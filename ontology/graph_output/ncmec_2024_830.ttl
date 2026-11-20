@@ -1,38 +1,55 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_830> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2024_830" ;
-    dcterms:created "2026-11-10T21:28:10.560595"^^xsd:dateTime ;
-    dcterms:date "2024-03-12"^^xsd:date ;
+    dcterms:created "2026-11-19T18:27:17.443097"^^xsd:dateTime ;
+    dcterms:date "2024-08-17"^^xsd:date ;
     dcterms:identifier "ncmec_2024_830" ;
-    dcterms:modified "2026-11-12T00:49:50.620993"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:27:17.443097"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_830/provenance> ;
-    dcterms:source <https://kfgo.com/2024/03/12/fargo-man-facing-40-years-for-child-porn/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_830/location/cass-county>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_830/location/united-states>,
-        <https://w3id.org/caselinker/resource/location/north-dakota-nd> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://kfgo.com/2024/08/17/police-say-grand-forks-man-possessed-child-porn-depicting-girls-as-young-as-infants/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/grand-forks-city>,
+        <https://w3id.org/caselinker/resource/location/north-dakota-nd>,
+        <https://w3id.org/caselinker/resource/location/north-dakota-nd-38> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_830/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_830/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_830/event/csam>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_830/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_830/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_830/agency/grand-forks-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_830/narrative> ;
+    ns3:hasConfidence 0.5016 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_830/narrative> ;
+    ns3:hasConfidence 0.5483 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 27.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 59.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_830/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -41,50 +58,67 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_830/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child pornography" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/agency/grand-forks-police-department> a ns3:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Grand Forks Police Department" ;
+    ns1:name "Grand Forks Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
+    rdfs:label "possession of child pornography Thursday" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_830/charge/1> .
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Grand Forks County Correctional Center" ;
+    ns6:chargeCount "13"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_830/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/location/cass-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Cass County" ;
-    ns1:name "Cass County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "United States" ;
-    ns1:name "United States" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_830/event/csam> .
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_830/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/north-dakota-nd> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/grand-forks-city> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Grand Forks city" ;
+    dcterms:identifier "fips:3832060" ;
+    skos:altLabel "Grand Forks" ;
+    ns1:name "Grand Forks city" .
+
+<https://w3id.org/caselinker/resource/location/north-dakota-nd> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "North Dakota" ;
+    dcterms:identifier "fips:38" ;
+    skos:altLabel "N.d." ;
+    ns1:name "North Dakota" .
+
+<https://w3id.org/caselinker/resource/location/north-dakota-nd-38> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "North Dakota" ;
     dcterms:identifier "fips:38" ;
     ns1:name "North Dakota" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_830/event/csam> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/csam" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_830/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_830/phase/charged> a ns2:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+        ns3:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_830/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

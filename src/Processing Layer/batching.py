@@ -952,197 +952,123 @@ def _normalize_ncmec_source_url(url_blob: str) -> str:
     return ""
 
 
-def _split_ncmec_2024_double_story_blocks(segment: str) -> List[str]:
-    """
-    Some 2024 state sections concatenate **two** unrelated stories: a local blurb (often no URL)
-    and a federal DOJ/USAO **Press Release** with a single ``justice.gov`` link. The multi-URL
-    branch only runs when ``https://`` appears more than once, so those pairs were one case.
+_NCMEC_STATES = frozenset({
+    'ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE',
+    'DISTRICT OF COLUMBIA', 'FLORIDA', 'GEORGIA', 'GUAM', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA',
+    'KANSAS', 'KENTUCKY', 'LOUISIANA', 'MAINE', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA',
+    'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO',
+    'NEW YORK', 'NORTH CAROLINA', 'NORTH DAKOTA', 'OHIO', 'OKLAHOMA', 'OREGON', 'PENNSYLVANIA',
+    'PUERTO RICO', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH',
+    'VERMONT', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING',
+})
+_NCMEC_PAGE_MARK = re.compile(r'^(?:Page\s*\|\s*)?\d{1,4}$')
+# Datelines as printed, typos included: "May 25, 2024", "Ay 17, 2024", "August 21/ 2025", "March 2025",
+# "August 19, 20225", "7/24/2024".
+_NCMEC_DATELINE = re.compile(
+    r'^(?:[A-Za-z]{2,10}\.?\s+\d{1,2}(?:st|nd|rd|th)?\s*[,/]?\s*\d{4,5}|[A-Za-z]{3,10}\s+\d{4}|\d{1,2}/\d{1,2}/\d{2,4})\b'
+)
+_NCMEC_CT = re.compile(r'^CT\s*\d')
 
-    Split at the last paragraph break before a federal-style ``Press Release`` / ``United States
-    Attorney`` block (typically after an ALL CAPS headline). Returns one or two segments.
+
+def _ncmec_caps_line(line: str) -> bool:
+    letters = [c for c in line if c.isalpha()]
+    return len(line) >= 15 and bool(letters) and sum(c.isupper() for c in letters) / len(letters) >= 0.85
+
+
+def _ncmec_article_heads(lines: List[str]) -> List[int]:
+    """Line index of the first headline line of every article in a 2024/2025 NCMEC anthology.
+
+    An entry is printed as an ALL-CAPS headline, outlet/byline, a dateline, the article URL and a ``CT``
+    line of CyberTipline report numbers, then the body, which may run over several pages that start with
+    only a page number. A head is the first line of an ALL-CAPS run followed within ten lines by
+    - a ``CT`` line (NCMEC's own marker, printed only in heads), or
+    - a dateline, when the headline opens a page (after a page number and an optional state line), or
+    - a dateline and a URL, anywhere on a page (two entries can share a page).
+    Lines inside an accepted head are not tested again.
     """
-    if not segment or len(segment) < 500:
-        return [segment]
-    m = re.search(
-        r'(?i)\n\s*Press Release\s*\n\s*(?:United States Attorney|U\.S\. Attorney)',
-        segment[120:],
-    )
-    if not m:
-        return [segment]
-    cut_press = 120 + m.start()
-    probe = segment[:cut_press]
-    idx = probe.rfind('\n\n')
-    if idx < 80:
-        return [segment]
-    first_line = segment[idx + 2 : idx + 2 + 240].split('\n')[0].strip()
-    if len(first_line) < 10:
-        return [segment]
-    letters = [c for c in first_line if c.isalpha()]
-    if letters:
-        upper_ratio = sum(1 for c in letters if c.isupper()) / len(letters)
-        if upper_ratio < 0.55 and len(first_line) < 35:
-            return [segment]
-    first = segment[:idx].strip()
-    second = segment[idx:].strip()
-    if len(first) < 120 or len(second) < 120:
-        return [segment]
-    return [first, second]
+    heads: List[int] = []
+    skip = -1
+    for i, raw in enumerate(lines):
+        s = raw.strip()
+        if i <= skip or not s or s.upper() in _NCMEC_STATES or _NCMEC_PAGE_MARK.match(s) or not _ncmec_caps_line(s):
+            continue
+        j = i - 1
+        while j >= 0 and not lines[j].strip():
+            j -= 1
+        if j >= 0:
+            prev = lines[j].strip()
+            if _ncmec_caps_line(prev) and prev.upper() not in _NCMEC_STATES and not _NCMEC_PAGE_MARK.match(prev):
+                continue  # inside a headline that started above
+        window = [(k, lines[k].strip()) for k in range(i + 1, min(len(lines), i + 16)) if lines[k].strip()][:10]
+        ct = [k for k, x in window if _NCMEC_CT.match(x)]
+        dates = [k for k, x in window if _NCMEC_DATELINE.match(x)]
+        k = i - 1
+        while k >= 0 and (not lines[k].strip() or lines[k].strip().upper() in _NCMEC_STATES):
+            k -= 1
+        page_top = k < 0 or bool(_NCMEC_PAGE_MARK.match(lines[k].strip()))
+        url = any(x.startswith('http') for _, x in window)
+        if ct or (dates and (page_top or url)):
+            heads.append(i)
+            skip = ct[0] if ct else dates[0]
+    return heads
 
 
 def _batch_ncmec_2024_cases(text: str, org_name: str, source_file: str = None) -> List[Dict[str, Any]]:
+    """Split a 2024 or 2025 NCMEC anthology into one case per printed entry (:func:`_ncmec_article_heads`).
+
+    Each case runs from its head to the next head, so a story's continuation pages stay with it. Page
+    numbers are dropped; a state line printed above a head stays with the entry it introduces and gives
+    the case its ``state``. Text before the first head (the cover) is not a case.
     """
-    Split NCMEC 2024 by ALL-CAPS US state lines (primary structure — different from 2022/2023 media PDFs).
+    report_year = _ncmec_report_year(source_file)
+    lines = text.split('\n')
+    heads = _ncmec_article_heads(lines)
+    if not heads:
+        y = report_year or str(datetime.now().year)
+        return [{'case_text': text, 'month_year': None, 'month': None, 'year': y, 'case_id': f'{org_name}_{y}_001'}]
 
-    Some sections bundle **multiple** press stories under one state (notably a long WYOMING tail and
-    multi-article blocks). When a state segment contains more than one ``https://`` link, we run the
-    same URL-boundary splitter used for media years **on that segment only**, then flatten and renumber.
-    When only one URL is present but a second federal **Press Release** block is pasted after a local
-    story, :func:`_split_ncmec_2024_double_story_blocks` splits first.
+    def starts(h: int) -> int:  # include a state line printed just above the headline
+        k = h - 1
+        while k >= 0 and (not lines[k].strip() or lines[k].strip().upper() in _NCMEC_STATES):
+            k -= 1
+        return k + 1
 
-    Args:
-        text: Full text from NCMEC PDF
-        org_name: Organization name prefix for case IDs (e.g., "ncmec")
-        source_file: Filename to extract report year from (e.g., "2024 - NCMEC Cases.pdf")
-
-    Returns:
-        List of case dictionaries with 'case_text', 'month_year', 'month', 'year', 'case_id'
-    """
-    # Extract report year from filename if available
-    report_year = None
-    if source_file:
-        year_match = re.search(r'(\d{4})', source_file)
-        if year_match:
-            report_year = year_match.group(1)
-    cases = []
-    
-    # List of all US states (all caps for NCMEC format)
-    states = [
-        'ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO',
-        'CONNECTICUT', 'DELAWARE', 'FLORIDA', 'GEORGIA', 'HAWAII', 'IDAHO',
-        'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA',
-        'MAINE', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA',
-        'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA',
-        'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK',
-        'NORTH CAROLINA', 'NORTH DAKOTA', 'OHIO', 'OKLAHOMA', 'OREGON',
-        'PENNSYLVANIA', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA',
-        'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGINIA', 'WASHINGTON',
-        'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'
-    ]
-    
-    # Build regex pattern to match state headers (must be at start of line).
-    # PDF extraction often leaves trailing spaces on the line (e.g. "CALIFORNIA  ");
-    # allow optional whitespace so sections still split.
-    # Sort by length (longest first) to match "NEW YORK" before "NEW"
-    states_sorted = sorted(states, key=len, reverse=True)
-    state_pattern = '|'.join(re.escape(state) for state in states_sorted)
-    pattern = rf'^\s*({state_pattern})\s*$'
-    
-    # Find all state header positions
-    matches = []
-    for match in re.finditer(pattern, text, re.MULTILINE):
-        matches.append({
-            'pos': match.start(),
-            'state': match.group(1)
-        })
-    
-    if not matches:
-        # No state headers found - return entire text as one case
-        from datetime import datetime
-        id_year = report_year if report_year else str(datetime.now().year)
-        case_date_year = report_year if report_year else str(datetime.now().year)
-        return [{
-            'case_text': text,
-            'month_year': None,
-            'month': None,
-            'year': case_date_year,
-            'case_id': f'{org_name}_{id_year}_001'
-        }]
-
-    def _metadata_from_text(case_text: str) -> Tuple[str, Optional[str], str]:
-        """Derive month_year, month, year string from a case blob."""
-        months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
-        date_pattern = rf'{months}\s+(\d{{1,2}}),?\s+(\d{{4}})'
-        date_match = re.search(date_pattern, case_text, re.IGNORECASE)
-        if date_match:
-            month = date_match.group(1)
-            case_date_year = date_match.group(3)
-            month_year = f"{month} {case_date_year}"
-            return month_year, month, case_date_year
-        year_match = re.search(r'\b(19|20)\d{2}\b', case_text)
-        if year_match:
-            y = year_match.group(0)
-            return y, None, y
-        from datetime import datetime
-        y = report_year if report_year else str(datetime.now().year)
-        return y, None, y
-
+    state_at, current = {}, None
+    for i, raw in enumerate(lines):
+        if raw.strip().upper() in _NCMEC_STATES:
+            current = raw.strip().upper()
+        state_at[i] = current
+    months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
     cases: List[Dict[str, Any]] = []
-
-    for i, match_info in enumerate(matches):
-        start_pos = match_info['pos']
-        state = match_info['state']
-        if i + 1 < len(matches):
-            end_pos = matches[i + 1]['pos']
+    bounds = [starts(h) for h in heads] + [len(lines)]
+    for n, h in enumerate(heads):
+        block = [ln for ln in lines[bounds[n]:bounds[n + 1]] if not _NCMEC_PAGE_MARK.match(ln.strip())]
+        if n + 1 < len(heads):  # a state line above the next head belongs to that entry
+            while block and (not block[-1].strip() or block[-1].strip().upper() in _NCMEC_STATES):
+                block.pop()
+        raw_case = '\n'.join(block).strip()
+        case_text = clean_artifacts_from_text(raw_case, remove_urls=False)
+        if len(case_text) < 40:
+            continue
+        m = re.search(rf'{months}\s+(\d{{1,2}}),?\s+(\d{{4}})', case_text, re.IGNORECASE)
+        if m:
+            month, year, month_year = m.group(1), m.group(3), f"{m.group(1)} {m.group(3)}"
         else:
-            end_pos = len(text)
-
-        raw_block = text[start_pos:end_pos].strip()
-        pieces = _split_ncmec_2024_double_story_blocks(raw_block)
-
-        for piece in pieces:
-            url_n = piece.count('https://')
-
-            if url_n > 1:
-                subs = _batch_ncmec_media_cases(piece, org_name, source_file)
-                sub_cases: List[Dict[str, Any]] = []
-                for sub in subs:
-                    ct = sub.get('case_text', '')
-                    ct = clean_artifacts_from_text(ct, remove_urls=False)
-                    if not ct or len(ct) < 40:
-                        continue
-                    # Local + federal DOJ blocks can share one URL in a segment (see WYOMING tail).
-                    for frag in _split_ncmec_2024_double_story_blocks(ct):
-                        if not frag or len(frag) < 40:
-                            continue
-                        my, mo, yr = _metadata_from_text(frag)
-                        sub_cases.append({
-                            'case_text': frag,
-                            'month_year': sub.get('month_year') or my,
-                            'month': sub.get('month') or mo,
-                            'year': sub.get('year') or yr,
-                            'case_id': '',
-                            'state': state,
-                            **({'source_url': sub['source_url']} if sub.get('source_url') else {}),
-                        })
-                if sub_cases:
-                    cases.extend(sub_cases)
-                    continue
-
-            case_text = clean_artifacts_from_text(piece)
-            month_year, month, case_date_year = _metadata_from_text(case_text)
-            id_year = report_year if report_year else case_date_year
-            single_case = {
-                'case_text': case_text,
-                'month_year': month_year,
-                'month': month,
-                'year': case_date_year,
-                'case_id': f'{org_name}_{id_year}_000',
-                'state': state,
-            }
-            source_url = _normalize_ncmec_source_url(piece)
-            if source_url:
-                single_case['source_url'] = source_url
-            cases.append(single_case)
-
-    id_yr = report_year
-    if not id_yr and cases:
-        id_yr = cases[0].get('year', '2024')
-        if isinstance(id_yr, str) and len(id_yr) >= 4 and id_yr[:4].isdigit():
-            id_yr = id_yr[:4]
-
+            ym = re.search(r'\b(19|20)\d{2}\b', case_text)
+            year = ym.group(0) if ym else (report_year or str(datetime.now().year))
+            month, month_year = None, year
+        case = {'case_text': case_text, 'month_year': month_year, 'month': month, 'year': year,
+                'case_id': '', 'state': state_at.get(h)}
+        # The entry's URL is printed in its header, after the dateline (at most ~15 lines below the
+        # headline); a link further down is the story's own reference, not where it was published.
+        header = [ln for ln in lines[bounds[n]:min(h + 17, bounds[n + 1])] if not _NCMEC_PAGE_MARK.match(ln.strip())]
+        url = _normalize_ncmec_source_url('\n'.join(header))
+        if url:
+            case['source_url'] = url
+        cases.append(case)
+    id_year = report_year or (cases[0]['year'][:4] if cases else str(datetime.now().year))
     for idx, c in enumerate(cases, start=1):
-        c['case_id'] = f"{org_name}_{id_yr}_{idx:03d}"
-
+        c['case_id'] = f"{org_name}_{id_year}_{idx:03d}"
     return cases
 
 
@@ -2094,6 +2020,16 @@ def _merged_news_title_starts(lines: List[str], sources: List[int]) -> List[int]
     for idx, si in enumerate(sources):
         prev_barrier = sources[idx - 1] if idx > 0 else -1
         lo = prev_barrier + 1
+        # Press PDFs put one article per page and the extractor joins pages with a newline,
+        # so the page break is the blank line just above the headline. When it is there it is
+        # the article start; the heuristics below only run for the first page or other layouts.
+        page_top = next(
+            (j + 1 for j in range(si - 1, max(prev_barrier, si - 13), -1) if not lines[j].strip()),
+            None,
+        )
+        if page_top is not None:
+            title_starts.append(page_top)
+            continue
         hi = _merged_news_hi_immediately_before_source(lines, si, prev_barrier)
         if hi <= prev_barrier:
             title_starts.append(max(0, lo))

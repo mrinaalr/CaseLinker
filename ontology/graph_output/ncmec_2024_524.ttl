@@ -1,105 +1,118 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524> a ns4:CACInvestigation,
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2024_524" ;
-    dcterms:created "2026-11-10T21:26:24.742303"^^xsd:dateTime ;
-    dcterms:date "2024-01-05"^^xsd:date ;
+    dcterms:created "2026-11-19T18:25:27.771426"^^xsd:dateTime ;
+    dcterms:date "2024-03"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_524" ;
-    dcterms:modified "2026-11-12T00:35:59.712809"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:25:27.771426"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_524/provenance> ;
-    dcterms:source <https://www.masslive.com/news/2024/01/77-year-old-amherst-man-arrested-on-child-pornography-charges.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_524/location/eastern-hampshire-county>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_524/location/northampton>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_524/location/perkins>,
-        <https://w3id.org/caselinker/resource/location/amherst-town-city-ma> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_524/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_524/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_524/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://whdh.com/news/police-revere-sex-offender-caught-with-hundreds-of-child-sex-abuse-images-videos/> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_524/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_524/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_524/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_524/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/massachusetts-state-police-ma>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_524/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_524/narrative> ;
+    ns3:hasConfidence 0.5087 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/cybertip/reporter/yahoo/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · cybertip/reporter/yahoo/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/esp/yahoo> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_524/cybertip/reporter/yahoo> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 77.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 45.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1/prior-history> a ns2:Annotation ;
+    rdfs:label "prior history" ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> ;
+    ns2:statement "prior_conviction; sex_offense=true" ;
+    ns2:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_524/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_524/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
-    rdfs:label "ICAC Task Force" ;
-    skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+<https://w3id.org/caselinker/resource/agency/massachusetts-state-police-ma> a ns3:OrganizationLikeEntity,
+        ns7:StateAgency ;
+    rdfs:label "Massachusetts State Police" ;
+    ns2:name "Massachusetts State Police" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/cybertip> a ns5:ESPReport,
+        <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns5:reportedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_524/cybertip/reporter/yahoo> ;
+    ns2:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held in jail; held in the Hampshire County Jail" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_524/charge/1> .
+    rdfs:comment "Pretrial detention facility (not a sentence): held without bail" ;
+    ns6:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_524/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/location/eastern-hampshire-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Eastern Hampshire County" ;
-    ns3:name "Eastern Hampshire County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/location/northampton> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Northampton" ;
-    ns3:name "Northampton" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/location/perkins> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Perkins’" ;
-    ns3:name "Perkins’" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_524/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_524/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/amherst-town-city-ma> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Amherst Town city" ;
-    dcterms:identifier "fips:2501370" ;
-    skos:altLabel "Amherst" ;
-    ns3:name "Amherst Town city" .
+<https://w3id.org/caselinker/resource/esp/yahoo> a <https://cacontology.projectvic.org/platforms#ElectronicServiceProvider> ;
+    rdfs:label "Yahoo" ;
+    ns2:name "Yahoo" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns5:HotlineOrganization,
+        ns7:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_524/phase/arrested> a ns1:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/cybertip/reporter/yahoo> a ns5:ReporterRole ;
+    rdfs:label "Reporter Role · cybertip/reporter/yahoo" ;
+    ns5:isAnonymous false .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/event/possession> a ns4:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_524/phase/charged> a ns4:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_524/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

@@ -1,8 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -10,16 +11,14 @@
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_001> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case doj_archives_2008_001" ;
-    dcterms:created "2026-11-10T18:23:54.637646"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:51:37.222815"^^xsd:dateTime ;
     dcterms:date "2008-01"^^xsd:gYearMonth ;
     dcterms:identifier "doj_archives_2008_001" ;
-    dcterms:modified "2026-11-10T18:23:54.637646"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:51:37.222815"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/provenance> ;
-    dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/NDOH%20Urbassik%20indict%20PR_041404.pdf>,
-        "DOJ ARCHIVES" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/location/northern-district-of-ohio>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/location/united-states>,
-        <https://w3id.org/caselinker/resource/location/cleveland-city-oh>,
+    dcterms:publisher "DOJ ARCHIVES" ;
+    dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/NDOH%20Urbassik%20indict%20PR_041404.pdf> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/cleveland-city-oh>,
         <https://w3id.org/caselinker/resource/location/district-of-columbia-dc>,
         <https://w3id.org/caselinker/resource/location/district-of-columbia-dc-11>,
         <https://w3id.org/caselinker/resource/location/ohio-oh> ;
@@ -28,7 +27,7 @@
     ns3:hasStep <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/doj> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/doj> ;
     ns1:object <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/role/offender/1/has-role> a ns1:Relationship ;
@@ -39,41 +38,49 @@
     ns1:target <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns1:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_001/charge/1> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2008_001/charge/1> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns3:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:MultiJurisdictionalInvestigation ;
+        ns2:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/charge/1> .
+    dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-ohio> ;
+    dcterms:references <https://w3id.org/caselinker/resource/statute/18-usc-1461>,
+        <https://w3id.org/caselinker/resource/statute/18-usc-1466>,
+        <https://w3id.org/caselinker/resource/statute/18-usc-1467>,
+        <https://w3id.org/caselinker/resource/statute/18-usc-371> ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_001/location/northern-district-of-ohio> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2008_001/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-ohio> a ns2:FederalJurisdiction ;
     rdfs:label "Northern District of Ohio" ;
+    ns4:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
     ns1:name "Northern District of Ohio" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_001/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+<https://w3id.org/caselinker/resource/jurisdiction/united-states> a ns2:FederalJurisdiction ;
     rdfs:label "United States" ;
+    ns4:hasStatute <https://w3id.org/caselinker/resource/statute/18-usc-1461>,
+        <https://w3id.org/caselinker/resource/statute/18-usc-1466>,
+        <https://w3id.org/caselinker/resource/statute/18-usc-1467>,
+        <https://w3id.org/caselinker/resource/statute/18-usc-371> ;
     ns1:name "United States" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_001/role/offender/1> a ns2:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/cleveland-city-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -108,4 +115,20 @@
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_001/phase/indicted> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/statute/18-usc-1461> a ns4:Statute ;
+    rdfs:label "18 U.S.C. § 1461" ;
+    ns1:name "18 U.S.C. § 1461" .
+
+<https://w3id.org/caselinker/resource/statute/18-usc-1466> a ns4:Statute ;
+    rdfs:label "18 U.S.C. § 1466" ;
+    ns1:name "18 U.S.C. § 1466" .
+
+<https://w3id.org/caselinker/resource/statute/18-usc-1467> a ns4:Statute ;
+    rdfs:label "18 U.S.C. § 1467" ;
+    ns1:name "18 U.S.C. § 1467" .
+
+<https://w3id.org/caselinker/resource/statute/18-usc-371> a ns4:Statute ;
+    rdfs:label "18 U.S.C. § 371" ;
+    ns1:name "18 U.S.C. § 371" .
 

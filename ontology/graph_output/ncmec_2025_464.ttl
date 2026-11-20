@@ -1,29 +1,46 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_464> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464> a ns3:CACInvestigation,
+        ns6:EnduringEntity ;
     rdfs:label "Case ncmec_2025_464" ;
-    dcterms:created "2026-11-10T16:35:06.406279"^^xsd:dateTime ;
-    dcterms:date "2025-04-07"^^xsd:date ;
+    dcterms:created "2026-11-19T18:36:40.410595"^^xsd:dateTime ;
+    dcterms:date "2025-02-04"^^xsd:date ;
     dcterms:identifier "ncmec_2025_464" ;
-    dcterms:modified "2026-11-12T01:55:33.186776"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:36:40.410595"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_464/provenance> ;
-    dcterms:source <https://www.facebook.com/61572275396068/posts/-update-ali-khalil-katato-of-detroit-now-facing-federal-charges-heres-the-timeli/122119724744742513/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/detroit-city-mi>,
-        <https://w3id.org/caselinker/resource/location/michigan-mi>,
-        <https://w3id.org/caselinker/resource/location/warren-city-mi> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_464/phase/indicted> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_464/phase/indicted> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.bigrapidsnews.com/news/article/sanilac-county-child-sexually-abusive-material-20147146.php> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/sanilac-county-mi> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_464/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_464/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_464/legal-proceeding> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_464/person/offender/1>,
-        <https://w3id.org/caselinker/resource/platform/facebook> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/michigan-state-police-mi> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_464/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_464/narrative> ;
+    ns6:hasConfidence 0.5172 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_464/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 29.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_464/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -32,50 +49,51 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_464/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_464/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_464/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/michigan-state-police-mi> a ns6:OrganizationLikeEntity,
+        ns2:StateAgency ;
+    rdfs:label "Michigan State Police" ;
+    ns1:name "Michigan State Police" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/distribution> a ns6:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): remain in custody" .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_464/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_464/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/possession> .
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/detroit-city-mi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/sanilac-county-mi> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Detroit city" ;
-    dcterms:identifier "fips:2622000" ;
-    skos:altLabel "Detroit" ;
-    ns1:name "Detroit city" .
+    rdfs:label "Sanilac County" ;
+    dcterms:identifier "fips:26151" ;
+    ns1:name "Sanilac County" .
 
-<https://w3id.org/caselinker/resource/location/michigan-mi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Michigan" ;
-    dcterms:identifier "fips:26" ;
-    ns1:name "Michigan" .
-
-<https://w3id.org/caselinker/resource/location/warren-city-mi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Warren city" ;
-    dcterms:identifier "fips:2684000" ;
-    skos:altLabel "Warren" ;
-    ns1:name "Warren city" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/event/possession> a ns3:CSAMIncident,
+        ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> .
+    ns3:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_464/phase/charged> a ns3:LegalProcessPhase,
+        ns6:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_464/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_464/phase/indicted> a ns2:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/indicted" .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" ;
-    ns1:name "Facebook" .
 

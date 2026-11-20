@@ -114,13 +114,13 @@ Phase 3 changes extraction and adds provenance; the case graph model is unchange
 ## Data & Ethics
 
 - Records come from public, redacted sources (ICAC reports, NCMEC materials, DOJ CEOS and State AG press releases, federal PACER filings). No PII was processed.
-- UMass Amherst HRPO Determination **#7668** — no private or identifiable information under 45 CFR 46.102(f)(1), (2).
+- UMass Amherst HRPO Determination **#7668** — no private or identifiable information under 45 CFR 46.102(e)(1), (4).
 
 ## Citation
 
 > Ramachandran, M. (2026). *CaseLinker: An Open-Source System for Cross-Case Analysis of Internet Crimes Against Children Reports* (Version 3.0) [Computer software]. https://github.com/mrinaalr/CaseLinker
 
-Phase 3 DOI: **[Zenodo DOI]**.
+Phase 3 DOI: [10.5281/zenodo.23461974](https://doi.org/10.5281/zenodo.23461974).
 
 ## Links
 

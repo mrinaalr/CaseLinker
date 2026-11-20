@@ -1,35 +1,43 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_004> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_004> a ns5:CACInvestigation,
+        ns2:EnduringEntity ;
     rdfs:label "Case svicac_2023_004" ;
-    dcterms:created "2026-11-11T17:49:49.463704"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T20:17:48.911860"^^xsd:dateTime ;
     dcterms:date "2023-07-07"^^xsd:date ;
     dcterms:identifier "svicac_2023_004" ;
-    dcterms:modified "2026-11-11T17:49:49.463704"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T20:17:48.911860"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/svicac_2023_004/provenance> ;
-    dcterms:source <https://goldrushcam.com/sierrasuntimes/index.php/news/california/47532-internet-crimes-against-children-crack-down-results-in-arrests-of-two-placer-county-men-for-child-pornography-charges-with-video>,
-        "SVICAC" ;
+    dcterms:publisher "SVICAC" ;
+    dcterms:source <https://goldrushcam.com/sierrasuntimes/index.php/news/california/47532-internet-crimes-against-children-crack-down-results-in-arrests-of-two-placer-county-men-for-child-pornography-charges-with-video> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/colfax-city-ca>,
         <https://w3id.org/caselinker/resource/location/placer-county-ca>,
         <https://w3id.org/caselinker/resource/location/roseville-city-ca> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/svicac_2023_004/phase/arrested> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/svicac_2023_004/phase/arrested> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/svicac_2023_004/event/distribution>,
+    ns5:currentPhase <https://w3id.org/caselinker/resource/case/svicac_2023_004/phase/arrested> ;
+    ns5:hasPhase <https://w3id.org/caselinker/resource/case/svicac_2023_004/phase/arrested> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/svicac_2023_004/event/distribution>,
         <https://w3id.org/caselinker/resource/case/svicac_2023_004/event/online-only>,
         <https://w3id.org/caselinker/resource/case/svicac_2023_004/event/possession>,
         <https://w3id.org/caselinker/resource/case/svicac_2023_004/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/placer-county-sheriff-s-office-ca> ;
     ns1:object <https://w3id.org/caselinker/resource/case/svicac_2023_004/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/svicac_2023_004/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/svicac_2023_004/narrative> ;
+    ns2:hasConfidence 0.5154 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_004/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -44,14 +52,14 @@
     ns1:source <https://w3id.org/caselinker/resource/case/svicac_2023_004/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/svicac_2023_004/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+        ns6:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/placer-county-sheriff-s-office-ca> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/placer-county-sheriff-s-office-ca> a ns2:OrganizationLikeEntity,
+        ns6:LocalAgency ;
     rdfs:label "Placer County Sheriff's Office" ;
     dcterms:identifier "ori:CA0310000" ;
     ns1:name "Placer County Sheriff's Office" .
@@ -64,20 +72,20 @@
         ns3:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_004/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+<https://w3id.org/caselinker/resource/case/svicac_2023_004/event/distribution> a ns2:Event,
         ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_004/event/online-only> a ns2:ChildSexualAbuseEvent,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_004/event/online-only> a ns5:ChildSexualAbuseEvent,
+        ns2:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_004/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_004/event/possession> a ns5:CSAMIncident,
+        ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_004/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
+<https://w3id.org/caselinker/resource/case/svicac_2023_004/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
         ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
@@ -87,28 +95,28 @@
 <https://w3id.org/caselinker/resource/case/svicac_2023_004/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/colfax-city-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/colfax-city-ca> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Colfax city" ;
     dcterms:identifier "fips:0614498" ;
     skos:altLabel "Colfax" ;
     ns1:name "Colfax city" .
 
-<https://w3id.org/caselinker/resource/location/placer-county-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/placer-county-ca> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Placer County" ;
     dcterms:identifier "fips:06061" ;
     ns1:name "Placer County" .
 
-<https://w3id.org/caselinker/resource/location/roseville-city-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/roseville-city-ca> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Roseville city" ;
     dcterms:identifier "fips:0662938" ;
     skos:altLabel "Roseville" ;
     ns1:name "Roseville city" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_004/phase/arrested> a ns2:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_004/phase/arrested> a ns5:InitialPhase,
+        ns2:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

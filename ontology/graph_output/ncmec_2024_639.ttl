@@ -1,31 +1,109 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_639> a <https://cacontology.projectvic.org#CACInvestigation>,
-        ns1:EnduringEntity ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2024_639" ;
-    dcterms:created "2026-11-10T21:27:03.479115"^^xsd:dateTime ;
-    dcterms:date "2024-01"^^xsd:gYearMonth ;
+    dcterms:created "2026-11-19T18:26:10.739779"^^xsd:dateTime ;
+    dcterms:date "2024-11-27"^^xsd:date ;
     dcterms:identifier "ncmec_2024_639" ;
-    dcterms:modified "2026-11-12T00:41:07.718036"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:26:10.739779"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_639/provenance> ;
-    dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata>,
-        "NCMEC" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_639/agency/nashua-police-department> .
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.boston25news.com/news/local/manchester-man-charged-with-possessing-child-sex-abuse-images/Z36JDNI5JRGHNMZ7K4XNMFJIYA/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/manchester-city-nh> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_639/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_639/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_639/event/possession> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_639/agency/manchester-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_639/agency/merrimack-county-sheriffs-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_639/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_639/assessment/semantic/evidence-seizure> a ns1:AssessmentResult ;
-    rdfs:label "semantic similarity · evidence_seizure" ;
-    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_639/narrative> ;
-    ns1:hasConfidence 0.5266 ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_639/narrative> ;
+    ns3:hasConfidence 0.4866 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_639/agency/nashua-police-department> a ns1:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Nashua Police Department" ;
-    ns3:name "Nashua Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_639/narrative> ;
+    ns3:hasConfidence 0.5794 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_639/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 24.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_639/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_639/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/agency/manchester-police-department> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Manchester Police Department" ;
+    ns4:name "Manchester Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/agency/merrimack-county-sheriffs-department> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Merrimack County Sheriff's Department" ;
+    ns4:name "Merrimack County Sheriff's Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_639/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/manchester-city-nh> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Manchester city" ;
+    dcterms:identifier "fips:3345140" ;
+    skos:altLabel "Manchester" ;
+    ns4:name "Manchester city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/phase/charged> a ns2:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns4:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_639/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

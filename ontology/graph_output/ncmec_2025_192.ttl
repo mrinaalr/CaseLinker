@@ -1,38 +1,56 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2025_192" ;
-    dcterms:created "2026-11-10T16:33:06.415378"^^xsd:dateTime ;
-    dcterms:date "2025-03-12"^^xsd:date ;
+    dcterms:created "2026-11-19T18:35:03.637280"^^xsd:dateTime ;
+    dcterms:date "2025-01-30"^^xsd:date ;
     dcterms:identifier "ncmec_2025_192" ;
-    dcterms:modified "2026-11-12T01:42:03.098099"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:35:03.637280"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_192/provenance> ;
-    dcterms:source <https://weartv.com/news/local/sex-offender-arrested-in-escambia-county-on-child-porn-possession-charges>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_192/location/escambia-county-jail>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_192/location/leon-county>,
-        <https://w3id.org/caselinker/resource/location/escambia-county-fl>,
-        <https://w3id.org/caselinker/resource/location/florida-fl>,
-        <https://w3id.org/caselinker/resource/location/florida-fl-12> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_192/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_192/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.chronicleonline.com/news/local/81-year-old-homosassa-man-arrested-for-possession-of-child-porn/article_9e1e8fec-7a7b-5fcd-a1bb-b2d3eb55dada.html> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/homosassa-cdp-fl> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_192/phase/arrested> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_192/phase/arrested> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_192/legal-proceeding> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/florida-department-of-law-enforcement>,
+        <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_192/agency/citrus-county-sheriffs-office> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2025_192/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/assessment/semantic/evidence-seizure> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · evidence_seizure" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_192/narrative> ;
+    ns3:hasConfidence 0.4562 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_192/narrative> ;
+    ns3:hasConfidence 0.5319 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 49.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 81.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_192/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -41,58 +59,61 @@
     ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1> ;
     ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2025_192/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child porn" .
+<https://w3id.org/caselinker/resource/agency/florida-department-of-law-enforcement> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Florida Department of Law Enforcement" ;
+    ns4:name "Florida Department of Law Enforcement" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/agency/citrus-county-sheriffs-office> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Citrus County Sheriff's Office" ;
+    ns4:name "Citrus County Sheriff's Office" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/distribution> a ns3:Event,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held in Escambia County Jail" ;
-    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_192/charge/1> .
+    rdfs:comment "Pretrial detention facility (not a sentence): held at the Citrus County Detention Facility" ;
+    ns1:chargeCount "15"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_192/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/location/escambia-county-jail> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Escambia County Jail" ;
-    ns4:name "Escambia County Jail" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/location/leon-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Leon County" ;
-    ns4:name "Leon County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/possession> .
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/escambia-county-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/homosassa-cdp-fl> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Escambia County" ;
-    dcterms:identifier "fips:12033" ;
-    ns4:name "Escambia County" .
+    rdfs:label "Homosassa CDP" ;
+    dcterms:identifier "fips:1232375" ;
+    skos:altLabel "Homosassa" ;
+    ns4:name "Homosassa CDP" .
 
-<https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Florida" ;
-    dcterms:identifier "fips:12" ;
-    skos:altLabel "Fla." ;
-    ns4:name "Florida" .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns7:HotlineOrganization,
+        ns6:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/location/florida-fl-12> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Florida" ;
-    dcterms:identifier "fips:12" ;
-    ns4:name "Florida" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_192/phase/arrested> a ns1:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_192/phase/arrested> a ns2:InitialPhase,
+        ns3:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_192/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

@@ -1,63 +1,75 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321> a ns4:CACInvestigation,
-        ns3:EnduringEntity ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_321" ;
-    dcterms:created "2026-11-10T21:25:13.679802"^^xsd:dateTime ;
-    dcterms:date "2024-05"^^xsd:gYearMonth ;
+    dcterms:created "2026-11-19T18:24:16.301689"^^xsd:dateTime ;
+    dcterms:date "2024-07-03"^^xsd:date ;
     dcterms:identifier "ncmec_2024_321" ;
-    dcterms:modified "2026-11-12T00:26:15.844454"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:24:16.301689"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_321/provenance> ;
-    dcterms:source <https://www.fox32chicago.com/news/east-dundee-man-sentenced-child-pornography>,
-        "NCMEC" ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/online-only>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://wgntv.com/news/north-suburbs/man-arrested-for-child-pornography-in-zion/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/illinois-il> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_321/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_321/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/hands-on>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_321/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
-    rdfs:label "semantic similarity · exploitive_positions" ;
-    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_321/narrative> ;
-    ns3:hasConfidence 0.5047 ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 37.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_321/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_321/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Illinois High Tech Crimes Bureau" ;
-    ns2:name "Illinois High Tech Crimes Bureau" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321/charge/1> a ns1:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/hands-on> a ns3:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns1:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/possession> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_321/charge/1> .
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_321/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321/role/offender/1> a ns1:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/online-only> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_321/event/online-only> a ns4:ChildSexualAbuseEvent,
-        ns3:Event ;
-    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+<https://w3id.org/caselinker/resource/location/illinois-il> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Illinois" ;
+    dcterms:identifier "fips:17" ;
+    skos:altLabel "Ill." ;
+    ns1:name "Illinois" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_321/phase/charged> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_321/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

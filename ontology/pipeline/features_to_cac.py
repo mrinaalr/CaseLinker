@@ -145,6 +145,7 @@ CAC_PRODUCTION = Namespace("https://cacontology.projectvic.org/production#")
 CAC_TASKFORCE = Namespace("https://cacontology.projectvic.org/taskforce#")
 CAC_NCMEC = Namespace("https://cacontology.projectvic.org/us/ncmec#")
 CAC_MULTI = Namespace("https://cacontology.projectvic.org/multi-jurisdiction#")
+CAC_LEGAL_HARM = Namespace("https://cacontology.projectvic.org/legal-harmonization#")
 CAC_AI = Namespace("https://cacontology.projectvic.org/ai-csam#")
 CAC_USA_FEDERAL = Namespace("https://cacontology.projectvic.org/usa-federal-law#")
 CAC_UNDERCOVER = Namespace("https://cacontology.projectvic.org/undercover#")
@@ -170,6 +171,20 @@ GRAPH_NLP = BASE["graphs/nlp"]
 # ---------------------------------------------------------------------------
 # Slug helper
 # ---------------------------------------------------------------------------
+
+def _ascii_slug(text: str) -> str:
+    """``_slug`` over ASCII: "18 U.S.C. § 2252A" → "18-usc-2252a", "Uiraçu" → "uiracu"."""
+    import unicodedata
+    return _slug(unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii"))
+
+
+def usao_slug(slug: str, districts: List[str]) -> str:
+    """"U.S. Attorney's Office" is one office per federal district: the district's
+    office when the release names exactly one district, else the generic node."""
+    if slug == "usao" and len(districts) == 1:
+        return f"usao-{_ascii_slug(districts[0])}"
+    return slug
+
 
 def _slug(text: str) -> str:
     """Convert a string to a URL-safe slug."""
@@ -886,6 +901,27 @@ _FEDERAL_PATTERNS: List[Tuple[re.Pattern, str]] = [
 
 _ICAC_PATTERN = re.compile(r"ICAC\b|Internet Crimes Against Children", re.I)
 
+# Not agencies: a fund ("Federal Crime Victims Fund" in restitution text) or a court.
+_NOT_AN_AGENCY_RE = re.compile(r"\bFund\b|\bCourts?\b")
+_US_FEDERAL_LABEL_RE = re.compile(r"Department of Homeland Security")
+
+# Publishers outside the U.S.: an agency they name is non-U.S. unless it is a
+# U.S. federal agency (an HSI attaché, the FBI).
+_NON_US_SOURCES = frozenset({
+    "NZ DIA", "BRAZIL PF", "SCOTLAND POLICE", "EUROPOL", "ALERT ICE", "NBI",
+    "AFP", "NCA", "QPS", "GARDA",
+})
+
+# Non-U.S. forces named in any source. Case-sensitive: "ALERT" is Alberta's
+# Law Enforcement Response Teams, whose ICE unit is Internet Child Exploitation.
+_NON_US_AGENCY_RE = re.compile(
+    r"\bRCMP\b|Royal Canadian Mount|\bALERT\b|Alberta Law Enforcement"
+    r"|\b(?:Calgary|Edmonton|Vancouver|Toronto|Winnipeg|Saskatchewan|Saskatoon)\b"
+    r"|Ottawa Police|Ontario Provincial|Ontario Police|Federal Police|Police Scotland"
+    r"|\bScotland\b(?! County)|National Crime Agency|Australia|Queensland|Task ?[Ff]orce Argos"
+    r"|New Zealand|Philippin|\bNBI\b|Europol|Interpol|Garda|National Police"
+)
+
 # ---------------------------------------------------------------------------
 # TECHNOLOGY_SIGNAL_MAP
 # ---------------------------------------------------------------------------
@@ -1013,6 +1049,7 @@ class CaseToCAC:
         platform_uris += self.map_technology(det_g, case, inv_uri, warnings)
         self.map_investigation_type(det_g, case, inv_uri, warnings)
         self.map_cybertip(det_g, case, inv_uri, agency_uris, warnings)
+        self.map_legal_context(det_g, case, inv_uri, agency_uris)
         self._link_to_single_event(
             det_g, case, event_uris, victim_uris, offender_uris, platform_uris
         )
@@ -1866,9 +1903,12 @@ class CaseToCAC:
         uris: List[URIRef] = []
         seen: set = set()
         used_slugs: set = set()
+        districts = list((_case_feature(case, "legal_context") or {}).get("federal_districts") or [])
 
         for agency_name in agencies_raw:
             if not agency_name or agency_name in seen:
+                continue
+            if _NOT_AN_AGENCY_RE.search(str(agency_name)):
                 continue
             seen.add(agency_name)
 
@@ -1884,6 +1924,20 @@ class CaseToCAC:
             gnd = ground_by_mention.get(str(agency_name).strip()) or {}
             status = (gnd.get("status") or "").strip() or "ungrounded"
             display = (gnd.get("agency_name") or agency_name).strip()
+            # A mention grounded in the federal table names a federal agency,
+            # whatever the mention's own wording (e.g. "Justice Department").
+            # Non-U.S. forces are InternationalAgency, though their names may read
+            # like U.S. ones ("Federal Police", "ALERT's ICE", "NBI").
+            if _NON_US_AGENCY_RE.search(str(agency_name)):
+                class_uri = CAC_MULTI.InternationalAgency
+            elif _US_FEDERAL_LABEL_RE.search(str(agency_name)):
+                class_uri = CAC_MULTI.FederalAgency
+            elif status == "grounded" and gnd.get("hint_source") == "federal":
+                class_uri = CAC_MULTI.FederalAgency
+            elif gnd.get("hint_source") == "international":
+                class_uri = CAC_MULTI.InternationalAgency
+            elif case.get("source") in _NON_US_SOURCES and class_uri != CAC_MULTI.FederalAgency:
+                class_uri = CAC_MULTI.InternationalAgency
             case_scope = None
             if status == "grounded" and gnd.get("slug"):
                 slug = str(gnd["slug"]).strip()
@@ -1903,6 +1957,11 @@ class CaseToCAC:
                     slug = f"{slug}-{str(gnd.get('state_hint')).strip().lower()}-unverified"
                 elif scope == "case":
                     case_scope = str(case_id)
+            # "U.S. Attorney's Office" is one office per federal district. When the
+            # release names exactly one district, the mention is that district's office.
+            if usao_slug(slug, districts) != slug:
+                slug = usao_slug(slug, districts)
+                display = f"U.S. Attorney's Office, {districts[0]}"
             used_slugs.add(slug)
             ag_uri = self._get_or_create_agency(
                 g,
@@ -2603,6 +2662,72 @@ class CaseToCAC:
                     f"Reported by an unnamed {str(reporter['category']).replace('_', ' ')}"
                 )))
         return tip_uri
+
+    def map_legal_context(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        agency_uris: List[URIRef],
+    ) -> None:
+        """Statutes, federal districts and named operations as nodes cases share.
+
+        A cited U.S. Code section is a ``Statute`` the proceeding ``dcterms:references``;
+        a prosecuting district is a ``FederalJurisdiction`` it falls under
+        (``dcterms:coverage``), and a named operation the investigation was part of
+        (``dcterms:isPartOf``) is a ``NamedMultiJurisdictionalOperation``. A district's
+        U.S. Attorney's Office ``operatesInJurisdiction`` that district. Operations a
+        non-U.S. publisher names are scoped to it: "Operation Safeguard" in Brazil is
+        not New Jersey's.
+        """
+        lc = _case_feature(case, "legal_context") or {}
+        if not isinstance(lc, dict) or not any(lc.values()):
+            return
+        case_id = case.get("id", "unknown")
+        proceeding = BASE[f"case/{case_id}/legal-proceeding"]
+        subject = proceeding if (proceeding, RDF.type, CAC_LEGAL.LegalProceeding) in g else inv_uri
+        nation = BASE["jurisdiction/united-states"]
+
+        def _nation() -> None:
+            g.add((nation, RDF.type, CAC_MULTI.FederalJurisdiction))
+            g.add((nation, RDFS.label, Literal("United States")))
+            g.add((nation, UCO_CORE.name, Literal("United States")))
+
+        for cite in lc.get("statutes") or []:
+            uri = BASE[f"statute/{_ascii_slug(cite)}"]
+            g.add((uri, RDF.type, CAC_LEGAL_HARM.Statute))
+            g.add((uri, RDFS.label, Literal(cite)))
+            g.add((uri, UCO_CORE.name, Literal(cite)))
+            g.add((subject, DCTERMS.references, uri))
+            _nation()
+            g.add((nation, CAC_LEGAL_HARM.hasStatute, uri))
+            self._evidence("legal_context", "statute", cite, uri)
+
+        districts = list(lc.get("federal_districts") or [])
+        for name in districts:
+            uri = BASE[f"jurisdiction/{_ascii_slug(name)}"]
+            g.add((uri, RDF.type, CAC_MULTI.FederalJurisdiction))
+            g.add((uri, RDFS.label, Literal(name)))
+            g.add((uri, UCO_CORE.name, Literal(name)))
+            _nation()
+            g.add((uri, CAC_LEGAL_HARM.parentJurisdiction, nation))
+            g.add((subject, DCTERMS.coverage, uri))
+            self._evidence("legal_context", "federal_district", name, uri)
+        if len(districts) == 1:
+            office = BASE[f"agency/usao-{_ascii_slug(districts[0])}"]
+            if office in agency_uris:
+                g.add((office, CAC_MULTI.operatesInJurisdiction,
+                       BASE[f"jurisdiction/{_ascii_slug(districts[0])}"]))
+
+        scope = _ascii_slug(str(case.get("source") or "")) if case.get("source") in _NON_US_SOURCES else ""
+        for name in lc.get("operations") or []:
+            label = f"Operation {name}"
+            uri = BASE[f"operation/{_ascii_slug(name)}" + (f"-{scope}" if scope else "")]
+            g.add((uri, RDF.type, CAC_MULTI.NamedMultiJurisdictionalOperation))
+            g.add((uri, RDFS.label, Literal(label)))
+            g.add((uri, UCO_CORE.name, Literal(label)))
+            g.add((inv_uri, DCTERMS.isPartOf, uri))
+            self._evidence("legal_context", "named_operation", name, uri)
 
     def _get_or_create_esp(self, g: Graph, name: str) -> URIRef:
         """A shared ``ElectronicServiceProvider`` (the company that files CyberTips).

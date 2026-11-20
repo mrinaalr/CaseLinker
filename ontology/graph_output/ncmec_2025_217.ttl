@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,22 +12,23 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_217> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_217" ;
-    dcterms:created "2026-11-10T16:33:16.781067"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:35:12.056777"^^xsd:dateTime ;
     dcterms:date "2025-01-24"^^xsd:date ;
     dcterms:identifier "ncmec_2025_217" ;
-    dcterms:modified "2026-11-12T01:43:46.704348"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:35:12.056777"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_217/provenance> ;
-    dcterms:source <https://www.observerlocalnews.com/news/2025/jan/24/ormond-beach-man-faces-felony-charges-for-child-pornography/>,
-        "NCMEC" ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.observerlocalnews.com/news/2025/jan/24/ormond-beach-man-faces-felony-charges-for-child-pornography/> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/ormond-beach-city> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_217/phase/booked> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_217/phase/booked> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_217/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_217/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_217/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_217/agency/volusia-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_217/person/offender/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_217/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_217/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_217/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -41,39 +43,38 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_217/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_217/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_217/agency/volusia-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Volusia County Sheriff's Office" ;
     ns1:name "Volusia County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/2> a ns2:CSAM_Distribution,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/2> a ns5:CSAM_Distribution,
+        ns5:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_217/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:name "observe" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_217/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_217/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remains in custody" ;
-    ns2:chargeCount "53"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/1>,
+    ns5:chargeCount "53"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_217/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_217/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_217/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_217/event/possession> .
 
@@ -83,6 +84,13 @@
     dcterms:identifier "fips:1253150" ;
     skos:altLabel "Ormond Beach" ;
     ns1:name "Ormond Beach city" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns6:HotlineOrganization,
+        ns2:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_217/event/possession> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;

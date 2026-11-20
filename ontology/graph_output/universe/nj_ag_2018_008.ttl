@@ -2,8 +2,8 @@
 @prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -12,13 +12,13 @@
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case nj_ag_2018_008" ;
-    dcterms:created "2026-11-11T15:55:19.050809"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T19:55:34.235782"^^xsd:dateTime ;
     dcterms:date "2018-05-22"^^xsd:date ;
     dcterms:identifier "nj_ag_2018_008" ;
-    dcterms:modified "2026-11-11T15:55:19.050809"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T19:55:34.235782"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/provenance> ;
-    dcterms:source <https://www.njoag.gov/man-arrested-for-allegedly-attempting-to-arrange-sexual-encounter-with-boy-14-who-in-reality-was-undercover-state-police-detective>,
-        "NJ AG" ;
+    dcterms:publisher "NJ AG" ;
+    dcterms:source <https://www.njoag.gov/man-arrested-for-allegedly-attempting-to-arrange-sexual-encounter-with-boy-14-who-in-reality-was-undercover-state-police-detective> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/highland-park-borough-nj>,
         <https://w3id.org/caselinker/resource/location/middlesex-county-nj>,
         <https://w3id.org/caselinker/resource/location/new-jersey-nj>,
@@ -35,7 +35,7 @@
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office>,
-        <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> ;
+        <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-nj> ;
     ns2:object <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/cybertip>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/person/offender/1>,
         <https://w3id.org/caselinker/resource/platform/chat>,
@@ -60,7 +60,7 @@
     ns2:name "Division of Criminal Justice Financial & Computer Crimes Bureau" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+        ns1:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns2:name "ICAC Task Force" .
@@ -70,37 +70,38 @@
     rdfs:label "New Jersey Attorney General's Office" ;
     ns2:name "New Jersey Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+<https://w3id.org/caselinker/resource/agency/new-jersey-state-police-nj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns1:StateAgency ;
-    rdfs:label "New Jersey State Police Department" ;
-    ns2:name "New Jersey State Police Department" .
+    rdfs:label "New Jersey State Police" ;
+    skos:altLabel "New Jersey State Police Department" ;
+    ns2:name "New Jersey State Police" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2018_008/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2018_008/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in the Middlesex County Jail" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/charge/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2018_008/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2018_008/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/event/csam> .
 
@@ -145,7 +146,7 @@
     ns2:name "Trenton city" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:HotlineOrganization,
+        ns5:HotlineOrganization,
         ns1:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;

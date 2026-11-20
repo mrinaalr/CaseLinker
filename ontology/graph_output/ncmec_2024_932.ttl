@@ -3,7 +3,8 @@
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,27 +12,33 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_932" ;
-    dcterms:created "2026-11-10T21:28:42.784578"^^xsd:dateTime ;
-    dcterms:date "2024-01"^^xsd:gYearMonth ;
+    dcterms:created "2026-11-19T18:27:50.654634"^^xsd:dateTime ;
+    dcterms:date "2024-02-08"^^xsd:date ;
     dcterms:identifier "ncmec_2024_932" ;
-    dcterms:modified "2026-11-12T00:55:01.847600"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:27:50.654634"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_932/provenance> ;
-    dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata>,
-        "NCMEC" ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.centraloregondaily.com/archives/central-oregon-daily/bend-man-arrested-for-uploading-child-porn-volunteered-with-bhs-swim-team/article_f3ce8f7e-b2a3-5bf7-a145-18084c655bf5.html?=/&subcategory=604%7CHappy+Hour> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/sunriver-cdp> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/arrested> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/booked> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/oregon-department-of-human-services>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/oregon-department-of-human-services>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/bend-police-department>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/agency/sunriver-police-department> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 20.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,6 +53,12 @@
     ns2:kindOfRelationship "Has_Role" ;
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/victim/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/oregon-department-of-human-services> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:LocalAgency ;
@@ -62,8 +75,12 @@
     rdfs:label "Sunriver Police Department" ;
     ns2:name "Sunriver Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/charge/1> a ns6:CriminalCharge ;
+    rdfs:label "first-degree encouraging child sex abuse and one count of criminal possession of a" ;
+    dcterms:subject ns1:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/charge/2> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/csam> a ns1:CSAMIncident,
@@ -71,7 +88,7 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -86,14 +103,12 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_932/charge/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/operation> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
-    rdfs:label "Task Force Operation · operation" .
+    rdfs:comment "Pretrial detention facility (not a sentence): Deschutes County Jail" ;
+    ns6:chargeCount "29"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_932/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_932/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/relationship/coach> a ns3:Coach,
         ns3:CustodialRelationship ;
@@ -112,19 +127,19 @@
     skos:altLabel "Sunriver" ;
     ns2:name "Sunriver CDP" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/arrested> a ns1:InitialPhase,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/phase/booked> a ns1:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
+    rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/victim/1> a ns1:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_932/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

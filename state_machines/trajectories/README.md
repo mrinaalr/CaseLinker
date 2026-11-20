@@ -47,7 +47,7 @@ $O_{i}$ is level C only. On `pacer-v1` the stated-means rule ties no feature to 
 
 Each derived step stores that split in `claims`: `stated_platform_means`, `candidate_capabilities` (level B), `available_on_platform` (level A, excluding B), `documented_feature_use` ($O_{i}$), and `how_used` (always null). `candidate_affordances` on the same step is a coder annotation. It is not a registry candidate and it is not copied into `claims`. The derivation record names the act policy, `intersection-1.0`: an act is in the bundle only when both coders cited the same sentence, action, and actor. The acts in `pacer-v1` were not recoded. `capability_registry_loaded` is false on those files, so their `candidate_capabilities` are empty. That is the registry being absent, not a finding that the platforms offered nothing.
 
-The thing you analyze is the frame beside that column. [`digest.py`](digest.py) reads the committed release and the registry and writes three files. It does not modify the release and it does not emit graphs.
+The thing you analyze is the frame beside that column. [`digest.py`](digest.py) reads the committed dataset and the registry and writes three files. It does not modify the dataset and it does not emit graphs.
 
 ```bash
 python -m state_machines.trajectories.digest pacer-v1 --registry <capability_sources> --out <dir>
@@ -78,7 +78,7 @@ In `pacer-v1` the stated-means rule ties no feature to an agreed act (one known 
 |---|---|
 | `derive.derive(bundle, threshold)` | Per track: chains with steps (action, $O_{i}$, levels A and B, outcome, interruptions), unordered pairs, possible-identity pairs, time conflicts, excluded events |
 | `derive.derived_json(...)` | The same, as deterministic JSON |
-| `afh.release_analysis(threshold, case_id)` | $\mathrm{Aff}(c)$, $H(c)$, $\psi$, coverage identity and per-track chain counts for a release (`/api/lifecycle/analysis`) |
+| `afh.release_analysis(threshold, case_id)` | $\mathrm{Aff}(c)$, $H(c)$, $\psi$, coverage identity and per-track chain counts for a dataset (`/api/lifecycle/analysis`) |
 | `payload.build_payload()` | The `/lifecycle` payload: events with roles, standing, dates, affordances, harms and page provenance; relations; per-track chains at both thresholds (`/api/lifecycle/cases`) |
 | `digest.release_digest(root, registry)` | The analysis frame: chains, stated platforms, registry candidates, documented feature use, researcher notes |
 | `claims.claims(step)` | The same step split into stated platform, candidates, and documented use. Candidates are not copied into $O_{i}$ |

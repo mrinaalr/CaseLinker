@@ -348,6 +348,182 @@ def _perp_attributed(window: str, frame: str) -> bool:
     return False
 
 
+# --- Speaker check for the "said" frames -------------------------------------
+# "<X> said he ..." is an admission only when X is the charged person. The frame
+# itself is compiled case-insensitively, so its name slot matches any word
+# ("Authorities", "after", "judge"); the speaker is re-read here from the text.
+
+_SAID_FRAMES = frozenset({"said_paraphrase", "he_said_paraphrase"})
+
+_NAME_TOK = r"(?-i:[A-Z][a-zA-Z\u2019'\-]*[a-z])"
+_TITLE_WORDS = (
+    r"(?-i:Sheriff|Chief|Detective|Det\.|Officer|Agent|Attorney|Judge|Justice|Lt\.|Lieutenant|"
+    r"Sgt\.|Sergeant|Deputy|Investigator|Inspector|Trooper|Capt\.|Captain|Cpl\.|Corporal|Prosecutor|"
+    r"Director|Commissioner|Mayor|Superintendent|Principal|Councilman|Councilwoman|Sen\.|Rep\.|Gov\.|"
+    r"Lt\.|Major|Colonel|Constable|Marshal|Commander|Spokesperson|Spokesman|Spokeswoman)"
+)
+_CHARGE_VERB = (
+    r"(?:arrested|charged|indicted|sentenced|convicted|booked|extradited|jailed|detained|"
+    r"accused|arraigned|pleaded|pled|pleads|enters|entered|faces|facing|faced|admitted|admits|"
+    r"confessed|allegedly|reportedly|uploaded|distributed|possessed|downloaded|produced|enticed|coerced|told\s+(?:investigators|police|detectives|agents|officers|deputies|"
+    r"authorities|troopers))"
+)
+_CHARGED_RES: Tuple[re.Pattern, ...] = (
+    re.compile(
+        rf"(?<![\w.])({_NAME_TOK})(?:,?\s+(?:Jr|Sr|II|III|IV)\.?)?"
+        rf"(?:,\s*(?:a\s+|age\s+)?\d{{1,2}}(?:-year-old)?,?)?(?:\s+of\s+{_NAME_TOK}(?:\s+{_NAME_TOK})?,?)?\s+"
+        rf"(?:(?:was|is|has\s+been|had\s+been|were|also|later|then|previously|further|initially|"
+        rf"subsequently|ultimately|now)\s+){{0,2}}{_CHARGE_VERB}\b",
+        re.I,
+    ),
+    re.compile(
+        rf"(?<![\w.])({_NAME_TOK})(?:,?\s+(?:Jr|Sr|II|III|IV)\.?)?,\s*(?:age\s+)?\d{{1,2}}(?:,|\s+of\b)", re.I
+    ),
+    re.compile(
+        rf"(?<![\w.])({_NAME_TOK})(?:\u2019s|'s)\s+(?:\w+\s+)?(?:home|residence|house|apartment|phone|iPhone|"
+        rf"computer|laptop|devices?|dorm|arrest|bond|bail|attorney|lawyer|defense|sentencing|plea|indictment)\b"
+    ),
+    re.compile(rf"\b\d{{1,2}}-year-old\s+(?:{_NAME_TOK}\.?\s+){{1,3}}?({_NAME_TOK})\b(?!\s+(?:{_NAME_TOK}))"),
+    re.compile(
+        rf"\b(?:arrested|charged|indicted|sentenced|convicted|defendant|suspect|accused|booked|"
+        rf"identified\s+as)\s+(?:{_NAME_TOK}\.?\s+){{0,3}}({_NAME_TOK})\b",
+        re.I,
+    ),
+)
+_TITLED_NAME_RE = re.compile(rf"{_TITLE_WORDS}\s+(?:{_NAME_TOK}\.?\s+){{0,2}}({_NAME_TOK})\b")
+_PERP_ROLE_WORDS = frozenset({"suspect", "defendant", "offender", "perpetrator", "accused"})
+_SAID_ADVERBS = frozenset({
+    "also", "later", "then", "allegedly", "reportedly", "further", "previously", "initially",
+    "repeatedly", "once", "first", "again", "eventually", "subsequently", "had", "has", "reportedly,",
+})
+_LINK_WORDS = frozenset({"and", "but", "who", "where", "he", "she", "him", "her"})
+_HEARSAY_ADVERBS = frozenset({"allegedly", "reportedly"})
+_SENT_END_RE = re.compile(r"[.!?][\"\u201d\u2019]?\s")
+_SPEAKER_POS_RE = re.compile(
+    rf"(?:\b({_NAME_TOK})|\b(police|authorities|officials?|investigators?|detectives?|deputies|officers?|"
+    rf"agents?|prosecutors?|troopers?|chief|sheriff|judge|attorney|lawyer|spokes\w+|mayor|she|her|"
+    rf"woman|mother|wife|daughter|girl|victim|witness(?:es)?|neighbou?rs?|friends?|relatives?|family))"
+    rf"\s+(?:also\s+|later\s+|then\s+)?(?:said|says|stated|told|wrote|testified|reported)\b",
+)
+
+
+def _charged_surnames(text: str) -> Set[str]:
+    """Surnames the text puts next to an arrest, charge, plea, sentence or age apposition."""
+    out: Set[str] = set()
+    for pat in _CHARGED_RES:
+        for m in pat.finditer(text):
+            tok = m.group(1).replace("\u2019s", "").replace("'s", "")
+            if len(tok) > 2:
+                out.add(tok)
+    return out
+
+
+def _antecedent_is_perp(text: str, pos: int, charged: Set[str], reach: int = 320) -> bool:
+    """Is the nearest preceding person the charged one (not an official, witness or victim)?"""
+    window = text[max(0, pos - reach) : pos]
+    refs: List[Tuple[int, bool]] = []
+    for name in charged:
+        for m in re.finditer(rf"(?<![\w.]){re.escape(name)}\b", window):
+            refs.append((m.start(), True))
+    for m in re.finditer(
+        r"\b(?:suspect|defendant|offender|perpetrator|accused|interviewed,?\s+(?:he|she)|(?:he|she)\s+(?:also\s+|later\s+)?"
+        r"(?:told|admitted|confessed|stated|denied|claimed))\b",
+        window,
+        re.I,
+    ):
+        refs.append((m.start(), True))
+    for m in _SPEAKER_POS_RE.finditer(window):
+        tok = m.group(1) or m.group(2) or ""
+        if tok in charged or tok.lower() in ("he", "him"):
+            continue
+        refs.append((m.start(), False))
+    for m in _TITLED_NAME_RE.finditer(window):
+        refs.append((m.start(), False))
+    if not refs:
+        return reach < 1500 and _antecedent_is_perp(text, pos, charged, 1500)
+    return max(refs)[1]
+
+
+_LEAD_WORDS = frozenset({
+    "During", "In", "After", "When", "While", "According", "Upon", "On", "At", "Once", "Following",
+    "Before", "Later", "However", "Then", "Also", "Additionally", "Further", "Furthermore", "Since",
+})
+
+
+def _mostly_male(text: str) -> bool:
+    male = len(re.findall(r"\b(?:he|his|him)\b", text, re.I))
+    female = len(re.findall(r"\b(?:she|her|hers)\b", text, re.I))
+    return male > 2 * female
+
+
+def _clause_subject_is_perp(tokens: List[str], text: str, pos: int, charged: Set[str]) -> bool:
+    """Subject of "<subject> ... and said he": the last name or pronoun in the clause that a verb follows."""
+    subject = None
+    for i, tok in enumerate(tokens[:-1]):
+        t = tok.strip(",;:\u201c\"(")
+        nxt = tokens[i + 1].strip(",;:")
+        if t.endswith(("\u2019s", "'s")) or not nxt or not nxt[0].islower() or nxt in _NOT_VERBS:
+            continue
+        if t.lower() in ("he", "she") or t.lower() in _PERP_ROLE_WORDS or (
+            t not in _LEAD_WORDS and re.fullmatch(_NAME_TOK, t)
+        ):
+            subject = t
+    if subject is None:
+        return False
+    if subject in charged or subject.lower() in _PERP_ROLE_WORDS:
+        return True
+    if subject.lower() in ("he", "she"):
+        return _antecedent_is_perp(text, pos, charged)
+    return False  # another named speaker, "His biography describes", "McConnell argued"
+
+
+_NOT_VERBS = frozenset({"of", "to", "and", "or", "the", "a", "an", "in", "on", "at", "for", "with", "by", "from"})
+
+
+def _said_speaker_ok(text: str, said_pos: int, inner_pronoun: str, charged: Set[str]) -> bool:
+    """True when the speaker of ``... said he|she`` at ``said_pos`` is the charged person."""
+    sent_start = 0
+    for m in _SENT_END_RE.finditer(text, max(0, said_pos - 400), said_pos):
+        sent_start = m.end()
+    before = text[sent_start:said_pos].replace("\u201d", " ").replace('"', " ").split()
+    hearsay = False
+    while before and before[-1].lower().strip(",") in _SAID_ADVERBS:
+        hearsay = hearsay or before[-1].lower().strip(",") in _HEARSAY_ADVERBS
+        before.pop()
+    if not before:
+        return False
+    head = before[-1].strip(",;:")
+    low = head.lower()
+    if low in ("he", "she"):
+        if low != inner_pronoun.lower():
+            return False  # "She said he ..." is someone else talking about him
+        if low == "she" and _mostly_male(text):
+            return False  # a woman speaking in a case about a man: witness, victim or official
+        if hearsay:
+            return True  # "He allegedly said he ..." reports the accused, not an official
+        return _antecedent_is_perp(text, said_pos, charged)
+    if low in _PERP_ROLE_WORDS or re.fullmatch(r"\d{1,2}-year-old", low):
+        return True
+    if low in _LINK_WORDS:
+        if low == "who" and len(before) > 1:
+            prev = before[-2].strip(",")
+            aged_man = prev in ("man", "woman") and any(re.fullmatch(r"\d{1,2}-year-old", w) for w in before[-6:-2])
+            return prev in charged or aged_man
+        if low in ("and", "but"):
+            return _clause_subject_is_perp(before[:-1], text, said_pos, charged)
+        return _antecedent_is_perp(text, said_pos, charged)
+    if not re.fullmatch(_NAME_TOK, head):
+        return False  # police, judge, attorney, woman, task force, reports ...
+    surname = head.replace("\u2019s", "").replace("'s", "")
+    if head.endswith(("\u2019s", "'s")):
+        return False  # "Kucharski's attorney said"
+    if len(before) > 1 and re.fullmatch(_TITLE_WORDS, before[-2].strip(",")):
+        return False
+    if any(w.lower() == "who" for w in before[:-1]):
+        return False  # "A counselor who had been working with <name> said he ..."
+    return surname in charged
+
+
 def _classify_themes(quote: str) -> List[str]:
     themes = [name for name, pat in _THEME_RES if pat.search(quote)]
     return themes or ["other"]
@@ -409,6 +585,7 @@ def extract_perpetrator_admissions(
 
     seen: Set[str] = set()
     results: List[Dict[str, Any]] = []
+    charged: Optional[Set[str]] = None
 
     for frame, quote_type, pattern in _FRAME_PATTERNS:
         for match in pattern.finditer(case_text):
@@ -427,6 +604,12 @@ def extract_perpetrator_admissions(
                 continue
             if not _perp_attributed(window, frame):
                 continue
+            if frame in _SAID_FRAMES:
+                said = re.search(r"\bsaid\s+(?:that\s+)?(he|she)\b", match.group(0), re.I)
+                if charged is None:
+                    charged = _charged_surnames(case_text)
+                if not said or not _said_speaker_ok(case_text, start + said.start(), said.group(1), charged):
+                    continue
             if _META_QUOTE_RE.search(quote):
                 continue
 

@@ -25,7 +25,7 @@ Everything below is in `local/pacer_text/<case_id>/`. That store is gitignored, 
 
 Do **not** open any of these:
 - another coder's draft;
-- released bundles and graphs (`state_machines/data/`, `local/releases/`);
+- published bundles and graphs (`state_machines/data/`, `local/releases/`);
 - press releases and case summaries.
 
 Code only from the page text.

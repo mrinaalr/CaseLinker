@@ -1,35 +1,87 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_082> a <https://cacontology.projectvic.org#CACInvestigation>,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_082" ;
-    dcterms:created "2026-11-10T16:32:20.503152"^^xsd:dateTime ;
-    dcterms:date "2025-03-14"^^xsd:date ;
+    dcterms:created "2026-11-19T18:34:25.569893"^^xsd:dateTime ;
+    dcterms:date "2025-05-19"^^xsd:date ;
     dcterms:identifier "ncmec_2025_082" ;
-    dcterms:modified "2026-11-12T01:36:39.055236"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:34:25.569893"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_082/provenance> ;
-    dcterms:source <https://www.facebook.com/photo.php?fbid=1087384630090100&id=100064557199396&set=a.3068750>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_082/location/modesto> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_082/agency/modesto-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/platform/facebook> .
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.yahoo.com/news/phelan-man-accused-possessing-thousands-165144840.html> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_082/phase/booked> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_082/phase/booked> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_082/event/possession>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_082/legal-proceeding> ;
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_082/agency/san-bernardino-county-sheriffs-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_082/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_082/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_082/agency/modesto-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
-    rdfs:label "Modesto Police Department" ;
-    ns1:name "Modesto Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_082/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 21.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_082/location/modesto> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Modesto" ;
-    ns1:name "Modesto" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_082/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_082/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" ;
-    ns1:name "Facebook" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/agency/san-bernardino-county-sheriffs-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns1:LocalAgency ;
+    rdfs:label "San Bernardino County Sheriff's Department" ;
+    ns2:name "San Bernardino County Sheriff's Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_082/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_082/event/possession> .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns6:HotlineOrganization,
+        ns1:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/event/possession> a ns4:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/phase/booked> a ns4:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_082/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

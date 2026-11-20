@@ -1,67 +1,155 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1020> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020> a ns6:CACInvestigation,
+        ns3:EnduringEntity ;
     rdfs:label "Case ncmec_2025_1020" ;
-    dcterms:created "2026-11-12T01:21:46.258932"^^xsd:dateTime ;
-    dcterms:date "2025-02-05"^^xsd:date ;
+    dcterms:created "2026-11-19T18:39:57.212601"^^xsd:dateTime ;
+    dcterms:date "2025-11-16"^^xsd:date ;
     dcterms:identifier "ncmec_2025_1020" ;
-    dcterms:modified "2026-11-12T01:21:46.258932"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:39:57.212601"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/provenance> ;
-    dcterms:source <https://www.news8000.com/news/crime/durand-man-faces-10-counts-of-child-porn-possession/article_d9761418-de68-11ef-b2a9-6fc9f5efeac5.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/durand-city-wi>,
-        <https://w3id.org/caselinker/resource/location/wisconsin-wi> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/legal-proceeding> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> .
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.wyomingnews.com/news/local_news/cheyenne-man-sentenced-for-possessing-child-sexual-abuse-material/article_a249dc5a-8813-11ef-b95b-9f2db74489ee.html> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/california-ca>,
+        <https://w3id.org/caselinker/resource/location/casper-city>,
+        <https://w3id.org/caselinker/resource/location/cheyenne-city-wy>,
+        <https://w3id.org/caselinker/resource/location/wyoming-wy> ;
+    ns6:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/phase/sentenced> ;
+    ns6:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/phase/sentenced> ;
+    ns6:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/multi-jurisdiction>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/possession>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/legal-step/sentenced> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 31.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1/prior-history> a ns1:Annotation ;
+    rdfs:label "prior history" ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> ;
+    ns1:statement "prior_conviction; registered_offender; years=2010; sex_offense=true" ;
+    ns1:tag "prior_conviction",
+        "registered_offender" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child sexual abuse material" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/registered-sex-offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns3:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns1:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/agency/wyoming-division-of-criminal-investigation> a ns3:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Wyoming Division of Criminal Investigation" ;
+    ns1:name "Wyoming Division of Criminal Investigation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns1:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/multi-jurisdiction> a ns3:Event,
+        ns2:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "12"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/charge/1> .
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/charge/1> ;
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1> a ns3:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/location/durand-city-wi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RecidivistSexOffender> ;
+    rdfs:label "Recidivist Sex Offender · role/registered-sex-offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
+    rdfs:label "120 months" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/california-ca> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Durand city" ;
-    dcterms:identifier "fips:5521225" ;
-    skos:altLabel "Durand" ;
-    ns2:name "Durand city" .
+    rdfs:label "California" ;
+    dcterms:identifier "fips:06" ;
+    ns1:name "California" .
 
-<https://w3id.org/caselinker/resource/location/wisconsin-wi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/casper-city> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wisconsin" ;
-    dcterms:identifier "fips:55" ;
-    skos:altLabel "Wis." ;
-    ns2:name "Wisconsin" .
+    rdfs:label "Casper city" ;
+    dcterms:identifier "fips:5613150" ;
+    skos:altLabel "Casper" ;
+    ns1:name "Casper city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/location/cheyenne-city-wy> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Cheyenne city" ;
+    dcterms:identifier "fips:5613900" ;
+    skos:altLabel "Cheyenne" ;
+    ns1:name "Cheyenne city" .
+
+<https://w3id.org/caselinker/resource/location/wyoming-wy> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Wyoming" ;
+    dcterms:identifier "fips:56" ;
+    ns1:name "Wyoming" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/possession> a ns6:CSAMIncident,
+        ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns1:severityLevel 3 .
+    ns6:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/phase/sentenced> a ns3:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1020/role/offender/1> a ns6:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_1020/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

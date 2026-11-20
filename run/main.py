@@ -2324,7 +2324,7 @@ def get_case(request: Request, case_id: str):
     return case
 
 
-_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date", "prior_history")
+_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date", "prior_history", "legal_context")
 _REVIEW_STATUSES = ("needs_review", "disagreement", "partial")
 
 
@@ -3755,11 +3755,21 @@ async def healthz():
     return Response(content="ok", media_type="text/plain", status_code=200)
 
 
+# Crawlers that collect pages to train AI models. They are refused the whole site. People, search
+# engines, user-triggered AI agents (ChatGPT-User, Claude-User, Perplexity-User), MCP clients and SPARQL
+# users are not affected: robots.txt governs crawlers, and the API, MCP and /sparql have their own limits.
+AI_TRAINING_CRAWLERS = (
+    "GPTBot", "ClaudeBot", "anthropic-ai", "CCBot", "Google-Extended", "Applebot-Extended",
+    "Meta-ExternalAgent", "Bytespider", "cohere-training-data-crawler", "Reflectionbot",
+)
+
+
 @app.get("/robots.txt")
 async def robots_txt():
-    """Keep crawlers off expensive API/ontology routes."""
-    body = "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /ontology/\nDisallow: /sparql\n"
-    return PlainTextResponse(content=body)
+    """Refuse AI-training crawlers; keep other crawlers off expensive API/ontology/SPARQL routes."""
+    training = "".join(f"User-agent: {ua}\n" for ua in AI_TRAINING_CRAWLERS) + "Disallow: /\n"
+    general = "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /ontology/\nDisallow: /sparql\n"
+    return PlainTextResponse(content=training + "\n" + general)
 
 
 @app.get("/favicon.ico")

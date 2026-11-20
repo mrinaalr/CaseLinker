@@ -1,80 +1,115 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143> a ns1:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143> a ns3:CACInvestigation,
+        ns2:EnduringEntity ;
     rdfs:label "Case ncmec_2025_143" ;
-    dcterms:created "2026-11-10T16:32:45.707717"^^xsd:dateTime ;
-    dcterms:date "2025-05-23"^^xsd:date ;
+    dcterms:created "2026-11-19T18:34:46.686037"^^xsd:dateTime ;
+    dcterms:date "2025-04-07"^^xsd:date ;
     dcterms:identifier "ncmec_2025_143" ;
-    dcterms:modified "2026-11-12T01:39:41.626620"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:34:46.686037"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_143/provenance> ;
-    dcterms:source <https://www.wtnh.com/news/connecticut/hartford/wethersfield-man-charged-for-possessing-child-sexual-abuse-material/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/connecticut-ct>,
-        <https://w3id.org/caselinker/resource/location/wethersfield-cdp-ct> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_143/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_143/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_143/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.nbcconnecticut.com/news/local/yale-police-officer-arrested-photos-videos-depicting-child-sex-material/3536179/?amp=1> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/hamden-village> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_143/phase/arrested> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_143/phase/arrested> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_143/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_143/legal-proceeding> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_143/agency/yale-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_143/narrative> ;
+    ns2:hasConfidence 0.5293 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_143/narrative> ;
+    ns2:hasConfidence 0.6212 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/assessment/semantic/production-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_143/narrative> ;
+    ns2:hasConfidence 0.5512 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/assessment/semantic/sextortion> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_143/narrative> ;
+    ns2:hasConfidence 0.4604 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 76.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 43.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_143/role/offender/1> .
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2025_143/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child pornography" .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/agency/yale-police-department> a ns2:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Yale Police Department" ;
+    ns4:name "Yale Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_143/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_143/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_143/event/possession> .
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_143/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/connecticut-ct> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/hamden-village> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Connecticut" ;
-    dcterms:identifier "fips:09" ;
-    skos:altLabel "Conn." ;
-    ns2:name "Connecticut" .
+    rdfs:label "Hamden village" ;
+    dcterms:identifier "fips:3932956" ;
+    skos:altLabel "Hamden" ;
+    ns4:name "Hamden village" .
 
-<https://w3id.org/caselinker/resource/location/wethersfield-cdp-ct> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wethersfield CDP" ;
-    dcterms:identifier "fips:0984970" ;
-    skos:altLabel "Wethersfield" ;
-    ns2:name "Wethersfield CDP" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/event/possession> a ns1:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/event/possession> a ns3:CSAMIncident,
+        ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns1:severityLevel 3 .
+    ns3:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_143/phase/charged> a ns1:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/charged" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_143/phase/arrested> a ns3:InitialPhase,
+        ns2:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_143/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

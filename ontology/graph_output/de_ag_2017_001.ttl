@@ -1,26 +1,56 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1/prior-history> a ns1:Annotation ;
+    rdfs:label "prior history" ;
+    ns1:object <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1> ;
+    ns1:statement "prior_conviction; sex_offense=false" ;
+    ns1:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/prior-history/1> a ns1:Annotation ;
+    rdfs:label "prior history" ;
+    ns1:object <https://w3id.org/caselinker/resource/case/de_ag_2017_001> ;
+    ns1:statement "prior_conviction; sex_offense=false" ;
+    ns1:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns3:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns1:name "U.S. Department of Justice" .
+
 <https://w3id.org/caselinker/resource/case/de_ag_2017_001> a ns5:CACInvestigation,
-        ns6:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case de_ag_2017_001" ;
-    dcterms:created "2026-11-10T18:10:58.097803"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:48:08.932468"^^xsd:dateTime ;
     dcterms:date "2017-03-03"^^xsd:date ;
     dcterms:identifier "de_ag_2017_001" ;
-    dcterms:modified "2026-11-10T18:10:58.097803"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:48:08.932468"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/de_ag_2017_001/provenance> ;
-    dcterms:source <https://news.delaware.gov/2017/03/03/h3>,
-        "DE AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/de_ag_2017_001/location/walker-woods>,
-        <https://w3id.org/caselinker/resource/location/delaware-de>,
+    dcterms:publisher "DE AG" ;
+    dcterms:source <https://news.delaware.gov/2017/03/03/h3> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware-de>,
         <https://w3id.org/caselinker/resource/location/dover-city-de>,
         <https://w3id.org/caselinker/resource/location/frankford-town-de>,
         <https://w3id.org/caselinker/resource/location/maryland-md>,
@@ -33,143 +63,119 @@
         <https://w3id.org/caselinker/resource/case/de_ag_2017_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/de_ag_2017_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/de_ag_2017_001/legal-step/sentenced> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/doj> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/doj> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1>,
         <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1/has-role> a ns3:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1/has-role> a ns3:Relationship ;
-    rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/victim/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
-        ns4:FederalAgency ;
-    rdfs:label "U.S. Department of Justice" ;
-    ns3:name "U.S. Department of Justice" .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/charge/1> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/charge/1> a ns2:CriminalCharge ;
     rdfs:label "Rape Third Degree and was sentenced in Superior Court to 20 years in prison" ;
     dcterms:subject <https://cacontology.projectvic.org/usa-federal-law#AggravatedSexualAbuse> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/event/multi-jurisdiction> a ns6:Event,
-        ns4:MultiJurisdictionalInvestigation ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/event/multi-jurisdiction> a ns3:Event,
+        ns6:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/event/trust-violation> a ns2:CustodialAbuse,
-        ns2:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/event/trust-violation> a ns4:CustodialAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/de_ag_2017_001/relationship/sister> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/de_ag_2017_001/relationship/sister> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns1:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2017_001/charge/1> ;
-    ns1:resultsSentence <https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/1>,
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2017_001/charge/1> ;
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/1>,
         <https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/2>,
         <https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/3> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/legal-step/sentenced> a ns6:Event,
-        ns6:LegalEvent,
-        ns1:LegalProceeding,
-        ns1:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/location/walker-woods> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Walker Woods" ;
-    ns3:name "Walker Woods" .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/relationship/sister> a ns2:CustodialRelationship,
-        ns2:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/relationship/sister> a ns4:CustodialRelationship,
+        ns4:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/sister" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> ;
-    ns2:relationshipType "relative" ;
-    ns3:isDirectional true ;
-    ns3:source <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> .
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> ;
+    ns4:relationshipType "relative" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/1> a ns1:CriminalSentence,
-        ns1:LifeImprisonmentSentence ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/1> a ns2:CriminalSentence,
+        ns2:LifeImprisonmentSentence ;
     rdfs:label "Sentenced to Life" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/2> a ns1:CriminalSentence,
-        ns1:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/2> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
     rdfs:label "30 years" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/3> a ns1:CriminalSentence,
-        ns1:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/sentence/3> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
     rdfs:label "20 years" ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/delaware-de> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/delaware-de> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Delaware" ;
     dcterms:identifier "fips:10" ;
-    ns3:name "Delaware" .
+    ns1:name "Delaware" .
 
-<https://w3id.org/caselinker/resource/location/dover-city-de> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/dover-city-de> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Dover city" ;
     dcterms:identifier "fips:1021200" ;
     skos:altLabel "Dover" ;
-    ns3:name "Dover city" .
+    ns1:name "Dover city" .
 
-<https://w3id.org/caselinker/resource/location/frankford-town-de> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/frankford-town-de> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Frankford town" ;
     dcterms:identifier "fips:1028310" ;
     skos:altLabel "Frankford" ;
-    ns3:name "Frankford town" .
+    ns1:name "Frankford town" .
 
-<https://w3id.org/caselinker/resource/location/maryland-md> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/maryland-md> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maryland" ;
     dcterms:identifier "fips:24" ;
-    ns3:name "Maryland" .
+    ns1:name "Maryland" .
 
-<https://w3id.org/caselinker/resource/location/north-east-town-md> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/north-east-town-md> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "North East town" ;
     dcterms:identifier "fips:2456450" ;
     skos:altLabel "North East" ;
-    ns3:name "North East town" .
+    ns1:name "North East town" .
 
-<https://w3id.org/caselinker/resource/location/wilmington-city-de> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wilmington-city-de> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wilmington city" ;
     dcterms:identifier "fips:1077580" ;
     skos:altLabel "Wilmington" ;
-    ns3:name "Wilmington city" .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns1:name "Wilmington city" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2017_001/phase/sentenced> a ns6:Phase,
-        ns1:SentencingPhase ;
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/phase/sentenced> a ns3:Phase,
+        ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2017_001/event/hands-on> a ns5:ChildSexualAbuseEvent,
-        ns6:Event ;
+        ns3:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns5:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2017_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2017_001/role/victim/1> a ns5:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

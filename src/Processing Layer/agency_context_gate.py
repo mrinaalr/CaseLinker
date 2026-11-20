@@ -657,6 +657,14 @@ def evaluate_ag_label(
 def evaluate_agency_label(
     case_text: str, label: str, source: Optional[str] = None
 ) -> Dict[str, Any]:
+    # A fund is not an agency: "Federal Crime Victims Fund" is restitution boilerplate.
+    if re.search(r"\bFund\b", label):
+        return {
+            "decision": "reject",
+            "reason": "not_an_agency_fund",
+            "template": None,
+            "anchors": [],
+        }
     if is_state_doj_label(label):
         return {
             "decision": "keep",

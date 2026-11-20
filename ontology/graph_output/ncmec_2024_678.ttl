@@ -1,95 +1,107 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678> a ns3:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678> a ns5:CACInvestigation,
+        ns6:EnduringEntity ;
     rdfs:label "Case ncmec_2024_678" ;
-    dcterms:created "2026-11-10T21:27:16.849974"^^xsd:dateTime ;
-    dcterms:date "2024-06-28"^^xsd:date ;
+    dcterms:created "2026-11-19T18:26:24.186178"^^xsd:dateTime ;
+    dcterms:date "2024-08-21"^^xsd:date ;
     dcterms:identifier "ncmec_2024_678" ;
-    dcterms:modified "2026-11-12T00:42:54.621655"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:26:24.186178"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_678/provenance> ;
-    dcterms:source <https://www.krqe.com/news/crime/albuquerque-police-arrest-3-men-on-child-pornography-charges/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/albuquerque-city>,
-        <https://w3id.org/caselinker/resource/location/new-mexico-nm> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_678/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_678/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/distribution>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://capemaycountyherald.com/article/clermont-man-held-on-child-porn-possession-distribution-charges/> ;
+    ns5:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_678/phase/charged> ;
+    ns5:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_678/phase/charged> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_678/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_678/agency/albuquerque-police-department> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_678/cybertip>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+        <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_678/cybertip>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_678/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/role/offender/1/has-role> a ns2:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_678/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_678/role/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_678/narrative> ;
+    ns6:hasConfidence 0.5153 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/agency/albuquerque-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
-    rdfs:label "Albuquerque Police Department" ;
-    ns2:name "Albuquerque Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_678/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 63.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_678/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_678/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/hsi> a ns6:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns4:name "Homeland Security Investigations" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_678/charge/1> a ns1:CSAM_Possession,
         ns1:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/charge/2> a ns1:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns3:ChildSexualAbuseEvent .
+    rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_678/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns2:name "observe" .
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/distribution> a ns6:Event,
         ns1:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
         ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_678/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_678/charge/2> .
+    ns1:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_678/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_678/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/possession> .
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/albuquerque-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Albuquerque city" ;
-    dcterms:identifier "fips:3502000" ;
-    skos:altLabel "Albuquerque" ;
-    ns2:name "Albuquerque city" .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns6:OrganizationLikeEntity,
+        ns7:HotlineOrganization,
+        ns2:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/location/new-mexico-nm> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "New Mexico" ;
-    dcterms:identifier "fips:35" ;
-    skos:altLabel "N.m." ;
-    ns2:name "New Mexico" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/possession> a ns5:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns5:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/event/possession> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_678/phase/charged> a ns5:LegalProcessPhase,
+        ns6:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_678/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_678/phase/arrested> a ns3:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
 

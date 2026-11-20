@@ -91,7 +91,7 @@
         </div>
         <button class="cl-btn cl-btn--primary" id="go">Open</button>
       </div>
-      <div class="hint-row"><span class="hint-row__k">Try</span><a href="/explore?case=nj_ag_2017_001">nj_ag_2017_001</a><a href="/explore?case=ncmec_2024_178&view=provenance">ncmec_2024_178 provenance</a><a href="/explore?iri=https://w3id.org/caselinker/resource/platform/snapchat">platform/snapchat</a><a href="/explore?iri=https://w3id.org/caselinker/resource/agency/fbi">agency/fbi</a></div>
+      <div class="hint-row"><span class="hint-row__k">Try</span><a href="/explore?case=nj_ag_2017_001">nj_ag_2017_001</a><a href="/explore?case=ncmec_2024_190&view=provenance">ncmec_2024_190 provenance</a><a href="/explore?iri=https://w3id.org/caselinker/resource/platform/snapchat">platform/snapchat</a><a href="/explore?iri=https://w3id.org/caselinker/resource/agency/fbi">agency/fbi</a></div>
     </section>
 
     <div id="out"></div>
@@ -134,7 +134,7 @@
   function toIri(input) {
     var s = input.trim();
     if (/^https?:\/\//.test(s)) return s.replace(/^https?:\/\/[^\/]+\/resource\//, RES);
-    if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3}$/i.test(s)) return RES + 'case/' + s.toLowerCase();
+    if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3,4}$/i.test(s)) return RES + 'case/' + s.toLowerCase();
     return RES + s.replace(/^\/+/, '');
   }
   function open(input, push) {
@@ -177,6 +177,27 @@
   }
 
   /* ---------- rendering ---------- */
+  // Display only: CaseLinker's own category label is shortened; wording quoted from a release is never changed.
+  function shown(text) {
+    var s = String(text), short = s.replace(/^Child Sexual Abuse Event\b/, 'CSEA Event');
+    return short === s ? CL.esc(s) : '<span title="' + CL.esc(s) + '">' + CL.esc(short) + '</span>';
+  }
+  // dcterms:source: the site the release URL opens, an archived copy (the Wayback Machine's closest snapshot,
+  // for sources that have gone offline), and the publisher or collection the case came from.
+  var DCT = 'http://purl.org/dc/terms/';
+  function sourceHtml(node) {
+    var vals = [].concat(node[DCT + 'source'] || []), pub = [].concat(node[DCT + 'publisher'] || []);
+    var text = function (v) { return v['@id'] !== undefined ? v['@id'] : String(v['@value']); };
+    var urls = vals.map(text).filter(function (t) { return /^https?:\/\//.test(t); });
+    var names = pub.concat(vals).map(text).filter(function (t) { return !/^https?:\/\//.test(t); });
+    if (!urls.length) return vals.map(function (v) { return objHtml(v); }).join('');
+    return urls.map(function (u) {
+      var site = u.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+      return '<span class="obj"><a class="ext" href="' + CL.esc(u) + '" rel="noopener" target="_blank" title="' + CL.esc(u) + '">' + CL.esc(site) + ' ↗</a>' +
+        ' <span class="cl-muted">·</span> <a class="ext" href="https://web.archive.org/web/' + CL.esc(u) + '" rel="noopener" target="_blank" title="Archived copy (Wayback Machine)">archived ↗</a>' +
+        (names[0] ? ' <span class="cl-muted">· via ' + CL.esc(names[0]) + '</span>' : '') + '</span>';
+    }).join('');
+  }
   function label(iri) {
     var n = graphIndex[iri]; if (!n) return null;
     var l = n['http://www.w3.org/2000/01/rdf-schema#label'] || n['https://ontology.unifiedcyberontology.org/uco/core/name'];
@@ -189,12 +210,12 @@
       var lab = label(t);
       if (t.indexOf(RES) === 0) {
         var inGraph = !!graphIndex[t] && t !== hostIri;
-        return '<span class="obj"><a class="local" href="' + (inGraph ? '#n-' + CL.esc(encodeURIComponent(t)) : '/explore?iri=' + encodeURIComponent(t)) + '" data-iri="' + CL.esc(t) + '" data-in="' + (inGraph ? '1' : '0') + '">' + CL.esc(lab || curie(t)) + '</a>' + (lab ? ' <span class="cl-muted cl-small mono">' + CL.esc(curie(t)) + '</span>' : '') + '</span>';
+        return '<span class="obj"><a class="local" href="' + (inGraph ? '#n-' + CL.esc(encodeURIComponent(t)) : '/explore?iri=' + encodeURIComponent(t)) + '" data-iri="' + CL.esc(t) + '" data-in="' + (inGraph ? '1' : '0') + '">' + (lab ? shown(lab) : CL.esc(curie(t))) + '</a>' + (lab ? ' <span class="cl-muted cl-small mono">' + CL.esc(curie(t)) + '</span>' : '') + '</span>';
       }
       return '<span class="obj"><a class="ext" href="' + CL.esc(t) + '" rel="noopener" target="_blank">' + CL.esc(curie(t)) + '</a></span>';
     }
     var v = o['@value'], dt = o['@type'] ? curie(o['@type']) : (o['@language'] ? '@' + o['@language'] : '');
-    return '<span class="obj lit">' + CL.esc(v) + (dt && dt !== 'xsd:string' ? '<span class="dt">' + CL.esc(dt) + '</span>' : '') + '</span>';
+    return '<span class="obj lit">' + shown(v) + (dt && dt !== 'xsd:string' ? '<span class="dt">' + CL.esc(dt) + '</span>' : '') + '</span>';
   }
   function props(node, hostIri) {
     var keys = Object.keys(node).filter(function (k) { return k !== '@id'; });
@@ -202,7 +223,7 @@
     return '<table class="kv">' + keys.map(function (k) {
       var vals = node[k]; if (!Array.isArray(vals)) vals = [vals];
       var isType = k === '@type';
-      var items = vals.map(function (v) { return isType ? objHtml({ '@id': v }, hostIri) : objHtml(v, hostIri); });
+      var items = k === DCT + 'source' ? [sourceHtml(node)] : vals.map(function (v) { return isType ? objHtml({ '@id': v }, hostIri) : objHtml(v, hostIri); });
       var html = items.length > 12 ? items.slice(0, 12).join('') + ' <span class="more" data-rest="' + CL.esc(items.slice(12).join('')) + '">+ ' + (items.length - 12) + ' more</span>' : items.join('');
       var pk = isType ? 'rdf:type' : curie(k);
       return '<tr><th>' + (isTermLink(k) ? '<a href="' + CL.esc(k) + '" rel="noopener" target="_blank" style="color:inherit">' + CL.esc(pk) + '</a>' : CL.esc(pk)) + '</th><td>' + html + '</td></tr>';
@@ -226,7 +247,7 @@
 
     var title = focus ? (label(iri) || curie(iri)) : curie(iri);
     if (isProv && caseId) title = 'Provenance · ' + caseId;
-    html += '<div class="focus"><h2>' + CL.esc(title) + '</h2>' + (focus ? typeChips(focus) : '') + '</div>';
+    html += '<div class="focus"><h2>' + shown(title) + '</h2>' + (focus ? typeChips(focus) : '') + '</div>';
     if (focus) html += '<div class="cl-card cl-card--pad">' + props(focus, iri) + '</div>';
     else if (nodes.length) html += '<div class="cl-notice">This IRI names a graph. Its nodes are listed below.</div>';
 
@@ -258,7 +279,7 @@
   function nodeCard(n, hostIri) {
     var id = n['@id'], lab = label(id), t = n['@type']; if (t && !Array.isArray(t)) t = [t];
     var ty = t ? t.map(curie).filter(function (x) { return !/EnduringEntity|cac-core:Event$|cac-core:Phase$/.test(x); }).slice(0, 2).join(', ') : '';
-    return '<details class="node" id="n-' + CL.esc(encodeURIComponent(id)) + '"><summary><span><span class="lab">' + CL.esc(lab || curie(id).split('/').slice(-2).join('/')) + '</span>' + (lab ? '<span class="path">' + CL.esc(curie(id)) + '</span>' : '') + '</span><span class="ty">' + CL.esc(ty) + '</span></summary>' +
+    return '<details class="node" id="n-' + CL.esc(encodeURIComponent(id)) + '"><summary><span><span class="lab">' + (lab ? shown(lab) : CL.esc(curie(id).split('/').slice(-2).join('/'))) + '</span>' + (lab ? '<span class="path">' + CL.esc(curie(id)) + '</span>' : '') + '</span><span class="ty">' + CL.esc(ty) + '</span></summary>' +
       '<div class="body">' + props(n, hostIri) + '<div class="go"><a href="/explore?iri=' + encodeURIComponent(id) + '" data-iri="' + CL.esc(id) + '" data-in="0">open as its own page →</a></div></div></details>';
   }
 

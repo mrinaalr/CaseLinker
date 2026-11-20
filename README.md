@@ -6,7 +6,7 @@
 
 **Try the latest version online:** [https://caselinker.up.railway.app/](https://caselinker.up.railway.app/)
 
-The live release includes all features and a processed case corpus from publicly available ICAC / NCMEC / DOJ / State Attorneys General press materials. The processed corpus holds **10,802 case reports**, **131,910 extracted features**, **4,000+ distinct law-enforcement agencies**, and ***52 online platforms*** across **76** sources. Per-source coverage is on the in-app **Sources** page. These reports summarize investigations, arrests, and prosecutions, redacted for public release. All data was already in the public domain. CaseLinker received a Not Human Subjects Research determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668); this research does not involve identifiable private information under federal regulations [45 CFR 46.102(e)(1), (4)].
+The live release includes all features and a processed case corpus from publicly available ICAC / NCMEC / DOJ / State Attorneys General press materials. The processed corpus holds **10,802 case reports**, **132,676 extracted features**, **4,000+ distinct law-enforcement agencies**, and ***52 online platforms*** across **76** sources. Per-source coverage is on the in-app **Sources** page. These reports summarize investigations, arrests, and prosecutions, redacted for public release. All data was already in the public domain. CaseLinker received a Not Human Subjects Research determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668); this research does not involve identifiable private information under federal regulations [45 CFR 46.102(e)(1), (4)].
 ## Technical Reports
 
 - **Report #1: [CaseLinker: An Open-Source System for Cross-Case Analysis of Internet Crimes Against Children Reports](https://arxiv.org/pdf/2603.18020)** - Initial technical report documenting the prototype architecture, deterministic extraction pipeline, and evaluation baseline on 47 cases.
@@ -303,7 +303,7 @@ The live store holds **10,802** press-release case graphs (`…/resource/case/{c
 
 ### **Persistent IRIs (w3id)**
 
-Case, platform, agency, location, and provenance IRIs use `https://w3id.org/caselinker/…`. After the perma-id registration lands, those URLs **303** to the live app and keep the path (`/resource/…`, `/ns/provenance`). The app returns HTML for browsers, or Turtle / JSON-LD when `Accept` asks for them. The Apache rules to submit are [`ontology/w3id-caselinker.htaccess`](ontology/w3id-caselinker.htaccess) (details in [`ontology/README.md`](ontology/README.md#w3idorg)).
+Case, platform, agency, location, and provenance IRIs use `https://w3id.org/caselinker/…`. Those URLs **303** to the live app and keep the path (`/resource/…`, `/ns/provenance`). The app returns HTML for browsers, or Turtle / JSON-LD when `Accept` asks for them. The registered Apache rules are [`ontology/w3id-caselinker.htaccess`](ontology/w3id-caselinker.htaccess) (details in [`ontology/README.md`](ontology/README.md#w3idorg)).
 
 ### **Public SPARQL** 
 (`GET|POST /sparql`) — SPARQL 1.1 Query only (`SELECT`, `CONSTRUCT`, `ASK`, `DESCRIBE`). No auth. Update and `SERVICE` are rejected. Rate limit is **30/minute** per IP. If a query has no outer `LIMIT`, the proxy injects **1000**; outer `LIMIT` above **10,000** is rejected. Each case is named graph `https://w3id.org/caselinker/resource/case/{case_id}`. Its provenance graph is `https://w3id.org/caselinker/resource/case/{case_id}/provenance`. Default-graph patterns see the union. Request formats, namespaces, errors, and more examples: **[ontology/docs/SPARQL.md](ontology/docs/SPARQL.md)**.
@@ -390,7 +390,7 @@ CaseLinker/
 ├── ontology/
 │   ├── README.md                     # Ontology docs (vocabulary, pipeline, pools, w3id)
 │   ├── docs/SPARQL.md                # Public SPARQL 1.1 API guide
-│   ├── w3id-caselinker.htaccess      # Submit to perma-id as ids/caselinker/.htaccess
+│   ├── w3id-caselinker.htaccess      # Registered at perma-id as ids/caselinker/.htaccess
 │   ├── caselinker-provenance.ttl     # Provenance vocabulary (w3id ns)
 │   ├── pipeline/                     # features_to_cac.py (case → CAC RDF), graph_generate.py, oxigraph_rebuild.py
 │   ├── pools/                        # *_ids.txt case pools + the scripts that select them
@@ -438,7 +438,7 @@ Each case includes structured features extracted from case narratives:
 - **Prosecution**: Charge phrases with counts, booking stage (arrest through sentenced), jail mentions
 - **Evidence volume**: Image, video, storage, and message counts when quantified in text
 - **Investigation**: Non-exclusive types — proactive, reactive, online, undercover, or unknown; agencies from pattern matching plus Stanza NER. CyberTipline-origin only when the tip is about this case
-- **Prior record**: Registered status and age at prior arrest when stated
+- **Prior record**: Earlier conviction, registration and supervision per defendant, with the count and year the release states (`prior_history`)
 
 ### **Pattern-based classification**
 
@@ -489,7 +489,7 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/ontology/cases` — graph pool catalog (`pool=compare|full|all|universe|analysis`; metadata only)
 - `GET /api/ontology/merged` — pre-merged flat nodes for a pool (public, cached; not `full`)
 - `GET /api/ontology/lookup` — find cases across full staging (`pool=full` default, max 2000); class/platform/agency/case text
-- `GET /api/ontology/pacer` — the PACER release manifest (cases, named graphs, review mode)
+- `GET /api/ontology/pacer` — the PACER dataset manifest (cases, named graphs, review mode)
 - `POST /api/ontology/cache/warm` — rebuild/warm merged-graph cache (`pool=compare|all|universe|analysis|both`)
 - `GET /ontology/graph_output/{case_id}.jsonld|.ttl` — staging (full corpus); also `{pool}/{case_id}…` for universe/big_bang/analysis
 - `GET /ontology/platform-affordance-evidence/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` — platform affordance evidence and Q2–Q3 evidence JSON
@@ -551,7 +551,4 @@ CaseLinker can be deployed to cloud platforms for public access. The app include
 
 ## Contributing
 
-Contributors can help by:
-- Adding ideas to the README
-- Contributing to the architecture design
-- Code implementation
+Roadmap, conventions and how to send a change: **[CONTRIBUTING.md](CONTRIBUTING.md)**.

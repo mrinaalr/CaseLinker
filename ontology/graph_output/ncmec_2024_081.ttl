@@ -1,87 +1,107 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_081> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+        ns4:EnduringEntity ;
     rdfs:label "Case ncmec_2024_081" ;
-    dcterms:created "2026-11-10T15:50:38.629080"^^xsd:dateTime ;
-    dcterms:date "2024-03"^^xsd:gYearMonth ;
+    dcterms:created "2026-11-19T18:22:53.657937"^^xsd:dateTime ;
+    dcterms:date "2024-03-29"^^xsd:date ;
     dcterms:identifier "ncmec_2024_081" ;
-    dcterms:modified "2026-11-12T00:14:21.621365"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:22:53.657937"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_081/provenance> ;
-    dcterms:source <https://abc30.com/porterville-man-arrested-alleged-child-porn/14583053/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/california-ca>,
-        <https://w3id.org/caselinker/resource/location/porterville-city-ca>,
-        <https://w3id.org/caselinker/resource/location/tulare-county-ca> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://wildrivers.lostcoastoutpost.com/2024/mar/29/ccpd-make-second-internet-crimes-against-taskforce/> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_081/phase/booked> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_081/phase/booked> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_081/event/possession>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_081/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_081/legal-proceeding> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_081/agency/crescent-city-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_081/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_081/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/assessment/semantic/evidence-seizure> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · evidence_seizure" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_081/narrative> ;
+    ns4:hasConfidence 0.4614 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 45.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 22.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_081/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_081/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_081/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_081/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/agency/crescent-city-police-department> a ns4:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Crescent City Police Department" ;
+    ns1:name "Crescent City Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_081/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Tulare County Jail" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_081/charge/1> .
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Del Norte County Jail" ;
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_081/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_081/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_081/event/possession> .
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_081/event/csam> .
 
-<https://w3id.org/caselinker/resource/location/california-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "California" ;
-    dcterms:identifier "fips:06" ;
-    skos:altLabel "Calif." ;
-    ns3:name "California" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "sending child pornography using the SnapChat app, Crescent City Police Chief Richard [PERSON] told the Wild Rivers Ou..." ;
+    dcterms:source <https://wildrivers.lostcoastoutpost.com/2024/mar/29/ccpd-make-second-internet-crimes-against-taskforce/> ;
+    ns1:description "sending child pornography using the SnapChat app, Crescent City Police Chief Richard [PERSON] told the Wild Rivers Outpost" .
 
-<https://w3id.org/caselinker/resource/location/porterville-city-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Porterville city" ;
-    dcterms:identifier "fips:0658240" ;
-    skos:altLabel "Porterville" ;
-    ns3:name "Porterville city" .
-
-<https://w3id.org/caselinker/resource/location/tulare-county-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Tulare County" ;
-    dcterms:identifier "fips:06107" ;
-    ns3:name "Tulare County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_081/event/possession> a ns2:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_081/event/csam> a ns2:CSAMIncident,
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_081/phase/booked> a ns2:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
+        ns4:Phase ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns4:DigitalSystemEntity,
+        ns7:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns7:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_081/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

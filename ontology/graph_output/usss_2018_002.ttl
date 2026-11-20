@@ -1,150 +1,145 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/usss_2018_002/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/usss_2018_002/narrative> ;
+    ns1:hasConfidence 0.5038 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/usss_2018_002/prior-history/1> a ns2:Annotation ;
+    rdfs:label "prior history" ;
+    ns2:object <https://w3id.org/caselinker/resource/case/usss_2018_002> ;
+    ns2:statement "prior_conviction; sex_offense=true" ;
+    ns2:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/usss_2018_002/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/usss_2018_002/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/usss_2018_002/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns2:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/agency/secret-service> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Secret Service" ;
+    ns2:name "Secret Service" .
+
+<https://w3id.org/caselinker/resource/agency/usao-northern-district-of-indiana> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office, Northern District of Indiana" ;
+    skos:altLabel "U.S. Attorney's Office" ;
+    ns6:operatesInJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-indiana> ;
+    ns2:name "U.S. Attorney's Office, Northern District of Indiana" .
+
+<https://w3id.org/caselinker/resource/case/usss_2018_002> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
     rdfs:label "Case usss_2018_002" ;
-    dcterms:created "2026-11-11T18:21:22.633490"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T20:24:34.578424"^^xsd:dateTime ;
     dcterms:date "2018-12-13"^^xsd:date ;
     dcterms:identifier "usss_2018_002" ;
-    dcterms:modified "2026-11-11T18:21:22.633490"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T20:24:34.578424"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/usss_2018_002/provenance> ;
-    dcterms:source <https://www.secretservice.gov/press/releases/2018/12/elkhart-man-indicted-possession-and-transportation-child-pornography>,
-        "USSS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/usss_2018_002/location/elkhart>,
-        <https://w3id.org/caselinker/resource/case/usss_2018_002/location/northern-district-of-indiana>,
-        <https://w3id.org/caselinker/resource/case/usss_2018_002/location/south-bend>,
-        <https://w3id.org/caselinker/resource/case/usss_2018_002/location/united-states>,
-        <https://w3id.org/caselinker/resource/location/indiana-in> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/usss_2018_002/phase/indicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/usss_2018_002/phase/indicted> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/usss_2018_002/event/distribution>,
+    dcterms:publisher "USSS" ;
+    dcterms:source <https://www.secretservice.gov/press/releases/2018/12/elkhart-man-indicted-possession-and-transportation-child-pornography> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/indiana-in> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/usss_2018_002/phase/indicted> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/usss_2018_002/phase/indicted> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/usss_2018_002/event/distribution>,
         <https://w3id.org/caselinker/resource/case/usss_2018_002/event/online-only>,
         <https://w3id.org/caselinker/resource/case/usss_2018_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/usss_2018_002/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/secret-service>,
-        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/agency/usao-northern-district-of-indiana>,
         <https://w3id.org/caselinker/resource/case/usss_2018_002/agency/st-joseph-county-sheriffs-department> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1>,
+    ns2:object <https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1>,
         <https://w3id.org/caselinker/resource/case/usss_2018_002/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1> ;
-    ns4:hasConfidence 0.65 ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
-    rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns1:CSAMIncident ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/usss_2018_002/narrative> ;
-    ns4:hasConfidence 0.5038 ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/role/offender/1/has-role> a ns3:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/usss_2018_002/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/usss_2018_002/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns4:OrganizationLikeEntity,
-        ns2:FederalAgency ;
-    rdfs:label "Federal Bureau of Investigation" ;
-    skos:altLabel "FBI" ;
-    ns3:name "Federal Bureau of Investigation" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
-        ns2:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns3:name "National Center for Missing and Exploited Children" .
-
-<https://w3id.org/caselinker/resource/agency/secret-service> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Secret Service" ;
-    ns3:name "Secret Service" .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
-        ns2:FederalAgency ;
-    rdfs:label "U.S. Attorney's Office" ;
-    ns3:name "U.S. Attorney's Office" .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/agency/st-joseph-county-sheriffs-department> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/agency/st-joseph-county-sheriffs-department> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
     rdfs:label "St. Joseph County Sheriff's Department" ;
-    ns3:name "St. Joseph County Sheriff's Department" .
+    ns2:name "St. Joseph County Sheriff's Department" .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/event/distribution> a ns4:Event,
-        ns5:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/event/distribution> a ns1:Event,
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns4:Event ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/event/online-only> a ns3:ChildSexualAbuseEvent,
+        ns1:Event ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/usss_2018_002/charge/1> .
+    dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-indiana> ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/usss_2018_002/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/location/elkhart> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Elkhart" ;
-    ns3:name "Elkhart" .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/location/northern-district-of-indiana> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Northern District of Indiana" ;
-    ns3:name "Northern District of Indiana" .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/location/south-bend> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "South Bend" ;
-    ns3:name "South Bend" .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/location/united-states> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "United States" ;
-    ns3:name "United States" .
-
-<https://w3id.org/caselinker/resource/case/usss_2018_002/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/indiana-in> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/jurisdiction/united-states> a ns6:FederalJurisdiction ;
+    rdfs:label "United States" ;
+    ns2:name "United States" .
+
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indiana" ;
     dcterms:identifier "fips:18" ;
-    ns3:name "Indiana" .
+    ns2:name "Indiana" .
 
 <https://w3id.org/caselinker/resource/case/usss_2018_002/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had uploaded images to the online service and was taken into custody" ;
     dcterms:source <https://www.secretservice.gov/press/releases/2018/12/elkhart-man-indicted-possession-and-transportation-child-pornography> ;
-    ns3:description "had uploaded images to the online service and was taken into custody" .
+    ns2:description "had uploaded images to the online service and was taken into custody" .
 
 <https://w3id.org/caselinker/resource/case/usss_2018_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/usss_2018_002/phase/indicted> a ns1:LegalProcessPhase,
-        ns4:Phase ;
+<https://w3id.org/caselinker/resource/case/usss_2018_002/phase/indicted> a ns3:LegalProcessPhase,
+        ns1:Phase ;
     rdfs:label "Legal Process Phase · phase/indicted" .
+
+<https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-indiana> a ns6:FederalJurisdiction ;
+    rdfs:label "Northern District of Indiana" ;
+    ns5:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
+    ns2:name "Northern District of Indiana" .
 

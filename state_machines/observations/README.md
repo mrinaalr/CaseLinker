@@ -137,7 +137,7 @@ Graph IRI: `urn:caselinker:pacer:<case>:observations`. A case with nothing obser
 
 ## Queries
 
-[`queries.py`](queries.py) holds the queries; each release's `REPORT.md` prints them with their results.
+[`queries.py`](queries.py) holds the queries; each dataset's `REPORT.md` prints them with their results.
 
 | Query | Answers |
 |---|---|
@@ -164,7 +164,7 @@ SELECT ?platform (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WHERE
 
 ## Research table
 
-[`table.py`](table.py) writes `research_table.json` and `research_table.csv` into the release: one row per case, built from the committed release files alone (`python -m state_machines.observations.table <release> --check` rebuilds and compares).
+[`table.py`](table.py) writes `research_table.json` and `research_table.csv` into the dataset: one row per case, built from the committed dataset files alone (`python -m state_machines.observations.table <release> --check` rebuilds and compares).
 
 | Column group | Meaning |
 |---|---|
@@ -185,7 +185,7 @@ The `/lifecycle` page shows the same things per case ("names 2 platforms, 1 feat
 
 ## Affordance evidence matrix
 
-[`affordance_matrix.py`](affordance_matrix.py) writes `affordance_matrix.json`, `affordance_matrix.csv` (one row per affordance class) and `affordance_case_grid.csv` (one row per case) into the release, from the committed release files alone (`python -m state_machines.observations.affordance_matrix <release> --check`).
+[`affordance_matrix.py`](affordance_matrix.py) writes `affordance_matrix.json`, `affordance_matrix.csv` (one row per affordance class) and `affordance_case_grid.csv` (one row per case) into the dataset, from the committed dataset files alone (`python -m state_machines.observations.affordance_matrix <release> --check`).
 
 The matrix says what the pages state. It does not say which capability an offender used. That reading is the [analysis frame](../trajectories/README.md#the-analysis-frame): the same phrases, beside the trajectory step, with a person's note kept out of $O_{i}$.
 
@@ -216,14 +216,14 @@ How not to read it:
 
 ## Review on the real text
 
-Optional, and a researcher's step: the release is machine-read and is complete, loadable and citable without it.
+Optional, and a researcher's step: the dataset is machine-read and is complete, loadable and citable without it.
 
 ```bash
 python -m state_machines.observations.validation packet pacer-v1     # local/validation/pacer-v1.review.html (court text; never committed)
 python -m state_machines.observations.validation score pacer-v1 <downloaded decisions.json>
 ```
 
-[`validation.py`](validation.py) draws a fixed, stratified set of items from the release: every observation tied to an act, every feature observation, one placeholder label and one generic description per case, term and standing, and listed-platform observations sampled one per platform and standing, then at random up to 60. The reviewer answers two questions per item, kept apart: is the term in the sentence as cited (grounding), and does it mean what the observation says (meaning). `score` writes counts and 95% intervals per stratum to `validation.json`, with no text, and the release report prints them.
+[`validation.py`](validation.py) draws a fixed, stratified set of items from the dataset: every observation tied to an act, every feature observation, one placeholder label and one generic description per case, term and standing, and listed-platform observations sampled one per platform and standing, then at random up to 60. The reviewer answers two questions per item, kept apart: is the term in the sentence as cited (grounding), and does it mean what the observation says (meaning). `score` writes counts and 95% intervals per stratum to `validation.json`, with no text, and the dataset report prints them.
 
 ## Measured
 
@@ -245,7 +245,7 @@ History of the rule, so the numbers can be read correctly:
 - **1.0.0** was developed on dev and scored once on held-out and confirm.
 - **1.1.0** merged aliases and dropped "website", from the audit of the real cases.
 - **1.2.0** followed an independent review that found relationships asserted without a stated means. The relationship rule was rewritten on the reviewer's examples, the dev cases and the structure of the real cases' relationships, and the scorer was made to require the relationship kind. Held-out and confirm are therefore a later look, not a first one.
-- **1.3.0** added placeholder labels, generic descriptions and the disputed-act record; ties a means only when the act's cited passage stays inside the observation's own sentence; and refuses a clause with no offender acting in it, a negation between cue and term, supposed, intended, questioned and quoted conduct, and a rule or policy statement. Reviews found these gaps on invented sentences, and one in the release: a Terms of Service sentence read as the defendant storing material (`anchorage_pd_2022_007`), now refused in both layers. Dev scores as under 1.2.0; held-out loses three relationships on acts that are not gold acts (65/72 became 65/69); confirm loses its one wrong-kind relationship (32/33 became 32/32).
+- **1.3.0** added placeholder labels, generic descriptions and the disputed-act record; ties a means only when the act's cited passage stays inside the observation's own sentence; and refuses a clause with no offender acting in it, a negation between cue and term, supposed, intended, questioned and quoted conduct, and a rule or policy statement. Reviews found these gaps on invented sentences, and one in the dataset: a Terms of Service sentence read as the defendant storing material (`anchorage_pd_2022_007`), now refused in both layers. Dev scores as under 1.2.0; held-out loses three relationships on acts that are not gold acts (65/72 became 65/69); confirm loses its one wrong-kind relationship (32/33 became 32/32).
 
 On the 30 real cases (`pacer-v1`, 98 documents):
 
@@ -273,8 +273,8 @@ By the standing of the document: 282 observations are in sworn affidavits, 221 i
 ## Limits
 
 - **Listed terms and fixed forms only.** A service or a feature wording that is not on the lists is not observed, and a placeholder other than "Website" with a letter or number is not taken. All benchmark splits keep platform names and feature terms verbatim, so the rates above measure finding listed terms in new sentence constructions, not recognising new wording.
-- **Machine-read.** No person reviewed these observations on the real text; the release does not depend on such a review. On the five reference cases the three listed platforms the reference coding names were all observed, and the reference names four platform surfaces that are not on the list.
+- **Machine-read.** No person reviewed these observations on the real text; the dataset does not depend on such a review. On the five reference cases the three listed platforms the reference coding names were all observed, and the reference names four platform surfaces that are not on the list.
 - **Feature statements are concentrated.** 87 statements in 13 cases, 56 of them one word in one document. The affordance evidence matrix counts cases beside statements for that reason.
-- **Relationships are few because acts are few, and the rule prefers silence.** A relationship needs a published act in that sentence (the release publishes 162 offender acts) and a construction the rule recognises. A true means stated another way is not tied. Six agreed acts share a sentence with a feature phrase (the matrix's `in_agreed_act_sentence` column). A sign-off review showed that three of them describe the technology and not the defendant's use, and a second review read one that does state the feature as the means and that the rule misses: `doj_ceos_2026_001`, act `e149`, observation `o0093` (anonymity, "VPN", admitted): the cue stands 13 words before the term. The rule's finding is "no tie made", not "no record states one".
+- **Relationships are few because acts are few, and the rule prefers silence.** A relationship needs a published act in that sentence (the dataset publishes 162 offender acts) and a construction the rule recognises. A true means stated another way is not tied. Six agreed acts share a sentence with a feature phrase (the matrix's `in_agreed_act_sentence` column). A sign-off review showed that three of them describe the technology and not the defendant's use, and a second review read one that does state the feature as the means and that the rule misses: `doj_ceos_2026_001`, act `e149`, observation `o0093` (anonymity, "VPN", admitted): the cue stands 13 words before the term. The rule's finding is "no tie made", not "no record states one".
 - **Three records give nothing about a service.** One case's narrative filings are sealed, and for two CourtListener holds no docket sheet to collect from. A thin record is represented as thin.
 - **Known rough edges with no hit in the 30 cases:** "Line 7" or a surname "Tor" would be observed; a hyphenated feature phrase broken across a line stops the build; a relationship can take a different IRI from the evidence graph's when the two rules disagree on "through" versus "moved to"; "Websites A and B" yields only "Website A".

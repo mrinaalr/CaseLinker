@@ -1,160 +1,166 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317> a ns3:CACInvestigation,
-        ns4:EnduringEntity ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_317/narrative> ;
+    ns2:hasConfidence 0.4514 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_317/narrative> ;
+    ns2:hasConfidence 0.5074 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1/age> a ns7:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns7:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1> ;
+    ns7:concernsAgeQuality ns7:Age ;
+    ns7:hasAgeInYears 39.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1/prior-history> a ns3:Annotation ;
+    rdfs:label "prior history" ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1> ;
+    ns3:statement "prior_conviction; years=2015; sex_offense=false" ;
+    ns3:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/prior-history/2> a ns3:Annotation ;
+    rdfs:label "prior history" ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_317> ;
+    ns3:statement "prior_conviction; sex_offense=true" ;
+    ns3:tag "prior_conviction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_317/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317> a ns1:CACInvestigation,
+        ns2:EnduringEntity ;
     rdfs:label "Case ncmec_2023_317" ;
-    dcterms:created "2026-11-10T10:04:15.921801"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:14:40.352382"^^xsd:dateTime ;
     dcterms:date "2023-03-15"^^xsd:date ;
     dcterms:identifier "ncmec_2023_317" ;
-    dcterms:modified "2026-11-10T10:04:15.921801"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:14:40.352382"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_317/provenance> ;
-    dcterms:source <https://www.cookcountysheriffil.gov/convicted-felon-charged-with-dissemination-of-child-pornography-weapons-possession/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_317/location/maywood>,
-        <https://w3id.org/caselinker/resource/location/cook-county-il>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.cookcountysheriffil.gov/convicted-felon-charged-with-dissemination-of-child-pornography-weapons-possession/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/cook-county-il>,
         <https://w3id.org/caselinker/resource/location/des-plaines-city>,
         <https://w3id.org/caselinker/resource/location/illinois-il> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_317/phase/convicted> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_317/phase/convicted> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/distribution>,
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_317/phase/convicted> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_317/phase/convicted> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_317/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_317/legal-step/convicted>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_317/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_317/agency/sheriffs-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_317/cybertip>,
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_317/cybertip>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
-    rdfs:label "semantic similarity · exploitive_positions" ;
-    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_317/narrative> ;
-    ns4:hasConfidence 0.4514 ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
-    rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns3:CSAMIncident ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_317/narrative> ;
-    ns4:hasConfidence 0.5074 ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1/age> a ns6:AgeAtTimeSituation ;
-    rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 39.0 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/role/offender/1/has-role> a ns1:Relationship ;
-    rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_317/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
-        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
-    rdfs:label "ICAC Task Force" ;
-    skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/agency/sheriffs-police-department> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/agency/sheriffs-police-department> a ns2:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Sheriff's Police Department" ;
-    ns1:name "Sheriff's Police Department" .
+    ns3:name "Sheriff's Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_317/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
     ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:name "observe" .
+    ns3:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/distribution> a ns4:Event,
-        ns7:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/distribution> a ns2:Event,
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns7:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns7:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_317/charge/1> .
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_317/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/legal-step/convicted> a ns4:Event,
-        ns4:LegalEvent,
-        ns7:LegalProceeding,
-        ns7:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/legal-step/convicted> a ns2:Event,
+        ns2:LegalEvent,
+        ns6:LegalProceeding,
+        ns6:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/location/maywood> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Maywood" ;
-    ns1:name "Maywood" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/operation> a ns4:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/operation> a ns2:Event,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/role/offender/1> a ns3:OffenderRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/role/offender/1> a ns1:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/possession> .
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/cook-county-il> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/cook-county-il> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cook County" ;
     dcterms:identifier "fips:17031" ;
-    ns1:name "Cook County" .
+    ns3:name "Cook County" .
 
-<https://w3id.org/caselinker/resource/location/des-plaines-city> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/des-plaines-city> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Des Plaines city" ;
     dcterms:identifier "fips:1719642" ;
     skos:altLabel "Des Plaines" ;
-    ns1:name "Des Plaines city" .
+    ns3:name "Des Plaines city" .
 
-<https://w3id.org/caselinker/resource/location/illinois-il> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/illinois-il> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Illinois" ;
     dcterms:identifier "fips:17" ;
-    ns1:name "Illinois" .
+    ns3:name "Illinois" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
         ns5:HotlineOrganization,
-        ns2:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
+    ns3:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/possession> a ns3:CSAMIncident,
-        ns4:Event ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/event/possession> a ns1:CSAMIncident,
+        ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+    ns1:severityLevel 3 ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_317/phase/convicted> a ns4:Phase,
-        ns7:SentencingPhase ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_317/phase/convicted> a ns2:Phase,
+        ns6:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
+<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
         <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
     rdfs:label "social media" ;
-    ns1:name "social media" .
+    ns3:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_317/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

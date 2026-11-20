@@ -1,28 +1,51 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_880> a ns3:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+        ns5:EnduringEntity ;
     rdfs:label "Case ncmec_2024_880" ;
-    dcterms:created "2026-11-10T21:28:26.346991"^^xsd:dateTime ;
-    dcterms:date "2024-04-16"^^xsd:date ;
+    dcterms:created "2026-11-19T18:27:33.930032"^^xsd:dateTime ;
+    dcterms:date "2024-06-02"^^xsd:date ;
     dcterms:identifier "ncmec_2024_880" ;
-    dcterms:modified "2026-11-12T00:52:08.375083"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:27:33.930032"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_880/provenance> ;
-    dcterms:source <https://www.newswatchman.com/news/article_be928676-fbfc-11ee-9ed8-8378daf1af4a.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_880/location/mansfield>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/location/pike-county>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/location/prc> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_880/phase/indicted> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_880/phase/indicted> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.whio.com/news/local/registered-sex-offender-sentenced-prison-after-pleading-30-child-porn-related-charges/FKJBP2OXC5FPXJCGNPKTADR5WU/> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_880/phase/sentenced> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_880/phase/sentenced> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_880/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/legal-proceeding> ;
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/legal-step/sentenced> ;
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/agency/piqua-police-department> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/assessment/semantic/registered-sex-offender> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_880/narrative> ;
+    ns5:hasConfidence 0.463 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 29.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1/prior-history> a ns1:Annotation ;
+    rdfs:label "prior history" ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1> ;
+    ns1:statement "registered_offender; sex_offense=true" ;
+    ns1:tag "registered_offender" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -31,52 +54,56 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "relating to child pornography" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/registered-sex-offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "the indictment concern acts that happened between May 31" .
+<https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/3> a ns2:CriminalCharge ;
-    rdfs:label "all deal with acts committed on or about July 13" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/agency/piqua-police-department> a ns5:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Piqua Police Department" ;
+    ns1:name "Piqua Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "pandering" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "127"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/3> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_880/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/location/mansfield> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mansfield" ;
-    ns1:name "Mansfield" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/legal-step/sentenced> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/location/pike-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Pike County" ;
-    ns1:name "Pike County" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/location/prc> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Prc" ;
-    ns1:name "Prc" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/offender/1> a ns2:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_880/event/csam> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RecidivistSexOffender> ;
+    rdfs:label "Recidivist Sex Offender · role/registered-sex-offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_880/event/csam> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
+        ns5:Event ;
     rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_880/phase/sentenced> a ns5:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_880/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_880/phase/indicted> a ns3:LegalProcessPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Legal Process Phase · phase/indicted" .
 

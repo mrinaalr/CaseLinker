@@ -5,7 +5,7 @@ CASE/UCO/CAC graphs emitted from coded bundles with the CASE-UCO SDK, checked wi
 **Contents:**
 - [Emission](#emission)
 - [SHACL](#shacl)
-- [Releases](#releases)
+- [Datasets](#datasets)
 - [Oxigraph](#oxigraph)
 
 ## Emission
@@ -27,7 +27,7 @@ CASE/UCO/CAC graphs emitted from coded bundles with the CASE-UCO SDK, checked wi
 | harm | `Documents_Harm` relationship to the victim, with victim kind and H0 category |
 | evidence | `oa:Annotation` targeting a page and character range of the document; quote hash only |
 
-A release built with `--observations` adds a third graph per case, `urn:caselinker:pacer:<case>:observations`: what the record names, as W3C Web Annotations, with no new vocabulary ([observations](../observations/README.md#graph)).
+A dataset built with `--observations` adds a third graph per case, `urn:caselinker:pacer:<case>:observations`: what the record names, as W3C Web Annotations, with no new vocabulary ([observations](../observations/README.md#graph)).
 
 | Record | Graph |
 |---|---|
@@ -49,18 +49,18 @@ The trajectory graph is the derived view: one `uco-action:ActionLifecycle` per c
 | `partial` | Everything that ran passed, but applicable upstream constraints could not run as published (listed) |
 | `fails` | A constraint that ran was violated |
 
-Violations from upstream shapes known to reject valid UCO data ([`shacl_upstream_defects.json`](shacl_upstream_defects.json)) are counted apart from violations of our own output, and still mean `fails`. For `pacer-v1` the `fails` come from CAC's `ActionSemanticsShape`, which targets every `uco-action:Action`, including `ActionLifecycle`; it is filed upstream as Project-VIC-International/CAC-Ontology#74 with a patch in #75, and the graphs validate against that shape once the patch is in the vendored CAC. Nothing is added to a graph (a performer, an object, a start time) to make the check pass. A release check passes only with no violations and every applicable skipped constraint waived in [`shacl_waivers.json`](shacl_waivers.json).
+Violations from upstream shapes known to reject valid UCO data ([`shacl_upstream_defects.json`](shacl_upstream_defects.json)) are counted apart from violations of our own output, and still mean `fails`. For `pacer-v1` the `fails` come from CAC's `ActionSemanticsShape`, which targets every `uco-action:Action`, including `ActionLifecycle`; it is filed upstream as Project-VIC-International/CAC-Ontology#74 with a patch in #75, and the graphs validate against that shape once the patch is in the vendored CAC. Nothing is added to a graph (a performer, an object, a start time) to make the check pass. A dataset check passes only with no violations and every applicable skipped constraint waived in [`shacl_waivers.json`](shacl_waivers.json).
 
-## Releases
+## Datasets
 
 ```bash
 python -m state_machines.graphs.release build <release_id>
 python -m state_machines.graphs.release nquads <release_id>
 ```
 
-A release folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `manifest.json`, `lifecycle.json` and the run report, and, when built with observations, `observations/`, `research_table.json`/`.csv` and (once reviewed) `validation.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
+A dataset folder `state_machines/data/<release_id>/` holds `derived/`, `graphs/`, `manifest.json`, `lifecycle.json` and the run report, and, when built with observations, `observations/`, `research_table.json`/`.csv` and (once reviewed) `validation.json` (committed: codes, dates, page references and hashes, no text), and `cases/` (the bundles, local: they hold coder text). [`release.py`](release.py) refuses a bundle with a validation error in every mode. `--mode adjudicated` (default) also refuses an unadjudicated item or an undecided role; `--mode machine` requires every item agreed by both coders and keeps open roles open; `--mode preview` accepts anything that validates. The manifest records `review_mode`, and per case the passages verified against OCR text only.
 
-The manifest records the schema, codebook, derivation rule, extension and SDK versions, and per case the bundle hash, the source-document hashes, the graph IRIs and hashes, the SHACL result and the review counts. Graph IRIs are stable across releases:
+The manifest records the schema, codebook, derivation rule, extension and SDK versions, and per case the bundle hash, the source-document hashes, the graph IRIs and hashes, the SHACL result and the review counts. Graph IRIs are stable across datasets:
 
 ```
 urn:caselinker:pacer:<case_id>:evidence        actions, participants, roles, relations, provenance
@@ -68,15 +68,15 @@ urn:caselinker:pacer:<case_id>:trajectories    derived order and affordance view
 urn:caselinker:pacer:<case_id>:observations    platforms, placeholder-labelled services, generic service descriptions and feature phrases the record names, each cited; relationships a sentence supports (releases built with observations)
 ```
 
-| Release | Holds |
+| Dataset | Holds |
 |---|---|
 | `pacer-v1` | 30 cases, 284 agreed acts: evidence, trajectory and observation graphs per case, `observations/`, the case-level research table and the affordance evidence matrix |
 
-An affordance individual in these graphs is level C: the sentence states the feature as the means. On `pacer-v1` there are none. Registry candidates and researcher use notes are not emitted here. They are the [analysis frame](../trajectories/README.md#the-analysis-frame), computed when you want to read the 30, and a later rebuild of the release reproduces the graphs from the same bundles.
+An affordance individual in these graphs is level C: the sentence states the feature as the means. On `pacer-v1` there are none. Registry candidates and researcher use notes are not emitted here. They are the [analysis frame](../trajectories/README.md#the-analysis-frame), computed when you want to read the 30, and a later rebuild of the dataset reproduces the graphs from the same bundles.
 
 ## Oxigraph
 
-The full corpus is rebuilt into an empty store; PACER graphs come from a release. `--pacer-graphs all` (default) loads evidence, trajectory and observation graphs, `--pacer-graphs evidence` the evidence graphs only. Adjudicated and machine-coded releases load; a preview is refused unless `--allow-preview`, which accepts only a local store.
+The full corpus is rebuilt into an empty store; PACER graphs come from a dataset. `--pacer-graphs all` (default) loads evidence, trajectory and observation graphs, `--pacer-graphs evidence` the evidence graphs only. Adjudicated and machine-coded datasets load; a preview is refused unless `--allow-preview`, which accepts only a local store.
 
 ```bash
 # build the corpus and PACER N-Quads without touching a store
@@ -88,7 +88,7 @@ OXIGRAPH_URL=http://localhost:7878 python3 scripts/oxigraph/rebuild_oxigraph.py 
 ```
 
 `--verify` checks over SPARQL that:
-- exactly the selected graph kinds of the release are present, each non-empty;
+- exactly the selected graph kinds of the dataset are present, each non-empty;
 - each evidence graph has one investigation and no derived lifecycles, and no trajectory graph holds an investigation;
 - every trajectory states its derivation rule and threshold;
 - no `urn:pacer:kg:*` graph remains;

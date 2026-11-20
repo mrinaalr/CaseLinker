@@ -33,7 +33,7 @@ A participant is the same person, persona or group across the case. What they di
 | `actor` | Who performed the act, and in which role (`offender`, `co_offender`, `victim`, `undercover`, `law_enforcement`, …) |
 | `co_actors` | Others who took part: `assisting`, or `directing` (instructed the act) |
 | `targets` | Whom the act was directed at: `victim`, `recipient`, `counterparty`, `subject` |
-| `unresolved_participants` | Someone the record ties to the event whose role is not decided yet; blocks release |
+| `unresolved_participants` | Someone the record ties to the event whose role is not decided yet; blocks publication |
 | `legal_status` (on the participant) | Charged defendant, uncharged co-conspirator, named victim, …, each with its own passage |
 
 The same participant can be a co-offender in one event and a victim in another. A role is never carried from one event to the next. A **collective** ("at least ten members of the group") is its own participant kind, with sourced membership and a count stated as exact, at least, at most, approximate or unknown.
@@ -101,7 +101,7 @@ An allegation stays an allegation when the case ends in a conviction. Coder revi
 | T18 | `SAME_ACT` is never DIRECT; an ordered pair warns |
 | T19 | Telephony, email and mail are channels, not platforms |
 
-`release_errors()` adds the release gate: no errors, verified passages, no undecided role, and a review state that fits the mode. In `adjudicated` mode every event and relation is adjudicated; in `machine` mode every event is one both model coders agreed on (`review.status = agreed`), and the release is labelled machine-coded, never adjudicated.
+`release_errors()` adds the publication gate: no errors, verified passages, no undecided role, and a review state that fits the mode. In `adjudicated` mode every event and relation is adjudicated; in `machine` mode every event is one both model coders agreed on (`review.status = agreed`), and the dataset is labelled machine-coded, never adjudicated.
 
 ## Migrating older bundles
 

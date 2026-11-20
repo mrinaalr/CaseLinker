@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -11,13 +11,13 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_106> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2023_106" ;
-    dcterms:created "2026-11-10T10:03:05.046154"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:13:28.507281"^^xsd:dateTime ;
     dcterms:date "2023-06-07"^^xsd:date ;
     dcterms:identifier "ncmec_2023_106" ;
-    dcterms:modified "2026-11-10T10:03:05.046154"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:13:28.507281"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_106/provenance> ;
-    dcterms:source <https://illinoisattorneygeneral.gov/onlinesafe/>,
-        "NCMEC" ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://illinoisattorneygeneral.gov/onlinesafe/> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/illinois-il>,
         <https://w3id.org/caselinker/resource/location/monmouth-city-il> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_106/phase/charged> ;
@@ -25,15 +25,16 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_106/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_106/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_106/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-department>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-il>,
+        <https://w3id.org/caselinker/resource/agency/illinois-state-police-il-il0849700>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_106/agency/monmouth-police-department> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_106/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_106/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_106/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_106/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 18.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_106/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 18.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_106/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -42,33 +43,41 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_106/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_106/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/illinois-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+<https://w3id.org/caselinker/resource/agency/illinois-state-police-il> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:StateAgency ;
-    rdfs:label "Illinois State Police Department" ;
-    ns2:name "Illinois State Police Department" .
+    rdfs:label "Illinois State Police" ;
+    dcterms:identifier "ori:IL0849700" ;
+    ns2:name "Illinois State Police" .
+
+<https://w3id.org/caselinker/resource/agency/illinois-state-police-il-il0849700> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:StateAgency ;
+    rdfs:label "Illinois State Police" ;
+    dcterms:identifier "ori:IL0849700" ;
+    skos:altLabel "Illinois State Police Department" ;
+    ns2:name "Illinois State Police" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_106/agency/monmouth-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:LocalAgency ;
     rdfs:label "Monmouth Police Department" ;
     ns2:name "Monmouth Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_106/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_106/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_106/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_106/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Warren County Jail" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_106/charge/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_106/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_106/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_106/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_106/event/possession> .
 

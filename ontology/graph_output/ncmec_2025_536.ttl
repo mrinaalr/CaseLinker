@@ -1,36 +1,54 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_536> a ns4:CACInvestigation,
-        ns3:EnduringEntity ;
+        ns2:EnduringEntity ;
     rdfs:label "Case ncmec_2025_536" ;
-    dcterms:created "2026-11-10T16:35:42.721996"^^xsd:dateTime ;
-    dcterms:date "2025-07-14"^^xsd:date ;
+    dcterms:created "2026-11-19T18:37:03.295705"^^xsd:dateTime ;
+    dcterms:date "2025-03-13"^^xsd:date ;
     dcterms:identifier "ncmec_2025_536" ;
-    dcterms:modified "2026-11-12T01:58:44.665559"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:37:03.295705"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_536/provenance> ;
-    dcterms:source <https://krcgtv.com/news/local/russellville-man-charged-with-possessing-images-of-child-sexual-abuse>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_536/location/russellville>,
-        <https://w3id.org/caselinker/resource/location/cole-county-mo> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.thesalemnewsonline.com/news/article_c147ace0-002c-11f0-92f4-9ff169fd70ba.html> ;
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_536/phase/charged> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_536/phase/charged> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/hands-on>,
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_536/legal-proceeding> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/south-central-missouri-computer-crimes-task-force> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_536/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_536/person/offender/1> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_536/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_536/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/admission/1/extraction-confidence> a ns2:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_536/admission/1> ;
-    ns3:hasConfidence 0.65 ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_536/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_536/narrative> ;
+    ns2:hasConfidence 0.5098 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/assessment/semantic/sextortion> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_536/narrative> ;
+    ns2:hasConfidence 0.4546 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_536/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -39,54 +57,59 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_536/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_536/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/south-central-missouri-computer-crimes-task-force> a ns2:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "South Central Missouri Computer Crimes Task Force" ;
+    ns1:name "South Central Missouri Computer Crimes Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "child molestation" ;
-    dcterms:subject <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/hands-on> a ns4:ChildSexualAbuseEvent,
-        ns3:Event ;
-    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/distribution> a ns2:Event,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/possession> a ns4:CSAMIncident,
-        ns3:Event ;
-    rdfs:label "CSAMIncident · event/possession" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held in the Cole County Jail" ;
-    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_536/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_536/charge/2> .
+    ns3:chargeCount "17"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_536/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/location/russellville> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Russellville" ;
-    ns1:name "Russellville" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_536/role/offender/1> a ns2:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
-
-<https://w3id.org/caselinker/resource/location/cole-county-mo> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Cole County" ;
-    dcterms:identifier "fips:29051" ;
-    ns1:name "Cole County" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_536/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "did not know her last name and said that she was 22 years old" ;
-    dcterms:source <https://krcgtv.com/news/local/russellville-man-charged-with-possessing-images-of-child-sexual-abuse> ;
-    ns1:description "did not know her last name and said that she was 22 years old" .
+    rdfs:label "collecting child pornography over several months and years, and distributing it to people on the internet" ;
+    dcterms:source <https://www.thesalemnewsonline.com/news/article_c147ace0-002c-11f0-92f4-9ff169fd70ba.html> ;
+    ns1:description "collecting child pornography over several months and years, and distributing it to people on the internet" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_536/event/possession> a ns4:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_536/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_536/phase/charged> a ns4:LegalProcessPhase,
-        ns3:Phase ;
+        ns2:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 

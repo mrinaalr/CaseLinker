@@ -1,10 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns8: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,22 +14,22 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312> a ns1:CACInvestigation,
         ns5:EnduringEntity ;
     rdfs:label "Case ncmec_2022_312" ;
-    dcterms:created "2026-11-10T09:18:50.040162"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T18:07:39.001755"^^xsd:dateTime ;
     dcterms:date "2022-04-21"^^xsd:date ;
     dcterms:identifier "ncmec_2022_312" ;
-    dcterms:modified "2026-11-10T09:18:50.040162"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:07:39.001755"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_312/provenance> ;
-    dcterms:source <https://www.arkansasonline.com/news/2022/apr/21/rogers-man-accused-of-possessing-child-pornography/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_312/location/benton-county>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_312/location/bentonville> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.arkansasonline.com/news/2022/apr/21/rogers-man-accused-of-possessing-child-pornography/> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_312/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_312/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_312/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_312/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_312/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_312/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_312/operation> ;
+    ns8:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_312/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1>,
         <https://w3id.org/caselinker/resource/platform/dropbox> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
@@ -37,58 +39,71 @@
     ns5:hasConfidence 0.5554 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/cybertip/reporter/dropbox/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · cybertip/reporter/dropbox/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/esp/dropbox> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_312/cybertip/reporter/dropbox> .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
     ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1> ;
     ns4:concernsAgeQuality ns4:Age ;
     ns4:hasAgeInYears 45.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_312/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_312/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_312/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
-        ns6:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/1> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/1> a ns2:CriminalCharge ;
     rdfs:label "distributing" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/2> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/2> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/cybertip> a ns7:ESPReport,
+        <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns7:reportedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_312/cybertip/reporter/dropbox> ;
+    ns3:name "observe" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312/event/distribution> a ns5:Event,
-        ns3:CSAM_Distribution ;
+        ns2:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns3:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Benton County Jail" ;
-    ns3:chargeCount "47"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/1>,
+    ns2:chargeCount "47"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_312/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_312/location/benton-county> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Benton County" ;
-    ns2:name "Benton County" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/operation> a ns5:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_312/location/bentonville> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bentonville" ;
-    ns2:name "Bentonville" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_312/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_312/event/possession> .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns7:HotlineOrganization,
+        ns8:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns3:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_312/cybertip/reporter/dropbox> a ns7:ReporterRole ;
+    rdfs:label "Reporter Role · cybertip/reporter/dropbox" ;
+    ns7:isAnonymous false .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312/event/possession> a ns1:CSAMIncident,
         ns5:Event ;
@@ -100,10 +115,15 @@
         ns5:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/platform/dropbox> a ns5:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+<https://w3id.org/caselinker/resource/esp/dropbox> a ns6:ElectronicServiceProvider ;
     rdfs:label "Dropbox" ;
-    ns2:name "Dropbox" .
+    ns3:name "Dropbox" .
+
+<https://w3id.org/caselinker/resource/platform/dropbox> a ns5:DigitalSystemEntity,
+        ns6:FileHostingService ;
+    rdfs:label "Dropbox" ;
+    ns6:operatedBy <https://w3id.org/caselinker/resource/esp/dropbox> ;
+    ns3:name "Dropbox" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_312/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

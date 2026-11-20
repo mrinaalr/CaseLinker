@@ -165,6 +165,8 @@ def evidence_targets(
             ok = role == n_role and _norm(value) == _norm(n_value)
         elif field == "prior_history":
             ok = role == n_role
+        elif field == "legal_context":
+            ok = role == n_role and _norm(value) == _norm(n_value)
         else:
             ok = False
         if ok and node not in out:
@@ -314,7 +316,8 @@ def build_provenance_graph(
                 g.add((node, PROV.wasDerivedFrom, source))
 
     _add_location_grounds(g, case_id, activity, location_grounds or [])
-    _add_agency_grounds(g, case_id, activity, agency_grounds or [])
+    districts = (((resolutions or {}).get("legal_context") or {}).get("final_value") or {}).get("federal_districts") or []
+    _add_agency_grounds(g, case_id, activity, agency_grounds or [], districts)
     return g
 
 
@@ -356,7 +359,9 @@ def _add_agency_grounds(
     case_id: str,
     activity: URIRef,
     grounds: List[Dict[str, Any]],
+    districts: Iterable[str] = (),
 ) -> None:
+    from features_to_cac import usao_slug  # type: ignore
     for index, gnd in enumerate(grounds, start=1):
         if not isinstance(gnd, dict):
             continue
@@ -380,7 +385,7 @@ def _add_agency_grounds(
             g.add((node, CL.stateHintSource, Literal(str(gnd["hint_source"]))))
         slug = str(gnd.get("slug") or "").strip()
         if status == "grounded" and slug:
-            g.add((node, DCTERMS.subject, BASE[f"agency/{slug}"]))
+            g.add((node, DCTERMS.subject, BASE[f"agency/{usao_slug(slug, list(districts))}"]))
 
 
 def validate_provenance(graph: Graph) -> tuple[bool, str]:

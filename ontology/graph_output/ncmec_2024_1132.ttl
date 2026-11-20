@@ -1,30 +1,41 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1132> a ns3:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+        ns2:EnduringEntity ;
     rdfs:label "Case ncmec_2024_1132" ;
-    dcterms:created "2026-11-11T23:57:33.222829"^^xsd:dateTime ;
-    dcterms:date "2024-03-12"^^xsd:date ;
+    dcterms:created "2026-11-19T18:29:06.592788"^^xsd:dateTime ;
+    dcterms:date "2024-05-27"^^xsd:date ;
     dcterms:identifier "ncmec_2024_1132" ;
-    dcterms:modified "2026-11-11T23:57:33.222829"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:29:06.592788"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/provenance> ;
-    dcterms:source <https://www.khq.com/news/spokane-man-accused-of-putting-hidden-camera-in-teen-s-room/article_2cb8170a-ddbd-11ee-b7b4-0b8b9bf753d2.html>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/spokane-city-wa>,
-        <https://w3id.org/caselinker/resource/location/washington-wa> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/event/trust-violation>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.chronline.com/stories/rochester-business-owner-accused-of-sexually-assaulting-a-child-under-the-age-of-12,341062> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/legal-proceeding> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/offender/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/victim/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/agency/thurston-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/admission/1> ;
+    ns2:hasConfidence 0.9 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 38.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -33,67 +44,35 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/victim/1/has-role> a ns1:Relationship ;
-    rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/victim/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/agency/thurston-county-sheriffs-office> a ns2:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Thurston County Sheriff's Office" ;
+    ns1:name "Thurston County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/charge/1> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/event/trust-violation> a ns2:CustodialAbuse,
-        ns2:TrustViolation ;
-    rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/relationship/father> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held in jail" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/charge/1> .
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Thurston County jail" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/relationship/father> a ns2:CustodialRelationship,
-        ns2:FamilialRelationship ;
-    rdfs:label "Custodial Relationship · relationship/father" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1> ;
-    ns2:relationshipType "parent" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/location/spokane-city-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Spokane city" ;
-    dcterms:identifier "fips:5367000" ;
-    skos:altLabel "Spokane" ;
-    ns1:name "Spokane city" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "she never told (the victim) not to talk to anyone, but did mention ([PERSON]) would go to jail if other people found out" ;
+    dcterms:source <https://www.chronline.com/stories/rochester-business-owner-accused-of-sexually-assaulting-a-child-under-the-age-of-12,341062> ;
+    ns1:description "she never told (the victim) not to talk to anyone, but did mention ([PERSON]) would go to jail if other people found out" .
 
-<https://w3id.org/caselinker/resource/location/washington-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Washington" ;
-    dcterms:identifier "fips:53" ;
-    skos:altLabel "Wash" ;
-    ns1:name "Washington" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/event/hands-on> a ns3:ChildSexualAbuseEvent,
+        ns2:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
+    ns3:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/phase/charged> a ns3:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/phase/arrested> a ns3:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/victim/1> a ns3:VictimRole ;
-    rdfs:label "Victim Role · role/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1132/role/offender/1> a ns4:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
 

@@ -1,36 +1,39 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_607" ;
-    dcterms:created "2026-11-10T21:26:52.677801"^^xsd:dateTime ;
-    dcterms:date "2024-02-28"^^xsd:date ;
+    dcterms:created "2026-11-19T18:25:59.309906"^^xsd:dateTime ;
+    dcterms:date "2024-06-14"^^xsd:date ;
     dcterms:identifier "ncmec_2024_607" ;
-    dcterms:modified "2026-11-12T00:39:41.864986"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:25:59.309906"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_607/provenance> ;
-    dcterms:source <https://www.kshb.com/news/crime/independence-man-leader-in-local-scout-troop-charged-with-child-pornography>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_607/location/jackson-county>,
-        <https://w3id.org/caselinker/resource/location/kansas-city-city-ks>,
-        <https://w3id.org/caselinker/resource/location/missouri-mo> ;
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://krcgtv.com/news/local/boonville-man-charged-with-child-sex-abuse-material-possession-in-callaway-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/callaway-county-mo> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_607/phase/charged> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_607/phase/charged> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession>,
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/online-only>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_607/legal-proceeding> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_607/agency/boone-county-sheriffs-office>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_607/agency/cyber-crimes-task-force> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/facebook> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 40.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 32.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -39,44 +42,53 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/agency/boone-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns1:LocalAgency ;
+    rdfs:label "Boone County Sheriff's Office" ;
+    ns2:name "Boone County Sheriff's Office" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/agency/cyber-crimes-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns1:LocalAgency ;
+    rdfs:label "Cyber Crimes Task Force" ;
+    ns2:name "Cyber Crimes Task Force" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/online-only> a ns3:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    rdfs:comment "Pretrial detention facility (not a sentence): held without bond" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_607/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/location/jackson-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Jackson County" ;
-    ns2:name "Jackson County" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1> a ns4:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession> .
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/kansas-city-city-ks> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/callaway-county-mo> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kansas City city" ;
-    dcterms:identifier "fips:2036000" ;
-    skos:altLabel "Kansas City" ;
-    ns2:name "Kansas City city" .
+    rdfs:label "Callaway County" ;
+    dcterms:identifier "fips:29027" ;
+    ns2:name "Callaway County" .
 
-<https://w3id.org/caselinker/resource/location/missouri-mo> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Missouri" ;
-    dcterms:identifier "fips:29" ;
-    skos:altLabel "Mo." ;
-    ns2:name "Missouri" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns3:severityLevel 3 .
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns2:name "Facebook" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

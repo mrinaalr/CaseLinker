@@ -2,6 +2,8 @@
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -9,20 +11,29 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_252> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_252" ;
-    dcterms:created "2026-11-10T21:24:49.572910"^^xsd:dateTime ;
-    dcterms:date "2024-07-11"^^xsd:date ;
+    dcterms:created "2026-11-19T18:23:52.288758"^^xsd:dateTime ;
+    dcterms:date "2024-06-20"^^xsd:date ;
     dcterms:identifier "ncmec_2024_252" ;
-    dcterms:modified "2026-11-12T00:22:54.790637"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:23:52.288758"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_252/provenance> ;
-    dcterms:source <https://www.nbc-2.com/article/north-port-man-arrested-child-pornography-charges/61570729>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/florida-fl>,
-        <https://w3id.org/caselinker/resource/location/north-port-city-fl> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_252/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_252/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/possession>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://www.local10.com/news/local/2024/06/20/bay-harbor-islands-man-had-at-least-141-files-of-child-sex-abuse-material-police-say/> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/bay-harbor-islands-town-fl>,
+        <https://w3id.org/caselinker/resource/location/florida-fl>,
+        <https://w3id.org/caselinker/resource/location/miami-dade-county> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_252/legal-proceeding> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/secret-service>,
+        <https://w3id.org/caselinker/resource/agency/usss> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_252/person/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_252/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_252/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 26.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_252/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -31,21 +42,48 @@
     ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_252/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_252/role/offender/1> .
 
+<https://w3id.org/caselinker/resource/agency/secret-service> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Secret Service" ;
+    ns2:name "Secret Service" .
+
+<https://w3id.org/caselinker/resource/agency/usss> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Secret Service" ;
+    ns2:name "U.S. Secret Service" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_252/charge/1> a ns1:CSAM_Possession,
         ns1:CriminalCharge ;
-    rdfs:label "possession of child pornography" .
+    rdfs:label "child sexual abuse material" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/csam> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/hands-on> a ns3:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_252/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
         ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Sarasota County Jail" ;
-    ns1:chargeCount "44"^^xsd:nonNegativeInteger ;
+    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
     ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_252/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_252/role/offender/1> a ns1:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/possession> .
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/bay-harbor-islands-town-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Bay Harbor Islands town" ;
+    dcterms:identifier "fips:1203975" ;
+    skos:altLabel "Bay Harbor Islands" ;
+    ns2:name "Bay Harbor Islands town" .
 
 <https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -54,22 +92,13 @@
     skos:altLabel "Fla." ;
     ns2:name "Florida" .
 
-<https://w3id.org/caselinker/resource/location/north-port-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+<https://w3id.org/caselinker/resource/location/miami-dade-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "North Port city" ;
-    dcterms:identifier "fips:1249675" ;
-    skos:altLabel "North Port" ;
-    ns2:name "North Port city" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_252/event/possession> a ns3:CSAMIncident,
-        <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "CSAMIncident · event/possession" ;
-    ns3:severityLevel 2 .
+    rdfs:label "Miami-Dade County" ;
+    dcterms:identifier "fips:12086" ;
+    skos:altLabel "Miami-dade" ;
+    ns2:name "Miami-Dade County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_252/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_252/phase/arrested> a ns3:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
 

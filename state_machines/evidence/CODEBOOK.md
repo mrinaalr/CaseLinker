@@ -41,7 +41,7 @@ Every party is a **participant** `P1`, `P2`, … that persists across the case. 
 
 - **Legal status** is kept on the participant, cited, apart from what it does: `charged_defendant`, `uncharged_coconspirator`, `named_victim`, `undercover_persona`, `law_enforcement`, `platform_provider`, `third_party`, `court`.
 - **Roles are per event.** Each event has one `actor` (`participant_ref` + `role`); `co_actors` add a `mode`: `performer`, `directing` (instructed the act) or `assisting`; `targets` have a role: `victim`, `recipient`, `counterparty` or `subject`.
-- **Code only the role the passage supports.** If a party is in the act but the source does not say how, list it in `unresolved_participants` with a short note. A release needs every one decided at adjudication (T17).
+- **Code only the role the passage supports.** If a party is in the act but the source does not say how, list it in `unresolved_participants` with a short note. A dataset needs every one decided at adjudication (T17).
 - **No inferred transitions.** A victim who later appears as an offender is two roles on two events, each cited; nothing links them unless the source does.
 - **A collective is never a person,** and a case has no single focal defendant: every charged participant's acts are events.
 
@@ -339,7 +339,7 @@ There is no `SYNTHETIC` status. Nothing introduced for modelling enters the evid
 - **Quote text lives only in the local store** (`local/pacer_text/<case>/quotes.json`). Bundles and graphs carry hashes.
 - **Normalization:** NFKC, straight quotes, soft hyphens removed, whitespace collapsed, case kept (`evidence.normalize`).
 - **Verified** means the validator re-derived the quote from the page text (T04).
-  - On an OCR page, the page image must also have been checked (`image_checked`, T05), or the passage says `ocr_text_exact`: the quote matches the OCR text exactly, but nobody checked the image. Machine coding uses it; releases count such passages, and the OCR text can be wrong where the image is right.
+  - On an OCR page, the page image must also have been checked (`image_checked`, T05), or the passage says `ocr_text_exact`: the quote matches the OCR text exactly, but nobody checked the image. Machine coding uses it; datasets count such passages, and the OCR text can be wrong where the image is right.
   - Struck-through or handwritten text is noted in `limitations`, and is never quoted as the document's content.
 - **No identifiers in coder-written text:** no names, initials, handles, phone numbers, emails or addresses (T14; the deny list comes from the case caption, kept locally).
 

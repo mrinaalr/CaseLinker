@@ -16,7 +16,7 @@ import importlib.util
 import re
 import sys
 from pathlib import Path
-from typing import Dict, Iterable, List, Set, Tuple
+from typing import Dict, Iterable, List, Optional, Set, Tuple
 
 _PATTERN_LAYER = Path(__file__).resolve().parent
 _PROCESSING_LAYER = _PATTERN_LAYER.parent
@@ -974,3 +974,131 @@ def prior_history_assertions(text: str, batch_year=None, persons=None) -> List[D
                         pattern="prior_history", kind=kind, why_not=why or None, count=count, year=year,
                         sex_offense=sex, defendant_entity=_defendant_near(text, s, e, persons) or None))
     return out
+
+
+# ---------------------------------------------------------------------------
+# Legal context: statutes, federal districts, named operations
+# ---------------------------------------------------------------------------
+# Things two cases can share as one node: the U.S. Code section a release cites,
+# the federal judicial district that prosecuted it, and a named enforcement
+# operation it was part of. Each value is canonical, read from one span.
+
+_USC_RE = re.compile(
+    r"\b(?P<title>18|21|34|47)\s*U\.?\s?S\.?\s?C\.?\s*(?:A\.?\s*)?(?:§§?|Sections?|Sec\.)?\s*(?P<sec>\d{3,5}[A-Z]?)"
+    r"|\bTitle\s+(?P<title2>18|21|34|47),?\s+United\s+States\s+Code,?\s+Sections?\s+(?P<sec2>\d{3,5}[A-Z]?)",
+)
+
+# The 94 U.S. district courts (28 U.S.C. §§ 81–131), by state: the divisions a
+# state has, or () for a single district.
+_FEDERAL_DISTRICTS: Dict[str, Tuple[str, ...]] = {
+    "Alabama": ("Northern", "Middle", "Southern"), "Alaska": (), "Arizona": (),
+    "Arkansas": ("Eastern", "Western"), "California": ("Northern", "Eastern", "Central", "Southern"),
+    "Colorado": (), "Connecticut": (), "Delaware": (), "Columbia": (),
+    "Florida": ("Northern", "Middle", "Southern"), "Georgia": ("Northern", "Middle", "Southern"),
+    "Hawaii": (), "Idaho": (), "Illinois": ("Northern", "Central", "Southern"),
+    "Indiana": ("Northern", "Southern"), "Iowa": ("Northern", "Southern"), "Kansas": (),
+    "Kentucky": ("Eastern", "Western"), "Louisiana": ("Eastern", "Middle", "Western"),
+    "Maine": (), "Maryland": (), "Massachusetts": (), "Michigan": ("Eastern", "Western"),
+    "Minnesota": (), "Mississippi": ("Northern", "Southern"), "Missouri": ("Eastern", "Western"),
+    "Montana": (), "Nebraska": (), "Nevada": (), "New Hampshire": (), "New Jersey": (),
+    "New Mexico": (), "New York": ("Northern", "Southern", "Eastern", "Western"),
+    "North Carolina": ("Eastern", "Middle", "Western"), "North Dakota": (),
+    "Ohio": ("Northern", "Southern"), "Oklahoma": ("Northern", "Eastern", "Western"), "Oregon": (),
+    "Pennsylvania": ("Eastern", "Middle", "Western"), "Puerto Rico": (), "Rhode Island": (),
+    "South Carolina": (), "South Dakota": (), "Tennessee": ("Eastern", "Middle", "Western"),
+    "Texas": ("Northern", "Southern", "Eastern", "Western"), "Utah": (), "Vermont": (),
+    "Virginia": ("Eastern", "Western"), "Washington": ("Eastern", "Western"),
+    "West Virginia": ("Northern", "Southern"), "Wisconsin": ("Eastern", "Western"), "Wyoming": (),
+    "Guam": (), "the Northern Mariana Islands": (), "the Virgin Islands": (),
+}
+_DISTRICT_STATES = sorted(_FEDERAL_DISTRICTS, key=len, reverse=True)
+_DISTRICT_RE = re.compile(
+    r"\b(?:(?P<div>Northern|Southern|Eastern|Western|Middle|Central)\s+)?District\s+of\s+(?P<state>"
+    + "|".join(re.escape(s) for s in _DISTRICT_STATES) + r")\b(?![ \t]+(?:Court\s+of\s+Appeals|Circuit))"
+)
+# A district names the prosecuting court or office only in a prosecution sentence.
+_DISTRICT_CUE = re.compile(
+    r"Attorney|Court|Judge|Magistrate|grand\s+jury|prosecut|sentenced|pleaded|pled|charged|indicted|"
+    r"convicted|USAO|federal\s+(?:case|charges?)",
+    re.IGNORECASE,
+)
+
+# Named operations that two or more releases name, each read from its context
+# in the corpus. Person names, single generic words and headline fragments
+# ("Operation Results in …") are left out, as are names that different
+# releases give to different operations (Angel, Clean Sweep, Spring Cleaning).
+# Numbered iterations ("Broken Heart IV", "Keiki Shield 18") are the same
+# operation; a longer name ("Angel Guard") is not.
+NAMED_OPERATIONS: Tuple[str, ...] = (
+    "Glass House", "Predator Alert", "Predator", "Safety Net", "Watchdog", "Safeguard", "Statewide",
+    "Restore Justice", "Koala", "Take Back America", "Emissary", "Joint Hammer", "Uiraçu", "Nest Egg",
+    "Broken Heart", "Janus", "Relentless Justice", "Stovewood", "Open House",
+    "Screen Capture", "Sneaky Peach", "Guardians of the Hope", "Voice of Childhood", "Home Alone",
+    "Ever Vigilant", "Protecting Tomorrow", "Someone Like Me", "Boo Dat", "Cross Country", "Safe Screen",
+    "Keiki Shield", "Argos", "Blue Lace", "Next Door", "Kick Boxer", "Safe Summer", "Winter Guardian",
+    "Creeper Ban", "Somnus", "Aeges", "Cyber Trace", "Cassiel", "Innocence Lost", "Grayskull",
+    "Boogeyman", "Southern Impact", "Safe Online Summer", "Access Denied",
+    "Online Guardian", "Northern Lights", "NO Saints and Sinners", "North Star", "Overwatch",
+)
+_OPERATION_RE = re.compile(
+    r"\bOperation\s+[\"“'‘]?(?P<name>"
+    + "|".join(re.escape(n) for n in sorted(NAMED_OPERATIONS, key=len, reverse=True))
+    + r")(?![\w'’-])(?!\s+(?!(?:In|Targets|Leads|Results|Nets)\b)[A-Z][a-z])"
+)
+
+
+def _usc_value(m: "re.Match") -> str:
+    title = m.group("title") or m.group("title2")
+    sec = (m.group("sec") or m.group("sec2")).upper()
+    return f"{title} U.S.C. § {sec}"
+
+
+def _district_value(m: "re.Match") -> Optional[str]:
+    divs = _FEDERAL_DISTRICTS.get(m.group("state"))
+    if divs is None:
+        return None
+    div = m.group("div")
+    if divs and div not in divs:
+        return None   # "District of Texas" alone, or a division the state does not have
+    if not divs and div:
+        return None
+    return f"{div + ' ' if div else ''}District of {m.group('state')}"
+
+
+def legal_context_assertions(text: str) -> List[Dict]:
+    """Statutes cited, federal districts prosecuting, named operations taking part.
+
+    Roles: ``statute`` (value "18 U.S.C. § 2252A"), ``federal_district`` (value
+    "Eastern District of Virginia"), ``named_operation`` (value "Glass House").
+    """
+    out: List[Dict] = []
+    for m in _USC_RE.finditer(text):
+        out.append(_raw("legal_context", _usc_value(m), "statute", m.start(), m.end(), 0.95,
+                        pattern="usc_citation"))
+    for m in _DISTRICT_RE.finditer(text):
+        value = _district_value(m)
+        if not value:
+            continue
+        ss, se = sg.sentence_at(text, m.start(), m.end())
+        if not _DISTRICT_CUE.search(text[ss:se]):
+            continue
+        out.append(_raw("legal_context", value, "federal_district", m.start(), m.end(), 0.9,
+                        pattern="federal_district"))
+    for m in _OPERATION_RE.finditer(text):
+        out.append(_raw("legal_context", m.group("name"), "named_operation", m.start(), m.end(), 0.9,
+                        pattern="named_operation"))
+    return out
+
+
+def legal_context_span_supports(span: str, role: str, value) -> bool:
+    span = (span or "").strip()
+    if role == "statute":
+        m = _USC_RE.fullmatch(span)
+        return bool(m) and _usc_value(m) == value
+    if role == "federal_district":
+        m = _DISTRICT_RE.fullmatch(span)
+        return bool(m) and _district_value(m) == value
+    if role == "named_operation":
+        m = _OPERATION_RE.fullmatch(span)
+        return bool(m) and m.group("name") == value
+    return False

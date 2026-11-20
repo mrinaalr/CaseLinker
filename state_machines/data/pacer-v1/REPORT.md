@@ -62,7 +62,7 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 | `ncis_2023_001` | yes | 5 | 0 | 58 | 85 | 17 | 0.224 | fails |
 | `ncmec_2022_575` | yes | 19 | 0 | 92 | 184 | 43 | 0.465 | fails |
 | `ncmec_2023_222` | yes | 1 | 0 | 14 | 63 | 1 | None | partial |
-| `ncmec_2025_1035` | yes | 1 | 0 | 18 | 96 | 4 | 0.2 | fails |
+| `ncmec_2025_1026` | yes | 1 | 0 | 18 | 96 | 4 | 0.2 | fails |
 | `svicac_2022_009` | yes | 19 | 0 | 58 | 92 | 15 | 0.534 | fails |
 | `texas_ag_2019_013` | yes | 19 | 0 | 102 | 223 | 45 | 0.344 | fails |
 | `usss_2017_006` | yes | 13 | 0 | 99 | 85 | 38 | 0.294 | fails |
@@ -152,7 +152,7 @@ Read by rule from every page except docket sheets, independent of the coders. An
 | observations in documents with standing SWORN_AFFIDAVIT | 282 |
 | observations in documents with standing ADMITTED_UNDER_OATH | 1 |
 
-**Machine-read; no person reviewed these observations on the real text.** The release is complete without such a review. A researcher who wants one can draw a stratified local packet (`python -m state_machines.observations.validation packet`); its score is printed here when a decisions file is scored.
+**Machine-read; no person reviewed these observations on the real text.** The dataset is complete without such a review. A researcher who wants one can draw a stratified local packet (`python -m state_machines.observations.validation packet`); its score is printed here when a decisions file is scored.
 
 On the reference cases (another coding, not truth): cases 5; listed platforms the reference coding names 3; of which observed 3; platform surfaces in the reference that are not on the list 4; listed platforms observed 6.
 
@@ -406,7 +406,7 @@ SELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE
 
 ## Accuracy on the synthetic benchmark
 
-Scores per rule version and split. `resolved` is what a machine release publishes; `resolved_2b` is the candidate cue rule, not released. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.
+Scores per rule version and split. `resolved` is what a machine-coded dataset publishes; `resolved_2b` is the candidate cue rule, not published. Synthetic pages are cleaner than real filings: none of this is accuracy on the real cases.
 
 ### Observation layer (observe-1.3.0)
 
@@ -444,7 +444,7 @@ Rules resolve-1.0.0. Held-out cases were scored beside dev in four code states w
 | harms correct (precision) | 0.969 (31/32) | 0.762 (16/21) | 1.0 (16/16) |
 | possible retellings linked | 0.0 (0/18) | 0.0 (0/18) | 0.5 (9/18) |
 
-Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.8 (12/15); allegation_only 0.0 (0/7); explicit_order 0.403 (29/72); harm 0.55 (22/40); interrupted 0.4 (4/10); level_c 0.867 (26/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.833 (15/18); undated 0.489 (22/45); undercover 0.4 (10/25).
+Recall of the published coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.8 (12/15); allegation_only 0.0 (0/7); explicit_order 0.403 (29/72); harm 0.55 (22/40); interrupted 0.4 (4/10); level_c 0.867 (26/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.833 (15/18); undated 0.489 (22/45); undercover 0.4 (10/25).
 
 
 ### resolve-1.1.0, confirmation cases (wording written without sight of the rules; the only blind split)
@@ -471,7 +471,7 @@ The one scoring of this split under resolve-1.1.0, after the rules were frozen a
 | harms correct (precision) | 1.0 (34/34) | 0.838 (31/37) | 1.0 (15/15) | 1.0 (19/19) |
 | possible retellings linked | 0.0 (0/27) | 0.0 (0/27) | 0.222 (6/27) | 0.259 (7/27) |
 
-Recall of the released coding by hard-case tag: advocacy 0.273 (3/11); allegation 0.5 (8/16); allegation_only 0.111 (1/9); explicit_order 0.303 (23/76); harm 0.353 (18/51); interrupted 0.75 (6/8); level_c 0.5 (16/32); mention_only 0.0 (0/11); no_level_c 0.455 (10/22); procedure 0.5 (20/40); response 0.0 (0/14); retelling 0.407 (11/27); undated 0.396 (19/48); undercover 0.55 (11/20).
+Recall of the published coding by hard-case tag: advocacy 0.273 (3/11); allegation 0.5 (8/16); allegation_only 0.111 (1/9); explicit_order 0.303 (23/76); harm 0.353 (18/51); interrupted 0.75 (6/8); level_c 0.5 (16/32); mention_only 0.0 (0/11); no_level_c 0.455 (10/22); procedure 0.5 (20/40); response 0.0 (0/14); retelling 0.407 (11/27); undated 0.396 (19/48); undercover 0.55 (11/20).
 
 
 ### resolve-1.1.0, development cases (rules were tuned on these)
@@ -498,7 +498,7 @@ Rules were developed on these cases.
 | harms correct (precision) | 1.0 (42/42) | 0.933 (28/30) | 1.0 (28/28) | 1.0 (39/39) |
 | possible retellings linked | 0.0 (0/24) | 0.0 (0/24) | 0.583 (14/24) | 0.667 (16/24) |
 
-Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
+Recall of the published coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
 
 
 ### resolve-1.1.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
@@ -525,7 +525,7 @@ A later look: these cases had been scored repeatedly during coder development un
 | harms correct (precision) | 0.97 (32/33) | 0.762 (16/21) | 1.0 (16/16) | 1.0 (22/22) |
 | possible retellings linked | 0.0 (0/18) | 0.0 (0/18) | 0.556 (10/18) | 0.556 (10/18) |
 
-Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
+Recall of the published coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
 
 
 ### resolve-1.2.0, confirmation cases (wording written without sight of the rules; the only blind split)
@@ -552,7 +552,7 @@ resolve-1.2.0: level C needs the sentence to state the feature as the means (the
 | harms correct (precision) | 1.0 (34/34) | 0.838 (31/37) | 1.0 (15/15) | 1.0 (19/19) |
 | possible retellings linked | 0.0 (0/27) | 0.0 (0/27) | 0.222 (6/27) | 0.259 (7/27) |
 
-Recall of the released coding by hard-case tag: advocacy 0.273 (3/11); allegation 0.5 (8/16); allegation_only 0.111 (1/9); explicit_order 0.303 (23/76); harm 0.353 (18/51); interrupted 0.75 (6/8); level_c 0.5 (16/32); mention_only 0.0 (0/11); no_level_c 0.455 (10/22); procedure 0.5 (20/40); response 0.0 (0/14); retelling 0.407 (11/27); undated 0.396 (19/48); undercover 0.55 (11/20).
+Recall of the published coding by hard-case tag: advocacy 0.273 (3/11); allegation 0.5 (8/16); allegation_only 0.111 (1/9); explicit_order 0.303 (23/76); harm 0.353 (18/51); interrupted 0.75 (6/8); level_c 0.5 (16/32); mention_only 0.0 (0/11); no_level_c 0.455 (10/22); procedure 0.5 (20/40); response 0.0 (0/14); retelling 0.407 (11/27); undated 0.396 (19/48); undercover 0.55 (11/20).
 
 
 ### resolve-1.2.0, development cases (rules were tuned on these)
@@ -579,7 +579,7 @@ resolve-1.2.0: level C needs the sentence to state the feature as the means (the
 | harms correct (precision) | 1.0 (42/42) | 0.933 (28/30) | 1.0 (28/28) | 1.0 (39/39) |
 | possible retellings linked | 0.0 (0/24) | 0.0 (0/24) | 0.583 (14/24) | 0.667 (16/24) |
 
-Recall of the released coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
+Recall of the published coding by hard-case tag: advocacy 0.833 (5/6); allegation 0.889 (16/18); allegation_only 0.143 (1/7); explicit_order 0.696 (55/79); harm 0.702 (33/47); interrupted 0.75 (3/4); level_c 0.889 (24/27); mention_only 0.0 (0/10); no_level_c 0.826 (19/23); procedure 1.0 (40/40); response 0.667 (6/9); retelling 0.875 (21/24); undated 0.704 (38/54); undercover 0.6 (6/10).
 
 
 ### resolve-1.2.0, held-out cases (a second register, scored repeatedly while the coder was developed; not a blind set)
@@ -606,20 +606,20 @@ resolve-1.2.0: level C needs the sentence to state the feature as the means (the
 | harms correct (precision) | 0.97 (32/33) | 0.762 (16/21) | 1.0 (16/16) | 1.0 (22/22) |
 | possible retellings linked | 0.0 (0/18) | 0.0 (0/18) | 0.556 (10/18) | 0.556 (10/18) |
 
-Recall of the released coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
+Recall of the published coding by hard-case tag: advocacy 1.0 (3/3); allegation 0.867 (13/15); allegation_only 0.0 (0/7); explicit_order 0.417 (30/72); harm 0.55 (22/40); interrupted 0.5 (5/10); level_c 0.9 (27/30); mention_only 0.0 (0/6); no_level_c 0.8 (12/15); procedure 1.0 (40/40); response 0.125 (1/8); retelling 0.889 (16/18); undated 0.489 (22/45); undercover 0.52 (13/25).
 
 
 ## Agreement with reference coding of real cases
 
 Cases `anchorage_pd_2022_006`, `doj_ceos_2025_026`, `ncis_2023_001`, `svicac_2022_009`, `texas_ag_2019_013` were coded earlier by two agent coders of a larger model (their agreed coding, not adjudicated). For each non-procedure act published here: did the reference code an act in the same sentence, and did it give the same action code there. The reference is another coding and does not code every act; this is agreement, not accuracy.
 
-| Measure | Released | Candidate 2b |
+| Measure | Published | Candidate 2b |
 |---|---:|---:|
 | agreed: published acts | 37 |  |
 | agreed: reference coded an act in the same sentence | 24 |  |
 | agreed: reference gave the same action code there | 19 |  |
 | reference acts | 115 |  |
-| reference acts in a sentence the release also cites | 28 |  |
+| reference acts in a sentence the dataset also cites | 28 |  |
 
 ## Privacy
 

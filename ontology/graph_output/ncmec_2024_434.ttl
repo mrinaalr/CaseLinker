@@ -1,88 +1,129 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434> a ns2:CACInvestigation,
-        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434> a ns1:CACInvestigation,
+        ns2:EnduringEntity ;
     rdfs:label "Case ncmec_2024_434" ;
-    dcterms:created "2026-11-10T21:25:53.245282"^^xsd:dateTime ;
-    dcterms:date "2024-09-05"^^xsd:date ;
+    dcterms:created "2026-11-19T18:24:55.676364"^^xsd:dateTime ;
+    dcterms:date "2024-03-19"^^xsd:date ;
     dcterms:identifier "ncmec_2024_434" ;
-    dcterms:modified "2026-11-12T00:31:41.576349"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T18:24:55.676364"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_434/provenance> ;
-    dcterms:source <https://clintoncountydailynews.com/frankfort-man-arrested-for-distributing-child-exploitation-material/>,
-        "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_434/location/frankfort> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_434/phase/arrested> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_434/phase/arrested> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/distribution>,
+    dcterms:publisher "NCMEC" ;
+    dcterms:source <https://fox59.com/news/indycrime/instagram-tip-leads-to-man-being-arrested-for-possession-of-child-porn/#:~:text=%E2%80%94%20A%20Medora%20man%20is%20under,as%20a%20Level%206%20felony> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/edinburgh-town>,
+        <https://w3id.org/caselinker/resource/location/indiana-in>,
+        <https://w3id.org/caselinker/resource/location/medora-town-in> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_434/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_434/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_434/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_434/agency/clinton-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1>,
-        <https://w3id.org/caselinker/resource/platform/kik> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_434/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/instagram> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_434/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_434/narrative> ;
+    ns2:hasConfidence 0.5526 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
     ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1> ;
     ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 34.0 .
+    ns4:hasAgeInYears 19.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_434/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_434/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
+        ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
+    ns3:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/agency/clinton-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
-    rdfs:label "Clinton County Sheriff's Office" ;
-    ns1:name "Clinton County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/charge/1> a ns5:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns2:ChildSexualAbuseEvent .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/distribution> a ns2:Event,
         ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
         ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    rdfs:comment "Pretrial detention facility (not a sentence): held in Jackson County Jail" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_434/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/location/frankfort> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Frankfort" ;
-    ns1:name "Frankfort" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_434/role/offender/1> a ns5:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
+<https://w3id.org/caselinker/resource/location/edinburgh-town> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Edinburgh town" ;
+    dcterms:identifier "fips:1820404" ;
+    skos:altLabel "Edinburgh" ;
+    ns3:name "Edinburgh town" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_434/phase/arrested> a ns2:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Indiana" ;
+    dcterms:identifier "fips:18" ;
+    skos:altLabel "Ind." ;
+    ns3:name "Indiana" .
+
+<https://w3id.org/caselinker/resource/location/medora-town-in> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Medora town" ;
+    dcterms:identifier "fips:1848240" ;
+    skos:altLabel "Medora" ;
+    ns3:name "Medora town" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "sending/receiving/trading child sexual abuse material and confirmed the Instagram account in question was his own" ;
+    dcterms:source <https://fox59.com/news/indycrime/instagram-tip-leads-to-man-being-arrested-for-possession-of-child-porn/#:~:text=%E2%80%94%20A%20Medora%20man%20is%20under,as%20a%20Level%206%20felony> ;
+    ns3:description "sending/receiving/trading child sexual abuse material and confirmed the Instagram account in question was his own" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/event/possession> a ns1:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 3 ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_434/phase/charged> a ns1:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/instagram> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Instagram" ;
+    ns3:name "Instagram" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_434/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

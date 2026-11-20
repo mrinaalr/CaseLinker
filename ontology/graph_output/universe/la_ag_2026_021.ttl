@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,22 +12,23 @@
 <https://w3id.org/caselinker/resource/case/la_ag_2026_021> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case la_ag_2026_021" ;
-    dcterms:created "2026-11-11T15:31:13.539463"^^xsd:dateTime ;
+    dcterms:created "2026-11-19T19:48:31.801979"^^xsd:dateTime ;
     dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "la_ag_2026_021" ;
-    dcterms:modified "2026-11-11T15:31:13.539463"^^xsd:dateTime ;
+    dcterms:modified "2026-11-19T19:48:31.801979"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/la_ag_2026_021/provenance> ;
-    dcterms:source <https://www.ag.state.la.us/Article/434>,
-        "LA AG" ;
+    dcterms:publisher "LA AG" ;
+    dcterms:source <https://www.ag.state.la.us/Article/434> ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/tickfaw-village-la> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/la_ag_2026_021/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/la_ag_2026_021/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/la_ag_2026_021/event/possession>,
         <https://w3id.org/caselinker/resource/case/la_ag_2026_021/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/la_ag_2026_021/person/offender/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/la_ag_2026_021/cybertip>,
+        <https://w3id.org/caselinker/resource/case/la_ag_2026_021/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_021/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -42,33 +44,32 @@
     ns1:target <https://w3id.org/caselinker/resource/case/la_ag_2026_021/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns1:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Louisiana Bureau of Investigation" ;
     ns1:name "Louisiana Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
-    rdfs:label "National Center for Missing and Exploited Children" ;
-    skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
-
-<https://w3id.org/caselinker/resource/case/la_ag_2026_021/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_021/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
+
+<https://w3id.org/caselinker/resource/case/la_ag_2026_021/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_021/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/la_ag_2026_021/charge/1> .
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/la_ag_2026_021/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_021/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_021/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/la_ag_2026_021/event/possession> .
 
@@ -78,6 +79,13 @@
     dcterms:identifier "fips:2275670" ;
     skos:altLabel "Tickfaw" ;
     ns1:name "Tickfaw village" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:HotlineOrganization,
+        ns5:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_021/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;

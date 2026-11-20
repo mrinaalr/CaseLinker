@@ -29,7 +29,7 @@ def test_reference_comparison_counts_sentences_and_codes(tmp_path):
     assert c["agreed: published acts"] == n
     assert c["agreed: reference coded an act in the same sentence"] == n - 1
     assert c["agreed: reference gave the same action code there"] == n - 2
-    assert c["reference acts"] == n - 1 and c["reference acts in a sentence the release also cites"] == n - 1
+    assert c["reference acts"] == n - 1 and c["reference acts in a sentence the dataset also cites"] == n - 1
 
 
 def test_benchmark_tables_keep_every_measure_apart_and_label_the_candidate():
@@ -41,5 +41,5 @@ def test_benchmark_tables_keep_every_measure_apart_and_label_the_candidate():
                "by_tag": {"undercover": rate}}
     md = "\n".join(R._benchmark_md({"resolve-9.9.9.confirm": {"resolved": overall, "resolved_2b": overall, "_note": "scored once"}}))
     for words in ("resolve-9.9.9", "scored once", "gold acts found (recall)", "order relations: reversed", "harms correct (precision)",
-                  "| resolved | resolved_2b |", "undercover 0.5 (1/2)", "not released"):
+                  "| resolved | resolved_2b |", "undercover 0.5 (1/2)", "not published"):
         assert words in md, words
