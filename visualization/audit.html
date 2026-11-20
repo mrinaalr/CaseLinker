@@ -1106,10 +1106,8 @@
             
             // If we have patterns, highlight them
             if (searchPatterns.length > 0) {
-                let highlightedText = currentCaseText;
-                
-                // Check if this is an age label to handle comma highlighting specially
                 const isAgeLabel = label.includes('Age');
+                let highlightedText = escapeHtml(currentCaseText);
                 
                 searchPatterns.forEach(pattern => {
                     highlightedText = highlightedText.replace(pattern, (match) => {
@@ -1663,12 +1661,9 @@
             
             // If we have patterns, highlight them
             if (searchPatterns.length > 0) {
-                let highlightedText = currentCaseText;
-                
-                // Check if this is an age label to handle comma highlighting specially
                 const isAgeLabel = label.includes('Age');
                 const isDateRange = label === 'Date Range';
-                
+                let highlightedText = escapeHtml(currentCaseText);
                 searchPatterns.forEach(pattern => {
                     highlightedText = highlightedText.replace(pattern, (match, prefix) => {
                         // For date range (year), we captured a prefix character - only highlight the year

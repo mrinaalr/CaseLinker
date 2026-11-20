@@ -1025,9 +1025,9 @@
         ],
         links: [
           repo("src/Clustering & Analysis Layer/analysis.py", "analysis.py"),
-          app("/clusters", "/clusters"),
           app("/analysis", "/analysis"),
-          app("/stats", "/stats")
+          app("/patterns", "/patterns"),
+          app("/sources", "/sources")
         ]
       },
       {
@@ -1043,7 +1043,7 @@
           ["Supervised tiers", "Scores binned → Random Forest or decision tree (joblib bundle). GET /api/triage-eval and /api/triage-model-corpus; optional facet_constraints."],
           ["Live paste", "POST /api/triage-live. Same extraction path, in memory only. Missing bundle is an error, not a silent fallback."]
         ],
-        links: [repo("triage.md"), repo("scripts/run/train_triage_model.py", "train_triage_model.py"), app("/triage", "/triage")]
+        links: [repo("triage.md"), repo("scripts/run/train_triage_model.py", "train_triage_model.py"), app("/search", "/search")]
       },
       {
         id: "harm",
@@ -1073,7 +1073,7 @@
           ["Eras", "Same four buckets as Search and Case Studies: 2010–2014, 2015–2018, 2019–2022, 2023–2026."],
           ["API", "GET /api/technology-revolver. Precomputed slim table technology_revolver_slim for the page."]
         ],
-        links: [app("/tech-landscape", "/tech-landscape"), repo("README.md#other-features", "README.md · Tech Landscape")]
+        links: [app("/visualization", "/visualization"), repo("README.md#other-features", "README.md · Tech Landscape")]
       },
       {
         id: "lstar",
@@ -1109,7 +1109,7 @@
           ["Five dimensions", "Platform context, perpetrator methodology, investigative approach, prosecutorial outcome, relationship to the era. Optional takeaway; optional linked_case_id into the corpus."],
           ["Notes", "GET/POST /api/case-studies/notes/{id} — community notes, rate limited. POST is not an MCP tool."]
         ],
-        links: [app("/case-studies", "/case-studies"), repo("data/case_studies.json", "case_studies.json"), repo("README.md#technical-reports", "README.md · Report #4")]
+        links: [app("/lifecycle", "/lifecycle"), repo("data/case_studies.json", "case_studies.json"), repo("README.md#technical-reports", "README.md · Report #4")]
       },
       {
         id: "querylab",
@@ -1120,11 +1120,11 @@
         title: "Query is a browser lab",
         lede: "Custom analysis in the page. JavaScript calls public APIs. No extra server language.",
         points: [
-          ["What it is", "/query — examples on the page. Same rate limits as other public routes."],
-          ["What it is not", "Not SPARQL. Not the LLM chat. Not trusted bulk export."],
-          ["Sister pages", "Stats and location aggregates: /stats, GET /api/stats-detailed, GET /api/location-stats."]
+          ["What it is", "/analysis — a question in plain language becomes SPARQL. Same rate limits as other public routes."],
+          ["What it is not", "Not a SQL console. Not trusted bulk export."],
+          ["Sister pages", "Source stats and location aggregates: /sources, GET /api/stats-detailed, GET /api/location-stats."]
         ],
-        links: [app("/query", "/query"), app("/stats", "/stats"), app("/docs", "/docs")]
+        links: [app("/analysis", "/analysis"), app("/sources", "/sources"), app("/docs", "/docs")]
       },
       {
         id: "llm",
@@ -1139,7 +1139,7 @@
           ["Caps", "Public: 50 requests / IP / day plus slowapi 15/min. Trusted CaseLinker-Key: daily cap exempt; 15/min still applies. Localhost exempt."],
           ["Scope", "Statistics and structured fields. Not a substitute for SPARQL over CAC graphs."]
         ],
-        links: [app("/llm", "/llm"), repo("caselinker_mcp/tool_registry.md#trusted-key-sensitive-5-tools", "tool_registry.md · llm_chat")]
+        links: [app("/analysis", "/analysis"), repo("caselinker_mcp/tool_registry.md#trusted-key-sensitive-5-tools", "tool_registry.md · llm_chat")]
       },
       {
         id: "audit",

@@ -132,6 +132,26 @@ def test_agencies_places_and_charges_are_not_masked():
     assert "person_spans" not in pub  # offsets are internal
 
 
+def test_lone_surname_label_is_masked_only_when_the_word_is_a_person():
+    surname = "Quillfeather"
+    assert surname.lower() not in PK._places()
+    text = f"Rowan Quinn {surname}, 38, of Little Rock, pleaded guilty."
+    spans = [[text.index("Rowan"), text.index(", 38")]]
+    masked = PK.mask_feature_strings(
+        {"person_spans": spans, "locations": [surname, "Little Rock"]}, text
+    )
+    assert masked["locations"] == ["[PERSON]", "Little Rock"]
+    # The same word outside the person span can be a place. Leave it.
+    outside = text + f" {surname} County filed nothing."
+    kept = PK.mask_feature_strings({"person_spans": spans, "locations": [surname]}, outside)
+    assert kept["locations"] == [surname]
+    if "smith" in PK._places():
+        smith = "Corin Smith, 40, pleaded guilty."
+        smith_spans = [[smith.index("Corin"), smith.index(", 40")]]
+        place = PK.mask_feature_strings({"person_spans": smith_spans, "locations": ["Smith"]}, smith)
+        assert place["locations"] == ["Smith"]
+
+
 def test_public_case_payload_serves_redacted_text_only():
     import importlib.util
     spec = importlib.util.spec_from_file_location("caselinker_run_main_nopii", ROOT / "run" / "main.py")

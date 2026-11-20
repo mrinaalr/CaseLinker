@@ -26,6 +26,7 @@ import csv
 import json
 import os
 import re
+import unicodedata
 import sqlite3
 import sys
 from collections import Counter, defaultdict
@@ -165,6 +166,7 @@ ABBREV_TO_USPS = {
     "s d": "SD",
     "w va": "WV",
     "w v": "WV",
+    "wva": "WV",  # "W.va." loses its periods in _norm
     "r i": "RI",
 }
 
@@ -240,6 +242,8 @@ INTERNATIONAL_SOURCES = frozenset(
         "QPS",
         "GARDA",
         "NCA",
+        # Alberta Law Enforcement Response Teams. Not U.S. ICE.
+        "ALERT ICE",
     }
 )
 
@@ -254,7 +258,6 @@ FEDERAL_SOURCES = frozenset(
         "US MARSHALS",
         "USSS",
         "ICE",
-        "ALERT ICE",
         "CBP",
         "AF OSI",
         "ARMY CID",
@@ -286,7 +289,8 @@ _STATE_NAMES_LONGEST = sorted(STATE_NAME_TO_USPS.keys(), key=len, reverse=True)
 
 
 def _norm(text: str) -> str:
-    s = text.strip().lower()
+    s = unicodedata.normalize("NFKD", text.strip().lower())
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
     s = s.replace("’", "'").replace("`", "'").replace("–", "-").replace("—", "-")
     s = re.sub(r"[.]", "", s)
     s = re.sub(r"[^a-z0-9'/\s-]+", " ", s)
@@ -297,7 +301,7 @@ def _norm(text: str) -> str:
 
 def strip_possessive(text: str) -> str:
     """New Jersey's → New Jersey; states' → states (caller re-norms)."""
-    s = text.strip()
+    s = text.strip().replace("’", "'").replace("`", "'")
     s = re.sub(r"(?i)([A-Za-z])'s\b", r"\1", s)
     s = re.sub(r"(?i)([A-Za-z]s)'\b", r"\1", s)
     return s

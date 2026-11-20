@@ -25,10 +25,10 @@ This project was motivated by challenges I encountered with understanding ICAC c
 
 - **Fragmented data sources**: Cases are scattered across numerous organizations, states, and agencies
 - **Cross-case analysis**: Identifying patterns, similarities, and connections between cases becomes challenging without a unified system, even when cases share common characteristics such as abuse patterns, platforms, or perpetrator demographics
-- **Limitations in trend analysis**: Analyzing the evolution of child exploitation, the mediums in which it occurs, and recurring case topics
-- **Emotional impact**: The challenge of repeatedly reading and processing highly disturbing case material
+- **Limitations in trend analysis**: Analyzing the evolution of online exploitation, the mediums in which it occurs, and recurring case topics
+- **Manual review limits**: The difficulty of reviewing thousands of case reports, retaining relevant details, and drawing meaningful inferences across them
 
-CaseLinker aims to address these challenges by serving as a tool for case analysis, enabling researchers, law enforcement, and advocacy organizations to better understand the landscape of child exploitation.
+CaseLinker aims to address these challenges by serving as a tool for case analysis, enabling researchers, law enforcement, and advocacy organizations to better understand how these cases unfold and the broader ICAC landscape.
 
 ## Emphasis
 

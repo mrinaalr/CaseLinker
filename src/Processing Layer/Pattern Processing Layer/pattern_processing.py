@@ -2036,8 +2036,12 @@ def extract_evidence_volume(case: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
 
 _INVESTIGATION_TYPE_PRIORITY = (
-    "undercover", "proactive", "reactive", "online", "unknown", "cybertip",
+    "undercover", "proactive", "reactive", "online", "cybertip", "unknown",
 )
+# "online" may sit a few words before "investigation" ("online child exploitation
+# investigation"). An unbounded gap also matches a later, unrelated "investigation",
+# which stored "online" on cases that never said the investigation was online.
+_INV_NEAR = r"(?:\s+\S+){0,3}\s+"
 _CYBERTIP_PATTERN = (
     r"Cyber\s*Tipline|CyberTip(?:line)?|Cybertipline|Cyber\s*Tip\s*Line"
     r"|missingkids\.org/cybertipline|NCMEC\s+(?:Cyber\s*)?Tipline"
@@ -2079,14 +2083,16 @@ def extract_investigation_info(case: Dict[str, Any]) -> Optional[Dict[str, Any]]
         # Check "undercover" before "proactive" (e.g. "proactive undercover investigation").
         type_patterns = {
             "undercover": r'\bunder\s*cover\b|\bundercover\b(?:\s+(?:\S+\s+)*(?:operation|operations|investigation|detective[s]?))?',
-            "proactive": r'\bproactive\b\s+(?:\S+\s+)*(?:investigation|operation[s]?)',
-            "reactive": r'\breactive\b\s+(?:\S+\s+)*(?:investigation|operation[s]?)',
-            "online": r'\bonline\b\s+(?:\S+\s+)*(?:investigation|operation[s]?)',
+            "proactive": rf'\bproactive\b{_INV_NEAR}(?:investigation|operation[s]?)',
+            "reactive": rf'\breactive\b{_INV_NEAR}(?:investigation|operation[s]?)',
+            "online": rf'\bonline\b{_INV_NEAR}(?:investigation|operation[s]?)',
         }
         for inv_type, pattern in type_patterns.items():
             if re.search(pattern, case_text, re.IGNORECASE) and inv_type not in types:
                 types.append(inv_type)
-        if not any(t in _METHOD_TYPE_KEYS for t in types):
+        # A CyberTip is a way the case started. Do not also store "unknown"
+        # just because the release uses the word "investigation" later.
+        if "cybertip" not in types and not any(t in _METHOD_TYPE_KEYS for t in types):
             types.append("unknown")
 
     if not types:
@@ -2239,6 +2245,22 @@ _CHARGE_COUNT_RE = re.compile(
     r'(\d+)\s+counts?\s+(?:of\s+)?([^\n,;]+?)(?=\s*(?:,|\.|;|\n|$))',
     re.IGNORECASE,
 )
+
+# Program footers name the problem, not the charge. "child sexual exploitation and
+# abuse" and the CEOS name were matching the bare charge list.
+_CHARGE_BOILERPLATE = (
+    re.compile(r"child sexual exploitation and abuse", re.IGNORECASE),
+    re.compile(r"child exploitation and obscenity section", re.IGNORECASE),
+    re.compile(r"project safe childhood", re.IGNORECASE),
+)
+
+
+def _text_without_program_boilerplate(case_text: str) -> str:
+    text = case_text
+    for pattern in _CHARGE_BOILERPLATE:
+        text = pattern.sub(" ", text)
+    return text
+
 
 # Bare charge phrases when no "N counts" prefix is present (longest / specific first).
 _BARE_CHARGE_PHRASES: Tuple[Tuple[re.Pattern, str], ...] = tuple(
@@ -2475,11 +2497,20 @@ def _extract_prosecution_charges(case_text: str) -> List[Dict[str, Any]]:
         except (ValueError, IndexError):
             continue
 
+    bare_text = _text_without_program_boilerplate(case_text)
     for pattern, label in _BARE_CHARGE_PHRASES:
-        if pattern.search(case_text):
+        if pattern.search(bare_text):
             _add(1, label)
 
-    return charges
+    # A shorter phrase inside a longer one is the same charge, not a second count.
+    return [
+        c for c in charges
+        if not any(
+            c["charge"].lower() != other["charge"].lower()
+            and c["charge"].lower() in other["charge"].lower()
+            for other in charges
+        )
+    ]
 
 
 def _sentence_span_overlaps_covered(
@@ -2770,9 +2801,14 @@ def extract_topics(case: Dict[str, Any]) -> List[str]:
     if re.search(r'\b(Australia|Philippines|Japan|India|Thailand|international|overseas)\b', case_text, re.IGNORECASE):
         topics.append('international')
     
-    # Multi-state
-    states = ['Colorado', 'Texas', 'California', 'Las Vegas', 'Arizona', 'Florida', 'New York', 'Ohio', 'Pennsylvania', 'Virginia', 'Washington', 'Oregon', 'Washington DC', 'Maryland', 'Massachusetts', 'New Jersey', 'New Mexico', 'New Hampshire', 'Rhode Island', 'Connecticut', 'Delaware', 'Maine', 'Michigan', 'Minnesota', 'Missouri', 'Nebraska', 'Nevada', 'North Carolina', 'North Dakota', 'South Carolina', 'South Dakota', 'Tennessee', 'Utah', 'Vermont', 'Wisconsin', 'Wyoming']
-    state_count = sum(1 for state in states if re.search(r'\b' + re.escape(state) + r'\b', case_text, re.IGNORECASE))
+    # Multi-state. A city is not a state, and "Washington, D.C." is one place however
+    # often it is named. A DOJ dateline "WASHINGTON —" or "WASHINGTON, D.C. —" is the
+    # release city, not a second state.
+    state_text = re.sub(r'(?m)^\s*WASHINGTON(?:,?\s+D\.?C\.?)?\s*[—–\-]', ' ', case_text)
+    dc_hits = 1 if re.search(r'\bWashington,?\s+D\.?C\.?\b', state_text, re.IGNORECASE) else 0
+    state_text = re.sub(r'\bWashington,?\s+D\.?C\.?\b', ' ', state_text, flags=re.IGNORECASE)
+    states = ['Colorado', 'Texas', 'California', 'Arizona', 'Florida', 'New York', 'Ohio', 'Pennsylvania', 'Virginia', 'Washington', 'Oregon', 'Maryland', 'Massachusetts', 'New Jersey', 'New Mexico', 'New Hampshire', 'Rhode Island', 'Connecticut', 'Delaware', 'Maine', 'Michigan', 'Minnesota', 'Missouri', 'Nebraska', 'Nevada', 'North Carolina', 'North Dakota', 'South Carolina', 'South Dakota', 'Tennessee', 'Utah', 'Vermont', 'Wisconsin', 'Wyoming']
+    state_count = dc_hits + sum(1 for state in states if re.search(r'\b' + re.escape(state) + r'\b', state_text, re.IGNORECASE))
     if state_count > 1:
         topics.append('multi_state')
     

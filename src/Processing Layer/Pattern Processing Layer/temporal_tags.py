@@ -90,6 +90,12 @@ _DATE_RES = (
     (re.compile(r"\b(?:in|since|during|from|until|by|of)\s+((?:19|20)\d{2})\b", re.I), "y"),  # "In 2008, …"
 )
 _PUBLICATION_LINE = re.compile(r"^\s*(?:Publication\s+date|Date\s+Posted|Published|Posted|Updated)\s*:?", re.I | re.M)
+_LEAD_DATE_PREFIX = re.compile(
+    r"^\s*(?:On|For immediate release)\b"
+    r"|^\s*(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s*$",
+    re.I,
+)
+_DATELINE_TAIL = re.compile(r"(?:[—–\-]|[(])\s*$")
 _BIOGRAPHY_CUES = re.compile(
     r"\b(?:born|ordained|graduated|married|enlisted|hired|joined|retired|served\s+as|appointed|elected|founded)\b", re.I
 )
@@ -213,10 +219,27 @@ def event_kind(text: str, ss: int, se: int, start: int, end: int) -> str:
     return best[1]
 
 
+def _publication_prefix(text: str, start: int) -> bool:
+    """A date at the head of the release: a labeled line, a blank lead, a dateline, or "On …"."""
+    line_start = text.rfind("\n", 0, start) + 1
+    prefix = text[line_start:start]
+    if _PUBLICATION_LINE.match(prefix):
+        return True
+    if start >= 500:
+        return False
+    if prefix.strip() == "" or _LEAD_DATE_PREFIX.match(prefix):
+        return True
+    return len(prefix) < 80 and bool(_DATELINE_TAIL.search(prefix))
+
+
 def publication_year(text: str, mentions: List[Dict], fallback: Optional[int]) -> Optional[int]:
+    """The release's own year, else the batch year.
+
+    A conduct year in the opening lines ("from 2010") is not the publication
+    year. Using it made a later prior sentence look like this case's sentence.
+    """
     for d in mentions:
-        line_start = text.rfind("\n", 0, d["start"]) + 1
-        if _PUBLICATION_LINE.match(text[line_start : d["start"]]) or d["start"] < 300:
+        if _publication_prefix(text, d["start"]):
             return d["year"]
     return fallback
 
@@ -305,12 +328,9 @@ def temporal_assertions(
     out: List[Dict] = []
     pub_value: Optional[str] = None
     for d in mentions:
-        line_start = text.rfind("\n", 0, d["start"]) + 1
         ss, se = sg.sentence_at(text, d["start"], d["end"])
         sentence = text[ss:se]
-        if _PUBLICATION_LINE.match(text[line_start : d["start"]]) or (
-            d["start"] < 300 and text[line_start : d["start"]].strip() == ""
-        ):
+        if _publication_prefix(text, d["start"]):
             role = "publication"
             if pub_value is None and len(d["value"]) == 10:
                 pub_value = d["value"]
