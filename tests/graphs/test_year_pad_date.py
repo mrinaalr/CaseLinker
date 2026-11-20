@@ -52,3 +52,21 @@ def test_luring_keeps_online_enticement_and_a_firearm_gets_no_csam_class():
     assert "CSAM" not in str(cls)
     cls, _cluster, _generic = mod.CaseToCAC._match_charge("drug trafficking", warnings)
     assert "SexTrafficking" not in str(cls)
+    cls, _cluster, _generic = mod.CaseToCAC._match_charge("possession of a deadly weapon during the commission of a felony", warnings)
+    assert "CSAM" not in str(cls)
+    cls, _cluster, _generic = mod.CaseToCAC._match_charge("trafficking in oxycodone", warnings)
+    assert "SexTrafficking" not in str(cls)
+
+
+def test_a_cut_off_possession_label_keeps_csam_possession():
+    """A short stored label is still a CSAM count. idaho_icac_2024_037, ky_sp_2021_005."""
+    warnings: list = []
+    for charge in (
+        "possession of",
+        "possession of matter portraying a sexual performance by a",
+    ):
+        cls, _cluster, generic = mod.CaseToCAC._match_charge(charge, warnings)
+        assert "Possession" in str(cls), (charge, cls)
+        assert generic is False
+    cls, _cluster, _generic = mod.CaseToCAC._match_charge("child pornography and drugs", warnings)
+    assert "Possession" in str(cls)

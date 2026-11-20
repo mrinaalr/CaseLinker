@@ -752,16 +752,18 @@ CHARGE_PATTERN_MAP: List[Tuple[str, URIRef]] = [
     (pat, cls) for pat, cls, _cluster in CHARGE_MATCH_RULES
 ]
 
-# Stems that also name firearm and drug counts. They match only when the charge
-# names the subject. "possession of a firearm" is not CSAM possession, and "drug
-# trafficking" is not sex trafficking. "luring" and "enticement" stay as they were.
+# Bare stems also name firearm and drug counts. Skip the stem only when the
+# label names one of those. A cut-off "possession of" stays CSAM possession.
+# "possession of a firearm" and "trafficking in oxycodone" do not. "luring"
+# and "enticement" are not stems.
 _CHARGE_STEMS = frozenset({
     "dissemination", "distribution", "transmission", "production",
     "possession", "trafficking",
 })
-_CHARGE_SUBJECT = re.compile(
-    r"\b(?:child|children|minor|minors|csam|pornograph\w*|obscen\w*"
-    r"|sexual\s+exploitation|sexually\s+explicit)\b",
+_CHARGE_OTHER = re.compile(
+    r"\b(?:firearms?|weapons?|guns?|handguns?|rifles?|pistols?|ammunition"
+    r"|drugs?|controlled\s+substance|narcotics?"
+    r"|oxycodone|cocaine|heroin|fentanyl|methamphetamine|marijuana|cannabis)\b",
     re.I,
 )
 
@@ -2780,9 +2782,8 @@ class CaseToCAC:
             pat = pattern.lower()
             if not re.search(r'(?<![a-z])' + re.escape(pat) + r'(?![a-z])', lower):
                 continue
-            # "possession" / "trafficking" alone must not turn a firearm or a
-            # drug count into a CSAM or sex-trafficking charge.
-            if pat in _CHARGE_STEMS and _CHARGE_SUBJECT.search(lower) is None:
+            # A bare stem names a firearm or a drug count only when the label says so.
+            if pat in _CHARGE_STEMS and _CHARGE_OTHER.search(lower):
                 continue
             return class_uri, cluster, False
         warnings.append(
