@@ -1319,6 +1319,33 @@ def _agencies_involved_for_case(case: Dict[str, Any], parse_field) -> set:
     return out
 
 
+_corpus_ids_cache = None
+_corpus_fp_cache = None
+_corpus_fp_time = 0.0
+
+
+def current_corpus():
+    """(id set, fingerprint). Cached with the case count. The fingerprint changes when ids change."""
+    global _corpus_ids_cache, _corpus_fp_cache, _corpus_fp_time
+    now = time.time()
+    if _corpus_fp_cache and (now - _corpus_fp_time) < _CASE_COUNT_TTL:
+        return _corpus_ids_cache, _corpus_fp_cache
+    from corpus_cache import corpus_fingerprint
+    rows = storage.get_source_date_rows()
+    ids = frozenset(row[0] for row in rows if row and row[0])
+    fp = corpus_fingerprint(ids)
+    _corpus_ids_cache = ids
+    _corpus_fp_cache = fp
+    _corpus_fp_time = now
+    return ids, fp
+
+
+def _payload_is_current(payload) -> bool:
+    from corpus_cache import payload_matches_corpus
+    ids, _fp = current_corpus()
+    return payload_matches_corpus(payload, ids)
+
+
 def get_case_count() -> int:
     """
     Lightweight helper for counting cases.
@@ -1512,10 +1539,11 @@ def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request"
                 "cached": True,
                 "source": "background",
             }
-            cache_key = get_cache_key("automated-analysis", version=case_count)
+            _ids, _fp = current_corpus()
+            cache_key = get_cache_key("automated-analysis", version=_fp)
             redis_ok = set_cached(cache_key, result, ttl=86400)
             _automated_analysis_mem_cache = result
-            _automated_analysis_mem_case_count = case_count
+            _automated_analysis_mem_case_count = _fp
 
             slim_groups = _slim_for_cluster_groups(analysis_results.get("case_groups", []))
             cg_result = {
@@ -1524,9 +1552,9 @@ def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request"
                 "cached": True,
                 "source": "background",
             }
-            set_cached(get_cache_key("cluster-groups", version=case_count), cg_result, ttl=86400)
+            set_cached(get_cache_key("cluster-groups", version=_fp), cg_result, ttl=86400)
             _cluster_groups_cache = cg_result
-            _cluster_groups_cache_case_count = case_count
+            _cluster_groups_cache_case_count = _fp
             if stored_aa and redis_ok:
                 print(f"✅ Automated analysis warmed and persisted ({case_count} cases, compute=#{compute_id})")
             elif redis_ok or _automated_analysis_mem_cache is not None:
@@ -1592,32 +1620,35 @@ try:
             try:
                 print("Pre-computing clusters in background...")
                 case_count = get_case_count()
-                cache_key = get_cache_key('cluster-groups', version=case_count)
+                _ids, _fp = current_corpus()
+                cache_key = get_cache_key('cluster-groups', version=_fp)
                 cached_result = get_cached(cache_key)
-                if cached_result is not None:
+                if cached_result is not None and _payload_is_current(cached_result):
                     _cluster_groups_cache = cached_result
-                    _cluster_groups_cache_case_count = case_count
+                    _cluster_groups_cache_case_count = _fp
                     print(f"✅ Cluster cache warmed from Redis ({case_count} cases)")
                 else:
                     slim_from_db = storage.get_cluster_groups_slim(case_count)
-                    if slim_from_db and len(slim_from_db) > 0:
+                    if slim_from_db and len(slim_from_db) > 0 and _payload_is_current(slim_from_db):
                         result = {"success": True, "case_groups": slim_from_db, "cached": True, "source": "startup"}
                         set_cached(cache_key, result, ttl=86400)
                         _cluster_groups_cache = result
-                        _cluster_groups_cache_case_count = case_count
+                        _cluster_groups_cache_case_count = _fp
                         print(f"✅ Cluster cache warmed from DB slim ({case_count} cases)")
+                    elif slim_from_db:
+                        print(f"⏭️  Cluster slim for {case_count} cases cites other ids; refusing it")
 
                 # Warm automated-analysis: Redis → Postgres slim → schedule background compute
-                aa_key = get_cache_key('automated-analysis', version=case_count)
+                aa_key = get_cache_key('automated-analysis', version=_fp)
                 aa_cached = get_cached(aa_key)
                 need_compute = False
-                if aa_cached is not None:
+                if aa_cached is not None and _payload_is_current(aa_cached):
                     _automated_analysis_mem_cache = aa_cached
-                    _automated_analysis_mem_case_count = case_count
+                    _automated_analysis_mem_case_count = _fp
                     print(f"✅ Automated-analysis cache warmed from Redis ({case_count} cases)")
                 else:
                     aa_from_db = storage.get_automated_analysis_slim(case_count)
-                    if aa_from_db:
+                    if aa_from_db and _payload_is_current(aa_from_db):
                         aa_result = {
                             "success": True,
                             "analysis": aa_from_db,
@@ -1626,9 +1657,11 @@ try:
                         }
                         set_cached(aa_key, aa_result, ttl=86400)
                         _automated_analysis_mem_cache = aa_result
-                        _automated_analysis_mem_case_count = case_count
+                        _automated_analysis_mem_case_count = _fp
                         print(f"✅ Automated-analysis cache warmed from DB slim ({case_count} cases)")
                     else:
+                        if aa_from_db:
+                            print(f"⏭️  Automated-analysis slim for {case_count} cases cites other ids; refusing it")
                         need_compute = True
 
                 if _cluster_groups_cache is None:
@@ -2764,12 +2797,8 @@ def get_case_ids_by_filter(
                 if not prosecution:
                     return None
                 if isinstance(prosecution, dict):
-                    # Same fallback chain as in stats: booking_status → status → 'prosecuted'
-                    return (
-                        prosecution.get('booking_status')
-                        or prosecution.get('status')
-                        or 'prosecuted'
-                    )
+                    # A charges-only record has no stage. Do not call it prosecuted.
+                    return prosecution.get('booking_status') or prosecution.get('status') or None
                 return str(prosecution)
 
             filtered_cases = [
@@ -2941,9 +2970,10 @@ def get_detailed_stats(request: Request):
         # Calculate coverage for each feature type
         severity_count = sum(1 for c in cases if parse_field(c.get('severity_indicators', [])))
         prosecution_count = sum(1 for c in cases if c.get('prosecution_outcome'))
-        relationship_count = sum(1 for c in cases if c.get('relationship_to_victim'))
+        from corpus_cache import is_stated
+        relationship_count = sum(1 for c in cases if is_stated(c.get('relationship_to_victim')))
         platforms_count = sum(1 for c in cases if parse_field(c.get('platforms_used', [])))
-        investigation_count = sum(1 for c in cases if c.get('investigation_type'))
+        investigation_count = sum(1 for c in cases if is_stated(c.get('investigation_type')))
         victim_count = sum(1 for c in cases if c.get('victim_count') is not None)
         perp_age_count = sum(1 for c in cases if c.get('perpetrator_age') is not None)
         perp_registry_count = sum(1 for c in cases if c.get('perpetrator_registered_sex_offender') is True)
@@ -3051,10 +3081,11 @@ def get_detailed_stats(request: Request):
             prosecution = case.get('prosecution_outcome')
             if prosecution:
                 if isinstance(prosecution, dict):
-                    status = prosecution.get('booking_status') or prosecution.get('status') or 'prosecuted'
+                    status = prosecution.get('booking_status') or prosecution.get('status') or None
                 else:
                     status = str(prosecution)
-                prosecution_counter[status] += 1
+                if status:
+                    prosecution_counter[status] += 1
         prosecution_distribution = [{"name": name, "count": count} for name, count in prosecution_counter.most_common()]
         
         # 7. Perpetrator Age Data (for bubble chart)
@@ -3610,26 +3641,30 @@ async def cluster_groups_endpoint(request: Request):
     global _cluster_groups_cache, _cluster_groups_cache_case_count
     try:
         current_case_count = get_case_count()
+        _ids, _fp = current_corpus()
 
-        # 1. In-memory cache (fastest - no network/DB)
+        # 1. In-memory cache (fastest - no network/DB). Keyed by the id fingerprint,
+        # not the case count: a renumber that keeps the count must miss.
         if (_cluster_groups_cache is not None and
-                _cluster_groups_cache_case_count == current_case_count):
+                _cluster_groups_cache_case_count == _fp and
+                _payload_is_current(_cluster_groups_cache)):
             _cluster_groups_cache['_cache_source'] = 'memory'
             return _cluster_groups_cache
 
-        cache_key = get_cache_key('cluster-groups', version=current_case_count)
+        cache_key = get_cache_key('cluster-groups', version=_fp)
 
         # 2. Redis cache
         cached_result = get_cached(cache_key)
-        if cached_result is not None:
+        if cached_result is not None and _payload_is_current(cached_result):
             cached_result['_cache_source'] = 'redis'
             _cluster_groups_cache = cached_result
-            _cluster_groups_cache_case_count = current_case_count
+            _cluster_groups_cache_case_count = _fp
             return cached_result
 
-        # 3. Slim table (small fetch, ~10KB vs ~1MB full blob)
+        # 3. Slim table is still stored by case count. Refuse it when it cites
+        # ids that are not in this corpus (the count can stay the same).
         slim_groups = await asyncio.to_thread(storage.get_cluster_groups_slim, current_case_count)
-        if slim_groups and len(slim_groups) > 0:
+        if slim_groups and len(slim_groups) > 0 and _payload_is_current(slim_groups):
             result = {
                 "success": True,
                 "case_groups": slim_groups,
@@ -3638,7 +3673,7 @@ async def cluster_groups_endpoint(request: Request):
             }
             set_cached(cache_key, result, ttl=86400)
             _cluster_groups_cache = result
-            _cluster_groups_cache_case_count = current_case_count
+            _cluster_groups_cache_case_count = _fp
             return result
 
         # 4. Cold: never compute inline. On Railway (default) refuse to spawn
@@ -3674,10 +3709,12 @@ async def automated_analysis_endpoint(request: Request):
     global _automated_analysis_mem_cache, _automated_analysis_mem_case_count
     try:
         current_case_count = get_case_count()
+        _ids, _fp = current_corpus()
 
         if (
             _automated_analysis_mem_cache is not None
-            and _automated_analysis_mem_case_count == current_case_count
+            and _automated_analysis_mem_case_count == _fp
+            and _payload_is_current(_automated_analysis_mem_cache)
         ):
             analysis = _automated_analysis_mem_cache.get("analysis")
             return _build_automated_analysis_response(
@@ -3687,10 +3724,10 @@ async def automated_analysis_endpoint(request: Request):
                 public=not _has_bulk_corpus_access(request),
             )
 
-        cache_key = get_cache_key('automated-analysis', version=current_case_count)
+        cache_key = get_cache_key('automated-analysis', version=_fp)
 
         cached_result = get_cached(cache_key)
-        if cached_result is not None:
+        if cached_result is not None and _payload_is_current(cached_result):
             analysis = cached_result.get("analysis")
             if isinstance(analysis, dict):
                 out = _build_automated_analysis_response(
@@ -3702,14 +3739,15 @@ async def automated_analysis_endpoint(request: Request):
                     "cached": True,
                     "source": "redis",
                 }
-                _automated_analysis_mem_case_count = current_case_count
+                _automated_analysis_mem_case_count = _fp
                 return out
 
-        # Postgres slim is source of truth when Redis is cold
+        # Postgres slim is source of truth when Redis is cold. A row for this
+        # count that cites the previous ids is a miss, not a hit.
         aa_from_db = await asyncio.to_thread(
             storage.get_automated_analysis_slim, current_case_count
         )
-        if aa_from_db:
+        if aa_from_db and _payload_is_current(aa_from_db):
             result = {
                 "success": True,
                 "analysis": aa_from_db,
@@ -3718,7 +3756,7 @@ async def automated_analysis_endpoint(request: Request):
             }
             set_cached(cache_key, result, ttl=86400)
             _automated_analysis_mem_cache = result
-            _automated_analysis_mem_case_count = current_case_count
+            _automated_analysis_mem_case_count = _fp
             return _build_automated_analysis_response(
                 aa_from_db, source="database", cached=True, public=not _has_bulk_corpus_access(request)
             )
@@ -3906,12 +3944,15 @@ def api_llm_chat(request: Request, body: LlmChatBody):
             api_key=key or "unset",
         )
     except requests.HTTPError as e:
-        detail = str(e)
-        if e.response is not None and e.response.text:
-            detail = e.response.text[:800]
-        raise HTTPException(status_code=502, detail=f"LLM upstream error: {detail}") from e
+        status = e.response.status_code if e.response is not None else None
+        if status == 429:
+            raise HTTPException(
+                status_code=429,
+                detail="The language model is rate-limited. Try again in a minute.",
+            ) from e
+        raise HTTPException(status_code=502, detail="The language model request failed.") from e
     except requests.RequestException as e:
-        raise HTTPException(status_code=502, detail=f"Upstream request failed: {e}") from e
+        raise HTTPException(status_code=502, detail="The upstream request failed.") from e
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e
 
@@ -4019,12 +4060,15 @@ def api_sparql_from_nl(request: Request, body: SparqlFromNlBody):
             model_override=body.model,
         )
     except requests.HTTPError as e:
-        detail = str(e)
-        if e.response is not None and e.response.text:
-            detail = e.response.text[:800]
-        raise HTTPException(status_code=502, detail=f"LLM upstream error: {detail}") from e
+        status = e.response.status_code if e.response is not None else None
+        if status == 429:
+            raise HTTPException(
+                status_code=429,
+                detail="The language model is rate-limited. Try again in a minute.",
+            ) from e
+        raise HTTPException(status_code=502, detail="The language model request failed.") from e
     except requests.RequestException as e:
-        raise HTTPException(status_code=502, detail=f"Upstream request failed: {e}") from e
+        raise HTTPException(status_code=502, detail="The upstream request failed.") from e
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e
     except RuntimeError as e:

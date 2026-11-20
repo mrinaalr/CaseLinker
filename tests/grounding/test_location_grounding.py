@@ -42,6 +42,15 @@ def test_cumberland_county_nj_grounds_to_fips(lg):
     assert rows[0]["entity_kind"] == "county"
 
 
+def test_wva_accent_and_alert_ice():
+    lg = _load_mod()
+    assert lg.resolve_abbrev_token("W.va.") == "WV"
+    assert lg._norm("San José") == "san jose"
+    assert lg.strip_possessive("Mary\u2019s") == "Mary"
+    assert lg.is_international_source("ALERT ICE")
+    assert "ALERT ICE" not in lg.FEDERAL_SOURCES
+
+
 def test_sc_abbrev_grounds_as_state(lg):
     # Pure state abbrev must ground even when the "string" hint source is demoted.
     rows = lg.ground_case_locations(["S.C."], source="SCAG ICAC", case_text="")

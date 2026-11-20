@@ -201,11 +201,53 @@
     });
     return out;
   }
-  function findState(q) {
-    var lower = q.toLowerCase(), best = null;
-    Object.keys(STATES).forEach(function (name) { if (lower.indexOf(name) >= 0 && (!best || name.length > best.name.length)) best = { name: name, abbr: STATES[name] }; });
-    if (!best) return null;
-    return { label: best.name.replace(/\b\w/g, function (c) { return c.toUpperCase(); }), abbr: best.abbr, iri: RES + 'location/' + best.name.replace(/ /g, '-') + '-' + best.abbr };
+  function findStates(q) {
+    var rest = ' ' + q.toLowerCase() + ' ';
+    var found = [];
+    Object.keys(STATES).sort(function (a, b) { return b.length - a.length; }).forEach(function (name) {
+      var gap = name.replace(/ /g, '\\s+');
+      if (!new RegExp('(^|[^a-z])' + gap + '($|[^a-z])').test(rest)) return;
+      found.push({
+        name: name, abbr: STATES[name],
+        label: name.replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
+        iri: RES + 'location/' + name.replace(/ /g, '-') + '-' + STATES[name]
+      });
+      rest = rest.replace(new RegExp(gap, 'g'), ' ');
+    });
+    return found;
+  }
+  function findState(q) { var all = findStates(q); return all.length === 1 ? all[0] : null; }
+  function findDistrict(lower) {
+    var m = /\b(northern|southern|eastern|western|middle|central)\s+district\s+of\s+([a-z][a-z .]+?)(?=\s+(?:case|cases|involving|with|that|and|or|versus|vs)|[?.!,]|$)/.exec(lower);
+    if (!m) return null;
+    var rest = m[2].trim(), stateName = null;
+    Object.keys(STATES).sort(function (a, b) { return b.length - a.length; }).some(function (name) {
+      if (rest === name || rest.indexOf(name + ' ') === 0) { stateName = name; return true; }
+      return false;
+    });
+    if (!stateName) return null;
+    return {
+      slug: m[1] + '-district-of-' + stateName.replace(/ /g, '-'),
+      label: m[1].charAt(0).toUpperCase() + m[1].slice(1) + ' District of ' + stateName.replace(/\b\w/g, function (c) { return c.toUpperCase(); })
+    };
+  }
+  // A negation covers the phrase right after it and stops at the next "in", "from",
+  // "and", "with" (and the like). "without a CyberTip in Florida" excludes the
+  // CyberTip, not Florida.
+  var NEG_LEAD = /^\s*(?:(?:involve|involves|involving|include|includes|including|have|has|having|mention|mentions|mentioning|in|from|a|an|any|the)\s+)*/;
+  var NEG_STOP = /\s(?:in|from|and|with|or|but|that|which|who|where|involving|including|per|by|since|during|before|after|versus|vs)\b|[.,;:?!]/;
+  function clauseNegated(lower, needle) {
+    var re = /\b(?:do not|does not|did not|don't|doesn't|without|except|excluding|other than|not)\b/gi, m;
+    var rx = needle instanceof RegExp ? needle : new RegExp(needle, 'i');
+    while ((m = re.exec(lower))) {
+      var tail = lower.slice(m.index + m[0].length);
+      tail = tail.slice(NEG_LEAD.exec(tail)[0].length);
+      var stop = NEG_STOP.exec(tail);
+      var scope = stop ? tail.slice(0, stop.index) : tail;
+      rx.lastIndex = 0;
+      if (rx.test(scope)) return true;
+    }
+    return false;
   }
   function findCase(q) { var m = /\b([a-z]+(?:_[a-z]+)*_\d{4}_\d{3,4})\b/i.exec(q); return m ? m[1].toLowerCase() : null; }
   function caseIri(id) { return RES + 'case/' + id; }
@@ -213,8 +255,13 @@
   /* ---------- verified query templates ---------- */
   function build(q) {
     var lower = q.toLowerCase();
-    var id = findCase(q), state = findState(q), plats = findPlatforms(q);
+    var id = findCase(q), states = findStates(q), plats = findPlatforms(q);
+    var district = findDistrict(lower);
+    var namedCompare = /\bversus\b|\bvs\.?\b|\bcompared?\b/.test(lower) && states.length >= 2;
+    var state = (!district && states.length === 1) ? states[0] : null;
     var tip = /cyber\s?tip|tipline|ncmec report/.test(lower);
+    var tipNeg = tip && clauseNegated(lower, /cyber\s?tips?|tipline|ncmec report/);
+    var stateNeg = state && clauseNegated(lower, new RegExp(state.name.replace(/ /g, '\\s+'), 'i'));
     var AG = { 'fbi': 'fbi', 'federal bureau of investigation': 'fbi', 'hsi': 'hsi', 'homeland security investigations': 'hsi', 'ncmec': 'ncmec', 'icac': 'icac', 'usao': 'usao', 'u.s. attorney': 'usao', 'marshals': 'usms', 'cbp': 'cbp', 'secret service': 'usss' };
     var ags = Object.keys(AG).filter(function (k) { return new RegExp('(^|[^a-z])' + k.replace(/\./g, '\\.') + '($|[^a-z])').test(lower); }).map(function (k) { return AG[k]; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
     var count = /how many|count|number of/.test(lower);
@@ -282,16 +329,33 @@
       'SELECT ?kind ?label ?node WHERE {\n  GRAPH <' + caseIri(id) + '> {\n    BIND(<' + caseIri(id) + '> AS ?case)\n    {\n      ?case cac:hasStep ?node . ?node a ?t FILTER(?t != <https://cacontology.projectvic.org/core#Event>)\n      BIND("step" AS ?kind) BIND(REPLACE(STR(?t), "^.*[#/]", "") AS ?label)\n    } UNION {\n      ?node a cac-core:DigitalSystemEntity ; rdfs:label ?label BIND("platform" AS ?kind)\n    } UNION {\n      ?case cac-multi:involvesAgency ?node . ?node rdfs:label ?label BIND("agency" AS ?kind)\n    } UNION {\n      ?case dcterms:spatial ?node . ?node rdfs:label ?label BIND("location" AS ?kind)\n    } UNION {\n      ?case dcterms:source ?node FILTER(isLiteral(?node)) BIND("source" AS ?kind) BIND(STR(?node) AS ?label)\n    }\n  }\n} ORDER BY ?kind ?label LIMIT 300', evidenceCase: id };
 
 
+    function kept(item, needle) { return !clauseNegated(lower, needle); }
+    var platPos = [], platNeg = [];
+    plats.forEach(function (p) {
+      var needle = new RegExp(p.label.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      (kept(p, needle) ? platPos : platNeg).push(p);
+    });
+    var offPos = [], offNeg = [];
+    offs.forEach(function (o) { (clauseNegated(lower, o[0]) ? offNeg : offPos).push(o); });
     var where = '    ?case a cac:CACInvestigation ; dcterms:identifier ?caseId .\n';
-    if (state) where += '    ?case dcterms:spatial ?place . FILTER(REGEX(STR(?place), "/location/[^/]*-' + state.abbr + '(-[0-9]+)?$"))\n';
-    if (tip) where += '    ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport .\n';
-    plats.forEach(function (p) { where += '    <' + RES + 'platform/' + p.slug + '> a cac-core:DigitalSystemEntity .\n'; });
+    if (district) where += '    ?cov dcterms:coverage <' + RES + 'jurisdiction/' + district.slug + '> .\n';
+    if (state && !stateNeg) where += '    ?case dcterms:spatial ?place . FILTER(REGEX(STR(?place), "/location/[^/]*-' + state.abbr + '(-[0-9]+)?$"))\n';
+    if (state && stateNeg) where += '    FILTER NOT EXISTS { ?case dcterms:spatial ?noPlace . FILTER(REGEX(STR(?noPlace), "/location/[^/]*-' + state.abbr + '(-[0-9]+)?$")) }\n';
+    if (!district && !state && states.length > 1) where += '    ?case dcterms:spatial ?anyPlace . FILTER(' + states.map(function (s) { return 'REGEX(STR(?anyPlace), "/location/[^/]*-' + s.abbr + '(-[0-9]+)?$")'; }).join(' || ') + ')\n';
+    if (tip && !tipNeg) where += '    ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport .\n';
+    if (tipNeg) where += '    FILTER NOT EXISTS { ?case uco-core:object ?noTip . ?noTip a ncmec:NCMECCybertipReport . }\n';
+    platPos.forEach(function (p) { where += '    <' + RES + 'platform/' + p.slug + '> a cac-core:DigitalSystemEntity .\n'; });
+    platNeg.forEach(function (p) { where += '    FILTER NOT EXISTS { <' + RES + 'platform/' + p.slug + '> a cac-core:DigitalSystemEntity . }\n'; });
     ags.forEach(function (a) { where += '    ?case cac-multi:involvesAgency <' + RES + 'agency/' + a + '> .\n'; });
-    offs.forEach(function (o, i) { where += '    ?off' + i + ' a ?offType' + i + ' . VALUES ?offType' + i + ' { ' + o[2].map(function (t) { return '<' + t + '>'; }).join(' ') + ' }\n'; });
+    offPos.forEach(function (o, i) { where += '    ?off' + i + ' a ?offType' + i + ' . VALUES ?offType' + i + ' { ' + o[2].map(function (t) { return '<' + t + '>'; }).join(' ') + ' }\n'; });
+    offNeg.forEach(function (o, i) { where += '    FILTER NOT EXISTS { ?noOff' + i + ' a ?noOffType' + i + ' . VALUES ?noOffType' + i + ' { ' + o[2].map(function (t) { return '<' + t + '>'; }).join(' ') + ' } }\n'; });
     if (yr) where += '    ?case dcterms:date ?caseDate . FILTER(' + yr.filter + ')\n';
     var casesQ = PREFIXES + 'SELECT DISTINCT ?caseId WHERE {\n  GRAPH ?g {\n' + where + '  }\n  ' + PRESS + '\n} ORDER BY ?caseId LIMIT 500';
-    var desc = [state ? state.label : null, tip ? 'CyberTip' : null].concat(offs.map(function (o) { return o[1]; })).concat(plats.map(function (p) { return p.label; })).concat(ags.map(function (a) { return a.toUpperCase(); })).concat(yr ? [yr.label] : []).filter(Boolean).join(' · ');
-    var filtered = state || tip || plats.length || ags.length || offs.length || yr;
+    var desc = [district ? district.label : null, state ? (stateNeg ? 'not ' + state.label : state.label) : null, states.length > 1 ? states.map(function (s) { return s.label; }).join(namedCompare ? ' vs ' : ' or ') : null, tipNeg ? 'not CyberTip' : (tip ? 'CyberTip' : null)].concat(offPos.map(function (o) { return o[1]; })).concat(offNeg.map(function (o) { return 'not ' + o[1]; })).concat(platPos.map(function (p) { return p.label; })).concat(platNeg.map(function (p) { return 'not ' + p.label; })).concat(ags.map(function (a) { return a.toUpperCase(); })).concat(yr ? [yr.label] : []).filter(Boolean).join(' · ');
+    var filtered = !!(district || state || stateNeg || states.length > 1 || tip || tipNeg || plats.length || ags.length || offs.length || yr);
+    var byYear = /\bper year\b|\bby year\b|\beach year\b|\bover time\b|\bover the years\b|\btrend\b|\bchanged\b|\bannual(?:ly)?\b/.test(lower);
+    var byState = /\bwhich states\b|\bwhat states\b|\bby state\b|\bper state\b|\beach state\b|\bstates have\b/.test(lower);
+    var placeNote = !!(state && !stateNeg);
 
     var prior = /\bprior\b|previous(?:ly)?\s+(?:been\s+)?convict|registered\s+(?:sex\s+)?offender|recidivis|on\s+(?:probation|parole|supervised release|supervision)/.test(lower);
     if (prior) {
@@ -300,21 +364,21 @@
         'SELECT ?kind (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + pw +
         '    ?ann a uco-core:Annotation ; rdfs:label "prior history" ; uco-core:tag ?kind .\n  }\n  ' + PRESS + '\n} GROUP BY ?kind ORDER BY DESC(?cases)' };
     }
-    if (tip && /who\b|which (?:compan|provider|esp)|report(?:ed|ers?|ing)\b|filed|sent\b|c[ao]me from/.test(lower)) return { casesSparql: casesQ, kind: 'reporters', how: 'Template: who reported the CyberTips, when the release says' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    if (tip && !tipNeg && /who\b|which (?:compan|provider|esp)|report(?:ed|ers?|ing)\b|filed|sent\b|c[ao]me from/.test(lower)) return { casesSparql: casesQ, kind: 'reporters', how: 'Template: who reported the CyberTips, when the release says' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?reporter (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
       '    ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?reporter .\n  }\n  ' + PRESS + '\n} GROUP BY ?reporter ORDER BY DESC(?cases) LIMIT 30' };
 
     // Conditions the corpus-wide templates cannot express (role, victim, outcome): answer through the
     // language model instead of returning a broader answer that silently drops them.
-    if (/groom|livestream|convict|sentenc|plea|teacher|coach|pastor|priest|officer|female|wom[ae]n|girls?\b|boys?\b|juvenile|teen|infant|toddler/.test(lower)) return null;
+    if (/groom|livestream|convict|sentenc|plea|teacher|coach|pastor|priest|officer|female|wom[ae]n|girls?\b|boys?\b|juvenile|teen|infant|toddler|youngest|percent|average|median/.test(lower)) return null;
     if (/\b(?:19|20)\d\d\b/.test(lower) && !yr) return null;
 
     // "How many cases involve social media?" separates the generic tag from the named apps of that kind.
-    var gen = plats.length === 1 && GENERIC_CLASS[plats[0].slug];
+    var gen = platPos.length === 1 && !platNeg.length && GENERIC_CLASS[platPos[0].slug];
     if (gen && (count || /involve|mention/.test(lower))) {
-      var base = where.replace('    <' + RES + 'platform/' + plats[0].slug + '> a cac-core:DigitalSystemEntity .\n', '');
-      var named = '?p a <https://cacontology.projectvic.org/platforms#' + gen[1] + '> FILTER(?p != <' + RES + 'platform/' + plats[0].slug + '>)';
-      var tag = '<' + RES + 'platform/' + plats[0].slug + '> a cac-core:DigitalSystemEntity';
+      var base = where.replace('    <' + RES + 'platform/' + platPos[0].slug + '> a cac-core:DigitalSystemEntity .\n', '');
+      var named = '?p a <https://cacontology.projectvic.org/platforms#' + gen[1] + '> FILTER(?p != <' + RES + 'platform/' + platPos[0].slug + '>)';
+      var tag = '<' + RES + 'platform/' + platPos[0].slug + '> a cac-core:DigitalSystemEntity';
       return { casesSparql: casesQ, kind: 'generic', genLabel: gen[0], how: 'Template: ' + gen[0].toLowerCase() + ' as a generic tag versus named ' + gen[0].toLowerCase() + ' apps' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
         'SELECT ?kind (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n' +
         '  { GRAPH ?g {\n' + base + '    ' + tag + ' . FILTER NOT EXISTS { ' + named + ' }\n  } BIND("generic tag only" AS ?kind) }\n' +
@@ -324,7 +388,25 @@
     }
     var appsOnly = wantApps ? '    FILTER(?platform NOT IN (' + Object.keys(PLATFORM_KIND).map(function (k) { return '<' + RES + 'platform/' + k + '>'; }).join(', ') + '))\n' : '';
 
-    if (agency && filtered) return { casesSparql: casesQ, how: 'Template: agencies by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    function yearSparql(body) {
+      return PREFIXES + 'SELECT ?year (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + body +
+        '    ?case dcterms:date ?caseDate .\n    BIND(YEAR(?caseDate) AS ?year)\n    FILTER(BOUND(?year))\n  }\n  ' + PRESS + '\n} GROUP BY ?year ORDER BY ?year';
+    }
+    function stateSparql(body, abbrs) {
+      var filt = abbrs && abbrs.length
+        ? '    FILTER(?st IN (' + abbrs.map(function (a) { return '"' + a.toUpperCase() + '"'; }).join(', ') + '))\n'
+        : '    FILTER(STRLEN(?st) = 2)\n';
+      return PREFIXES + 'SELECT ?st (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + body +
+        '    ?case dcterms:spatial ?stPlace .\n' +
+        '    BIND(UCASE(REPLACE(STR(?stPlace), "^.*/location/[^/]*-([a-z][a-z])(-[0-9]+)?$", "$1")) AS ?st)\n' +
+        filt + '  }\n  ' + PRESS + '\n} GROUP BY ?st ORDER BY DESC(?cases)';
+    }
+    if (byYear || byState || namedCompare) {
+      if (byYear && !byState && !namedCompare) return { casesSparql: casesQ, kind: 'by-year', placeNote: placeNote, how: 'Template: matching cases by year' + (desc ? ' (' + desc + ')' : ''), sparql: yearSparql(where) };
+      return { casesSparql: casesQ, kind: 'by-state', placeNote: placeNote, how: 'Template: matching cases by state' + (desc ? ' (' + desc + ')' : ''), sparql: stateSparql(where, (namedCompare && states.length) ? states.map(function (s) { return s.abbr; }) : null) };
+    }
+
+    if (agency && filtered) return { casesSparql: casesQ, placeNote: placeNote, how: 'Template: agencies by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
       '    ?case cac-multi:involvesAgency ?agency . ?agency rdfs:label ?label .\n  }\n  ' + PRESS + '\n} GROUP BY ?label ORDER BY DESC(?cases) LIMIT 25' };
 
@@ -332,17 +414,17 @@
       'SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
       '    ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label .\n' + appsOnly + '  }\n  ' + PRESS + '\n} GROUP BY ?platform ?label ORDER BY DESC(?cases) LIMIT 30' };
 
-    if (count && filtered) return { casesSparql: casesQ, how: 'Template: count of matching cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    if (count && filtered) return { casesSparql: casesQ, placeNote: placeNote, how: 'Template: count of matching cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where + '  }\n  ' + PRESS + '\n}' };
 
-    if (filtered) return { casesSparql: casesQ, how: 'Template: matching cases with their platforms' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
+    if (filtered) return { casesSparql: casesQ, placeNote: placeNote, limited: 50, how: 'Template: first 50 matching cases, ordered by case id' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?caseId (GROUP_CONCAT(DISTINCT ?label; separator=", ") AS ?platforms) WHERE {\n  GRAPH ?g {\n' + where +
       '    OPTIONAL { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label }\n  }\n  ' + PRESS + '\n} GROUP BY ?caseId ORDER BY ?caseId LIMIT 50' };
 
     return null;
   }
 
-  var SCHEMA_HINT = '\n\nSchema notes for this store: a CyberTip report is `?case uco-core:object ?tip . ?tip a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport>` (there is no cac:CyberTip class); who sent it, when the release says, is `?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?name` with ESP IRIs https://w3id.org/caselinker/resource/esp/{slug}; a tip with no reportedBy means the release does not say. Platforms used in a case and the people in it are objects of the case node: `?case uco-core:object ?platform . ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label` and `?case uco-core:object ?person . ?person a uco-identity:Person` (cac:usesChannel links an event only when the case has one event), platform IRIs are https://w3id.org/caselinker/resource/platform/{slug} (e.g. snapchat, kik, discord, social-media). Locations: `?case dcterms:spatial <https://w3id.org/caselinker/resource/location/{state}-{abbr}>` e.g. maryland-md, texas-tx. Agencies: `?case cac-multi:involvesAgency ?a . ?a rdfs:label ?l`; agency IRIs are https://w3id.org/caselinker/resource/agency/{slug} (fbi, hsi, ncmec, icac, usao, usms, cbp, plus local departments like bayonne-police-department-nj); rdfs:label is the full name (e.g. "Federal Bureau of Investigation") and acronyms are skos:altLabel, so match a named agency by IRI, never by a literal acronym label. Case ids are dcterms:identifier on cac:CACInvestigation; the release date is `?case dcterms:date ?d` (xsd:date, use YEAR(?d)). Offences are typed nodes inside the case graph: `?x a <https://cacontology.projectvic.org/sextortion#SextortionIncident>`, legal-outcomes#OnlineEnticement, legal-outcomes#SexTrafficking, legal-outcomes#CSAM_Distribution, production#ProductionOffense, ai-csam#AIGeneratedCSAM, undercover#UndercoverOperation (namespaces under https://cacontology.projectvic.org/); there is no offence-type literal. Cross-case nodes: a named operation the case was part of is `?case dcterms:isPartOf ?op . ?op a cac-multi:NamedMultiJurisdictionalOperation ; rdfs:label ?l` (labels like "Operation Glass House"); a federal district that prosecuted it is `?x dcterms:coverage ?d . ?d a cac-multi:FederalJurisdiction ; rdfs:label ?l` with IRIs https://w3id.org/caselinker/resource/jurisdiction/{slug} (e.g. eastern-district-of-virginia); a cited U.S. Code section is `?x dcterms:references ?s . ?s rdfs:label ?l` with IRIs https://w3id.org/caselinker/resource/statute/{slug} (e.g. 18-usc-2252a). ?x is the case node or its legal proceeding (`?case cac:hasStep ?x`), so match both. Always wrap patterns in GRAPH ?g and exclude provenance graphs with FILTER(STRSTARTS(STR(?g),"https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g),"/provenance")). Provenance quotes live in GRAPH <case-iri/provenance> as oa:Annotation with dcterms:subject in {age,date,sentence,investigation_type,cybertip_reporter}, prov:value, oa:hasTarget/oa:hasSelector with oa:exact and oa:start/oa:end; an annotation a resolution used has uco-core:object pointing at the age, sentence, CyberTip or reporter-role node it supports.';
+  var SCHEMA_HINT = '\n\nSchema notes for this store: a CyberTip report is `?case uco-core:object ?tip . ?tip a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport>` (there is no cac:CyberTip class); who sent it, when the release says, is `?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?name` with ESP IRIs https://w3id.org/caselinker/resource/esp/{slug}; a tip with no reportedBy means the release does not say. Platforms used in a case and the people in it are objects of the case node: `?case uco-core:object ?platform . ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label` and `?case uco-core:object ?person . ?person a uco-identity:Person` (cac:usesChannel links an event only when the case has one event), platform IRIs are https://w3id.org/caselinker/resource/platform/{slug} (e.g. snapchat, kik, discord, social-media). Locations: `?case dcterms:spatial <https://w3id.org/caselinker/resource/location/{state}-{abbr}>` e.g. maryland-md, texas-tx. Agencies: `?case cac-multi:involvesAgency ?a . ?a rdfs:label ?l`; agency IRIs are https://w3id.org/caselinker/resource/agency/{slug} (fbi, hsi, ncmec, icac, usao, usms, cbp, plus local departments like bayonne-police-department-nj); rdfs:label is the full name (e.g. "Federal Bureau of Investigation") and acronyms are skos:altLabel, so match a named agency by IRI, never by a literal acronym label. Case ids are dcterms:identifier on cac:CACInvestigation; the release date is `?case dcterms:date ?d` (xsd:date, xsd:gYearMonth, or xsd:gYear; filter with YEAR(?d), never compare ?d to a date literal). Offences are typed nodes inside the case graph: `?x a <https://cacontology.projectvic.org/sextortion#SextortionIncident>`, legal-outcomes#OnlineEnticement, legal-outcomes#SexTrafficking, legal-outcomes#CSAM_Distribution, production#ProductionOffense, ai-csam#AIGeneratedCSAM, undercover#UndercoverOperation (namespaces under https://cacontology.projectvic.org/); there is no offence-type literal. Cross-case nodes: a named operation the case was part of is `?case dcterms:isPartOf ?op . ?op a cac-multi:NamedMultiJurisdictionalOperation ; rdfs:label ?l` (labels like "Operation Glass House"); a federal district that prosecuted it is `?x dcterms:coverage ?d . ?d a cac-multi:FederalJurisdiction ; rdfs:label ?l` with IRIs https://w3id.org/caselinker/resource/jurisdiction/{slug} (e.g. eastern-district-of-virginia); a cited U.S. Code section is `?x dcterms:references ?s . ?s rdfs:label ?l` with IRIs https://w3id.org/caselinker/resource/statute/{slug} (e.g. 18-usc-2252a). ?x is the case node or its legal proceeding (`?case cac:hasStep ?x`), so match both. Always wrap patterns in GRAPH ?g and exclude provenance graphs with FILTER(STRSTARTS(STR(?g),"https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g),"/provenance")). Provenance quotes live in GRAPH <case-iri/provenance> as oa:Annotation with dcterms:subject in {age,date,sentence,investigation_type,cybertip_reporter}, prov:value, oa:hasTarget/oa:hasSelector with oa:exact and oa:start/oa:end; an annotation a resolution used has uco-core:object pointing at the age, sentence, CyberTip or reporter-role node it supports.';
 
   /* ---------- examples ---------- */
   var EXAMPLES = [
@@ -537,7 +619,15 @@
     var table = '<div class="result-wrap"><table class="cl-table"><thead><tr>' + vars.map(function (v) { return '<th>' + CL.esc(v) + '</th>'; }).join('') + '</tr></thead><tbody>' +
       rows.map(function (row) { return '<tr>' + vars.map(function (v) { return '<td' + (row[v] && row[v].datatype && /integer|decimal|double/.test(row[v].datatype) ? ' class="num"' : '') + '>' + cell(row[v]) + '</td>'; }).join('') + '</tr>'; }).join('') +
       '</tbody></table></div>';
-    host.innerHTML = kicker + preface + table + (ids.length > 1 ? '<p class="cl-small cl-muted" style="margin-top:10px">' + ids.length + ' cases in this answer. Click a case id to see its passages.</p>' : '');
+    var cap = lastTemplate && lastTemplate.limited;
+    var listNote = '';
+    if (ids.length > 1) {
+      listNote = (cap && ids.length >= cap)
+        ? '<p class="cl-small cl-muted" style="margin-top:10px">First ' + ids.length + ' cases, ordered by case id. The query stops there; this is not the full set.</p>'
+        : '<p class="cl-small cl-muted" style="margin-top:10px">' + ids.length + ' cases in this answer. Click a case id to see its passages.</p>';
+    }
+    var placeCaveat = (lastTemplate && lastTemplate.placeNote) ? '<p class="answer-note">A case counts here when the release mentions a place in that state.</p>' : '';
+    host.innerHTML = kicker + preface + placeCaveat + table + listNote;
     Array.prototype.forEach.call(host.querySelectorAll('button[data-ev]'), function (b) {
       b.addEventListener('click', function () { Array.prototype.forEach.call(host.querySelectorAll('button[data-ev]'), function (x) { x.classList.remove('is-on'); }); b.classList.add('is-on'); loadEvidence(b.getAttribute('data-ev'), true); $('s-evidence').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     });

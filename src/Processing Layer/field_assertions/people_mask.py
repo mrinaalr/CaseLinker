@@ -258,6 +258,33 @@ def _is_person_label(value: str, full_keys: Set[str], surnames: Set[str]) -> boo
     return bool(key) and had_suffix and key in surnames
 
 
+def _lone_person_surnames(case_text: str, spans: Iterable, surnames: Iterable[str]) -> Set[str]:
+    """Surnames safe to mask as a whole label.
+
+    A lone surname is a person only when that word occurs inside a person span
+    and nowhere else in the release, and it is not a gazetteer place. "Boston"
+    and "Marshals" stay. A longer label ("Brambleton County") is not this set.
+    """
+    places = _places()
+    out: Set[str] = set()
+    text = case_text or ""
+    span_list = [(int(s), int(e)) for s, e in spans or ()]
+    for surname in surnames:
+        if not surname or surname.lower() in places or surname.lower() in _INSTITUTION:
+            continue
+        pat = re.compile(r"(?<!\w)" + re.escape(surname) + r"(?!\w)", re.I)
+        seen = False
+        outside = False
+        for match in pat.finditer(text):
+            seen = True
+            if not any(start <= match.start() < end for start, end in span_list):
+                outside = True
+                break
+        if seen and not outside:
+            out.add(_name_key(surname).lower())
+    return out
+
+
 def _name_key(name: str) -> str:
     """Comparison key for dropping entries: no possessive, no suffix, collapsed spaces."""
     toks = [t.strip(".,") for t in _norm_name(name).split()]
@@ -335,10 +362,11 @@ def mask_feature_strings(features: Dict, case_text: str = "") -> Dict:
     spans = spans_for(features, case_text)
     full, surnames = _people_from_spans(case_text, spans)
     full_keys = {_name_key(n) for n in full}
+    lone = _lone_person_surnames(case_text, spans, surnames)
     inst = "|".join(sorted(_INSTITUTION))
 
     def label(v: str) -> str:
-        if _is_person_label(v, full_keys, surnames):
+        if _is_person_label(v, full_keys, surnames) or _name_key(v).lower() in lone:
             return PERSON_MASK
         for name in sorted(full, key=len, reverse=True):
             if name in v:

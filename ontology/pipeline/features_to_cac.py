@@ -298,12 +298,14 @@ def _prosecution_record(case: Dict[str, Any]) -> Dict[str, Any]:
     return record if has_facts else {}
 
 
-def _date_at_stated_precision(value: Any) -> Optional[Literal]:
+def _date_at_stated_precision(value: Any, end: Any = None) -> Optional[Literal]:
     """A case date as ``xsd:date`` / ``xsd:gYearMonth`` / ``xsd:gYear``, never more precise than stored.
 
-    Ingest pads a month-only batch date to ``YYYY-MM-01`` (``merge_processing``
-    replaces it when the release states a day), so a stored ``-01`` day is read
-    as month precision. No day or time is invented (#23).
+    Ingest pads a month-only batch date to ``YYYY-MM-01`` and a year-only date to
+    ``YYYY-01-01`` with no end. Reading every ``-01`` day as a month made the
+    year pad ``YYYY-01``, which asserts January. A year pad stays a year.
+    When start and end are the same ``YYYY-01-01``, the day was stated (merge
+    copies a publication day into both) and the value stays an ``xsd:date``.
     """
     if value is None:
         return None
@@ -315,6 +317,11 @@ def _date_at_stated_precision(value: Any) -> Optional[Literal]:
         return None
     if m.group(2) and m.group(2) != "01":
         return Literal(text[:10], datatype=XSD.date)
+    if m.group(2) == "01" and m.group(1).endswith("-01"):
+        end_text = str(end).strip()[:10] if end else ""
+        if end_text == text[:10]:
+            return Literal(text[:10], datatype=XSD.date)
+        return Literal(m.group(1)[:4], datatype=XSD.gYear)
     return Literal(m.group(1), datatype=XSD.gYearMonth)
 
 
@@ -744,6 +751,21 @@ CHARGE_MATCH_RULES: List[Tuple[str, URIRef, Optional[str]]] = [
 CHARGE_PATTERN_MAP: List[Tuple[str, URIRef]] = [
     (pat, cls) for pat, cls, _cluster in CHARGE_MATCH_RULES
 ]
+
+# Bare stems also name firearm and drug counts. Skip the stem only when the
+# label names one of those. A cut-off "possession of" stays CSAM possession.
+# "possession of a firearm" and "trafficking in oxycodone" do not. "luring"
+# and "enticement" are not stems.
+_CHARGE_STEMS = frozenset({
+    "dissemination", "distribution", "transmission", "production",
+    "possession", "trafficking",
+})
+_CHARGE_OTHER = re.compile(
+    r"\b(?:firearms?|weapons?|guns?|handguns?|rifles?|pistols?|ammunition"
+    r"|drugs?|controlled\s+substance|narcotics?"
+    r"|oxycodone|cocaine|heroin|fentanyl|methamphetamine|marijuana|cannabis)\b",
+    re.I,
+)
 
 # Contact-abuse charge clusters → the CAC offense class the charge concerns. CAC has no
 # contact-abuse charge class, so the charge stays a CriminalCharge with
@@ -1218,10 +1240,10 @@ class CaseToCAC:
         # proceedings get no begin point: the release date is not when any of
         # them began.
         date_range = case.get("date_range") or {}
-        released = _date_at_stated_precision(
-            (date_range.get("start") if isinstance(date_range, dict) else None)
-            or case.get("date_start")
-        )
+        if isinstance(date_range, dict) and date_range.get("start"):
+            released = _date_at_stated_precision(date_range.get("start"), date_range.get("end"))
+        else:
+            released = _date_at_stated_precision(case.get("date_start"))
         if released is not None:
             g.add((inv_uri, DCTERMS.date, released))
 
@@ -2757,8 +2779,13 @@ class CaseToCAC:
         """
         lower = re.sub(r'\s+', ' ', charge_str.lower()).strip()
         for pattern, class_uri, cluster in CHARGE_MATCH_RULES:
-            if pattern.lower() in lower:
-                return class_uri, cluster, False
+            pat = pattern.lower()
+            if not re.search(r'(?<![a-z])' + re.escape(pat) + r'(?![a-z])', lower):
+                continue
+            # A bare stem names a firearm or a drug count only when the label says so.
+            if pat in _CHARGE_STEMS and _CHARGE_OTHER.search(lower):
+                continue
+            return class_uri, cluster, False
         warnings.append(
             f"CHARGE_MAP (info): generic CriminalCharge for "
             f"'{charge_str[:100]}'"

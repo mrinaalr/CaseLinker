@@ -89,14 +89,16 @@ def main() -> int:
     # Redis warm (optional) — must include internal_groups (satellite moons for /clusters)
     try:
         from redis_cache import get_cache_key, set_cached
+        from corpus_cache import corpus_fingerprint
 
+        fp = corpus_fingerprint(c.get("id") for c in cases if isinstance(c, dict))
         result = {"success": True, "analysis": analysis, "cached": True, "source": "precompute_script"}
-        set_cached(get_cache_key("automated-analysis", version=case_count), result, ttl=86400)
+        set_cached(get_cache_key("automated-analysis", version=fp), result, ttl=86400)
         # Re-read Postgres slim so Redis matches what /api/cluster-groups serves
         # (includes internal_groups). Do not hand-roll a cases-only payload.
         slim_groups = pg.get_cluster_groups_slim(case_count) or []
         set_cached(
-            get_cache_key("cluster-groups", version=case_count),
+            get_cache_key("cluster-groups", version=fp),
             {
                 "success": True,
                 "case_groups": slim_groups,
