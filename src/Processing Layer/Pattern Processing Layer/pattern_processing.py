@@ -1848,8 +1848,10 @@ def extract_platforms(case: Dict[str, Any]) -> List[str]:
     Extract platforms and online methods used (contact / distribution surfaces).
 
     Named brands and early-era chat surfaces map to stable labels for ``platforms_used``.
-    Generic ``online`` / ``internet`` / ``chat`` / ``social media`` are last so specific hits win visually
-    in the same list. Agency "follow us" footers are masked first (#21).
+    Generic ``online`` / ``internet`` / ``chat`` / ``social media`` stay in that list. They are
+    tags, not named apps: rankings, event channels, and app queries leave them out.
+    They are last so a specific hit wins visually in the same list. Agency "follow us"
+    footers are masked first (#21).
     """
     case_text = case.get("case_text", "")
     if not case_text:

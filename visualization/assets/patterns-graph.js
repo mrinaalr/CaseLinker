@@ -1614,11 +1614,23 @@
             'SELECT ?platform ?label (COUNT(DISTINCT ?g) AS ?cases)',
             'WHERE {',
             '  GRAPH ?g { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label . }',
+            '  FILTER(?platform NOT IN (<https://w3id.org/caselinker/resource/platform/online>, <https://w3id.org/caselinker/resource/platform/internet>, <https://w3id.org/caselinker/resource/platform/social-media>, <https://w3id.org/caselinker/resource/platform/chat>))',
             '  FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))',
             '}',
             'GROUP BY ?platform ?label',
             'ORDER BY DESC(?cases)',
             'LIMIT 8'
+        ].join('\n'),
+        'generic-tags': SPARQL_PREFIX + [
+            'PREFIX cac-core: <https://cacontology.projectvic.org/core#>',
+            'SELECT ?platform ?label (COUNT(DISTINCT ?g) AS ?cases)',
+            'WHERE {',
+            '  GRAPH ?g { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label . }',
+            '  FILTER(?platform IN (<https://w3id.org/caselinker/resource/platform/online>, <https://w3id.org/caselinker/resource/platform/internet>, <https://w3id.org/caselinker/resource/platform/social-media>, <https://w3id.org/caselinker/resource/platform/chat>))',
+            '  FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))',
+            '}',
+            'GROUP BY ?platform ?label',
+            'ORDER BY DESC(?cases)'
         ].join('\n'),
         investigations: SPARQL_PREFIX + [
             'SELECT (COUNT(DISTINCT ?inv) AS ?n)',

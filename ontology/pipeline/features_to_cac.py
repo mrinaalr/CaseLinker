@@ -65,6 +65,10 @@ logger = logging.getLogger(__name__)
 
 _THIS_DIR = Path(__file__).parent.parent  # ontology/
 _REPO_ROOT = _THIS_DIR.parent
+_PATTERN_DIR = _REPO_ROOT / "src" / "Processing Layer" / "Pattern Processing Layer"
+if str(_PATTERN_DIR) not in sys.path:
+    sys.path.insert(0, str(_PATTERN_DIR))
+from platform_kinds import is_generic_platform_tag  # noqa: E402
 _OUTPUT_DIR = _THIS_DIR / "output"
 _TEST_OUTPUT_DIR = _THIS_DIR / "graph_output"
 _SHACL_NS = Namespace("http://www.w3.org/ns/shacl#")
@@ -348,7 +352,6 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "MeWe":                     ("SocialMediaPlatform",      {}),
     "MySpace":                  ("SocialMediaPlatform",      {"platformType": "legacy"}),
     "Craigslist":               ("SocialMediaPlatform",      {"platformType": "classifieds"}),
-    "social media":             ("SocialMediaPlatform",      {}),
     # Dating / hookup
     "Grindr":                   ("OnlineDatingPlatform",     {}),
     "Skout":                    ("OnlineDatingPlatform",     {}),
@@ -378,7 +381,6 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "Chatroulette":             ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true", "identityVerificationRequired": "false"}),
     "YouNow":                   ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true"}),
     "IRC":                      ("AnonymousChatPlatform",    {"platformType": "legacy"}),
-    "chat":                     ("AnonymousChatPlatform",    {}),
     # --- Video Streaming ---
     "YouTube":                  ("VideoStreamingPlatform",   {}),
     "YouTube Live":             ("VideoStreamingPlatform",   {}),
@@ -423,7 +425,12 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "dark web":                 ("DarkWebService",           {}),
     # --- SKIP (extracted; no CAC platform class — see MAPPING_PLAN.md) ---
     "Cash App":                 (_SKIP,                      {}),
-    "online":                   (_SKIP,                      {}),
+    # Generic tags. A node, not a named app: DigitalSystemEntity with
+    # platformType generic-tag, and not the channel of an event.
+    "social media":             ("GenericPlatformTag",       {}),
+    "chat":                     ("GenericPlatformTag",       {}),
+    "online":                   ("GenericPlatformTag",       {}),
+    "internet":                 ("GenericPlatformTag",       {}),
 }
 
 _PLATFORM_CLASS_URI: Dict[str, URIRef] = {
@@ -1027,11 +1034,13 @@ class CaseToCAC:
         """
         Map one case dict to a ConjunctiveGraph.
 
-        The graph states only what the case's extracted fields state. A link
+        The graph states only what the case's extracted fields state.         A link
         between two nodes (a role in an event, a platform used in an event) is
         written only when the case has exactly one event to attach it to; the
-        extraction holds case-level sets, not pairings. People and platforms
-        are always objects of the investigation itself (``_link_to_case``).
+        extraction holds case-level sets, not pairings. People and named
+        platforms are always objects of the investigation itself
+        (``_link_to_case``). A generic tag (online, internet, social media,
+        chat) is an object of the case too, and it is not the channel of an event.
         Nothing is added to satisfy a SHACL shape.
 
         Returns
@@ -1062,20 +1071,22 @@ class CaseToCAC:
 
         # --- deterministic mapping steps ---
         event_uris = self.map_topics(det_g, case, inv_uri, warnings)
-        platform_uris = self.map_platforms(det_g, case, warnings)
+        named_platform_uris, generic_tag_uris = self.map_platforms(det_g, case, warnings)
         victim_uris, offender_uris = self.map_roles(det_g, case, inv_uri, warnings)
         self.map_perpetrator_admissions(det_g, case, inv_uri, warnings)
         self.map_prosecution(det_g, case, inv_uri, offender_uris, warnings)
         agency_uris = self.map_agencies(det_g, case, inv_uri, warnings)
         self.map_locations(det_g, case, inv_uri, warnings)
-        platform_uris += self.map_technology(det_g, case, inv_uri, warnings)
+        named_platform_uris += self.map_technology(det_g, case, inv_uri, warnings)
         self.map_investigation_type(det_g, case, inv_uri, warnings)
         self.map_cybertip(det_g, case, inv_uri, agency_uris, warnings)
         self.map_legal_context(det_g, case, inv_uri, agency_uris)
         self._link_to_single_event(
-            det_g, case, event_uris, victim_uris, offender_uris, platform_uris
+            det_g, case, event_uris, victim_uris, offender_uris, named_platform_uris
         )
-        self._link_to_case(det_g, inv_uri, victim_uris, offender_uris, platform_uris)
+        self._link_to_case(
+            det_g, inv_uri, victim_uris, offender_uris, named_platform_uris + generic_tag_uris
+        )
 
         # --- NLP mapping (separate named graph) ---
         self.map_nlp_features(nlp_g, case, inv_uri, warnings)
@@ -1258,8 +1269,12 @@ class CaseToCAC:
         g: Graph,
         case: Dict[str, Any],
         warnings: List[str],
-    ) -> List[URIRef]:
-        """Create platform nodes (shared singletons). Linking is ``_link_to_case`` and ``_link_to_single_event``."""
+    ) -> Tuple[List[URIRef], List[URIRef]]:
+        """Create platform nodes (shared singletons).
+
+        Returns ``(named, generic)``. Named platforms are the event channel.
+        Generic tags are case objects only.
+        """
         platforms_raw = case.get("platforms_used") or []
         if isinstance(platforms_raw, str):
             try:
@@ -1274,7 +1289,8 @@ class CaseToCAC:
             label for label in anon if label in PLATFORM_MAP
         ]
 
-        uris: List[URIRef] = []
+        named: List[URIRef] = []
+        generic: List[URIRef] = []
         seen: set = set()
         for label in all_platforms:
             if label in seen:
@@ -1290,16 +1306,23 @@ class CaseToCAC:
             if class_name == _SKIP:
                 continue
 
+            slug = _slug(label)
+            if class_name == "GenericPlatformTag" or is_generic_platform_tag(label):
+                p_uri = self._get_or_create_platform(
+                    g, slug, label, CAC_CORE.DigitalSystemEntity, {"platformType": "generic-tag"}
+                )
+                generic.append(p_uri)
+                continue
+
             class_uri = _PLATFORM_CLASS_URI.get(class_name)
             if class_uri is None:
                 warnings.append(f"PLATFORM_MAP: unknown class '{class_name}' for '{label}'")
                 continue
 
-            slug = _slug(label)
             p_uri = self._get_or_create_platform(g, slug, label, class_uri, extra_props)
-            uris.append(p_uri)
+            named.append(p_uri)
 
-        return uris
+        return named, generic
 
     def _get_or_create_platform(
         self,

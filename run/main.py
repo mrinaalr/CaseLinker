@@ -2249,10 +2249,20 @@ def post_cohort_sparql(request: Request, body: CohortSparqlBody):
 
 
 # Technology revolver: platforms_used + technology-signal buckets in extracted_features
-_TECHNOLOGY_REVOLVER_SNIPPET_VER = 11
+_TECHNOLOGY_REVOLVER_SNIPPET_VER = 12
 _technology_revolver_cache = None
 _technology_revolver_cache_case_count = None
 _technology_revolver_cache_snippet_ver = None
+
+
+def _is_generic_platform_tag(label: object) -> bool:
+    """online, internet, social media, chat: extracted tags, not named platforms."""
+    kinds = _REPO_ROOT / "src" / "Processing Layer" / "Pattern Processing Layer"
+    if str(kinds) not in sys.path:
+        sys.path.insert(0, str(kinds))
+    from platform_kinds import is_generic_platform_tag
+    return is_generic_platform_tag(label)
+
 
 @app.get("/api/tags")
 @limiter.limit("60/minute")
@@ -2942,6 +2952,7 @@ def get_detailed_stats(request: Request):
             empty_result = {
                 "feature_coverage": {},
                 "platform_trends": {},
+                "generic_tag_trends": {},
                 "top_organizations": [],
                 "agency_frequency": {},
                 "relationship_distribution": [],
@@ -3004,6 +3015,7 @@ def get_detailed_stats(request: Request):
         from collections import defaultdict, Counter
         import json
         platform_by_year = defaultdict(lambda: defaultdict(int))
+        generic_by_year = defaultdict(lambda: defaultdict(int))
         
         for case in cases:
             year = None
@@ -3034,22 +3046,36 @@ def get_detailed_stats(request: Request):
             if year and year.isdigit() and 2010 <= int(year) <= 2025:
                 platforms = parse_field(case.get('platforms_used', []))
                 for platform in platforms:
-                    platform_by_year[year][platform] += 1
+                    if _is_generic_platform_tag(platform):
+                        generic_by_year[year][platform] += 1
+                    else:
+                        platform_by_year[year][platform] += 1
         
-        # Get top 7 platforms overall
+        # Top 7 named platforms. Generic tags are a separate series.
         all_platforms = Counter()
         for year_data in platform_by_year.values():
             all_platforms.update(year_data)
         top_platforms = [p[0] for p in all_platforms.most_common(7)]
+        all_generic = Counter()
+        for year_data in generic_by_year.values():
+            all_generic.update(year_data)
+        top_generic = [p[0] for p in all_generic.most_common()]
         
         platform_trends = {
             "years": sorted(platform_by_year.keys()),
             "platforms": top_platforms,
             "data": {}
         }
+        generic_tag_trends = {
+            "years": sorted(generic_by_year.keys()),
+            "tags": top_generic,
+            "data": {}
+        }
         
         for year in platform_trends["years"]:
             platform_trends["data"][year] = {platform: platform_by_year[year][platform] for platform in top_platforms}
+        for year in generic_tag_trends["years"]:
+            generic_tag_trends["data"][year] = {tag: generic_by_year[year][tag] for tag in top_generic}
         
         # 3. Top Organizations (stored agencies_involved; normalized at ingest only)
         org_counter = Counter()
@@ -3131,6 +3157,7 @@ def get_detailed_stats(request: Request):
         result = {
             "feature_coverage": feature_coverage,
             "platform_trends": platform_trends,
+            "generic_tag_trends": generic_tag_trends,
             "top_organizations": top_organizations,
             "agency_frequency": agency_frequency,
             "relationship_distribution": relationship_distribution,
@@ -3486,14 +3513,31 @@ def _chambers_technology_revolver(
     return chambers_out
 
 
+def _generic_tag_rows(
+    label_buckets: Dict[str, set],
+    label_case_map: Dict[str, Dict[str, Dict[str, Any]]],
+    names: List[str],
+) -> List[Dict[str, Any]]:
+    return [
+        {
+            "label": lab,
+            "buckets": sorted(label_buckets.get(lab, set())),
+            "case_count": len(label_case_map[lab]),
+        }
+        for lab in names
+    ]
+
+
 def _technology_revolver_payload_dict(
     total_cases: int,
     chambers_out: List[Dict[str, Any]],
     eras_block: Optional[Dict[str, Any]] = None,
+    generic_tags: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     out: Dict[str, Any] = {
         "total_cases": total_cases,
         "chambers": chambers_out,
+        "generic_tags": generic_tags or [],
         "bucket_keys": list(_TECH_REVOLVER_BUCKETS),
         "extraction_code_hook": (
             "src/Processing Layer/Pattern Processing Layer/pattern_processing.py — "
@@ -3501,7 +3545,8 @@ def _technology_revolver_payload_dict(
             "(investigation_technology, anonymization_network, p2p_clients in extracted_features)."
         ),
         "coverage_note": (
-            "Counts are per extracted label after re-ingest; regex gaps in either extractor still undercount."
+            "Counts are per extracted label after re-ingest; regex gaps in either extractor still undercount. "
+            "online, internet, social media, and chat are generic_tags, not chambers."
         ),
         "snippet_ver": _TECHNOLOGY_REVOLVER_SNIPPET_VER,
     }
@@ -3517,16 +3562,21 @@ def _compute_technology_revolver_payload() -> Dict[str, Any]:
     total_cases, label_buckets, label_case_map, names_sorted = _aggregate_technology_revolver(
         slim_annotated, era_filter=None
     )
-    ids = _revolver_text_case_ids(label_case_map, names_sorted)
+    named = [n for n in names_sorted if not _is_generic_platform_tag(n)]
+    generic = [n for n in names_sorted if _is_generic_platform_tag(n)]
+    ids = _revolver_text_case_ids(label_case_map, named)
     loaded = storage.get_cases_by_ids(ids, include_raw_data=True) if ids else []
     text_by_id = {str(c["id"]): c for c in loaded}
-    chambers = _chambers_technology_revolver(label_buckets, label_case_map, names_sorted, text_by_id)
+    chambers = _chambers_technology_revolver(label_buckets, label_case_map, named, text_by_id)
+    generic_tags = _generic_tag_rows(label_buckets, label_case_map, generic)
 
     eras_block: Dict[str, Any] = {}
     for i, roman in enumerate(_TECH_REVOLVER_ERA_ROMANS):
         lo, hi, _facet_label = ERA_PERIOD_BUCKETS[i]
         etot, ebuckets, elcm, enames = _aggregate_technology_revolver(slim_annotated, era_filter=roman)
-        echambers = _chambers_technology_revolver(ebuckets, elcm, enames, text_by_id)
+        enamed = [n for n in enames if not _is_generic_platform_tag(n)]
+        egeneric = [n for n in enames if _is_generic_platform_tag(n)]
+        echambers = _chambers_technology_revolver(ebuckets, elcm, enamed, text_by_id)
         eras_block[roman] = {
             "roman": roman,
             "years": f"{lo}–{hi}",
@@ -3534,9 +3584,12 @@ def _compute_technology_revolver_payload() -> Dict[str, Any]:
             "total_cases": etot,
             "distinct_tags": len(echambers),
             "chambers": echambers,
+            "generic_tags": _generic_tag_rows(ebuckets, elcm, egeneric),
         }
 
-    return _technology_revolver_payload_dict(total_cases, chambers, eras_block=eras_block)
+    return _technology_revolver_payload_dict(
+        total_cases, chambers, eras_block=eras_block, generic_tags=generic_tags
+    )
 
 
 @app.get("/api/technology-revolver")
@@ -3600,6 +3653,7 @@ def get_technology_revolver(request: Request):
                     "Run scripts/run/precompute_clusters.py (runtime compute disabled).",
                     "total_cases": current_case_count,
                     "chambers": [],
+                    "generic_tags": [],
                     "cached": False,
                     "status": "cache_miss",
                 },
@@ -3619,6 +3673,7 @@ def get_technology_revolver(request: Request):
             "error": str(e),
             "total_cases": 0,
             "chambers": [],
+            "generic_tags": [],
             "bucket_keys": list(_TECH_REVOLVER_BUCKETS),
             "extraction_code_hook": (
                 "src/Processing Layer/Pattern Processing Layer/pattern_processing.py — "

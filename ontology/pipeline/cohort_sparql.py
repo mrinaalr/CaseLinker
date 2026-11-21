@@ -36,7 +36,7 @@ PREFIX cac-legal: <https://cacontology.projectvic.org/legal-outcomes#>
 PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?id ?sources ?platforms ?agencies ?phase ?steps ?charges ?sentences
+SELECT ?id ?sources ?platforms ?genericTags ?agencies ?phase ?steps ?charges ?sentences
 WHERE {
   VALUES ?g { $values }
   GRAPH ?g {
@@ -52,8 +52,30 @@ WHERE {
       WHERE {
         ?case a cac:CACInvestigation .
         ?node a cac-core:DigitalSystemEntity .
+        FILTER(?node NOT IN (
+          <https://w3id.org/caselinker/resource/platform/online>,
+          <https://w3id.org/caselinker/resource/platform/internet>,
+          <https://w3id.org/caselinker/resource/platform/social-media>,
+          <https://w3id.org/caselinker/resource/platform/chat>
+        ))
         OPTIONAL { ?node rdfs:label ?label }
         BIND(COALESCE(STR(?label), REPLACE(STR(?node), "^.*/", "")) AS ?platform)
+      }
+      GROUP BY ?case
+    }
+    OPTIONAL {
+      SELECT ?case (GROUP_CONCAT(DISTINCT ?tag; separator=", ") AS ?genericTags)
+      WHERE {
+        ?case a cac:CACInvestigation .
+        ?node a cac-core:DigitalSystemEntity .
+        FILTER(?node IN (
+          <https://w3id.org/caselinker/resource/platform/online>,
+          <https://w3id.org/caselinker/resource/platform/internet>,
+          <https://w3id.org/caselinker/resource/platform/social-media>,
+          <https://w3id.org/caselinker/resource/platform/chat>
+        ))
+        OPTIONAL { ?node rdfs:label ?label }
+        BIND(COALESCE(STR(?label), REPLACE(STR(?node), "^.*/", "")) AS ?tag)
       }
       GROUP BY ?case
     }
