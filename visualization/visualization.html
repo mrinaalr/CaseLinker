@@ -240,7 +240,7 @@
       Signal: "messaging",
       Wickr: "messaging",
       Skype: "messaging",
-      chat: "messaging",
+      chat: "generic",
       Discord: "community",
       Reddit: "community",
       IRC: "community",
@@ -248,7 +248,7 @@
       Instagram: "discovery",
       TikTok: "discovery",
       "Twitter / X": "discovery",
-      "social media": "discovery",
+      "social media": "generic",
       Roblox: "discovery",
       Omegle: "discovery",
       Whisper: "discovery",
@@ -431,13 +431,16 @@
       wrap.innerHTML = "";
 
       const list = filteredPlatforms();
-      const maxCount = maxBarCount(list);
+      const named = list.filter((p) => !GENERIC_PLATFORMS.has(p.platform));
+      const generic = list.filter((p) => GENERIC_PLATFORMS.has(p.platform));
+      const maxCount = maxBarCount(named.length ? named : list);
+      const genericMax = maxBarCount(generic);
       const analysed = list.filter((p) => p.researcherAnalyzed).length;
       document.getElementById("shown-count").textContent =
-        fmt(list.length) + " of " + fmt(state.platforms.length) + " labels shown · dot = researcher analysis (" + fmt(analysed) + ")";
+        fmt(named.length) + " named · " + fmt(generic.length) + " generic tags · dot = researcher analysis (" + fmt(analysed) + ")";
 
       LIFECYCLE_LANES.forEach((lane) => {
-        const lanePlatforms = list.filter((p) => p.lane === lane.id);
+        const lanePlatforms = named.filter((p) => p.lane === lane.id);
         const laneEl = el("div", { className: "pf-lane", "data-lane": lane.id });
         laneEl.style.setProperty("--lane-color", lane.color);
 
@@ -457,6 +460,25 @@
         laneEl.appendChild(body);
         wrap.appendChild(laneEl);
       });
+
+      if (generic.length) {
+        const lane = {
+          id: "generic",
+          label: "Generic tags",
+          hint: "Extracted. Not a named platform.",
+          color: "var(--ink-3, #8a8478)",
+        };
+        const laneEl = el("div", { className: "pf-lane", "data-lane": "generic" });
+        laneEl.style.setProperty("--lane-color", lane.color);
+        laneEl.appendChild(el("div", { className: "pf-lane__label" }, [
+          el("span", { className: "pf-lane__name", textContent: lane.label }),
+          el("span", { className: "pf-lane__hint", textContent: lane.hint }),
+        ]));
+        const body = el("div", { className: "pf-lane__body" });
+        generic.forEach((p) => body.appendChild(renderPlatformNode(p, lane, genericMax)));
+        laneEl.appendChild(body);
+        wrap.appendChild(laneEl);
+      }
     }
 
     function renderPlatformNode(p, lane, maxCount) {

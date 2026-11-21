@@ -106,4 +106,32 @@ if (!negPlace("tx").test(notTx.sparql)) throw new Error("not in Texas did not ex
 if (!posPlat("snapchat").test(notTx.sparql) || negPlat("snapchat").test(notTx.sparql)) throw new Error("Snapchat was negated with Texas:\n" + notTx.sparql);
 if (!/not Texas/.test(notTx.how)) throw new Error("excluded state is not labeled 'not Texas': " + notTx.how);
 
+const ranked = sparql("Which platforms appear most often");
+for (const slug of ["online", "internet", "social-media", "chat"]) {
+  if (!ranked.includes("platform/" + slug)) {
+    throw new Error("named-platform ranking does not exclude " + slug + ":\n" + ranked);
+  }
+}
+if (!/FILTER\(\?platform NOT IN/.test(ranked)) {
+  throw new Error("named-platform ranking has no exclusion filter:\n" + ranked);
+}
+
+const internet = sparql("How many cases involve the internet");
+if (!/platform\/internet/.test(internet)) {
+  throw new Error("internet tag was not counted:\n" + internet);
+}
+if (/platforms#/.test(internet)) {
+  throw new Error("internet was treated as a named platform class:\n" + internet);
+}
+
+const enticement = sparql("How many online enticement cases");
+if (/platform\/online/.test(enticement)) {
+  throw new Error("online enticement was read as the online tag:\n" + enticement);
+}
+
+const social = sparql("How many cases involve social media");
+if (!/generic tag only/.test(social) || !/SocialMediaPlatform/.test(social)) {
+  throw new Error("social media no longer splits tag from named apps:\n" + social);
+}
+
 console.log("ask templates ok");

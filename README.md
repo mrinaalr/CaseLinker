@@ -433,7 +433,7 @@ Each case includes structured features extracted from case narratives:
 - **Perpetrator**: Age(s), registered sex offender status, gender when stated; flags for multi-defendant operations
 - **Victim**: Age ranges, count when explicitly stated in victim-clause phrasing, gender after validation
 - **Relationship**: Kin and role labels (father, mother, parent, sibling, teacher, coach, stranger, etc.); unknown when not stated
-- **Platforms**: Named apps and surfaces — social, messaging, gaming, file hosting, livestreaming, early-era chat, Gen AI tools when cited — plus generic online, chat, or social media when no product matches
+- **Platforms**: Named apps and surfaces — social, messaging, gaming, file hosting, livestreaming, early-era chat, Gen AI tools when cited. `online`, `internet`, `social media`, and `chat` are extracted and kept on the affordance map. They are generic tags, not named platforms: cluster rankings, event channels, and app queries leave them out.
 - **Technology signals** (stored separately from the platform list): investigation tooling (PhotoDNA, hash matching, CyberTipline language), anonymization (Tor, dark web, cryptocurrency), P2P clients
 - **Prosecution**: Charge phrases with counts, booking stage (arrest through sentenced), jail mentions
 - **Evidence volume**: Image, video, storage, and message counts when quantified in text

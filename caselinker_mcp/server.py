@@ -611,7 +611,9 @@ async def filter_cases_by_tags(tags: list[str]) -> dict[str, Any]:
       - severity_indicators: infant, very_young, under_10, under_12, grooming,
                              sexual_abuse, multiple_perpetrators, rape, physical_abuse
       - platforms_used: facebook, discord, kik, telegram, roblox, snapchat,
-                        whatsapp, tor, dark_web, and others from get_unique_tags
+                        whatsapp, tor, dark_web, and others from get_unique_tags.
+        online, internet, social media, and chat are stored here as generic tags.
+        They are not named platforms: rankings and app queries leave them out.
       - investigation_types: proactive, reactive, undercover, cybertip (alias: cybertipline)
       - perpetrator_relationships: father, stranger, teacher, coach, etc.
       - perpetrator_status: registered_sex_offender
