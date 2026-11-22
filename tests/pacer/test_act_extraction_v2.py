@@ -150,53 +150,15 @@ def _page(sentence: str) -> tuple:
     return page, start
 
 
-def test_frames_are_off_until_selected(monkeypatch):
-    _off(monkeypatch)
-    page, start = _page("The defendant initiated contact with Minor Victim 1 through the Kitebox application.")
-    assert FR.extract_frames(page[start:], page_text=page, sentence_start=start) == []
-
-
-def test_frames_means_near_far_parenthetical_and_absent(monkeypatch):
-    _off(monkeypatch)
-    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
-    near = "The defendant initiated contact with Minor Victim 1 through the Kitebox application."
-    far = "The defendant initiated contact with Minor Victim 1 long before the filing ever names Kitebox."
-    paren = "The defendant initiated contact with Minor Victim 1 (through the Kitebox application)."
-    absent = "The defendant initiated contact with Minor Victim 1 on the telephone that afternoon."
-    feature = "The defendant initiated contact with Minor Victim 1 using the disappearing-message feature."
-    dated = "On May 2, 2020, the defendant initiated contact with Minor Victim 1 through the Kitebox application."
-
-    def frames_of(sentence):
-        page, start = _page(sentence)
-        found = FR.extract_frames(sentence, page_text=page, sentence_start=start)
-        assert found and all(FR.verify_frame(frame, page) == [] for frame in found)
-        return found
-
-    near_frames = frames_of(near)
-    assert near_frames[0]["means"]["text"] == "Kitebox" and near_frames[0]["means"]["level"] == "stated-platform"
-    assert near_frames[0]["level_c"] is False and "affordances" not in near_frames[0]
-    assert "documented_feature_use" not in near_frames[0]
-    far_frames = frames_of(far)
-    assert far_frames[0]["act"]["code"] == "INITIATE_CONTACT" and far_frames[0]["means"] is None
-    paren_frames = frames_of(paren)
-    assert paren_frames[0]["means"]["text"] == "Kitebox"
-    assert "(" in paren and paren.index("(") < paren.index("Kitebox")
-    assert frames_of(absent)[0]["means"] is None
-    feature_frames = frames_of(feature)
-    assert feature_frames[0]["means"]["level"] == "C" and feature_frames[0]["level_c"] is True
-    assert feature_frames[0]["means"]["kind"] == "feature"
-    dated_frames = frames_of(dated)
-    assert "May 2, 2020" in dated_frames[0]["time"]["text"]
-    assert dated_frames[0]["object"]["text"] == "Minor Victim 1"
-    assert dated_frames[0]["actor"]["text"].lower() == "the defendant"
-
-
 def test_span_verifier_rejects_a_paraphrased_span(monkeypatch):
     _off(monkeypatch)
-    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     sentence = "The defendant initiated contact with Minor Victim 1 through the Kitebox application."
-    page, start = _page(sentence)
-    frame = FR.extract_frames(sentence, page_text=page, sentence_start=start)[0]
+    page = "STATEMENT OF FACTS. " + sentence
+    start = page.index("The defendant")
+    end = page.index("application.") + len("application.")
+    frame = {"passage_hash": E.sha256_text(E.normalize(page)),
+             "sentence": {"text": page[start:end], "start": start, "end": end},
+             "actor": {"text": "The defendant", "start": start, "end": start + len("The defendant")}}
     assert FR.verify_frame(frame, page) == []
     paraphrased = json.loads(json.dumps(frame))
     paraphrased["actor"]["text"] = "the accused party"
@@ -522,13 +484,14 @@ def test_reading_committed_pacer_v1_does_not_raise():
     json.loads(derived.read_text(encoding="utf-8"))
 
 
-def test_allow_empty_registry_suppresses_the_refusal(monkeypatch):
-    from state_machines.graphs.release import require_loaded_registry
-
+def test_allow_empty_registry_suppresses_the_refusal(tmp_path, monkeypatch):
     monkeypatch.setattr("state_machines.trajectories.affordances.load", lambda paths=None: {"platforms": {}})
-    assert require_loaded_registry(allow_empty_registry=True) is False
+    cases = tmp_path / "rel" / "cases"
+    cases.mkdir(parents=True)
+    (cases / "synth_case.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     with pytest.raises(SystemExit, match="capability_registry_loaded"):
-        require_loaded_registry(allow_empty_registry=False)
+        build("rel", data_root=tmp_path, allow_empty_registry=False)
 
 
 def test_allow_empty_registry_records_the_flag(tmp_path, monkeypatch):

@@ -84,17 +84,10 @@ def _registry_loaded() -> bool:
         return False
 
 
-def require_loaded_registry(allow_empty_registry: bool = False) -> bool:
-    """The loaded flag, or a refusal to build when the registry is empty.
-
-    ``allow_empty_registry`` is the ``--allow-empty-registry`` switch. Reading a
-    committed release does not call this.
-    """
-    loaded = _registry_loaded()
-    if not loaded and not allow_empty_registry:
-        raise SystemExit("refusing to build a release with capability_registry_loaded false; "
-                         "pass --allow-empty-registry to build one anyway")
-    return loaded
+def _v2_release_guard() -> bool:
+    """A v2 flag is on, so an empty registry is refused unless the switch allows it."""
+    from state_machines.coding.workflow import v2_active
+    return v2_active()
 
 
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
@@ -114,7 +107,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     # reading that release does not come through here. The check is before the graph
     # libraries load, so a refusal does not depend on them.
     loaded = _registry_loaded()
-    if require_registry and not loaded and not allow_empty_registry:
+    if (require_registry or _v2_release_guard()) and not loaded and not allow_empty_registry:
         raise SystemExit("refusing to build a release with capability_registry_loaded false; "
                          "pass --allow-empty-registry to build one anyway")
     from state_machines.evidence.validate import release_errors

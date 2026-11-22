@@ -102,6 +102,9 @@ def _name_mentions(text: str, actors: Sequence[Actor]) -> List[dict]:
     out = []
     for name, actor in forms:
         for m in re.finditer(rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])", text, re.I):
+            surface = text[m.start():m.end()]
+            if " " not in name.strip() and not surface[:1].isupper():
+                continue
             if any(m.start() < e and s < m.end() for s, e in taken):
                 continue
             taken.append(m.span())

@@ -5,9 +5,10 @@ stays the default. A caller passes tokens ``{text, start, end, head, deprel}``
 with ``head`` an index into the same list. ``pos`` may be ``VERB``.
 
 The walk follows ``appos`` and ``parataxis``, so a term inside parentheses is
-still the instrument of the verb outside them. When ``CASELINKER_COREFERENCE=1``
-and the verb's subject is ``they``, the resolved actor decides. With
-coreference off, ``they`` is not an offender subject.
+still the instrument of the verb outside them. A bare ``he`` is not an offender
+word. When ``CASELINKER_COREFERENCE=1`` and the verb's subject is a pronoun
+(``he``, ``him``, ``they``, ``them``, ``their``), the resolved actor decides.
+With coreference off, a pronoun is not an offender subject.
 
 ``tokens_from_spacy`` loads ``en_core_web_sm`` (or ``CASELINKER_MEANS_SPACY_MODEL``) once
 and keeps it. If that model cannot load, the call raises. It does not return an
@@ -25,8 +26,8 @@ from typing import List, Optional, Sequence
 _PREPS = {"through", "via", "using", "with", "on", "over", "by"}
 _USE = {"utilize", "utilized", "utilizing", "use", "used", "uses", "using",
         "conceal", "concealed", "concealing", "send", "sent", "sending"}
-_OFFENDER_WORD = re.compile(r"^(?:defendants?|accused|he)$", re.I)
-_THEY = re.compile(r"^(?:they|them|their)$", re.I)
+_OFFENDER_WORD = re.compile(r"^(?:defendants?|accused)$", re.I)
+_THEY = re.compile(r"^(?:he|him|they|them|their)$", re.I)
 _BLOCKED = ("state_machines/data", "caselinker_oxigraph")
 
 

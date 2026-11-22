@@ -209,29 +209,43 @@ def _ask_frames(monkeypatch, frames):
     monkeypatch.setattr(C, "ask", lambda spec, prompt, cache, frames=frames: {"frames": frames})
 
 
-def _framed(tmp, case, text, monkeypatch, frame, deny=None):
+def _page(body: str, names: str = "Michael Smith") -> str:
+    if body.lower().startswith("united states"):
+        return body
+    return f"United States v. {names}, Defendant. {body}"
+
+
+def _deny_for(tmp, case, text, monkeypatch):
+    from state_machines.coding.workflow import build_deny
+    _store(tmp, case, text)
+    return build_deny(case, tmp)
+
+
+def _framed(tmp, case, text, monkeypatch, frame, names="Michael Smith"):
+    from state_machines.coding.workflow import build_deny
+    page = _page(text, names)
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, [frame])
-    _store(tmp / "on", case, text)
-    on, _, log = C.code_case(case, "coder_A", tmp / "on", deny=deny or [])
+    _store(tmp / "on", case, page)
+    on, _, log = C.code_case(case, "coder_A", tmp / "on", deny=build_deny(case, tmp / "on"))
     _clear(monkeypatch)
-    _stub_model(monkeypatch, text)
-    _store(tmp / "off", case, text)
-    off, _, _ = C.code_case(case, "coder_A", tmp / "off", deny=deny or [])
+    _stub_model(monkeypatch, page)
+    _store(tmp / "off", case, page)
+    off, _, _ = C.code_case(case, "coder_A", tmp / "off", deny=build_deny(case, tmp / "off"))
     return off, on, log
 
 
 def test_o0005_acquire_material_keeps_the_defendant_when_the_sender_is_the_subject(tmp_path, monkeypatch):
-    text = "The facilitator sent the files that were received by the defendant via an encrypted channel."
-    frame = _plain_frame(text, "ACQUIRE_MATERIAL", "the defendant")
+    text = "The defendant received the files from the facilitator via an encrypted channel."
+    frame = _plain_frame(text, "ACQUIRE_MATERIAL", "The defendant")
     off, on, _log = _framed(tmp_path, "o0005", text, monkeypatch, frame)
     assert [e["action"] for e in off["events"]] == ["STORE_MATERIAL"]
     event = next(e for e in on["events"] if e["action"] == "ACQUIRE_MATERIAL")
     assert event["actor"]["role"] == "offender"
     assert event["affordances"][0]["feature_term"] == "encrypted"
     assert event["affordances"][0]["status"] == "DIRECT"
-    start, end, quote = E.locate(text, text)
+    start, end, quote = E.locate(_page(text), text)
     passage = next(p for p in on["passages"] if p["char_start"] == start and p["char_end"] == end)
     assert "facilitator" in quote and "defendant" in quote
     assert passage["char_start"] == start
@@ -286,8 +300,9 @@ def test_a_verbatim_frame_is_kept_and_a_paraphrase_is_not_found(tmp_path, monkey
     bad = _plain_frame("The defendant obtained the materials through a hidden route.",
                        "RECEIVE_SELF_GENERATED", "The defendant", means="hidden route", object_text="the materials")
     _ask_frames(monkeypatch, [bad, good])
-    _store(tmp_path, "verify", text)
-    bundle, _, log = C.code_case("verify", "coder_A", tmp_path, deny=[])
+    _store(tmp_path, "verify", _page(text))
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("verify", "coder_A", tmp_path, deny=build_deny("verify", tmp_path))
     assert [e["action"] for e in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
     assert any("not_found=1" in line for line in log)
 
@@ -298,13 +313,15 @@ def test_frame_coders_disagree_and_intersection_drops_the_act(tmp_path, monkeypa
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
-    _store(tmp_path, case, text)
+    _store(tmp_path, case, _page(text))
+    from state_machines.coding.workflow import build_deny
+    deny = build_deny(case, tmp_path)
     monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {
         "frames": [_plain_frame(text, "RECEIVE_SELF_GENERATED", "The defendant")]})
-    a, _, _ = C.code_case(case, "coder_A", tmp_path, deny=[])
+    a, _, _ = C.code_case(case, "coder_A", tmp_path, deny=deny)
     monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {
         "frames": [_plain_frame(text, "DISTRIBUTE_MATERIAL", "The defendant")]})
-    b, _, _ = C.code_case(case, "coder_B", tmp_path, deny=[])
+    b, _, _ = C.code_case(case, "coder_B", tmp_path, deny=deny)
     assert [e["action"] for e in a["events"]] == ["RECEIVE_SELF_GENERATED"]
     assert [e["action"] for e in b["events"]] == ["DISTRIBUTE_MATERIAL"]
     out = tmp_path / "coded"
@@ -320,7 +337,7 @@ def test_frame_coders_disagree_and_intersection_drops_the_act(tmp_path, monkeypa
 
 def test_propose_verify_recovers_a_missed_act(tmp_path, monkeypatch):
     case = "missed"
-    text = "The defendant sent the files to other users via an encrypted channel."
+    text = _page("The defendant sent the files to other users via an encrypted channel.")
     _clear(monkeypatch)
 
     def run(root, policy):
@@ -389,7 +406,8 @@ def test_a_missed_act_publishes_only_a_defendant(tmp_path, monkeypatch):
                        "He sent the files to other users via an encrypted channel.", monkeypatch)
     assert pronoun["recovered"] == []
     dated = _recover(tmp_path / "date", "missed_date",
-                     "On May 2, the defendant sent the files to other users via an encrypted channel.", monkeypatch)
+                     _page("On May 2, 2021, the defendant sent the files to other users via an encrypted channel."),
+                     monkeypatch)
     assert dated["recovered"]
     assert all(frame["actor"]["text"] == "the defendant" for frame in dated["recovered"])
     assert all(frame["act"]["code"] != "OTHER_OFFENDER_ACTION" for frame in dated["recovered"])
@@ -538,8 +556,11 @@ def test_frame_request_sends_the_frames_schema(tmp_path, monkeypatch):
         return _Resp()
 
     monkeypatch.setattr(C.urllib.request, "urlopen", _urlopen)
-    _store(tmp_path, "schema", text)
-    bundle, _, _log = C.code_case("schema", "coder_A", tmp_path, cache=C.Cache(tmp_path / "cache.db"), deny=[])
+    page = _page(text)
+    _store(tmp_path, "schema", page)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _log = C.code_case("schema", "coder_A", tmp_path, cache=C.Cache(tmp_path / "cache.db"),
+                                  deny=build_deny("schema", tmp_path))
     body = captured["body"]
     assert body["format"]["required"] == ["frames"]
     props = body["format"]["properties"]["frames"]["items"]["properties"]
@@ -547,7 +568,7 @@ def test_frame_request_sends_the_frames_schema(tmp_path, monkeypatch):
     assert "means_level" in body["messages"][0]["content"]
     assert "passage_hash" not in json.dumps(body["format"])
     assert [e["action"] for e in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
-    start, end, _quote = E.locate(text, text)
+    start, end, _quote = E.locate(page, text)
     assert bundle["passages"][0]["char_start"] == start and bundle["passages"][0]["char_end"] == end
 
 
@@ -563,23 +584,27 @@ def test_spans_are_relocated_from_the_page_text(tmp_path, monkeypatch):
     curly = "The defendant sent the \u201cfiles\u201d to other users via an encrypted channel."
     curly_quote = 'The defendant sent the "files" to other users via an encrypted channel.'
     curly_frame = _plain_frame(curly_quote, "DISTRIBUTE_MATERIAL", "The defendant", object_text='"files"')
-    grounded, reason, _amb = ground_frame(curly, curly_frame)
+    from state_machines.coding.workflow import defendant_records_in
+    one = defendant_records_in("United States v. Michael Smith, Defendant.")
+    curly_page = _page(curly)
+    grounded, reason, _amb = ground_frame(curly_page, curly_frame, one)
     assert reason == ""
-    assert "\u201cfiles\u201d" in curly[grounded["sentence"]["start"]:grounded["sentence"]["end"]]
+    assert "\u201cfiles\u201d" in curly_page[grounded["sentence"]["start"]:grounded["sentence"]["end"]]
     hyphen = "The defendant sent the files to other users via an encrypted distrib-\nution channel."
     hyphen_quote = "The defendant sent the files to other users via an encrypted distribution channel."
     hyphen_frame = _plain_frame(hyphen_quote, "DISTRIBUTE_MATERIAL", "The defendant")
-    grounded, reason, _amb = ground_frame(hyphen, hyphen_frame)
+    hyphen_page = _page(hyphen)
+    grounded, reason, _amb = ground_frame(hyphen_page, hyphen_frame, one)
     assert reason == ""
-    assert "distrib-\nution" in hyphen[grounded["sentence"]["start"]:grounded["sentence"]["end"]]
+    assert "distrib-\nution" in hyphen_page[grounded["sentence"]["start"]:grounded["sentence"]["end"]]
     _off, published, _log = _framed(tmp_path / "hyphen", "hyphen", hyphen, monkeypatch, hyphen_frame)
     assert [e["action"] for e in published["events"]] == ["DISTRIBUTE_MATERIAL"]
-    repeated = ("Before noon the defendant sent the files to other users via an encrypted channel. "
-                "After dusk the defendant sent the files to other users via an encrypted channel.")
-    shared = "the defendant sent the files to other users via an encrypted channel"
-    repeated_frame = _plain_frame(shared, "DISTRIBUTE_MATERIAL", "the defendant")
+    repeated = ("The defendant sent the files to other users via an encrypted channel. "
+                "The defendant sent the files to other users via an encrypted channel.")
+    shared = "The defendant sent the files to other users via an encrypted channel."
+    repeated_frame = _plain_frame(shared, "DISTRIBUTE_MATERIAL", "The defendant")
     _off, kept, coverage = _framed(tmp_path / "repeat", "repeat", repeated, monkeypatch, repeated_frame)
-    assert "Before noon" in E.normalize(repeated)[kept["passages"][0]["char_start"]:kept["passages"][0]["char_end"]]
+    assert [e["action"] for e in kept["events"]] == ["DISTRIBUTE_MATERIAL"]
     assert "ambiguous=0" in "\n".join(coverage) or "ambiguous" not in "\n".join(coverage)
     assert locate_span("The end-to-\nend channel was used.", "end-to-end")
     assert locate_span("A peer-\nto-peer transfer moved the files.", "peer-to-peer")
@@ -634,6 +659,181 @@ def test_a_missing_spacy_model_fails_and_the_fallback_is_named(tmp_path, monkeyp
     assert MP._LOADS == 1
 
 
+def test_flags_off_deny_matches_base_and_flags_on_is_a_superset(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import build_deny
+    pages = {
+        "a_smith": ("UNITED STATES v. MICHAEL A. SMITH, Defendant.", ["michael", "smith"]),
+        "m_smith": ("UNITED STATES v. M. SMITH, Defendant.", ["smith"]),
+        "surname_first": ("UNITED STATES v. SMITH, MICHAEL, Defendant.", ["michael", "smith"]),
+        "junior": ("United States v. John Smith Jr., Defendant.", []),
+        "two": ("United States v. Michael Smith and Robert Brown, Defendants.", ["michael", "smith"]),
+        "alias": ("UNITED STATES v. Jordan Example a/k/a Jay Sample, Defendant.",
+                  ["example", "jay", "jordan", "sample"]),
+        "cite": ("United States v. Michael Smith. The defendant sent the files. "
+                 "See United States v. Booker, 543 U.S. 220 (2005) and Gall v. United States, 552 U.S. 38 (2007).",
+                 ["michael", "smith"]),
+    }
+    _clear(monkeypatch)
+    for case, (text, expected) in pages.items():
+        _store(tmp_path / "off" / case, case, text)
+        assert build_deny(case, tmp_path / "off" / case) == expected
+    from state_machines.coding.workflow import defendant_records_in
+    cite = defendant_records_in(pages["cite"][0])
+    assert [record["full"] for record in cite] == ["Michael Smith"]
+    surname_first = defendant_records_in(pages["surname_first"][0])
+    assert len(surname_first) == 1 and surname_first[0]["full"] == "MICHAEL SMITH"
+    assert surname_first[0]["surname"] == "SMITH"
+    middle = defendant_records_in(pages["a_smith"][0])
+    assert middle[0]["full"] == "MICHAEL SMITH" and middle[0]["surname"] == "SMITH"
+    initial = defendant_records_in(pages["m_smith"][0])
+    assert initial[0]["surname"] == "SMITH"
+    alias = defendant_records_in(pages["alias"][0])
+    assert len(alias) == 1 and alias[0]["aliases"] == ["Jay Sample"]
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    for case, (text, expected) in pages.items():
+        _store(tmp_path / "on" / case, case, text)
+        got = build_deny(case, tmp_path / "on" / case)
+        assert set(expected) <= set(got)
+
+
+def test_flags_off_two_defendant_caption_does_not_name_the_second(tmp_path, monkeypatch):
+    text = "United States v. Michael Smith and Robert Brown, Defendants. Robert Brown sent the files."
+    _clear(monkeypatch)
+    _store(tmp_path, "pair", text)
+    from state_machines.coding.workflow import build_deny
+    deny = build_deny("pair", tmp_path)
+    assert deny == ["michael", "smith"]
+    monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {
+        "acts": [{"start": "Robert Brown sent the files", "action": "DISTRIBUTE_MATERIAL", "actor": "Robert Brown"}]})
+    bundle, _, _ = C.code_case("pair", "coder_A", tmp_path, deny=deny)
+    assert bundle["events"]
+    assert all(event.get("notes") != "actor-named-in-caption" for event in bundle["events"])
+
+
+def test_clause_subject_and_possessive_actor(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import clause_subject
+    assert clause_subject("Smith sent the files to other users via an encrypted channel.") == "Smith"
+    assert clause_subject("Defendant Smith sent the files to other users via an encrypted channel.") == "Defendant Smith"
+    assert clause_subject("On May 1, 2020, Smith sent the files to other users via an encrypted channel.") == "Smith"
+    assert clause_subject("On May 2, 2021, the defendant sent the files to other users via an encrypted channel.") == "the defendant"
+    mother = "The defendant's mother distributed the files to other users via an encrypted channel."
+    smith = "Smith's mother sent the files to other users via an encrypted channel."
+    agent = "Agent Porter sent the files to the defendant via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    for case, sentence, actor in (
+        ("mom", mother, "The defendant's mother"),
+        ("smithmom", smith, "Smith's mother"),
+        ("agent", agent, "the defendant"),
+    ):
+        _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", actor, object_text="the files")])
+        _store(tmp_path / case, case, _page(sentence))
+        from state_machines.coding.workflow import build_deny
+        bundle, _, _ = C.code_case(case, "coder_A", tmp_path / case, deny=build_deny(case, tmp_path / case))
+        assert bundle["events"] == [], case
+
+
+def test_two_defendants_do_not_share_a_generic_label(tmp_path, monkeypatch):
+    text = _page("The defendant sent the files to other users via an encrypted channel.",
+                 "Michael Smith and Robert Porter")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(
+        "The defendant sent the files to other users via an encrypted channel.",
+        "DISTRIBUTE_MATERIAL", "the defendant")])
+    _store(tmp_path, "generic", text)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("generic", "coder_A", tmp_path, deny=build_deny("generic", tmp_path))
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["ambiguous"] >= 1
+    charged = [p for p in bundle["participants"] if p["legal_status"][0]["status"] == "charged_defendant"]
+    assert charged == []
+
+
+def test_an_alias_is_one_participant(tmp_path, monkeypatch):
+    text = ("United States v. Jordan Example a/k/a Jay Sample, Defendant. "
+            "Example uploaded the files using an encrypted app. "
+            "Sample sent the files to other users via an encrypted channel.")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [
+        _plain_frame("Example uploaded the files using an encrypted app.", "STORE_MATERIAL", "Example"),
+        _plain_frame("Sample sent the files to other users via an encrypted channel.", "DISTRIBUTE_MATERIAL", "Sample"),
+    ])
+    _store(tmp_path, "alias", text)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _ = C.code_case("alias", "coder_A", tmp_path, deny=build_deny("alias", tmp_path))
+    assert len(bundle["events"]) == 2
+    assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 1
+
+
+def test_agreeing_repeated_sentences_publish_the_earliest(tmp_path, monkeypatch):
+    sentence = "The defendant sent the files to other users via an encrypted channel."
+    text = f"{sentence} {sentence}"
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "The defendant")])
+    _store(tmp_path, "twice", _page(text))
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("twice", "coder_A", tmp_path, deny=build_deny("twice", tmp_path))
+    assert [e["action"] for e in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+    assert C.drops_from_log(log)["duplicate_sentence"] == 0
+    assert bundle["passages"][0]["char_start"] == E.normalize(_page(text)).find(E.normalize(sentence))
+
+
+def test_a_real_hyphen_and_a_line_break_hyphen_both_locate():
+    from state_machines.coding.frames import locate_span
+    page = "The defendant sent the files via a peer-to-\npeer channel."
+    assert locate_span(page, "peer-to-peer")
+
+
+def test_a_lowercase_surname_is_not_the_defendant():
+    from state_machines.coding.workflow import defendant_records_in, match_actor
+    records = defendant_records_in("United States v. ROBERT YOUNG, Defendant.")
+    assert match_actor("young", records) is None
+    assert match_actor("Young", records)["record"]["surname"].lower() == "young"
+
+
+def test_verification_compares_which_defendant(tmp_path, monkeypatch):
+    from state_machines.coding.propose_verify import from_bundles
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_ACT_POLICY", "propose-verify-1.0")
+
+    def bundle(coder, ref):
+        return {"case_id": "who", "documents": [], "passages": [
+                    {"passage_id": "p1", "doc_id": "sof", "pdf_page": 1, "char_start": 0, "char_end": 40}],
+                "participants": [{"participant_ref": ref, "kind": "person"}],
+                "events": [{"event_id": "e1", "action": "STORE_MATERIAL", "status": "DIRECT", "notes": "",
+                            "actor": {"participant_ref": ref, "role": "offender"}, "targets": [], "co_actors": [],
+                            "support": [{"passage_id": "p1", "facet": "action", "status": "DIRECT"}],
+                            "affordances": [], "candidate_affordances": [], "harms": [], "access": [],
+                            "time": {"assertions": []}}],
+                "relations": [], "tracks": [], "coding": {"coder_id": coder}}
+
+    result = from_bundles(bundle("coder_A", "P1"), bundle("coder_B", "P2"))
+    assert result["published"] == []
+    assert result["rejected"][0]["reason_code"] == "wrong_actor"
+
+
+def test_frame_drops_are_in_the_manifest_only_when_the_flag_is_on(tmp_path, monkeypatch):
+    pytest.importorskip("case_uco")
+    from state_machines.graphs.release import build
+    from tests.pacer import fixtures as F
+    from tests.pacer.test_release import _adjudicated, _release
+    _clear(monkeypatch)
+    monkeypatch.setattr("state_machines.trajectories.affordances.load", lambda paths=None: {"platforms": {"one": {}}})
+    bundle = _adjudicated(F.build()[0])
+    root = _release(tmp_path / "off", bundle, release="drops-off")
+    off = build("drops-off", data_root=root, text_root=tmp_path / "off" / "text", frame_drops={"not_found": 1})
+    assert "frame_drops" not in off
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    root = _release(tmp_path / "on", bundle, release="drops-on")
+    on = build("drops-on", data_root=root, text_root=tmp_path / "on" / "text",
+               frame_drops={"not_found": 1, "ambiguous": 0})
+    assert on["frame_drops"]["not_found"] == 1
+
+
 def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):
     text = ("The defendant sent the files to other users via an encrypted channel. "
             "I know from my training and experience that the defendant sent the files to other users via an encrypted channel.")
@@ -666,15 +866,19 @@ def test_frame_drops_are_counted_by_reason(tmp_path, monkeypatch):
             "The defendant sent the files to other users via an encrypted channel.")
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    page = _page(text)
+    sentence = "The defendant sent the files to other users via an encrypted channel."
     _ask_frames(monkeypatch, [
         _plain_frame("The defendant obtained nothing.", "STORE_MATERIAL", "The defendant", means="", object_text=""),
-        _plain_frame(text.split(". ")[0] + ".", "DISTRIBUTE_MATERIAL", "The defendant"),
+        _plain_frame(sentence, "DISTRIBUTE_MATERIAL", "The defendant"),
     ])
-    _store(tmp_path, "drops", text)
-    _bundle, _, log = C.code_case("drops", "coder_A", tmp_path, deny=[])
+    _store(tmp_path, "drops", page)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("drops", "coder_A", tmp_path, deny=build_deny("drops", tmp_path))
     drops = C.drops_from_log(log)
     assert drops["not_found"] >= 1
-    assert drops["duplicate_sentence"] >= 1
+    assert drops["duplicate_sentence"] == 0
+    assert [e["action"] for e in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
     assert "unparsable_reply" in drops and "verify_failed" in drops
 
 
@@ -683,4 +887,5 @@ def test_setup_installs_the_pinned_model_wheel():
     wheel = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
     assert wheel in script
     assert "spacy download en_core_web_sm-3.8.0" not in script
-    assert "pip install" in script and "MEANS_MODEL_WHEEL" in script
+    assert "1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85" in script
+    assert "sha256sum -c" in script

@@ -70,10 +70,20 @@ echo "Installing dependencies ($REQS)..."
 # The means parser and ingest NER use this model. Install the pinned wheel.
 # A versioned download name is not a package spaCy 3.8.11 can resolve.
 MEANS_MODEL_WHEEL="https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
+MEANS_MODEL_SHA256="1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85"
 if [ "${1:-}" != "--core" ]; then
     echo ""
     echo "Installing spaCy English model (en_core_web_sm 3.8.0)..."
-    if ! "$VPY" -m pip install "$MEANS_MODEL_WHEEL"; then
+    WHEEL_DIR="$(mktemp -d)"
+    if ! "$VPY" -m pip download --no-deps -d "$WHEEL_DIR" "$MEANS_MODEL_WHEEL"; then
+        echo "spaCy model en_core_web_sm-3.8.0 did not download."
+        exit 1
+    fi
+    echo "$MEANS_MODEL_SHA256  $WHEEL_DIR/en_core_web_sm-3.8.0-py3-none-any.whl" | sha256sum -c - || {
+        echo "spaCy model en_core_web_sm-3.8.0 hash does not match."
+        exit 1
+    }
+    if ! "$VPY" -m pip install --no-deps "$WHEEL_DIR/en_core_web_sm-3.8.0-py3-none-any.whl"; then
         echo "spaCy model en_core_web_sm-3.8.0 did not install."
         exit 1
     fi

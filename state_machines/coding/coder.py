@@ -551,7 +551,16 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             act = expand(act)
             try:
                 if act.get("quote"):                       # the docket parser gives the whole entry text
-                    start, end, qn = E.locate(text, act["quote"])
+                    try:
+                        start, end, qn = E.locate(text, act["quote"])
+                    except E.QuoteNotFound as exc:
+                        if act.get("keep_earliest") and "more than once" in str(exc):
+                            page_n = E.normalize(text)
+                            qn = E.normalize(act["quote"])
+                            start = page_n.find(qn)
+                            end = start + len(qn)
+                        else:
+                            raise
                 else:
                     start, end, qn = locate_sentence(text, act.get("start") or "")
             except E.QuoteNotFound as exc:
@@ -577,6 +586,7 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             fam = V.FAMILY_OF[action]
             if fam == "offender" and states_a_rule_not_conduct(qn):
                 log.append(f"dropped {doc['doc_id']} p{page_no} {action}: the sentence states a rule or policy, not conduct")
+                _drop("assemble_dropped")
                 continue
             actor_note = None
             if not act.get("actor"):
@@ -604,6 +614,7 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                     if anchor[1] is None or anchor in proc_seen:
                         log.append(f"dropped {doc['doc_id']} p{page_no} {action}: procedure act "
                                    + ("without a stated date" if anchor[1] is None else "repeating a dated anchor"))
+                        _drop("assemble_dropped")
                         continue
                     proc_seen.add(anchor)
             role = act.get("actor_role")
@@ -611,11 +622,13 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                 fixed = {"offender": "offender", "procedure": "court", "law_enforcement": "law_enforcement"}.get(fam)
                 if fam == "response" and role not in _ALLOWED_ROLES[fam]:
                     log.append(f"dropped {doc['doc_id']} p{page_no} {action}: actor role {role} cannot perform it")
+                    _drop("assemble_dropped")
                     continue
                 role = "undercover" if fam == "law_enforcement" and "undercover" in _label(act.get("actor", "")) else fixed
             actor = who(act.get("actor", ""), role)
             if participants[actor]["kind"] == "persona" and role != "undercover":
                 log.append(f"dropped {doc['doc_id']} p{page_no} {action}: a persona can only act undercover")
+                _drop("assemble_dropped")
                 continue
             key = (doc["doc_id"], page_no, start, end)
             if key not in passages:
@@ -853,16 +866,27 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
             counts[reason] = counts.get(reason, 0) + 1
             continue
         slot = grounded.get("actor") or {}
+        sentence = (grounded.get("sentence") or {}).get("text") or ""
+        from state_machines.coding.workflow import clause_subject, match_actor, same_actor
+        subject = clause_subject(sentence)
+        found = match_actor(slot.get("text") or "", records)
+        if found and found.get("ambiguous"):
+            counts["ambiguous"] += 1
+            continue
+        if not same_actor(slot.get("text") or "", subject, records):
+            counts["actor_rejected"] += 1
+            continue
         canonical = _canonical_actor(text, slot, records)
         if not canonical:
             counts["actor_rejected"] += 1
             continue
-        sentence = (grounded.get("sentence") or {}).get("text") or ""
         code = (grounded.get("act") or {}).get("code")
         if not sentence or not code:
             counts["not_found"] += 1
             continue
         act = {"quote": sentence, "action": code, "actor": canonical, "actor_role": "offender"}
+        if grounded.get("keep_earliest"):
+            act["keep_earliest"] = True
         if grounded.get("means_level") == "C":
             means_text = (grounded.get("means") or {}).get("text") or ""
             found = feature(means_text) or feature(sentence)

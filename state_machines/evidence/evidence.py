@@ -25,8 +25,23 @@ _QUOTES = str.maketrans({"‘": "'", "’": "'", "“": '"', "”": '"', " ": "
 _WS = re.compile(r"\s+")
 
 
-def normalize(text: str) -> str:
-    """NFKC, straight quotes, soft hyphens removed, whitespace collapsed. Case is kept."""
+def _join_line_hyphen(text: str) -> str:
+    """Drop a hyphen that exists only because a word was broken across a line."""
+    return re.sub(r"(?<=[A-Za-z0-9])-\r?\n[ \t]*(?=[A-Za-z0-9])", "", text)
+
+
+def normalize(text: str, *, join_line_hyphen: bool = False) -> str:
+    """NFKC, straight quotes, soft hyphens removed, whitespace collapsed. Case is kept.
+
+    The default is the historical hyphen handling: a line break becomes a space
+    and the hyphen stays. Flags-off page hashes and quote offsets use that
+    default. ``join_line_hyphen`` drops a hyphen that exists only because a word
+    was broken across a line. Frame span offsets stay in ``frames.locate_span``,
+    which searches both forms. That map's keep-hyphen form does not insert the
+    space this function inserts, so the two are not one convention.
+    """
+    if join_line_hyphen:
+        text = _join_line_hyphen(text)
     return _WS.sub(" ", unicodedata.normalize("NFKC", text).translate(_QUOTES)).strip()
 
 

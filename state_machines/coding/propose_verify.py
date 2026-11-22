@@ -141,7 +141,7 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
             "sentence_start": start,
             "sentence_end": end,
             "act": {"code": event["action"]},
-            "actor": {"id": event["actor"]["role"]},
+            "actor": {"id": event["actor"]["role"], "participant": event["actor"].get("participant_ref")},
         })
     b_events = []
     for event in b["events"]:
@@ -158,7 +158,10 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
             reviews.append({"frame_id": frame["frame_id"], "decision": "reject", "reason_code": "not_an_act"})
             continue
         other = overlap[0]
-        if other["actor"]["role"] != frame["actor"]["id"]:
+        same_who = other["actor"].get("participant_ref") == frame["actor"].get("participant")
+        if frame["actor"].get("participant") and not same_who:
+            reviews.append({"frame_id": frame["frame_id"], "decision": "reject", "reason_code": "wrong_actor"})
+        elif other["actor"]["role"] != frame["actor"]["id"]:
             reviews.append({"frame_id": frame["frame_id"], "decision": "reject", "reason_code": "wrong_actor"})
         elif other["action"] != frame["act"]["code"]:
             reviews.append({"frame_id": frame["frame_id"], "decision": "correct", "reason_code": "slot_correction",
@@ -183,7 +186,7 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
     def recover(sent):
         subject = clause_subject(sent.get("text") or "")
         found = match_actor(subject, records)
-        if not found:
+        if not found or found.get("ambiguous") or "canonical" not in found:
             return []
         return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},
                  "actor": {"id": "defendant", "text": found["canonical"]}} for code in sent.get("codes") or []]

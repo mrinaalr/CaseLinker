@@ -130,7 +130,7 @@ Each item is one question with a fixed set of answers that `apply` carries out:
 
 ## Act extraction v2
 
-A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless it is set. With the flags unset, resolution is `intersection-1.0` and a release is built as before. A release refuses an empty capability registry only when `require_registry` is set; `--allow-empty-registry` records that it was allowed and builds anyway. Reading `pacer-v1` does not build.
+A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless it is set. With the flags unset, resolution is `intersection-1.0` and a release is built as before. A release refuses an empty capability registry when `require_registry` is set or any v2 flag is on; `--allow-empty-registry` records that it was allowed and builds anyway. Reading `pacer-v1` does not build.
 
 | Flag or mode | Default | Pipeline function it changes |
 |---|---|---|

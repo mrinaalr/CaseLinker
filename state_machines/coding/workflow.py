@@ -206,51 +206,134 @@ _POSSESSIVE_ACTOR = re.compile("\\b(?:defendant|accused)(?:'s|\u2019s)\\b", re.I
 def _name_words(raw: str) -> List[str]:
     """The leading run of capitalised words of a caption fragment: a name is at most six words and
     ends at the first word that is not capitalised or is a caption word ("INDICTMENT", "Defendant")."""
-    return [word.lower() for word in _display_words(raw)]
+    out = []
+    for token in raw.replace('"', " ").replace("“", " ").replace("”", " ").split()[:6]:
+        word = token.strip(".,'-/").lower()
+        if not _NAME_TOKEN.match(token) or word in _NOT_NAME:
+            break
+        if len(word) >= 3 and word.isalpha():
+            out.append(word)
+    return out
 
 
-def _display_words(raw: str) -> List[str]:
-    """Caption tokens of one person, in the caption's own case. A suffix is not a surname."""
+def _base_deny_tokens(text: str) -> set:
+    """The deny tokens the unset-flag path has always produced. Do not change this."""
+    names = set()
+    for match in _CAPTION.finditer(E.normalize(text or "")):
+        for part in _ALIAS.split(match.group(1)):
+            names |= set(_name_words(_CAPTION_STOP.split(part)[0]))
+    return names
+
+
+def v2_active() -> bool:
+    """True when a v2 flag changes published behavior. Unset flags stay on the base path."""
+    if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
+        return True
+    if os.environ.get("CASELINKER_SECTION_FILTER") == "1":
+        return True
+    if os.environ.get("CASELINKER_COREFERENCE") == "1":
+        return True
+    if os.environ.get("CASELINKER_ADJACENT_LEVEL") == "1":
+        return True
+    if os.environ.get("CASELINKER_MEANS_PARSER") == "dep":
+        return True
+    if os.environ.get("CASELINKER_MEANS_RULE"):
+        return True
+    if os.environ.get("CASELINKER_DISAGREEMENT") == "1":
+        return True
+    policy = os.environ.get("CASELINKER_ACT_POLICY")
+    return bool(policy) and policy != "intersection-1.0"
+
+
+def _caption_tokens(raw: str) -> List[str]:
+    """Name words for one caption person. An initial is skipped. A suffix ends the name."""
     out = []
     for token in raw.replace('"', " ").replace("“", " ").replace("”", " ").split()[:8]:
         word = token.strip(".,'-/").lower()
         if word in _SUFFIXES:
             break
-        if not _NAME_TOKEN.match(token) or word in _NOT_NAME:
+        if word in {"defendant", "defendants", "plaintiff"}:
             break
-        if len(word) >= 3 and word.isalpha():
-            out.append(token.strip(".,"))
+        if re.fullmatch(r"[a-z]", word):
+            continue
+        if not re.fullmatch(r"[a-z][a-z'\-]+", word):
+            if out:
+                break
+            continue
+        out.append(token.strip(".,"))
     return out
 
 
+def _one_person(chunk: str) -> Optional[dict]:
+    chunk = chunk.strip(" ,")
+    if not chunk:
+        return None
+    if re.match(r"^[A-Z][A-Za-z'\-]+,\s+[A-Z]", chunk):
+        left, right = chunk.split(",", 1)
+        surname_words = _caption_tokens(left)
+        given = _caption_tokens(right)
+        if not surname_words:
+            return None
+        surname = surname_words[0]
+        full = " ".join(given + [surname]) if given else surname
+        return {"full": full, "surname": surname}
+    words = _caption_tokens(chunk)
+    if not words:
+        return None
+    return {"full": " ".join(words), "surname": words[-1]}
+
+
+_REPORTER = re.compile(r"\d+\s+U\.?\s*S\.?", re.I)
+
+
 def _people_in_caption(fragment: str) -> List[dict]:
-    """One record per person the caption names, aliases included, suffixes removed."""
-    cut = re.split(r"\.\s+[A-Z]", fragment, maxsplit=1)[0]
-    records = []
-    seen = set()
-    for part in _ALIAS.split(cut):
-        for chunk in re.split(r"\s+and\s+|;\s+|,\s+(?=[A-Z])", part):
-            words = _display_words(_CAPTION_STOP.split(chunk)[0])
-            if not words:
+    """Caption people only. A reporter citation is not a defendant. An alias is the same person."""
+    head = re.split(r"(?<=[A-Za-z]{2})\.\s+", fragment, maxsplit=1)[0]
+    if _REPORTER.search(head):
+        return []
+    head = _CAPTION_STOP.split(head)[0]
+    parts = _ALIAS.split(head)
+    people = []
+    for chunk in re.split(r"\s+and\s+|;\s+", parts[0]):
+        person = _one_person(chunk)
+        if person:
+            people.append(person)
+    if len(people) != 1:
+        return people
+    primary = people[0]
+    aliases, alias_surnames = [], []
+    for part in parts[1:]:
+        for chunk in re.split(r"\s+and\s+", part):
+            alias = _one_person(chunk)
+            if not alias:
                 continue
-            full = " ".join(words)
-            key = full.lower()
-            if key in seen:
-                continue
-            seen.add(key)
-            records.append({"full": full, "surname": words[-1], "key": key})
-    return records
+            aliases.append(alias["full"])
+            alias_surnames.append(alias["surname"])
+    primary["aliases"] = aliases
+    primary["alias_surnames"] = alias_surnames
+    return [primary]
 
 
 def defendant_records_in(text: str) -> List[dict]:
-    """Defendants named in captions in ``text``. Matching is case-insensitive; the record keeps the caption's spelling."""
+    """Defendants named in the caption, not in a later case citation."""
     records = []
     seen = set()
-    for match in _CAPTION.finditer(E.normalize(text or "")):
-        for record in _people_in_caption(match.group(1)):
-            if record["key"] in seen:
+    norm = E.normalize(text or "")
+    for match in _CAPTION.finditer(norm):
+        fragment = match.group(1)
+        head = re.split(r"(?<=[A-Za-z]{2})\.\s+", fragment, maxsplit=1)[0]
+        if _REPORTER.search(head):
+            continue
+        for record in _people_in_caption(fragment):
+            key = record["full"].lower()
+            if key in seen or key in {"united states", "united states of america"}:
                 continue
-            seen.add(record["key"])
+            if record["surname"].lower() in {"united", "states", "america"}:
+                continue
+            seen.add(key)
+            record.setdefault("aliases", [])
+            record.setdefault("alias_surnames", [])
+            record["key"] = key
             records.append(record)
     return records
 
@@ -268,57 +351,109 @@ def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -
     return records
 
 
-_LEAD_IN = re.compile(r"^(?:(?:on|in|during|after|before)\s+[^,]{0,60},\s*)+", re.I)
+_LEAD_IN = re.compile(
+    r"^(?:(?:on|in|during|after|before)\s+[A-Za-z]+\s+\d{1,2},?\s+\d{4},?\s*"
+    r"|(?:on|in|during|after|before)\s+[^,]{0,40},\s*)+",
+    re.I,
+)
+_SUBJECT = re.compile(
+    r"((?:[Tt]he\s+)?[Dd]efendant(?:s)?(?:\s+[A-Z][\w'.-]+){0,3}"
+    r"|(?:[Tt]he\s+)?[Aa]ccused(?:\s+[A-Z][\w'.-]+){0,3}"
+    r"|[A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})"
+)
+_ANY_POSSESSIVE = re.compile(r"\b[\w.\-]+(?:'s|\u2019s)\b")
 
 
 def clause_subject(sentence: str) -> str:
-    """The head of the act's clause, after a leading date, not the start of the whole sentence."""
+    """The grammatical subject of the act's clause, after a leading date.
+
+    A possessive (``Smith's mother``, ``the defendant's mother``) is that whole
+    phrase, so it is not read as the defendant. Lowercase words do not extend a name.
+    """
     text = _LEAD_IN.sub("", (sentence or "").strip())
-    match = re.match(
-        r"((?:the\s+)?(?:defendant|accused)|[A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})",
+    possessive = re.match(
+        r"((?:[Tt]he\s+[Dd]efendant|[Tt]he\s+[Aa]ccused|[A-Z][\w'.-]+)(?:'s|\u2019s)"
+        r"\s+[A-Za-z][\w'.-]+)",
         text,
-        re.I,
     )
+    if possessive:
+        return possessive.group(1)
+    match = _SUBJECT.match(text)
     return match.group(1) if match else ""
 
 
-def match_actor(text: str, records: List[dict]) -> Optional[dict]:
-    """The caption defendant ``text`` names, or the generic defendant phrase.
-
-    The whole phrase has to be the head: ``the defendant``, ``defendant``, ``accused``,
-    ``Defendant <Name>``, the full name, or the surname. A possessive is not a match.
-    A bare given name is not a match. One caption defendant is recorded as ``the defendant``;
-    each defendant of a multi-defendant caption keeps that defendant's own name.
-    """
-    raw = " ".join((text or "").split())
-    if not raw or _POSSESSIVE_ACTOR.search(raw):
-        return None
-    if _GENERIC_ACTOR.fullmatch(raw):
-        return {"canonical": "the defendant", "record": records[0] if len(records) == 1 else None, "generic": True}
-    named = _NAMED_ACTOR.fullmatch(raw)
-    target = " ".join((named.group(1) if named else raw).split())
-    parts = target.split()
-    while parts and parts[-1].lower().strip(".") in _SUFFIXES:
-        parts.pop()
-    low = " ".join(parts).lower()
-    if not low:
-        return None
-    hits = [record for record in records if low == record["key"] or low == record["surname"].lower()]
-    if len(hits) != 1:
-        return None
-    record = hits[0]
+def _record_hit(record: dict, records: List[dict]) -> dict:
     canonical = "the defendant" if len(records) == 1 else "defendant " + record["full"]
     return {"canonical": canonical, "record": record, "generic": False}
 
 
+def match_actor(text: str, records: List[dict]) -> Optional[dict]:
+    """The caption defendant ``text`` names.
+
+    ``the defendant``, ``defendant`` and ``accused`` match only when the caption
+    names exactly one defendant. A possessive phrase does not match. A bare surname
+    matches only when that token is capitalized. A full name and ``Defendant <Name>``
+    match in any case.
+    """
+    raw = " ".join((text or "").split())
+    if not raw or _ANY_POSSESSIVE.search(raw) or _POSSESSIVE_ACTOR.search(raw):
+        return None
+    if _GENERIC_ACTOR.fullmatch(raw):
+        if len(records) == 1:
+            return {"canonical": "the defendant", "record": records[0], "generic": True}
+        return {"ambiguous": True}
+    named = _NAMED_ACTOR.fullmatch(raw)
+    target = " ".join((named.group(1) if named else raw).split())
+    parts = [part for part in target.split() if part.lower().strip(".") not in _SUFFIXES]
+    low = " ".join(parts).lower()
+    if not low:
+        return None
+    for record in records:
+        forms = [record["full"].lower(), *[alias.lower() for alias in record.get("aliases", [])]]
+        if low in forms:
+            return _record_hit(record, records)
+    if len(parts) == 1 and parts[0][:1].isupper():
+        hits = []
+        for record in records:
+            surnames = [record["surname"].lower(), *[name.lower() for name in record.get("alias_surnames", [])]]
+            if parts[0].lower() in surnames:
+                hits.append(record)
+        if len(hits) == 1:
+            return _record_hit(hits[0], records)
+    return None
+
+
+def same_actor(left: str, right: str, records: List[dict]) -> bool:
+    """True when both phrases are the same defendant, ignoring case on a full phrase."""
+    if not left or not right:
+        return False
+    if " ".join(left.split()).lower() == " ".join(right.split()).lower():
+        if re.fullmatch(r"(?:he|him|she|her|they|them|their)", left.strip(), re.I):
+            return True
+        found = match_actor(left, records)
+        return bool(found) and not found.get("ambiguous")
+    a, b = match_actor(left, records), match_actor(right, records)
+    if not a or not b or a.get("ambiguous") or b.get("ambiguous"):
+        return False
+    return a["canonical"] == b["canonical"]
+
+
 def build_deny(case_id: str, text_root: Optional[Path] = None) -> List[str]:
-    """Names from the case captions ("United States v. ...") in the page text: the words T14 and the
-    release privacy scan must never find in coded text. Written to the local store beside the pages."""
+    """Names from the case captions. With every v2 flag unset this is the base token list.
+
+    A v2 flag may add tokens from the caption records. It does not drop a base token.
+    """
     root = E.text_root(text_root) / case_id
     names = set()
+    extra = v2_active()
     for page in sorted(root.glob("*/p*.txt")):
-        for record in defendant_records_in(page.read_text(encoding="utf-8", errors="replace")):
-            names |= set(record["full"].lower().split())
+        text = page.read_text(encoding="utf-8", errors="replace")
+        names |= _base_deny_tokens(text)
+        if extra:
+            for record in defendant_records_in(text):
+                names |= set(record["full"].lower().split())
+                for alias in record.get("aliases", []):
+                    names |= set(alias.lower().split())
     terms = sorted(names)
     (root / "deny.json").write_text(json.dumps(terms, indent=1) + "\n", encoding="utf-8")
     return terms
