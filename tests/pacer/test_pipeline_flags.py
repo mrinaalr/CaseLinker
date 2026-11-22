@@ -97,10 +97,10 @@ def _they(tmp, monkeypatch, text, case, **env):
     return tied
 
 
-def test_e009_they_means_the_defendant(tmp_path, monkeypatch):
-    _they(tmp_path, monkeypatch,
-          "The defendant opened an account, and they sent files via an encrypted channel.",
-          "e009", CASELINKER_COREFERENCE="1")
+def test_e009_they_does_not_tie_a_means_under_v2(tmp_path, monkeypatch):
+    text = "The defendant opened an account, and they sent files via an encrypted channel."
+    doc = _means_of(tmp_path, "e009", text, monkeypatch, CASELINKER_COREFERENCE="1")
+    assert all(not o["relations"] for o in doc["observations"])
 
 
 def test_e026_on_is_a_means_cue_only_when_the_recall_rule_is_on(tmp_path, monkeypatch):
@@ -562,8 +562,7 @@ def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monk
     off_doc = _means_of(tmp_path / "they_off", "they", relate, monkeypatch)
     on_doc = _means_of(tmp_path / "they_on", "they", relate, monkeypatch, CASELINKER_COREFERENCE="1")
     assert all(not o["relations"] for o in off_doc["observations"])
-    tied = [o for o in on_doc["observations"] if o.get("feature_term") == "encrypted" and o["relations"]]
-    assert tied and tied[0]["relations"][0]["relationship"] == "Supports_Action"
+    assert all(not o["relations"] for o in on_doc["observations"])
 
 
 @pytest.mark.needs_spacy

@@ -178,10 +178,6 @@ _FEATURE_MEANS = (r"\b(?P<cue>through|via|using|used|uses|by means of|with|utili
 # The {0,5} and {0,70} windows above are unchanged.
 _FEATURE_ON_VIA = (r"\b" + _CONDUCT + r"\b[^.;,]{{0,70}}?\b(?P<cue>on|via)\s+" + _DET
                    + r"(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
-# A listed feature whose cue sits further along the same clause. 16 words is the
-# documented 13-word gap plus three. It is fixed here, and it is not fit to a corpus count.
-_FEATURE_WIDE = (r"\b" + _CONDUCT + r"\b[^.;,]{{0,80}}?\b(?P<cue>through|via|using|by means of|with)\s+"
-                 + r"(?:[\w'-]+\s+){{0,16}}?{term}(?![A-Za-z0-9])")
 _RECALL_TERMS = ("virtual private network", "virtual private networks", "VPNs")
 _CLAUSE_BREAK = re.compile(r"[,;]\s+(?:and|but|while|when|after|before|because|which|who|so)\b|;\s+|\s(?:and then|after|before|when|while|because)\s", re.I)
 _LEAD = r"^\s*(?:and\s+|but\s+|then\s+|later\s+|after\s+|before\s+|when\s+|while\s+|because\s+|which\s+|who\s+|so\s+)*"
@@ -347,9 +343,7 @@ def _means(kind: str, sentence: str, o: dict, subject: Optional[str] = None) -> 
         flags = 0 if o["feature_term"] in ("Tor", "VPN", "VPNs") else re.I
         patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), flags)]
         if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
-            term = _breakable(o["feature_term"])
-            patterns.append(("Supports_Action", _FEATURE_ON_VIA.format(term=term), flags))
-            patterns.append(("Supports_Action", _FEATURE_WIDE.format(term=term), flags))
+            patterns.append(("Supports_Action", _FEATURE_ON_VIA.format(term=_breakable(o["feature_term"])), flags))
     if N.states_a_rule_not_conduct(sentence):               # "the Terms of Service prohibit storing such material on ..."
         return None
     if _GENERIC_DESCRIPTION.search(sentence) and not _OFFENDER.search(sentence):   # how the technology works, not anyone's act
@@ -422,7 +416,7 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
     dependency parser runs only when the word window missed.
     """
     from state_machines.coding.workflow import v2_active
-    coref = os.environ.get("CASELINKER_COREFERENCE") == "1"
+    coref = os.environ.get("CASELINKER_COREFERENCE") == "1" and not v2_active()
     parser = os.environ.get("CASELINKER_MEANS_PARSER") == "dep"
     if not coref and not parser:
         return _means(kind, sentence, o, subject)
@@ -461,10 +455,6 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
         actor_records = info.get("records") or []
         actor_generic = info.get("generic")
         by_document = info.get("by_document") or {}
-        if os.environ.get("CASELINKER_COREFERENCE") == "1" and len(actor_records) == 1:
-            from state_machines.coding.coreference import make_inventory
-            named = [actor_records[0]["full"]]
-            coref_actors = make_inventory(defendant=named[0], defendant_names=named)
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
