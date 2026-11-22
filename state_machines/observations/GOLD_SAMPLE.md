@@ -70,7 +70,7 @@ Precision uses the same weights. A stratum drawn more heavily would otherwise pu
 sum_h (weight_h * TP_h) / sum_h (weight_h * (TP_h + FP_h))
 ```
 
-`weight_h` is `N_h / n_h`. A unit enters when the machine stated it. `TP` is a statement the gold confirms. The interval is the same case bootstrap as recall: cases are drawn with replacement from the whole frame, and a drawn case brings every one of its rows. Each stratum also has its own Wilson interval (Wilson 1927) on its count of statements. Brown, Cai and DasGupta (2001) compare binomial intervals and are why the within-stratum interval is Wilson's.
+`weight_h` is `N_h / n_h`. A unit enters when the machine stated it. `TP` is a statement the gold confirms. The interval is the same case bootstrap as recall: cases are drawn with replacement from the whole frame, and a drawn case brings every one of its rows. Each stratum also has its own Wilson interval (Wilson 1927) on its count of statements.
 
 ## Validation mode
 
@@ -92,9 +92,9 @@ The interval on each is the same case bootstrap. Cases are drawn with replacemen
 
 ## Rows for a design-based correction
 
-The machine labels are a surrogate. The human grades are the gold on a sample whose inclusion probabilities are known. Two procedures take that pair. This module writes the rows and does not run either procedure.
+The machine labels are a surrogate. The human grades are the gold on a sample whose inclusion probabilities are known. This module writes the rows for a design-based correction and does not run that correction.
 
-Design-based supervised learning (Egami, Hinck, Stewart and Wei 2023) combines surrogate labels with gold labels on a sample whose inclusion probabilities are known and bounded away from zero. Here `n_h / N_h` is computed from the stratum sizes. Prediction-powered inference (Angelopoulos, Bates, Fannjiang, Jordan and Zrnic, Science 382, 2023) uses a gold set to correct a quantity estimated from machine predictions, without an assumption about how the predictions were produced. Both need the gold label, the machine label and the sampling probability. The score file has one row per labeled unit with those fields and the weight `N_h / n_h`.
+Design-based supervised learning (Egami, Hinck, Stewart and Wei 2023) combines surrogate labels with gold labels on a sample whose inclusion probabilities are known and bounded away from zero. Here `n_h / N_h` is computed from the stratum sizes. The score file has one row per labeled unit with the gold label, the machine label, the sampling probability, and the weight `N_h / n_h`.
 
 ## Levels kept apart
 
@@ -104,24 +104,16 @@ A mention is the record naming a platform or stating a feature phrase. It does n
 
 An act says that someone did something. In the validation mode it is published only when the two coders agree on the sentence, the action and the actor.
 
-A same-sentence means says that the act's own sentence states the platform or the feature as the means. The means slot is the instrument of the act. PropBank's ArgM-MNR is manner, not that instrument (Palmer, Gildea and Kingsbury 2005). The element that names it is FrameNet's Instrument (Baker, Fillmore and Lowe 1998). Level C is a feature the sentence states as that instrument. A platform name is not a level-C affordance (codebook rule B0).
+A same-sentence means says that the act's own sentence states the platform or the feature as the means. The means slot is the instrument of the act. Level C is a feature the sentence states as that instrument. A platform name is not a level-C affordance (codebook rule B0).
 
 An adjacent-sentence link says that a later sentence has an explicit anaphor ("that account", "he") whose antecedent is in the sentence before it. It is labelled `adjacent-sentence` and stored in its own list. It is not copied into the level-C list. `CASELINKER_ADJACENT_LEVEL` defaults off. With it off, the list is empty.
 
 ## References
-
-Angelopoulos, Anastasios N., Stephen Bates, Clara Fannjiang, Michael I. Jordan, and Tijana Zrnic (2023). Prediction-powered inference. *Science* 382(6671), 669–674. https://doi.org/10.1126/science.adi6000
-
-Baker, Collin F., Charles J. Fillmore, and John B. Lowe (1998). The Berkeley FrameNet Project. In *36th Annual Meeting of the Association for Computational Linguistics and 17th International Conference on Computational Linguistics, Volume 1*, 86–90. Montreal, Quebec, Canada: Association for Computational Linguistics. https://doi.org/10.3115/980845.980860
-
-Brown, Lawrence D., T. Tony Cai, and Anirban DasGupta (2001). Interval Estimation for a Binomial Proportion. *Statistical Science* 16(2), 101–133. https://doi.org/10.1214/ss/1009213286
 
 Egami, Naoki, Musashi Hinck, Brandon M. Stewart, and Hanying Wei (2023). Using Imperfect Surrogates for Downstream Inference: Design-based Supervised Learning for Social Science Applications of Large Language Models. In *Advances in Neural Information Processing Systems* 36. NeurIPS 2023. Also arXiv:2306.04746. https://proceedings.neurips.cc/paper_files/paper/2023/hash/d862f7f5445255090de13b825b880d59-Abstract-Conference.html
 
 Hayes, Andrew F. and Klaus Krippendorff (2007). Answering the Call for a Standard Reliability Measure for Coding Data. *Communication Methods and Measures* 1(1), 77–89. https://doi.org/10.1080/19312450709336664
 
 Horvitz, D. G. and D. J. Thompson (1952). A Generalization of Sampling Without Replacement from a Finite Universe. *Journal of the American Statistical Association* 47(260), 663–685. https://doi.org/10.1080/01621459.1952.10483446
-
-Palmer, Martha, Daniel Gildea, and Paul Kingsbury (2005). The Proposition Bank: An Annotated Corpus of Semantic Roles. *Computational Linguistics* 31(1), 71–106. https://doi.org/10.1162/0891201053630264
 
 Wilson, Edwin B. (1927). Probable Inference, the Law of Succession, and Statistical Inference. *Journal of the American Statistical Association* 22(158), 209–212. https://doi.org/10.1080/01621459.1927.10502953
