@@ -580,6 +580,8 @@ def defendant_records_in(text: str) -> List[dict]:
 
 def _same_party(left: dict, right: dict) -> bool:
     """A bare surname and the full name with that surname are one person."""
+    if left.get("party_id") and right.get("party_id") and left["party_id"] != right["party_id"]:
+        return False
     if left["key"] == right["key"] or left["full"].lower() == right["full"].lower():
         return True
     left_full, right_full = left["full"].lower(), right["full"].lower()
@@ -663,8 +665,11 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
                 by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
             else:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
-    from state_machines.coding.parties import defendants_for
-    snapshot = defendants_for(str(meta.get("court") or ""), str(meta.get("docket_number") or ""))
+    from state_machines.coding.parties import defendants_for, other_surnames
+    court = str(meta.get("court") or "")
+    docket = str(meta.get("docket_number") or "")
+    snapshot = defendants_for(court, docket)
+    others = other_surnames(court, docket)
     disagreement = False
     if snapshot is not None:
         caption_names = {record["surname"].lower() for record in records}
@@ -673,19 +678,24 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         records = list(snapshot)
         et_al = False
         conflict = False
-        generic = "one" if len(records) == 1 else ("ambiguous" if records else "no_defendant_record")
+        generic = "ambiguous" if disagreement or len(records) != 1 else "one"
+        if not records:
+            generic = "no_defendant_record"
         by_document = {}
         for item in found:
             own = item["records"]
             match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
-            if match is not None and not item["et_al"]:
+            if disagreement or item["et_al"] or (own and match is None):
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
+            elif match is not None:
                 by_document[item["doc_id"]] = {"generic": "one", "record": match}
             elif generic == "one":
                 by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
             else:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
     return {"records": records, "generic": generic, "et_al": et_al, "conflict": conflict,
-            "by_document": by_document, "caption_snapshot_disagreement": disagreement}
+            "by_document": by_document, "caption_snapshot_disagreement": disagreement,
+            "other_surnames": sorted(others)}
 
 
 def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -> List[dict]:
@@ -889,7 +899,8 @@ def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optio
 
 
 def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
-                 generic: Optional[str] = None, scope: Optional[dict] = None) -> Tuple[Optional[dict], Optional[str]]:
+                 generic: Optional[str] = None, scope: Optional[dict] = None,
+                 other_surnames: Optional[List[str]] = None) -> Tuple[Optional[dict], Optional[str]]:
     """``(match, drop reason)`` for one act. A reason means the act is not published.
 
     The coder and missed-act recovery both use this. A full name, ``Defendant
@@ -930,7 +941,7 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
                 return None, reason
     if re.fullmatch(r"(?:he|him|she|her|they|them|their)", " ".join((actor_text or "").split()), re.I):
         return None, None
-    found = match_actor(actor_text, records, generic=generic)
+    found = match_actor(actor_text, records, generic=generic, other_surnames=other_surnames)
     if found and found.get("drop"):
         return None, found["drop"]
     if found and found.get("ambiguous"):
@@ -947,7 +958,8 @@ def _record_hit(record: dict, records: List[dict]) -> dict:
     return {"canonical": canonical, "record": record, "generic": False}
 
 
-def match_actor(text: str, records: List[dict], *, generic: Optional[str] = None) -> Optional[dict]:
+def match_actor(text: str, records: List[dict], *, generic: Optional[str] = None,
+                other_surnames: Optional[List[str]] = None) -> Optional[dict]:
     """The caption defendant ``text`` names.
 
     ``the defendant``, ``defendant`` and ``accused`` match only when the caption
@@ -973,16 +985,24 @@ def match_actor(text: str, records: List[dict], *, generic: Optional[str] = None
     low = " ".join(parts).lower()
     if not low:
         return None
+    full_hits = []
     for record in records:
         forms = [record["full"].lower(), *[alias.lower() for alias in record.get("aliases", [])]]
         if low in forms:
-            return _record_hit(record, records)
+            full_hits.append(record)
+    if len(full_hits) > 1:
+        return {"ambiguous": True}
+    if len(full_hits) == 1:
+        return _record_hit(full_hits[0], records)
     if len(parts) == 1 and (named or parts[0][:1].isupper()):
         hits = []
         for record in records:
             surnames = [record["surname"].lower(), *[name.lower() for name in record.get("alias_surnames", [])]]
             if parts[0].lower() in surnames:
                 hits.append(record)
+        blocked = parts[0].lower() in {name.lower() for name in (other_surnames or [])}
+        if blocked or len(hits) > 1:
+            return {"ambiguous": True}
         if len(hits) == 1:
             return _record_hit(hits[0], records)
     return None

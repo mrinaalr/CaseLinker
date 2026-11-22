@@ -56,3 +56,81 @@ def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, senten
     assert events == []
 
 
+def test_a_plea_for_a_stranger_is_refused(tmp_path, monkeypatch):
+    sentence = f"The defendant sent {_TAIL}"
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-1",
+        "parties": [{"party_id": "p-smith", "name": "Michael Smith", "role": "defendant"}],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    docs = [("plea", "plea_agreement", [f"United States v. Robert Porter, Defendant. {sentence}"])]
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "the defendant")])
+    _store_docs(tmp_path, "stranger", docs)
+    sources = json.loads((tmp_path / "stranger" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-1"
+    (tmp_path / "stranger" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    from state_machines.coding.workflow import build_deny, case_defendants
+    info = case_defendants("stranger", tmp_path)
+    assert info["caption_snapshot_disagreement"] is True
+    bundle, _, _log = C.code_case("stranger", "coder_A", tmp_path, deny=build_deny("stranger", tmp_path))
+    assert bundle["events"] == []
+
+
+def test_a_shared_surname_is_not_the_first_party(tmp_path, monkeypatch):
+    sentence = f"Smith sent {_TAIL}"
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-2",
+        "parties": [
+            {"party_id": "p-def", "name": "Michael Smith", "role": "defendant"},
+            {"party_id": "p-wit", "name": "Robert Smith", "role": "witness"},
+        ],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "Smith")])
+    _store_docs(tmp_path, "shared", [("sof", "statement_of_facts",
+                                      [f"United States v. Michael Smith, Defendant. {sentence}"])])
+    sources = json.loads((tmp_path / "shared" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-2"
+    (tmp_path / "shared" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _log = C.code_case("shared", "coder_A", tmp_path, deny=build_deny("shared", tmp_path))
+    assert bundle["events"] == []
+
+
+def test_two_defendants_with_one_name_are_refused(tmp_path, monkeypatch):
+    sentence = f"Michael Smith sent {_TAIL}"
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-3",
+        "parties": [
+            {"party_id": "p-1", "name": "Michael Smith", "role": "defendant"},
+            {"party_id": "p-2", "name": "Michael Smith", "role": "defendant"},
+        ],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "Michael Smith")])
+    _store_docs(tmp_path, "twins", [("sof", "statement_of_facts",
+                                     [f"United States v. Michael Smith, Defendant. {sentence}"])])
+    sources = json.loads((tmp_path / "twins" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-3"
+    (tmp_path / "twins" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _log = C.code_case("twins", "coder_A", tmp_path, deny=build_deny("twins", tmp_path))
+    assert bundle["events"] == []

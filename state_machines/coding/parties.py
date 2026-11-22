@@ -54,23 +54,28 @@ def load(path: Optional[str] = None) -> Optional[dict]:
     if expected and expected != digest:
         raise SystemExit(f"party snapshot sha256 {digest} does not match {expected}")
     index = {}
+    others = {}
     for entry in _entries(raw.decode("utf-8")):
         court = str(entry.get("court") or "")
         docket = str(entry.get("docket_number") or "")
         people = []
+        other_names = set()
         for party in entry.get("parties") or []:
-            if str(party.get("role") or "").lower() != "defendant":
-                continue
             name = " ".join(str(party.get("name") or "").split())
             if not name or not party.get("party_id"):
                 continue
             parts = name.split()
+            surname = parts[-1]
+            if str(party.get("role") or "").lower() != "defendant":
+                other_names.add(surname.lower())
+                continue
             people.append({
-                "full": name, "surname": parts[-1], "aliases": [], "alias_surnames": [],
+                "full": name, "surname": surname, "aliases": [], "alias_surnames": [],
                 "key": str(party["party_id"]), "party_id": str(party["party_id"]),
             })
         index[(court, docket)] = people
-    loaded = {"sha256": digest, "index": index}
+        others[(court, docket)] = other_names
+    loaded = {"sha256": digest, "index": index, "others": others}
     _CACHE[key] = loaded
     return loaded
 
@@ -88,3 +93,11 @@ def defendants_for(court: str, docket_number: str) -> Optional[list]:
     if not loaded:
         return None
     return loaded["index"].get((court or "", docket_number or ""))
+
+
+def other_surnames(court: str, docket_number: str) -> set:
+    """Surnames of parties who are not defendants, so a shared surname can be refused."""
+    loaded = load()
+    if not loaded:
+        return set()
+    return set(loaded.get("others", {}).get((court or "", docket_number or ""), ()))

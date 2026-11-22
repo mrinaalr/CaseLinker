@@ -202,12 +202,13 @@ def _inside(page: str, needle: str, sent_start: int, sent_end: int, *, ignore_ca
 
 
 def _occurrence_actor(page: str, sentence: str, sent_start: int, sent_end: int, actor: str, records: List[dict],
-                      generic: str = None, scope: dict = None):
+                      generic: str = None, scope: dict = None, other_surnames: List[str] = None):
     """Who this copy of the quote is about, using the same actor decision as coding."""
     from state_machines.coding.workflow import clause_subject, decide_actor
 
     def _label(phrase, fallback):
-        found, reason = decide_actor(sentence, phrase, records, generic=generic, scope=scope)
+        found, reason = decide_actor(sentence, phrase, records, generic=generic, scope=scope,
+                                     other_surnames=other_surnames)
         if reason == "ambiguous":
             return "ambiguous"
         if found and found.get("canonical"):
@@ -220,7 +221,8 @@ def _occurrence_actor(page: str, sentence: str, sent_start: int, sent_end: int, 
 
 
 def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None,
-                 generic: Optional[str] = None, scope: Optional[dict] = None) -> Tuple[Optional[dict], str, List[str]]:
+                 generic: Optional[str] = None, scope: Optional[dict] = None,
+                 other_surnames: Optional[List[str]] = None) -> Tuple[Optional[dict], str, List[str]]:
     """Place a model's plain-text frame on ``page``.
 
     Returns ``(frame, "", [])`` or ``(None, reason, problems)``. The hash and the
@@ -246,7 +248,7 @@ def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None,
         sent_start, sent_end = _sentence_bounds(page, *hit)
         sentence = page[sent_start:sent_end]
         blocked = blocks_offender_products(classify(sentence)["role"])
-        label = _occurrence_actor(page, sentence, sent_start, sent_end, actor, records, generic, scope)
+        label = _occurrence_actor(page, sentence, sent_start, sent_end, actor, records, generic, scope, other_surnames)
         views.append((blocked, label, sent_start, sent_end, sentence))
     labels = {(blocked, label) for blocked, label, *_rest in views}
     if len(views) > 1 and len(labels) > 1:
