@@ -410,6 +410,49 @@ def test_preflight_reports_the_known_id_alias_pattern(tmp_path):
     assert report["ok"] is False
 
 
+def test_fingerprint_table_reports_a_changed_id_a_missing_id_and_a_shared_fingerprint():
+    table = [
+        {"case_id": "case_a", "fingerprint": "aa" * 32, "normalization_version": "fp-1"},
+        {"case_id": "case_b", "fingerprint": "aa" * 32, "normalization_version": "fp-1"},
+        {"case_id": "case_c", "fingerprint": "cc" * 32, "normalization_version": "fp-1"},
+        {"case_id": "case_d", "fingerprint": "dd" * 32, "normalization_version": "fp-0"},
+    ]
+    same = PF.fingerprint_checks(["case_c"], table, collected_fingerprints={"case_c": "cc" * 32}, collected_as={})
+    assert same["mismatches"] == [] and same["shared"] == []
+    changed = PF.fingerprint_checks(["case_c"], table, collected_fingerprints={"case_c": "ee" * 32}, collected_as={})
+    assert changed["mismatches"] == [{
+        "case_id": "case_c", "kind": "fingerprint_different",
+        "collected_fingerprint": "ee" * 32, "current_fingerprint": "cc" * 32,
+    }]
+    missing = PF.fingerprint_checks(["case_gone"], table, collected_as={})
+    assert missing["mismatches"][0]["kind"] == "fingerprint_none" and missing["mismatches"][0]["case_id"] == "case_gone"
+    shared = PF.fingerprint_checks(["case_a", "case_b"], table, collected_as={})
+    assert shared["shared"] == [{"fingerprint": "aa" * 32, "case_ids": ["case_a", "case_b"]}]
+    other = PF.fingerprint_checks(["case_d"], table, collected_as={})
+    assert other["mismatches"][0]["kind"] == "fingerprint_other_version"
+    # the id on the PDF is checked as well as the press-release id
+    both = PF.fingerprint_checks(["case_a"], table, collected_as={"case_a": "case_b"})
+    assert both["shared"][0]["case_ids"] == ["case_a", "case_b"]
+    old_pdf = PF.fingerprint_checks(["case_c"], table, collected_as={"case_c": "pdf_old"})
+    assert any(row["case_id"] == "pdf_old" and row["kind"] == "fingerprint_none" for row in old_pdf["mismatches"])
+
+
+def test_fingerprint_preflight_does_not_rewrite_ids(tmp_path):
+    text_root, out, _release = _layout(tmp_path, text_name="synth_case", bundle_name="synth_case")
+    sources = text_root / "synth_case" / "sources.json"
+    bundle = out / "coder_A" / "synth_case.json"
+    before = {sources: sources.read_bytes(), bundle: bundle.read_bytes()}
+    report = PF.preflight(
+        ["synth_case"], text_root, out, collected_as={},
+        fingerprint_table=[{"case_id": "synth_case", "fingerprint": "ab" * 32, "normalization_version": "fp-1"}],
+        collected_fingerprints={"synth_case": "ff" * 32},
+    )
+    assert report["ok"] is False
+    assert report["fingerprints"]["mismatches"][0]["kind"] == "fingerprint_different"
+    assert {path: path.read_bytes() for path in before} == before
+    assert sources.name == "sources.json" and bundle.name == "synth_case.json"
+
+
 def test_preflight_command_does_not_read_page_text_or_rewrite_ids(tmp_path, monkeypatch):
     _off(monkeypatch)
     text_root, out, _release = _layout(tmp_path, text_name="synth_case", bundle_name="synth_case")

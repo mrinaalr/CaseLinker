@@ -227,10 +227,18 @@ def main(argv=None) -> int:
     ap.add_argument("--note", default="", help="bench --record: one line stored with the scores")
     ap.add_argument("--bench-out", type=Path, default=E.REPO_ROOT / "local" / "bench")
     ap.add_argument("--release-root", type=Path, default=None, help="preflight: the release directory, read-only")
+    ap.add_argument("--fingerprints", type=Path, default=None,
+                    help="preflight: JSON rows of case_id, fingerprint, normalization_version; read-only")
+    ap.add_argument("--collected-fingerprints", type=Path, default=None,
+                    help="preflight: JSON object of stored id to the fingerprint recorded at collection")
     a = ap.parse_args(argv)
     if a.cmd == "preflight":
         from state_machines.coding.preflight import preflight
-        report = preflight(list(a.args), a.text_root, a.out, release_root=a.release_root)
+        table = json.loads(a.fingerprints.read_text(encoding="utf-8")) if a.fingerprints else None
+        collected_fp = (json.loads(a.collected_fingerprints.read_text(encoding="utf-8"))
+                        if a.collected_fingerprints else None)
+        report = preflight(list(a.args), a.text_root, a.out, release_root=a.release_root,
+                           fingerprint_table=table, collected_fingerprints=collected_fp)
         print(json.dumps(report, indent=1))
         return 0 if report["ok"] else 1
     elif a.cmd == "code":
