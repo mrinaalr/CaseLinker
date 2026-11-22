@@ -323,8 +323,13 @@ def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
     assert [r["surname"] for r in defendant_records_in(wrapped)] == ["SMITH", "BROWN"]
     inline = "UNITED STATES v. (1) SMITH, (2) PORTER, Defendants."
     assert [r["surname"] for r in defendant_records_in(inline)] == ["SMITH", "PORTER"]
-    company = "UNITED STATES v. MICHAEL SMITH and ACME WIDGETS, INC., Defendants."
-    assert [r["surname"] for r in defendant_records_in(company)] == ["SMITH"]
+    company = "UNITED STATES v. MICHAEL SMITH and ACME WIDGETS, INC., Defendants. The defendant sent the files."
+    events, _log = code_events(
+        tmp_path, monkeypatch, "company",
+        [("sof", "statement_of_facts", [company])],
+        "The defendant sent the files.", means="")
+    assert events == []
+    assert "other_caption" in _reasons(tmp_path, "company")
     alias = "UNITED STATES v. JOHN DOE, a/k/a JD, a/k/a Johnny, Defendant."
     records = defendant_records_in(alias)
     assert len(records) == 1 and records[0]["aliases"] == ["JD", "Johnny"]

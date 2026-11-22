@@ -548,6 +548,7 @@ def _people_in_caption(fragment: str) -> Tuple[List[dict], bool]:
     original = head
     if re.search(r"\bHOLDINGS\b", original, re.I):
         return [], False
+    had_company = bool(_COMPANY.search(original))
     head = _COMPANY_PHRASE.sub(" ", head)
     head = re.sub(r",?\s*Defendants?\.?$", "", head, flags=re.I).strip(" ,")
     saved: List[str] = []
@@ -582,6 +583,8 @@ def _people_in_caption(fragment: str) -> Tuple[List[dict], bool]:
         person["alias_surnames"] = []
         _attach_aliases(person, pending + marks, saved)
         pending = []
+        if had_company:
+            person["with_company"] = True
         people.append(person)
     return people, False
 
@@ -755,7 +758,7 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         for item in chosen:
             for record in item["records"]:
                 _absorb(records, record)
-        if conflict or et_al or len(records) != 1:
+        if conflict or et_al or len(records) != 1 or any(record.get("with_company") for record in records):
             generic = "ambiguous"
         else:
             generic = "one"
@@ -771,6 +774,8 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "caption_mismatch"}
             elif len(own) > 1:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
+            elif len(matches) == 1 and matches[0].get("with_company"):
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "other_caption"}
             elif len(matches) == 1:
                 by_document[item["doc_id"]] = {"generic": "one", "record": matches[0]}
             elif generic == "one":
