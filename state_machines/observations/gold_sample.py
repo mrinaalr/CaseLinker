@@ -51,16 +51,12 @@ def _weight(row: dict) -> float:
     return row["stratum_population"] / row["stratum_drawn"]
 
 
-def _document_key(row: dict):
-    """One filing. Sentences of that filing share the key. A later filing with
-    the same bytes is a different key and is the duplicate."""
-    digest = row.get("document_sha256")
-    identity = row.get("doc_id") or row.get("document_id")
-    if digest and identity:
-        return ("doc", identity, digest)
-    if digest:
-        return ("case", row.get("case_id"), digest)
-    return ("unit", row.get("unit_id"))
+def _copy_id(row: dict):
+    """Which copy of a filing this row belongs to. The duplicate check is the sha256 alone."""
+    ident = row.get("doc_id") or row.get("document_id")
+    if ident:
+        return (row.get("case_id"), ident)
+    return (row.get("case_id"), row.get("document_sha256") or row.get("unit_id"))
 
 
 def merge_dockets(rows: Sequence[dict]) -> list:
@@ -75,7 +71,7 @@ def merge_dockets(rows: Sequence[dict]) -> list:
     dropped = set()
     kept = []
     for row in rows:
-        key = _document_key(row)
+        key = _copy_id(row)
         digest = row.get("document_sha256")
         if digest:
             owner = seen_digest.setdefault(digest, key)

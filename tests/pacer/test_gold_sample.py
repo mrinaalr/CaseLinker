@@ -278,6 +278,27 @@ def test_a_duplicate_document_drops_every_sentence_and_the_original_keeps_its_ow
     assert {row["case_id"] for row in merged} == {"one"}
 
 
+def test_draw_merges_a_docket_and_keeps_two_courts_apart():
+    """Goes through draw_sample, so removing the merge_dockets call fails it."""
+    manifest = _seal(["one", "two", "three", "four"], [], held=0, frame=4)
+    def row(case, court, number, sha, unit):
+        return {"unit_id": unit, "case_id": case, "court": court, "docket_number": number,
+                "document_sha256": sha, "stratum": "s", "sentence": unit,
+                "context_before": [], "context_after": []}
+    population = [
+        row("one", "DISTRICT OF MARYLAND", "24-1", "aa", "a1"),
+        row("one", "DISTRICT OF MARYLAND", "24-1", "aa", "a2"),
+        row("two", "DISTRICT OF MARYLAND", "24-1", "aa", "b1"),
+        row("three", "DISTRICT OF MARYLAND", "24-1", "bb", "c1"),
+        row("four", "SOUTHERN DISTRICT OF NEW YORK", "24-1", "cc", "d1"),
+    ]
+    sample = G.draw_sample(population, {"seed": 1, "strata": {"s": {"n": 4}}}, sealed=manifest)
+    by_unit = {item["unit_id"]: item["case_id"] for item in sample["rows"]}
+    assert by_unit["a1"] == by_unit["c1"] == "one"
+    assert "b1" not in by_unit
+    assert by_unit["d1"] == "four"
+
+
 def test_the_same_docket_is_one_case_and_a_repeated_document_is_dropped():
     from state_machines.observations.gold_sample import merge_dockets
     rows = [
@@ -290,12 +311,24 @@ def test_the_same_docket_is_one_case_and_a_repeated_document_is_dropped():
     assert {row["case_id"] for row in merged} == {"one"}
 
 
-def test_bootstrap_cli_default_is_two_thousand(capsys):
-    from state_machines.observations.gold_sample import main
-    with pytest.raises(SystemExit) as caught:
-        main(["score", "--help"])
-    assert caught.value.code == 0
-    assert "2000" in (capsys.readouterr().out + capsys.readouterr().err)
+def test_bootstrap_cli_default_is_two_thousand():
+    import argparse
+    from state_machines.observations import gold_sample as sample
+    captured = {}
+    real = argparse.ArgumentParser.add_argument
+
+    def wrapped(self, *args, **kwargs):
+        if args and args[0] == "--replicates":
+            captured["default"] = kwargs.get("default")
+        return real(self, *args, **kwargs)
+
+    argparse.ArgumentParser.add_argument = wrapped
+    try:
+        with pytest.raises(SystemExit):
+            sample.main(["score", "--help"])
+    finally:
+        argparse.ArgumentParser.add_argument = real
+    assert captured["default"] == 2000
 
 
 def test_bootstrap_default_is_two_thousand():
