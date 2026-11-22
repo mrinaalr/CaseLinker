@@ -1,6 +1,8 @@
 # Platform launch years
 
-`afh_manifest/config/platform_launch_years.csv` records the first public launch year of each platform in the capability registry (`capability_sources/*.yaml`). One row per registry id, in the registry's own spelling.
+`launch_year` is the year of first public release, including a public beta or early access: the first time the general public could use the service, under any earlier product name when it is the same service continued.
+
+`afh_manifest/config/platform_launch_years.csv` records that year for each platform in the capability registry (`capability_sources/*.yaml`). One row per registry id, in the registry's own spelling.
 
 | Column | Meaning |
 |---|---|

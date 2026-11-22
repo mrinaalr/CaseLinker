@@ -46,7 +46,7 @@ def test_generation_boundaries():
     assert generation(stated["Facebook"]) == "2004-2010"
     assert generation(stated["Instagram"]) == "2004-2010"
     assert generation(stated["Twitch"]) == "2011-2016"
-    assert generation(stated["MeWe"]) == "2011-2016"
+    assert generation(stated["TikTok"]) == "2011-2016"
     assert generation(stated["Fortnite"]) == ">=2017"
 
 
