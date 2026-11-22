@@ -49,7 +49,7 @@ def _sources(tmp: Path, case: str, text: str) -> list:
     return docs
 
 
-def _coder_files(out: Path, case: str, docs: list) -> None:
+def _coder_files(out: Path, case: str, docs: list, *, counts: bool = True) -> None:
     body = json.dumps({
         "case_id": case, "events": [], "passages": [], "relations": [], "tracks": [],
         "participants": [], "documents": docs,
@@ -58,6 +58,10 @@ def _coder_files(out: Path, case: str, docs: list) -> None:
         folder = out / coder
         folder.mkdir(parents=True, exist_ok=True)
         (folder / f"{case}.json").write_text(body, encoding="utf-8")
+        if counts:
+            (folder / f"{case}.counts.json").write_text(
+                json.dumps({"pages": 0, "model_pages": 0, "unparsable": 0}, indent=1) + "\n",
+                encoding="utf-8")
 
 
 def test_a_bundle_with_events_and_no_participants_still_fails_validation():
@@ -77,9 +81,9 @@ def test_zero_acts_are_recorded_and_the_draw_completes(tmp_path, monkeypatch):
     for coder in ("coder_A", "coder_B"):
         bundle, _quotes, _log = C.code_case(zero, coder, text_root, deny=[])
         assert bundle["events"] == []
-        folder = out / coder
-        folder.mkdir(parents=True, exist_ok=True)
-        (folder / f"{zero}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        C.store_bundle(out / coder, zero, bundle)
+        written = json.loads((out / coder / f"{zero}.json").read_text(encoding="utf-8"))
+        assert "coding_counts" not in written
     _coder_files(out, blank, blank_docs)
     summary = resolve_cases([zero, blank], out, text_root)
     assert summary[zero]["no_acts"] is True and summary[blank]["no_acts"] is True
@@ -176,9 +180,26 @@ def test_an_unparsable_reply_fails_before_a_zero_act_record(tmp_path, monkeypatc
     assert "decision file" in proc.stderr + proc.stdout
 
 
+def test_an_empty_bundle_without_counts_is_not_recorded_as_no_acts(tmp_path):
+    case = "bare"
+    out = tmp_path / "coded"
+    body = json.dumps({"case_id": case, "events": [], "passages": [], "documents": []})
+    for coder in ("coder_A", "coder_B"):
+        folder = out / coder
+        folder.mkdir(parents=True)
+        (folder / f"{case}.json").write_text(body, encoding="utf-8")
+    summary = resolve_cases([case], out, None)
+    assert summary[case]["failed"] == "counts file is missing"
+    assert "no_acts" not in summary[case]
+    assert not (out / "resolved" / f"{case}.json").is_file()
+    assert (out / "resolved" / f"{case}.failed").is_file()
+
+
 def test_no_agreed_acts_is_a_different_record_and_the_draw_completes(tmp_path, monkeypatch):
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_DISAGREEMENT", "1")
+    monkeypatch.setattr("state_machines.graphs.release.spacy_model_record",
+                        lambda: {"model": "stub", "model_version": "0"})
     case = "split_case"
     text_root = tmp_path / "text"
     docs = _sources(text_root, case, "The hearing was continued.")
@@ -193,13 +214,14 @@ def test_no_agreed_acts_is_a_different_record_and_the_draw_completes(tmp_path, m
                             "support": [{"passage_id": "p1", "facet": "action", "status": "DIRECT"}],
                             "affordances": [], "candidate_affordances": [], "harms": [], "access": [],
                             "time": {"assertions": []}}],
-                "relations": [], "tracks": [], "coding": {"coder_id": coder},
-                "coding_counts": {"pages": 1, "model_pages": 1, "unparsable": 0}}
+                "relations": [], "tracks": [], "coding": {"coder_id": coder}}
 
     for coder, action in (("coder_A", "STORE_MATERIAL"), ("coder_B", "DISTRIBUTE_MATERIAL")):
         folder = out / coder
         folder.mkdir(parents=True)
         (folder / f"{case}.json").write_text(json.dumps(bundle(coder, action)), encoding="utf-8")
+        (folder / f"{case}.counts.json").write_text(
+            json.dumps({"pages": 1, "model_pages": 1, "unparsable": 0}) + "\n", encoding="utf-8")
     summary = resolve_cases([case], out, None)
     assert summary[case]["no_agreed_acts"] is True
     assert (out / "disagreement_sheets" / case / "disagreements.csv").is_file()

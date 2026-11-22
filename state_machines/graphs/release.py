@@ -90,6 +90,12 @@ def _v2_release_guard() -> bool:
     return v2_active()
 
 
+def spacy_model_record() -> dict:
+    """The spaCy model a v2 release records. Tests replace this without loading the model."""
+    from state_machines.coding.workflow import spacy_model_record as recorded
+    return recorded()
+
+
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
           deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
           mode: str = "adjudicated", observations: bool = False, coders_root: Optional[Path] = None,
@@ -207,7 +213,6 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     if recorded:
         manifest["party_snapshot"] = recorded["sha256"]
     if _v2_release_guard():
-        from state_machines.coding.workflow import spacy_model_record
         manifest["spacy_model"] = spacy_model_record()
     if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0" and frame_drops is not None:
         manifest["frame_drops"] = frame_drops

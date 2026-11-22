@@ -1079,6 +1079,16 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
     return _done(bundle, rlog)
 
 
+def store_bundle(directory: Path, case_id: str, bundle: dict) -> None:
+    """Write the coder bundle. Page counts go in a side file, not in the bundle."""
+    counts = bundle.pop("coding_counts", None)
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    if counts is not None:
+        (directory / f"{case_id}.counts.json").write_text(
+            json.dumps(counts, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("coder", choices=sorted(MODELS["coders"]))
@@ -1093,8 +1103,7 @@ def main(argv=None) -> int:
         deny = json.loads(deny_path.read_text()) if deny_path.is_file() else []
         bundle, quotes, log = code_case(case_id, args.coder, args.text_root, cache, deny)
         out = args.out / args.coder
-        out.mkdir(parents=True, exist_ok=True)
-        (out / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        store_bundle(out, case_id, bundle)
         (out / f"{case_id}.log").write_text("\n".join(log) + "\n", encoding="utf-8")
         store = E.load_quotes(case_id, args.text_root)
         store.update(quotes)
