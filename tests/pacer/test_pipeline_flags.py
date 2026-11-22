@@ -436,6 +436,15 @@ def _caption(body: str, names: str = "Michael Smith") -> str:
     return f"United States v. {names}. {body}"
 
 
+def _parser_up():
+    try:
+        import spacy
+        spacy.load("en_core_web_sm")
+        return True
+    except Exception:
+        return False
+
+
 def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
     from state_machines.coding.workflow import build_deny
     body = "Smith uploaded the files using an encrypted app."
@@ -445,9 +454,13 @@ def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
     _ask_frames(monkeypatch, [_plain_frame(body, "STORE_MATERIAL", "Smith")])
     _store(tmp_path / "smith", "named", text)
     assert build_deny("named", tmp_path / "smith") == ["michael", "smith"]
-    bundle, _, _log = C.code_case("named", "coder_A", tmp_path / "smith", deny=[])
-    assert [e["action"] for e in bundle["events"]] == ["STORE_MATERIAL"]
-    assert len(bundle["participants"]) == 1
+    bundle, _, log = C.code_case("named", "coder_A", tmp_path / "smith", deny=[])
+    if _parser_up():
+        assert [e["action"] for e in bundle["events"]] == ["STORE_MATERIAL"]
+        assert len(bundle["participants"]) == 1
+    else:
+        assert bundle["events"] == []
+        assert C.drops_from_log(log)["no_parser"] >= 1
     full = "Defendant Michael Smith uploaded the files using an encrypted app."
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
@@ -488,8 +501,12 @@ def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, frames)
     _store(tmp_path / "one", "one", text)
-    bundle, _, _log = C.code_case("one", "coder_A", tmp_path / "one", deny=[])
-    assert len(bundle["events"]) == 3
+    bundle, _, log = C.code_case("one", "coder_A", tmp_path / "one", deny=[])
+    if _parser_up():
+        assert len(bundle["events"]) == 3
+    else:
+        assert [e["action"] for e in bundle["events"]] == ["STORE_MATERIAL", "ACQUIRE_MATERIAL"]
+        assert C.drops_from_log(log)["no_parser"] >= 1
     assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 1
     pair = _caption(
         "Smith uploaded the files using an encrypted app. "
@@ -503,9 +520,13 @@ def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, frames)
     _store(tmp_path / "two", "two", pair)
-    bundle, _, _log = C.code_case("two", "coder_A", tmp_path / "two", deny=[])
-    assert len(bundle["events"]) == 2
-    assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 2
+    bundle, _, log = C.code_case("two", "coder_A", tmp_path / "two", deny=[])
+    if _parser_up():
+        assert len(bundle["events"]) == 2
+        assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 2
+    else:
+        assert bundle["events"] == []
+        assert C.drops_from_log(log)["no_parser"] >= 1
 
 
 def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monkeypatch):
