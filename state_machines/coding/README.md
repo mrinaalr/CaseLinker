@@ -127,3 +127,24 @@ Each item is one question with a fixed set of answers that `apply` carries out:
 | `unresolved_role` | a participant whose role the source leaves open | a target role / a co-actor mode / not involved / edit |
 
 `edit` means the reviewer changes the frozen agreed core (`local/adjudication/<release>/agreed/<case>.json`) by hand; `apply` always rebuilds from that file and the decisions, so it can be rerun. `defer` blocks the dataset. `apply` marks every event and relation `adjudicated` with the reviewer's name and refuses a result that does not validate. Coder A's ids, participants and passages are the agreed core's own; coder B's passages are imported under a `b.` prefix, and anything needing coder B's participants is an `edit`.
+
+## Act extraction v2
+
+A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless a researcher sets it. With the flags unset, resolution is `intersection-1.0` and a release is built as before. The one exception is a new release: `graphs/release.py build` refuses to write one when the capability registry has no platforms, unless `--allow-empty-registry` is passed. Reading `pacer-v1` does not build, so that refusal does not apply to it.
+
+| Flag or mode | Default | What it selects |
+|---|---|---|
+| `CASELINKER_SECTION_FILTER` | off | technology-explainer and affiant-background passages yield no offender act and no means |
+| `CASELINKER_SECTION_MODEL` | off | local-model fallback when no section rule matches; the caller passes the callable |
+| `CASELINKER_COREFERENCE` | off | closed-list actor ids; the subject test can ask whether the resolved actor is an offender |
+| `CASELINKER_COREFERENCE_MODEL` | off | local model, restricted to the closed actor list |
+| `CASELINKER_ADJACENT_LEVEL` | off | `adjacent-sentence` links, kept out of same-sentence level C |
+| `CASELINKER_EXTRACTOR` | unset | `frame-1.0` writes one frame per cued act, each slot a verbatim span |
+| `CASELINKER_ACT_POLICY` | `intersection-1.0` | `propose-verify-1.0` is the other mode |
+
+```bash
+python -m state_machines.coding.pipeline preflight <case_id> [...] --text-root DIR --out DIR [--release-root DIR]
+python -m state_machines.coding.quote_check records.json --pages pages.json
+```
+
+`preflight` compares the release id, the text-directory id, the coder-bundle id and `COLLECTED_AS`. It reads those ids and does not open page text. `quote_check` reports each quote that is not the page text at its offsets. Neither command reads `state_machines/data`, `local/` or `caselinker_oxigraph/`. Disagreement rows are written by `coding/disagreement.py`; the human columns are blank, and a count from adjudicated events is labelled `adjudicated`.

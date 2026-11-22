@@ -70,24 +70,54 @@ def _review_summary(bundle: dict) -> Dict[str, int]:
     return dict(sorted(Counter(e["review"]["status"] for e in bundle["events"]).items()))
 
 
+def _registry_loaded() -> bool:
+    """Whether the capability registry this process would derive against has any platforms.
+
+    A missing source directory is an empty registry. Reading a release does not call this.
+    """
+    from state_machines.trajectories.affordances import load as load_registry
+
+    try:
+        return bool(load_registry().get("platforms"))
+    except FileNotFoundError:
+        return False
+
+
+def require_loaded_registry(allow_empty_registry: bool = False) -> bool:
+    """The loaded flag, or a refusal to build when the registry is empty.
+
+    ``allow_empty_registry`` is the ``--allow-empty-registry`` switch. Reading a
+    committed release does not call this.
+    """
+    loaded = _registry_loaded()
+    if not loaded and not allow_empty_registry:
+        raise SystemExit("refusing to build a release with capability_registry_loaded false; "
+                         "pass --allow-empty-registry to build one anyway")
+    return loaded
+
+
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
           deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
-          mode: str = "adjudicated", observations: bool = False, coders_root: Optional[Path] = None) -> dict:
+          mode: str = "adjudicated", observations: bool = False, coders_root: Optional[Path] = None,
+          allow_empty_registry: bool = False) -> dict:
     """Validate, derive, emit and SHACL-check every bundle of a release; write the manifest.
 
     ``observations`` also reads every page of each case for the platforms and features it names
     (state_machines/observations), writes ``observations/<case>.json`` and a third graph per case."""
-    from state_machines.evidence.validate import release_errors
-    from state_machines.graphs.emit import evidence_graph, observation_graph, serialize, trajectory_graph
-    from state_machines.graphs.shacl import validation_report
-    from state_machines.trajectories.act_policy import POLICY_ID
-    from state_machines.trajectories.affordances import load as load_registry
-    from state_machines.trajectories.derive import RULE_VERSION, derive, derived_json
-
     root = data_root / release_id
     bundles = sorted((root / "cases").glob("*.json"))
     if not bundles:
         raise SystemExit(f"no bundles under {root / 'cases'}")
+    # A new release records whether the registry loaded. pacer-v1 was built when it did not;
+    # reading that release does not come through here. The check is before the graph
+    # libraries load, so a refusal does not depend on them.
+    loaded = require_loaded_registry(allow_empty_registry)
+    from state_machines.evidence.validate import release_errors
+    from state_machines.graphs.emit import evidence_graph, observation_graph, serialize, trajectory_graph
+    from state_machines.graphs.shacl import validation_report
+    from state_machines.trajectories.act_policy import POLICY_ID
+    from state_machines.trajectories.derive import RULE_VERSION, derive, derived_json
+
     (root / "graphs").mkdir(exist_ok=True)
     (root / "derived").mkdir(exist_ok=True)
     cases = []
@@ -157,7 +187,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         "manifest_version": MANIFEST_VERSION, "release_id": release_id,
         "schema_version": V.SCHEMA_VERSION, "codebook_version": V.CODEBOOK_VERSION,
         "derivation_rule": RULE_VERSION, "act_policy": POLICY_ID,
-        "capability_registry_loaded": bool(load_registry().get("platforms")),
+        "capability_registry_loaded": loaded,
         "extension": EXTENSION.name,
         "sdk": sdk_pin(),
         "review_mode": "preview" if allow_unreviewed else mode,
@@ -393,12 +423,15 @@ def main(argv=None) -> int:
                    help="adjudicated: a named reviewer decided every item; machine: two independent coders agreed "
                         "on everything published; preview: anything that validates, local only")
     b.add_argument("--allow-unreviewed", action="store_true", help="same as --mode preview")
+    b.add_argument("--allow-empty-registry", action="store_true",
+                   help="build even when the capability registry has no platforms")
     n = sub.add_parser("nquads")
     n.add_argument("release_id")
     n.add_argument("--graphs", choices=sorted(SELECTIONS), default="all", help="evidence only, or evidence, trajectories and observations")
     args = ap.parse_args(argv)
     if args.cmd == "build":
-        m = build(args.release_id, allow_unreviewed=args.allow_unreviewed, mode=args.mode)
+        m = build(args.release_id, allow_unreviewed=args.allow_unreviewed, mode=args.mode,
+                  allow_empty_registry=args.allow_empty_registry)
         print(json.dumps({"release": m["release_id"], "cases": len(m["cases"]), "review_mode": m["review_mode"]}))
     else:
         print(nquads(args.release_id, select=args.graphs))

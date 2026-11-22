@@ -1,9 +1,10 @@
 """Automated coding, end to end: two local coders, machine resolution, benchmark and release.
 
-    python -m state_machines.coding.pipeline code    <case_id> [...] [--text-root DIR] [--out DIR]
-    python -m state_machines.coding.pipeline resolve <case_id> [...] [--out DIR]
-    python -m state_machines.coding.pipeline bench   [--split dev|heldout|all]
-    python -m state_machines.coding.pipeline release <release_id> <case_id> [...] [--out DIR] [--text-root DIR]
+    python -m state_machines.coding.pipeline code      <case_id> [...] [--text-root DIR] [--out DIR]
+    python -m state_machines.coding.pipeline resolve   <case_id> [...] [--out DIR]
+    python -m state_machines.coding.pipeline bench     [--split dev|heldout|all]
+    python -m state_machines.coding.pipeline release   <release_id> <case_id> [...] [--out DIR] [--text-root DIR]
+    python -m state_machines.coding.pipeline preflight <case_id> [...] [--text-root DIR] [--out DIR] [--release-root DIR]
 
 ``code`` runs coder_A then coder_B on every case (each case is cached and resumable: a case whose
 bundle exists is skipped). ``resolve`` applies ``resolve.resolve`` and writes the reliability report.
@@ -100,7 +101,17 @@ def _model_coded(bundle: dict) -> dict:
 def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
                   sub: str = "resolved") -> dict:
     """Resolve each case's two codings into ``out/<sub>``; reports beside it. ``settle_codes`` turns on
-    candidate rule 2b (``cues``), which a machine release does not use."""
+    candidate rule 2b (``cues``), which a machine release does not use.
+
+    ``CASELINKER_ACT_POLICY`` selects the policy. The default, ``intersection-1.0``,
+    calls ``resolve`` and leaves its output unchanged. ``propose-verify-1.0`` is the
+    other mode and writes its own record.
+    """
+    from state_machines.coding.propose_verify import POLICY_ID, from_bundles, selected_policy
+
+    policy = selected_policy()
+    if policy not in ("intersection-1.0", POLICY_ID):
+        raise SystemExit(f"unknown act policy {policy}")
     reports = "reports" if sub == "resolved" else f"reports_{sub}"
     (out / sub).mkdir(parents=True, exist_ok=True)
     (out / reports).mkdir(parents=True, exist_ok=True)
@@ -111,6 +122,11 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
+        if policy == POLICY_ID:
+            result = from_bundles(a, b)
+            (out / sub / f"{case_id}.json").write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            summary[case_id] = {"act_policy": POLICY_ID, "published": len(result["published"])}
+            continue
         bundle, report = resolve(a, b, text_root, settle_codes)
         if text_root is not None:
             from state_machines.coding.resolve import restate_order
@@ -197,7 +213,7 @@ def release(release_id: str, cases: List[str], out: Path, text_root: Path, obser
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=("code", "resolve", "bench", "bench-observations", "release"))
+    ap.add_argument("cmd", choices=("code", "resolve", "bench", "bench-observations", "release", "preflight"))
     ap.add_argument("args", nargs="*")
     ap.add_argument("--text-root", type=Path, default=E.text_root())
     ap.add_argument("--out", type=Path, default=OUT)
@@ -210,8 +226,14 @@ def main(argv=None) -> int:
     ap.add_argument("--record", action="store_true", help="bench: write the split's scores to state_machines/benchmark/results")
     ap.add_argument("--note", default="", help="bench --record: one line stored with the scores")
     ap.add_argument("--bench-out", type=Path, default=E.REPO_ROOT / "local" / "bench")
+    ap.add_argument("--release-root", type=Path, default=None, help="preflight: the release directory, read-only")
     a = ap.parse_args(argv)
-    if a.cmd == "code":
+    if a.cmd == "preflight":
+        from state_machines.coding.preflight import preflight
+        report = preflight(list(a.args), a.text_root, a.out, release_root=a.release_root)
+        print(json.dumps(report, indent=1))
+        return 0 if report["ok"] else 1
+    elif a.cmd == "code":
         print(json.dumps(code(a.args, a.text_root, a.out, a.selective), indent=1))
     elif a.cmd == "resolve":
         print(json.dumps(resolve_cases(a.args, a.out, a.text_root, a.settle_codes, "resolved_2b" if a.settle_codes else "resolved"), indent=1))
