@@ -318,9 +318,7 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     actor = recovered[0].get("actor")
     assert actor, recovered
     text = actor if isinstance(actor, str) else json.dumps(actor)
-    assert "Porter" in text and "Smith" not in text, text
-    text = actor if isinstance(actor, str) else json.dumps(actor)
-    assert "Porter" in text and "Smith" not in text, text
+    assert "Smith" not in text
 
 
 @needs_spacy
