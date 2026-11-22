@@ -1105,6 +1105,23 @@ def _hit_for(record: dict, records: List[dict], scope: Optional[dict], generic: 
     return {"canonical": canonical, "record": record, "generic": alone}
 
 
+def _defendant_is_other_argument(verb, subject) -> bool:
+    """True when ``the defendant`` is an object of the act verb and not its subject."""
+    if verb is None:
+        return False
+    subject_i = subject.i if subject is not None else -1
+    for token in verb.children:
+        if token.i == subject_i:
+            continue
+        if token.text.lower() == "defendant" and token.dep_ in {"dobj", "dative", "iobj", "attr", "oprd"}:
+            return True
+        if token.dep_ == "prep":
+            for child in token.children:
+                if child.i != subject_i and child.text.lower() == "defendant" and child.dep_ == "pobj":
+                    return True
+    return False
+
+
 def _subject_decision(subject, records, generic, scope, other_surnames, actor_text):
     """``(hit, None)`` or ``(None, reason)`` for one main-clause subject token."""
     if subject is None:
@@ -1198,6 +1215,8 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
         return found
 
     subject = _subject_of(verb) if verb is not None else None
+    if _defendant_is_other_argument(verb, subject):
+        return None, "actor_rejected"
     wanted = " ".join((actor_text or "").split()).lower()
     if subject is not None and wanted and subject.text.lower() not in wanted and "defendant" not in wanted:
         in_advcl = [token for token in doc if token.text.lower() in wanted.split() and _clause_of(token) == "advcl"]

@@ -106,6 +106,20 @@ def test_caption_layouts_and_labels(tmp_path, monkeypatch):
     assert "caption_mismatch" in _reasons(tmp_path, "memo")
 
 
+@pytest.mark.parametrize("sentence", [
+    "Smith sent the defendant a photo of herself.",
+    "Smith texted the defendant a picture of herself.",
+    "Smith gave the defendant her phone.",
+    "Jane Smith sent the defendant a photo.",
+])
+def test_the_defendant_as_an_object_is_refused(tmp_path, monkeypatch, sentence):
+    actor = "Jane Smith" if sentence.startswith("Jane") else "Smith"
+    events, _log = code_events(
+        tmp_path, monkeypatch, "obj", _one("Michael Smith", sentence), sentence, actor,
+        means="", object_text="")
+    assert events == []
+
+
 def test_multi_defendant_and_shared_surname_are_counted(tmp_path, monkeypatch):
     generic = "The defendant sent the files."
     events, _log = code_events(
