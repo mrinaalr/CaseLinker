@@ -1282,6 +1282,13 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
     return found, None
 
 
+def _strip_heading(text: str) -> str:
+    """Drop a count or paragraph label. A courtesy title such as Mr. stays."""
+    return re.sub(
+        r"^(?:count\s+(?:[0-9]+|[ivxlcdm]+|[a-z]+)\s*[:.)-]|[0-9]+[.)]|\([0-9]+\))\s+",
+        "", (text or "").strip(), count=1, flags=re.I)
+
+
 def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
                  generic: Optional[str] = None, scope: Optional[dict] = None,
                  other_surnames: Optional[List[str]] = None,
@@ -1304,7 +1311,7 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     nlp = _require_actor_nlp()
     if nlp is None:
         return None, "no_parser"
-    doc = nlp(sentence or "")
+    doc = nlp(_strip_heading(sentence or ""))
     verb = _act_verb(doc)
     blocked = _verb_block(verb)
     if blocked:

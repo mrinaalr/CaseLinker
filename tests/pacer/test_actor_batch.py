@@ -152,6 +152,19 @@ def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, senten
 
 
 @pytest.mark.parametrize("sentence", [
+    "COUNT ONE: The defendant sent the files.",
+    "Count 1. The defendant sent the files.",
+    "1. The defendant sent the files.",
+    "(1) The defendant sent the files.",
+])
+def test_a_count_heading_does_not_hide_the_defendant(tmp_path, monkeypatch, sentence):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "hd", _one("Michael Smith", sentence), sentence, "the defendant",
+        means="", object_text="the files")
+    assert events == ["DISTRIBUTE_MATERIAL"]
+
+
+@pytest.mark.parametrize("sentence", [
     "At no point did the defendant send the files.",
     "At no time did the defendant send the files.",
     "The defendant never sent the files.",
