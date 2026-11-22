@@ -208,3 +208,22 @@ def test_capability_and_interaction_graphs_conform_and_reject_bad_claims(tmp_pat
                                                       and n.get("oa:hasBody", {}).get("@id") == through)]
     conforms, messages = validate_jsonld(json.dumps(doc))
     assert not conforms and any("Carried_Out_Through" in m for m in messages)
+
+
+def test_default_registry_is_the_afh_capability_sources(monkeypatch):
+    """A checkout with no env override loads the AfH sources, not an empty registry."""
+    from state_machines.trajectories.affordances import DEFAULT_SOURCES
+
+    monkeypatch.delenv("CASELINKER_CAPABILITY_SOURCES", raising=False)
+
+    assert DEFAULT_SOURCES.is_dir()
+    assert "research" not in DEFAULT_SOURCES.parts
+    data = load()
+    names = {row["name"] for row in data["platforms"].values()}
+    assert len(names) == 56
+    assert {"Snapchat", "Kik", "Instagram", "Facebook Messenger"} <= names
+    snap = data["platforms"]["snapchat"]["capabilities"]
+    assert set(snap) == {
+        "anonymity", "ephemerality", "contact_discovery",
+        "unmonitored_communication", "distribution_infrastructure", "generative_synthesis",
+    }

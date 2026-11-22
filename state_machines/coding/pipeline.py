@@ -1,9 +1,10 @@
 """Automated coding, end to end: two local coders, machine resolution, benchmark and release.
 
-    python -m state_machines.coding.pipeline code    <case_id> [...] [--text-root DIR] [--out DIR]
-    python -m state_machines.coding.pipeline resolve <case_id> [...] [--out DIR]
-    python -m state_machines.coding.pipeline bench   [--split dev|heldout|all]
-    python -m state_machines.coding.pipeline release <release_id> <case_id> [...] [--out DIR] [--text-root DIR]
+    python -m state_machines.coding.pipeline code      <case_id> [...] [--text-root DIR] [--out DIR]
+    python -m state_machines.coding.pipeline resolve   <case_id> [...] [--out DIR]
+    python -m state_machines.coding.pipeline bench     [--split dev|heldout|all]
+    python -m state_machines.coding.pipeline release   <release_id> <case_id> [...] [--out DIR] [--text-root DIR]
+    python -m state_machines.coding.pipeline preflight <case_id> [...] [--text-root DIR] [--out DIR] [--release-root DIR]
 
 ``code`` runs coder_A then coder_B on every case (each case is cached and resumable: a case whose
 bundle exists is skipped). ``resolve`` applies ``resolve.resolve`` and writes the reliability report.
@@ -19,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 import time
@@ -79,8 +81,15 @@ def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) 
                 store.update(quotes)
                 E.save_quotes(case_id, store, text_root)
                 (d / f"{case_id}.log").write_text("\n".join(log) + "\n", encoding="utf-8")
-                status[f"{coder}/{case_id}"] = {"events": len(bundle["events"]), "seconds": round(time.time() - t)}
-                print(f"{coder} {case_id}: {len(bundle['events'])} events in {time.time() - t:.0f}s", flush=True)
+                entry = {"events": len(bundle["events"]), "seconds": round(time.time() - t)}
+                drops = C.drops_from_log(log)
+                if drops is not None:
+                    entry["frame_drops"] = drops
+                    corpus = status.setdefault("frame_drops", C.empty_drops())
+                    C.add_drops(corpus, drops)
+                status[f"{coder}/{case_id}"] = entry
+                suffix = f" frame_drops {json.dumps(drops, sort_keys=True)}" if drops else ""
+                print(f"{coder} {case_id}: {len(bundle['events'])} events in {time.time() - t:.0f}s{suffix}", flush=True)
             except BaseException as exc:            # noqa: BLE001 - a failed case is recorded, not fatal
                 if isinstance(exc, KeyboardInterrupt):
                     raise
@@ -97,10 +106,60 @@ def _model_coded(bundle: dict) -> dict:
                 relations=[r for r in bundle["relations"] if r["from_event"] in keep and r["to_event"] in keep])
 
 
+def _pages(text_root: Optional[Path], case_id: str) -> Optional[List[str]]:
+    """Page texts for the missed-act pass. None when the case has no text store."""
+    if text_root is None:
+        return None
+    sources = text_root / case_id / "sources.json"
+    if not sources.is_file():
+        return None
+    from state_machines.evidence import evidence as pages
+    out, docs = [], []
+    doc = json.loads(sources.read_text(encoding="utf-8"))
+    for item in doc.get("documents", []):
+        for page in item.get("pages", []):
+            text = pages.read_page(case_id, item["doc_id"], page["pdf_page"], text_root)
+            if text and text.strip():
+                out.append(text)
+                docs.append(item["doc_id"])
+    return out, docs
+
+
+def _record_disagreement(case_id: str, a: dict, b: dict, out: Path, entry: dict, policy: str, result: Optional[dict] = None) -> None:
+    """Write the adjudication sheet when ``CASELINKER_DISAGREEMENT=1``.
+
+    Unset, this returns without touching ``entry`` or the filesystem.
+    """
+    if os.environ.get("CASELINKER_DISAGREEMENT") != "1":
+        return
+    from state_machines.coding.disagreement import rows_from_intersection, rows_from_propose_verify, write_sheet
+    from state_machines.coding.propose_verify import POLICY_ID
+    if policy == POLICY_ID and isinstance(result, dict) and "published" in result:
+        rows = rows_from_propose_verify(case_id, result)
+    else:
+        rows = rows_from_intersection(case_id, a, b)
+    entry["disagreement_rows"] = len(rows)
+    dest = out / "disagreement_sheets" / case_id
+    try:
+        write_sheet(rows, dest)
+    except SystemExit:
+        entry["disagreement_sheet"] = "refused"
+
+
 def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
                   sub: str = "resolved") -> dict:
     """Resolve each case's two codings into ``out/<sub>``; reports beside it. ``settle_codes`` turns on
-    candidate rule 2b (``cues``), which a machine release does not use."""
+    candidate rule 2b (``cues``), which a machine release does not use.
+
+    ``CASELINKER_ACT_POLICY`` selects the policy. The default, ``intersection-1.0``,
+    calls ``resolve`` and leaves its output unchanged. ``propose-verify-1.0`` is the
+    other mode and writes its own record.
+    """
+    from state_machines.coding.propose_verify import POLICY_ID, from_bundles, selected_policy
+
+    policy = selected_policy()
+    if policy not in ("intersection-1.0", POLICY_ID):
+        raise SystemExit(f"unknown act policy {policy}")
     reports = "reports" if sub == "resolved" else f"reports_{sub}"
     (out / sub).mkdir(parents=True, exist_ok=True)
     (out / reports).mkdir(parents=True, exist_ok=True)
@@ -111,6 +170,14 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
+        if policy == POLICY_ID:
+            loaded = _pages(text_root, case_id)
+            pages, page_docs = loaded if loaded else (None, None)
+            result = from_bundles(a, b, pages=pages, page_docs=page_docs, case_id=case_id, text_root=text_root)
+            (out / sub / f"{case_id}.json").write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            summary[case_id] = {"act_policy": POLICY_ID, "published": len(result["published"])}
+            _record_disagreement(case_id, a, b, out, summary[case_id], policy, result)
+            continue
         bundle, report = resolve(a, b, text_root, settle_codes)
         if text_root is not None:
             from state_machines.coding.resolve import restate_order
@@ -120,11 +187,13 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
         report["parser_events"] = sum(e.get("notes") == "docket-parser" for e in bundle["events"])
         if not bundle["events"]:
             summary[case_id] = {"failed": "no event both coders coded", "report": report}
+            _record_disagreement(case_id, a, b, out, summary[case_id], policy)
             continue
         (out / sub / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
         summary[case_id] = {"events": len(bundle["events"]), "parser_events": report["parser_events"],
                             "agreement_model_coded": report["agreement_model_coded"]}
+        _record_disagreement(case_id, a, b, out, summary[case_id], policy)
     (out / reports / "SUMMARY.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     return summary
 
@@ -190,14 +259,24 @@ def release(release_id: str, cases: List[str], out: Path, text_root: Path, obser
         if src.is_file():
             shutil.copy(src, root / f"{case_id}.json")
             included.append(case_id)
+    frame_drops = None
+    if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
+        frame_drops = C.empty_drops()
+        for case_id in included:
+            for coder in ("coder_A", "coder_B"):
+                path = out / coder / f"{case_id}.log"
+                if path.is_file():
+                    part = C.drops_from_log(path.read_text(encoding="utf-8").splitlines())
+                    if part:
+                        C.add_drops(frame_drops, part)
     manifest = build(release_id, text_root=text_root, deny_lists={c: _deny(text_root, c) for c in included}, mode="machine",
-                     observations=observations, coders_root=out)
+                     observations=observations, coders_root=out, frame_drops=frame_drops)
     return {"release": release_id, "cases": len(manifest["cases"]), "left_out": sorted(set(cases) - set(included))}
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=("code", "resolve", "bench", "bench-observations", "release"))
+    ap.add_argument("cmd", choices=("code", "resolve", "bench", "bench-observations", "release", "preflight"))
     ap.add_argument("args", nargs="*")
     ap.add_argument("--text-root", type=Path, default=E.text_root())
     ap.add_argument("--out", type=Path, default=OUT)
@@ -210,8 +289,22 @@ def main(argv=None) -> int:
     ap.add_argument("--record", action="store_true", help="bench: write the split's scores to state_machines/benchmark/results")
     ap.add_argument("--note", default="", help="bench --record: one line stored with the scores")
     ap.add_argument("--bench-out", type=Path, default=E.REPO_ROOT / "local" / "bench")
+    ap.add_argument("--release-root", type=Path, default=None, help="preflight: the release directory, read-only")
+    ap.add_argument("--fingerprints", type=Path, default=None,
+                    help="preflight: JSON rows of case_id, fingerprint, normalization_version; read-only")
+    ap.add_argument("--collected-fingerprints", type=Path, default=None,
+                    help="preflight: JSON object of stored id to the fingerprint recorded at collection")
     a = ap.parse_args(argv)
-    if a.cmd == "code":
+    if a.cmd == "preflight":
+        from state_machines.coding.preflight import preflight
+        table = json.loads(a.fingerprints.read_text(encoding="utf-8")) if a.fingerprints else None
+        collected_fp = (json.loads(a.collected_fingerprints.read_text(encoding="utf-8"))
+                        if a.collected_fingerprints else None)
+        report = preflight(list(a.args), a.text_root, a.out, release_root=a.release_root,
+                           fingerprint_table=table, collected_fingerprints=collected_fp)
+        print(json.dumps(report, indent=1))
+        return 0 if report["ok"] else 1
+    elif a.cmd == "code":
         print(json.dumps(code(a.args, a.text_root, a.out, a.selective), indent=1))
     elif a.cmd == "resolve":
         print(json.dumps(resolve_cases(a.args, a.out, a.text_root, a.settle_codes, "resolved_2b" if a.settle_codes else "resolved"), indent=1))

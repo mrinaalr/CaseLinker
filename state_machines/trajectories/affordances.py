@@ -8,8 +8,9 @@ that kind of action (``vocab.ACTION_RELEVANCE``). Level C (instrumental) is code
 court record and is the only level that enters O_i; nothing here changes it.
 
 One registry for CaseLinker: the dated capability sources of the AfH Q1 work
-(``research/afh_q1/config/capability_sources/*.yaml``, PR #95), or the files named by
-``CASELINKER_CAPABILITY_SOURCES``. When none is present, levels A and B are empty.
+(``ontology/platform_affordance_evidence/afh_manifest/config/capability_sources/*.yaml``),
+or the files named by ``CASELINKER_CAPABILITY_SOURCES``. The default directory has to
+be there. A missing one is an error, so a derive cannot ship with an empty registry.
 
 Availability at an event (I4):
   supported    native, documented introduction date, and the event lies wholly inside
@@ -34,7 +35,14 @@ from typing import Dict, Iterable, List, Optional, Tuple
 from state_machines.evidence import vocab as V
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_SOURCES = REPO_ROOT / "research" / "afh_q1" / "config" / "capability_sources"
+DEFAULT_SOURCES = (
+    REPO_ROOT
+    / "ontology"
+    / "platform_affordance_evidence"
+    / "afh_manifest"
+    / "config"
+    / "capability_sources"
+)
 LEVEL_UNIT = "event"
 
 
@@ -63,7 +71,17 @@ def load(paths: Optional[Iterable[Path]] = None) -> dict:
 
     if paths is None:
         env = os.environ.get("CASELINKER_CAPABILITY_SOURCES")
-        paths = [Path(p) for p in env.split(os.pathsep)] if env else sorted(DEFAULT_SOURCES.glob("*.yaml"))
+        if env:
+            paths = [Path(p) for p in env.split(os.pathsep) if p]
+        elif not DEFAULT_SOURCES.is_dir():
+            raise FileNotFoundError(
+                f"AfH capability sources are not at {DEFAULT_SOURCES}. "
+                "Set CASELINKER_CAPABILITY_SOURCES to a directory of registry YAML files."
+            )
+        else:
+            paths = sorted(DEFAULT_SOURCES.glob("*.yaml"))
+            if not paths:
+                raise FileNotFoundError(f"no capability-source YAML files in {DEFAULT_SOURCES}")
     platforms: Dict[str, dict] = {}
     for path in paths:
         if not Path(path).is_file():

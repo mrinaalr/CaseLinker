@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from collections import Counter
 from pathlib import Path
@@ -173,6 +174,11 @@ _PLATFORM_CUES = [
 _FEATURE_MEANS = (r"\b(?P<cue>through|via|using|used|uses|by means of|with|utilized|utilizing|enabled|activated|turned on|"
                   r"created|creating|made|making|opened|set up|registered|published|posted|sent|shared|joined|ran|operated|"
                   r"administered|maintained|installed)\s+(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
+# extra feature cue for CASELINKER_MEANS_RULE=1.4-recall only: a conduct verb, then on/via.
+# The {0,5} and {0,70} windows above are unchanged.
+_FEATURE_ON_VIA = (r"\b" + _CONDUCT + r"\b[^.;,]{{0,70}}?\b(?P<cue>on|via)\s+" + _DET
+                   + r"(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
+_RECALL_TERMS = ("virtual private network", "virtual private networks", "VPNs")
 _CLAUSE_BREAK = re.compile(r"[,;]\s+(?:and|but|while|when|after|before|because|which|who|so)\b|;\s+|\s(?:and then|after|before|when|while|because)\s", re.I)
 _LEAD = r"^\s*(?:and\s+|but\s+|then\s+|later\s+|after\s+|before\s+|when\s+|while\s+|because\s+|which\s+|who\s+|so\s+)*"
 # a clause whose subject is a third party is never the offender's act ("..., and agents served a warrant on Kitebox")
@@ -264,6 +270,18 @@ def features_in(sentence: str) -> List[Tuple[str, str, int, int]]:
                 continue
             taken.append((m.start(), m.end()))
             out.setdefault((cls, phrase), (cls, phrase, m.start(), m.end()))
+    if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
+        extra = (
+            ("anonymity", "virtual private networks", re.compile(r"virtual private networks(?![A-Za-z0-9])", re.I)),
+            ("anonymity", "virtual private network", re.compile(r"virtual private network(?![A-Za-z])", re.I)),
+            ("anonymity", "VPNs", re.compile(r"VPNs(?![A-Za-z0-9])")),
+        )
+        for cls, phrase, pat in extra:
+            for m in pat.finditer(sentence):
+                if any(m.start() < e and s < m.end() for s, e in taken):
+                    continue
+                taken.append((m.start(), m.end()))
+                out.setdefault((cls, phrase), (cls, phrase, m.start(), m.end()))
     return sorted(out.values(), key=lambda t: t[2])
 
 
@@ -322,7 +340,10 @@ def _means(kind: str, sentence: str, o: dict, subject: Optional[str] = None) -> 
         name = "(?:" + _breakable(o["named_as"]) + "|" + _breakable(o["named_as"].upper()) + ")"
         patterns = [(rel, pat.format(name=name), 0) for rel, pat in _PLATFORM_CUES]
     else:
-        patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), 0 if o["feature_term"] in ("Tor", "VPN") else re.I)]
+        flags = 0 if o["feature_term"] in ("Tor", "VPN", "VPNs") else re.I
+        patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), flags)]
+        if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
+            patterns.append(("Supports_Action", _FEATURE_ON_VIA.format(term=_breakable(o["feature_term"])), flags))
     if N.states_a_rule_not_conduct(sentence):               # "the Terms of Service prohibit storing such material on ..."
         return None
     if _GENERIC_DESCRIPTION.search(sentence) and not _OFFENDER.search(sentence):   # how the technology works, not anyone's act
@@ -386,6 +407,36 @@ def _offender_acts(b: dict) -> List[tuple]:
             for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
 
 
+def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None, actors=None,
+                     records=None, generic=None, scope=None):
+    """The means tie ``relate`` publishes.
+
+    With ``CASELINKER_COREFERENCE`` and ``CASELINKER_MEANS_PARSER`` unset this is
+    ``_means`` and nothing else. Coreference retries a ``they`` subject. The
+    dependency parser runs only when the word window missed.
+    """
+    from state_machines.coding.workflow import v2_active
+    coref = os.environ.get("CASELINKER_COREFERENCE") == "1" and not v2_active()
+    parser = os.environ.get("CASELINKER_MEANS_PARSER") == "dep"
+    if not coref and not parser:
+        return _means(kind, sentence, o, subject)
+    if coref:
+        from state_machines.coding.coreference import make_inventory, means_with_resolved_subject
+        hit = means_with_resolved_subject(kind, sentence, o, actors if actors is not None else make_inventory())
+    else:
+        hit = _means(kind, sentence, o, subject)
+    if hit or not parser:
+        return hit
+    from state_machines.coding.coreference import make_inventory
+    from state_machines.observations.means_parse import instrument_means, parser_provenance, tokens_for
+    term = o.get("feature_term") or o.get("named_as") or ""
+    dep = instrument_means(sentence, {"feature_term": term}, tokens_for(sentence),
+                           actors=actors if coref else None, records=records, generic=generic, scope=scope)
+    if not dep:
+        return None
+    return dep["relationship"], dep["cue"], parser_provenance()
+
+
 def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, dict]] = None) -> dict:
     """Level 3: tie an observation to a published offender act whose cited sentence holds it and states
     the act was done by means of it. Where several published acts cite that sentence, the sentence
@@ -393,6 +444,17 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
     Returns the document with ``relations`` filled."""
     acts = [t[:5] for t in _offender_acts(bundle)]
     by_coder = {name: _offender_acts(b) for name, b in sorted((coded or {}).items())}
+    coref_actors = None
+    from state_machines.coding.workflow import v2_active
+    actor_records = None
+    actor_generic = None
+    by_document = {}
+    if v2_active():
+        from state_machines.coding.workflow import case_defendants
+        info = case_defendants(bundle["case_id"], text_root)
+        actor_records = info.get("records") or []
+        actor_generic = info.get("generic")
+        by_document = info.get("by_document") or {}
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
@@ -419,9 +481,19 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             if a < o["char_start"] - 1 or b > o["char_end"] + 1:
                 o["act_passage_runs_on"] = True
                 continue
-            hit = _means(o["kind"], pages[(d, pg)][a:b], o)
+            scope = by_document.get(d) or {}
+            hit = _published_means(
+                o["kind"], pages[(d, pg)][a:b], o, actors=coref_actors,
+                records=actor_records, generic=scope.get("generic", actor_generic),
+                scope=scope.get("record"))
             if hit and all(r["event_id"] != eid for r in o["relations"]):
-                o["relations"].append({"event_id": eid, "relationship": hit[0], "cue": hit[1], "basis": "means_stated_in_act_sentence"})
+                relation = {"event_id": eid, "relationship": hit[0], "cue": hit[1],
+                            "basis": "means_stated_in_act_sentence"}
+                if len(hit) > 2 and hit[2].get("parser"):
+                    relation["parser"] = hit[2]["parser"]
+                    relation["model"] = hit[2]["model"]
+                    relation["model_version"] = hit[2]["model_version"]
+                o["relations"].append(relation)
     # The disputed tier. The sentence states the means, each coder coded an offender act in that sentence, and
     # no act was published there because the coders differ on what the act is or on who did it. Nothing is tied
     # to an act: the record says how something was done, and the two coders disagree on what was done.
@@ -444,7 +516,8 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
         # no agreed act vouches for the reading here, so the stricter subject test applies to platforms too: a clause
         # about the victim, with no offender acting in it, states the victim's conduct
-        hit = _means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature")
+        hit = _published_means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature",
+                               actors=coref_actors)
         if not hit:
             continue
         a_codes, b_codes = (set(v) for v in inside.values())
@@ -460,6 +533,21 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             # recognise: that an offender acted is itself not agreed, so this is not offender use by any reading
             o["actor_conflict"] = dict(record, basis="means_stated_in_sentence_coders_do_not_both_name_an_identified_offender")
     doc["bundle_case_id"] = bundle["case_id"]
+    if os.environ.get("CASELINKER_ADJACENT_LEVEL") == "1":
+        from state_machines.coding.coreference import adjacent_links, level_c_only, make_inventory
+        links = []
+        seen = set()
+        for o in doc["observations"]:
+            key = (o["doc_id"], o["pdf_page"])
+            if key in seen:
+                continue
+            seen.add(key)
+            if key not in pages:
+                pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
+            sents = [pages[key][a:b] for a, b in sentences(pages[key])]
+            links.extend(adjacent_links(sents, make_inventory()))
+        same = [{"level": "C"} for o in doc["observations"] for _r in o["relations"]]
+        doc["adjacent_sentence"] = level_c_only(same, links)["adjacent_sentence"]
     return doc
 
 
@@ -489,6 +577,8 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
     re-hashed, every name and term on its list, every relation inside its act's cited sentence."""
     problems = []
     terms = {(cls, ph) for cls, phrases in FEATURES.items() for ph in phrases}
+    if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
+        terms |= {("anonymity", phrase) for phrase in _RECALL_TERMS}
     events = {e["event_id"]: e for e in (bundle or {}).get("events", [])}
     passages = {p["passage_id"]: p for p in (bundle or {}).get("passages", [])}
     pages: Dict[tuple, Optional[str]] = {}

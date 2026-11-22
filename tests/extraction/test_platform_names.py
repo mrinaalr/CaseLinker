@@ -32,6 +32,14 @@ DOG = (
 )
 
 
+def test_generic_tags_stay_extracted():
+    found = platforms(
+        "He contacted the child online, over the internet, in a chat, and on social media, and also on Snapchat."
+    )
+    for label in ("online", "internet", "chat", "social media", "Snapchat"):
+        assert label in found, found
+
+
 def test_mega_the_dog_is_not_a_platform():
     assert "Mega.nz" not in platforms(DOG)
 

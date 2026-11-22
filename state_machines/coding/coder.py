@@ -41,6 +41,7 @@ import sqlite3
 import sys
 import time
 import urllib.request
+import uuid
 from datetime import date
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -117,6 +118,20 @@ SCHEMA = {
             "by": {"type": "string"},
         }}}},
 }
+# What a frame model is asked for. Every field is text. The hash and the offsets are not in the schema.
+FRAME_SCHEMA = {
+    "type": "object", "required": ["frames"],
+    "properties": {"frames": {"type": "array", "items": {
+        "type": "object", "required": ["act", "actor", "quote", "means", "means_level"],
+        "properties": {
+            "act": {"type": "string", "enum": ACTIONS},
+            "actor": {"type": "string"},
+            "object": {"type": "string"},
+            "quote": {"type": "string"},
+            "means": {"type": "string"},
+            "means_level": {"type": "string", "enum": ["A", "B", "C"]},
+        }}}},
+}
 
 PROMPT = """You code a federal court record for a research codebook. Read the ONE page below and list every act it describes:
 something a person or agency DID (contact, ask, send, threaten, travel, record, distribute, arrest, plead, sentence, ...).
@@ -142,6 +157,38 @@ PAGE:
 <<<
 {text}
 >>>"""
+
+FRAME_PROMPT = """You code a federal court record for a research codebook. Read the ONE page below and list every act it describes:
+something a person or agency DID (contact, ask, send, threaten, travel, record, distribute, arrest, plead, sentence, ...).
+Skip legal argument, statutes, guideline calculations and boilerplate.
+
+Return frames. Each frame is plain text copied from this page, plus the action code and the means level:
+  act         = the action code
+  actor       = the verbatim words of who the codebook treats as the actor
+  object      = the verbatim words of what was acted on, or an empty string
+  quote       = the verbatim sentence that states the act
+  means       = the verbatim words of the instrument, or an empty string
+  means_level = A, B or C from the codebook. A is a capability the platform made available.
+                B is a capability relevant to that kind of action. C is a feature this sentence
+                states was used to carry out the act. A platform name is never C.
+Do not return offsets, hashes, or ids.
+
+Action codes:
+{codes}
+
+Document type: {doc_type}. Page {page}.
+PAGE:
+<<<
+{text}
+>>>"""
+
+
+def render_frame_prompt(**fields: str) -> str:
+    """FRAME_PROMPT with its slots filled. The model is not asked for offsets or a hash."""
+    out = FRAME_PROMPT
+    for k, v in fields.items():
+        out = out.replace("{" + k + "}", v)
+    return out
 
 
 def render_prompt(**fields: str) -> str:
@@ -261,18 +308,29 @@ class Cache:
         self.db.commit()
 
 
+def request_body(spec: dict, prompt: str, *, frames: bool = False) -> dict:
+    """The JSON sent to the model. ``frames`` selects the frame schema; otherwise the acts schema."""
+    body = {"model": spec["model"], "messages": [{"role": "user", "content": prompt}], "stream": False,
+            "format": FRAME_SCHEMA if frames else SCHEMA, "options": MODELS["options"],
+            "keep_alive": MODELS["runtime"].get("keep_alive", "2m")}
+    if spec.get("think") is False:
+        body["think"] = False
+    return body
+
+
 def ask(spec: dict, prompt: str, cache: Cache) -> dict:
     env = MODELS["runtime"].get("env") or {}
     numerics = {k: env[k] for k in ("OLLAMA_FLASH_ATTENTION", "OLLAMA_KV_CACHE_TYPE") if k in env}   # settings that change outputs
-    key = hashlib.sha256(json.dumps([spec["digest"], PROMPT_VERSION, MODELS["options"], numerics, prompt]).encode()).hexdigest()
+    frames = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
+    key_parts = [spec["digest"], PROMPT_VERSION, MODELS["options"], numerics, prompt]
+    if frames:
+        key_parts.append("frames")
+    key = hashlib.sha256(json.dumps(key_parts).encode()).hexdigest()
     hit = cache.get(key)
     if hit is not None:
         return json.loads(hit)
     wait_for_memory()
-    body = {"model": spec["model"], "messages": [{"role": "user", "content": prompt}], "stream": False,
-            "format": SCHEMA, "options": MODELS["options"], "keep_alive": MODELS["runtime"].get("keep_alive", "2m")}
-    if spec.get("think") is False:
-        body["think"] = False
+    body = request_body(spec, prompt, frames=frames)
     req = urllib.request.Request(MODELS["runtime"]["base_url"] + "/api/chat", data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json"})
     t = time.time()
@@ -282,7 +340,7 @@ def ask(spec: dict, prompt: str, cache: Cache) -> dict:
     try:
         out = json.loads(content)
     except json.JSONDecodeError:
-        out = {"acts": [], "unparsed": True}
+        out = {"frames": [], "unparsed": True} if frames else {"acts": [], "unparsed": True}
     cache.put(key, spec, json.dumps(out), time.time() - t, raw)
     return out
 
@@ -464,7 +522,7 @@ ACTOR_NOTES = ("actor-not-named", "actor-named-in-caption", "actor-renamed-from-
 
 
 def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, dict]], coder: str, spec: dict,
-             caption_names: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
+             caption_names: Optional[set] = None, drops: Optional[dict] = None) -> Tuple[dict, Dict[str, str], List[str]]:
     """answers: (document, page number, page text, model answer). Returns (bundle, quotes, log)."""
     log: List[str] = []
     participants: Dict[str, dict] = {}
@@ -482,6 +540,11 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
         return labels[lab]
 
     proc_seen: set = set()
+
+    def _drop(kind: str) -> None:
+        if drops is not None and kind in drops:
+            drops[kind] += 1
+
     for doc, page_no, text, ans in answers:
         page_events: List[Tuple[str, str, int, bool]] = []   # (event id, action, sentence end, same page)
         page_quotes: List[Tuple[str, str]] = []
@@ -489,21 +552,42 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             act = expand(act)
             try:
                 if act.get("quote"):                       # the docket parser gives the whole entry text
-                    start, end, qn = E.locate(text, act["quote"])
+                    try:
+                        start, end, qn = E.locate(text, act["quote"])
+                    except E.QuoteNotFound as exc:
+                        if act.get("keep_earliest") and "more than once" in str(exc):
+                            page_n = E.normalize(text)
+                            qn = E.normalize(act["quote"])
+                            start = page_n.find(qn)
+                            end = start + len(qn)
+                        else:
+                            raise
                 else:
                     start, end, qn = locate_sentence(text, act.get("start") or "")
             except E.QuoteNotFound as exc:
                 log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: quote {exc}")
+                _drop("duplicate_sentence" if "more than once" in str(exc) else "assemble_dropped")
                 continue
             if len(qn.split()) < 4:
                 log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: quote too short")
+                _drop("assemble_dropped")
                 continue
+            if os.environ.get("CASELINKER_SECTION_FILTER") == "1":
+                from state_machines.coding.sections import blocks_offender_products, classify
+                role = classify(qn)["role"]
+                if blocks_offender_products(role):
+                    log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: section filter, "
+                               f"the quote's sentence is {role}")
+                    _drop("section_filtered")
+                    continue
             action = act.get("action")
             if action not in _DEF:
+                _drop("assemble_dropped")
                 continue
             fam = V.FAMILY_OF[action]
             if fam == "offender" and states_a_rule_not_conduct(qn):
                 log.append(f"dropped {doc['doc_id']} p{page_no} {action}: the sentence states a rule or policy, not conduct")
+                _drop("assemble_dropped")
                 continue
             actor_note = None
             if not act.get("actor"):
@@ -531,6 +615,7 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                     if anchor[1] is None or anchor in proc_seen:
                         log.append(f"dropped {doc['doc_id']} p{page_no} {action}: procedure act "
                                    + ("without a stated date" if anchor[1] is None else "repeating a dated anchor"))
+                        _drop("assemble_dropped")
                         continue
                     proc_seen.add(anchor)
             role = act.get("actor_role")
@@ -538,11 +623,13 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                 fixed = {"offender": "offender", "procedure": "court", "law_enforcement": "law_enforcement"}.get(fam)
                 if fam == "response" and role not in _ALLOWED_ROLES[fam]:
                     log.append(f"dropped {doc['doc_id']} p{page_no} {action}: actor role {role} cannot perform it")
+                    _drop("assemble_dropped")
                     continue
                 role = "undercover" if fam == "law_enforcement" and "undercover" in _label(act.get("actor", "")) else fixed
             actor = who(act.get("actor", ""), role)
             if participants[actor]["kind"] == "persona" and role != "undercover":
                 log.append(f"dropped {doc['doc_id']} p{page_no} {action}: a persona can only act undercover")
+                _drop("assemble_dropped")
                 continue
             key = (doc["doc_id"], page_no, start, end)
             if key not in passages:
@@ -702,8 +789,145 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
+# One list. A refusal row's reason_code is one of these, and the drop counts use the same names.
+REASON_CODES = (
+    "not_found", "ambiguous", "section_filtered", "verify_failed",
+    "actor_rejected", "passive_subject", "no_defendant_record", "no_parser",
+    "surname_not_established", "assemble_dropped", "duplicate_sentence", "unparsable_reply",
+    "subordinate_clause", "reported_speech", "negated", "modal_conditional",
+    "coordinated_subject", "appositive_relation", "pronoun_object",
+    "caption_mismatch", "ambiguous_surname", "multi_defendant_caption", "other_caption",
+)
+DROP_KEYS = REASON_CODES
+
+
+def empty_drops() -> dict:
+    return {key: 0 for key in DROP_KEYS} | {"verify_failed": {}}
+
+
+def add_drops(total: dict, part: dict) -> None:
+    for key, value in part.items():
+        if key == "verify_failed":
+            bucket = total.setdefault("verify_failed", {})
+            for problem, count in value.items():
+                bucket[problem] = bucket.get(problem, 0) + count
+        elif key == "_refusals":
+            total.setdefault("_refusals", []).extend(value)
+        else:
+            total[key] = total.get(key, 0) + value
+
+
+def drops_from_log(log: List[str]) -> Optional[dict]:
+    for line in log:
+        if line.startswith("frame_drops "):
+            return json.loads(line[len("frame_drops "):])
+    return None
+
+
+def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str]:
+    """The caption defendant this span matched, as one participant label.
+
+    The span itself stays in the quote. One caption defendant is ``the defendant``.
+    Each person in a multi-defendant caption keeps that person's name.
+    """
+    from state_machines.coding.workflow import match_actor
+    found = match_actor((slot or {}).get("text") or "", records)
+    if found and found.get("canonical"):
+        return found["canonical"]
+    return None
+
+
+def refusal_row(case_id, coder_id, run_id, document_sha256, code, reason) -> dict:
+    """One refusal. ``act`` is the code. ``behavior_category`` is its conduct group."""
+    code = code or ""
+    reason_code = reason if reason in REASON_CODES else "actor_rejected"
+    return {
+        "case_id": case_id,
+        "document_sha256": document_sha256 or "",
+        "coder": coder_id or "",
+        "act": code,
+        "behavior_category": V.GROUP_OF.get(code, ""),
+        "reason": reason_code,
+    }
+
+
+def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
+                           generic: Optional[str] = None, scope: Optional[dict] = None,
+                           other_surnames: Optional[List[str]] = None,
+                           caption_reason: Optional[str] = None,
+                           case_id: Optional[str] = None, document_sha256: Optional[str] = None,
+                           coder_id: Optional[str] = None, run_id: Optional[str] = None):
+    """Acts a coder's model frames survive as, and why the others were dropped.
+
+    The model returns text. The hash and the offsets are computed from the page.
+    ``extract_frames`` is not called. The actor stored on the act is the caption
+    defendant's canonical label, not the model's raw span.
+    """
+    from state_machines.coding.enrich import feature
+    from state_machines.coding.frames import ground_frame
+    acts = []
+    counts = empty_drops()
+    records = records or []
+    for frame in frames or []:
+        raw_act = frame.get("act")
+        code = raw_act.get("code") if isinstance(raw_act, dict) else (raw_act or "")
+        grounded, reason, problems = ground_frame(
+            text, frame, records, generic=generic, scope=scope, other_surnames=other_surnames)
+        if reason == "verify_failed":
+            for problem in problems:
+                counts["verify_failed"][problem] = counts["verify_failed"].get(problem, 0) + 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, "verify_failed"))
+            continue
+        if reason:
+            counts[reason] = counts.get(reason, 0) + 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, reason))
+            continue
+        slot = grounded.get("actor") or {}
+        sentence = (grounded.get("sentence") or {}).get("text") or ""
+        from state_machines.coding.workflow import decide_actor
+        found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic,
+                                     scope=scope, other_surnames=other_surnames,
+                                     caption_reason=caption_reason, page_text=text)
+        if reason:
+            counts[reason] = counts.get(reason, 0) + 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256,
+                            (grounded.get("act") or {}).get("code") or code, reason))
+            continue
+        canonical = (found or {}).get("canonical") or _canonical_actor(text, slot, records)
+        if not canonical:
+            counts["actor_rejected"] += 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, "actor_rejected"))
+            continue
+        code = (grounded.get("act") or {}).get("code") or code
+        if not sentence or not code:
+            counts["not_found"] += 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, "not_found"))
+            continue
+        act = {"quote": sentence, "action": code, "actor": canonical, "actor_role": "offender"}
+        if grounded.get("keep_earliest"):
+            act["keep_earliest"] = True
+        if grounded.get("means_level") == "C":
+            means_text = (grounded.get("means") or {}).get("text") or ""
+            found = feature(means_text) or feature(sentence)
+            if found and found[1].lower() in E.normalize(sentence).lower():
+                act["affordance"] = {"class": found[0], "feature": found[1]}
+        acts.append(act)
+    return acts, counts
+
+
 def route(doc: dict, text: str) -> str:
-    """How a page is read: "docket" (parser), "boilerplate" (skipped judgment form page) or "model"."""
+    """How a page is read: "docket" (parser), "boilerplate" (skipped judgment form page) or "model".
+
+    The section filter does not decide the page. It drops an act whose own quote
+    sentence is an explainer or affiant background, and leaves the other sentences.
+    ``CASELINKER_EXTRACTOR=frame-1.0`` does not change this: both coders still take
+    the model path.
+    """
     if doc["doc_type"] == "docket":
         return "docket"
     if doc["doc_type"] in ("judgment", "amended_judgment") and BOILERPLATE.search(text):
@@ -715,10 +939,22 @@ def pages_with_acts(log_path: Path) -> set:
     """(doc_id, page) pairs where a coder's model reported at least one act, read from its coverage log."""
     out = set()
     for line in log_path.read_text(encoding="utf-8").splitlines():
-        m = re.match(r"page (\S+) p(\d+): model.*?, (\d+) acts$", line)
+        m = re.match(r"page (\S+) p(\d+): model.*?, (\d+) acts\b", line)
         if m and int(m.group(3)) > 0:
             out.add((m.group(1), int(m.group(2))))
     return out
+
+
+def _write_refusals(text_root: Path, case_id: str, coder: str, rows: List[dict]) -> None:
+    """Rewrite this coder's refusal file. A run with no refusals leaves the file empty."""
+    folder = text_root / case_id
+    folder.mkdir(parents=True, exist_ok=True)
+    body = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
+    safe = re.sub(r"[^A-Za-z0-9_.-]+", "_", coder or "coder")
+    (folder / f"{safe}.v2_refusals.jsonl").write_text(body, encoding="utf-8")
+    stale = folder / "v2_refusals.jsonl"
+    if stale.is_file():
+        stale.unlink()
 
 
 def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] = None, deny: Optional[List[str]] = None,
@@ -740,24 +976,95 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
             ans, how = {"acts": []}, "skipped: first coder found no act"
         else:
             text = full[:MAX_PAGE_CHARS]
-            prompt = render_prompt(codes=codes, harms=HARM_LINES, affordances=AFF_LINES, doc_type=doc["doc_type"].replace("_", " "),
-                               page=str(page_no), text=text)
-            ans, how = prompt, "model" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
+            fields = dict(codes=codes, harms=HARM_LINES, affordances=AFF_LINES,
+                          doc_type=doc["doc_type"].replace("_", " "), page=str(page_no), text=text)
+            if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
+                prompt = render_frame_prompt(**fields)
+                how = "model frame-1.0" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
+            else:
+                prompt = render_prompt(**fields)
+                how = "model" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
+            ans, how = prompt, how
             jobs.append(len(answers))
-        answers.append([doc, page_no, full, ans, how])
+        answers.append([doc, page_no, full, ans, how, None])
     # model pages run with up to runtime.parallel requests in flight (the server batches them)
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=max(1, int(MODELS["runtime"].get("parallel", 1)))) as pool:
         for i, ans in zip(jobs, pool.map(lambda i: ask(spec, answers[i][3], cache), jobs)):
             answers[i][3] = ans
-    for doc, page_no, full, ans, how in answers:
-        coverage.append(f"page {doc['doc_id']} p{page_no}: {how}, {len(ans.get('acts', []))} acts")
+    framing = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
+    run_id = uuid.uuid4().hex
+    from state_machines.coding.workflow import case_defendants
+    info = case_defendants(case_id, text_root) if framing else {"records": [], "generic": "one"}
+    records = info["records"]
+    generic = info.get("generic")
+    totals = empty_drops()
+    zero_pages = 0
+    if framing:
+        for item in answers:
+            ans, how = item[3], item[4]
+            if isinstance(ans, dict) and str(how).startswith("model"):
+                if ans.get("unparsed"):
+                    totals["unparsable_reply"] += 1
+                    item[3] = {"acts": []}
+                    item[5] = {"unparsed": True}
+                    continue
+                doc_scope = (info.get("by_document") or {}).get(item[0]["doc_id"], {})
+                acts, counts = acts_from_model_frames(
+                    item[2], ans.get("frames") or [], records,
+                    generic=doc_scope.get("generic", generic), scope=doc_scope.get("record"),
+                    other_surnames=info.get("other_surnames"),
+                    caption_reason=doc_scope.get("reason"),
+                    case_id=case_id, document_sha256=item[0].get("sha256"),
+                    coder_id=coder, run_id=run_id)
+                item[3] = {"acts": acts}
+                item[5] = counts
+                add_drops(totals, counts)
+    for doc, page_no, full, ans, how, counts in answers:
+        n_acts = len(ans.get("acts", []))
+        line = f"page {doc['doc_id']} p{page_no}: {how}, {n_acts} acts"
+        if counts is not None:
+            if counts.get("unparsed"):
+                why = "unparsable reply"
+            elif n_acts == 0 and not any(counts.get(key) for key in DROP_KEYS) and not counts.get("verify_failed"):
+                why = "model returned no frames"
+            else:
+                why = (f"not_found={counts.get('not_found', 0)} actor_rejected={counts.get('actor_rejected', 0)} "
+                       f"ambiguous={counts.get('ambiguous', 0)} section_filtered={counts.get('section_filtered', 0)}")
+            if n_acts == 0:
+                zero_pages += 1
+                line += f", zero frames: {why}"
+            else:
+                line += f", {why}"
+        coverage.append(line)
         if progress:
-            progress(doc["doc_id"], page_no, len(ans.get("acts", [])))
+            progress(doc["doc_id"], page_no, n_acts)
     answers = [tuple(a[:4]) for a in answers]
+    refusals = totals.pop("_refusals", []) if framing else []
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
-                                   caption_names={w.lower() for term in (deny or []) for w in term.split()})
+                                   caption_names={w.lower() for term in (deny or []) for w in term.split()},
+                                   drops=totals if framing else None)
     log = coverage + log
+    if framing:
+        from state_machines.coding.parties import snapshot_record
+        recorded = snapshot_record()
+        if recorded:
+            log.append(f"party_snapshot {recorded['sha256']}")
+        if info.get("caption_snapshot_disagreement"):
+            totals["caption_snapshot_disagreement"] = totals.get("caption_snapshot_disagreement", 0) + 1
+        _write_refusals(text_root, case_id, coder, refusals)
+        log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
+        log.append("frame_drops " + json.dumps(totals, sort_keys=True))
+    # An empty bundle has no participant, so repair cannot make it validate. The zero-frame
+    # lines above say why. Repair still runs, and a stop is logged rather than returned before
+    # it is tried. With the flags unset, an empty model answer still raises as it did.
+    if not bundle["events"] and (framing or os.environ.get("CASELINKER_SECTION_FILTER") == "1"):
+        try:
+            bundle, rlog = repair(bundle, text_root, deny or [])
+        except SystemExit as exc:
+            log.append(f"repair stopped: {exc}")
+            return bundle, quotes, log
+        return bundle, quotes, log + rlog
     bundle, rlog = repair(bundle, text_root, deny or [])
     return bundle, quotes, log + rlog
 
@@ -782,8 +1089,10 @@ def main(argv=None) -> int:
         store = E.load_quotes(case_id, args.text_root)
         store.update(quotes)
         E.save_quotes(case_id, store, args.text_root)
+        drops = drops_from_log(log)
+        extra = f" frame_drops {json.dumps(drops, sort_keys=True)}" if drops else ""
         print(f"{args.coder} {case_id}: {len(bundle['events'])} events, {len(bundle['relations'])} relations, "
-              f"{sum(l.startswith('dropped') for l in log)} dropped, {time.time() - t:.0f}s", flush=True)
+              f"{sum(l.startswith('dropped') for l in log)} dropped, {time.time() - t:.0f}s{extra}", flush=True)
     return 0
 
 

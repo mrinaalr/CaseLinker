@@ -8,8 +8,15 @@ Automated analysis with case grouping, triage, and insights.
 from typing import List, Dict, Any, Tuple, Optional
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime
+from pathlib import Path
+
+_PATTERN_DIR = Path(__file__).resolve().parents[1] / "Processing Layer" / "Pattern Processing Layer"
+if str(_PATTERN_DIR) not in sys.path:
+    sys.path.insert(0, str(_PATTERN_DIR))
+from platform_kinds import is_generic_platform_tag  # noqa: E402
 
 
 def match_custom_tag(case_text: str, tag: str) -> bool:
@@ -777,9 +784,10 @@ def analyze_group_characteristics(group_cases: List[Dict[str, Any]]) -> Dict[str
         if case.get('perpetrator_registered_sex_offender'):
             rso_count += 1
     
-    # Calculate percentages
+    # Calculate percentages. Generic tags stay extracted; they are not named platforms.
     total = len(group_cases)
-    platform_counts = Counter(all_platforms)
+    platform_counts = Counter(p for p in all_platforms if not is_generic_platform_tag(p))
+    generic_counts = Counter(p for p in all_platforms if is_generic_platform_tag(p))
     topic_counts = Counter(all_topics)
     severity_counts = Counter(all_severity)
     relationship_counts = Counter(all_relationships)
@@ -825,7 +833,7 @@ def analyze_group_characteristics(group_cases: List[Dict[str, Any]]) -> Dict[str
     if platform_counts:
         top_platform = platform_counts.most_common(1)[0]
         if top_platform[1] >= total * 0.3:
-            description_parts.append(f"Most common platform: {top_platform[0]} ({top_platform[1]}/{total} cases)")
+            description_parts.append(f"Most common named platform: {top_platform[0]} ({top_platform[1]}/{total} cases)")
     
     if topic_counts:
         top_topic = topic_counts.most_common(1)[0]
@@ -850,6 +858,7 @@ def analyze_group_characteristics(group_cases: List[Dict[str, Any]]) -> Dict[str
             'very_young_victims': f"{very_young_count}/{total} ({very_young_count/total*100:.1f}%)",
             'registered_sex_offenders': f"{rso_count}/{total} ({rso_count/total*100:.1f}%)",
             'top_platforms': dict(platform_counts.most_common(3)),
+            'top_generic_tags': dict(generic_counts.most_common(4)),
             'top_topics': dict(topic_counts.most_common(5)),
             'top_severity': dict(severity_counts.most_common(5)),
         }
@@ -1272,9 +1281,12 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
         
         base_description = f"All {len(all_online_only_cases)} cases are online-only"
         additional_info = []
-        if characteristics.get('statistics', {}).get('top_platforms'):
-            top_platform = list(characteristics['statistics']['top_platforms'].keys())[0]
-            additional_info.append(f"Most common platform: {top_platform} ({len(all_online_only_cases)}/{len(all_online_only_cases)} cases)")
+        top_named = list((characteristics.get('statistics') or {}).get('top_platforms') or {}.items())
+        if top_named:
+            top_platform, top_n = top_named[0]
+            additional_info.append(
+                f"Most common named platform: {top_platform} ({top_n}/{len(all_online_only_cases)} cases)"
+            )
         if characteristics.get('statistics', {}).get('top_topics'):
             top_topic = list(characteristics['statistics']['top_topics'].keys())[0]
             additional_info.append(f"Most common topic: {top_topic.replace('_', ' ').title()} ({len(all_online_only_cases)}/{len(all_online_only_cases)} cases)")
@@ -1706,8 +1718,9 @@ def generate_automated_insights(all_cases: List[Dict[str, Any]]) -> Dict[str, An
             for platform in platforms:
                 platform_to_cases[platform].append(case_id)
     
-    if all_platforms:
-        platform_counts = Counter(all_platforms)
+    named_platforms = [p for p in all_platforms if not is_generic_platform_tag(p)]
+    if named_platforms:
+        platform_counts = Counter(named_platforms)
         top_platform = platform_counts.most_common(1)[0]
         platform_name = top_platform[0]
         case_ids = platform_to_cases[platform_name]

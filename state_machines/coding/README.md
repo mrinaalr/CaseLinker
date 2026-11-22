@@ -127,3 +127,27 @@ Each item is one question with a fixed set of answers that `apply` carries out:
 | `unresolved_role` | a participant whose role the source leaves open | a target role / a co-actor mode / not involved / edit |
 
 `edit` means the reviewer changes the frozen agreed core (`local/adjudication/<release>/agreed/<case>.json`) by hand; `apply` always rebuilds from that file and the decisions, so it can be rerun. `defer` blocks the dataset. `apply` marks every event and relation `adjudicated` with the reviewer's name and refuses a result that does not validate. Coder A's ids, participants and passages are the agreed core's own; coder B's passages are imported under a `b.` prefix, and anything needing coder B's participants is an `edit`.
+
+## Act extraction v2
+
+A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless it is set. With the flags unset, resolution is `intersection-1.0` and a release is built as before. A release refuses an empty capability registry when `require_registry` is set or any v2 flag is on; `--allow-empty-registry` records that it was allowed and builds anyway. Reading `pacer-v1` does not build.
+
+| Flag or mode | Default | Pipeline function it changes |
+|---|---|---|
+| `CASELINKER_SECTION_FILTER` | off | `coder.assemble` drops an act whose own quote sentence is a technology explainer or affiant background. Other sentences on the page still publish |
+| `CASELINKER_COREFERENCE` | off | `observe.relate` calls `coreference.means_with_resolved_subject` before it attributes a means |
+| `CASELINKER_ADJACENT_LEVEL` | off | `observe.relate` writes `adjacent_sentence` from `coreference.adjacent_links`, kept out of the means relations |
+| `CASELINKER_EXTRACTOR` | unset | `coder.code_case` still calls each coder's own model, with the frames schema and prompt. The model returns plain text (act code, actor, object, quote, means, means level). `acts_from_model_frames` stamps the page hash, re-locates each span, and drops a frame whose span is not on the page or whose actor is not the defendant. The actor matches the head phrase exactly: `the defendant`, `the accused`, the caption name or surname, or `defendant <Name>`. A pronoun matches only when `CASELINKER_COREFERENCE=1`. `extract_frames` is not either coder |
+| `CASELINKER_ACT_POLICY` | `intersection-1.0` | `pipeline.resolve_cases` calls `propose_verify.from_bundles`, including the missed-act pass when page text is available |
+| `CASELINKER_MEANS_PARSER` | unset | `observe.relate` calls `means_parse.instrument_means` when the five-word window misses. `dep` loads `en_core_web_sm` once (override with `CASELINKER_MEANS_SPACY_MODEL`) and `pipeline preflight` loads it too. A model that cannot load raises. `CASELINKER_MEANS_PARSER_FALLBACK=1` uses the small tokenizer and records `parser: fallback` |
+| `CASELINKER_MEANS_RULE` | unset | `observe.features_in` and `observe._means` also match `virtual private network(s)`, `VPN(s)`, and `on` / `via` after a conduct verb |
+| `CASELINKER_DISAGREEMENT` | off | `pipeline.resolve_cases` writes the adjudication sheet from `disagreement.rows_from_intersection` or `rows_from_propose_verify` |
+
+```bash
+python -m state_machines.coding.pipeline preflight <case_id> [...] --text-root DIR --out DIR [--release-root DIR]
+python -m state_machines.coding.quote_check records.json --pages pages.json
+```
+
+`CASELINKER_MEANS_PARSER=dep` needs the spaCy model pinned in `requirements-sdk.txt` (`en-core-web-sm` 3.8.0). `./setup.sh` installs that wheel and checks its sha256.
+
+`preflight` compares the release id, the text-directory id, the coder-bundle id and `COLLECTED_AS`. Passed an `fp-1` fingerprint table, it also reports a stored id whose fingerprint changed or disappeared, and a fingerprint shared by several PACER ids. It reads those ids and does not open page text, and it does not rename anything. The PDF name and `COLLECTED_AS` are plain strings, so a later ingest that mints ids from the article text does not move them. `quote_check` reports each quote that is not the page text at its offsets. Neither command reads `state_machines/data`, `local/` or `caselinker_oxigraph/`. Disagreement rows are written by `coding/disagreement.py`; the human columns are blank, and a count from adjudicated events is labelled `adjudicated`.

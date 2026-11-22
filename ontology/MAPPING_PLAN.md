@@ -23,7 +23,7 @@ Each press-release case becomes one `cacontology:CACInvestigation` graph. CaseLi
 
 ### Platform names
 
-Source: `PLATFORM_MAP` (71 entries). A platform name from `platforms_used` becomes a node of this class (one shared node per platform).
+Source: `PLATFORM_MAP` (72 entries). A platform name from `platforms_used` becomes a node of this class (one shared node per platform).
 
 | CaseLinker platform | CAC class | Properties |
 |---|---|---|
@@ -31,7 +31,7 @@ Source: `PLATFORM_MAP` (71 entries). A platform name from `platforms_used` becom
 | BitTorrent | `cac-platforms:FileHostingService` | platformType=p2p |
 | Call of Duty | `cac-platforms:GamePlatform` |  |
 | Cash App | no node: no CAC class for this kind of service |  |
-| chat | `cac-platforms:AnonymousChatPlatform` |  |
+| chat | `cac-platforms:GenericPlatformTag` |  |
 | Chat Avenue | `cac-platforms:MessagingService` | platformType=anonymous-chat |
 | ChatGPT | `cac-platforms:MessagingService` | platformType=generative-ai |
 | Chatroulette | `cac-platforms:AnonymousChatPlatform` | guestAccountsAllowed=true, identityVerificationRequired=false |
@@ -53,6 +53,7 @@ Source: `PLATFORM_MAP` (71 entries). A platform name from `platforms_used` becom
 | iCloud | `cac-platforms:FileHostingService` | platformType=cloud-backup |
 | IMVU | `cac-platforms:MessagingService` | platformType=avatar-social |
 | Instagram | `cac-platforms:SocialMediaPlatform` |  |
+| internet | `cac-platforms:GenericPlatformTag` |  |
 | IRC | `cac-platforms:AnonymousChatPlatform` | platformType=legacy |
 | Kazaa | `cac-platforms:FileHostingService` | platformType=p2p |
 | Kik | `cac-platforms:MessagingService` |  |
@@ -68,7 +69,7 @@ Source: `PLATFORM_MAP` (71 entries). A platform name from `platforms_used` becom
 | Oculus | `cac-platforms:GamePlatform` | platformType=vr |
 | Omegle | `cac-platforms:AnonymousChatPlatform` | guestAccountsAllowed=true, identityVerificationRequired=false |
 | OneDrive | `cac-platforms:FileHostingService` |  |
-| online | no node: no CAC class for this kind of service |  |
+| online | `cac-platforms:GenericPlatformTag` |  |
 | PlayStation Network | `cac-platforms:GamePlatform` |  |
 | Reddit | `cac-platforms:SocialMediaPlatform` |  |
 | Roblox | `cac-platforms:GamePlatform` | allowsAnonymousChat=true |
@@ -76,7 +77,7 @@ Source: `PLATFORM_MAP` (71 entries). A platform name from `platforms_used` becom
 | Skout | `cac-platforms:OnlineDatingPlatform` |  |
 | Skype | `cac-platforms:MessagingService` |  |
 | Snapchat | `cac-platforms:MessagingService` | encryptionLevel=end-to-end |
-| social media | `cac-platforms:SocialMediaPlatform` |  |
+| social media | `cac-platforms:GenericPlatformTag` |  |
 | Stable Diffusion | `cac-platforms:FileHostingService` | platformType=generative-ai |
 | Steam | `cac-platforms:GamePlatform` |  |
 | Telegram | `cac-platforms:MessagingService` |  |
@@ -361,7 +362,6 @@ Mapping the 3 fictional fixture cases of `tests/ontology_fixtures.py` (a full ca
 | `cac-platforms:ElectronicServiceProvider` | 1 |
 | `cac-platforms:FileHostingService` | 1 |
 | `cac-platforms:MessagingService` | 2 |
-| `cac-platforms:SocialMediaPlatform` | 1 |
 | `cac-production:ProductionOffense` | 1 |
 | `cac-sex-offender-registry:RegisteredSexOffender` | 1 |
 | `cac-sextortion:SextortionIncident` | 1 |
@@ -395,7 +395,7 @@ Mapping the 3 fictional fixture cases of `tests/ontology_fixtures.py` (a full ca
 | `cac-multi-jurisdiction:involvesAgency` | 4 |
 | `cac-platforms:encryptionLevel` | 1 |
 | `cac-platforms:operatedBy` | 1 |
-| `cac-platforms:platformType` | 1 |
+| `cac-platforms:platformType` | 2 |
 | `cac-temporal:ageSubject` | 1 |
 | `cac-temporal:concernsAgeQuality` | 1 |
 | `cac-temporal:hasAgeInYears` | 1 |
@@ -413,7 +413,7 @@ Mapping the 3 fictional fixture cases of `tests/ontology_fixtures.py` (a full ca
 | `dcterms:source` | 2 |
 | `dcterms:spatial` | 1 |
 | `dcterms:subject` | 7 |
-| `rdf:type` | 94 |
+| `rdf:type` | 93 |
 | `rdfs:label` | 58 |
 | `skos:altLabel` | 4 |
 | `uco-core:description` | 1 |

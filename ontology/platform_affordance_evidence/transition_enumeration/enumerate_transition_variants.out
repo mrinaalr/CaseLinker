@@ -1,0 +1,76 @@
+Baseline O(P) = ['AN', 'CD', 'EP', 'UM']  Q = ['DI', 'GS']
+runs: P = 8  P+Q = 27
+
+Delta_path(DI) = [('enter_scene',), ('contact', 'request', 'circulate')]
+Delta_path(GS) = [('photograph', 'reconstruct'), ('photograph', 'reconstruct', 'synthesize'), ('photograph', 'reconstruct', 'synthesize', 'contact_threaten')]
+Delta_path({DI,GS}) = [('enter_scene',), ('enter_scene', 'reconstruct'), ('photograph', 'reconstruct'), ('contact', 'request', 'circulate'), ('enter_scene', 'reconstruct', 'synthesize'), ('photograph', 'reconstruct', 'synthesize'), ('enter_scene', 'reconstruct', 'synthesize', 'circulate'), ('enter_scene', 'reconstruct', 'synthesize', 'contact_threaten'), ('photograph', 'reconstruct', 'synthesize', 'circulate'), ('photograph', 'reconstruct', 'synthesize', 'contact_threaten')]
+Sigma(DI,GS) = [('enter_scene', 'reconstruct'), ('enter_scene', 'reconstruct', 'synthesize'), ('enter_scene', 'reconstruct', 'synthesize', 'circulate'), ('enter_scene', 'reconstruct', 'synthesize', 'contact_threaten'), ('photograph', 'reconstruct', 'synthesize', 'circulate')]
+Delta_supp(DI) = [(('contact', frozenset({'DI'})),), (('contact', frozenset({'DI'})), ('request', frozenset({'UM'}))), (('contact', frozenset({'DI'})), ('request', frozenset({'EP', 'UM'}))), (('contact', frozenset({'DI'})), ('request', frozenset({'UM'})), ('threaten', frozenset({'UM'}))), (('contact', frozenset({'DI'})), ('request', frozenset({'EP', 'UM'})), ('threaten', frozenset({'UM'})))]
+Delta_supp(GS) = []
+C1b check: every run realising a Sigma sequence uses {DI,GS}: OK
+
+contact-free reachable 'syn': {'P': False, 'P+DI': False, 'P+GS': False, 'P+Q': True}
+reachable 'syn' at all: {'P': False, 'P+DI': False, 'P+GS': True, 'P+Q': True}
+dominators of h6 syn: ['lik', 'syn']
+dominators of h3 circ: ['circ']
+dominators of h4 thr: ['thr']
+min blocking set [h6 syn]: (1, [['GS']])
+min blocking set [h6 syn, contact-free runs]: (1, [['DI'], ['GS']])
+min blocking set [h3 circ]: (1, [['DI']])
+min blocking set [h4 thr]: (1, [['UM']])
+min blocking set [h4 thr, team-controllable {DI,GS} only]: (None, [])
+min blocking set [h4 thr via synthetic leverage (runs through syn)]: (1, [['CD'], ['UM'], ['GS']])
+cut characterisation (blocks iff R hits every run's Aff): OK on 64 subsets x 3 targets
+
+substitution for (contact, request):
+  P: kappa=1, single-affordance cuts (not substitutable) = ['AN', 'CD', 'UM']
+  P+Q: kappa=1, single-affordance cuts (not substitutable) = ['UM']
+kappa(enter_scene, reconstruct, synthesize) in P+Q = (1, ['DI'])
+
+C5: Delta_path(DI)|syn = []  Delta_path(GS)|syn = [('photograph', 'reconstruct', 'synthesize')]
+
+interventions (transition deletions in T*):
+  I1 capture-geometry constraint (delete t10,t11 reconstruct) {'syn': False, 'syn contact-free': False, 'thr via syn': False}
+  I2 gate scene entry for scenes with minors (delete t8) {'syn': True, 'syn contact-free': False, 'thr via syn': True}
+  I3 no co-presence channel with minors (delete t2) {'syn': True, 'syn contact-free': True, 'thr via syn': True}
+I3 restores CD and AN as single-affordance cuts for (contact, request): OK
+
+ALL CHECKS PASSED
+
+== PRIMARY (no t2)
+runs P 8 runs P+Q 19
+|dDI| 2 |dGS| 3 |dQ| 10 |Sigma| 5
+|supp DI| 0 |supp GS| 0
+ minblock syn (1, [['GS']])
+ minblock syn cf (1, [['DI'], ['GS']])
+ minblock circ (1, [['DI']])
+ minblock thr (1, [['CD'], ['UM']])
+ minblock thr ctrl (None, [])
+ minblock thr via syn (1, [['CD'], ['UM'], ['GS']])
+ single cuts (contact,request): ['AN', 'CD', 'UM']
+ dominators syn: ['lik', 'syn']
+ cf reach syn P,DI,GS,Q: [False, False, False, True]
+
+== CO-PRESENT (with t2)
+runs P 8 runs P+Q 27
+|dDI| 2 |dGS| 3 |dQ| 10 |Sigma| 5
+|supp DI| 5 |supp GS| 0
+ minblock syn (1, [['GS']])
+ minblock syn cf (1, [['DI'], ['GS']])
+ minblock circ (1, [['DI']])
+ minblock thr (1, [['UM']])
+ minblock thr ctrl (None, [])
+ minblock thr via syn (1, [['CD'], ['UM'], ['GS']])
+ single cuts (contact,request): ['UM']
+ dominators syn: ['lik', 'syn']
+ cf reach syn P,DI,GS,Q: [False, False, False, True]
+
+GS-in-baseline (primary): |dpath(DI;P')| 7
+   ('enter_scene',)
+   ('enter_scene', 'reconstruct')
+   ('contact', 'request', 'circulate')
+   ('enter_scene', 'reconstruct', 'synthesize')
+   ('enter_scene', 'reconstruct', 'synthesize', 'circulate')
+   ('enter_scene', 'reconstruct', 'synthesize', 'contact_threaten')
+   ('photograph', 'reconstruct', 'synthesize', 'circulate')
+GS-in-baseline (co-present): |dpath(DI;P')| 7

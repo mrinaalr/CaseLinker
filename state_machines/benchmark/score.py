@@ -1,6 +1,10 @@
 """Score coded bundles against the synthetic gold.
 
     python -m state_machines.benchmark.score <coded_dir> [--split dev|heldout|confirm|all] [--json out.json]
+        [--sealed-manifest M --final-evaluation --manifest-hash HEX]
+
+A sealed manifest is optional. Without one, scoring is unchanged. With one, a sealed
+case id is refused unless ``--final-evaluation`` is passed with that manifest's hash.
 
 ``coded_dir`` holds ``<case_id>.json`` bundles (a coder's output, or a resolved bundle). Events are
 matched to gold events by the overlap of the passages they cite (``workflow.match_events``),
@@ -250,12 +254,31 @@ def score_dir(coded_dir: Path, split: str = "all", data: Path = DATA) -> dict:
     return {"split": split, "cases": len(per_case), "missing": missing, "overall": summarize(total), "per_case": per_case}
 
 
+def cases_in_split(split: str = "all", data: Path = DATA) -> List[str]:
+    """Case ids ``score_dir`` would load for ``split``."""
+    ids = []
+    for gold_path in sorted(data.glob("synth_*/gold.json")):
+        case_id = gold_path.parent.name
+        if split == "all" or split_of(case_id, data) == split:
+            ids.append(case_id)
+    return ids
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("coded_dir", type=Path)
     ap.add_argument("--split", choices=("dev", "heldout", "confirm", "all"), default="all")
     ap.add_argument("--json", type=Path)
+    ap.add_argument("--sealed-manifest", type=Path, default=None,
+                    help="refuse sealed case ids unless --final-evaluation is passed with --manifest-hash")
+    ap.add_argument("--final-evaluation", action="store_true")
+    ap.add_argument("--manifest-hash", default="")
     args = ap.parse_args(argv)
+    if args.sealed_manifest is not None:
+        from state_machines.observations.seal import guard_development
+        manifest = json.loads(args.sealed_manifest.read_text(encoding="utf-8"))
+        guard_development(cases_in_split(args.split), manifest, final_evaluation=args.final_evaluation,
+                          manifest_hash=args.manifest_hash or None)
     out = score_dir(args.coded_dir, args.split)
     if args.json:
         args.json.write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8")
