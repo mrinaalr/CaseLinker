@@ -114,14 +114,15 @@ def _pages(text_root: Optional[Path], case_id: str) -> Optional[List[str]]:
     if not sources.is_file():
         return None
     from state_machines.evidence import evidence as pages
-    out = []
+    out, docs = [], []
     doc = json.loads(sources.read_text(encoding="utf-8"))
     for item in doc.get("documents", []):
         for page in item.get("pages", []):
             text = pages.read_page(case_id, item["doc_id"], page["pdf_page"], text_root)
             if text and text.strip():
                 out.append(text)
-    return out
+                docs.append(item["doc_id"])
+    return out, docs
 
 
 def _record_disagreement(case_id: str, a: dict, b: dict, out: Path, entry: dict, policy: str, result: Optional[dict] = None) -> None:
@@ -170,7 +171,9 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
         if policy == POLICY_ID:
-            result = from_bundles(a, b, pages=_pages(text_root, case_id), case_id=case_id, text_root=text_root)
+            loaded = _pages(text_root, case_id)
+            pages, page_docs = loaded if loaded else (None, None)
+            result = from_bundles(a, b, pages=pages, page_docs=page_docs, case_id=case_id, text_root=text_root)
             (out / sub / f"{case_id}.json").write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
             summary[case_id] = {"act_policy": POLICY_ID, "published": len(result["published"])}
             _record_disagreement(case_id, a, b, out, summary[case_id], policy, result)

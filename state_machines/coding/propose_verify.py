@@ -122,7 +122,8 @@ def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
 
 
 def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None,
-                 case_id: Optional[str] = None, text_root=None) -> dict:
+                 case_id: Optional[str] = None, text_root=None,
+                 page_docs: Optional[Sequence[str]] = None) -> dict:
     """Run propose-then-verify on two coder bundles.
 
     Coder 1's events are the proposals. Coder 2 accepts an overlapping sentence
@@ -184,10 +185,18 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None,
     info = case_defendants(case_id, text_root)
     records = info["records"]
     generic = info["generic"]
+    aligned = list(page_docs or [])
 
     def recover(sent):
         text = sent.get("text") or ""
-        found, reason = decide_actor(text, clause_subject(text), records, generic=generic)
+        doc_id = next((doc for page, doc in zip(pages, aligned) if text and text in page), None)
+        scope = (info.get("by_document") or {}).get(doc_id or "", {})
+        found, reason = decide_actor(
+            text, clause_subject(text), records,
+            generic=scope.get("generic", generic) if scope else generic,
+            scope=scope.get("record") if scope else None,
+            other_surnames=info.get("other_surnames"),
+        )
         if reason or not found or "canonical" not in found:
             return []
         return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},

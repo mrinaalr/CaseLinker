@@ -56,6 +56,53 @@ def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, senten
     assert events == []
 
 
+def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
+    sentence = f"The defendant sent {_TAIL}"
+    docs = [
+        ("complaint", "complaint", ["United States v. Michael Smith, Defendant."]),
+        ("plea", "plea_agreement", [f"United States v. Robert Porter, Defendant. {sentence}"]),
+    ]
+    events, _log = code_events(tmp_path, monkeypatch, "agree", docs, sentence)
+    assert events == ["DISTRIBUTE_MATERIAL"]
+    from state_machines.coding import pipeline as P
+    out = tmp_path / "coded"
+    for coder in ("coder_A", "coder_B"):
+        (out / coder).mkdir(parents=True)
+        (out / coder / "agree.json").write_text(json.dumps({
+            "case_id": "agree", "documents": [], "passages": [], "participants": [],
+            "events": [], "relations": [], "tracks": [], "coding": {"coder_id": coder},
+        }), encoding="utf-8")
+    monkeypatch.setenv("CASELINKER_ACT_POLICY", "propose-verify-1.0")
+    P.resolve_cases(["agree"], out, tmp_path)
+    recovered = json.loads((out / "resolved" / "agree.json").read_text(encoding="utf-8"))["recovered"]
+    assert recovered
+    assert all("Porter" in frame["actor"]["text"] for frame in recovered)
+    assert all("Smith" not in frame["actor"]["text"] for frame in recovered)
+
+
+def test_citation_lines_are_not_defendants(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import defendant_records_in, eyecite_version
+    assert eyecite_version()
+    page = (
+        "See United States v. Booker, 543 F.4th 100.\n"
+        "As held in United States v. Booker, the guidelines changed.\n"
+        "United States v. Gall, 552 F. App'x 1.\n"
+        "United States v. Gall, 128 S. Ct. 586, 169 L. Ed. 2d 445.\n"
+        "United States v. Booker, id. at 220.\n"
+        "Fed. Appx. 12 says the same.\n"
+        f"United States v. Michael Smith, Defendant. The defendant sent {_TAIL}"
+    )
+    assert [r["surname"] for r in defendant_records_in(page)] == ["Smith"]
+    events, _log = code_events(
+        tmp_path, monkeypatch, "cites",
+        [("sof", "statement_of_facts", [page])],
+        f"The defendant sent {_TAIL}",
+    )
+    assert events == ["DISTRIBUTE_MATERIAL"]
+    numbered = "UNITED STATES v. Case No. 1:24-cr-1\n(1) JOHN DOE\n(2) JANE ROE\n"
+    assert [r["surname"] for r in defendant_records_in(numbered)] == ["DOE", "ROE"]
+
+
 def test_extract_records_court_case_number_and_document_hash(tmp_path, monkeypatch):
     import pymupdf
     from state_machines.coding.workflow import extract
