@@ -170,7 +170,7 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
         if policy == POLICY_ID:
-            result = from_bundles(a, b, pages=_pages(text_root, case_id))
+            result = from_bundles(a, b, pages=_pages(text_root, case_id), case_id=case_id, text_root=text_root)
             (out / sub / f"{case_id}.json").write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
             summary[case_id] = {"act_policy": POLICY_ID, "published": len(result["published"])}
             _record_disagreement(case_id, a, b, out, summary[case_id], policy, result)

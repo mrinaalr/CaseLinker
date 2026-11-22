@@ -286,11 +286,24 @@ def _one_person(chunk: str) -> Optional[dict]:
 _REPORTER = re.compile(r"\d+\s+U\.?\s*S\.?", re.I)
 _CASE_V = re.compile(
     r"(?:UNITED STATES OF AMERICA|United States of America|UNITED STATES|United States|USA|U\.S\.|CRIMINAL CASE)"
-    r"[^.]{0,80}?(?<![A-Za-z])[Vv][Ss]?\.\s+"
+    r"[^.]{0,240}?(?<![A-Za-z])[Vv][Ss]?\.\s+"
 )
-_BODY_START = re.compile(
-    r"(?:\n\s*\n|\n\s*(?:STATEMENT OF FACTS|INTRODUCTION|BACKGROUND|COUNT\b|ARGUMENT|CONCLUSION|"
-    r"FINDINGS OF FACT|PROCEDURAL HISTORY|OFFENSE CONDUCT|THE OFFENSE)\b)",
+_BODY_HEADING = re.compile(
+    r"(?:STATEMENT OF FACTS|INTRODUCTION|BACKGROUND|COUNT\b|ARGUMENT|CONCLUSION|"
+    r"FINDINGS OF FACT|PROCEDURAL HISTORY|OFFENSE CONDUCT|THE OFFENSE)\b",
+    re.I,
+)
+_DEFENDANT_LINE = re.compile(r"\bDefendants?\.?\s*$", re.I)
+_CAPTION_LINE_LIMIT = 40
+_CHARGING_DOCS = {"complaint", "information", "indictment", "superseding_indictment"}
+_ET_AL = re.compile(r"\bet\s+al\b\.?", re.I)
+_SUFFIX_BETWEEN = re.compile(
+    r"\b([A-Z][A-Za-z'\-]+),\s+(?:JR|SR|II|III|IV)\.?,\s+([A-Z][A-Za-z'\-]+)\b",
+    re.I,
+)
+_ENTITY_AND = re.compile(
+    r"[A-Z][\w.'-]*(?:\s+[A-Z][\w.'-]*)*\s+AND\s+[A-Z][\w.'-]*(?:\s+[A-Z][\w.'-]*)*"
+    r"\s+(?:LLC|INC|CORP|LTD|CO)\b\.?",
     re.I,
 )
 _SURNAME_GIVEN = re.compile(
@@ -308,13 +321,36 @@ def _citation_follows(text: str, start: int) -> bool:
 
 
 def _caption_block(page: str) -> str:
-    """Opening of a page, through the caption and before the first body heading or paragraph."""
-    found = _BODY_START.search(page or "")
-    return page[:found.start()] if found else (page or "")
+    """Opening lines through the caption. Blank lines inside the caption stay.
+
+    The block ends at a ``Defendant(s).`` line, a body heading, or a line limit.
+    """
+    kept = []
+    for index, line in enumerate((page or "").splitlines()):
+        if index >= _CAPTION_LINE_LIMIT:
+            break
+        if _BODY_HEADING.fullmatch(line.strip().rstrip(".")):
+            break
+        kept.append(line)
+        if _DEFENDANT_LINE.search(line.strip()):
+            break
+    return "\n".join(kept)
 
 
 def _split_caption_people(head: str) -> List[str]:
-    """People in one caption list. 'SURNAME, Given' stays one person; other commas split."""
+    """People in one caption list. 'SURNAME, Given' stays one person; other commas split.
+
+    A suffix between the surname and the given name stays on that one person.
+    An entity name ending in LLC, INC, CORP, LTD, or CO is not split on AND.
+    """
+    head = _SUFFIX_BETWEEN.sub(r"\1, \2", head)
+    entities: List[str] = []
+
+    def _hold_entity(match: re.Match) -> str:
+        entities.append(match.group(0))
+        return f"\x01{len(entities) - 1}\x01"
+
+    head = _ENTITY_AND.sub(_hold_entity, head)
     held: List[str] = []
 
     def _hold(match: re.Match) -> str:
@@ -328,6 +364,9 @@ def _split_caption_people(head: str) -> List[str]:
         if not chunk:
             continue
         chunk = re.sub(r"\x00(\d+)\x00", lambda m: held[int(m.group(1))], chunk)
+        chunk = re.sub(r"\x01(\d+)\x01", lambda m: entities[int(m.group(1))], chunk)
+        if re.fullmatch(r"(?:JR|SR|II|III|IV)\.?", chunk.strip(".,"), re.I):
+            continue
         chunks.append(chunk)
     return chunks
 
@@ -371,40 +410,95 @@ def _keep_record(record: dict, seen: set) -> bool:
     return True
 
 
+def _parse_caption(text: str) -> Tuple[List[dict], bool]:
+    """Records from the first real caption in ``text``, and whether it says ``et al``."""
+    block = _caption_block(text or "")
+    et_al = bool(_ET_AL.search(block))
+    records = []
+    seen: set = set()
+    for match in _CASE_V.finditer(block):
+        if _citation_follows(block, match.end()):
+            continue
+        fragment = _ET_AL.sub(" ", block[match.end():])
+        for record in _people_in_caption(fragment):
+            if _keep_record(record, seen):
+                records.append(record)
+        break
+    return records, et_al
+
+
 def defendant_records_in(text: str) -> List[dict]:
     """Defendants in the first case caption of this page, before the body.
 
     A 'v.' whose raw following text is a reporter citation is not a caption.
     Later captions on the page are not defendants.
     """
-    block = _caption_block(text or "")
-    records = []
-    seen: set = set()
-    for match in _CASE_V.finditer(block):
-        if _citation_follows(block, match.end()):
-            continue
-        for record in _people_in_caption(block[match.end():]):
-            if _keep_record(record, seen):
-                records.append(record)
-        break
+    records, _et_al = _parse_caption(text)
     return records
 
 
-def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -> List[dict]:
-    """Defendants from the first page's caption. A citation on a later page is not a defendant."""
+def _signature(records: List[dict]) -> Tuple[str, ...]:
+    return tuple(sorted(record["key"] for record in records))
+
+
+def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
+    """Case-level defendants, shared by the coder and by missed-act recovery.
+
+    A charging document (complaint, information, indictment) supplies the caption
+    when its type is known. Otherwise every document's first page contributes,
+    and a document with no caption contributes nothing. ``et al``, more than one
+    person, or two captions that name different people make the generic actor
+    ambiguous. No caption at all is ``no_defendant_record``.
+    """
     root = E.text_root(text_root) / case_id
-    first = sorted(root.glob("*/p0001.txt"))
-    if not first:
-        return []
-    text = first[0].read_text(encoding="utf-8", errors="replace")
-    return defendant_records_in(text)
+    listed = root / "sources.json"
+    if listed.is_file():
+        documents = json.loads(listed.read_text(encoding="utf-8")).get("documents") or []
+    else:
+        documents = [{"doc_id": path.parent.name, "doc_type": "other"}
+                     for path in sorted(root.glob("*/p0001.txt"))]
+    found = []
+    for doc in documents:
+        page = root / doc["doc_id"] / "p0001.txt"
+        if not page.is_file():
+            continue
+        records, et_al = _parse_caption(page.read_text(encoding="utf-8", errors="replace"))
+        if not records and not et_al:
+            continue
+        found.append({"doc_type": doc.get("doc_type") or "other", "records": records, "et_al": et_al})
+    charging = [item for item in found if item["doc_type"] in _CHARGING_DOCS]
+    chosen = charging or found
+    if not chosen:
+        return {"records": [], "generic": "no_defendant_record", "et_al": False, "conflict": False}
+    signatures = {_signature(item["records"]) for item in chosen}
+    conflict = len(signatures) > 1
+    et_al = any(item["et_al"] for item in chosen)
+    records = []
+    seen: set = set()
+    for item in chosen:
+        for record in item["records"]:
+            if record["key"] not in seen:
+                seen.add(record["key"])
+                records.append(record)
+    if conflict or et_al or len(records) != 1:
+        generic = "ambiguous"
+    else:
+        generic = "one"
+    return {"records": records, "generic": generic, "et_al": et_al, "conflict": conflict}
+
+
+def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -> List[dict]:
+    """Defendants for the case. A citation on a later page is not a defendant."""
+    return case_defendants(case_id, text_root)["records"]
 
 
 _LEAD_PIECE = re.compile(
     r"^(?:"
     r"on\s+or\s+about\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
+    r"|between\s+\w+\s+\d{1,2}\s+and\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
     r"|between\s+\w+\s+and\s+\w+(?:\s+\w+)?\s+\d{4}\s*,\s*"
     r"|in\s+or\s+(?:around|about)\s+\d{4}\s*,\s*"
+    r"|at\s+\d{1,2}:\d{2}\s*[ap]\.?m\.?\s*,\s*"
     r"|(?:on|in|during|after|before)\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
     r"|(?:on|in|during|after|before)\s+[^,]{0,60},\s*"
     r"|(?:then|later|however|thereafter)\s*,\s*"
@@ -417,16 +511,6 @@ _SUBJECT = re.compile(
     r"|[A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})"
 )
 _ANY_POSSESSIVE = re.compile(r"\b[\w.\-]+(?:'s|\u2019s)\b")
-_NP_SKIP = re.compile(
-    r"^(?:then|later|also|subsequently|thereafter|however|next|soon|immediately|eventually|"
-    r"thus|therefore|again|already|still|just|now|once|often|previously|finally|"
-    r"sent|send|sends|sending|used|use|uses|using|distributed|distribute|distributes|distributing|"
-    r"was|were|is|are|be|been|being|had|has|have|did|does|do|"
-    r"uploaded|received|stored|opened|created|posted|shared|downloaded|accessed|viewed|"
-    r"possessed|produced|transported|communicated|asked|told|went|made|took|gave|kept|said|"
-    r"transmitted|forwarded|admitted|began|started|continued|would|could|should|will|can|may|might)$",
-    re.I,
-)
 _PASSIVE = re.compile(
     r"\b(?:was|were|been|be)\s+(?:sent|used|distributed|uploaded|received|stored|transmitted|"
     r"shared|posted|forwarded|asked|told|made|kept|given|taken|viewed|accessed|produced|"
@@ -443,17 +527,13 @@ def _strip_lead(text: str) -> str:
         text = text[match.end():]
 
 
-def _continues_noun_phrase(word: str) -> bool:
-    """A lowercase noun or adjective after a name, not the verb or a sentence adverb."""
-    return bool(word) and word[:1].islower() and not _NP_SKIP.match(word)
-
-
 def clause_subject(sentence: str) -> str:
     """The grammatical subject of the act's clause, after a leading adverbial or date.
 
     A possessive (``Smith's mother``, ``the defendant's mother``) is that whole
-    phrase, so it is not read as the defendant. A capitalized name followed by a
-    lowercase noun or adjective is that whole noun phrase, not a bare surname.
+    phrase, so it is not read as the defendant. A following lowercase word is not
+    part of the name. Whether a bare surname is the clause subject is decided by
+    the dependency parse, not by a verb list.
     """
     text = _strip_lead((sentence or "").strip())
     possessive = re.match(
@@ -464,19 +544,7 @@ def clause_subject(sentence: str) -> str:
     if possessive:
         return possessive.group(1)
     match = _SUBJECT.match(text)
-    if not match:
-        return ""
-    subject = match.group(1)
-    if re.fullmatch(r"[A-Z][\w'.-]+", subject):
-        rest = text[match.end():]
-        words = []
-        for word in re.findall(r"[A-Za-z][\w'.-]*", rest):
-            if not _continues_noun_phrase(word):
-                break
-            words.append(word)
-        if words:
-            subject = subject + " " + " ".join(words)
-    return subject
+    return match.group(1) if match else ""
 
 
 def is_passive(sentence: str) -> bool:
@@ -484,26 +552,104 @@ def is_passive(sentence: str) -> bool:
     return bool(_PASSIVE.search(sentence or ""))
 
 
-def bare_surname_established(subject: str, prior: str, records: List[dict]) -> bool:
-    """A one-word surname counts only after the full name or ``Defendant <Surname>``."""
-    token = " ".join((subject or "").split())
-    if not re.fullmatch(r"[A-Z][\w'.-]+", token):
-        return True
-    hits = [record for record in records
-            if token.lower() in {record["surname"].lower(),
-                                 *[name.lower() for name in record.get("alias_surnames", [])]}]
-    if len(hits) != 1:
-        return True
-    record = hits[0]
-    prior_text = prior or ""
-    if re.search(rf"\b{re.escape(record['full'])}\b", prior_text, re.I):
-        return True
-    if re.search(rf"\bdefendants?\s+{re.escape(record['surname'])}\b", prior_text, re.I):
-        return True
-    for alias in record.get("aliases") or []:
-        if re.search(rf"\b{re.escape(alias)}\b", prior_text, re.I):
-            return True
-    return False
+_ACTOR_NLP = None
+_ACTOR_NLP_TRIED = False
+_SUBJECT_DEPS = {"nsubj", "nsubjpass", "nsubj:pass"}
+
+
+def _actor_nlp():
+    """The spaCy model for bare-surname subjects, or None when it is not available."""
+    global _ACTOR_NLP, _ACTOR_NLP_TRIED
+    if _ACTOR_NLP_TRIED:
+        return _ACTOR_NLP
+    _ACTOR_NLP_TRIED = True
+    try:
+        from state_machines.observations.means_parse import load_spacy_model, model_name
+        _ACTOR_NLP = load_spacy_model(model_name())
+    except Exception:
+        _ACTOR_NLP = None
+    return _ACTOR_NLP
+
+
+def _known_surnames(records: List[dict]) -> set:
+    names = set()
+    for record in records or []:
+        names.add(record["surname"].lower())
+        names.update(name.lower() for name in record.get("alias_surnames") or [])
+    return names
+
+
+def _one_capital(text: str) -> Optional[str]:
+    parts = (text or "").split()
+    if len(parts) == 1 and re.fullmatch(r"[A-Z][\w'.-]+", parts[0]):
+        return parts[0]
+    return None
+
+
+def _surname_is_subject(sentence: str, surname: str) -> Optional[bool]:
+    """True when ``surname`` is nsubj or nsubjpass. None when no parser is available."""
+    nlp = _actor_nlp()
+    if nlp is None:
+        return None
+    doc = nlp(sentence or "")
+    target = surname.lower()
+    return any(token.text.lower() == target and token.dep_ in _SUBJECT_DEPS for token in doc)
+
+
+def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optional[str]:
+    """Why a bare surname may not be the actor, or None when this phrase is not one.
+
+    Establishment is the case's parsed surnames. The dependency parse decides
+    whether that token is the clause subject. No parser means ``no_parser``.
+    """
+    token = _one_capital(text)
+    if token is None or token.lower() in {"defendant", "defendants", "accused", "he", "she", "they", "him", "her", "the", "a", "an"}:
+        return None
+    if token.lower() not in _known_surnames(records):
+        return "surname_not_established"
+    parsed = _surname_is_subject(sentence, token)
+    if parsed is None:
+        return "no_parser"
+    if parsed:
+        return None
+    return "actor_rejected"
+
+
+def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
+                 generic: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
+    """``(match, drop reason)`` for one act. A reason means the act is not published.
+
+    The coder and missed-act recovery both use this. A full name, ``Defendant
+    <Surname>``, and ``the defendant`` do not need the parser. A bare surname does.
+    """
+    records = list(records or [])
+    if generic is None:
+        generic = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
+    if generic == "no_defendant_record" or not records:
+        return None, "no_defendant_record"
+    subject = clause_subject(sentence)
+    if is_passive(sentence):
+        hit = match_actor(subject, records, generic=generic)
+        if not hit or "canonical" not in hit:
+            return None, "passive_subject"
+    if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())) and generic != "one":
+        return None, "ambiguous"
+    for candidate in (actor_text, subject):
+        reason = _bare_surname_reason(sentence, candidate, records)
+        if reason:
+            return None, reason
+    if re.fullmatch(r"(?:he|him|she|her|they|them|their)", " ".join((actor_text or "").split()), re.I):
+        return None, None
+    found = match_actor(actor_text, records, generic=generic)
+    if found and found.get("drop"):
+        return None, found["drop"]
+    if found and found.get("ambiguous"):
+        return None, "ambiguous"
+    if not same_actor(actor_text, subject, records, generic=generic):
+        return None, "actor_rejected"
+    if not found or "canonical" not in found:
+        return None, "actor_rejected"
+    return found, None
 
 
 def _record_hit(record: dict, records: List[dict]) -> dict:
@@ -511,7 +657,7 @@ def _record_hit(record: dict, records: List[dict]) -> dict:
     return {"canonical": canonical, "record": record, "generic": False}
 
 
-def match_actor(text: str, records: List[dict]) -> Optional[dict]:
+def match_actor(text: str, records: List[dict], *, generic: Optional[str] = None) -> Optional[dict]:
     """The caption defendant ``text`` names.
 
     ``the defendant``, ``defendant`` and ``accused`` match only when the caption
@@ -523,9 +669,14 @@ def match_actor(text: str, records: List[dict]) -> Optional[dict]:
     if not raw or _ANY_POSSESSIVE.search(raw) or _POSSESSIVE_ACTOR.search(raw):
         return None
     if _GENERIC_ACTOR.fullmatch(raw):
-        if len(records) == 1:
-            return {"canonical": "the defendant", "record": records[0], "generic": True}
-        return {"ambiguous": True}
+        status = generic
+        if status is None:
+            status = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
+        if status == "no_defendant_record" or not records:
+            return {"drop": "no_defendant_record"}
+        if status != "one":
+            return {"ambiguous": True}
+        return {"canonical": "the defendant", "record": records[0], "generic": True}
     named = _NAMED_ACTOR.fullmatch(raw)
     target = " ".join((named.group(1) if named else raw).split())
     parts = [part for part in target.split() if part.lower().strip(".") not in _SUFFIXES]
@@ -547,16 +698,16 @@ def match_actor(text: str, records: List[dict]) -> Optional[dict]:
     return None
 
 
-def same_actor(left: str, right: str, records: List[dict]) -> bool:
+def same_actor(left: str, right: str, records: List[dict], *, generic: Optional[str] = None) -> bool:
     """True when both phrases are the same defendant, ignoring case on a full phrase."""
     if not left or not right:
         return False
     if " ".join(left.split()).lower() == " ".join(right.split()).lower():
         if re.fullmatch(r"(?:he|him|she|her|they|them|their)", left.strip(), re.I):
             return True
-        found = match_actor(left, records)
-        return bool(found) and not found.get("ambiguous")
-    a, b = match_actor(left, records), match_actor(right, records)
+        found = match_actor(left, records, generic=generic)
+        return bool(found) and not found.get("ambiguous") and not found.get("drop")
+    a, b = match_actor(left, records, generic=generic), match_actor(right, records, generic=generic)
     if not a or not b or a.get("ambiguous") or b.get("ambiguous"):
         return False
     return a["canonical"] == b["canonical"]

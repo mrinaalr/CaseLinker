@@ -790,7 +790,8 @@ def pages_of(case_id: str, text_root: Path):
 
 _PRONOUN = re.compile(r"^(?:he|him|his|she|her|they|them|their)$", re.I)
 DROP_KEYS = ("not_found", "ambiguous", "section_filtered", "actor_rejected",
-             "passive_subject", "assemble_dropped", "duplicate_sentence", "unparsable_reply")
+             "passive_subject", "no_defendant_record", "no_parser", "surname_not_established",
+             "assemble_dropped", "duplicate_sentence", "unparsable_reply")
 
 
 def empty_drops() -> dict:
@@ -844,7 +845,8 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
     return named["canonical"] if named else "the defendant"
 
 
-def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None):
+def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
+                           generic: Optional[str] = None):
     """Acts a coder's model frames survive as, and why the others were dropped.
 
     The model returns text. The hash and the offsets are computed from the page.
@@ -867,32 +869,12 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
             continue
         slot = grounded.get("actor") or {}
         sentence = (grounded.get("sentence") or {}).get("text") or ""
-        from state_machines.coding.workflow import (
-            bare_surname_established, clause_subject, is_passive, match_actor, same_actor,
-        )
-        subject = clause_subject(sentence)
-        start = (grounded.get("sentence") or {}).get("start") or 0
-        if not bare_surname_established(subject, text[:start], records):
-            counts["actor_rejected"] += 1
+        from state_machines.coding.workflow import decide_actor
+        found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic)
+        if reason:
+            counts[reason] = counts.get(reason, 0) + 1
             continue
-        parts = subject.split()
-        surnames = {record["surname"].lower() for record in records}
-        if len(parts) >= 2 and parts[0][:1].isupper() and parts[0].lower() in surnames and parts[1][:1].islower():
-            counts["actor_rejected"] += 1
-            continue
-        if is_passive(sentence):
-            subject_hit = match_actor(subject, records)
-            if not subject_hit or subject_hit.get("ambiguous") or "canonical" not in subject_hit:
-                counts["passive_subject"] += 1
-                continue
-        found = match_actor(slot.get("text") or "", records)
-        if found and found.get("ambiguous"):
-            counts["ambiguous"] += 1
-            continue
-        if not same_actor(slot.get("text") or "", subject, records):
-            counts["actor_rejected"] += 1
-            continue
-        canonical = _canonical_actor(text, slot, records)
+        canonical = (found or {}).get("canonical") or _canonical_actor(text, slot, records)
         if not canonical:
             counts["actor_rejected"] += 1
             continue
@@ -973,8 +955,10 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         for i, ans in zip(jobs, pool.map(lambda i: ask(spec, answers[i][3], cache), jobs)):
             answers[i][3] = ans
     framing = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
-    from state_machines.coding.workflow import defendant_records_for_case
-    records = defendant_records_for_case(case_id, text_root) if framing else []
+    from state_machines.coding.workflow import case_defendants
+    info = case_defendants(case_id, text_root) if framing else {"records": [], "generic": "one"}
+    records = info["records"]
+    generic = info.get("generic")
     totals = empty_drops()
     zero_pages = 0
     if framing:
@@ -986,7 +970,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     item[3] = {"acts": []}
                     item[5] = {"unparsed": True}
                     continue
-                acts, counts = acts_from_model_frames(item[2], ans.get("frames") or [], records)
+                acts, counts = acts_from_model_frames(item[2], ans.get("frames") or [], records, generic=generic)
                 item[3] = {"acts": acts}
                 item[5] = counts
                 add_drops(totals, counts)

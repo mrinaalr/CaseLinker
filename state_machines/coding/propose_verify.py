@@ -121,7 +121,8 @@ def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
     return missed, means_ids
 
 
-def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dict:
+def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None,
+                 case_id: Optional[str] = None, text_root=None) -> dict:
     """Run propose-then-verify on two coder bundles.
 
     Coder 1's events are the proposals. Coder 2 accepts an overlapping sentence
@@ -177,24 +178,18 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
     covered += [(pid, start, end) for pid, start, end, _event in b_events]
     missed, means_ids = _missed_on_pages(pages, covered)
 
-    from state_machines.coding.workflow import (
-        bare_surname_established, clause_subject, defendant_records_in, is_passive, match_actor,
-    )
-    records = defendant_records_in(pages[0]) if pages else []
+    from state_machines.coding.workflow import case_defendants, clause_subject, decide_actor
+    if case_id is not None and text_root is not None:
+        info = case_defendants(case_id, text_root)
+    else:
+        info = {"records": [], "generic": "no_defendant_record"}
+    records = info["records"]
+    generic = info["generic"]
 
     def recover(sent):
         text = sent.get("text") or ""
-        subject = clause_subject(text)
-        if not bare_surname_established(subject, sent.get("prior") or "", records):
-            return []
-        parts = subject.split()
-        surnames = {record["surname"].lower() for record in records}
-        if len(parts) >= 2 and parts[0][:1].isupper() and parts[0].lower() in surnames and parts[1][:1].islower():
-            return []
-        if is_passive(text) and not (match_actor(subject, records) or {}).get("canonical"):
-            return []
-        found = match_actor(subject, records)
-        if not found or found.get("ambiguous") or "canonical" not in found:
+        found, reason = decide_actor(text, clause_subject(text), records, generic=generic)
+        if reason or not found or "canonical" not in found:
             return []
         return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},
                  "actor": {"id": "defendant", "text": found["canonical"]}} for code in sent.get("codes") or []]
