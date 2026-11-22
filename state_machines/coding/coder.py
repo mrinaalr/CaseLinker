@@ -824,19 +824,6 @@ def drops_from_log(log: List[str]) -> Optional[dict]:
     return None
 
 
-def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str]:
-    """The caption defendant this span matched, as one participant label.
-
-    The span itself stays in the quote. One caption defendant is ``the defendant``.
-    Each person in a multi-defendant caption keeps that person's name.
-    """
-    from state_machines.coding.workflow import match_actor
-    found = match_actor((slot or {}).get("text") or "", records)
-    if found and found.get("canonical"):
-        return found["canonical"]
-    return None
-
-
 def refusal_row(case_id, coder_id, run_id, document_sha256, code, reason) -> dict:
     """One refusal. ``act`` is the code. ``behavior_category`` is its conduct group."""
     code = code or ""
@@ -889,14 +876,19 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
         from state_machines.coding.workflow import decide_actor
         found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic,
                                      scope=scope, other_surnames=other_surnames,
-                                     caption_reason=caption_reason, page_text=text)
+                                     caption_reason=caption_reason, page_text=text,
+                                     act_code=(grounded.get("act") or {}).get("code") or code)
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
             counts.setdefault("_refusals", []).append(
                 refusal_row(case_id, coder_id, run_id, document_sha256,
                             (grounded.get("act") or {}).get("code") or code, reason))
             continue
-        canonical = (found or {}).get("canonical") or _canonical_actor(text, slot, records)
+        canonical = (found or {}).get("canonical")
+        if not canonical:
+            from state_machines.coding.workflow import match_actor
+            matched = match_actor(slot.get("text") or "", records)
+            canonical = (matched or {}).get("canonical")
         if not canonical:
             counts["actor_rejected"] += 1
             counts.setdefault("_refusals", []).append(

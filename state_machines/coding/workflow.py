@@ -602,6 +602,7 @@ def _people_in_caption(fragment: str) -> Tuple[List[dict], bool]:
     for chunk in _split_caption_people(masked):
         marks = [int(n) for n in re.findall(r"\x02(\d+)\x02", chunk)]
         plain = re.sub(r"\x02\d+\x02", " ", chunk)
+        plain = re.sub(r"^(?:and|or)\s+", "", plain.strip(), flags=re.I)
         if not plain.strip():
             if people:
                 _attach_aliases(people[-1], marks, saved)
@@ -795,7 +796,7 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         for item in chosen:
             for record in item["records"]:
                 _absorb(records, record)
-        if conflict or et_al or len(records) != 1 or any(record.get("with_company") for record in records):
+        if conflict or et_al or len(records) != 1:
             generic = "ambiguous"
         else:
             generic = "one"
@@ -810,8 +811,6 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
             elif own and not matches:
                 reason = "other_caption" if item["doc_type"] in _PLEA_DOCS else "caption_mismatch"
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": reason}
-            elif len(matches) == 1 and matches[0].get("with_company"):
-                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "other_caption"}
             elif len(matches) == 1:
                 by_document[item["doc_id"]] = {"generic": "one", "record": matches[0]}
             elif generic == "one":
@@ -954,9 +953,10 @@ _CONDUCT = {"send", "distribute", "upload", "download", "receive", "trade", "mes
              "email", "text", "post", "share", "transmit", "forward"}
 _SPEECH = {"say", "tell", "claim", "know", "quote", "report", "state", "write"}
 _NEG_VERBS = {"deny", "refuse", "fail", "decline", "neglect", "avoid"}
-_UNREAL = {"plan", "intend", "want", "hope"}
-_INFLUENCE = {"ask", "tell", "persuade", "convince", "instruct", "direct", "entice", "coerce", "cause"}
+_UNREAL = {"plan", "intend", "want", "hope", "hop", "wish"}
+_INFLUENCE = {"ask", "tell", "persuade", "convince", "instruct", "direct", "entice", "coerce", "cause", "pressure", "get"}
 _CAUSE = {"use", "have", "make"}
+_DEFENDANT_SOLICIT = {"SOLICIT_IMAGERY", "DIRECT_CONDUCT"}
 _PERCEPTION = {"watch", "see", "observe", "look"}
 _MODALS = {"would", "could", "may", "might", "should"}
 _BLOCKED_CLAUSE = {"advcl", "ccomp", "xcomp", "relcl"}
@@ -1059,7 +1059,7 @@ def _clause_is_negated(verb) -> bool:
     return False
 
 
-def _defendant_said(verb) -> bool:
+def _defendant_said(verb, records=None) -> bool:
     """A complement whose subject is a pronoun and whose main subject is the defendant.
 
     ``The defendant told the victim that he would share the images`` is his threat.
@@ -1071,9 +1071,12 @@ def _defendant_said(verb) -> bool:
     own = next((child for child in verb.children if child.dep_ in _SUBJECT_DEPS), None)
     if matrix_subject is None or own is None:
         return False
-    if matrix_subject.text.lower() not in {"defendant", "accused"}:
+    if own.pos_ != "PRON":
         return False
-    return own.pos_ == "PRON"
+    low = matrix_subject.text.lower()
+    if low in {"defendant", "accused"}:
+        return True
+    return bool(records) and len(records) == 1 and low in _known_surnames(records)
 
 
 def _verb_block(verb) -> Optional[str]:
@@ -1154,7 +1157,7 @@ def _name_modifiers(subject):
         if child.dep_ != "compound" or child.i > subject.i:
             continue
         low = child.text.strip(".").lower()
-        if child.pos_ == "ADV" or low in _ADVERB_COMPOUND:
+        if child.pos_ == "ADV" or low in _ADVERB_COMPOUND or low in {"defendant", "accused"}:
             continue
         if low in _COURTESY or low in _ROLE_TITLE or low in _FEMININE:
             titles.append(low)
@@ -1172,7 +1175,7 @@ def _other_given_on_page(surname: str, record: dict, page_text: str) -> bool:
             known.update(parts[:-1])
     for match in re.finditer(rf"\b([A-Z][A-Za-z']+)\s+{re.escape(surname)}\b", page_text or ""):
         given = match.group(1).lower()
-        if given in known or given in _ADVERB_COMPOUND:
+        if given in known or given in _ADVERB_COMPOUND or given in {"defendant", "accused"}:
             continue
         return True
     return False
@@ -1237,6 +1240,9 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
     if subject.dep_ == "conj":
         partners = [subject.head, *[child for child in subject.head.children if child.dep_ == "conj" and child.i != subject.i]]
     if partners:
+        if any(token.dep_ == "preconj" and token.lemma_.lower() == "neither" for token in subject.children) or any(
+                token.dep_ == "cc" and token.lemma_.lower() == "nor" for token in subject.children):
+            return None, "negated"
         group = [subject, *partners]
         surnames = _known_surnames(records)
         ours = [token for token in group if token.text.lower() in {"defendant", "accused"} or token.text.lower() in surnames]
@@ -1245,14 +1251,14 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
         if len(ours) == 1 and others and not charged_other and len(records) == 1:
             return _hit_for(records[0], records, scope, generic), None
         return None, "coordinated_subject"
-    if any(child.dep_ in {"appos", "relcl"} for child in subject.children):
+    if any(child.dep_ == "appos" for child in subject.children):
         return None, "appositive_relation"
     if any(child.dep_ == "prep" and any(g.text.lower() == "defendant" for g in child.subtree) for child in subject.children):
         return None, "appositive_relation"
     word = subject.text.lower()
     phrase = _noun_phrase(subject.doc, subject)
     if word in PRONOUN_WORDS or _PRONOUN.fullmatch(phrase):
-        if _defendant_said(subject.head) and len(records) == 1:
+        if _defendant_said(subject.head, records) and len(records) == 1:
             return _hit_for(records[0], records, scope, generic), None
         if subject.dep_ not in _SUBJECT_DEPS:
             return None, "pronoun_object"
@@ -1307,7 +1313,8 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
                  generic: Optional[str] = None, scope: Optional[dict] = None,
                  other_surnames: Optional[List[str]] = None,
                  caption_reason: Optional[str] = None,
-                 page_text: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
+                 page_text: Optional[str] = None,
+                 act_code: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
     """``(match, reason code)``. A reason means the act is not published.
 
     This is the only actor decision. A clause is published only when its act
@@ -1325,7 +1332,12 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     nlp = _require_actor_nlp()
     doc = nlp(_strip_heading(sentence or ""))
     verb = _act_verb(doc)
+    if (verb is not None and verb.dep_ == "xcomp" and _object_controls(verb.head)
+            and act_code in _DEFENDANT_SOLICIT):
+        verb = verb.head
     blocked = _verb_block(verb)
+    if blocked == "reported_speech" and _defendant_said(verb, records):
+        blocked = None
     if blocked:
         return None, blocked
 

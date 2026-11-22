@@ -31,6 +31,7 @@ does not run that estimator.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import random
@@ -570,6 +571,71 @@ def score_drawn(graded: dict, key: dict, sample: dict, *, sealed: dict, replicat
     return result
 
 
+def write_population(case_ids: Sequence[str], text_root: Path, out: Path) -> int:
+    """Write the sentence units ``draw --population`` reads."""
+    refuse_store(out)
+    rows = []
+    for case_id in case_ids:
+        rows.extend(population_from_case(case_id, text_root))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rows, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    return len(rows)
+
+
+_GRADE_COLUMNS = (
+    "unit_id", "context_before", "sentence", "context_after",
+    "act", "act_code", "actor", "means", "level_c",
+)
+
+
+def _yes(value: str) -> bool:
+    return (value or "").strip().lower() in {"y", "yes", "1", "true"}
+
+
+def export_grading_csv(sheet: dict, out: Path) -> int:
+    """Blind CSV. The machine key is not an input and is not a column."""
+    refuse_store(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=_GRADE_COLUMNS)
+        writer.writeheader()
+        for unit in sheet["units"]:
+            writer.writerow({
+                "unit_id": unit["unit_id"],
+                "context_before": " | ".join(unit.get("context_before") or []),
+                "sentence": unit.get("sentence") or "",
+                "context_after": " | ".join(unit.get("context_after") or []),
+                "act": "",
+                "act_code": "",
+                "actor": "",
+                "means": "",
+                "level_c": "",
+            })
+    return len(sheet["units"])
+
+
+def import_graded_csv(path: Path) -> dict:
+    """Filled CSV back into the graded JSON ``score`` reads.
+
+    ``act`` yes uses ``act_code`` as ``gold.act``. ``means`` and ``level_c`` are
+    the booleans ``gold.means_tie`` and ``gold.level_c``.
+    """
+    units = []
+    with path.open(encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle):
+            act = (row.get("act_code") or "").strip() if _yes(row.get("act") or "") else ""
+            units.append({
+                "unit_id": row["unit_id"],
+                "gold": {
+                    "act": act,
+                    "means_tie": _yes(row.get("means") or ""),
+                    "level_c": _yes(row.get("level_c") or ""),
+                },
+                "actor": (row.get("actor") or "").strip(),
+            })
+    return {"units": units}
+
+
 def write_draw(sample: dict, out_dir: Path) -> dict:
     """Write the hash, then the blind sheet and the key. The hash file is first."""
     refuse_store(out_dir)
@@ -591,6 +657,16 @@ def main(argv=None) -> int:
     d.add_argument("--config", type=Path, required=True)
     d.add_argument("--sealed", type=Path, required=True)
     d.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("population")
+    p.add_argument("--text-root", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p.add_argument("cases", nargs="+")
+    e = sub.add_parser("export-csv")
+    e.add_argument("--sheet", type=Path, required=True)
+    e.add_argument("--out", type=Path, required=True)
+    i = sub.add_parser("import-csv")
+    i.add_argument("--csv", type=Path, required=True)
+    i.add_argument("--out", type=Path, required=True)
     s = sub.add_parser("score", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     s.add_argument("--graded", type=Path, required=True)
     s.add_argument("--key", type=Path, required=True)
@@ -599,11 +675,25 @@ def main(argv=None) -> int:
     s.add_argument("--replicates", type=int, default=2000, help="bootstrap replicates (default: 2000)")
     s.add_argument("--seed", type=int, default=0)
     args = ap.parse_args(argv)
-    for path in (getattr(args, "population", None), getattr(args, "config", None), args.sealed,
-                 getattr(args, "graded", None), getattr(args, "key", None), getattr(args, "draw", None),
-                 getattr(args, "out", None)):
+    for path in (getattr(args, "population", None), getattr(args, "config", None),
+                 getattr(args, "sealed", None), getattr(args, "graded", None),
+                 getattr(args, "key", None), getattr(args, "draw", None),
+                 getattr(args, "sheet", None), getattr(args, "csv", None),
+                 getattr(args, "out", None), getattr(args, "text_root", None)):
         if path is not None:
             refuse_store(path)
+    if args.cmd == "population":
+        print(write_population(args.cases, args.text_root, args.out))
+        return 0
+    if args.cmd == "export-csv":
+        sheet = json.loads(args.sheet.read_text(encoding="utf-8"))
+        print(export_grading_csv(sheet, args.out))
+        return 0
+    if args.cmd == "import-csv":
+        graded = import_graded_csv(args.csv)
+        args.out.write_text(json.dumps(graded, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        print(len(graded["units"]))
+        return 0
     sealed = json.loads(args.sealed.read_text(encoding="utf-8"))
     if args.cmd == "draw":
         population = json.loads(args.population.read_text(encoding="utf-8"))

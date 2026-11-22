@@ -549,8 +549,7 @@ def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
         tmp_path, monkeypatch, "company",
         [("sof", "statement_of_facts", [company])],
         "The defendant sent the files.", means="")
-    assert events == []
-    assert "other_caption" in _reasons(tmp_path, "company")
+    assert events == ["DISTRIBUTE_MATERIAL"]
     alias = "UNITED STATES v. JOHN DOE, a/k/a JD, a/k/a Johnny, Defendant."
     records = defendant_records_in(alias)
     assert len(records) == 1 and records[0]["aliases"] == ["JD", "Johnny"]

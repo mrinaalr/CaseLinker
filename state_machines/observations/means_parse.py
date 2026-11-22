@@ -175,9 +175,13 @@ def _subject_is_offender(sentence: str, tokens: Sequence[dict], verb_i: int, act
         return False
     if os.environ.get("CASELINKER_COREFERENCE") != "1" or not actors:
         return False
-    from state_machines.coding.coreference import resolve_mentions, subject_is_offender
+    from state_machines.coding.coreference import resolve_mentions, _offender_ids
     mentions = resolve_mentions(sentence, actors)
-    return subject_is_offender(mentions, subj["end"], actors)
+    offenders = _offender_ids(actors)
+    prior = [mention for mention in mentions if mention["end"] <= subj["end"] and mention["actor_ids"]]
+    if not prior:
+        return False
+    return any(actor_id in offenders for actor_id in prior[-1]["actor_ids"])
 
 
 def _negated(tokens: Sequence[dict], verb_i: int) -> bool:

@@ -187,7 +187,7 @@ _THIRD_PARTY = (r"(?:her\s+\w+|his\s+(?:mother|father|parents?)|(?:the\s+)?(?:mo
 # a platform carries both sides of a conversation, so a clause about the victim ("when Minor Victim 1 wrote back via Kitebox")
 # can still state the means of the offender's act; a feature someone else used ("after she used a fake name") cannot
 _OTHER_PARTY = (r"(?:she|they|(?:the\s+)?(?:victim|minor)\b|Minor Victim|MV-?\d|Victim\s+\w|Jane Doe|John Doe|an?\s+undercover|the undercover)")
-_OTHER_SUBJECT = {"platform": re.compile(_LEAD + _THIRD_PARTY, re.I), "feature": re.compile(_LEAD + "(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + ")", re.I)}
+_OTHER_CLAUSE = {"platform": re.compile(_LEAD + _THIRD_PARTY, re.I), "feature": re.compile(_LEAD + "(?:" + _THIRD_PARTY + "|" + _OTHER_PARTY + ")", re.I)}
 _NEGATED = re.compile(r"\b(?:not|never|no|without|denied|denies|deny|declined|refused)\b", re.I)
 # conduct that is supposed, intended, asked about or only possible is not conduct the sentence states happened
 _UNREAL = re.compile(r"\b(?:would|could|might|should|if|whether|unless|planned|plans|plan|intended|intends|intend|wanted|wants|"
@@ -214,7 +214,7 @@ def _own_clause(sentence: str, at: int, kind: str = "feature") -> Optional[Tuple
     for m in _CLAUSE_BREAK.finditer(sentence[:at]):
         start = m.start()
     clause = sentence[start:at]
-    if start > 0 and _OTHER_SUBJECT[kind].search(re.sub(r"^[,;\s]+", "", clause)):
+    if start > 0 and _OTHER_CLAUSE[kind].search(re.sub(r"^[,;\s]+", "", clause)):
         return None
     return start, clause
 
@@ -407,6 +407,27 @@ def _offender_acts(b: dict) -> List[tuple]:
             for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
 
 
+def tie_means(kind: str, sentence: str, observation: dict, actors, *, voice: str = "narrative"):
+    """The word-window tie, retried once when coreference resolves ``they`` to the defendant.
+
+    With the flag off this is ``_means`` alone.
+    """
+    from state_machines.coding.coreference import coreference_enabled, resolve_mentions, _offender_ids
+
+    hit = _means(kind, sentence, observation)
+    if hit or not coreference_enabled():
+        return hit
+    mentions = resolve_mentions(sentence, actors, voice=voice)
+    offenders = _offender_ids(actors)
+    prior = [mention for mention in mentions if mention["end"] <= len(sentence) and mention["actor_ids"]]
+    if not prior or not any(actor_id in offenders for actor_id in prior[-1]["actor_ids"]):
+        return None
+    rewritten = re.sub(r"\bthey\b", "the defendant", sentence, count=1, flags=re.I)
+    if rewritten == sentence:
+        return None
+    return _means(kind, rewritten, observation)
+
+
 def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None, actors=None,
                      records=None, generic=None, scope=None):
     """The means tie ``relate`` publishes.
@@ -421,10 +442,15 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
     if not coref and not parser:
         return _means(kind, sentence, o, subject)
     if coref:
-        from state_machines.coding.coreference import make_inventory, means_with_resolved_subject
-        hit = means_with_resolved_subject(kind, sentence, o, actors if actors is not None else make_inventory())
+        from state_machines.coding.coreference import make_inventory
+        hit = tie_means(kind, sentence, o, actors if actors is not None else make_inventory())
     else:
         hit = _means(kind, sentence, o, subject)
+    if hit and records:
+        from state_machines.coding.workflow import decide_actor
+        found, reason = decide_actor(sentence, "the defendant", records, generic=generic, scope=scope)
+        if reason or not found:
+            hit = None
     if hit or not parser:
         return hit
     from state_machines.coding.coreference import make_inventory

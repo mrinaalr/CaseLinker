@@ -176,44 +176,6 @@ def resolve_mentions(text: str, actors: Sequence[Actor], *, voice: str = "narrat
     return _rule_mentions(text, actors, voice)
 
 
-def subject_is_offender(mentions: Sequence[dict], at: int, actors: Sequence[Actor]) -> bool:
-    """The subject test the means rule can ask: is the resolved actor an offender?
-
-    ``at`` is the cue offset. The mention that ends there, or the nearest one
-    before it, decides. Off (returns False) unless coreference is enabled, so a
-    caller that forgets the flag does not loosen the current subject test.
-    """
-    if not coreference_enabled():
-        return False
-    offenders = _offender_ids(actors)
-    prior = [m for m in mentions if m["end"] <= at and m["actor_ids"]]
-    if not prior:
-        return False
-    return any(i in offenders for i in prior[-1]["actor_ids"])
-
-
-def means_with_resolved_subject(kind: str, sentence: str, observation: dict, actors: Sequence[Actor],
-                                *, voice: str = "narrative"):
-    """``observe._means``, and, when coreference is on, a retry if the resolved subject is an offender.
-
-    The retry rewrites the first "they" as "the defendant" and asks the current
-    rule again. The current rule is not modified. With the flag off this is
-    ``_means`` unchanged.
-    """
-    from state_machines.observations.observe import _means
-
-    hit = _means(kind, sentence, observation)
-    if hit or not coreference_enabled():
-        return hit
-    mentions = resolve_mentions(sentence, actors, voice=voice)
-    if not subject_is_offender(mentions, len(sentence), actors):
-        return None
-    rewritten = re.sub(r"\bthey\b", "the defendant", sentence, count=1, flags=re.I)
-    if rewritten == sentence:
-        return None
-    return _means(kind, rewritten, observation)
-
-
 def _previous_grounds(previous: str, anaphor: str, actors: Sequence[Actor]) -> bool:
     noun = re.search(r"(account|app|application|platform|service|channel)", anaphor, re.I)
     if noun:

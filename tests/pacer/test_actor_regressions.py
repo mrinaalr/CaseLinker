@@ -309,10 +309,8 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
             assert records[0]["aliases"] == ["JD"]
             assert records[1]["aliases"] == []
     elif kind == "subject":
-        pytest.importorskip("spacy")
         assert clause_subject(payload) == expected
     elif kind == "actor":
-        pytest.importorskip("spacy")
         caption, sentence, actor = payload
         records = defendant_records_in(caption)
         generic = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
@@ -328,7 +326,6 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         assert info["generic"] == status
         assert [record["surname"] for record in info["records"]] == surnames
     elif kind == "case_actor":
-        pytest.importorskip("spacy")
         _store_docs(tmp_path, name.replace("-", "_"), payload["docs"])
         info = case_defendants(name.replace("-", "_"), tmp_path)
         found, reason = decide_actor(payload["sentence"], payload["actor"], info["records"], generic=info["generic"])
