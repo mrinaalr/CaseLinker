@@ -285,20 +285,26 @@ def _outcome(found, reason):
     return reason or (found or {}).get("canonical")
 
 
-_MODEL_XFAIL = {
-    "long-texted": "en_core_web_sm 3.8.0 labels Long as advmod of texted, not nsubj",
-    "long-repeatedly": "en_core_web_sm 3.8.0 labels Long as advmod of sent, not nsubj",
-}
-
-
 def _check(name, got, expected):
     want = _expect(expected)
-    if got != want and name in _MODEL_XFAIL and _parser_up():
-        pytest.xfail(f"{_MODEL_XFAIL[name]}; got {got}")
     assert got == want, name
 
 
-@pytest.mark.parametrize("name,kind,payload,expected", PROBES, ids=[row[0] for row in PROBES])
+_NEEDS_SPACY_IDS = {
+    "subject-smith", "subject-defendant-name", "subject-date", "subject-the-defendant",
+    "lead-on-or-about", "lead-between-months", "lead-between-days", "lead-then",
+    "lead-later", "lead-however", "lead-thereafter", "lead-around", "lead-clock",
+    "generic-one", "generic-two", "defendant-smith-case",
+}
+
+
+def _marked(row):
+    if row[0] in _NEEDS_SPACY_IDS:
+        return pytest.param(*row, marks=needs_spacy)
+    return row
+
+
+@pytest.mark.parametrize("name,kind,payload,expected", [_marked(row) for row in PROBES], ids=[row[0] for row in PROBES])
 def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_path, monkeypatch):
     if kind == "records":
         assert _surnames(payload) == expected
@@ -309,10 +315,8 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
             assert records[0]["aliases"] == ["JD"]
             assert records[1]["aliases"] == []
     elif kind == "subject":
-        pytest.importorskip("spacy")
         assert clause_subject(payload) == expected
     elif kind == "actor":
-        pytest.importorskip("spacy")
         caption, sentence, actor = payload
         records = defendant_records_in(caption)
         generic = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
@@ -328,7 +332,6 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         assert info["generic"] == status
         assert [record["surname"] for record in info["records"]] == surnames
     elif kind == "case_actor":
-        pytest.importorskip("spacy")
         _store_docs(tmp_path, name.replace("-", "_"), payload["docs"])
         info = case_defendants(name.replace("-", "_"), tmp_path)
         found, reason = decide_actor(payload["sentence"], payload["actor"], info["records"], generic=info["generic"])
@@ -428,9 +431,13 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     info = case_defendants("split", tmp_path)
     assert [record["surname"] for record in info["records"]] == ["Smith"]
     bundle, _, log = C.code_case("split", "coder_A", tmp_path, deny=build_deny("split", tmp_path))
-    assert info["by_document"]["plea"]["reason"] == "other_caption"
-    assert bundle["events"] == []
-    assert "other_caption" in {row["reason"] for row in json.loads("[" + ",".join((tmp_path / "split" / "coder_A.v2_refusals.jsonl").read_text().splitlines()) + "]")}
+    assert info["by_document"]["plea"]["generic"] == "one"
+    assert info["by_document"]["plea"]["record"]["surname"] == "Porter"
+    assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+    assert bundle["events"][0]["actor"]["participant_ref"]
+    assert bundle["events"][0]["actor"]["role"] == "offender"
+    assert "Smith" not in json.dumps(bundle["events"][0]["actor"])
+    assert (C.drops_from_log(log) or {}).get("ambiguous", 0) == 0
 
 
 @needs_spacy

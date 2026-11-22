@@ -50,7 +50,6 @@ def _one(name, sentence, actor="the defendant"):
     ("The files were sent by the defendant.", "the defendant", "", "The files", None),
     ("The defendant downloaded and sent the files.", "the defendant", "", "the files", None),
     ("The defendant and Agent Porter sent the files.", "the defendant", "", "the files", None),
-    ("The defendant used a laptop to upload the files.", "the defendant", "", "the files", None),
 ])
 @needs_spacy
 def test_plain_positive_clauses_publish(tmp_path, monkeypatch, sentence, actor, means, object_text, extra):
@@ -160,6 +159,15 @@ def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, senten
     assert events == ["DISTRIBUTE_MATERIAL"]
 
 
+@needs_spacy
+def test_a_caption_surname_that_is_a_listed_platform_is_not_an_instrument(tmp_path, monkeypatch):
+    sentence = "The defendant used Snapchat to send the files."
+    events, _log = code_events(
+        tmp_path, monkeypatch, "collide", _one("Snapchat", sentence), sentence, "the defendant",
+        means="", object_text="the files")
+    assert events == []
+
+
 @pytest.mark.parametrize("sentence", [
     "COUNT ONE: The defendant sent the files.",
     "Count 1. The defendant sent the files.",
@@ -199,6 +207,7 @@ def test_a_negated_clause_is_refused(tmp_path, monkeypatch, sentence):
     "The defendant used Minor Victim 1 to send the files.",
     "The defendant had Minor Victim 1 send the files.",
     "The defendant made Minor Victim 1 send the files.",
+    "The defendant used a laptop to upload the files.",
 ])
 @needs_spacy
 def test_an_object_controlled_complement_is_refused(tmp_path, monkeypatch, sentence):
@@ -291,8 +300,9 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
         ("plea", "plea_agreement", [f"United States v. Robert Porter, Defendant. {sentence}"]),
     ]
     events, _log = code_events(tmp_path, monkeypatch, "agree", docs, sentence)
-    assert events == []
-    assert "other_caption" in _reasons(tmp_path, "agree")
+    assert events == ["DISTRIBUTE_MATERIAL"]
+    assert "other_caption" not in _reasons(tmp_path, "agree")
+    assert _reasons(tmp_path, "agree").count("ambiguous") == 0
     from state_machines.coding import pipeline as P
     out = tmp_path / "coded"
     for coder in ("coder_A", "coder_B"):
@@ -304,7 +314,11 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     monkeypatch.setenv("CASELINKER_ACT_POLICY", "propose-verify-1.0")
     P.resolve_cases(["agree"], out, tmp_path)
     recovered = json.loads((out / "resolved" / "agree.json").read_text(encoding="utf-8"))["recovered"]
-    assert recovered == []
+    assert recovered and recovered[0]["act"]["code"] == "DISTRIBUTE_MATERIAL"
+    actor = recovered[0].get("actor")
+    assert actor, recovered
+    text = actor if isinstance(actor, str) else json.dumps(actor)
+    assert "Smith" not in text
 
 
 @needs_spacy
@@ -549,8 +563,7 @@ def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
         tmp_path, monkeypatch, "company",
         [("sof", "statement_of_facts", [company])],
         "The defendant sent the files.", means="")
-    assert events == []
-    assert "other_caption" in _reasons(tmp_path, "company")
+    assert events == ["DISTRIBUTE_MATERIAL"]
     alias = "UNITED STATES v. JOHN DOE, a/k/a JD, a/k/a Johnny, Defendant."
     records = defendant_records_in(alias)
     assert len(records) == 1 and records[0]["aliases"] == ["JD", "Johnny"]

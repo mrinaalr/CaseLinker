@@ -10,8 +10,8 @@
 bundle exists is skipped). ``resolve`` applies ``resolve.resolve`` and writes the reliability report.
 ``bench`` runs both coders on the synthetic benchmark and scores each coder and the resolution
 against the gold. ``release`` copies the resolved bundles into a release and builds it as
-``machine``. A case that fails (no events, an unrepairable bundle, a model error) is recorded with
-its reason and left out; it is never forced through.
+``machine``. A case where both coders return no acts is written as an explicit record and
+released with the others. Any other failure is recorded with its reason and left out.
 
 Outputs (local, gitignored; they hold quotes and model output): ``<out>/coder_A``, ``<out>/coder_B``,
 ``<out>/resolved``, ``<out>/reports``.
@@ -75,8 +75,9 @@ def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) 
                 if selective and coder == "coder_B":
                     first_log = out / "coder_A" / f"{case_id}.log"
                     only = C.pages_with_acts(first_log) if first_log.is_file() else None
-                bundle, quotes, log = C.code_case(case_id, coder, text_root, cache, _deny(text_root, case_id), only_pages=only)
-                target.write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+                counts: dict = {}
+                bundle, quotes, log = C.code_case(case_id, coder, text_root, cache, _deny(text_root, case_id), only_pages=only, counts=counts)
+                C.store_bundle(d, case_id, bundle, counts)
                 store = E.load_quotes(case_id, text_root)
                 store.update(quotes)
                 E.save_quotes(case_id, store, text_root)
@@ -146,6 +147,46 @@ def _record_disagreement(case_id: str, a: dict, b: dict, out: Path, entry: dict,
         entry["disagreement_sheet"] = "refused"
 
 
+def _counts_file(out: Path, coder: str, case_id: str) -> Optional[dict]:
+    path = out / coder / f"{case_id}.counts.json"
+    if not path.is_file():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _unparsed(counts: Optional[dict]) -> int:
+    return int((counts or {}).get("unparsable") or 0)
+
+
+def empty_case_record(case_id: str, left: dict, left_counts: Optional[dict], right_counts: Optional[dict], *, reason: str) -> dict:
+    """A decision file for a case with no published acts. Not a case bundle.
+
+    ``no_acts`` means every model page parsed and neither coder found an act.
+    ``no_agreed_acts`` means both found acts and the resolution published none.
+    """
+    from state_machines.evidence import vocab as V
+
+    if reason not in ("no_acts", "no_agreed_acts"):
+        raise ValueError(reason)
+    counts = left_counts or right_counts or {}
+    record = {
+        "case_id": case_id,
+        "events": [],
+        "passages": [],
+        "relations": [],
+        "tracks": [],
+        "participants": [],
+        "documents": list(left.get("documents") or []),
+        "codebook_version": V.CODEBOOK_VERSION,
+        "pages": counts.get("pages"),
+        "model_pages": counts.get("model_pages"),
+        "unparsable": _unparsed(left_counts) + _unparsed(right_counts),
+        "reason": reason,
+    }
+    record[reason] = True
+    return record
+
+
 def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
                   sub: str = "resolved") -> dict:
     """Resolve each case's two codings into ``out/<sub>``; reports beside it. ``settle_codes`` turns on
@@ -170,6 +211,21 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
+        left_counts, right_counts = _counts_file(out, "coder_A", case_id), _counts_file(out, "coder_B", case_id)
+        # Propose-verify reads two empty codings and can still recover an act. The empty
+        # record is only for the intersection policy, and only when every model page parsed.
+        if policy != POLICY_ID and not a.get("events") and not b.get("events"):
+            if left_counts is None or right_counts is None:
+                (out / sub / f"{case_id}.failed").write_text("counts file is missing\n", encoding="utf-8")
+                summary[case_id] = {"failed": "counts file is missing"}
+                continue
+            if _unparsed(left_counts) or _unparsed(right_counts):
+                summary[case_id] = {"failed": "a model page did not parse"}
+                continue
+            record = empty_case_record(case_id, a, left_counts, right_counts, reason="no_acts")
+            (out / sub / f"{case_id}.json").write_text(json.dumps(record, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            summary[case_id] = {"events": 0, "no_acts": True}
+            continue
         if policy == POLICY_ID:
             loaded = _pages(text_root, case_id)
             pages, page_docs = loaded if loaded else (None, None)
@@ -186,7 +242,12 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
         report["agreement_model_coded"] = {k: v for k, v in model_agree.items() if k != "pairs"}
         report["parser_events"] = sum(e.get("notes") == "docket-parser" for e in bundle["events"])
         if not bundle["events"]:
-            summary[case_id] = {"failed": "no event both coders coded", "report": report}
+            record = empty_case_record(case_id, a, left_counts, right_counts, reason="no_agreed_acts")
+            (out / sub / f"{case_id}.json").write_text(json.dumps(record, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+            summary[case_id] = {"events": 0, "no_agreed_acts": True, "report": report,
+                                "parser_events": report["parser_events"],
+                                "agreement_model_coded": report["agreement_model_coded"]}
             _record_disagreement(case_id, a, b, out, summary[case_id], policy)
             continue
         (out / sub / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")

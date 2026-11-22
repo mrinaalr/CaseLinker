@@ -4,6 +4,8 @@
      * Boot: GET /api/ontology/cases?pool=compare (curated 200 chips only).
      * Find/load/compare: pool=full staging graphs (~10k); max canvas merge 2000.
      * Big Bang: ?pool=all — half-sample at graph_output/big_bang/
+     * Loads of more than 500 cases draw on a canvas (same colors, click, zoom).
+     * One case and compares up to 500 stay on the SVG.
      * Universe (secret): double-click Exit Big Bang → ?pool=universe (~1969)
      * Analysis (secret): triple-click Exit Universe → ?pool=analysis
      *
@@ -15,6 +17,8 @@
     const API_CASES_URL = '/api/ontology/cases';
     /** Railway UI can merge at most ~2000 graphs at once. */
     const MAX_COMPARE_CASES = 2000;
+    /** One case and compares up to this many stay on the SVG. Above it, draw on a canvas. */
+    const LARGE_GRAPH_CASES = 500;
     /** Cases merged per tick when building client-side (fallback if /api/ontology/merged unavailable). */
     const BIG_BANG_FETCH_BATCH = 80;
     const UNIVERSE_FETCH_BATCH = 80;
@@ -45,6 +49,11 @@
     let universeExitTimer = null;
     const JSONLD_CACHE = Object.create(null);
     let CURRENT_FLAT_NODES = null;       // last unfiltered flat model for canvas filters
+    let RENDER_CASE_COUNT = 1;           // cases in the graph currently being drawn
+    let graphRenderGen = 0;              // bumps so a replaced SVG sway loop stops
+    let activeSvgSimulation = null;
+    let activeSvgResize = null;
+    let activeLargeGraph = null;
     let LOOKUP_CASE_IDS = [];            // last SPARQL ontology lookup hits
     let CORPUS_SOURCE = 'cases';         // 'cases' | 'pacer'
     let PACER_CATALOG = [];
@@ -255,6 +264,16 @@
             if (path.endsWith(fragment)) return name;
         }
         return st || path;
+    }
+
+    /* Canvas and SVG captions only. The stored label and the detail card stay as written.
+       Only the event class name is shortened. Charges, agencies, and sentences stay. */
+    function graphFaceLabel(text) {
+        let s = String(text || '');
+        if (!s) return s;
+        s = s.replace(/Child\s*Sexual\s*Abuse\s*Events?/gi, 'CSEA event');
+        s = s.replace(/ChildSexualAbuseEvents?/g, 'CSEA event');
+        return s.replace(/\s{2,}/g, ' ').trim();
     }
 
     // ---------- Detail-panel value formatter ----------
@@ -579,7 +598,7 @@
         const resp = await fetch('/api/ontology/merged?pool=' + encodeURIComponent(pool), { cache: 'default' });
         if (!resp.ok) return null;
         const payload = await resp.json();
-        if (payload.flat_nodes && payload.flat_nodes.length) {
+        if (payload.flat_nodes && payload.flat_nodes.length && payload.flat_nodes.length <= 8000) {
             saveLocalMerged(pool, payload.manifest || GRAPH_MANIFEST, payload.flat_nodes);
         }
         return payload;
@@ -604,7 +623,7 @@
             titleEl.textContent = titleLabel + ' · ' + n + ' cases';
             const flatOut = pool === 'compare' ? withSharedClassNodes(merged.flat_nodes) : merged.flat_nodes;
             if (pool === 'compare') setTitleCompare(flatOut, caseEntries.map(c => c.case_id));
-            renderGraphFromFlat(flatOut);
+            renderGraphFromFlat(flatOut, n);
             return;
         }
 
@@ -635,7 +654,7 @@
                     loaded >= total);
             if (shouldPaint) {
                 if (pool === 'compare' && loaded >= 2) setTitleCompare(flat, caseEntries.slice(0, loaded).map(c => c.case_id));
-                renderGraphFromFlat(flat);
+                renderGraphFromFlat(flat, total);
                 firstPaint = true;
             }
             await new Promise(resolve => requestAnimationFrame(resolve));
@@ -645,7 +664,7 @@
         const finalFlat = pool === 'compare' ? withSharedClassNodes(finalRaw) : finalRaw;
         titleEl.textContent = titleLabel + ' · ' + total + ' cases merged';
         if (pool === 'compare') setTitleCompare(finalFlat, caseEntries.map(c => c.case_id));
-        renderGraphFromFlat(finalFlat);
+        renderGraphFromFlat(finalFlat, total);
         if (!firstPaint && !finalFlat.length) {
             showCompareEmpty('No graph data loaded.');
         }
@@ -759,14 +778,582 @@
         return container;
     }
 
-    function renderGraph(jsonLd) {
+    function releaseGraphRenderer() {
+        if (activeSvgSimulation) {
+            activeSvgSimulation.stop();
+            activeSvgSimulation = null;
+        }
+        if (activeSvgResize) {
+            window.removeEventListener('resize', activeSvgResize);
+            activeSvgResize = null;
+        }
+        if (activeLargeGraph) {
+            activeLargeGraph.destroy();
+            activeLargeGraph = null;
+        }
+    }
+
+    function layoutStore() {
+        return new Promise(function (resolve, reject) {
+            const req = indexedDB.open('caselinker-layout', 1);
+            req.onupgradeneeded = function () {
+                if (!req.result.objectStoreNames.contains('layouts')) req.result.createObjectStore('layouts');
+            };
+            req.onsuccess = function () { resolve(req.result); };
+            req.onerror = function () { reject(req.error); };
+        });
+    }
+
+    function layoutKey(nodeData, linkData) {
+        const a = nodeData[0] && nodeData[0].id || '';
+        const b = nodeData[nodeData.length - 1] && nodeData[nodeData.length - 1].id || '';
+        return 'v2|' + (GRAPH_MANIFEST || 'nom') + '|' + nodeData.length + '|' + linkData.length + '|' + a + '|' + b;
+    }
+
+    function readLayout(key, n) {
+        return layoutStore().then(function (db) {
+            return new Promise(function (resolve) {
+                const req = db.transaction('layouts', 'readonly').objectStore('layouts').get(key);
+                req.onsuccess = function () {
+                    const row = req.result;
+                    if (!row || !row.xs || row.xs.length !== n) resolve(null);
+                    else resolve(row);
+                };
+                req.onerror = function () { resolve(null); };
+            });
+        }).catch(function () { return null; });
+    }
+
+    function writeLayout(key, nodeData) {
+        const xs = new Float32Array(nodeData.length);
+        const ys = new Float32Array(nodeData.length);
+        for (let i = 0; i < nodeData.length; i++) {
+            xs[i] = nodeData[i].x;
+            ys[i] = nodeData[i].y;
+        }
+        layoutStore().then(function (db) {
+            db.transaction('layouts', 'readwrite').objectStore('layouts').put({ xs: xs, ys: ys }, key);
+        }).catch(function () { /* private mode */ });
+    }
+
+    /* Same picture as the SVG, drawn as one canvas so a 1000-case merge can be panned and clicked. */
+    function renderLargeGraph(model, nCases) {
+        const session = { dead: false, sim: null, worker: null, raf: 0, ro: null };
+        const nodeData = model.nodes.map(function (n) { return Object.assign({}, n); });
+        const byId = new Map();
+        nodeData.forEach(function (n, i) {
+            byId.set(n.id, n);
+            const ring = 16 * Math.sqrt(i + 1);
+            const ang = i * 2.399963229728653;
+            n.x = Math.cos(ang) * ring;
+            n.y = Math.sin(ang) * ring;
+        });
+        const linkData = [];
+        model.links.forEach(function (l) {
+            const s = byId.get(l.source);
+            const t = byId.get(l.target);
+            if (s && t) linkData.push({ source: s, target: t, property: l.property });
+        });
+        const adj = new Map();
+        linkData.forEach(function (l) {
+            if (!adj.has(l.source.id)) adj.set(l.source.id, []);
+            if (!adj.has(l.target.id)) adj.set(l.target.id, []);
+            adj.get(l.source.id).push(l);
+            adj.get(l.target.id).push(l);
+        });
+
+        const container = document.getElementById('graph-container');
+        const svg = document.getElementById('graph-svg');
+        if (svg) svg.style.display = 'none';
+        let canvas = document.getElementById('graph-canvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.id = 'graph-canvas';
+            container.insertBefore(canvas, container.firstChild);
+        }
+        const hint = container.querySelector('.graph-hint');
+        const tip = document.getElementById('edge-tooltip');
+        const ctx = canvas.getContext('2d', { alpha: false });
+        const cam = { x: 0, y: 0, k: 1 };
+        let viewW = 1, viewH = 1, viewDpr = 1;
+        let tree = d3.quadtree(nodeData, function (d) { return d.x; }, function (d) { return d.y; });
+        let userZoomed = false;
+        let fitted = false;
+        const selectedIds = new Set();
+        let hot = new Set();
+        let hovered = null;
+        let arranged = false;
+
+        function resizeCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            const w = container.clientWidth || 800;
+            const h = container.clientHeight || 600;
+            const pw = Math.max(1, Math.round(w * dpr));
+            const ph = Math.max(1, Math.round(h * dpr));
+            if (canvas.width === pw && canvas.height === ph && viewW === w && viewH === h) return false;
+            viewDpr = dpr;
+            viewW = w;
+            viewH = h;
+            canvas.width = pw;
+            canvas.height = ph;
+            return true;
+        }
+
+        session.sway = 0;
+        let pointerOver = false;
+        function worldPoint(event) {
+            const p = d3.pointer(event, canvas);
+            const a = -(session.sway || 0);
+            const dx = p[0] - viewW / 2;
+            const dy = p[1] - viewH / 2;
+            const c = Math.cos(a), s = Math.sin(a);
+            const sx = dx * c - dy * s + viewW / 2;
+            const sy = dx * s + dy * c + viewH / 2;
+            return { x: (sx - cam.x) / cam.k, y: (sy - cam.y) / cam.k };
+        }
+
+        function pick(event) {
+            if (!tree) return null;
+            const w = worldPoint(event);
+            const found = tree.find(w.x, w.y, 18 / cam.k);
+            if (!found) return null;
+            const dx = found.x - w.x;
+            const dy = found.y - w.y;
+            const r = nodeDrawRadius(found) + 3 / cam.k;
+            if (dx * dx + dy * dy > r * r) return null;
+            return found;
+        }
+
+        function rebuildHot() {
+            hot = new Set();
+            selectedIds.forEach(function (id) {
+                hot.add(id);
+                const ls = adj.get(id);
+                if (!ls) return;
+                ls.forEach(function (l) {
+                    hot.add(l.source.id);
+                    hot.add(l.target.id);
+                });
+            });
+        }
+
+        function scheduleDraw() {
+            if (session.raf || session.dead) return;
+            session.raf = requestAnimationFrame(function () {
+                session.raf = 0;
+                if (!session.dead) draw();
+            });
+        }
+
+        function screenPx(px) { return px / cam.k; }
+        /* Far away the field is a starfield. Zooming in resolves each node to the
+           same disc the single-case graph draws: real radius, spine color, spine stroke. */
+        function detailT() {
+            const px = 11 * cam.k;
+            const t = (px - 1.6) / 8;
+            return t < 0 ? 0 : t > 1 ? 1 : t;
+        }
+        function nodeDrawRadius(n) {
+            const star = screenPx(1.05);
+            const real = n.radius;
+            return star + (Math.max(star, real) - star) * detailT();
+        }
+
+        function strokeLinks(color, predicate) {
+            const t = detailT();
+            ctx.globalAlpha = 1;
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            // Stay a thread on screen. A world-unit stroke turns the close view into grey fog.
+            ctx.lineWidth = screenPx(0.55 + 0.5 * t);
+            for (let i = 0; i < linkData.length; i++) {
+                const l = linkData[i];
+                if (predicate && !predicate(l)) continue;
+                ctx.moveTo(l.source.x, l.source.y);
+                ctx.lineTo(l.target.x, l.target.y);
+            }
+            ctx.stroke();
+        }
+
+        function fillNodes(alpha, predicate) {
+            const t = detailT();
+            const groups = Object.create(null);
+            for (let i = 0; i < nodeData.length; i++) {
+                const n = nodeData[i];
+                if (predicate && !predicate(n)) continue;
+                const key = n.spine || 'Unknown';
+                (groups[key] || (groups[key] = [])).push(n);
+            }
+            ctx.globalAlpha = alpha;
+            const keys = Object.keys(groups);
+            for (let g = 0; g < keys.length; g++) {
+                const color = SPINE_COLORS[keys[g]] || SPINE_COLORS.Unknown;
+                const arr = groups[keys[g]];
+                ctx.beginPath();
+                ctx.fillStyle = color.fill;
+                for (let i = 0; i < arr.length; i++) {
+                    const n = arr[i];
+                    const r = nodeDrawRadius(n);
+                    ctx.moveTo(n.x + r, n.y);
+                    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+                }
+                ctx.fill();
+                if (t > 0.2) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = color.stroke;
+                    ctx.lineWidth = 0.8 + 1.1 * t;
+                    for (let i = 0; i < arr.length; i++) {
+                        const n = arr[i];
+                        const r = nodeDrawRadius(n);
+                        ctx.moveTo(n.x + r, n.y);
+                        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+                    }
+                    ctx.stroke();
+                }
+            }
+            if (t > 0.35) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 1.4 + 1.4 * t;
+                for (let i = 0; i < nodeData.length; i++) {
+                    const n = nodeData[i];
+                    if (!n.isShared) continue;
+                    if (predicate && !predicate(n)) continue;
+                    const r = nodeDrawRadius(n) + 2.2;
+                    ctx.moveTo(n.x + r, n.y);
+                    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+                }
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.setLineDash([4, 2]);
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 1.5;
+                for (let i = 0; i < nodeData.length; i++) {
+                    const n = nodeData[i];
+                    if (!n.isNlp || n.isShared) continue;
+                    if (predicate && !predicate(n)) continue;
+                    const r = nodeDrawRadius(n);
+                    ctx.moveTo(n.x + r, n.y);
+                    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        function drawLabels() {
+            const want = [];
+            const seen = new Set();
+            function add(n) {
+                if (!n || seen.has(n.id)) return;
+                seen.add(n.id);
+                want.push(n);
+            }
+            add(hovered);
+            selectedIds.forEach(function (id) { add(byId.get(id)); });
+            if (detailT() > 0.35) {
+                const x0 = -cam.x / cam.k, y0 = -cam.y / cam.k;
+                const x1 = x0 + viewW / cam.k, y1 = y0 + viewH / cam.k;
+                const inView = [];
+                for (let i = 0; i < nodeData.length; i++) {
+                    const n = nodeData[i];
+                    if (n.x < x0 || n.x > x1 || n.y < y0 || n.y > y1) continue;
+                    if (n.radius * cam.k < 6 && !n.isShared && !n.isInvestigation) continue;
+                    inView.push(n);
+                }
+                inView.sort(function (a, b) { return b.radius - a.radius; });
+                for (let i = 0; i < inView.length && i < 56; i++) add(inView[i]);
+            }
+            if (!want.length) return;
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = 'rgba(255,255,255,0.92)';
+            ctx.font = (12 / cam.k) + 'px Inter, Segoe UI, sans-serif';
+            ctx.textBaseline = 'middle';
+            for (let i = 0; i < want.length; i++) {
+                const n = want[i];
+                const raw = n.label || '';
+                const faced = graphFaceLabel(raw);
+                const label = faced.length > 28 ? faced.slice(0, 26) + '\u2026' : faced;
+                ctx.fillText(label, n.x + nodeDrawRadius(n) + 4, n.y);
+            }
+        }
+
+        function draw() {
+            if (session.dead) return;
+            ctx.setTransform(viewDpr, 0, 0, viewDpr, 0, 0);
+            ctx.fillStyle = '#121a2b';
+            ctx.fillRect(0, 0, viewW, viewH);
+            ctx.save();
+            ctx.translate(viewW / 2, viewH / 2);
+            ctx.rotate(session.sway || 0);
+            ctx.translate(-viewW / 2, -viewH / 2);
+            ctx.translate(cam.x, cam.y);
+            ctx.scale(cam.k, cam.k);
+            ctx.lineCap = 'round';
+            const hasSel = selectedIds.size > 0;
+            if (!hasSel) {
+                const t = detailT();
+                const a = (0.2 + 0.22 * t).toFixed(3);
+                strokeLinks('rgba(176,206,236,' + a + ')');
+                fillNodes(1);
+            } else {
+                strokeLinks('rgba(136,168,214,0.07)', function (l) {
+                    return !hot.has(l.source.id) && !hot.has(l.target.id);
+                });
+                strokeLinks('rgba(251,191,36,0.8)', function (l) {
+                    return hot.has(l.source.id) || hot.has(l.target.id);
+                });
+                fillNodes(0.2, function (n) { return !hot.has(n.id); });
+                fillNodes(1, function (n) { return hot.has(n.id); });
+            }
+            drawLabels();
+            ctx.restore();
+        }
+
+        function fit() {
+            if (userZoomed || !nodeData.length) return;
+            let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+            for (let i = 0; i < nodeData.length; i++) {
+                const n = nodeData[i];
+                if (n.x < x0) x0 = n.x;
+                if (n.x > x1) x1 = n.x;
+                if (n.y < y0) y0 = n.y;
+                if (n.y > y1) y1 = n.y;
+            }
+            const pad = 48;
+            const bw = Math.max(1, x1 - x0 + pad * 2);
+            const bh = Math.max(1, y1 - y0 + pad * 2);
+            const k = Math.min(1.25, 0.92 * Math.min(viewW / bw, viewH / bh));
+            const tx = viewW / 2 - k * (x0 + x1) / 2;
+            const ty = viewH / 2 - k * (y0 + y1) / 2;
+            fitted = true;
+            d3.select(canvas).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(k));
+        }
+
+        const zoom = d3.zoom().scaleExtent([0.02, 14]).clickDistance(6).filter(function (event) {
+            if (event.type === 'dblclick') return false;
+            if (event.type === 'wheel') return true;
+            return !event.button;
+        }).on('zoom', function (event) {
+            cam.x = event.transform.x;
+            cam.y = event.transform.y;
+            cam.k = event.transform.k;
+            if (event.sourceEvent) userZoomed = true;
+            scheduleDraw();
+        });
+        d3.select(canvas).call(zoom);
+
+        function onMove(ev) {
+            if (session.dead) return;
+            const n = pick(ev);
+            canvas.style.cursor = n ? 'pointer' : 'grab';
+            if (n !== hovered) {
+                hovered = n;
+                scheduleDraw();
+            }
+            if (!tip) return;
+            if (n || !tree) { tip.style.display = 'none'; return; }
+            const w = worldPoint(ev);
+            const near = tree.find(w.x, w.y, 70 / cam.k);
+            const ls = near && adj.get(near.id);
+            if (!ls) { tip.style.display = 'none'; return; }
+            let best = null;
+            let bestD = (8 / cam.k) * (8 / cam.k);
+            for (let i = 0; i < ls.length; i++) {
+                const l = ls[i];
+                const dx = l.target.x - l.source.x;
+                const dy = l.target.y - l.source.y;
+                const len2 = dx * dx + dy * dy || 1;
+                let t = ((w.x - l.source.x) * dx + (w.y - l.source.y) * dy) / len2;
+                t = Math.max(0, Math.min(1, t));
+                const px = l.source.x + t * dx - w.x;
+                const py = l.source.y + t * dy - w.y;
+                const d2 = px * px + py * py;
+                if (d2 < bestD) { bestD = d2; best = l; }
+            }
+            if (!best) { tip.style.display = 'none'; return; }
+            const p = d3.pointer(ev, container);
+            tip.textContent = best.property;
+            tip.style.display = 'block';
+            tip.style.left = (p[0] + 12) + 'px';
+            tip.style.top = (p[1] - 8) + 'px';
+        }
+        function onClick(ev) {
+            const n = pick(ev);
+            if (n) {
+                if (selectedIds.has(n.id)) selectedIds.delete(n.id);
+                else selectedIds.add(n.id);
+                rebuildHot();
+                showNodeDetail(n, model.idToLabel);
+                scheduleDraw();
+                return;
+            }
+            if (!selectedIds.size) return;
+            selectedIds.clear();
+            hot = new Set();
+            const placeholder = document.getElementById('detail-placeholder');
+            const content = document.getElementById('detail-content');
+            if (placeholder) placeholder.style.display = 'block';
+            if (content) content.style.display = 'none';
+            scheduleDraw();
+        }
+        canvas.addEventListener('pointermove', onMove);
+        canvas.addEventListener('click', onClick);
+
+        function applyPositions(xs, ys) {
+            for (let i = 0; i < nodeData.length; i++) {
+                nodeData[i].x = xs[i];
+                nodeData[i].y = ys[i];
+            }
+            tree = d3.quadtree(nodeData, function (d) { return d.x; }, function (d) { return d.y; });
+            if (!fitted) fit();
+            else scheduleDraw();
+        }
+
+        function arrangeOnMain() {
+            const sim = d3.forceSimulation(nodeData)
+                .force('link', d3.forceLink(linkData).distance(68).strength(0.32))
+                .force('charge', d3.forceManyBody().strength(-280).theta(0.95).distanceMax(1100))
+                .force('center', d3.forceCenter(0, 0))
+                .force('collide', d3.forceCollide().radius(function (d) { return (d.radius || 8) * 0.45; }).iterations(1).strength(0.7))
+                .stop();
+            session.sim = sim;
+                const ticks = 140;
+            let t = 0;
+            function step() {
+                if (session.dead) return;
+                const end = Math.min(ticks, t + 2);
+                for (; t < end; t++) sim.tick();
+                if (hint) hint.textContent = 'Arranging ' + nCases + ' cases \u00b7 ' + Math.round(100 * t / ticks) + '%';
+                tree = d3.quadtree(nodeData, function (d) { return d.x; }, function (d) { return d.y; });
+                if (!fitted) fit();
+                else scheduleDraw();
+                if (t < ticks) requestAnimationFrame(step);
+                else finishArrange();
+            }
+            requestAnimationFrame(step);
+        }
+
+        function finishArrange() {
+            if (session.dead) return;
+            arranged = true;
+            if (hint) hint.textContent = 'Scroll to zoom \u00b7 Drag to move \u00b7 Click a node to inspect';
+            tree = d3.quadtree(nodeData, function (d) { return d.x; }, function (d) { return d.y; });
+            if (!fitted) fit();
+            else scheduleDraw();
+            writeLayout(layoutKey(nodeData, linkData), nodeData);
+        }
+
+        function startArrange() {
+            const key = layoutKey(nodeData, linkData);
+            if (hint) hint.textContent = 'Arranging ' + nCases + ' cases\u2026';
+            readLayout(key, nodeData.length).then(function (row) {
+                if (session.dead) return;
+                if (row) {
+                    applyPositions(row.xs, row.ys);
+                    arranged = true;
+                    if (hint) hint.textContent = 'Scroll to zoom \u00b7 Drag to move \u00b7 Click a node to inspect';
+                    return;
+                }
+                let worker = null;
+                try { worker = new Worker(workerUrl); } catch (err) { worker = null; }
+                if (!worker) { arrangeOnMain(); return; }
+                session.worker = worker;
+                const xs = new Float32Array(nodeData.length);
+                const ys = new Float32Array(nodeData.length);
+                const src = new Int32Array(linkData.length);
+                const tgt = new Int32Array(linkData.length);
+                const indexOf = new Map();
+                nodeData.forEach(function (n, i) { indexOf.set(n.id, i); xs[i] = n.x; ys[i] = n.y; });
+                for (let i = 0; i < linkData.length; i++) {
+                    src[i] = indexOf.get(linkData[i].source.id);
+                    tgt[i] = indexOf.get(linkData[i].target.id);
+                }
+                worker.onmessage = function (ev) {
+                    if (session.dead) return;
+                    const msg = ev.data;
+                    if (!msg || !msg.xs) return;
+                    applyPositions(msg.xs, msg.ys);
+                    if (hint && msg.type === 'tick') {
+                        hint.textContent = 'Arranging ' + nCases + ' cases \u00b7 ' + Math.round(100 * msg.t / msg.ticks) + '%';
+                    }
+                    if (msg.type === 'done') finishArrange();
+                };
+                worker.onerror = function () {
+                    if (session.worker) { session.worker.terminate(); session.worker = null; }
+                    if (!session.dead && !arranged) arrangeOnMain();
+                };
+                worker.postMessage({ xs: xs, ys: ys, src: src, tgt: tgt, ticks: 140 }, [xs.buffer, ys.buffer, src.buffer, tgt.buffer]);
+            });
+        }
+
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const swayT0 = performance.now();
+        function onOver() { pointerOver = true; }
+        function onOut() { pointerOver = false; }
+        canvas.addEventListener('pointerenter', onOver);
+        canvas.addEventListener('pointerleave', onOut);
+        function swayFrame(now) {
+            if (session.dead) return;
+            if (!reduceMotion && !pointerOver) {
+                session.sway = (2.4 * Math.PI / 180) * Math.sin((now - swayT0) / 26000 * 2 * Math.PI);
+                draw();
+            }
+            session.swayRaf = requestAnimationFrame(swayFrame);
+        }
+
+        resizeCanvas();
+        session.ro = new ResizeObserver(function () {
+            if (session.dead) return;
+            if (resizeCanvas()) scheduleDraw();
+        });
+        session.ro.observe(container);
+        draw();
+        if (!reduceMotion) session.swayRaf = requestAnimationFrame(swayFrame);
+        startArrange();
+
+        function destroy() {
+            if (session.dead) return;
+            session.dead = true;
+            if (session.sim) session.sim.stop();
+            if (session.worker) session.worker.terminate();
+            if (session.raf) cancelAnimationFrame(session.raf);
+            if (session.swayRaf) cancelAnimationFrame(session.swayRaf);
+            if (session.ro) session.ro.disconnect();
+            d3.select(canvas).on('.zoom', null);
+            canvas.removeEventListener('pointerenter', onOver);
+            canvas.removeEventListener('pointerleave', onOut);
+            canvas.removeEventListener('pointermove', onMove);
+            canvas.removeEventListener('click', onClick);
+            if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+            if (svg) svg.style.display = '';
+            if (tip) tip.style.display = 'none';
+        }
+        return { destroy: destroy };
+    }
+
+    const workerUrl = URL.createObjectURL(new Blob(['\nimportScripts("https://d3js.org/d3.v7.min.js");\nself.onmessage = function (ev) {\n  var data = ev.data;\n  var n = data.xs.length;\n  var nodes = new Array(n);\n  for (var i = 0; i < n; i++) nodes[i] = { index: i, x: data.xs[i], y: data.ys[i] };\n  var m = data.src.length;\n  var links = new Array(m);\n  for (var j = 0; j < m; j++) links[j] = { source: data.src[j], target: data.tgt[j] };\n  var sim = d3.forceSimulation(nodes)\n    .force("link", d3.forceLink(links).distance(68).strength(0.32))\n    .force("charge", d3.forceManyBody().strength(-280).theta(0.95).distanceMax(1100))\n    .force("center", d3.forceCenter(0, 0))\n    .force("collide", d3.forceCollide().radius(7).iterations(1).strength(0.7))\n    .stop();\n  var ticks = data.ticks || 80;\n  for (var t = 0; t < ticks; t++) {\n    sim.tick();\n    if ((t + 1) % 10 === 0 || t + 1 === ticks) {\n      var xs = new Float32Array(n);\n      var ys = new Float32Array(n);\n      for (var k = 0; k < n; k++) { xs[k] = nodes[k].x; ys[k] = nodes[k].y; }\n      self.postMessage({ type: t + 1 === ticks ? "done" : "tick", t: t + 1, ticks: ticks, xs: xs, ys: ys }, [xs.buffer, ys.buffer]);\n    }\n  }\n};\n'], { type: 'text/javascript' }));
+
+    function renderGraph(jsonLd, caseCount) {
         // Accept either a raw JSON-LD document or a pre-merged sentinel
         // ``{ __preMerged: flatNodes }`` produced by Compare mode.
+        // More than LARGE_GRAPH_CASES draws on a canvas. Smaller loads stay here.
+        const gen = ++graphRenderGen;
+        releaseGraphRenderer();
+        const nCases = (typeof caseCount === 'number') ? caseCount : 1;
+        RENDER_CASE_COUNT = nCases;
         const model = (jsonLd && Array.isArray(jsonLd.__preMerged))
             ? buildGraphModel(jsonLd.__preMerged)
             : parseJsonLdGraph(jsonLd);
+        if (nCases > LARGE_GRAPH_CASES && model.nodes.length) {
+            ensureGraphSvg();
+            activeLargeGraph = renderLargeGraph(model, nCases);
+            return;
+        }
         const { nodes, links, idToLabel } = model;
         const container = ensureGraphSvg();
+        const svgNode = document.getElementById('graph-svg');
+        if (svgNode) svgNode.style.display = '';
         const width  = container.clientWidth;
         const height = container.clientHeight;
 
@@ -783,6 +1370,7 @@
             let paused = 0, t0 = performance.now(), raf = 0;
             const period = 26000, amp = 2.4;
             function frame(now) {
+                if (gen !== graphRenderGen) return;
                 if (!document.body.contains(svg.node())) return;
                 if (!paused) {
                     const a = amp * Math.sin((now - t0) / period * 2 * Math.PI);
@@ -819,6 +1407,7 @@
             .force('charge',    d3.forceManyBody().strength(-420))
             .force('center',    d3.forceCenter(width / 2, height / 2))
             .force('collision', d3.forceCollide().radius(d => d.radius + 6));
+        activeSvgSimulation = simulation;
 
         const defs = svg.append('defs');
         linkData.forEach((link, i) => {
@@ -958,7 +1547,10 @@
             });
 
         const labelSel = nodeSel.append('text')
-            .text(d => d.label.length > 22 ? d.label.slice(0, 20) + '\u2026' : d.label)
+            .text(d => {
+                const faced = graphFaceLabel(d.label);
+                return faced.length > 22 ? faced.slice(0, 20) + '\u2026' : faced;
+            })
             .attr('x', d => d.radius + 5).attr('y', 4)
             .attr('fill', 'rgba(255,255,255,0.92)')
             .attr('font-size', '10px')
@@ -1002,12 +1594,13 @@
         simulation.alpha(0.08).alphaTarget(0).velocityDecay(0.4).on('tick', paint);
         simulation.restart();
 
-        window.addEventListener('resize', () => {
+        activeSvgResize = () => {
             const w = container.clientWidth, h = container.clientHeight;
             svg.attr('viewBox', [0, 0, w, h]);
             simulation.force('center', d3.forceCenter(w / 2, h / 2));
             simulation.alpha(0.3).restart();
-        });
+        };
+        window.addEventListener('resize', activeSvgResize);
     }
 
     // ---------- Title rendering ----------
@@ -1250,7 +1843,7 @@
         try {
             const jsonLd = await fetchCase(caseEntry);
             setTitleSingle(jsonLd, caseEntry.case_id);
-            renderGraph(jsonLd);
+            renderGraph(jsonLd, 1);
         } catch (err) {
             console.error('Failed to load graph', caseEntry, err);
             showLoadError(caseEntry.case_id, err);
@@ -1511,11 +2104,11 @@
     }
 
     // Allow renderGraph to accept either a JSON-LD doc or a pre-merged flat array.
-    function renderGraphFromFlat(flatNodes) {
+    function renderGraphFromFlat(flatNodes, caseCount) {
         // Preserve case lineage when Single-mode filters rebuild from flat nodes.
         annotateFlatNodesWithCase(flatNodes, CURRENT_CASE_ID);
         CURRENT_FLAT_NODES = Array.isArray(flatNodes) ? flatNodes : null;
-        renderGraph({ __preMerged: flatNodes });
+        renderGraph({ __preMerged: flatNodes }, caseCount == null ? RENDER_CASE_COUNT : caseCount);
     }
 
     function setLookupStatus(msg) {
@@ -2222,7 +2815,7 @@
             const opt = document.createElement('option');
             // Prefer CAC hash IRI when it looks like a top-level class; else bare local name for lookup API.
             opt.value = name;
-            opt.textContent = name + (f.count != null ? ' (' + f.count + ')' : '');
+            opt.textContent = graphFaceLabel(String(name)) + (f.count != null ? ' (' + f.count + ')' : '');
             select.appendChild(opt);
         });
         select.value = current;
@@ -2417,7 +3010,7 @@
         // Keep edges only among surviving nodes by rebuilding from the filtered set.
         const titleEl = document.getElementById('case-title');
         const prev = titleEl ? titleEl.textContent : '';
-        renderGraph({ __preMerged: filtered });
+        renderGraph({ __preMerged: filtered }, RENDER_CASE_COUNT);
         if (titleEl) {
             titleEl.textContent = prev + ' · filtered ' + filtered.length + '/' + CURRENT_FLAT_NODES.length;
         }
@@ -2455,9 +3048,17 @@
         const payload = await resp.json();
         PACER_CATALOG = Array.isArray(payload.investigations) ? payload.investigations : [];
         if (!PACER_CATALOG.length && Array.isArray(payload.cases)) {
-            // the per-document PACER graphs this view browsed were replaced by a graph release (documented acts, sources)
-            throw new Error('PACER records are shown on the Lifecycle page (' + payload.cases.length + ' cases in release ' +
-                (payload.release || '') + '). This view reads the corpus graphs.');
+            PACER_CATALOG = payload.cases.filter(function (c) {
+                return c && c.case_id && c.graphs && c.graphs.evidence;
+            }).map(function (c) {
+                return {
+                    id: c.case_id,
+                    path: '/api/ontology/pacer/' + encodeURIComponent(c.case_id) + '.evidence.jsonld',
+                    classes: [],
+                    agencies: [],
+                    search_text: String(c.case_id).toLowerCase()
+                };
+            });
         }
 
         const classSelect = document.getElementById('pacer-class');
@@ -2539,7 +3140,8 @@
         const resp = await fetch(path, { cache: 'default' });
         if (!resp.ok) throw new Error('HTTP ' + resp.status + ' for ' + path);
         const doc = await resp.json();
-        const id = path.split('/').pop().replace(/-investigation\.jsonld$/i, '') || path;
+        const file = decodeURIComponent(String(path || '').split('?')[0].split('/').pop() || '');
+        const id = file.replace(/-investigation\.jsonld$/i, '').replace(/\.evidence\.jsonld$/i, '') || path;
         return { id, path, flat: flattenCompactJsonLd(doc) };
     }
 
@@ -2675,12 +3277,14 @@
     }
 
     function showCompareEmpty(msg) {
+        releaseGraphRenderer();
         const container = document.getElementById('graph-container');
         container.innerHTML =
             '<div class="empty-state">' + escapeHtml(msg) + '</div>';
     }
 
     function showEmptyState() {
+        releaseGraphRenderer();
         const container = document.getElementById('graph-container');
         container.innerHTML =
             '<div class="empty-state">' +
@@ -2692,6 +3296,7 @@
     }
 
     function showLoadError(caseId, err) {
+        releaseGraphRenderer();
         const container = document.getElementById('graph-container');
         container.innerHTML =
             '<div class="empty-state">' +

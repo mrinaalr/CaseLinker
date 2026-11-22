@@ -106,15 +106,15 @@ def test_coreference_off_resolves_nothing(monkeypatch):
 
 def test_resolved_they_is_an_offender_for_the_subject_test(monkeypatch):
     _off(monkeypatch)
-    from state_machines.observations.observe import _means
+    from state_machines.observations.observe import _means, tie_means
 
     actors = CF.make_inventory(defendant="Smith")
     sentence = "Smith opened an account on Kitebox and they communicated via an encrypted channel."
     observation = {"feature_term": "encrypted"}
     assert _means("feature", sentence, observation) is None
-    assert CF.means_with_resolved_subject("feature", sentence, observation, actors) is None
+    assert tie_means("feature", sentence, observation, actors) is None
     monkeypatch.setenv("CASELINKER_COREFERENCE", "1")
-    hit = CF.means_with_resolved_subject("feature", sentence, observation, actors)
+    hit = tie_means("feature", sentence, observation, actors)
     assert hit is not None and hit[0] == "Supports_Action"
 
 

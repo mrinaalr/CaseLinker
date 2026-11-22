@@ -25,6 +25,18 @@ def test_blank_config_is_refused():
         S.load_config(CONFIG)
 
 
+def _heads(tmp, case):
+    decisions, observations = tmp / "decisions", tmp / "observations"
+    decisions_v2, observations_v2 = tmp / "decisions_v2", tmp / "observations_v2"
+    for folder in (decisions, observations, decisions_v2, observations_v2):
+        folder.mkdir(parents=True, exist_ok=True)
+    (decisions / f"{case}.json").write_text(json.dumps({"case_id": case, "events": [], "passages": []}), encoding="utf-8")
+    (decisions_v2 / f"{case}.json").write_text(json.dumps({"case_id": case, "events": [], "passages": []}), encoding="utf-8")
+    (observations / f"{case}.json").write_text(json.dumps({"observations": []}), encoding="utf-8")
+    (observations_v2 / f"{case}.json").write_text(json.dumps({"observations": []}), encoding="utf-8")
+    return decisions, observations, decisions_v2, observations_v2
+
+
 def test_seal_is_deterministic_and_never_draws_an_excluded_id(tmp_path):
     corpus = ["pilot_a", "pilot_b", "case_01", "case_02", "case_03", "case_04", "case_05"]
     exclusion = ["pilot_a", "pilot_b"]
@@ -78,20 +90,28 @@ def test_benchmark_score_refuses_a_sealed_benchmark_case(tmp_path):
 def _population(frame_ids):
     rows = []
     for case_id in frame_ids:
-        for stratum, sentence in (
-            ("published_acts", "The defendant initiated contact with Minor Victim 1."),
-            ("means_rule_no_act", "The record names a messaging application and states no act."),
-            ("other", "The hearing was continued to the following week."),
-        ):
+        rows.append({
+            "unit_id": f"{case_id}:act",
+            "case_id": case_id,
+            "stratum": f"{case_id}:act",
+            "sentence": "The defendant initiated contact with Minor Victim 1.",
+            "context_before": [f"before {i} {case_id}" for i in range(5)],
+            "context_after": [f"after {i} {case_id}" for i in range(5)],
+            "machine": {"act": "INITIATE_CONTACT", "means_tie": True, "level_c": False},
+            "uncertainty": 0.1,
+        })
+        for index, sentence in enumerate((
+            "The record names a messaging application and states no act.",
+            "The hearing was continued to the following week.",
+        )):
             rows.append({
-                "unit_id": f"{case_id}:{stratum}",
+                "unit_id": f"{case_id}:other:{index}",
                 "case_id": case_id,
-                "stratum": stratum,
+                "stratum": f"{case_id}:other",
                 "sentence": sentence,
                 "context_before": [f"before {i} {case_id}" for i in range(5)],
                 "context_after": [f"after {i} {case_id}" for i in range(5)],
-                "machine": {"act": "INITIATE_CONTACT" if stratum == "published_acts" else None,
-                            "means_tie": stratum == "published_acts", "level_c": False},
+                "machine": {"act": "", "means_tie": False, "level_c": False},
                 "uncertainty": 0.1,
             })
     return rows
@@ -100,7 +120,7 @@ def _population(frame_ids):
 def test_sampler_draws_only_the_sealed_frame_and_hides_machine_labels(tmp_path):
     manifest = _seal(["case_01", "case_02", "case_03", "case_04", "pilot_a"], ["pilot_a"], held=1, frame=2)
     population = _population(manifest["gold_frame_ids"])
-    config = {"seed": 3, "strata": {"published_acts": {"n": 1}, "means_rule_no_act": {"n": 1}, "other": {"n": 2}}}
+    config = {"seed": 3}
     sample = G.draw_sample(population, config, sealed=manifest)
     assert {row["case_id"] for row in sample["rows"]} <= set(manifest["gold_frame_ids"])
     assert all(row["stratum_population"] >= row["stratum_drawn"] for row in sample["rows"])
@@ -114,8 +134,10 @@ def test_sampler_draws_only_the_sealed_frame_and_hides_machine_labels(tmp_path):
     assert all(len(unit["context_before"]) == 2 and len(unit["context_after"]) == 2 for unit in sheet["units"])
     key = G.key_file(sample)
     assert all("machine" in unit for unit in key["units"])
-    written = G.write_draw(sample, tmp_path / "draw")
-    assert (tmp_path / "draw" / "draw.sha256").read_text(encoding="utf-8").strip() == written["sha256"] == digest
+    written = G.write_draw(sample, tmp_path / "sheet", tmp_path / "record")
+    assert (tmp_path / "record" / "draw.sha256").read_text(encoding="utf-8").strip() == written["sha256"] == digest
+    assert not (tmp_path / "sheet" / "draw.json").exists()
+    assert (tmp_path / "sheet" / "grading_sheet.json").is_file()
     outside = _population(["not_in_frame"])
     with pytest.raises(SystemExit, match="sealed frame"):
         G.draw_sample(outside, config, sealed=manifest)
@@ -175,8 +197,7 @@ def test_equal_rates_recover_the_population_totals():
 def test_score_checks_the_manifest_hash_and_reports_agreement():
     manifest = _seal(["case_01", "case_02", "case_03", "case_04"], [], held=1, frame=2)
     population = _population(manifest["gold_frame_ids"])
-    config = {"seed": 1, "strata": {"published_acts": {"n": len(manifest["gold_frame_ids"])},
-                                    "means_rule_no_act": {"n": 1}, "other": {"n": 1}}}
+    config = {"seed": 1}
     sample = G.draw_sample(population, config, sealed=manifest)
     key = G.key_file(sample)
     graded = {"units": []}
@@ -197,13 +218,30 @@ def test_score_checks_the_manifest_hash_and_reports_agreement():
     assert "warnings" in result["recall"]["act"]
     assert result["krippendorff_alpha"]["act"]["alpha"] == 1
     assert result["design_based"]["ready_for"] == ["DSL"]
-    assert result["design_based"]["population_by_stratum"]["published_acts"] == len(manifest["gold_frame_ids"])
+    act_stratum = f"{manifest['gold_frame_ids'][0]}:act"
+    assert result["design_based"]["population_by_stratum"][act_stratum] == 1
     assert all(row["sampling_weight"] == pytest.approx(1 / row["inclusion_probability"])
                for row in result["design_based"]["rows"])
     bad = dict(manifest, sha256="ab" * 32)
     with pytest.raises(SystemExit, match="does not match"):
         G.score(graded, key, sealed=bad)
     assert G.krippendorff_alpha([["a", "b"]]) == pytest.approx(0.0)
+
+
+def test_score_merges_one_docket_before_the_interval():
+    """Removing the merge_dockets call inside score leaves two cases and an interval."""
+    manifest = _seal(["one", "two", "three", "four"], [], held=0, frame=4)
+    rows = []
+    for case, unit in (("one", "a"), ("two", "b")):
+        rows.append({
+            "unit_id": unit, "case_id": case, "court": "dcd", "docket_number": "1:24-cr-1",
+            "stratum": f"{case}:act", "inclusion_probability": 1, "stratum_population": 1,
+            "stratum_drawn": 1, "sentence": unit, "context_before": [], "context_after": [],
+            "machine": {"act": "DISTRIBUTE_MATERIAL", "means_tie": False, "level_c": False},
+        })
+    graded = {"units": [{"unit_id": row["unit_id"], "gold": row["machine"]} for row in rows]}
+    result = G.score(graded, {"units": rows}, sealed=manifest, replicates=20, seed=0)
+    assert result["recall"]["act"]["interval_95"] is None
 
 
 def _scored(stratum, population, drawn, machine, gold, case_id=None, unit_id="u"):
@@ -283,7 +321,7 @@ def test_draw_merges_a_docket_and_keeps_two_courts_apart():
     manifest = _seal(["one", "two", "three", "four"], [], held=0, frame=4)
     def row(case, court, number, sha, unit):
         return {"unit_id": unit, "case_id": case, "court": court, "docket_number": number,
-                "document_sha256": sha, "stratum": "s", "sentence": unit,
+                "document_sha256": sha, "stratum": f"{case}:other", "sentence": unit,
                 "context_before": [], "context_after": []}
     population = [
         row("one", "DISTRICT OF MARYLAND", "24-1", "aa", "a1"),
@@ -292,7 +330,7 @@ def test_draw_merges_a_docket_and_keeps_two_courts_apart():
         row("three", "DISTRICT OF MARYLAND", "24-1", "bb", "c1"),
         row("four", "SOUTHERN DISTRICT OF NEW YORK", "24-1", "cc", "d1"),
     ]
-    sample = G.draw_sample(population, {"seed": 1, "strata": {"s": {"n": 4}}}, sealed=manifest)
+    sample = G.draw_sample(population, {"seed": 1}, sealed=manifest)
     by_unit = {item["unit_id"]: item["case_id"] for item in sample["rows"]}
     assert by_unit["a1"] == by_unit["c1"] == "one"
     assert "b1" not in by_unit
@@ -378,13 +416,14 @@ def test_population_rows_carry_court_docket_and_document_hash(tmp_path):
             "pages": [{"pdf_page": 1}],
         }],
     }), encoding="utf-8")
-    rows = G.population_from_case(case, tmp_path)
+    rows = G.population_from_case(case, tmp_path, *_heads(tmp_path, case))
     assert rows
     assert rows[0]["court"] == "dcd"
     assert rows[0]["docket_number"] == "1:24-cr-9"
     assert rows[0]["document_sha256"] == "abc123"
+    assert rows[0]["stratum"] == "stamp:other"
     manifest = _seal(["stamp"], [], held=0, frame=1)
-    sample = G.draw_sample(rows, {"seed": 1, "strata": {"published_acts": {"n": len(rows)}}}, sealed=manifest)
+    sample = G.draw_sample(rows, {"seed": 1}, sealed=manifest)
     assert sample["rows"][0]["document_sha256"] == "abc123"
     blank = {"act": "", "means_tie": False, "level_c": False}
     graded = {"units": [{"unit_id": row["unit_id"], "gold": dict(blank)} for row in sample["rows"]]}
@@ -404,3 +443,38 @@ def test_a_stratum_with_fewer_than_five_gold_positives_warns():
     assert report["gold_positives_by_stratum"] == {"thin": 4, "wide": 5}
     assert report["warnings"] == ["thin: fewer than 5 gold positives; its bootstrap interval is unreliable"]
     assert report["recall"] == pytest.approx(1.0)
+
+
+def test_v15_refills_other_and_an_empty_level_c_does_not_exit():
+    manifest = _seal(["case_01", "case_02", "case_03", "case_04"], [], held=1, frame=2)
+    case_id = manifest["gold_frame_ids"][0]
+    population = []
+    for index in range(1):
+        population.append({
+            "unit_id": f"a{index}", "case_id": case_id, "stratum": f"{case_id}:act",
+            "sentence": f"Act sentence {index}.", "context_before": [], "context_after": [],
+            "machine": {"act": "DISTRIBUTE_MATERIAL", "means_tie": False, "level_c": False},
+        })
+    for index in range(4):
+        population.append({
+            "unit_id": f"o{index}", "case_id": case_id, "stratum": f"{case_id}:other",
+            "sentence": f"Other sentence {index}.", "context_before": [], "context_after": [],
+            "machine": {"act": "", "means_tie": False, "level_c": False},
+        })
+    sample = G.draw_sample(population, {"seed": 7}, sealed=manifest)
+    counts = {}
+    for row in sample["rows"]:
+        counts[row["stratum"]] = counts.get(row["stratum"], 0) + 1
+    assert counts[f"{case_id}:act"] == 1
+    assert counts[f"{case_id}:other"] == 2
+    assert any(item["stratum"] == "level_c" and item["drawn"] == 0 for item in sample["shortfalls"])
+    empty = next(case for case in manifest["gold_frame_ids"] if case != case_id)
+    assert any(item["stratum"] == empty and item["population"] == 0 for item in sample["shortfalls"])
+    ordered = sorted(
+        [row for row in population if row["stratum"].endswith(":other")],
+        key=lambda row: __import__("hashlib").sha256(f"7‖{row['case_id']}‖{row['unit_id']}".encode()).hexdigest(),
+    )
+    assert [row["unit_id"] for row in sample["rows"] if row["stratum"].endswith(":other")] == [row["unit_id"] for row in ordered[:2]]
+    sheet = G.grading_sheet(sample)
+    assert "machine" not in json.dumps(sheet)
+    assert sheet["units"] != sample["rows"] or len(sheet["units"]) == 1

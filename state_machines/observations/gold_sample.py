@@ -31,6 +31,7 @@ does not run that estimator.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import random
@@ -95,15 +96,92 @@ def merge_dockets(rows: Sequence[dict]) -> list:
 _STAMPED = ("court", "docket_number", "document_sha256", "doc_id")
 
 
-def population_from_case(case_id: str, text_root, *, stratum: str = "published_acts") -> list:
-    """Sentence rows for one case, each stamped with court, docket and document hash.
+def _observations_file(directory, case_id: str) -> dict:
+    """The release file ``observations/{case}.json``. A missing file is an error."""
+    if directory is None:
+        raise SystemExit("an observations file is required")
+    path = Path(directory)
+    if path.is_dir():
+        path = path / f"{case_id}.json"
+    if not path.is_file():
+        raise SystemExit(f"observations file is missing: {path}")
+    return json.loads(path.read_text(encoding="utf-8"))
 
-    Court and docket come from ``case_key.json`` when that file exists, otherwise
-    from ``sources.json``. The document hash is the filing's own sha256.
+
+def _decision_file(directory, case_id: str) -> dict:
+    """The head's case bundle. A missing file is an error."""
+    if directory is None:
+        raise SystemExit("a decision file is required")
+    path = Path(directory)
+    if path.is_dir():
+        path = path / f"{case_id}.json"
+    if not path.is_file():
+        raise SystemExit(f"decision file is missing: {path}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _covers(spans, doc_id, page, start, end) -> bool:
+    return any(doc == doc_id and pg == page and a < end and start < b for doc, pg, a, b, *_rest in spans)
+
+
+def _act_spans(bundle: dict) -> list:
+    passages = {p["passage_id"]: p for p in bundle.get("passages") or []}
+    spans = []
+    for event in bundle.get("events") or []:
+        for support in event.get("support") or []:
+            if support.get("facet") != "action":
+                continue
+            passage = passages.get(support.get("passage_id"))
+            if not passage:
+                continue
+            spans.append((passage["doc_id"], passage["pdf_page"], passage["char_start"], passage["char_end"],
+                          event.get("action") or ""))
+    return spans
+
+
+def _tied_spans(document: dict, kind: str) -> list:
+    """Means ties from ``observations/{case}.json``, not from the decision bundle."""
+    spans = []
+    for obs in document.get("observations") or []:
+        if obs.get("kind") != kind or not obs.get("relations"):
+            continue
+        spans.append((obs["doc_id"], obs["pdf_page"], obs["char_start"], obs["char_end"]))
+    return spans
+
+
+def _machine_labels(act_spans, platform_spans, feature_spans, doc_id, page, start, end) -> dict:
+    act = next((code for doc, pg, a, b, code in act_spans
+                if doc == doc_id and pg == page and a < end and start < b), "")
+    return {
+        "act": act,
+        "means_tie": _covers(platform_spans, doc_id, page, start, end),
+        "level_c": _covers(feature_spans, doc_id, page, start, end),
+    }
+
+
+def population_from_case(case_id: str, text_root, decisions=None, observations=None,
+                         decisions_v2=None, observations_v2=None) -> list:
+    """Every sentence on every filed page.
+
+    ``{case_id}:act`` when the flags-off bundle published an act there.
+    ``level_c`` when ``observations/{case}.json`` tied a feature means and no act
+    was published there. ``{case_id}:other`` otherwise. A platform name alone is
+    not an act. The v2 bundle and v2 observations file are required and supply
+    ``machine_v2``. A missing file is an error.
     """
     from state_machines.evidence import evidence as E
     from state_machines.observations.observe import sentences
 
+    bundle = _decision_file(decisions, case_id)
+    observed = _observations_file(observations, case_id)
+    v2 = _decision_file(decisions_v2, case_id)
+    observed_v2 = _observations_file(observations_v2, case_id)
+    act_spans = _act_spans(bundle)
+    feature_spans = _tied_spans(observed, "feature")
+    platform_spans = _tied_spans(observed, "platform")
+    v2_acts = _act_spans(v2)
+    v2_features = _tied_spans(observed_v2, "feature")
+    v2_platforms = _tied_spans(observed_v2, "platform")
     root = Path(text_root) / case_id
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
     key_path = root / "case_key.json"
@@ -118,30 +196,81 @@ def population_from_case(case_id: str, text_root, *, stratum: str = "published_a
             text = E.read_page(case_id, doc_id, page["pdf_page"], text_root) or ""
             spans = list(sentences(E.normalize(text)))
             texts = [E.normalize(text)[start:end].strip() for start, end in spans]
-            for index, sentence in enumerate(texts):
+            for index, ((start, end), sentence) in enumerate(zip(spans, texts)):
                 if not sentence:
                     continue
-                rows.append({
-                    "unit_id": f"{case_id}:{doc_id}:{page['pdf_page']}:{index}",
+                page_no = page["pdf_page"]
+                acted = _covers(act_spans, doc_id, page_no, start, end)
+                level = _covers(feature_spans, doc_id, page_no, start, end)
+                if acted:
+                    stratum = f"{case_id}:act"
+                elif level:
+                    stratum = "level_c"
+                else:
+                    stratum = f"{case_id}:other"
+                row = {
+                    "unit_id": f"{case_id}:{doc_id}:{page_no}:{index}",
                     "case_id": case_id,
                     "doc_id": doc_id,
                     "court": court,
                     "docket_number": docket,
                     "document_sha256": sha,
+                    "pdf_page": page_no,
+                    "char_start": start,
+                    "char_end": end,
                     "stratum": stratum,
                     "sentence": sentence,
                     "context_before": texts[max(0, index - 2):index],
                     "context_after": texts[index + 1:index + 3],
-                })
+                    "machine": _machine_labels(act_spans, platform_spans, feature_spans, doc_id, page_no, start, end),
+                    "machine_v2": _machine_labels(v2_acts, v2_platforms, v2_features, doc_id, page_no, start, end),
+                }
+                rows.append(row)
     return rows
 
 
-def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
-    """A stratified sample of the sealed gold frame.
+def _order_key(seed, row: dict) -> str:
+    blob = f"{seed}‖{row['case_id']}‖{row['unit_id']}".encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()
 
-    ``config`` is ``{"seed": int, "strata": {name: {"n": int}}}``. Selection uses
-    the stratum name and the seed only. Rows that share a court and case number
-    are one case before the draw.
+
+def _v15_plan(by: dict, frame_ids, *, cap: int = 43) -> tuple:
+    """Up to two act sentences per case, the rest of three from other, and level C up to 43.
+
+    A case in the frame with no sentences is logged. An empty or short stratum
+    does not stop the draw.
+    """
+    strata = {}
+    shortfalls = []
+    present = {name[:name.rfind(":")] for name in by if name.endswith(":act") or name.endswith(":other")}
+    for case_id in sorted(set(frame_ids) | present):
+        act_name, other_name = f"{case_id}:act", f"{case_id}:other"
+        n_act_pop, n_other_pop = len(by.get(act_name, [])), len(by.get(other_name, []))
+        if n_act_pop == 0 and n_other_pop == 0:
+            shortfalls.append({"stratum": case_id, "population": 0, "asked": 3, "drawn": 0})
+            continue
+        n_act, n_other = min(2, n_act_pop), min(3 - min(2, n_act_pop), n_other_pop)
+        if n_act < 2:
+            shortfalls.append({"stratum": act_name, "population": n_act_pop, "asked": 2, "drawn": n_act})
+        if n_other < 3 - n_act:
+            shortfalls.append({"stratum": other_name, "population": n_other_pop, "asked": 3 - n_act, "drawn": n_other})
+        if n_act:
+            strata[act_name] = {"n": n_act}
+        if n_other:
+            strata[other_name] = {"n": n_other}
+    level_pop = len(by.get("level_c", []))
+    n_level = min(cap, level_pop)
+    if level_pop == 0 or n_level < level_pop:
+        shortfalls.append({"stratum": "level_c", "population": level_pop, "asked": min(cap, level_pop), "drawn": n_level})
+    if n_level:
+        strata["level_c"] = {"n": n_level}
+    return strata, shortfalls
+
+
+def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
+    """The per-case draw. ``config`` is ``{"seed": int}``.
+
+    Rows that share a court and case number are one case before the draw.
     """
     verify_manifest(sealed)
     population = merge_dockets(population)
@@ -155,20 +284,20 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
         raise SystemExit("excluded ids cannot be drawn: " + ", ".join(leaked))
     if config.get("select") not in (None, "stratified_random"):
         raise SystemExit("selection is stratified random; model uncertainty is not a selection method")
-    rng = random.Random(config["seed"])
     by = {}
     for row in population:
         by.setdefault(row["stratum"], []).append(row)
+    strata, shortfalls = _v15_plan(by, frame, cap=int(config.get("level_c_cap", 43)))
     drawn = []
     meta = {}
-    for name, spec in config["strata"].items():
-        pool = sorted(by.get(name, []), key=lambda row: row["unit_id"])
+    for name, spec in strata.items():
+        pool = list(by.get(name, []))
         size, asked = len(pool), spec["n"]
         if asked > size:
             raise SystemExit(f"{name}: asked for {asked} from a stratum of {size}")
         pi = (asked / size) if size else None
         meta[name] = {"population": size, "drawn": asked, "inclusion_probability": pi}
-        picks = pool if asked == size else rng.sample(pool, asked)
+        picks = sorted(pool, key=lambda row: _order_key(config["seed"], row))[:asked]
         for row in picks:
             drawn_row = {
                 "unit_id": row["unit_id"],
@@ -182,11 +311,14 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
                 "context_after": list(row.get("context_after") or []),
                 "machine": row.get("machine"),
             }
+            if row.get("machine_v2") is not None:
+                drawn_row["machine_v2"] = row["machine_v2"]
             for field in _STAMPED:
                 if row.get(field):
                     drawn_row[field] = row[field]
             drawn.append(drawn_row)
-    return {"seed": config["seed"], "rows": drawn, "strata": meta}
+    sample = {"seed": config["seed"], "rows": drawn, "strata": meta, "shortfalls": shortfalls}
+    return sample
 
 
 def draw_sha256(sample: dict) -> str:
@@ -212,7 +344,8 @@ def grading_sheet(sample: dict, window: int = 2) -> dict:
             "sentence": row["sentence"],
             "context_after": _clip(row.get("context_after") or [], window, last=False),
         }))
-    return {"units": units}
+    random.Random(sample["seed"]).shuffle(units)
+    return {"seed": sample["seed"], "units": units}
 
 
 def _stamp(row: dict, base: dict) -> dict:
@@ -235,6 +368,8 @@ def key_file(sample: dict) -> dict:
             "stratum_drawn": row["stratum_drawn"],
             "machine": row["machine"],
         }))
+        if row.get("machine_v2") is not None:
+            units[-1]["machine_v2"] = row["machine_v2"]
     return {"units": units}
 
 
@@ -544,7 +679,7 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed
             if row.get(field):
                 stamped[field] = row[field]
         ready.append(stamped)
-    return {
+    result = {
         "manifest_sha256": digest,
         "precision": precision,
         "recall": recall,
@@ -557,6 +692,18 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed
                     "DSL (Egami, Hinck, Stewart and Wei 2023) needs those probabilities.",
         },
     }
+    if rows and all(row.get("machine_v2") is not None for row in rows):
+        alt = [{**row, "machine": row["machine_v2"]} for row in rows]
+        v2_precision = {}
+        for unit in UNITS:
+            block = precision_unit(alt, unit)
+            block["interval_95"] = _precision_interval(alt, unit, replicates, seed) if block["precision"] is not None else None
+            v2_precision[unit] = block
+        result["machine_v2"] = {
+            "precision": v2_precision,
+            "recall": {unit: recall_report(alt, unit, replicates, seed) for unit in UNITS},
+        }
+    return result
 
 
 def _population_counts(sample: dict) -> dict:
@@ -570,16 +717,119 @@ def score_drawn(graded: dict, key: dict, sample: dict, *, sealed: dict, replicat
     return result
 
 
-def write_draw(sample: dict, out_dir: Path) -> dict:
-    """Write the hash, then the blind sheet and the key. The hash file is first."""
-    refuse_store(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+def label_rows(rows: Sequence[dict], decisions, observations, decisions_v2, observations_v2) -> list:
+    """Machine labels from the decision and observations files. Labels in ``rows`` are ignored."""
+    labelled = []
+    cache = {}
+    for row in rows:
+        case_id = row["case_id"]
+        if case_id not in cache:
+            cache[case_id] = (
+                _act_spans(_decision_file(decisions, case_id)),
+                _tied_spans(_observations_file(observations, case_id), "platform"),
+                _tied_spans(_observations_file(observations, case_id), "feature"),
+                _act_spans(_decision_file(decisions_v2, case_id)),
+                _tied_spans(_observations_file(observations_v2, case_id), "platform"),
+                _tied_spans(_observations_file(observations_v2, case_id), "feature"),
+            )
+        acts, platforms, features, v2_acts, v2_platforms, v2_features = cache[case_id]
+        clean = {key: value for key, value in row.items() if key not in {"machine", "machine_v2"}}
+        clean["machine"] = _machine_labels(acts, platforms, features, row["doc_id"], row["pdf_page"], row["char_start"], row["char_end"])
+        clean["machine_v2"] = _machine_labels(v2_acts, v2_platforms, v2_features, row["doc_id"], row["pdf_page"], row["char_start"], row["char_end"])
+        labelled.append(clean)
+    return labelled
+
+
+def write_population(case_ids: Sequence[str], text_root: Path, out: Path, decisions, observations,
+                     decisions_v2, observations_v2) -> int:
+    """Write the sentence units ``draw --population`` reads. Machine labels are not in the file."""
+    refuse_store(out)
+    rows = []
+    for case_id in case_ids:
+        rows.extend(population_from_case(
+            case_id, text_root, decisions, observations, decisions_v2, observations_v2))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    public = [{key: value for key, value in row.items() if key not in {"machine", "machine_v2"}} for row in rows]
+    out.write_text(json.dumps(public, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    return len(rows)
+
+
+_GRADE_COLUMNS = (
+    "unit_id", "context_before", "sentence", "context_after",
+    "act", "act_code", "actor",
+    "platform_means", "platform",
+    "feature_means", "feature",
+)
+
+
+def _yes(value: str) -> bool:
+    return (value or "").strip().lower() in {"y", "yes", "1", "true"}
+
+
+def export_grading_csv(sheet: dict, out: Path) -> int:
+    """Blind CSV. The machine key is not an input and is not a column."""
+    refuse_store(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=_GRADE_COLUMNS)
+        writer.writeheader()
+        for unit in sheet["units"]:
+            writer.writerow({
+                "unit_id": unit["unit_id"],
+                "context_before": " | ".join(unit.get("context_before") or []),
+                "sentence": unit.get("sentence") or "",
+                "context_after": " | ".join(unit.get("context_after") or []),
+                "act": "",
+                "act_code": "",
+                "actor": "",
+                "platform_means": "",
+                "platform": "",
+                "feature_means": "",
+                "feature": "",
+            })
+    return len(sheet["units"])
+
+
+def import_graded_csv(path: Path) -> dict:
+    """Filled CSV back into the graded JSON ``score`` reads.
+
+    ``act`` yes uses ``act_code`` as ``gold.act``. ``platform_means`` yes is
+    ``gold.means_tie``. ``feature_means`` yes is ``gold.level_c``. The platform
+    and feature names are kept on the unit and are not scoring units.
+    """
+    units = []
+    with path.open(encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle):
+            act = (row.get("act_code") or "").strip() if _yes(row.get("act") or "") else ""
+            units.append({
+                "unit_id": row["unit_id"],
+                "gold": {
+                    "act": act,
+                    "means_tie": _yes(row.get("platform_means") or ""),
+                    "level_c": _yes(row.get("feature_means") or ""),
+                },
+                "actor": (row.get("actor") or "").strip(),
+                "platform": (row.get("platform") or "").strip(),
+                "feature": (row.get("feature") or "").strip(),
+            })
+    return {"units": units}
+
+
+def write_draw(sample: dict, sheet_dir: Path, record_dir: Path) -> dict:
+    """The sheet folder gets the blind sheet and CSV. The record folder gets the draw and the key."""
+    refuse_store(sheet_dir)
+    refuse_store(record_dir)
+    if sheet_dir.resolve() == record_dir.resolve():
+        raise SystemExit("the draw record is kept out of the sheet folder")
+    sheet_dir.mkdir(parents=True, exist_ok=True)
+    record_dir.mkdir(parents=True, exist_ok=True)
     digest = draw_sha256(sample)
-    (out_dir / "draw.sha256").write_text(digest + "\n", encoding="utf-8")
-    (out_dir / "draw.json").write_text(json.dumps(sample, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    (record_dir / "draw.sha256").write_text(digest + "\n", encoding="utf-8")
+    (record_dir / "draw.json").write_text(json.dumps(sample, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     sheet = grading_sheet(sample)
-    (out_dir / "grading_sheet.json").write_text(json.dumps(sheet, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    (out_dir / "key.json").write_text(json.dumps(key_file(sample), indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    (sheet_dir / "grading_sheet.json").write_text(json.dumps(sheet, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    export_grading_csv(sheet, sheet_dir / "grading_sheet.csv")
+    (record_dir / "key.json").write_text(json.dumps(key_file(sample), indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return {"sha256": digest, "units": len(sample["rows"])}
 
 
@@ -590,7 +840,26 @@ def main(argv=None) -> int:
     d.add_argument("--population", type=Path, required=True)
     d.add_argument("--config", type=Path, required=True)
     d.add_argument("--sealed", type=Path, required=True)
-    d.add_argument("--out", type=Path, required=True)
+    d.add_argument("--sheet-out", type=Path, required=True)
+    d.add_argument("--record-out", type=Path, required=True)
+    d.add_argument("--decisions", type=Path, required=True)
+    d.add_argument("--observations", type=Path, required=True)
+    d.add_argument("--decisions-v2", type=Path, required=True)
+    d.add_argument("--observations-v2", type=Path, required=True)
+    p = sub.add_parser("population")
+    p.add_argument("--text-root", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p.add_argument("--decisions", type=Path, required=True)
+    p.add_argument("--observations", type=Path, required=True)
+    p.add_argument("--decisions-v2", type=Path, required=True)
+    p.add_argument("--observations-v2", type=Path, required=True)
+    p.add_argument("cases", nargs="+")
+    e = sub.add_parser("export-csv")
+    e.add_argument("--sheet", type=Path, required=True)
+    e.add_argument("--out", type=Path, required=True)
+    i = sub.add_parser("import-csv")
+    i.add_argument("--csv", type=Path, required=True)
+    i.add_argument("--out", type=Path, required=True)
     s = sub.add_parser("score", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     s.add_argument("--graded", type=Path, required=True)
     s.add_argument("--key", type=Path, required=True)
@@ -599,17 +868,34 @@ def main(argv=None) -> int:
     s.add_argument("--replicates", type=int, default=2000, help="bootstrap replicates (default: 2000)")
     s.add_argument("--seed", type=int, default=0)
     args = ap.parse_args(argv)
-    for path in (getattr(args, "population", None), getattr(args, "config", None), args.sealed,
-                 getattr(args, "graded", None), getattr(args, "key", None), getattr(args, "draw", None),
-                 getattr(args, "out", None)):
+    for path in (getattr(args, "population", None), getattr(args, "config", None),
+                 getattr(args, "sealed", None), getattr(args, "graded", None),
+                 getattr(args, "key", None), getattr(args, "draw", None),
+                 getattr(args, "sheet", None), getattr(args, "csv", None),
+                 getattr(args, "out", None), getattr(args, "text_root", None)):
         if path is not None:
             refuse_store(path)
+    if args.cmd == "population":
+        print(write_population(args.cases, args.text_root, args.out, args.decisions, args.observations,
+                               args.decisions_v2, args.observations_v2))
+        return 0
+    if args.cmd == "export-csv":
+        sheet = json.loads(args.sheet.read_text(encoding="utf-8"))
+        print(export_grading_csv(sheet, args.out))
+        return 0
+    if args.cmd == "import-csv":
+        graded = import_graded_csv(args.csv)
+        args.out.write_text(json.dumps(graded, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        print(len(graded["units"]))
+        return 0
     sealed = json.loads(args.sealed.read_text(encoding="utf-8"))
     if args.cmd == "draw":
-        population = json.loads(args.population.read_text(encoding="utf-8"))
+        population = label_rows(
+            json.loads(args.population.read_text(encoding="utf-8")),
+            args.decisions, args.observations, args.decisions_v2, args.observations_v2)
         config = json.loads(args.config.read_text(encoding="utf-8"))
         sample = draw_sample(population, config, sealed=sealed)
-        print(json.dumps(write_draw(sample, args.out), indent=1))
+        print(json.dumps(write_draw(sample, args.sheet_out, args.record_out), indent=1))
     else:
         graded = json.loads(args.graded.read_text(encoding="utf-8"))
         key = json.loads(args.key.read_text(encoding="utf-8"))

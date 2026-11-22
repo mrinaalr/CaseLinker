@@ -766,6 +766,9 @@ def repair(bundle: dict, text_root: Path, deny: List[str]) -> Tuple[dict, List[s
                 if i < len(items):
                     (bad_events if m.group(1) == "events" else bad_rel).add(items[i]["event_id" if m.group(1) == "events" else "relation_id"])
         if not bad_events and not bad_rel:
+            if not bundle["events"]:
+                log.append("zero acts: nothing remains to repair")
+                return bundle, log
             raise SystemExit("unrepairable bundle: " + "; ".join(f"{f.code} {f.where}: {f.message}" for f in errs[:5]))
         for f in errs:
             log.append(f"dropped by {f.code} at {f.where}: {f.message[:120]}")
@@ -824,19 +827,6 @@ def drops_from_log(log: List[str]) -> Optional[dict]:
     return None
 
 
-def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str]:
-    """The caption defendant this span matched, as one participant label.
-
-    The span itself stays in the quote. One caption defendant is ``the defendant``.
-    Each person in a multi-defendant caption keeps that person's name.
-    """
-    from state_machines.coding.workflow import match_actor
-    found = match_actor((slot or {}).get("text") or "", records)
-    if found and found.get("canonical"):
-        return found["canonical"]
-    return None
-
-
 def refusal_row(case_id, coder_id, run_id, document_sha256, code, reason) -> dict:
     """One refusal. ``act`` is the code. ``behavior_category`` is its conduct group."""
     code = code or ""
@@ -889,14 +879,19 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
         from state_machines.coding.workflow import decide_actor
         found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic,
                                      scope=scope, other_surnames=other_surnames,
-                                     caption_reason=caption_reason, page_text=text)
+                                     caption_reason=caption_reason, page_text=text,
+                                     act_code=(grounded.get("act") or {}).get("code") or code)
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
             counts.setdefault("_refusals", []).append(
                 refusal_row(case_id, coder_id, run_id, document_sha256,
                             (grounded.get("act") or {}).get("code") or code, reason))
             continue
-        canonical = (found or {}).get("canonical") or _canonical_actor(text, slot, records)
+        canonical = (found or {}).get("canonical")
+        if not canonical:
+            from state_machines.coding.workflow import match_actor
+            matched = match_actor(slot.get("text") or "", records)
+            canonical = (matched or {}).get("canonical")
         if not canonical:
             counts["actor_rejected"] += 1
             counts.setdefault("_refusals", []).append(
@@ -958,7 +953,7 @@ def _write_refusals(text_root: Path, case_id: str, coder: str, rows: List[dict])
 
 
 def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] = None, deny: Optional[List[str]] = None,
-              progress=None, only_pages: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
+              progress=None, only_pages: Optional[set] = None, counts: Optional[dict] = None) -> Tuple[dict, Dict[str, str], List[str]]:
     """``only_pages``: model pages to read (others get no acts). With the selective second pass the
     second coder reads only pages where the first found acts: resolution publishes only acts both
     coded, so the release is unchanged; reliability is then measured on those pages."""
@@ -1010,7 +1005,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     item[5] = {"unparsed": True}
                     continue
                 doc_scope = (info.get("by_document") or {}).get(item[0]["doc_id"], {})
-                acts, counts = acts_from_model_frames(
+                acts, frame_counts = acts_from_model_frames(
                     item[2], ans.get("frames") or [], records,
                     generic=doc_scope.get("generic", generic), scope=doc_scope.get("record"),
                     other_surnames=info.get("other_surnames"),
@@ -1018,19 +1013,19 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     case_id=case_id, document_sha256=item[0].get("sha256"),
                     coder_id=coder, run_id=run_id)
                 item[3] = {"acts": acts}
-                item[5] = counts
-                add_drops(totals, counts)
-    for doc, page_no, full, ans, how, counts in answers:
+                item[5] = frame_counts
+                add_drops(totals, frame_counts)
+    for doc, page_no, full, ans, how, page_counts in answers:
         n_acts = len(ans.get("acts", []))
         line = f"page {doc['doc_id']} p{page_no}: {how}, {n_acts} acts"
-        if counts is not None:
-            if counts.get("unparsed"):
+        if page_counts is not None:
+            if page_counts.get("unparsed"):
                 why = "unparsable reply"
-            elif n_acts == 0 and not any(counts.get(key) for key in DROP_KEYS) and not counts.get("verify_failed"):
+            elif n_acts == 0 and not any(page_counts.get(key) for key in DROP_KEYS) and not page_counts.get("verify_failed"):
                 why = "model returned no frames"
             else:
-                why = (f"not_found={counts.get('not_found', 0)} actor_rejected={counts.get('actor_rejected', 0)} "
-                       f"ambiguous={counts.get('ambiguous', 0)} section_filtered={counts.get('section_filtered', 0)}")
+                why = (f"not_found={page_counts.get('not_found', 0)} actor_rejected={page_counts.get('actor_rejected', 0)} "
+                       f"ambiguous={page_counts.get('ambiguous', 0)} section_filtered={page_counts.get('section_filtered', 0)}")
             if n_acts == 0:
                 zero_pages += 1
                 line += f", zero frames: {why}"
@@ -1039,6 +1034,14 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         coverage.append(line)
         if progress:
             progress(doc["doc_id"], page_no, n_acts)
+    page_count = len(answers)
+    model_pages = 0
+    unparsable = 0
+    for _doc, _page_no, _full, ans, how, page_counts in answers:
+        if str(how).startswith("model"):
+            model_pages += 1
+            if (isinstance(ans, dict) and ans.get("unparsed")) or (isinstance(page_counts, dict) and page_counts.get("unparsed")):
+                unparsable += 1
     answers = [tuple(a[:4]) for a in answers]
     refusals = totals.pop("_refusals", []) if framing else []
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
@@ -1055,18 +1058,36 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         _write_refusals(text_root, case_id, coder, refusals)
         log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
         log.append("frame_drops " + json.dumps(totals, sort_keys=True))
-    # An empty bundle has no participant, so repair cannot make it validate. The zero-frame
-    # lines above say why. Repair still runs, and a stop is logged rather than returned before
-    # it is tried. With the flags unset, an empty model answer still raises as it did.
+    # An empty bundle has no participant, so it cannot pass validation. Repair still runs.
+    # A parsed case with nothing left is returned and recorded as having no acts. A page whose
+    # reply did not parse is not that case: it stops here. A bundle that still has events and
+    # cannot be repaired still stops.
+    def _done(done: dict, extra: List[str]):
+        if not done["events"] and unparsable:
+            raise SystemExit(f"{case_id}: {unparsable} model page(s) did not parse")
+        if counts is not None:
+            counts.clear()
+            counts.update({"pages": page_count, "model_pages": model_pages, "unparsable": unparsable})
+        return done, quotes, log + extra
+
     if not bundle["events"] and (framing or os.environ.get("CASELINKER_SECTION_FILTER") == "1"):
         try:
             bundle, rlog = repair(bundle, text_root, deny or [])
         except SystemExit as exc:
             log.append(f"repair stopped: {exc}")
-            return bundle, quotes, log
-        return bundle, quotes, log + rlog
+            return _done(bundle, [])
+        return _done(bundle, rlog)
     bundle, rlog = repair(bundle, text_root, deny or [])
-    return bundle, quotes, log + rlog
+    return _done(bundle, rlog)
+
+
+def store_bundle(directory: Path, case_id: str, bundle: dict, counts: Optional[dict] = None) -> None:
+    """Write the coder bundle. Page counts go in a side file, not in the bundle."""
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    if counts is not None:
+        (directory / f"{case_id}.counts.json").write_text(
+            json.dumps(counts, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def main(argv=None) -> int:
@@ -1081,10 +1102,10 @@ def main(argv=None) -> int:
         t = time.time()
         deny_path = args.text_root / case_id / "deny.json"
         deny = json.loads(deny_path.read_text()) if deny_path.is_file() else []
-        bundle, quotes, log = code_case(case_id, args.coder, args.text_root, cache, deny)
+        counts: dict = {}
+        bundle, quotes, log = code_case(case_id, args.coder, args.text_root, cache, deny, counts=counts)
         out = args.out / args.coder
-        out.mkdir(parents=True, exist_ok=True)
-        (out / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        store_bundle(out, case_id, bundle, counts)
         (out / f"{case_id}.log").write_text("\n".join(log) + "\n", encoding="utf-8")
         store = E.load_quotes(case_id, args.text_root)
         store.update(quotes)

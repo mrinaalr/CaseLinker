@@ -90,6 +90,12 @@ def _v2_release_guard() -> bool:
     return v2_active()
 
 
+def spacy_model_record() -> dict:
+    """The spaCy model a v2 release records. Tests replace this without loading the model."""
+    from state_machines.coding.workflow import spacy_model_record as recorded
+    return recorded()
+
+
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
           deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
           mode: str = "adjudicated", observations: bool = False, coders_root: Optional[Path] = None,
@@ -122,10 +128,14 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     for path in bundles:
         bundle = json.loads(path.read_text(encoding="utf-8"))
         case_id = bundle["case_id"]
-        problems = release_errors(bundle, text_root=text_root, deny_list=(deny_lists or {}).get(case_id, ()),
-                                  mode="preview" if allow_unreviewed else mode)
-        if problems:
-            raise SystemExit(f"{case_id}: not releasable:\n  " + "\n  ".join(problems[:20]))
+        if bundle.get("no_acts") is True or bundle.get("no_agreed_acts") is True:
+            if bundle.get("events"):
+                raise SystemExit(f"{case_id}: a record of no published acts cannot contain events")
+        else:
+            problems = release_errors(bundle, text_root=text_root, deny_list=(deny_lists or {}).get(case_id, ()),
+                                      mode="preview" if allow_unreviewed else mode)
+            if problems:
+                raise SystemExit(f"{case_id}: not releasable:\n  " + "\n  ".join(problems[:20]))
         for threshold in ("DIRECT", "INFERRED"):
             (root / "derived" / f"{case_id}.{threshold.lower()}.json").write_text(derived_json(bundle, threshold), encoding="utf-8")
         ev = serialize(evidence_graph(bundle))
@@ -179,6 +189,10 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "shacl": {"conformance": shacl["conformance"], "violations": len(shacl["violations"]),
                       "upstream_defect_violations": len(shacl["upstream_defect_violations"]),
                       "applicable_skipped": shacl["applicable_skipped"]},
+            **({"no_acts": True} if bundle.get("no_acts") is True else {}),
+            **({"no_agreed_acts": True} if bundle.get("no_agreed_acts") is True else {}),
+            **({"pages": bundle["pages"], "model_pages": bundle["model_pages"], "unparsable": bundle["unparsable"]}
+               if "pages" in bundle else {}),
         })
     from state_machines.graphs.shacl import EXTENSION
     manifest = {
@@ -199,7 +213,6 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     if recorded:
         manifest["party_snapshot"] = recorded["sha256"]
     if _v2_release_guard():
-        from state_machines.coding.workflow import spacy_model_record
         manifest["spacy_model"] = spacy_model_record()
     if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0" and frame_drops is not None:
         manifest["frame_drops"] = frame_drops
