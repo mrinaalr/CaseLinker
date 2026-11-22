@@ -230,6 +230,8 @@ _NAME_TOKEN = re.compile(r"^[A-Z][A-Za-z'\-]+\.?,?$|^[A-Z]\.,?$")
 
 _SUFFIXES = {"jr", "sr", "ii", "iii", "iv"}
 _GENERIC_ACTOR = re.compile(r"^(?:the\s+)?(?:defendant|accused)$", re.I)
+PRONOUN_WORDS = ("he", "him", "his", "she", "her", "they", "them", "their")
+_PRONOUN = re.compile(r"^(?:" + "|".join(PRONOUN_WORDS) + r")$", re.I)
 _NAMED_ACTOR = re.compile(r"^(?:the\s+)?defendants?\s+(.+)$", re.I)
 _POSSESSIVE_ACTOR = re.compile("\\b(?:defendant|accused)(?:'s|\u2019s)\\b", re.I)
 
@@ -415,8 +417,9 @@ def _citation_follows(text: str, start: int) -> bool:
     pre = text[max(0, start - 80):start]
     if _REPORTER.search(_CASE_NO.sub(" ", head)) or _CITATION_SIGNAL.search(pre):
         return True
+    head_end = start + len(head)
     for cite_start, cite_end in citation_spans(text):
-        if cite_start < start + len(window) and cite_end > start:
+        if cite_start < head_end and cite_end > start:
             return True
     return False
 
@@ -492,8 +495,9 @@ def _name_line(fragment: str) -> str:
             continue
         if piece in {"/", "\\"}:
             continue
-        if _DEFENDANT_LINE.search(piece) and not re.search(r"[A-Za-z]{3}", piece.replace("Defendant", "").replace("Defendants", "")):
-            break
+        closed = re.search(r"\bDefendants?\b", piece)
+        if closed:
+            piece = piece[:closed.start()]
         label = _DOCKET_LABEL.search(piece)
         if label:
             piece = piece[:label.start()]
@@ -501,7 +505,7 @@ def _name_line(fragment: str) -> str:
         piece = piece.strip(" ,;")
         if piece:
             lines.append(piece)
-        if _DEFENDANT_LINE.search(raw):
+        if closed:
             break
     return " ".join(lines)
 
@@ -987,7 +991,7 @@ def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optio
     whether that token is the clause subject. No parser means ``no_parser``.
     """
     token = _one_capital(text)
-    if token is None or token.lower() in {"defendant", "defendants", "accused", "he", "she", "they", "him", "her", "the", "a", "an"}:
+    if token is None or token.lower() in {"defendant", "defendants", "accused", "the", "a", "an"} or token.lower() in PRONOUN_WORDS:
         return None
     if token.lower() not in _known_surnames(records):
         return "surname_not_established"
@@ -1040,7 +1044,7 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
             reason = _bare_surname_reason(sentence, candidate, records)
             if reason:
                 return None, reason
-    if re.fullmatch(r"(?:he|him|she|her|they|them|their)", " ".join((actor_text or "").split()), re.I):
+    if _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
         return None, None
     found = match_actor(actor_text, records, generic=generic, other_surnames=other_surnames)
     if found and found.get("drop"):
@@ -1123,7 +1127,7 @@ def same_actor(left: str, right: str, records: List[dict], *, generic: Optional[
     if not left or not right:
         return False
     if " ".join(left.split()).lower() == " ".join(right.split()).lower():
-        if re.fullmatch(r"(?:he|him|she|her|they|them|their)", left.strip(), re.I):
+        if _PRONOUN.fullmatch(left.strip()):
             return True
         found = match_actor(left, records, generic=generic)
         return bool(found) and not found.get("ambiguous") and not found.get("drop")

@@ -788,7 +788,6 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
-_PRONOUN = re.compile(r"^(?:he|him|his|she|her|they|them|their)$", re.I)
 DROP_KEYS = ("not_found", "ambiguous", "section_filtered", "actor_rejected",
              "passive_subject", "no_defendant_record", "no_parser", "surname_not_established",
              "assemble_dropped", "duplicate_sentence", "unparsable_reply")
@@ -822,7 +821,7 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
     Each person in a multi-defendant caption keeps that person's name. A pronoun
     uses the same records, and only when coreference is on.
     """
-    from state_machines.coding.workflow import match_actor
+    from state_machines.coding.workflow import _PRONOUN, match_actor
     found = match_actor((slot or {}).get("text") or "", records)
     if found and found.get("canonical"):
         return found["canonical"]

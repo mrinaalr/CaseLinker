@@ -27,7 +27,7 @@ _PREPS = {"through", "via", "using", "with", "on", "over", "by"}
 _USE = {"utilize", "utilized", "utilizing", "use", "used", "uses", "using",
         "conceal", "concealed", "concealing", "send", "sent", "sending"}
 _OFFENDER_WORD = re.compile(r"^(?:defendants?|accused)$", re.I)
-_THEY = re.compile(r"^(?:he|him|they|them|their)$", re.I)
+from state_machines.coding.workflow import _PRONOUN as _THEY
 _BLOCKED = ("state_machines/data", "caselinker_oxigraph")
 
 

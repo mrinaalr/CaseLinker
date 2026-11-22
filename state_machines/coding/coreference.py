@@ -23,7 +23,9 @@ import os
 import re
 from typing import Callable, Iterable, List, Optional, Sequence
 
-_PRONOUN = re.compile(r"\b(they|them|their|he|him|his|she|her|me|my)\b|\b(I)\b", re.I)
+from state_machines.coding.workflow import PRONOUN_WORDS
+
+_PRONOUN = re.compile(r"\b(" + "|".join(PRONOUN_WORDS) + r"|me|my)\b|\b(I)\b", re.I)
 _AND = re.compile(r"\band\b", re.I)
 _ACCOUNT = re.compile(r"\b(?:that|this|the same|the)\s+(account|app|application)\b", re.I)
 _ANAPHOR = re.compile(
