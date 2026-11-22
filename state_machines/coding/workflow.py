@@ -89,18 +89,31 @@ def _ocr(page, dpi: int = 300) -> Tuple[str, Optional[float]]:
     return text, (round(sum(confs) / len(confs), 1) if confs else None)
 
 
-_COURT_NAME = re.compile(
-    r"((?:UNITED STATES )?DISTRICT COURT(?:\s+FOR THE\s+[A-Z][A-Z ]+)?)",
+_DISTRICT = re.compile(
+    r"((?:NORTHERN|SOUTHERN|EASTERN|WESTERN|MIDDLE|CENTRAL)\s+DISTRICT\s+OF\s+[A-Z][A-Z .]+"
+    r"|DISTRICT\s+OF\s+[A-Z][A-Z .]+)",
     re.I,
 )
-_CASE_NUMBER = re.compile(r"\b(?:Case|Criminal)\s+No\.?\s*(\d+:\d{2}-[A-Za-z]+-\d+)\b", re.I)
+_CASE_NUMBER = re.compile(
+    r"\b(?:Case|Criminal|Cr\.?)\s+No\.?\s*([0-9][\w:.-]*(?:\s*\([A-Za-z0-9]+\))?)",
+    re.I,
+)
+
+
+def _normalise_court(text: str) -> Optional[str]:
+    """The district name, with whitespace collapsed. Two districts do not share a key."""
+    found = _DISTRICT.search(re.sub(r"\s+", " ", text or ""))
+    if not found:
+        return None
+    name = re.split(r"\b(?:CASE|CRIMINAL|NO|JUDGMENT|PLAINTIFF)\b", found.group(1), maxsplit=1, flags=re.I)[0]
+    return " ".join(name.split()).upper().rstrip(".")
 
 
 def court_and_docket(text: str) -> Tuple[Optional[str], Optional[str]]:
-    """Court name and case number printed on a filing, when the page states them."""
-    court = _COURT_NAME.search(text or "")
+    """District key and case number printed on a filing, when the page states them."""
+    court = _normalise_court(text or "")
     number = _CASE_NUMBER.search(text or "")
-    return (court.group(1).strip() if court else None, number.group(1) if number else None)
+    return court, (number.group(1).strip() if number else None)
 
 
 def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
@@ -158,14 +171,14 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
                    "page_count": len(pages), "pages": pages}
         doc["source_path"] = f"{pdf.parent.name}/pacer -- {case_id} -- {doc['doc_id'].replace('_', ' ')}.pdf"
         files[doc["doc_id"]] = str(pdf.relative_to(source_root()))
-        if court:
-            doc["court"] = court
-        if docket:
-            doc["docket_number"] = docket
         docs.append(doc)                      # in file-name order, as collected: a rerun lists a case's documents as before
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "files.json").write_text(json.dumps(files, indent=1, sort_keys=True) + "\n", encoding="utf-8")   # names on disk: local only
-    return {"case_id": case_id, "court": court, "docket_number": docket, "documents": docs}
+    if court or docket:
+        (folder / "case_key.json").write_text(
+            json.dumps({"court": court, "docket_number": docket}, indent=1, sort_keys=True) + "\n",
+            encoding="utf-8")
+    return {"case_id": case_id, "documents": docs}
 
 
 def local_file(case_id: str, doc_id: str, text_root: Optional[Path] = None) -> Optional[Path]:
@@ -337,7 +350,6 @@ _REPORTER = re.compile(
     r"\d+\s+U\.?\s*S\.|\b\d+\s*WL\b|\bWL\s+\d+|\bsupra\b|\bid\.|\bNo\.\s*\d",
     re.I,
 )
-_CASE_NO = re.compile(r"\bCase\s+No\.\s*\d[\w:-]*", re.I)
 _CITATION_SIGNAL = re.compile(
     r"\b(?:as\s+held\s+in|see|cf\.|accord|id\.)\s+(?:united\s+states|u\.s\.)\s+v\.?\s*$",
     re.I,
@@ -399,6 +411,8 @@ def eyecite_version() -> Optional[str]:
 def citation_spans(text: str) -> List[Tuple[int, int]]:
     """Character spans eyecite calls a citation. Empty when eyecite is not installed."""
     if eyecite_version() is None:
+        if v2_active():
+            raise SystemExit("v2 coding needs eyecite, which is not installed")
         return []
     from eyecite import get_citations
     spans = []
@@ -718,6 +732,9 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
     root = E.text_root(text_root) / case_id
     listed = root / "sources.json"
     meta = json.loads(listed.read_text(encoding="utf-8")) if listed.is_file() else {}
+    key_path = root / "case_key.json"
+    if key_path.is_file():
+        meta = {**meta, **json.loads(key_path.read_text(encoding="utf-8"))}
     if listed.is_file():
         documents = meta.get("documents") or []
     else:
@@ -782,9 +799,13 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
                 by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
             else:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
-    from state_machines.coding.parties import defendants_for, other_surnames
+    from state_machines.coding.parties import defendants_for, has_entry, other_surnames
     court = str(meta.get("court") or "")
     docket = str(meta.get("docket_number") or "")
+    if court and docket and has_entry(court, docket) is False:
+        return {"records": [], "generic": "no_defendant_record", "et_al": False, "conflict": False,
+                "by_document": {}, "caption_snapshot_disagreement": False, "other_surnames": [],
+                "reason": "other_caption"}
     snapshot = defendants_for(court, docket)
     others = other_surnames(court, docket)
     disagreement = False
@@ -820,24 +841,6 @@ def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -
     return case_defendants(case_id, text_root)["records"]
 
 
-_LEAD_PIECE = re.compile(
-    r"^(?:"
-    r"on\s+or\s+about\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
-    r"|between\s+\w+\s+\d{1,2}\s+and\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
-    r"|between\s+\w+\s+and\s+\w+(?:\s+\w+)?\s+\d{4}\s*,\s*"
-    r"|in\s+or\s+(?:around|about)\s+\d{4}\s*,\s*"
-    r"|at\s+\d{1,2}:\d{2}\s*[ap]\.?m\.?\s*,\s*"
-    r"|(?:on|in|during|after|before)\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
-    r"|(?:on|in|during|after|before)\s+[^,]{0,60},\s*"
-    r"|(?:then|later|however|thereafter)\s*,\s*"
-    r")",
-    re.I,
-)
-_SUBJECT = re.compile(
-    r"((?:[Tt]he\s+)?[Dd]efendant(?:s)?(?:\s+[A-Z][\w'.-]+){0,3}"
-    r"|(?:[Tt]he\s+)?[Aa]ccused(?:\s+[A-Z][\w'.-]+){0,3}"
-    r"|[A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})"
-)
 _ANY_POSSESSIVE = re.compile(r"\b[\w.\-]+(?:'s|\u2019s)\b")
 _PASSIVE = re.compile(
     r"\b(?:was|were|been|be)\s+(?:sent|used|distributed|uploaded|received|stored|transmitted|"
@@ -845,14 +848,6 @@ _PASSIVE = re.compile(
     r"possessed|\w+ed)\b",
     re.I,
 )
-
-
-def _strip_lead(text: str) -> str:
-    while True:
-        match = _LEAD_PIECE.match(text)
-        if not match:
-            return text
-        text = text[match.end():]
 
 
 def _require_actor_nlp():
@@ -1328,9 +1323,9 @@ def build_deny(case_id: str, text_root: Optional[Path] = None) -> List[str]:
         names |= _base_deny_tokens(text)
     if v2_active():
         for record in defendant_records_for_case(case_id, text_root):
-            names |= set(record["full"].lower().split())
+            names |= {word.strip(".,") for word in record["full"].lower().replace(",", " ").split() if word.strip(".,")}
             for alias in record.get("aliases", []):
-                names |= set(alias.lower().split())
+                names |= {word.strip(".,") for word in alias.lower().replace(",", " ").split() if word.strip(".,")}
     terms = sorted(names)
     (root / "deny.json").write_text(json.dumps(terms, indent=1) + "\n", encoding="utf-8")
     return terms

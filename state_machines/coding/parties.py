@@ -103,8 +103,14 @@ def load(path: Optional[str] = None) -> Optional[dict]:
             if str(party.get("role") or "").lower() != "defendant":
                 other_names.add(surname.lower())
                 continue
+            aliases, alias_surnames = [], []
+            for alias in party.get("aliases") or []:
+                alias_full, alias_surname = party_name(str(alias))
+                if alias_full:
+                    aliases.append(alias_full)
+                    alias_surnames.append(alias_surname)
             people.append({
-                "full": full, "surname": surname, "aliases": [], "alias_surnames": [],
+                "full": full, "surname": surname, "aliases": aliases, "alias_surnames": alias_surnames,
                 "key": str(party["party_id"]), "party_id": str(party["party_id"]),
             })
         index[(court, docket)] = people
@@ -119,6 +125,14 @@ def snapshot_record() -> Optional[dict]:
     if not loaded:
         return None
     return {"sha256": loaded["sha256"]}
+
+
+def has_entry(court: str, docket_number: str) -> Optional[bool]:
+    """True or False when a snapshot is configured, else None."""
+    loaded = load()
+    if not loaded:
+        return None
+    return (court or "", docket_number or "") in loaded["index"]
 
 
 def defendants_for(court: str, docket_number: str) -> Optional[list]:

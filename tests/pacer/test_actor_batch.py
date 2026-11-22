@@ -213,11 +213,17 @@ def test_extract_records_court_case_number_and_document_hash(tmp_path, monkeypat
     monkeypatch.setenv("CASELINKER_PACER_SOURCE", str(tmp_path / "src"))
     monkeypatch.setenv("CASELINKER_PACER_TEXT", str(tmp_path / "text"))
     manifest = extract("sample_2024_001")
-    assert manifest["court"] == "UNITED STATES DISTRICT COURT FOR THE DISTRICT OF COLUMBIA"
-    assert manifest["docket_number"] == "1:24-cr-4"
+    assert "court" not in manifest and "docket_number" not in manifest["documents"][0]
     assert manifest["documents"][0]["sha256"]
-    assert manifest["documents"][0]["court"] == manifest["court"]
-    assert manifest["documents"][0]["docket_number"] == "1:24-cr-4"
+    key = json.loads((tmp_path / "text" / "sample_2024_001" / "case_key.json").read_text(encoding="utf-8"))
+    assert key["court"] == "DISTRICT OF COLUMBIA"
+    assert key["docket_number"].startswith("1:24-cr-4")
+    from state_machines.coding.workflow import court_and_docket
+    maryland = court_and_docket("UNITED STATES DISTRICT COURT FOR THE DISTRICT OF MARYLAND")[0]
+    new_york = court_and_docket("UNITED STATES DISTRICT COURT FOR THE SOUTHERN DISTRICT OF NEW YORK")[0]
+    assert maryland == "DISTRICT OF MARYLAND"
+    assert new_york == "SOUTHERN DISTRICT OF NEW YORK"
+    assert maryland != new_york
 
 
 def test_a_snapshot_without_its_hash_or_file_is_an_error(tmp_path, monkeypatch):
