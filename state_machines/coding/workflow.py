@@ -803,6 +803,25 @@ def _surname_is_subject(sentence: str, surname: str) -> Optional[bool]:
     return any(token.text.lower() == target and token.dep_ in _SUBJECT_DEPS for token in doc)
 
 
+_OTHER_ROLE = {"sister", "brother", "mother", "father", "parent", "victim", "friend", "wife", "husband", "daughter", "son"}
+
+
+def _distinguished_from_defendant(sentence: str, records: List[dict]) -> bool:
+    """True when the surname is an appositive relative or is not the defendant."""
+    nlp = _actor_nlp()
+    if nlp is None:
+        return False
+    doc = nlp(sentence or "")
+    surnames = _known_surnames(records)
+    for token in doc:
+        if token.dep_ == "appos" and token.text.lower() in _OTHER_ROLE and token.head.text.lower() in surnames:
+            return True
+    reflexive = any(token.text.lower() in {"herself", "himself"} for token in doc)
+    defendant_is_other = any(token.text.lower() == "defendant" and token.dep_ in {"dative", "dobj", "pobj"} for token in doc)
+    surname_is_subject = any(token.text.lower() in surnames and token.dep_ == "nsubj" for token in doc)
+    return bool(reflexive and defendant_is_other and surname_is_subject)
+
+
 def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optional[str]:
     """Why a bare surname may not be the actor, or None when this phrase is not one.
 
@@ -853,6 +872,8 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
             return {"canonical": canonical, "record": scope, "generic": True}, None
         if generic != "one":
             return None, "ambiguous"
+    if _distinguished_from_defendant(sentence, records):
+        return None, "actor_rejected"
     if not agent_is_actor:
         for candidate in (actor_text, subject):
             reason = _bare_surname_reason(sentence, candidate, records)
