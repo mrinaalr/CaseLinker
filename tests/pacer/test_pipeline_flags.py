@@ -113,7 +113,7 @@ def test_e026_on_is_a_means_cue_only_when_the_recall_rule_is_on(tmp_path, monkey
     assert tied[0]["relations"][0]["relationship"] == "Supports_Action"
 
 
-def test_e149_virtual_private_networks_are_tied_to_the_act(tmp_path, monkeypatch):
+def test_virtual_private_networks_are_tied_to_the_act_when_the_means_rule_is_on(tmp_path, monkeypatch):
     text = "The defendant utilized virtual private networks to hide the address."
     _clear(monkeypatch)
     _store(tmp_path / "off", "e149", text)
@@ -172,7 +172,8 @@ def _coded(tmp, case, text, monkeypatch, **env):
         monkeypatch.setenv(key, value)
     _stub_model(monkeypatch, text)
     _store(tmp, case, text)
-    bundle, _quotes, _log = C.code_case(case, "coder_A", tmp, deny=[])
+    from state_machines.coding.workflow import build_deny
+    bundle, _quotes, _log = C.code_case(case, "coder_A", tmp, deny=build_deny(case, tmp))
     return bundle
 
 
@@ -287,7 +288,8 @@ def test_a_victim_frame_is_not_an_offender_act(tmp_path, monkeypatch):
     frame = _plain_frame(text, "DISTRIBUTE_MATERIAL", "Minor Victim 1")
     monkeypatch.setattr(C, "ask", lambda spec, prompt, cache, frame=frame: {"frames": [frame]})
     _store(tmp_path, "victim", text)
-    bundle, _, _ = C.code_case("victim", "coder_A", tmp_path, deny=[])
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _ = C.code_case("victim", "coder_A", tmp_path, deny=build_deny("victim", tmp_path))
     assert bundle["events"] == []
     assert all(e["actor"]["role"] != "offender" for e in bundle["events"])
 
@@ -423,10 +425,11 @@ def test_section_filter_drops_only_the_blocked_sentence(tmp_path, monkeypatch):
         {"start": "The defendant sent the files", "action": "DISTRIBUTE_MATERIAL", "actor": "the defendant"},
     ]})
     _store(tmp_path / "off", "mixed", text)
-    off, _, _ = C.code_case("mixed", "coder_A", tmp_path / "off", deny=[])
+    from state_machines.coding.workflow import build_deny
+    off, _, _ = C.code_case("mixed", "coder_A", tmp_path / "off", deny=build_deny("mixed", tmp_path / "off"))
     monkeypatch.setenv("CASELINKER_SECTION_FILTER", "1")
     _store(tmp_path / "on", "mixed", text)
-    on, _, log = C.code_case("mixed", "coder_A", tmp_path / "on", deny=[])
+    on, _, log = C.code_case("mixed", "coder_A", tmp_path / "on", deny=build_deny("mixed", tmp_path / "on"))
     assert {e["action"] for e in off["events"]} == {"STORE_MATERIAL", "DISTRIBUTE_MATERIAL"}
     assert [e["action"] for e in on["events"]] == ["DISTRIBUTE_MATERIAL"]
     assert any("section filter" in line and "affiant_background" in line for line in log)
@@ -454,26 +457,26 @@ def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
     _ask_frames(monkeypatch, [_plain_frame(body, "STORE_MATERIAL", "Smith")])
     _store(tmp_path / "smith", "named", text)
     assert build_deny("named", tmp_path / "smith") == ["michael", "smith"]
-    bundle, _, log = C.code_case("named", "coder_A", tmp_path / "smith", deny=[])
+    bundle, _, log = C.code_case("named", "coder_A", tmp_path / "smith", deny=build_deny("named", tmp_path / "smith"))
     if _parser_up():
         assert [e["action"] for e in bundle["events"]] == ["STORE_MATERIAL"]
         assert len(bundle["participants"]) == 1
     else:
-        assert bundle["events"] == []
-        assert C.drops_from_log(log)["no_parser"] >= 1
+        with pytest.raises(SystemExit, match="spaCy"):
+            C.code_case("named", "coder_A", tmp_path / "smith", deny=build_deny("named", tmp_path / "smith"))
     full = "Defendant Michael Smith uploaded the files using an encrypted app."
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, [_plain_frame(full, "STORE_MATERIAL", "Defendant Michael Smith")])
     _store(tmp_path / "full", "full", _caption(full))
-    published, _, _log = C.code_case("full", "coder_A", tmp_path / "full", deny=[])
+    published, _, _log = C.code_case("full", "coder_A", tmp_path / "full", deny=build_deny("full", tmp_path / "full"))
     assert published["events"] and len(published["participants"]) == 1
     given = "Michael uploaded the files using an encrypted app."
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, [_plain_frame(given, "STORE_MATERIAL", "Michael")])
     _store(tmp_path / "given", "given", _caption(given))
-    rejected, _, log = C.code_case("given", "coder_A", tmp_path / "given", deny=[])
+    rejected, _, log = C.code_case("given", "coder_A", tmp_path / "given", deny=build_deny("given", tmp_path / "given"))
     assert rejected["events"] == []
     assert C.drops_from_log(log)["surname_not_established"] >= 1
     mother = "The defendant's mother sent the files to other users via an encrypted channel."
@@ -481,7 +484,7 @@ def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, [_plain_frame(mother, "DISTRIBUTE_MATERIAL", "The defendant's mother")])
     _store(tmp_path / "mother", "mother", _caption(mother))
-    bundle, _, log = C.code_case("mother", "coder_A", tmp_path / "mother", deny=[])
+    bundle, _, log = C.code_case("mother", "coder_A", tmp_path / "mother", deny=build_deny("mother", tmp_path / "mother"))
     assert bundle["events"] == []
     assert any("actor_rejected=1" in line for line in log)
 
@@ -497,16 +500,17 @@ def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch
         _plain_frame("Defendant SMITH received the files from the sender via an encrypted channel.",
                      "ACQUIRE_MATERIAL", "Defendant SMITH"),
     ]
+    from state_machines.coding.workflow import build_deny
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, frames)
     _store(tmp_path / "one", "one", text)
-    bundle, _, log = C.code_case("one", "coder_A", tmp_path / "one", deny=[])
+    bundle, _, log = C.code_case("one", "coder_A", tmp_path / "one", deny=build_deny("one", tmp_path / "one"))
     if _parser_up():
         assert len(bundle["events"]) == 3
     else:
-        assert [e["action"] for e in bundle["events"]] == ["STORE_MATERIAL", "ACQUIRE_MATERIAL"]
-        assert C.drops_from_log(log)["no_parser"] >= 1
+        with pytest.raises(SystemExit, match="spaCy"):
+            C.code_case("one", "coder_A", tmp_path / "one", deny=build_deny("one", tmp_path / "one"))
     assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 1
     pair = _caption(
         "Smith uploaded the files using an encrypted app. "
@@ -520,13 +524,13 @@ def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, frames)
     _store(tmp_path / "two", "two", pair)
-    bundle, _, log = C.code_case("two", "coder_A", tmp_path / "two", deny=[])
+    bundle, _, log = C.code_case("two", "coder_A", tmp_path / "two", deny=build_deny("two", tmp_path / "two"))
     if _parser_up():
         assert len(bundle["events"]) == 2
         assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 2
     else:
-        assert bundle["events"] == []
-        assert C.drops_from_log(log)["no_parser"] >= 1
+        with pytest.raises(SystemExit, match="spaCy"):
+            C.code_case("two", "coder_A", tmp_path / "two", deny=build_deny("two", tmp_path / "two"))
 
 
 def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monkeypatch):
@@ -538,11 +542,12 @@ def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monk
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, [frame])
     _store(tmp_path / "off", "pronoun", text)
-    off, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "off", deny=[])
+    from state_machines.coding.workflow import build_deny
+    off, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "off", deny=build_deny("pronoun", tmp_path / "off"))
     assert off["events"] == []
     monkeypatch.setenv("CASELINKER_COREFERENCE", "1")
     _store(tmp_path / "on", "pronoun", text)
-    on, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "on", deny=[])
+    on, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "on", deny=build_deny("pronoun", tmp_path / "on"))
     assert [e["action"] for e in on["events"]] == ["DISTRIBUTE_MATERIAL"]
     assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in on["participants"]) == 1
     relate = "United States v. Michael Smith. Smith created an account and they sent files via an encrypted channel."
@@ -785,7 +790,8 @@ def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):
     monkeypatch.setenv("CASELINKER_SECTION_FILTER", "1")
     _ask_frames(monkeypatch, [_plain_frame(quote, "DISTRIBUTE_MATERIAL", "the defendant")])
     _store(tmp_path / "sec", "sec", text)
-    bundle, _, log = C.code_case("sec", "coder_A", tmp_path / "sec", deny=[])
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("sec", "coder_A", tmp_path / "sec", deny=build_deny("sec", tmp_path / "sec"))
     assert bundle["events"] == []
     drops = C.drops_from_log(log)
     assert drops["ambiguous"] >= 1
@@ -798,7 +804,7 @@ def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):
     _ask_frames(monkeypatch, [_plain_frame("sent the files to other users via an encrypted channel",
                                            "DISTRIBUTE_MATERIAL", "Smith")])
     _store(tmp_path / "who", "who", pair)
-    bundle, _, log = C.code_case("who", "coder_A", tmp_path / "who", deny=[])
+    bundle, _, log = C.code_case("who", "coder_A", tmp_path / "who", deny=build_deny("who", tmp_path / "who"))
     assert bundle["events"] == []
     assert C.drops_from_log(log)["ambiguous"] >= 1
 

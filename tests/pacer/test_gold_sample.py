@@ -290,6 +290,14 @@ def test_the_same_docket_is_one_case_and_a_repeated_document_is_dropped():
     assert {row["case_id"] for row in merged} == {"one"}
 
 
+def test_bootstrap_cli_default_is_two_thousand(capsys):
+    from state_machines.observations.gold_sample import main
+    with pytest.raises(SystemExit) as caught:
+        main(["score", "--help"])
+    assert caught.value.code == 0
+    assert "2000" in (capsys.readouterr().out + capsys.readouterr().err)
+
+
 def test_bootstrap_default_is_two_thousand():
     import inspect
     from state_machines.observations.gold_sample import score, score_drawn

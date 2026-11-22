@@ -334,6 +334,10 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         case = name.replace("-", "_")
         _store(tmp_path, case, page)
         from state_machines.coding.workflow import build_deny
+        if not _parser_up():
+            with pytest.raises(SystemExit, match="spaCy"):
+                C.code_case(case, "coder_A", tmp_path, deny=build_deny(case, tmp_path))
+            return
         bundle, _, log = C.code_case(case, "coder_A", tmp_path, deny=build_deny(case, tmp_path))
         want = _expect(expected)
         if want == "DISTRIBUTE_MATERIAL":
