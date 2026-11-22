@@ -263,6 +263,21 @@ def test_cluster_bootstrap_keeps_a_case_whole_and_is_wider_than_rows():
             assert copies >= 1 and ids == full[case] * copies
 
 
+def test_a_duplicate_document_drops_every_sentence_and_the_original_keeps_its_own():
+    from state_machines.observations.gold_sample import merge_dockets
+    rows = [
+        {"unit_id": "a1", "case_id": "one", "doc_id": "plea", "document_sha256": "aa",
+         "court": "dcd", "docket_number": "1:24-cr-1"},
+        {"unit_id": "a2", "case_id": "one", "doc_id": "plea", "document_sha256": "aa",
+         "court": "dcd", "docket_number": "1:24-cr-1"},
+        {"unit_id": "b1", "case_id": "two", "doc_id": "copy", "document_sha256": "aa",
+         "court": "dcd", "docket_number": "1:24-cr-1"},
+    ]
+    merged = merge_dockets(rows)
+    assert [row["unit_id"] for row in merged] == ["a1", "a2"]
+    assert {row["case_id"] for row in merged} == {"one"}
+
+
 def test_the_same_docket_is_one_case_and_a_repeated_document_is_dropped():
     from state_machines.observations.gold_sample import merge_dockets
     rows = [

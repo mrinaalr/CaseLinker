@@ -51,21 +51,38 @@ def _weight(row: dict) -> float:
     return row["stratum_population"] / row["stratum_drawn"]
 
 
-def merge_dockets(rows: Sequence[dict]) -> list:
-    """One case per court and case number. A repeated document hash is dropped.
+def _document_key(row: dict):
+    """One filing. Sentences of that filing share the key. A later filing with
+    the same bytes is a different key and is the duplicate."""
+    digest = row.get("document_sha256")
+    identity = row.get("doc_id") or row.get("document_id")
+    if digest and identity:
+        return ("doc", identity, digest)
+    if digest:
+        return ("case", row.get("case_id"), digest)
+    return ("unit", row.get("unit_id"))
 
-    Rows without a court and case number stay on their own case id. The merged
-    id is the first case id in the group, so a sealed frame id is unchanged
-    when that case is the first copy.
+
+def merge_dockets(rows: Sequence[dict]) -> list:
+    """One case per court and case number. A repeated document is dropped whole.
+
+    Every sentence of the first copy is kept. A later document with the same
+    sha256 is dropped, sentences and all. Rows without a court and case number
+    stay on their own case id. The merged id is the first case id in the group,
+    so a sealed frame id is unchanged when that case is the first copy.
     """
-    seen_documents = set()
+    seen_digest = {}
+    dropped = set()
     kept = []
     for row in rows:
+        key = _document_key(row)
         digest = row.get("document_sha256")
         if digest:
-            if digest in seen_documents:
-                continue
-            seen_documents.add(digest)
+            owner = seen_digest.setdefault(digest, key)
+            if owner != key:
+                dropped.add(key)
+        if key in dropped:
+            continue
         kept.append(row)
     canonical = {}
     merged = []
