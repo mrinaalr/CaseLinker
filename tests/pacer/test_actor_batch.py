@@ -71,6 +71,41 @@ def test_each_refusal_reason_is_counted(tmp_path, monkeypatch, sentence, actor, 
     assert reason in _reasons(tmp_path, "why")
 
 
+def test_caption_layouts_and_labels(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import case_defendants, defendant_records_in
+    assert [r["surname"] for r in defendant_records_in(
+        "UNITED STATES v.\nMICHAEL SMITH,\nROBERT BROWN,\nDefendants.")] == ["SMITH", "BROWN"]
+    assert [r["surname"] for r in defendant_records_in(
+        "UNITED STATES v.\nMICHAEL SMITH,\n\nROBERT BROWN,\nDefendants.")] == ["SMITH", "BROWN"]
+    kite = defendant_records_in('UNITED STATES v.\n(1) SMITH, a/k/a "Kite"\n(2) PORTER\nDefendants.')
+    assert [r["surname"] for r in kite] == ["SMITH", "PORTER"]
+    assert kite[0]["aliases"] == ["Kite"]
+    assert [r["surname"] for r in defendant_records_in(
+        "UNITED STATES v.\n1. SMITH\n2. PORTER\nDefendants.")] == ["SMITH", "PORTER"]
+    assert "Assigned" not in [r["full"] for r in defendant_records_in(
+        "UNITED STATES v. Quill Assigned to Magistrate")]
+    assert [r["full"] for r in defendant_records_in("UNITED STATES v. ALAN QUILL USM Number")] == ["ALAN QUILL"]
+    assert [r["full"] for r in defendant_records_in(
+        "UNITED STATES v. MICHAEL SMITH CASE Number: 1:24-cr-1")] == ["MICHAEL SMITH"]
+    assert [r["surname"] for r in defendant_records_in(
+        "UNITED STATES v. MICHAEL SMITH\nCriminal No. 24-123 (ABC)\nDefendant.")] == ["SMITH"]
+    assert [r["surname"] for r in defendant_records_in(
+        "UNITED STATES v. MICHAEL SMITH\n18 U.S.C. 2252\nDefendant.")] == ["SMITH"]
+    assert defendant_records_in("See United States v. Booker, 123 Fed. Appx. 456.") == []
+    _store_docs(tmp_path, "cover", [("indictment", "indictment", [
+        "COVER SHEET",
+        "UNITED STATES v. MICHAEL SMITH and ROBERT BROWN, Defendants.",
+    ])])
+    assert [r["surname"] for r in case_defendants("cover", tmp_path)["records"]] == ["SMITH", "BROWN"]
+    sentence = "The defendant sent the files."
+    events, _log = code_events(tmp_path, monkeypatch, "memo", [
+        ("complaint", "complaint", ["United States v. Michael Smith, Defendant."]),
+        ("memo", "memorandum", [f"United States v. Robert Porter, Defendant. {sentence}"]),
+    ], sentence, means="")
+    assert events == []
+    assert "caption_mismatch" in _reasons(tmp_path, "memo")
+
+
 def test_multi_defendant_and_shared_surname_are_counted(tmp_path, monkeypatch):
     generic = "The defendant sent the files."
     events, _log = code_events(

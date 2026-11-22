@@ -299,7 +299,8 @@ def _caption_tokens(raw: str) -> List[str]:
         word = token.strip(".,'-/").lower()
         if word in _SUFFIXES:
             break
-        if word in {"defendant", "defendants", "plaintiff", "date", "filed", "judgment", "judgement"}:
+        if word in {"defendant", "defendants", "plaintiff", "date", "filed", "judgment", "judgement",
+                    "assigned", "magistrate", "usm", "number", "case", "criminal", "no"}:
             break
         if re.fullmatch(r"[a-z]", word):
             continue
@@ -413,9 +414,13 @@ def citation_spans(text: str) -> List[Tuple[int, int]]:
 def _citation_follows(text: str, start: int) -> bool:
     """True when the text just after a 'v.' is a citation, not a caption of defendants."""
     window = text[start:start + 220]
-    head = re.split(r"(?<=[A-Za-z]{3})\.\s+", window, maxsplit=1)[0]
+    cut = re.search(r"(?<=[A-Za-z]{3})\.\s+", window)
+    abbrev = window[cut.start() - 3:cut.start()] if cut else ""
+    head = window[:cut.start()] if cut and abbrev not in {"Fed", "App", "Supp"} else window
+    head = re.sub(r"\b(?:Criminal|Cr\.?|Case)\s+No\.\s*\S+", " ", head, flags=re.I)
+    head = re.sub(r"\d+\s+U\.S\.C\.\s*\S*", " ", head, flags=re.I)
     pre = text[max(0, start - 80):start]
-    if _REPORTER.search(_CASE_NO.sub(" ", head)) or _CITATION_SIGNAL.search(pre):
+    if _REPORTER.search(head) or _CITATION_SIGNAL.search(pre):
         return True
     head_end = start + len(head)
     for cite_start, cite_end in citation_spans(text):
@@ -490,8 +495,6 @@ def _name_line(fragment: str) -> str:
     for raw in (fragment or "").splitlines() or [fragment or ""]:
         piece = raw.strip()
         if not piece:
-            if lines:
-                break
             continue
         if piece in {"/", "\\"}:
             continue
@@ -502,7 +505,7 @@ def _name_line(fragment: str) -> str:
         if label:
             piece = piece[:label.start()]
         piece = re.split(r"(?<=[A-Za-z]{2})\.\s+", piece, maxsplit=1)[0]
-        piece = piece.strip(" ,;")
+        piece = piece.strip(" ;")
         if piece:
             lines.append(piece)
         if closed:
@@ -596,15 +599,27 @@ def _keep_record(record: dict, seen: set) -> bool:
     return True
 
 
+_NUMBERED_LINE = re.compile(r"(?m)^\s*(?:\(\d+\)|\d+\.)\s+(.+?)\s*$")
+
+
 def _numbered_people(block: str) -> List[dict]:
-    """Defendants written as ``(1) NAME`` under a column caption."""
+    """Defendants written as ``(1) NAME``, ``1. NAME`` or ``NAME (1)``."""
     people = []
-    for match in _NUMBERED_DEFENDANT.finditer(block or ""):
-        person = _one_person(match.group(1).strip(" ,.)"))
-        if person and not _COMPANY.search(person["full"]):
-            person.setdefault("aliases", [])
-            person.setdefault("alias_surnames", [])
-            people.append(person)
+    seen_lines = _NUMBERED_LINE.findall(block or "") or [match.group(1) for match in _NUMBERED_DEFENDANT.finditer(block or "")]
+    for line in seen_lines:
+        found, refused = _people_in_caption(line)
+        if refused:
+            continue
+        for person in found:
+            if person and not _COMPANY.search(person["full"]):
+                people.append(person)
+    if not people:
+        for match in re.finditer(r"\b([A-Z][A-Z'\-]+(?:\s+[A-Z][A-Z'\-]+){0,3})\s+\(\d+\)", block or ""):
+            person = _one_person(match.group(1))
+            if person:
+                person.setdefault("aliases", [])
+                person.setdefault("alias_surnames", [])
+                people.append(person)
     return people
 
 
@@ -723,8 +738,9 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
     # One charging document must not replace another, or a plea that names
     # someone else. The case set is their union. Other documents fill in only
     # when no charging or plea caption exists.
-    primary = [item for item in found if item["doc_type"] in _CHARGING_DOCS | _PLEA_DOCS]
-    chosen = primary or found
+    charging = [item for item in found if item["doc_type"] in _CHARGING_DOCS]
+    pleas = [item for item in found if item["doc_type"] in _PLEA_DOCS]
+    chosen = charging or pleas or found
     if not chosen:
         records = []
         generic = "no_defendant_record"
@@ -746,13 +762,21 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         by_document = {}
         for item in found:
             own = item["records"]
-            match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
-            if match is not None and not item["et_al"]:
-                by_document[item["doc_id"]] = {"generic": "one", "record": match}
+            matches = [party for party in records if len(own) == 1 and _same_party(own[0], party)]
+            if len(matches) > 1 or item["et_al"]:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "ambiguous_surname"}
+            elif item["doc_type"] in _PLEA_DOCS and own and not matches:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "other_caption"}
+            elif item["doc_type"] in {"memorandum", "order", "opinion", "brief"} and own and not matches:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "caption_mismatch"}
+            elif len(own) > 1:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
+            elif len(matches) == 1:
+                by_document[item["doc_id"]] = {"generic": "one", "record": matches[0]}
             elif generic == "one":
                 by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
             else:
-                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
     from state_machines.coding.parties import defendants_for, other_surnames
     court = str(meta.get("court") or "")
     docket = str(meta.get("docket_number") or "")

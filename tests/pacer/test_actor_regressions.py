@@ -418,11 +418,11 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     ])
     from state_machines.coding.workflow import build_deny, case_defendants
     info = case_defendants("split", tmp_path)
-    assert [record["surname"] for record in info["records"]] == ["Smith", "Porter"]
+    assert [record["surname"] for record in info["records"]] == ["Smith"]
     bundle, _, log = C.code_case("split", "coder_A", tmp_path, deny=build_deny("split", tmp_path))
-    assert info["by_document"]["plea"]["record"]["surname"] == "Porter"
-    assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
-    assert C.drops_from_log(log)["ambiguous"] == 0
+    assert info["by_document"]["plea"]["reason"] == "other_caption"
+    assert bundle["events"] == []
+    assert "other_caption" in {row["reason"] for row in json.loads("[" + ",".join((tmp_path / "split" / "v2_refusals.jsonl").read_text().splitlines()) + "]")}
 
 
 def test_a_pronoun_in_a_two_defendant_case_is_refused(tmp_path, monkeypatch):
