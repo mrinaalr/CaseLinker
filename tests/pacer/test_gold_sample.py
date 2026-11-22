@@ -180,8 +180,10 @@ def test_score_checks_the_manifest_hash_and_reports_agreement():
     assert G.cohen_kappa(["a", "b"], ["a", "b"]) == 1
 
 
-def _scored(stratum, population, drawn, machine, gold):
+def _scored(stratum, population, drawn, machine, gold, case_id=None, unit_id="u"):
     return {
+        "case_id": stratum if case_id is None else case_id,
+        "unit_id": unit_id,
         "stratum": stratum,
         "stratum_population": population,
         "stratum_drawn": drawn,
@@ -204,6 +206,35 @@ def test_weighted_precision_matches_a_hand_computation():
     assert block["precision"] == pytest.approx(10 / 12)
     assert block["by_stratum"]["wide"]["wilson_95"] == wilson(1, 1)
     assert block["by_stratum"]["tight"]["wilson_95"] == wilson(0, 1)
+
+
+def test_cluster_bootstrap_keeps_a_case_whole_and_is_wider_than_rows():
+    """Two cases, very different sizes, labels constant inside a case. Resampling rows looks precise; resampling cases does not."""
+    import random
+    rows = [_scored("s", 32, 32, "CONTACT", "CONTACT", case_id="big", unit_id=f"b{i}") for i in range(30)]
+    rows += [_scored("s", 32, 32, "CONTACT", "OTHER", case_id="small", unit_id=f"s{i}") for i in range(2)]
+    full = {}
+    for row in rows:
+        full.setdefault(row["case_id"], []).append(row["unit_id"])
+
+    def row_resample(rng):
+        return [rows[rng.randrange(len(rows))] for _ in rows]
+
+    def width(draw):
+        rng = random.Random(0)
+        stats = sorted(G.ipw_precision(draw(rng), "act") for _ in range(300))
+        return stats[int(0.975 * (len(stats) - 1))] - stats[int(0.025 * (len(stats) - 1))]
+
+    assert width(lambda rng: G.cluster_resample(rows, rng)) > width(row_resample)
+    rng = random.Random(1)
+    for _ in range(40):
+        sample = G.cluster_resample(rows, rng)
+        seen = {}
+        for row in sample:
+            seen.setdefault(row["case_id"], []).append(row["unit_id"])
+        for case, ids in seen.items():
+            copies = len(ids) // len(full[case])
+            assert copies >= 1 and ids == full[case] * copies
 
 
 def test_a_stratum_with_fewer_than_five_gold_positives_warns():

@@ -54,7 +54,7 @@ Recall is a property of the gold-positive units in the frame. A stratum that was
 sum (weight * hit) / sum (weight * gold)
 ```
 
-`hit` is 1 when the machine and the gold agree that the unit is positive. `gold` is 1 when the gold says it is positive. For an act, positive means a stated action code. For a means tie and for level C, positive means the boolean on the sheet. The same weights, averaged over every sample the design can draw, recover the population totals. That check is a synthetic test. The interval resamples inside each stratum at that stratum's drawn size.
+`hit` is 1 when the machine and the gold agree that the unit is positive. `gold` is 1 when the gold says it is positive. For an act, positive means a stated action code. For a means tie and for level C, positive means the boolean on the sheet. The same weights, averaged over every sample the design can draw, recover the population totals. That check is a synthetic test. The interval is a cluster bootstrap: inside each stratum it draws that stratum's cases with replacement, and every sentence from a drawn case stays with the case. It does not resample sentences on their own.
 
 The score reports the number of gold positives in each stratum next to the recall and its interval. A stratum with fewer than 5 gold positives carries a warning that its bootstrap interval is unreliable.
 
@@ -68,7 +68,7 @@ Precision uses the same weights. A stratum drawn more heavily would otherwise pu
 sum_h (weight_h * TP_h) / sum_h (weight_h * (TP_h + FP_h))
 ```
 
-`weight_h` is `N_h / n_h`. A unit enters when the machine stated it. `TP` is a statement the gold confirms. The interval resamples inside each stratum at that stratum's drawn size, the same bootstrap as recall. Each stratum also has its own Wilson interval (Wilson 1927) on its count of statements. Brown, Cai and DasGupta (2001) compare binomial intervals and are why the within-stratum interval is Wilson's.
+`weight_h` is `N_h / n_h`. A unit enters when the machine stated it. `TP` is a statement the gold confirms. The interval is the same case-level bootstrap as recall: within each stratum, whole cases are drawn with replacement. Each stratum also has its own Wilson interval (Wilson 1927) on its count of statements. Brown, Cai and DasGupta (2001) compare binomial intervals and are why the within-stratum interval is Wilson's.
 
 ## Validation mode
 
@@ -86,7 +86,7 @@ Alpha uses the coincidence matrix. Pairs of values on a unit contribute to the o
 
 Kappa is the two-coder coefficient: observed agreement corrected by the agreement expected from each coder's own marginals. It is undefined when both coders use only one category, because the chance term is then 1. Both coefficients are reported.
 
-The interval on each is a percentile bootstrap over units. The bootstrap seed and the number of replicates are stored with the score.
+The interval on each is the same case-level bootstrap: within each stratum, whole cases are drawn with replacement, and a case's sentences are not split. The bootstrap seed and the number of replicates are stored with the score.
 
 ## Rows for a design-based correction
 

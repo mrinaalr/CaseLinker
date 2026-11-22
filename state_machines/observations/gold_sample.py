@@ -17,12 +17,13 @@ probability) is computed before the grading sheet. The sheet has the sentence
 and the clipped context. Machine labels go only in the key.
 
 ``score`` checks the sealed manifest hash before it computes anything. Precision
-is the Horvitz-Thompson ratio of true positives to machine statements, with a
-within-stratum bootstrap interval and a Wilson interval inside each stratum.
+is the Horvitz-Thompson ratio of true positives to machine statements. Its
+interval, and the intervals on recall and on agreement, resample whole cases
+inside each stratum. A Wilson interval is also reported inside each stratum.
 Recall weights each gold-positive unit by N_h / n_h and reports how many gold
 positives each stratum contributed. A second grader marks a fixed seeded
 subset; Krippendorff's alpha (nominal) and Cohen's kappa are computed on the
-rows that have two grades, with a percentile bootstrap interval. The same rows,
+rows that have two grades. The same rows,
 with the known probabilities, are emitted for a design-based correction (DSL or
 prediction-powered inference). This module does not run those estimators.
 """
@@ -224,26 +225,63 @@ def precision_unit(rows: Sequence[dict], unit: str) -> dict:
             "by_stratum": strata}
 
 
-def _precision_interval(rows: Sequence[dict], unit: str, replicates: int, seed: int) -> Optional[list]:
-    """Percentile interval from resampling each stratum with replacement, at its drawn size."""
-    if not rows:
-        return None
-    groups = {}
+def _clusters(group: Sequence[dict]) -> list:
+    """One list of rows per case, in the order the cases first appear."""
+    order = []
+    buckets = {}
+    for row in group:
+        key = row["case_id"]
+        if key not in buckets:
+            order.append(key)
+            buckets[key] = []
+        buckets[key].append(row)
+    return [buckets[key] for key in order]
+
+
+def cluster_resample(rows: Sequence[dict], rng: random.Random) -> list:
+    """Within each stratum, draw that stratum's cases with replacement.
+
+    A drawn case contributes every one of its rows. Rows are not drawn one by one.
+    """
+    by = {}
     for row in rows:
-        groups.setdefault(row["stratum"], []).append(row)
-    rng = random.Random(seed)
-    stats = []
-    for _ in range(replicates):
-        sample = []
-        for group in groups.values():
-            sample.extend(group[rng.randrange(len(group))] for _ in group)
-        value = ipw_precision(sample, unit)
-        if value is not None:
-            stats.append(value)
+        by.setdefault(row["stratum"], []).append(row)
+    sample = []
+    for group in by.values():
+        clusters = _clusters(group)
+        for _ in range(len(clusters)):
+            sample.extend(clusters[rng.randrange(len(clusters))])
+    return sample
+
+
+def _percentile(stats: list) -> Optional[list]:
     if not stats:
         return None
     stats.sort()
     return [stats[int(0.025 * (len(stats) - 1))], stats[int(0.975 * (len(stats) - 1))]]
+
+
+def _cluster_interval(rows: Sequence[dict], statistic: Callable, replicates: int, seed: int) -> Optional[list]:
+    """Percentile interval from a within-stratum case bootstrap. None with fewer than two cases."""
+    if not rows:
+        return None
+    by = {}
+    for row in rows:
+        by.setdefault(row["stratum"], []).append(row)
+    n_cases = sum(len(_clusters(group)) for group in by.values())
+    if n_cases < 2:
+        return None
+    rng = random.Random(seed)
+    stats = []
+    for _ in range(replicates):
+        value = statistic(cluster_resample(rows, rng))
+        if value is not None:
+            stats.append(value)
+    return _percentile(stats)
+
+
+def _precision_interval(rows: Sequence[dict], unit: str, replicates: int, seed: int) -> Optional[list]:
+    return _cluster_interval(rows, lambda sample: ipw_precision(sample, unit), replicates, seed)
 
 
 def recall_report(rows: Sequence[dict], unit: str, replicates: int, seed: int) -> dict:
@@ -277,25 +315,7 @@ def ipw_recall(rows: Sequence[dict], unit: str) -> Optional[float]:
 
 
 def _recall_interval(rows: Sequence[dict], unit: str, replicates: int, seed: int) -> Optional[list]:
-    """Percentile interval from resampling each stratum with replacement, at its drawn size."""
-    if not rows:
-        return None
-    groups = {}
-    for row in rows:
-        groups.setdefault(row["stratum"], []).append(row)
-    rng = random.Random(seed)
-    stats = []
-    for _ in range(replicates):
-        sample = []
-        for group in groups.values():
-            sample.extend(group[rng.randrange(len(group))] for _ in group)
-        value = ipw_recall(sample, unit)
-        if value is not None:
-            stats.append(value)
-    if not stats:
-        return None
-    stats.sort()
-    return [stats[int(0.025 * (len(stats) - 1))], stats[int(0.975 * (len(stats) - 1))]]
+    return _cluster_interval(rows, lambda sample: ipw_recall(sample, unit), replicates, seed)
 
 
 def krippendorff_alpha(units: Sequence[Sequence]) -> Optional[float]:
@@ -349,22 +369,6 @@ def cohen_kappa(left: Sequence, right: Sequence) -> Optional[float]:
     return (observed - chance) / (1 - chance)
 
 
-def _bootstrap(values_of: Callable, units: Sequence, replicates: int, seed: int) -> Optional[list]:
-    if len(units) < 2:
-        return None
-    rng = random.Random(seed)
-    stats = []
-    for _ in range(replicates):
-        sample = [units[rng.randrange(len(units))] for _ in units]
-        value = values_of(sample)
-        if value is not None:
-            stats.append(value)
-    if not stats:
-        return None
-    stats.sort()
-    return [stats[int(0.025 * (len(stats) - 1))], stats[int(0.975 * (len(stats) - 1))]]
-
-
 def _joined(graded: dict, key: dict) -> list:
     gold = {row["unit_id"]: row for row in graded["units"]}
     rows = []
@@ -398,7 +402,8 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 1000, seed
         alpha_point = krippendorff_alpha(coded)
         alpha[unit] = {
             "alpha": alpha_point,
-            "interval_95": _bootstrap(lambda sample: krippendorff_alpha(sample), coded, replicates, seed),
+            "interval_95": _cluster_interval(
+                paired, lambda sample: krippendorff_alpha(_coder_units(sample, unit)), replicates, seed),
         }
         if len(names) >= 2 and paired:
             a = [row["coders"][names[0]].get(unit) for row in paired]
@@ -407,11 +412,11 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 1000, seed
             kappa[unit] = {
                 "coders": names[:2],
                 "kappa": kappa_point,
-                "interval_95": _bootstrap(
-                    lambda sample, n0=names[0], n1=names[1]: cohen_kappa(
+                "interval_95": _cluster_interval(
+                    paired, lambda sample, n0=names[0], n1=names[1]: cohen_kappa(
                         [row["coders"][n0].get(unit) for row in sample],
                         [row["coders"][n1].get(unit) for row in sample]),
-                    paired, replicates, seed),
+                    replicates, seed),
             }
         else:
             kappa[unit] = {"coders": names, "kappa": None, "interval_95": None}
