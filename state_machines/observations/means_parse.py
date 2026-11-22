@@ -149,6 +149,51 @@ def instrument_means(sentence: str, observation: dict, tokens: Sequence[dict], a
     return None
 
 
+_WORD = re.compile(r"[A-Za-z0-9']+|[()]")
+_USE_VERBS = {"utilized", "utilize", "used", "use", "sent", "send", "received", "receive", "contacted", "communicated"}
+_SUBJECTS = {"defendant", "accused", "he", "they"}
+
+
+def _fallback_tokens(sentence: str) -> List[dict]:
+    """A small dependency parse for a means verb and a parenthetical instrument.
+
+    Used only when ``CASELINKER_MEANS_PARSER=dep`` and ``en_core_web_sm`` is not installed.
+    """
+    tokens = [{"text": m.group(), "start": m.start(), "end": m.end(), "head": 0, "deprel": "dep", "pos": ""}
+              for m in _WORD.finditer(sentence)]
+    verb_i = next((i for i, tok in enumerate(tokens) if tok["text"].lower() in _USE_VERBS), None)
+    if verb_i is None:
+        return tokens
+    tokens[verb_i]["deprel"] = "ROOT"
+    tokens[verb_i]["pos"] = "VERB"
+    tokens[verb_i]["head"] = verb_i
+    for i, tok in enumerate(tokens):
+        if i < verb_i and tok["text"].lower() in _SUBJECTS:
+            tok["head"] = verb_i
+            tok["deprel"] = "nsubj"
+    opens = [i for i, tok in enumerate(tokens) if tok["text"] == "("]
+    closes = [i for i, tok in enumerate(tokens) if tok["text"] == ")"]
+    if opens and closes and opens[0] < closes[0]:
+        before = opens[0] - 1
+        inside = list(range(opens[0] + 1, closes[0]))
+        if before >= 0 and inside:
+            tokens[before]["head"] = verb_i
+            tokens[before]["deprel"] = "dobj"
+            noun = inside[-1]
+            tokens[noun]["head"] = before
+            tokens[noun]["deprel"] = "appos"
+            for j in inside[:-1]:
+                tokens[j]["head"] = noun
+                tokens[j]["deprel"] = "amod"
+    return tokens
+
+
+def tokens_for(sentence: str) -> List[dict]:
+    """Tokens for the instrument walk. An installed spaCy model wins; otherwise the fallback."""
+    parsed = tokens_from_spacy(sentence)
+    return parsed if parsed else _fallback_tokens(sentence)
+
+
 def compare(sentence: str, observation: dict, tokens: Sequence[dict] = (), actors=None) -> dict:
     """The word-window hit and the dependency hit, side by side. Neither is stored."""
     from state_machines.observations.observe import _means

@@ -132,17 +132,16 @@ Each item is one question with a fixed set of answers that `apply` carries out:
 
 A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless a researcher sets it. With the flags unset, resolution is `intersection-1.0` and a release is built as before. The one exception is a new release: `graphs/release.py build` refuses to write one when the capability registry has no platforms, unless `--allow-empty-registry` is passed. Reading `pacer-v1` does not build, so that refusal does not apply to it.
 
-| Flag or mode | Default | What it selects |
+| Flag or mode | Default | Pipeline function it changes |
 |---|---|---|
-| `CASELINKER_SECTION_FILTER` | off | technology-explainer and affiant-background passages yield no offender act and no means |
-| `CASELINKER_SECTION_MODEL` | off | local-model fallback when no section rule matches; the caller passes the callable |
-| `CASELINKER_COREFERENCE` | off | closed-list actor ids; the subject test can ask whether the resolved actor is an offender |
-| `CASELINKER_COREFERENCE_MODEL` | off | local model, restricted to the closed actor list |
-| `CASELINKER_ADJACENT_LEVEL` | off | `adjacent-sentence` links, kept out of same-sentence level C |
-| `CASELINKER_EXTRACTOR` | unset | `frame-1.0` writes one frame per cued act, each slot a verbatim span |
-| `CASELINKER_ACT_POLICY` | `intersection-1.0` | `propose-verify-1.0` is the other mode |
-| `CASELINKER_MEANS_PARSER` | unset | `dep` walks a dependency parse for the instrument, including through a parenthesis, and accepts `they` when coreference resolves it to the actor |
-| `CASELINKER_MEANS_RULE` | unset | `1.4-recall` also matches `virtual private network(s)` and `VPN(s)`, and `on` / `via` after a conduct verb |
+| `CASELINKER_SECTION_FILTER` | off | `coder.route` returns `section_blocked`, and `coder.code_case` writes no acts, for a technology explainer or affiant background |
+| `CASELINKER_COREFERENCE` | off | `observe.relate` calls `coreference.means_with_resolved_subject` before it attributes a means |
+| `CASELINKER_ADJACENT_LEVEL` | off | `observe.relate` writes `adjacent_sentence` from `coreference.adjacent_links`, kept out of the means relations |
+| `CASELINKER_EXTRACTOR` | unset | `coder.route` returns `frame`, and `coder.code_case` writes acts from `frames.extract_frames` after `verify_frame` |
+| `CASELINKER_ACT_POLICY` | `intersection-1.0` | `pipeline.resolve_cases` calls `propose_verify.from_bundles`, including the missed-act pass when page text is available |
+| `CASELINKER_MEANS_PARSER` | unset | `observe.relate` calls `means_parse.instrument_means` when the five-word window misses |
+| `CASELINKER_MEANS_RULE` | unset | `observe.features_in` and `observe._means` also match `virtual private network(s)`, `VPN(s)`, and `on` / `via` after a conduct verb |
+| `CASELINKER_DISAGREEMENT` | off | `pipeline.resolve_cases` writes the adjudication sheet from `disagreement.rows_from_intersection` or `rows_from_propose_verify` |
 
 ```bash
 python -m state_machines.coding.pipeline preflight <case_id> [...] --text-root DIR --out DIR [--release-root DIR]

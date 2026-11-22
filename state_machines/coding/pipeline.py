@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 import time
@@ -98,6 +99,45 @@ def _model_coded(bundle: dict) -> dict:
                 relations=[r for r in bundle["relations"] if r["from_event"] in keep and r["to_event"] in keep])
 
 
+def _pages(text_root: Optional[Path], case_id: str) -> Optional[List[str]]:
+    """Page texts for the missed-act pass. None when the case has no text store."""
+    if text_root is None:
+        return None
+    sources = text_root / case_id / "sources.json"
+    if not sources.is_file():
+        return None
+    from state_machines.evidence import evidence as pages
+    out = []
+    doc = json.loads(sources.read_text(encoding="utf-8"))
+    for item in doc.get("documents", []):
+        for page in item.get("pages", []):
+            text = pages.read_page(case_id, item["doc_id"], page["pdf_page"], text_root)
+            if text and text.strip():
+                out.append(text)
+    return out
+
+
+def _record_disagreement(case_id: str, a: dict, b: dict, out: Path, entry: dict, policy: str, result: Optional[dict] = None) -> None:
+    """Write the adjudication sheet when ``CASELINKER_DISAGREEMENT=1``.
+
+    Unset, this returns without touching ``entry`` or the filesystem.
+    """
+    if os.environ.get("CASELINKER_DISAGREEMENT") != "1":
+        return
+    from state_machines.coding.disagreement import rows_from_intersection, rows_from_propose_verify, write_sheet
+    from state_machines.coding.propose_verify import POLICY_ID
+    if policy == POLICY_ID and isinstance(result, dict) and "published" in result:
+        rows = rows_from_propose_verify(case_id, result)
+    else:
+        rows = rows_from_intersection(case_id, a, b)
+    entry["disagreement_rows"] = len(rows)
+    dest = out / "disagreement_sheets" / case_id
+    try:
+        write_sheet(rows, dest)
+    except SystemExit:
+        entry["disagreement_sheet"] = "refused"
+
+
 def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
                   sub: str = "resolved") -> dict:
     """Resolve each case's two codings into ``out/<sub>``; reports beside it. ``settle_codes`` turns on
@@ -123,9 +163,10 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
         if policy == POLICY_ID:
-            result = from_bundles(a, b)
+            result = from_bundles(a, b, pages=_pages(text_root, case_id))
             (out / sub / f"{case_id}.json").write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
             summary[case_id] = {"act_policy": POLICY_ID, "published": len(result["published"])}
+            _record_disagreement(case_id, a, b, out, summary[case_id], policy, result)
             continue
         bundle, report = resolve(a, b, text_root, settle_codes)
         if text_root is not None:
@@ -136,11 +177,13 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
         report["parser_events"] = sum(e.get("notes") == "docket-parser" for e in bundle["events"])
         if not bundle["events"]:
             summary[case_id] = {"failed": "no event both coders coded", "report": report}
+            _record_disagreement(case_id, a, b, out, summary[case_id], policy)
             continue
         (out / sub / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
         summary[case_id] = {"events": len(bundle["events"]), "parser_events": report["parser_events"],
                             "agreement_model_coded": report["agreement_model_coded"]}
+        _record_disagreement(case_id, a, b, out, summary[case_id], policy)
     (out / reports / "SUMMARY.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     return summary
 

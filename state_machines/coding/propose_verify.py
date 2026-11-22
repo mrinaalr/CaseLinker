@@ -98,14 +98,35 @@ def _span(bundle: dict, event: dict):
     return None
 
 
-def from_bundles(a: dict, b: dict) -> dict:
+def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
+    """Sentences the means rule ties and neither coder framed."""
+    from state_machines.coding.cues import CUES
+    from state_machines.evidence import vocab as V
+    from state_machines.observations.observe import _means, features_in, sentences
+    missed, means_ids = [], []
+    for page in pages:
+        for start, end in sentences(page):
+            if any(s < end and start < e for _pid, s, e in covered):
+                continue
+            sentence = page[start:end]
+            if not any(_means("feature", sentence, {"feature_term": phrase}) for _cls, phrase, _a, _b in features_in(sentence)):
+                continue
+            sid = f"page:{start}:{end}"
+            codes = sorted(c for c in CUES if V.FAMILY_OF.get(c) == "offender" and CUES[c].search(sentence))
+            means_ids.append(sid)
+            missed.append({"sentence_id": sid, "text": sentence, "codes": codes})
+    return missed, means_ids
+
+
+def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dict:
     """Run propose-then-verify on two coder bundles.
 
     Coder 1's events are the proposals. Coder 2 accepts an overlapping sentence
     with the same action and the same actor role, corrects the action when the
     sentence overlaps and the action differs, and a proposal with no overlap
-    is rejected. The missed-act pass is not run here: it needs the means rule
-    and a page, and the caller passes those to ``propose_verify`` directly.
+    is rejected. When ``pages`` is given, a sentence neither coder framed where
+    the means rule fires is recovered. ``pipeline.resolve_cases`` passes the
+    pages. Without them the missed-act pass does not run.
     """
     proposals = []
     for event in a["events"]:
@@ -144,7 +165,17 @@ def from_bundles(a: dict, b: dict) -> dict:
                             "slot": "act", "corrected": {"code": other["action"]}})
         else:
             reviews.append({"frame_id": frame["frame_id"], "decision": "accept"})
-    return propose_verify(proposals, reviews)
+    if not pages:
+        return propose_verify(proposals, reviews)
+    covered = [(f["passage_id"], f["sentence_start"], f["sentence_end"]) for f in proposals]
+    covered += [(pid, start, end) for pid, start, end, _event in b_events]
+    missed, means_ids = _missed_on_pages(pages, covered)
+
+    def recover(sent):
+        return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},
+                 "actor": {"id": "defendant"}} for code in sent.get("codes") or []]
+
+    return propose_verify(proposals, reviews, missed=missed, means_sentence_ids=means_ids, recover=recover)
 
 
 def resolve_case(a: dict, b: dict, text_root=None, settle_codes: bool = False):

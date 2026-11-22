@@ -13,4 +13,6 @@ python3 independent_checks/enum.py
 python3 independent_checks/recompute_transition_sets.py
 ```
 
+`Delta_supp(DI)` on the full model, the one that includes the co-present channel, is 6 runs and 5 trajectories. Two of the runs carry the same action-and-affordance sequence, so the trajectory set is one smaller than the run count.
+
 `enumerate_transitions.py` exits 0 when its asserts pass. `enumerate_transition_variants.py` prints the `enumerate_transitions.py` output first, because the import runs that file, and then the three variants. Printed sets are sorted, so a rerun matches `enumerate_transitions.out` and `enumerate_transition_variants.out`.

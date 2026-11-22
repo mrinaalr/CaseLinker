@@ -407,6 +407,34 @@ def _offender_acts(b: dict) -> List[tuple]:
             for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
 
 
+def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None):
+    """The means tie ``relate`` publishes.
+
+    With ``CASELINKER_COREFERENCE`` and ``CASELINKER_MEANS_PARSER`` unset this is
+    ``_means`` and nothing else. Coreference retries a ``they`` subject. The
+    dependency parser runs only when the word window missed.
+    """
+    coref = os.environ.get("CASELINKER_COREFERENCE") == "1"
+    parser = os.environ.get("CASELINKER_MEANS_PARSER") == "dep"
+    if not coref and not parser:
+        return _means(kind, sentence, o, subject)
+    if coref:
+        from state_machines.coding.coreference import make_inventory, means_with_resolved_subject
+        hit = means_with_resolved_subject(kind, sentence, o, make_inventory())
+    else:
+        hit = _means(kind, sentence, o, subject)
+    if hit or not parser:
+        return hit
+    from state_machines.coding.coreference import make_inventory
+    from state_machines.observations.means_parse import instrument_means, tokens_for
+    term = o.get("feature_term") or o.get("named_as") or ""
+    dep = instrument_means(sentence, {"feature_term": term}, tokens_for(sentence),
+                           actors=make_inventory() if coref else None)
+    if not dep:
+        return None
+    return dep["relationship"], dep["cue"]
+
+
 def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, dict]] = None) -> dict:
     """Level 3: tie an observation to a published offender act whose cited sentence holds it and states
     the act was done by means of it. Where several published acts cite that sentence, the sentence
@@ -440,7 +468,7 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             if a < o["char_start"] - 1 or b > o["char_end"] + 1:
                 o["act_passage_runs_on"] = True
                 continue
-            hit = _means(o["kind"], pages[(d, pg)][a:b], o)
+            hit = _published_means(o["kind"], pages[(d, pg)][a:b], o)
             if hit and all(r["event_id"] != eid for r in o["relations"]):
                 o["relations"].append({"event_id": eid, "relationship": hit[0], "cue": hit[1], "basis": "means_stated_in_act_sentence"})
     # The disputed tier. The sentence states the means, each coder coded an offender act in that sentence, and
@@ -465,7 +493,7 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
         # no agreed act vouches for the reading here, so the stricter subject test applies to platforms too: a clause
         # about the victim, with no offender acting in it, states the victim's conduct
-        hit = _means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature")
+        hit = _published_means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature")
         if not hit:
             continue
         a_codes, b_codes = (set(v) for v in inside.values())
@@ -481,6 +509,21 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             # recognise: that an offender acted is itself not agreed, so this is not offender use by any reading
             o["actor_conflict"] = dict(record, basis="means_stated_in_sentence_coders_do_not_both_name_an_identified_offender")
     doc["bundle_case_id"] = bundle["case_id"]
+    if os.environ.get("CASELINKER_ADJACENT_LEVEL") == "1":
+        from state_machines.coding.coreference import adjacent_links, level_c_only, make_inventory
+        links = []
+        seen = set()
+        for o in doc["observations"]:
+            key = (o["doc_id"], o["pdf_page"])
+            if key in seen:
+                continue
+            seen.add(key)
+            if key not in pages:
+                pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
+            sents = [pages[key][a:b] for a, b in sentences(pages[key])]
+            links.extend(adjacent_links(sents, make_inventory()))
+        same = [{"level": "C"} for o in doc["observations"] for _r in o["relations"]]
+        doc["adjacent_sentence"] = level_c_only(same, links)["adjacent_sentence"]
     return doc
 
 

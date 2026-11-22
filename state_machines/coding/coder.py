@@ -702,12 +702,44 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
+def frames_as_acts(text: str) -> List[dict]:
+    """Acts from ``frame-1.0``, each quote checked against the page offsets.
+
+    Called from ``code_case`` only when ``CASELINKER_EXTRACTOR=frame-1.0``.
+    """
+    from state_machines.coding.frames import extract_frames, verify_frame
+    from state_machines.observations.observe import sentences
+    acts = []
+    for start, end in sentences(text):
+        sentence = text[start:end]
+        for frame in extract_frames(sentence, page_text=text, sentence_start=start):
+            if verify_frame(frame, text):
+                continue
+            means = frame.get("means") or {}
+            act = {"quote": sentence, "action": frame["act"]["code"], "actor": "the defendant", "actor_role": "offender"}
+            if means.get("level") == "C" and means.get("text"):
+                act["affordance"] = {"class": means.get("feature_class"), "feature": means["text"]}
+            acts.append(act)
+    return acts
+
+
 def route(doc: dict, text: str) -> str:
-    """How a page is read: "docket" (parser), "boilerplate" (skipped judgment form page) or "model"."""
+    """How a page is read: "docket" (parser), "boilerplate" (skipped judgment form page) or "model".
+
+    ``CASELINKER_SECTION_FILTER=1`` adds ``section_blocked`` for a technology explainer or
+    affiant background. ``CASELINKER_EXTRACTOR=frame-1.0`` adds ``frame``. Neither is
+    returned when those variables are unset.
+    """
     if doc["doc_type"] == "docket":
         return "docket"
     if doc["doc_type"] in ("judgment", "amended_judgment") and BOILERPLATE.search(text):
         return "boilerplate"
+    if os.environ.get("CASELINKER_SECTION_FILTER") == "1":
+        from state_machines.coding.sections import blocks_offender_products, classify
+        if blocks_offender_products(classify(text)["role"]):
+            return "section_blocked"
+    if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
+        return "frame"
     return "model"
 
 
@@ -736,8 +768,12 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
             ans, how = docket_acts(full), "docket parser"
         elif kind == "boilerplate":
             ans, how = {"acts": []}, "skipped: judgment form page"
+        elif kind == "section_blocked":
+            ans, how = {"acts": []}, "skipped: section filter"
         elif only_pages is not None and (doc["doc_id"], page_no) not in only_pages:
             ans, how = {"acts": []}, "skipped: first coder found no act"
+        elif kind == "frame":
+            ans, how = {"acts": frames_as_acts(full)}, "frame-1.0"
         else:
             text = full[:MAX_PAGE_CHARS]
             prompt = render_prompt(codes=codes, harms=HARM_LINES, affordances=AFF_LINES, doc_type=doc["doc_type"].replace("_", " "),
@@ -758,6 +794,11 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
                                    caption_names={w.lower() for term in (deny or []) for w in term.split()})
     log = coverage + log
+    # A page the section filter blocks has no act and no participant. That is the published
+    # result of the filter. Repair still runs for every other bundle, including one with no acts
+    # from the model, so the unset flag keeps the previous failure.
+    if not bundle["events"] and any("section filter" in line for line in coverage):
+        return bundle, quotes, log
     bundle, rlog = repair(bundle, text_root, deny or [])
     return bundle, quotes, log + rlog
 
