@@ -5048,6 +5048,107 @@ def api_ontology_cases(
     raise HTTPException(status_code=400, detail=f"unknown pool: {pool_norm}")
 
 
+_PACER_CASE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,80}$")
+_pacer_investigation_mem: Dict[str, List[Dict[str, Any]]] = {}
+
+
+def _pacer_local_type(value: Any) -> str:
+    s = str(value or "")
+    if "://" not in s and ":" in s:
+        s = s.rsplit(":", 1)[-1]
+    if "#" in s:
+        s = s.rsplit("#", 1)[-1]
+    if "/" in s:
+        s = s.rsplit("/", 1)[-1]
+    return s
+
+
+def _pacer_literal(value: Any) -> str:
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, dict):
+        raw = value.get("@value")
+        return str(raw).strip() if raw is not None else ""
+    if isinstance(value, list):
+        for item in value:
+            text = _pacer_literal(item)
+            if text:
+                return text
+    return ""
+
+
+def _pacer_investigations(root: Path, case_ids: List[str]) -> List[Dict[str, Any]]:
+    """Catalog rows the graph page already opens: one evidence graph per case."""
+    stamp = str(root / "manifest.json")
+    try:
+        key = f"{stamp}:{int((root / 'manifest.json').stat().st_mtime)}"
+    except OSError:
+        key = stamp
+    hit = _pacer_investigation_mem.get(key)
+    if hit is not None:
+        return hit
+    skip = {
+        "Relationship", "UcoObject", "ObservableObject", "ProvenanceRecord", "FunctionalComplex",
+    }
+    rows: List[Dict[str, Any]] = []
+    for case_id in case_ids:
+        path = root / "graphs" / f"{case_id}.evidence.jsonld"
+        if not path.is_file():
+            continue
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            doc = {}
+        classes: set = set()
+        agencies: List[str] = []
+        text_bits = [case_id]
+        for node in doc.get("@graph") or []:
+            if not isinstance(node, dict):
+                continue
+            types = node.get("@type")
+            type_list = types if isinstance(types, list) else [types]
+            locals_ = []
+            for typ in type_list:
+                local = _pacer_local_type(typ)
+                if not local or local in skip:
+                    continue
+                locals_.append(local)
+                classes.add(local)
+            name = _pacer_literal(node.get("uco-core:name") or node.get("http://www.w3.org/2000/01/rdf-schema#label"))
+            if name:
+                text_bits.append(name)
+                if "Organization" in locals_:
+                    agencies.append(name)
+        rows.append({
+            "id": case_id,
+            "path": f"/api/ontology/pacer/{case_id}.evidence.jsonld",
+            "label": case_id,
+            "classes": sorted(classes),
+            "agencies": sorted(set(agencies)),
+            "search_text": " ".join(text_bits).casefold(),
+        })
+    _pacer_investigation_mem.clear()
+    _pacer_investigation_mem[key] = rows
+    return rows
+
+
+@app.get("/api/ontology/pacer/{case_id}.evidence.jsonld")
+def api_ontology_pacer_evidence(case_id: str):
+    """The evidence graph for one released PACER case, the document the graph page draws."""
+    if not _PACER_CASE_ID.fullmatch(case_id):
+        raise HTTPException(status_code=404, detail="unknown case")
+    from state_machines.trajectories.payload import release_dir
+
+    root = release_dir()
+    if root is None:
+        raise HTTPException(status_code=404, detail="no PACER release")
+    graphs = (root / "graphs").resolve()
+    path = (graphs / f"{case_id}.evidence.jsonld").resolve()
+    if graphs not in path.parents or not path.is_file():
+        raise HTTPException(status_code=404, detail="no evidence graph")
+    return FileResponse(str(path), media_type="application/ld+json")
+
+
 @app.get("/api/ontology/pacer")
 def api_ontology_pacer():
     """
@@ -5071,6 +5172,7 @@ def api_ontology_pacer():
         content={"release": manifest["release_id"], "adjudicated": manifest["adjudicated"],
                  "review_mode": manifest.get("review_mode") or ("adjudicated" if manifest["adjudicated"] else "preview"),
                  "schema_version": manifest["schema_version"], "cases": cases, "n": len(cases),
+                 "investigations": _pacer_investigations(root, [c["case_id"] for c in cases]),
                  "release_graph": f"urn:caselinker:pacer-release:{manifest['release_id']}",
                  "note": "Query these named graphs through /sparql; the release graph states how their acts were published."},
         headers={"Cache-Control": "public, max-age=600"},

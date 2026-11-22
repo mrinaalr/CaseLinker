@@ -3048,9 +3048,17 @@
         const payload = await resp.json();
         PACER_CATALOG = Array.isArray(payload.investigations) ? payload.investigations : [];
         if (!PACER_CATALOG.length && Array.isArray(payload.cases)) {
-            // the per-document PACER graphs this view browsed were replaced by a graph release (documented acts, sources)
-            throw new Error('PACER records are shown on the Lifecycle page (' + payload.cases.length + ' cases in release ' +
-                (payload.release || '') + '). This view reads the corpus graphs.');
+            PACER_CATALOG = payload.cases.filter(function (c) {
+                return c && c.case_id && c.graphs && c.graphs.evidence;
+            }).map(function (c) {
+                return {
+                    id: c.case_id,
+                    path: '/api/ontology/pacer/' + encodeURIComponent(c.case_id) + '.evidence.jsonld',
+                    classes: [],
+                    agencies: [],
+                    search_text: String(c.case_id).toLowerCase()
+                };
+            });
         }
 
         const classSelect = document.getElementById('pacer-class');
@@ -3132,7 +3140,8 @@
         const resp = await fetch(path, { cache: 'default' });
         if (!resp.ok) throw new Error('HTTP ' + resp.status + ' for ' + path);
         const doc = await resp.json();
-        const id = path.split('/').pop().replace(/-investigation\.jsonld$/i, '') || path;
+        const file = decodeURIComponent(String(path || '').split('?')[0].split('/').pop() || '');
+        const id = file.replace(/-investigation\.jsonld$/i, '').replace(/\.evidence\.jsonld$/i, '') || path;
         return { id, path, flat: flattenCompactJsonLd(doc) };
     }
 
