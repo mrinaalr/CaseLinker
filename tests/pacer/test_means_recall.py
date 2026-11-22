@@ -78,7 +78,6 @@ def test_parenthetical_vpn_is_an_instrument_when_the_parser_is_on(monkeypatch):
     assert both["window"] == ("Supports_Action", "utilized")
 
 
-@pytest.mark.xfail(reason="a pronoun subject is refused; the stored expectation still resolves they")
 def test_they_is_the_offender_only_when_coreference_resolves_it(monkeypatch):
     monkeypatch.setenv("CASELINKER_MEANS_PARSER", "dep")
     monkeypatch.delenv("CASELINKER_COREFERENCE", raising=False)
@@ -97,6 +96,23 @@ def test_on_is_a_feature_cue_only_under_the_recall_rule(monkeypatch):
     phrases = [phrase for _, phrase, _, _ in features_in(PAREN)]
     assert phrases == ["virtual private networks", "VPNs"]
     assert _means("feature", ON, {"feature_term": "encrypted"}) == ("Supports_Action", "on")
+
+
+# Thirteen words sit between the cue and the feature. The fixed window allows sixteen.
+WIDE = ("The defendant sent the files through a private relay he kept running for "
+        "several months during that transfer of a virtual private network.")
+VICTIM_WIDE = WIDE.replace("The defendant", "Minor Victim 1")
+
+
+def test_a_feature_cue_thirteen_words_away_ties_only_under_the_recall_rule(monkeypatch):
+    observation = {"feature_term": "virtual private network"}
+    monkeypatch.delenv("CASELINKER_MEANS_RULE", raising=False)
+    assert _means("feature", WIDE, observation) is None
+    monkeypatch.setenv("CASELINKER_MEANS_RULE", "1.4-recall")
+    assert "virtual private network" in [phrase for _, phrase, _, _ in features_in(WIDE)]
+    hit = _means("feature", WIDE, observation)
+    assert hit == ("Supports_Action", "through")
+    assert _means("feature", VICTIM_WIDE, observation) is None
 
 
 def test_a_tor_explainer_is_not_an_act(monkeypatch):

@@ -148,6 +148,6 @@ python -m state_machines.coding.pipeline preflight <case_id> [...] --text-root D
 python -m state_machines.coding.quote_check records.json --pages pages.json
 ```
 
-`CASELINKER_MEANS_PARSER=dep` needs the spaCy model pinned in `requirements-sdk.txt` (`en-core-web-sm` 3.8.0). `./setup.sh` stops if `python -m spacy download en_core_web_sm-3.8.0` fails.
+`CASELINKER_MEANS_PARSER=dep` needs the spaCy model pinned in `requirements-sdk.txt` (`en-core-web-sm` 3.8.0). `./setup.sh` installs that wheel and checks its sha256.
 
 `preflight` compares the release id, the text-directory id, the coder-bundle id and `COLLECTED_AS`. Passed an `fp-1` fingerprint table, it also reports a stored id whose fingerprint changed or disappeared, and a fingerprint shared by several PACER ids. It reads those ids and does not open page text, and it does not rename anything. The PDF name and `COLLECTED_AS` are plain strings, so a later ingest that mints ids from the article text does not move them. `quote_check` reports each quote that is not the page text at its offsets. Neither command reads `state_machines/data`, `local/` or `caselinker_oxigraph/`. Disagreement rows are written by `coding/disagreement.py`; the human columns are blank, and a count from adjudicated events is labelled `adjudicated`.

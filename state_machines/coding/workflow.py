@@ -953,9 +953,14 @@ def _token_names_defendant(token, actor_text: str, records: List[dict]) -> bool:
 _CONDUCT = {"send", "distribute", "upload", "download", "receive", "trade", "message",
              "email", "text", "post", "share", "transmit", "forward"}
 _SPEECH = {"say", "tell", "claim", "know", "quote", "report", "state", "write"}
-_NEG_VERBS = {"deny", "refuse", "fail"}
+_NEG_VERBS = {"deny", "refuse", "fail", "decline", "neglect", "avoid"}
+_UNREAL = {"plan", "intend", "want", "hope"}
+_INFLUENCE = {"ask", "tell", "persuade", "convince", "instruct", "direct", "entice", "coerce", "cause"}
+_CAUSE = {"use", "have", "make"}
+_PERCEPTION = {"watch", "see", "observe", "look"}
 _MODALS = {"would", "could", "may", "might", "should"}
 _BLOCKED_CLAUSE = {"advcl", "ccomp", "xcomp", "relcl"}
+_ADVERB_COMPOUND = {"later", "then", "thereafter", "also", "next"}
 
 
 def _is_main_verb(token) -> bool:
@@ -986,25 +991,37 @@ def _clause_of(token) -> Optional[str]:
     return None
 
 
-def _object_controls(governor) -> bool:
-    """A direct object controls the governor's infinitive when it can be a person.
+_PERSON_LEMMAS = {
+    "victim", "minor", "child", "girl", "boy", "woman", "man", "person",
+    "mother", "father", "sister", "brother", "wife", "husband",
+}
 
-    A pronoun, an unpossessed common noun, or a multi-token proper name controls.
-    One unmodified proper name, or a noun with a possessor, is an instrument.
-    """
-    for child in governor.children:
-        if child.dep_ not in {"dobj", "dative", "iobj"}:
-            continue
-        if any(grandchild.dep_ == "poss" for grandchild in child.children):
-            return False
-        if child.pos_ == "PRON":
-            return True
-        if child.pos_ == "NOUN":
-            return True
-        if child.pos_ == "PROPN" and any(grandchild.dep_ in {"compound", "nummod"} for grandchild in child.children):
-            return True
+
+def _person_object(token, *, names: bool) -> bool:
+    """A pronoun or a victim label. A proper name counts only for an influence verb."""
+    if any(child.dep_ == "poss" for child in token.children):
         return False
-    return False
+    if token.pos_ == "PRON":
+        return True
+    if token.lemma_.lower() in _PERSON_LEMMAS:
+        return True
+    if any(child.lemma_.lower() in _PERSON_LEMMAS for child in token.children):
+        return True
+    return names and token.pos_ == "PROPN"
+
+
+def _object_controls(governor) -> bool:
+    """An influence verb's person-object controls the infinitive.
+
+    ``asked Jane to send`` is Jane's act. ``used a laptop to upload`` and
+    ``used Snapchat to send`` stay the subject's act.
+    """
+    lemma = governor.lemma_.lower()
+    names = lemma in _INFLUENCE
+    if lemma not in _INFLUENCE and lemma not in _CAUSE:
+        return False
+    return any(child.dep_ in {"dobj", "dative", "iobj", "npadvmod"} and _person_object(child, names=names)
+               for child in governor.children)
 
 
 def _act_verb(doc):
@@ -1027,25 +1044,50 @@ def _act_verb(doc):
 
 
 def _clause_is_negated(verb) -> bool:
-    """A neg dependency, or a negative determiner on a phrase that scopes the verb."""
+    """A neg dependency, or ``no`` on the verb's object or passive subject."""
     for token in verb.subtree:
         if token.dep_ == "neg":
             return True
-        if token.lemma_.lower() == "no" and token.dep_ == "det" and token.head.dep_ == "pobj":
-            prep = token.head.head
-            if prep.dep_ == "prep" and prep.head.i == verb.i:
+        if token.lemma_.lower() in {"no", "none"} and token.dep_ == "det":
+            head = token.head
+            if head.dep_ in {"dobj", "nsubj", "nsubjpass", "nsubj:pass"} and head.head.i == verb.i:
                 return True
+            if head.dep_ == "pobj":
+                prep = head.head
+                if prep.dep_ == "prep" and prep.head.i == verb.i:
+                    return True
     return False
+
+
+def _defendant_said(verb) -> bool:
+    """A complement whose subject is a pronoun and whose main subject is the defendant.
+
+    ``The defendant told the victim that he would share the images`` is his threat.
+    """
+    if verb is None or _clause_of(verb) != "ccomp":
+        return False
+    matrix = verb.head
+    matrix_subject = next((child for child in matrix.children if child.dep_ in _SUBJECT_DEPS), None)
+    own = next((child for child in verb.children if child.dep_ in _SUBJECT_DEPS), None)
+    if matrix_subject is None or own is None:
+        return False
+    if matrix_subject.text.lower() not in {"defendant", "accused"}:
+        return False
+    return own.pos_ == "PRON"
 
 
 def _verb_block(verb) -> Optional[str]:
     """Why this verb is not a publishable main-clause act, or None."""
     if verb is None:
         return "actor_rejected"
+    if _defendant_said(verb):
+        return None
     if _clause_is_negated(verb):
         return "negated"
-    if verb.lemma_.lower() in _NEG_VERBS:
+    if verb.lemma_.lower() in _NEG_VERBS or verb.head.lemma_.lower() in _NEG_VERBS and _clause_of(verb) == "xcomp":
         return "negated"
+    if verb.lemma_.lower() in _UNREAL or (verb.head.lemma_.lower() in _UNREAL and _clause_of(verb) == "xcomp"):
+        return "modal_conditional"
     if any(child.dep_ == "aux" and child.lemma_.lower() in _MODALS for child in verb.children):
         return "modal_conditional"
     if any(child.dep_ == "mark" and child.lemma_.lower() in {"if", "unless"} for child in verb.children):
@@ -1078,19 +1120,20 @@ def _hit_for(record: dict, records: List[dict], scope: Optional[dict], generic: 
 
 
 def _defendant_is_other_argument(verb, subject) -> bool:
-    """True when ``the defendant`` is an object of the act verb and not its subject."""
+    """True when ``the defendant`` is an object or recipient of the act verb."""
     if verb is None:
         return False
     subject_i = subject.i if subject is not None else -1
+
+    def _hit(token) -> bool:
+        return token.i != subject_i and token.text.lower() == "defendant"
+
     for token in verb.children:
-        if token.i == subject_i:
-            continue
-        if token.text.lower() == "defendant" and token.dep_ in {"dobj", "dative", "iobj", "attr", "oprd"}:
+        if _hit(token) and token.dep_ in {"dobj", "dative", "iobj", "attr", "oprd", "pobj"}:
             return True
-        if token.dep_ == "prep":
-            for child in token.children:
-                if child.i != subject_i and child.text.lower() == "defendant" and child.dep_ == "pobj":
-                    return True
+        if token.dep_ in {"prep", "dative"}:
+            if any(_hit(child) and child.dep_ == "pobj" for child in token.children):
+                return True
     return False
 
 
@@ -1111,11 +1154,41 @@ def _name_modifiers(subject):
         if child.dep_ != "compound" or child.i > subject.i:
             continue
         low = child.text.strip(".").lower()
+        if child.pos_ == "ADV" or low in _ADVERB_COMPOUND:
+            continue
         if low in _COURTESY or low in _ROLE_TITLE or low in _FEMININE:
             titles.append(low)
         else:
             givens.append(child.text.strip("."))
     return titles, givens
+
+
+def _other_given_on_page(surname: str, record: dict, page_text: str) -> bool:
+    """Another capitalized given name in the page shares this surname."""
+    known = _given_names(record) | {record["surname"].lower()}
+    for alias in record.get("aliases") or []:
+        parts = [part.lower() for part in alias.split()]
+        if parts and parts[-1] == surname.lower():
+            known.update(parts[:-1])
+    for match in re.finditer(rf"\b([A-Z][A-Za-z']+)\s+{re.escape(surname)}\b", page_text or ""):
+        given = match.group(1).lower()
+        if given in known or given in _ADVERB_COMPOUND:
+            continue
+        return True
+    return False
+
+
+def _someone_else_in_a_subordinate(verb) -> bool:
+    """``watched as Minor Victim 1 produced`` is not the defendant's act."""
+    if verb is None or verb.lemma_.lower() not in _PERCEPTION:
+        return False
+    for child in verb.children:
+        if child.dep_ != "advcl":
+            continue
+        other = next((token for token in child.children if token.dep_ in _SUBJECT_DEPS), None)
+        if other is not None and other.text.lower() not in {"defendant", "accused"}:
+            return True
+    return False
 
 
 def _conflicts_with_record(subject, record, page_text: str) -> bool:
@@ -1155,7 +1228,22 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
     """``(hit, None)`` or ``(None, reason)`` for one main-clause subject token."""
     if subject is None:
         return None, "actor_rejected"
-    if any(child.dep_ == "conj" for child in subject.children) or subject.dep_ == "conj":
+    if subject.text.strip(".").lower() in _SUFFIXES:
+        surname = next((child for child in subject.children
+                        if child.dep_ == "compound" and child.text.lower() in _known_surnames(records)), None)
+        if surname is not None:
+            subject = surname
+    partners = [child for child in subject.children if child.dep_ == "conj"]
+    if subject.dep_ == "conj":
+        partners = [subject.head, *[child for child in subject.head.children if child.dep_ == "conj" and child.i != subject.i]]
+    if partners:
+        group = [subject, *partners]
+        surnames = _known_surnames(records)
+        ours = [token for token in group if token.text.lower() in {"defendant", "accused"} or token.text.lower() in surnames]
+        others = [token for token in group if token not in ours]
+        charged_other = {token.text.lower() for token in others} & surnames
+        if len(ours) == 1 and others and not charged_other and len(records) == 1:
+            return _hit_for(records[0], records, scope, generic), None
         return None, "coordinated_subject"
     if any(child.dep_ in {"appos", "relcl"} for child in subject.children):
         return None, "appositive_relation"
@@ -1164,6 +1252,8 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
     word = subject.text.lower()
     phrase = _noun_phrase(subject.doc, subject)
     if word in PRONOUN_WORDS or _PRONOUN.fullmatch(phrase):
+        if _defendant_said(subject.head) and len(records) == 1:
+            return _hit_for(records[0], records, scope, generic), None
         if subject.dep_ not in _SUBJECT_DEPS:
             return None, "pronoun_object"
         return None, "actor_rejected"
@@ -1196,6 +1286,8 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
         return None, "actor_rejected"
     if _PRONOUN.fullmatch(" ".join((actor_text or "").split())) and subject.dep_ not in _SUBJECT_DEPS:
         return None, "pronoun_object"
+    if _other_given_on_page(subject.text, found["record"], page_text):
+        return None, "ambiguous_surname"
     if _conflicts_with_record(subject, found["record"], page_text):
         titles, givens = _name_modifiers(subject)
         if not titles and not givens:
@@ -1246,7 +1338,9 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     if verb is not None and verb.dep_ == "xcomp" and not _object_controls(verb.head):
         verb = verb.head
     subject = _subject_of(verb) if verb is not None else None
-    if _defendant_is_other_argument(verb, subject):
+    if _someone_else_in_a_subordinate(verb) or _defendant_is_other_argument(verb, subject):
+        return None, "actor_rejected"
+    if re.search(r"\b(?:watched|saw|observed)\s+as\s+(?!the\s+defendant\b)", sentence or "", re.I):
         return None, "actor_rejected"
     wanted = " ".join((actor_text or "").split()).lower()
     if subject is not None and wanted and subject.text.lower() not in wanted and "defendant" not in wanted:
@@ -1266,9 +1360,12 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
             return None, "passive_subject"
     if _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
         pronoun = next((token for token in doc if token.text.lower() == actor_text.strip().lower()), None)
-        if pronoun is None or pronoun.dep_ not in _SUBJECT_DEPS or not _is_main_verb(pronoun.head):
+        if pronoun is not None and _defendant_said(pronoun.head):
+            subject = pronoun
+        elif pronoun is None or pronoun.dep_ not in _SUBJECT_DEPS or not _is_main_verb(pronoun.head):
             return None, "pronoun_object"
-        subject = pronoun
+        else:
+            subject = pronoun
     hit, reason = _subject_decision(subject, records, generic, scope, other_surnames, actor_text,
                                     page_text if page_text is not None else sentence)
     if reason:

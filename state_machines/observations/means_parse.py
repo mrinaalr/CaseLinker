@@ -164,6 +164,10 @@ def _subject_is_offender(sentence: str, tokens: Sequence[dict], verb_i: int, act
         # A pronoun is not resolved. The actor decision is decide_actor when the
         # case records are known; otherwise only the word "defendant" stands.
         if _THEY.match(subj["text"]):
+            if os.environ.get("CASELINKER_COREFERENCE") == "1" and actors:
+                from state_machines.coding.coreference import resolve_mentions, subject_is_offender
+                mentions = resolve_mentions(sentence, actors)
+                return subject_is_offender(mentions, subj["end"], actors)
             return False
         if records:
             found, reason = decide_actor(sentence, subj["text"], records, generic=generic, scope=scope)

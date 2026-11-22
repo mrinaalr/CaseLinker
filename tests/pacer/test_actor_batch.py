@@ -45,15 +45,14 @@ def _one(name, sentence, actor="the defendant"):
     ("Michael Smith distributed the images.", "Michael Smith", "", "the images", None),
     ("The files were sent by the defendant.", "the defendant", "", "The files", None),
     ("The defendant downloaded and sent the files.", "the defendant", "", "the files", None),
-    ("He sent the files.", "He", "", "the files", {"CASELINKER_COREFERENCE": "1"}),
+    ("The defendant and Agent Porter sent the files.", "the defendant", "", "the files", None),
+    ("The defendant used a laptop to upload the files.", "the defendant", "", "the files", None),
 ])
 @pytest.mark.needs_spacy
 def test_plain_positive_clauses_publish(tmp_path, monkeypatch, sentence, actor, means, object_text, extra):
     events, _log = code_events(
         tmp_path, monkeypatch, "plain", _one("Michael Smith", sentence), sentence, actor,
         means=means, object_text=object_text, env=extra)
-    if actor == "He" and events != ["DISTRIBUTE_MATERIAL"]:
-        pytest.xfail("a pronoun subject is refused; the stored expectation still publishes")
     assert events == ["DISTRIBUTE_MATERIAL"]
 
 
@@ -62,7 +61,7 @@ def test_plain_positive_clauses_publish(tmp_path, monkeypatch, sentence, actor, 
     ("The defendant said that the victim sent the files.", "the defendant", "reported_speech", None),
     ("The defendant did not send the files.", "the defendant", "negated", None),
     ("The defendant would have sent the files.", "the defendant", "modal_conditional", None),
-    ("The defendant and Agent Porter sent the files.", "the defendant", "coordinated_subject", None),
+    ("Jane Roe and Robert Porter sent the files to the defendant.", "the defendant", "actor_rejected", None),
     ("Smith, his sister, sent the files.", "Smith", "appositive_relation", None),
     ("Agent Porter sent him the files.", "him", "pronoun_object", {"CASELINKER_COREFERENCE": "1"}),
 ])
@@ -348,8 +347,10 @@ def test_extract_records_court_case_number_and_document_hash(tmp_path, monkeypat
     assert "court" not in manifest and "docket_number" not in manifest["documents"][0]
     assert manifest["documents"][0]["sha256"]
     key_path = tmp_path / "text" / "sample_2024_001" / "case_key.json"
-    if not key_path.is_file():
-        pytest.xfail("case_key.json is written only when a v2 flag is on; this test still expects the file")
+    assert not key_path.is_file()
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    manifest = extract("sample_2024_001")
+    key_path = tmp_path / "text" / "sample_2024_001" / "case_key.json"
     key = json.loads(key_path.read_text(encoding="utf-8"))
     assert key["court"] == "DISTRICT OF COLUMBIA"
     assert key["docket_number"].startswith("1:24-cr-4")
