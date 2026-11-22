@@ -203,22 +203,26 @@ def _inside(page: str, needle: str, sent_start: int, sent_end: int, *, ignore_ca
     return inner[0] if inner else None
 
 
-def _occurrence_actor(page: str, sentence: str, sent_start: int, sent_end: int, actor: str, records: List[dict]):
-    """Who this copy of the quote is about: the model's actor if it sits here, else the clause subject."""
-    from state_machines.coding.workflow import clause_subject, match_actor
-    def _label(found, fallback):
-        if not found:
-            return fallback
-        if found.get("ambiguous"):
+def _occurrence_actor(page: str, sentence: str, sent_start: int, sent_end: int, actor: str, records: List[dict],
+                      generic: str = None, scope: dict = None):
+    """Who this copy of the quote is about, using the same actor decision as coding."""
+    from state_machines.coding.workflow import clause_subject, decide_actor
+
+    def _label(phrase, fallback):
+        found, reason = decide_actor(sentence, phrase, records, generic=generic, scope=scope)
+        if reason == "ambiguous":
             return "ambiguous"
-        return found.get("canonical") or fallback
+        if found and found.get("canonical"):
+            return found["canonical"]
+        return fallback
 
     if actor and _inside(page, actor, sent_start, sent_end, ignore_case=True):
-        return _label(match_actor(actor, records), actor)
-    return _label(match_actor(clause_subject(sentence), records), clause_subject(sentence))
+        return _label(actor, actor)
+    return _label(clause_subject(sentence), clause_subject(sentence))
 
 
-def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None) -> Tuple[Optional[dict], str, List[str]]:
+def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None,
+                 generic: Optional[str] = None, scope: Optional[dict] = None) -> Tuple[Optional[dict], str, List[str]]:
     """Place a model's plain-text frame on ``page``.
 
     Returns ``(frame, "", [])`` or ``(None, reason, problems)``. The hash and the
@@ -244,7 +248,7 @@ def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None) -
         sent_start, sent_end = _sentence_bounds(page, *hit)
         sentence = page[sent_start:sent_end]
         blocked = blocks_offender_products(classify(sentence)["role"])
-        label = _occurrence_actor(page, sentence, sent_start, sent_end, actor, records)
+        label = _occurrence_actor(page, sentence, sent_start, sent_end, actor, records, generic, scope)
         views.append((blocked, label, sent_start, sent_end, sentence))
     labels = {(blocked, label) for blocked, label, *_rest in views}
     if len(views) > 1 and len(labels) > 1:

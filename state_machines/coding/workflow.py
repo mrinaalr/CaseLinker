@@ -310,6 +310,7 @@ _BODY_HEADING = re.compile(
 _DEFENDANT_LINE = re.compile(r"\bDefendants?\.?\s*$", re.I)
 _CAPTION_LINE_LIMIT = 40
 _CHARGING_DOCS = {"complaint", "information", "indictment", "superseding_indictment"}
+_PLEA_DOCS = {"plea_agreement", "plea_transcript", "statement_of_offense"}
 _ET_AL = re.compile(r"\bet\s+al\b\.?", re.I)
 _SUFFIX_BETWEEN = re.compile(
     r"\b([A-Z][A-Za-z'\-]+),\s+(?:JR|SR|II|III|IV)\.?,\s+([A-Z][A-Za-z'\-]+)\b",
@@ -626,9 +627,13 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         records, et_al = _parse_caption(page.read_text(encoding="utf-8", errors="replace"))
         if not records and not et_al:
             continue
-        found.append({"doc_type": doc.get("doc_type") or "other", "records": records, "et_al": et_al})
-    charging = [item for item in found if item["doc_type"] in _CHARGING_DOCS]
-    chosen = charging or found
+        found.append({"doc_id": doc["doc_id"], "doc_type": doc.get("doc_type") or "other",
+                      "records": records, "et_al": et_al})
+    # One charging document must not replace another, or a plea that names
+    # someone else. The case set is their union. Other documents fill in only
+    # when no charging or plea caption exists.
+    primary = [item for item in found if item["doc_type"] in _CHARGING_DOCS | _PLEA_DOCS]
+    chosen = primary or found
     if not chosen:
         return {"records": [], "generic": "no_defendant_record", "et_al": False, "conflict": False}
     signatures = {_signature(item["records"]) for item in chosen}
@@ -642,7 +647,18 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         generic = "ambiguous"
     else:
         generic = "one"
-    return {"records": records, "generic": generic, "et_al": et_al, "conflict": conflict}
+    by_document = {}
+    for item in found:
+        own = item["records"]
+        match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
+        if match is not None and not item["et_al"]:
+            by_document[item["doc_id"]] = {"generic": "one", "record": match}
+        elif generic == "one":
+            by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
+        else:
+            by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
+    return {"records": records, "generic": generic, "et_al": et_al, "conflict": conflict,
+            "by_document": by_document}
 
 
 def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -> List[dict]:
@@ -807,7 +823,7 @@ def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optio
 
 
 def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
-                 generic: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
+                 generic: Optional[str] = None, scope: Optional[dict] = None) -> Tuple[Optional[dict], Optional[str]]:
     """``(match, drop reason)`` for one act. A reason means the act is not published.
 
     The coder and missed-act recovery both use this. A full name, ``Defendant
@@ -830,8 +846,13 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
         if agent and _token_names_defendant(agent, actor_text, records):
             subject = agent.text
             agent_is_actor = True
-    if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())) and generic != "one":
-        return None, "ambiguous"
+    if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())):
+        if scope is not None and generic == "one":
+            alone = len(records) == 1
+            canonical = "the defendant" if alone else "defendant " + scope["full"]
+            return {"canonical": canonical, "record": scope, "generic": True}, None
+        if generic != "one":
+            return None, "ambiguous"
     if not agent_is_actor:
         for candidate in (actor_text, subject):
             reason = _bare_surname_reason(sentence, candidate, records)

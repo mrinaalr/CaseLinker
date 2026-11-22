@@ -338,6 +338,25 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         raise AssertionError(kind)
 
 
+def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
+    """A complaint naming Smith does not absorb a plea that names Porter."""
+    sentence = "The defendant sent the files to other users via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "the defendant")])
+    _store_docs(tmp_path, "split", [
+        ("complaint", "complaint", ["United States v. Michael Smith, Defendant."]),
+        ("plea", "plea_agreement", [f"United States v. Robert Porter, Defendant. {sentence}"]),
+    ])
+    from state_machines.coding.workflow import build_deny, case_defendants
+    info = case_defendants("split", tmp_path)
+    assert [record["surname"] for record in info["records"]] == ["Smith", "Porter"]
+    bundle, _, log = C.code_case("split", "coder_A", tmp_path, deny=build_deny("split", tmp_path))
+    assert info["by_document"]["plea"]["record"]["surname"] == "Porter"
+    assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+    assert C.drops_from_log(log)["ambiguous"] == 0
+
+
 def test_an_alias_stays_one_charged_defendant(tmp_path, monkeypatch):
     text = ("United States v. Jordan Example a/k/a Jay Sample, Defendant. "
             "Example uploaded the files using an encrypted app. "

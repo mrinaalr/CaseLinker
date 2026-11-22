@@ -846,7 +846,7 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
 
 
 def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
-                           generic: Optional[str] = None):
+                           generic: Optional[str] = None, scope: Optional[dict] = None):
     """Acts a coder's model frames survive as, and why the others were dropped.
 
     The model returns text. The hash and the offsets are computed from the page.
@@ -859,7 +859,7 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
     counts = empty_drops()
     records = records or []
     for frame in frames or []:
-        grounded, reason, problems = ground_frame(text, frame, records)
+        grounded, reason, problems = ground_frame(text, frame, records, generic=generic, scope=scope)
         if reason == "verify_failed":
             for problem in problems:
                 counts["verify_failed"][problem] = counts["verify_failed"].get(problem, 0) + 1
@@ -870,7 +870,7 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
         slot = grounded.get("actor") or {}
         sentence = (grounded.get("sentence") or {}).get("text") or ""
         from state_machines.coding.workflow import decide_actor
-        found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic)
+        found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic, scope=scope)
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
             continue
@@ -970,7 +970,10 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     item[3] = {"acts": []}
                     item[5] = {"unparsed": True}
                     continue
-                acts, counts = acts_from_model_frames(item[2], ans.get("frames") or [], records, generic=generic)
+                doc_scope = (info.get("by_document") or {}).get(item[0]["doc_id"], {})
+                acts, counts = acts_from_model_frames(
+                    item[2], ans.get("frames") or [], records,
+                    generic=doc_scope.get("generic", generic), scope=doc_scope.get("record"))
                 item[3] = {"acts": acts}
                 item[5] = counts
                 add_drops(totals, counts)
