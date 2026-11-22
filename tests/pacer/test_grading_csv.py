@@ -30,15 +30,19 @@ def test_the_csv_round_trip_keeps_the_marks_and_leaves_the_key_out(tmp_path):
         rows = list(csv.DictReader(handle))
     assert set(rows[0]) == {
         "unit_id", "context_before", "sentence", "context_after",
-        "act", "act_code", "actor", "means", "level_c",
+        "act", "act_code", "actor",
+        "platform_means", "platform", "feature_means", "feature",
     }
     assert "machine" not in rows[0] and "inclusion_probability" not in rows[0]
-    assert rows[0]["act"] == "" and rows[0]["means"] == ""
+    assert "means" not in rows[0] and "level_c" not in rows[0]
+    assert rows[0]["act"] == "" and rows[0]["platform_means"] == "" and rows[0]["feature_means"] == ""
     rows[0]["act"] = "yes"
     rows[0]["act_code"] = "DISTRIBUTE_MATERIAL"
     rows[0]["actor"] = "the defendant"
-    rows[0]["means"] = "yes"
-    rows[0]["level_c"] = "no"
+    rows[0]["platform_means"] = "yes"
+    rows[0]["platform"] = "Kitebox"
+    rows[0]["feature_means"] = "yes"
+    rows[0]["feature"] = "encrypted"
     rows[1]["act"] = "no"
     filled = tmp_path / "filled.csv"
     with filled.open("w", encoding="utf-8", newline="") as handle:
@@ -47,11 +51,13 @@ def test_the_csv_round_trip_keeps_the_marks_and_leaves_the_key_out(tmp_path):
         writer.writerows(rows)
     graded = import_graded_csv(filled)
     assert graded["units"][0]["gold"] == {
-        "act": "DISTRIBUTE_MATERIAL", "means_tie": True, "level_c": False,
+        "act": "DISTRIBUTE_MATERIAL", "means_tie": True, "level_c": True,
     }
-    assert graded["units"][0]["actor"] == "the defendant"
+    assert graded["units"][0]["platform"] == "Kitebox"
+    assert graded["units"][0]["feature"] == "encrypted"
     assert graded["units"][1]["gold"]["act"] == ""
     assert graded["units"][1]["gold"]["means_tie"] is False
+    assert graded["units"][1]["gold"]["level_c"] is False
     again = json.loads(json.dumps(graded))
     assert again == graded
 
@@ -76,7 +82,7 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
         "sentence": "The defendant sent the files through an encrypted channel.",
         "context_before": ["The caption names one defendant."],
         "context_after": ["The next sentence is background."],
-        "machine": {"act": "DISTRIBUTE_MATERIAL", "means_tie": False, "level_c": False},
+        "machine": {"act": "DISTRIBUTE_MATERIAL", "means_tie": True, "level_c": False},
     }, {
         "unit_id": "u-app",
         "case_id": case_id,
@@ -84,7 +90,7 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
         "sentence": "A later sentence names a messaging application.",
         "context_before": [],
         "context_after": [],
-        "machine": {"act": "", "means_tie": True, "level_c": False},
+        "machine": {"act": "", "means_tie": False, "level_c": True},
     }]
     sample = G.draw_sample(
         population, {"seed": 1, "strata": {"published_acts": {"n": 2}}}, sealed=manifest)
@@ -98,9 +104,11 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
         rows = list(csv.DictReader(handle))
     by_sentence = {row["sentence"]: row for row in rows}
     send = by_sentence["The defendant sent the files through an encrypted channel."]
-    send.update(act="yes", act_code="DISTRIBUTE_MATERIAL", actor="the defendant", means="no", level_c="no")
+    send.update(act="yes", act_code="DISTRIBUTE_MATERIAL", actor="the defendant",
+                platform_means="yes", platform="Kitebox", feature_means="no", feature="")
     app = by_sentence["A later sentence names a messaging application."]
-    app.update(act="no", act_code="", actor="", means="yes", level_c="no")
+    app.update(act="no", act_code="", actor="",
+               platform_means="no", platform="", feature_means="yes", feature="encrypted")
     filled = tmp_path / "filled.csv"
     _write(filled, rows)
     graded = import_graded_csv(filled)
@@ -108,20 +116,22 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
     result = G.score(graded, key, sealed=manifest, replicates=20, seed=0)
     assert result["precision"]["act"]["precision"] == 1
     assert result["precision"]["means_tie"]["precision"] == 1
+    assert result["precision"]["level_c"]["precision"] == 1
     assert result["recall"]["act"]["recall"] == 1
+    assert result["recall"]["level_c"]["recall"] == 1
     swapped = {"units": []}
     for row in rows:
         swapped["units"].append({
             "unit_id": row["unit_id"],
             "gold": {
                 "act": "yes" if row["act"] == "yes" else "",
-                "means_tie": row["act"] == "yes",
-                "level_c": False,
+                "means_tie": row["feature_means"] == "yes",
+                "level_c": row["platform_means"] == "yes",
             },
         })
     wrong = G.score(swapped, key, sealed=manifest, replicates=20, seed=0)
-    assert wrong["precision"]["act"]["precision"] == 0
     assert wrong["precision"]["means_tie"]["precision"] == 0
+    assert wrong["precision"]["level_c"]["precision"] == 0
 
 
 def test_population_writer_emits_the_file_draw_reads(tmp_path):
@@ -138,5 +148,8 @@ def test_population_writer_emits_the_file_draw_reads(tmp_path):
     out = tmp_path / "units.json"
     assert G.write_population([case], tmp_path, out) == 2
     rows = json.loads(out.read_text(encoding="utf-8"))
-    assert rows[0]["court"] == "dcd" and rows[0]["sentence"]
-    assert "machine" not in rows[0]
+    sentences = {row["sentence"]: row["stratum"] for row in rows}
+    assert sentences["The defendant sent the files."] == "other"
+    assert sentences["The hearing was continued."] == "other"
+    assert "published_acts" not in sentences.values()
+    assert all("machine" not in row for row in rows)

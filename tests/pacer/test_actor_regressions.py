@@ -425,9 +425,9 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     info = case_defendants("split", tmp_path)
     assert [record["surname"] for record in info["records"]] == ["Smith"]
     bundle, _, log = C.code_case("split", "coder_A", tmp_path, deny=build_deny("split", tmp_path))
-    assert info["by_document"]["plea"]["reason"] == "other_caption"
-    assert bundle["events"] == []
-    assert "other_caption" in {row["reason"] for row in json.loads("[" + ",".join((tmp_path / "split" / "coder_A.v2_refusals.jsonl").read_text().splitlines()) + "]")}
+    assert info["by_document"]["plea"]["generic"] == "one"
+    assert info["by_document"]["plea"]["record"]["surname"] == "Porter"
+    assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
 
 
 @needs_spacy

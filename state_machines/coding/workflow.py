@@ -808,6 +808,8 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "ambiguous_surname"}
             elif len(own) > 1:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
+            elif own and not matches and item["doc_type"] in _PLEA_DOCS:
+                by_document[item["doc_id"]] = {"generic": "one", "record": own[0]}
             elif own and not matches:
                 reason = "other_caption" if item["doc_type"] in _PLEA_DOCS else "caption_mismatch"
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": reason}
@@ -954,8 +956,6 @@ _CONDUCT = {"send", "distribute", "upload", "download", "receive", "trade", "mes
 _SPEECH = {"say", "tell", "claim", "know", "quote", "report", "state", "write"}
 _NEG_VERBS = {"deny", "refuse", "fail", "decline", "neglect", "avoid"}
 _UNREAL = {"plan", "intend", "want", "hope", "hop", "wish"}
-_INFLUENCE = {"ask", "tell", "persuade", "convince", "instruct", "direct", "entice", "coerce", "cause", "pressure", "get"}
-_CAUSE = {"use", "have", "make"}
 _DEFENDANT_SOLICIT = {"SOLICIT_IMAGERY", "DIRECT_CONDUCT"}
 _PERCEPTION = {"watch", "see", "observe", "look"}
 _MODALS = {"would", "could", "may", "might", "should"}
@@ -1010,18 +1010,58 @@ def _person_object(token, *, names: bool) -> bool:
     return names and token.pos_ == "PROPN"
 
 
-def _object_controls(governor) -> bool:
-    """An influence verb's person-object controls the infinitive.
+def _subject_possessive(child, governor) -> bool:
+    """A possessive pronoun on the object resolves to the one subject of this verb.
 
-    ``asked Jane to send`` is Jane's act. ``used a laptop to upload`` and
-    ``used Snapchat to send`` stay the subject's act.
+    ``his phone`` is the subject's instrument. A named possessor does not resolve
+    that way, and a bare common noun is not an instrument.
     """
-    lemma = governor.lemma_.lower()
-    names = lemma in _INFLUENCE
-    if lemma not in _INFLUENCE and lemma not in _CAUSE:
+    poss = [grand for grand in child.children if grand.dep_ == "poss" and grand.pos_ == "PRON"]
+    if len(poss) != 1:
         return False
-    return any(child.dep_ in {"dobj", "dative", "iobj", "npadvmod"} and _person_object(child, names=names)
-               for child in governor.children)
+    subjects = [token for token in governor.children if token.dep_ in _SUBJECT_DEPS]
+    return len(subjects) == 1
+
+
+def _listed_instrument(token, records) -> bool:
+    """A platform or level-C feature the pipeline already recognizes.
+
+    A vocabulary entry that is also a surname or given name on this case's
+    caption is not an instrument.
+    """
+    from state_machines.coding.enrich import feature, known_platform
+
+    words = [child.text for child in token.children if child.dep_ == "compound" and child.i < token.i]
+    phrase = " ".join([*words, token.text])
+    matched = known_platform(phrase) or known_platform(token.text)
+    if matched:
+        people = _known_surnames(records or [])
+        for record in records or []:
+            people |= _given_names(record)
+        return matched.lower() not in people
+    return feature(phrase) is not None or feature(token.text) is not None
+
+
+def _controlling_object(governor, records=None):
+    """The object that controls an embedded act, or None when the act stays with the subject.
+
+    A listed platform or level-C feature is an instrument. A possessive pronoun
+    that resolves to the one subject is that subject's instrument. A person
+    controls the act. Any other object is unresolved, and the act is refused.
+    """
+    person = None
+    for child in governor.children:
+        if child.dep_ not in {"dobj", "dative", "iobj", "npadvmod"}:
+            continue
+        if _subject_possessive(child, governor):
+            continue
+        if _listed_instrument(child, records):
+            continue
+        if _person_object(child, names=False):
+            person = ("person", child)
+            continue
+        return "unresolved", child
+    return person
 
 
 def _act_verb(doc):
@@ -1079,7 +1119,7 @@ def _defendant_said(verb, records=None) -> bool:
     return bool(records) and len(records) == 1 and low in _known_surnames(records)
 
 
-def _verb_block(verb) -> Optional[str]:
+def _verb_block(verb, records=None) -> Optional[str]:
     """Why this verb is not a publishable main-clause act, or None."""
     if verb is None:
         return "actor_rejected"
@@ -1103,10 +1143,19 @@ def _verb_block(verb) -> Optional[str]:
             return "reported_speech"
     if where == "xcomp" and verb.head.lemma_.lower() in _NEG_VERBS:
         return "negated"
-    if where == "xcomp":
-        if _object_controls(verb.head):
+    if where in {"xcomp", "ccomp"}:
+        own = next((child for child in verb.children if child.dep_ in _SUBJECT_DEPS), None)
+        if own is not None and own.dep_ in {"nsubjpass", "nsubj:pass"}:
+            agent = next((child for child in verb.children if child.dep_ == "agent"), None)
+            if agent is None:
+                return "passive_subject"
+        control = _controlling_object(verb.head, records)
+        if control is not None:
             return "actor_rejected"
-        return None
+        if where == "ccomp" and own is None:
+            return "actor_rejected"
+        if where == "xcomp":
+            return None
     if where in _BLOCKED_CLAUSE:
         return "subordinate_clause"
     if not _is_main_verb(verb):
@@ -1309,6 +1358,36 @@ def _strip_heading(text: str) -> str:
         "", (text or "").strip(), count=1, flags=re.I)
 
 
+_PASSIVE_MARK = re.compile(
+    r"\b(?:was|were|been|be)\s+(?:sent|used|distributed|uploaded|received|stored|transmitted|"
+    r"shared|posted|forwarded|asked|told|made|kept|given|taken|viewed|accessed|produced|"
+    r"possessed|\w+ed)\b",
+    re.I,
+)
+_APPOSITIVE_POSSESSIVE = re.compile(r",\s+the\s+defendant(?:'s|\u2019s)\s+\S+\s*,", re.I)
+
+
+def _plain_actor(sentence: str, actor_text: str, records: List[dict]) -> Tuple[Optional[dict], Optional[str]]:
+    """A missing parse never publishes. Embedded clauses refuse with the rest.
+
+    Bare surnames and passives are ``no_parser``. A possessive, an appositive,
+    or a generic actor with no parsed subject is ``actor_rejected``. A capital
+    token that is not a caption surname is ``surname_not_established``.
+    """
+    actor = " ".join((actor_text or "").split())
+    if _PASSIVE_MARK.search(sentence or ""):
+        return None, "no_parser"
+    if (_APPOSITIVE_POSSESSIVE.search(sentence or "") or _POSSESSIVE_ACTOR.search(actor)
+            or _ANY_POSSESSIVE.search(actor) or _POSSESSIVE_ACTOR.search(sentence or "")):
+        return None, "actor_rejected"
+    token = _one_capital(actor)
+    if token and token.lower() not in {"defendant", "accused"}:
+        if token.lower() not in _known_surnames(records):
+            return None, "surname_not_established"
+        return None, "no_parser"
+    return None, "actor_rejected"
+
+
 def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
                  generic: Optional[str] = None, scope: Optional[dict] = None,
                  other_surnames: Optional[List[str]] = None,
@@ -1329,13 +1408,18 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
         return None, caption_reason
     if generic == "no_defendant_record" or not records:
         return None, "no_defendant_record"
+    if _actor_nlp() is None:
+        if v2_active():
+            from state_machines.observations.means_parse import model_name
+            raise SystemExit(f"v2 coding needs the spaCy model {model_name()}, which is not available")
+        return _plain_actor(sentence, actor_text, records)
     nlp = _require_actor_nlp()
     doc = nlp(_strip_heading(sentence or ""))
     verb = _act_verb(doc)
-    if (verb is not None and verb.dep_ == "xcomp" and _object_controls(verb.head)
+    if (verb is not None and verb.dep_ in {"xcomp", "ccomp"} and _controlling_object(verb.head, records)
             and act_code in _DEFENDANT_SOLICIT):
         verb = verb.head
-    blocked = _verb_block(verb)
+    blocked = _verb_block(verb, records)
     if blocked == "reported_speech" and _defendant_said(verb, records):
         blocked = None
     if blocked:
@@ -1347,7 +1431,7 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
             return _subject_of(head.head)
         return found
 
-    if verb is not None and verb.dep_ == "xcomp" and not _object_controls(verb.head):
+    if verb is not None and verb.dep_ == "xcomp" and _controlling_object(verb.head, records) is None:
         verb = verb.head
     subject = _subject_of(verb) if verb is not None else None
     if _someone_else_in_a_subordinate(verb) or _defendant_is_other_argument(verb, subject):

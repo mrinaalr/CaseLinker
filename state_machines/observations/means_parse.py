@@ -212,8 +212,16 @@ def instrument_means(sentence: str, observation: dict, tokens: Sequence[dict], a
         verb_i, cue, crossed = found
         if _negated(tokens, verb_i):
             continue
-        if not _subject_is_offender(sentence, tokens, verb_i, actors, records=records,
-                                    generic=generic, scope=scope):
+        _, subj = _subject(tokens, verb_i)
+        if subj is None:
+            continue
+        if records:
+            from state_machines.coding.workflow import decide_actor
+            found_actor, reason = decide_actor(
+                sentence, subj["text"], records, generic=generic, scope=scope)
+            if reason or not found_actor:
+                continue
+        elif not _OFFENDER_WORD.match(subj["text"]):
             continue
         method = "fallback" if fallback_enabled() else "dep"
         return {"relationship": "Supports_Action", "cue": cue, "method": method,

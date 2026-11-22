@@ -96,11 +96,27 @@ def merge_dockets(rows: Sequence[dict]) -> list:
 _STAMPED = ("court", "docket_number", "document_sha256", "doc_id")
 
 
-def population_from_case(case_id: str, text_root, *, stratum: str = "published_acts") -> list:
-    """Sentence rows for one case, each stamped with court, docket and document hash.
+def stratum_for_sentence(sentence: str, *, published_act: bool = False) -> str:
+    """``machine_positive`` when a platform or level-C feature is named, or an act was published.
 
-    Court and docket come from ``case_key.json`` when that file exists, otherwise
-    from ``sources.json``. The document hash is the filing's own sha256.
+    ``published_act`` is the frozen head's label. This function does not run that head.
+    The name ``published_acts`` is not a stratum and is not a filter.
+    """
+    from state_machines.observations.observe import features_in, platforms_in
+
+    if published_act or platforms_in(sentence) or features_in(sentence):
+        return "machine_positive"
+    return "other"
+
+
+def population_from_case(case_id: str, text_root) -> list:
+    """Every sentence on every filed page.
+
+    A sentence that names a listed platform or a level-C feature is
+    ``machine_positive``. Every other sentence is ``other``. The old stamp
+    ``published_acts`` is not a stratum and not a filter. No machine label is
+    written here; those labels belong in ``key.json``. Court and docket come
+    from ``case_key.json`` when that file exists, otherwise from ``sources.json``.
     """
     from state_machines.evidence import evidence as E
     from state_machines.observations.observe import sentences
@@ -129,12 +145,33 @@ def population_from_case(case_id: str, text_root, *, stratum: str = "published_a
                     "court": court,
                     "docket_number": docket,
                     "document_sha256": sha,
-                    "stratum": stratum,
+                    "stratum": stratum_for_sentence(sentence),
                     "sentence": sentence,
                     "context_before": texts[max(0, index - 2):index],
                     "context_after": texts[index + 1:index + 3],
                 })
     return rows
+
+
+def _strata_from_config(config: dict, by: dict) -> dict:
+    """Stratum sizes. ``take_all`` draws every row of one stratum and fills the rest.
+
+    ``{"take_all": "machine_positive", "fill": "other", "total": 129, "seed": 1}``
+    never asks a stratum for more rows than it has.
+    """
+    if config.get("take_all"):
+        take = config["take_all"]
+        fill = config.get("fill") or "other"
+        total = int(config["total"])
+        n_take = len(by.get(take, []))
+        n_fill = min(len(by.get(fill, [])), max(0, total - n_take))
+        strata = {}
+        if n_take:
+            strata[take] = {"n": n_take}
+        if n_fill:
+            strata[fill] = {"n": n_fill}
+        return strata
+    return config["strata"]
 
 
 def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
@@ -160,9 +197,10 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
     by = {}
     for row in population:
         by.setdefault(row["stratum"], []).append(row)
+    strata = _strata_from_config(config, by)
     drawn = []
     meta = {}
-    for name, spec in config["strata"].items():
+    for name, spec in strata.items():
         pool = sorted(by.get(name, []), key=lambda row: row["unit_id"])
         size, asked = len(pool), spec["n"]
         if asked > size:
@@ -584,7 +622,9 @@ def write_population(case_ids: Sequence[str], text_root: Path, out: Path) -> int
 
 _GRADE_COLUMNS = (
     "unit_id", "context_before", "sentence", "context_after",
-    "act", "act_code", "actor", "means", "level_c",
+    "act", "act_code", "actor",
+    "platform_means", "platform",
+    "feature_means", "feature",
 )
 
 
@@ -608,8 +648,10 @@ def export_grading_csv(sheet: dict, out: Path) -> int:
                 "act": "",
                 "act_code": "",
                 "actor": "",
-                "means": "",
-                "level_c": "",
+                "platform_means": "",
+                "platform": "",
+                "feature_means": "",
+                "feature": "",
             })
     return len(sheet["units"])
 
@@ -617,8 +659,9 @@ def export_grading_csv(sheet: dict, out: Path) -> int:
 def import_graded_csv(path: Path) -> dict:
     """Filled CSV back into the graded JSON ``score`` reads.
 
-    ``act`` yes uses ``act_code`` as ``gold.act``. ``means`` and ``level_c`` are
-    the booleans ``gold.means_tie`` and ``gold.level_c``.
+    ``act`` yes uses ``act_code`` as ``gold.act``. ``platform_means`` yes is
+    ``gold.means_tie``. ``feature_means`` yes is ``gold.level_c``. The platform
+    and feature names are kept on the unit and are not scoring units.
     """
     units = []
     with path.open(encoding="utf-8", newline="") as handle:
@@ -628,10 +671,12 @@ def import_graded_csv(path: Path) -> dict:
                 "unit_id": row["unit_id"],
                 "gold": {
                     "act": act,
-                    "means_tie": _yes(row.get("means") or ""),
-                    "level_c": _yes(row.get("level_c") or ""),
+                    "means_tie": _yes(row.get("platform_means") or ""),
+                    "level_c": _yes(row.get("feature_means") or ""),
                 },
                 "actor": (row.get("actor") or "").strip(),
+                "platform": (row.get("platform") or "").strip(),
+                "feature": (row.get("feature") or "").strip(),
             })
     return {"units": units}
 

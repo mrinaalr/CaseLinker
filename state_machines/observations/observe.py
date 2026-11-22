@@ -447,8 +447,9 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
     else:
         hit = _means(kind, sentence, o, subject)
     if hit and records:
-        from state_machines.coding.workflow import decide_actor
-        found, reason = decide_actor(sentence, "the defendant", records, generic=generic, scope=scope)
+        from state_machines.coding.workflow import clause_subject, decide_actor
+        actor = clause_subject(sentence) or (subject or "")
+        found, reason = decide_actor(sentence, actor, records, generic=generic, scope=scope)
         if reason or not found:
             hit = None
     if hit or not parser:

@@ -383,8 +383,10 @@ def test_population_rows_carry_court_docket_and_document_hash(tmp_path):
     assert rows[0]["court"] == "dcd"
     assert rows[0]["docket_number"] == "1:24-cr-9"
     assert rows[0]["document_sha256"] == "abc123"
+    assert rows[0]["stratum"] == "machine_positive"
+    assert "machine" not in rows[0]
     manifest = _seal(["stamp"], [], held=0, frame=1)
-    sample = G.draw_sample(rows, {"seed": 1, "strata": {"published_acts": {"n": len(rows)}}}, sealed=manifest)
+    sample = G.draw_sample(rows, {"seed": 1, "strata": {"machine_positive": {"n": len(rows)}}}, sealed=manifest)
     assert sample["rows"][0]["document_sha256"] == "abc123"
     blank = {"act": "", "means_tie": False, "level_c": False}
     graded = {"units": [{"unit_id": row["unit_id"], "gold": dict(blank)} for row in sample["rows"]]}
@@ -404,3 +406,49 @@ def test_a_stratum_with_fewer_than_five_gold_positives_warns():
     assert report["gold_positives_by_stratum"] == {"thin": 4, "wide": 5}
     assert report["warnings"] == ["thin: fewer than 5 gold positives; its bootstrap interval is unreliable"]
     assert report["recall"] == pytest.approx(1.0)
+
+
+def test_take_all_draws_every_machine_positive_and_fills_the_rest(tmp_path):
+    manifest = _seal(["case_01", "case_02", "case_03", "case_04"], [], held=1, frame=2)
+    case_id = manifest["gold_frame_ids"][0]
+    population = []
+    for index in range(2):
+        population.append({
+            "unit_id": f"m{index}", "case_id": case_id, "stratum": "machine_positive",
+            "sentence": f"The defendant sent the files on Snapchat {index}.",
+            "context_before": [], "context_after": [],
+        })
+    for index in range(10):
+        population.append({
+            "unit_id": f"o{index}", "case_id": case_id, "stratum": "other",
+            "sentence": f"The hearing was continued {index}.",
+            "context_before": [], "context_after": [],
+        })
+    sample = G.draw_sample(population, {
+        "seed": 1, "take_all": "machine_positive", "fill": "other", "total": 5,
+    }, sealed=manifest)
+    counts = {}
+    for row in sample["rows"]:
+        counts[row["stratum"]] = counts.get(row["stratum"], 0) + 1
+        if row["stratum"] == "machine_positive":
+            assert row["inclusion_probability"] == 1
+    assert counts == {"machine_positive": 2, "other": 3}
+
+
+def test_two_strata_weights_recover_the_population_total():
+    """Every machine-positive row is kept (weight 1). A light draw of the rest, averaged, recovers the total.
+
+    machine_positive: 4 rows, all gold, all drawn, weight 1.
+    other: 6 rows, 2 gold, draw 2, weight 3.
+    Population gold is 6. The mean Horvitz-Thompson total over every 2-of-6 sample is 6.
+    """
+    kept = [{"stratum_population": 4, "stratum_drawn": 4, "gold": True} for _ in range(4)]
+    rest = [{"gold": True}, {"gold": True}, {"gold": False}, {"gold": False}, {"gold": False}, {"gold": False}]
+    samples = []
+    for pair in itertools.combinations(rest, 2):
+        rows = list(kept)
+        for unit in pair:
+            rows.append({"stratum_population": 6, "stratum_drawn": 2, **unit})
+        samples.append(rows)
+    mean = sum(G.ipw_total(rows, lambda row: row["gold"]) for rows in samples) / len(samples)
+    assert mean == pytest.approx(6.0)
