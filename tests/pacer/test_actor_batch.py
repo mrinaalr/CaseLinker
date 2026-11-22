@@ -472,6 +472,43 @@ def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
     assert events == []
 
 
+@pytest.mark.parametrize("kind", ["judgment", "sentencing_memorandum", "statement_of_facts", "order"])
+def test_any_other_caption_is_refused(tmp_path, monkeypatch, kind):
+    sentence = "The defendant sent the files."
+    events, _log = code_events(
+        tmp_path, monkeypatch, "cross", [
+            ("complaint", "complaint", ["United States v. Michael Smith, Defendant."]),
+            ("other", kind, [f"United States v. Robert Porter, Defendant. {sentence}"]),
+        ], sentence, means="", object_text="the files")
+    assert events == []
+    assert "caption_mismatch" in _reasons(tmp_path, "cross")
+
+
+def test_a_snapshot_refuses_a_different_caption(tmp_path, monkeypatch):
+    sentence = "The defendant sent the files."
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-4",
+        "parties": [{"party_id": "p-smith", "name": "Michael Smith", "role": "defendant"}],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    events, _log = code_events(
+        tmp_path, monkeypatch, "snapcross",
+        [("judgment", "judgment", [f"United States v. Robert Porter, Defendant. {sentence}"])],
+        sentence, means="", object_text="the files",
+        env={"CASELINKER_PARTY_SNAPSHOT": str(snapshot), "CASELINKER_PARTY_SNAPSHOT_SHA256": digest})
+    sources = json.loads((tmp_path / "snapcross" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-4"
+    (tmp_path / "snapcross" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _log = C.code_case("snapcross", "coder_A", tmp_path, deny=build_deny("snapcross", tmp_path))
+    assert [event["action"] for event in bundle["events"]] == []
+    assert "caption_mismatch" in _reasons(tmp_path, "snapcross")
+
+
 def test_a_plea_for_a_stranger_is_refused(tmp_path, monkeypatch):
     sentence = f"The defendant sent {_TAIL}"
     snapshot = tmp_path / "parties.json"

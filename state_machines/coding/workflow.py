@@ -785,10 +785,9 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
             matches = [party for party in records if len(own) == 1 and _same_party(own[0], party)]
             if len(matches) > 1 or item["et_al"]:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "ambiguous_surname"}
-            elif item["doc_type"] in _PLEA_DOCS and own and not matches:
-                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "other_caption"}
-            elif item["doc_type"] in {"memorandum", "order", "opinion", "brief"} and own and not matches:
-                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "caption_mismatch"}
+            elif own and not matches:
+                reason = "other_caption" if item["doc_type"] in _PLEA_DOCS else "caption_mismatch"
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": reason}
             elif len(own) > 1:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
             elif len(matches) == 1 and matches[0].get("with_company"):
@@ -823,7 +822,10 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         for item in found:
             own = item["records"]
             match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
-            if disagreement or item["et_al"] or (own and match is None):
+            if own and match is None:
+                reason = "other_caption" if item["doc_type"] in _PLEA_DOCS else "caption_mismatch"
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": reason}
+            elif disagreement or item["et_al"]:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
             elif match is not None:
                 by_document[item["doc_id"]] = {"generic": "one", "record": match}
