@@ -153,3 +153,34 @@ def test_population_writer_emits_the_file_draw_reads(tmp_path):
     assert sentences["The hearing was continued."] == "other"
     assert "published_acts" not in sentences.values()
     assert all("machine" not in row for row in rows)
+
+
+def test_a_published_act_with_no_platform_or_feature_is_machine_positive(tmp_path):
+    from state_machines.evidence import evidence as E
+    from state_machines.observations.observe import sentences
+
+    case = "synth_act"
+    text = "The hearing was continued. The calendar was reset."
+    E.write_page(case, "sof", 1, text, tmp_path)
+    norm = E.normalize(text)
+    start, end = list(sentences(norm))[0]
+    hearing = norm[start:end].strip()
+    assert G.stratum_for_sentence(hearing) == "other"
+    bundle = {
+        "events": [{"event_id": "e1", "action": "DISTRIBUTE_MATERIAL",
+                    "support": [{"facet": "action", "passage_id": "q1"}]}],
+        "passages": [{"passage_id": "q1", "doc_id": "sof", "pdf_page": 1,
+                      "char_start": start, "char_end": end}],
+    }
+    decisions = tmp_path / "head.json"
+    decisions.write_text(json.dumps(bundle), encoding="utf-8")
+    (tmp_path / case / "sources.json").write_text(json.dumps({
+        "case_id": case, "court": "dcd", "docket_number": "1:24-cr-9",
+        "documents": [{"doc_id": "sof", "sha256": "abc123", "pages": [{"pdf_page": 1}]}],
+    }), encoding="utf-8")
+    rows = G.population_from_case(case, tmp_path, decisions=decisions)
+    strata = {row["sentence"]: row["stratum"] for row in rows}
+    assert strata[hearing] == "machine_positive"
+    assert "The calendar was reset." in strata
+    assert strata["The calendar was reset."] == "other"
+    assert all("machine" not in row for row in rows)

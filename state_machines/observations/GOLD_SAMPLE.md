@@ -44,7 +44,7 @@ python -m state_machines.observations.gold_sample draw --population <units.json>
 
 Inside the gold frame, the human sample is a stratified simple random sample of sentences. Stratum names, sizes and the seed come from the config. A unit whose case is outside the frame is refused. A unit whose case is on the exclusion list is refused. A field such as model uncertainty is not read.
 
-`population_from_case` labels a sentence `machine_positive` when it names a listed platform or a level-C feature, and `other` otherwise. The stamp `published_acts` is not a stratum and not a filter. A config `{"take_all": "machine_positive", "fill": "other", "total": N, "seed": ...}` draws every machine-positive sentence and fills the rest of `N` from `other`, so a small machine-positive stratum does not stop the draw. Machine labels are not on the grading sheet.
+`population_from_case` labels a sentence `machine_positive` when it names a listed platform or a level-C feature, or when the head's decision bundle already published an act in that sentence. The stamp `published_acts` is not a stratum and not a filter. A config `{"take_all": "machine_positive", "fill": "other", "total": N, "seed": ...}` draws every machine-positive sentence and fills the rest of `N` from `other`, so a small machine-positive stratum does not stop the draw. Machine labels are not on the grading sheet.
 
 For a unit in stratum h the inclusion probability is `n_h / N_h`. `N_h` is the number of units of that stratum in the frame. `n_h` is the number drawn. Every drawn row stores `N_h`, `n_h` and the probability. The sampling weight is `N_h / n_h`.
 

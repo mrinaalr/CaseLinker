@@ -109,14 +109,35 @@ def stratum_for_sentence(sentence: str, *, published_act: bool = False) -> str:
     return "other"
 
 
-def population_from_case(case_id: str, text_root) -> list:
+def _published_spans(decisions) -> list:
+    """Action spans the head already published. This does not decide an act."""
+    if not decisions:
+        return []
+    path = Path(decisions)
+    bundle = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else decisions
+    passages = {p["passage_id"]: p for p in bundle.get("passages") or []}
+    spans = []
+    for event in bundle.get("events") or []:
+        for support in event.get("support") or []:
+            if support.get("facet") != "action":
+                continue
+            passage = passages.get(support.get("passage_id"))
+            if not passage:
+                continue
+            spans.append((passage["doc_id"], passage["pdf_page"], passage["char_start"], passage["char_end"]))
+    return spans
+
+
+def population_from_case(case_id: str, text_root, decisions=None) -> list:
     """Every sentence on every filed page.
 
     A sentence that names a listed platform or a level-C feature is
-    ``machine_positive``. Every other sentence is ``other``. The old stamp
-    ``published_acts`` is not a stratum and not a filter. No machine label is
-    written here; those labels belong in ``key.json``. Court and docket come
-    from ``case_key.json`` when that file exists, otherwise from ``sources.json``.
+    ``machine_positive``. So is a sentence the head's own decision file already
+    published an act in. ``decisions`` is that bundle (events and passages).
+    Every other sentence is ``other``. The old stamp ``published_acts`` is not a
+    stratum and not a filter. No machine label is written here; those labels
+    belong in ``key.json``. Court and docket come from ``case_key.json`` when
+    that file exists, otherwise from ``sources.json``.
     """
     from state_machines.evidence import evidence as E
     from state_machines.observations.observe import sentences
@@ -127,6 +148,7 @@ def population_from_case(case_id: str, text_root) -> list:
     key = json.loads(key_path.read_text(encoding="utf-8")) if key_path.is_file() else {}
     court = key.get("court") or sources.get("court") or ""
     docket = key.get("docket_number") or sources.get("docket_number") or ""
+    published = _published_spans(decisions)
     rows = []
     for doc in sources.get("documents") or []:
         sha = doc.get("sha256") or ""
@@ -135,9 +157,11 @@ def population_from_case(case_id: str, text_root) -> list:
             text = E.read_page(case_id, doc_id, page["pdf_page"], text_root) or ""
             spans = list(sentences(E.normalize(text)))
             texts = [E.normalize(text)[start:end].strip() for start, end in spans]
-            for index, sentence in enumerate(texts):
+            for index, ((start, end), sentence) in enumerate(zip(spans, texts)):
                 if not sentence:
                     continue
+                cited = any(doc_id == doc and page["pdf_page"] == pg and a < end and start < b
+                            for doc, pg, a, b in published)
                 rows.append({
                     "unit_id": f"{case_id}:{doc_id}:{page['pdf_page']}:{index}",
                     "case_id": case_id,
@@ -145,7 +169,7 @@ def population_from_case(case_id: str, text_root) -> list:
                     "court": court,
                     "docket_number": docket,
                     "document_sha256": sha,
-                    "stratum": stratum_for_sentence(sentence),
+                    "stratum": stratum_for_sentence(sentence, published_act=cited),
                     "sentence": sentence,
                     "context_before": texts[max(0, index - 2):index],
                     "context_after": texts[index + 1:index + 3],
@@ -609,12 +633,16 @@ def score_drawn(graded: dict, key: dict, sample: dict, *, sealed: dict, replicat
     return result
 
 
-def write_population(case_ids: Sequence[str], text_root: Path, out: Path) -> int:
+def write_population(case_ids: Sequence[str], text_root: Path, out: Path, decisions: Path = None) -> int:
     """Write the sentence units ``draw --population`` reads."""
     refuse_store(out)
     rows = []
     for case_id in case_ids:
-        rows.extend(population_from_case(case_id, text_root))
+        bundle = None
+        if decisions is not None:
+            candidate = decisions / f"{case_id}.json" if decisions.is_dir() else decisions
+            bundle = candidate if candidate.is_file() else None
+        rows.extend(population_from_case(case_id, text_root, decisions=bundle))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rows, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return len(rows)
@@ -705,6 +733,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("population")
     p.add_argument("--text-root", type=Path, required=True)
     p.add_argument("--out", type=Path, required=True)
+    p.add_argument("--decisions", type=Path, default=None)
     p.add_argument("cases", nargs="+")
     e = sub.add_parser("export-csv")
     e.add_argument("--sheet", type=Path, required=True)
@@ -728,7 +757,7 @@ def main(argv=None) -> int:
         if path is not None:
             refuse_store(path)
     if args.cmd == "population":
-        print(write_population(args.cases, args.text_root, args.out))
+        print(write_population(args.cases, args.text_root, args.out, decisions=getattr(args, "decisions", None)))
         return 0
     if args.cmd == "export-csv":
         sheet = json.loads(args.sheet.read_text(encoding="utf-8"))
