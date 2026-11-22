@@ -1104,11 +1104,23 @@ def _act_verb(doc):
     return main[-1] if main else conduct[-1]
 
 
+def _clause_is_negated(verb) -> bool:
+    """A neg dependency, or a negative determiner on a phrase that scopes the verb."""
+    for token in verb.subtree:
+        if token.dep_ == "neg":
+            return True
+        if token.lemma_.lower() == "no" and token.dep_ == "det" and token.head.dep_ == "pobj":
+            prep = token.head.head
+            if prep.dep_ == "prep" and prep.head.i == verb.i:
+                return True
+    return False
+
+
 def _verb_block(verb) -> Optional[str]:
     """Why this verb is not a publishable main-clause act, or None."""
     if verb is None:
         return "actor_rejected"
-    if any(child.dep_ == "neg" or child.lemma_.lower() == "never" for child in verb.children):
+    if _clause_is_negated(verb):
         return "negated"
     if verb.lemma_.lower() in _NEG_VERBS:
         return "negated"

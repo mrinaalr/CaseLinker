@@ -152,6 +152,23 @@ def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, senten
 
 
 @pytest.mark.parametrize("sentence", [
+    "At no point did the defendant send the files.",
+    "At no time did the defendant send the files.",
+    "The defendant never sent the files.",
+    "The defendant no longer sent the files.",
+    "The defendant denied sending the files.",
+    "The defendant refused to send the files.",
+    "The defendant failed to send the files.",
+])
+def test_a_negated_clause_is_refused(tmp_path, monkeypatch, sentence):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "neg", _one("Michael Smith", sentence), sentence, "the defendant",
+        means="", object_text="the files")
+    assert events == []
+    assert "negated" in _reasons(tmp_path, "neg")
+
+
+@pytest.mark.parametrize("sentence", [
     "The defendant asked Minor Victim 1 to send the files.",
     "The defendant told Minor Victim 1 to send the files.",
     "The defendant persuaded Minor Victim 1 to send the files.",
