@@ -6,10 +6,12 @@ they are.
 
 Each filled slot carries the exact characters it cites and the page-text hash.
 ``verify_frame`` rejects a frame whose hash is stale or whose slot text is not
-those characters. A means is level C only when it is a codebook feature the
-stated-means rule ties inside the act's own sentence. A platform name is a
-stated platform means, never an affordance and never ``documented_feature_use``
-(codebook rule B0).
+those characters. The means slot is the instrument of the act. PropBank's ArgM-MNR is manner,
+not that instrument (Palmer, Gildea and Kingsbury 2005). The element that names
+it is FrameNet's Instrument (Baker, Fillmore and Lowe 1998). A means is level C
+only when it is a codebook feature the stated-means rule ties inside the act's
+own sentence. A platform name is a stated platform means, never an affordance
+and never ``documented_feature_use`` (codebook rule B0).
 """
 from __future__ import annotations
 

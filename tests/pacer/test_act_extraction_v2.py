@@ -410,12 +410,17 @@ def test_preflight_reports_the_known_id_alias_pattern(tmp_path):
     assert report["ok"] is False
 
 
-def test_preflight_command_does_not_read_page_text(tmp_path, monkeypatch):
+def test_preflight_command_does_not_read_page_text_or_rewrite_ids(tmp_path, monkeypatch):
     _off(monkeypatch)
     text_root, out, _release = _layout(tmp_path, text_name="synth_case", bundle_name="synth_case")
-    (text_root / "synth_case" / "p0001.txt").write_text("this page text must not be required", encoding="utf-8")
+    page = text_root / "synth_case" / "p0001.txt"
+    page.write_text("this page text must not be required", encoding="utf-8")
+    sources = text_root / "synth_case" / "sources.json"
+    before = {path: path.read_bytes() for path in (sources, page, out / "coder_A" / "synth_case.json", out / "coder_B" / "synth_case.json")}
     code = pipeline_main(["preflight", "synth_case", "--text-root", str(text_root), "--out", str(out)])
     assert code == 0
+    assert {path: path.read_bytes() for path in before} == before
+    assert sorted(p.name for p in (text_root / "synth_case").iterdir()) == sorted(p.name for p in before if p.parent == text_root / "synth_case")
 
 
 # --- release guard ---------------------------------------------------------------------------

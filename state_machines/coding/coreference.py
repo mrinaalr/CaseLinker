@@ -3,8 +3,8 @@
 Stanza's neural coreference is a poor fit here: the actors are already a closed
 list (the defendant from the caption, co-offenders, victims by the record's own
 label, the affiant, agents, and the platforms and accounts the inventory names).
-A deterministic linker over that list is reproducible, which a pre-registered
-study needs. An optional local model may only choose an id from that same list;
+A deterministic linker over that list is the same on every run. An optional
+local model may only choose an id from that same list;
 any other id is dropped. The model runs only when ``CASELINKER_COREFERENCE_MODEL=1``
 and the caller passes ``complete``. Neither flag calls out on its own.
 
