@@ -637,6 +637,33 @@ def test_a_shared_surname_is_not_the_first_party(tmp_path, monkeypatch):
     assert bundle["events"] == []
 
 
+def test_a_refusal_row_names_the_category_and_is_rewritten(tmp_path, monkeypatch):
+    sentence = "The defendant sent the files."
+    # The means words are not on the page, so grounding refuses before an act is published.
+    events, _log = code_events(
+        tmp_path, monkeypatch, "row", _one("Michael Smith", sentence), sentence,
+        means="encrypted", object_text="the files")
+    assert events == []
+    path = tmp_path / "row" / "v2_refusals.jsonl"
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert rows
+    row = rows[0]
+    assert row["reason_code"] == "not_found"
+    assert row["behavior_category"] == "distribution"
+    assert "DISTRIBUTE_MATERIAL" not in row.values()
+    assert row["coder_id"] == "coder_A"
+    assert row["case_id"] == "row"
+    assert row["run_id"] and row["document_sha256"]
+    coder_file = tmp_path / "row" / "coder_A.v2_refusals.jsonl"
+    assert coder_file.read_text(encoding="utf-8") == path.read_text(encoding="utf-8")
+    # A clean rerun that publishes replaces the previous rows.
+    code_events(
+        tmp_path, monkeypatch, "row", _one("Michael Smith", sentence), sentence,
+        means="", object_text="the files")
+    assert path.read_text(encoding="utf-8") == ""
+    assert coder_file.read_text(encoding="utf-8") == ""
+
+
 def test_two_defendants_with_one_name_are_refused(tmp_path, monkeypatch):
     sentence = f"Michael Smith sent {_TAIL}"
     snapshot = tmp_path / "parties.json"

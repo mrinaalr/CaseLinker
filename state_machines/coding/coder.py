@@ -41,6 +41,7 @@ import sqlite3
 import sys
 import time
 import urllib.request
+import uuid
 from datetime import date
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -788,9 +789,16 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
-DROP_KEYS = ("not_found", "ambiguous", "section_filtered", "actor_rejected",
-             "passive_subject", "no_defendant_record", "no_parser", "surname_not_established",
-             "assemble_dropped", "duplicate_sentence", "unparsable_reply")
+# One list. A refusal row's reason_code is one of these, and the drop counts use the same names.
+REASON_CODES = (
+    "not_found", "ambiguous", "section_filtered", "verify_failed",
+    "actor_rejected", "passive_subject", "no_defendant_record", "no_parser",
+    "surname_not_established", "assemble_dropped", "duplicate_sentence", "unparsable_reply",
+    "subordinate_clause", "reported_speech", "negated", "modal_conditional",
+    "coordinated_subject", "appositive_relation", "pronoun_object",
+    "caption_mismatch", "ambiguous_surname", "multi_defendant_caption", "other_caption",
+)
+DROP_KEYS = REASON_CODES
 
 
 def empty_drops() -> dict:
@@ -829,11 +837,27 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
     return None
 
 
+def refusal_row(case_id, coder_id, run_id, document_sha256, code, reason) -> dict:
+    """One refusal. ``behavior_category`` is the conduct group, not the act code."""
+    code = code or ""
+    reason_code = reason if reason in REASON_CODES else "actor_rejected"
+    return {
+        "case_id": case_id,
+        "coder_id": coder_id,
+        "run_id": run_id,
+        "document_sha256": document_sha256 or "",
+        "behavior_category": V.GROUP_OF.get(code, ""),
+        "reason_code": reason_code,
+        "reason": reason_code,
+    }
+
+
 def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
                            generic: Optional[str] = None, scope: Optional[dict] = None,
                            other_surnames: Optional[List[str]] = None,
                            caption_reason: Optional[str] = None,
-                           case_id: Optional[str] = None, document_sha256: Optional[str] = None):
+                           case_id: Optional[str] = None, document_sha256: Optional[str] = None,
+                           coder_id: Optional[str] = None, run_id: Optional[str] = None):
     """Acts a coder's model frames survive as, and why the others were dropped.
 
     The model returns text. The hash and the offsets are computed from the page.
@@ -846,14 +870,20 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
     counts = empty_drops()
     records = records or []
     for frame in frames or []:
+        raw_act = frame.get("act")
+        code = raw_act.get("code") if isinstance(raw_act, dict) else (raw_act or "")
         grounded, reason, problems = ground_frame(
             text, frame, records, generic=generic, scope=scope, other_surnames=other_surnames)
         if reason == "verify_failed":
             for problem in problems:
                 counts["verify_failed"][problem] = counts["verify_failed"].get(problem, 0) + 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, "verify_failed"))
             continue
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, reason))
             continue
         slot = grounded.get("actor") or {}
         sentence = (grounded.get("sentence") or {}).get("text") or ""
@@ -863,20 +893,21 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
                                      caption_reason=caption_reason, page_text=text)
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
-            counts.setdefault("_refusals", []).append({
-                "case_id": case_id,
-                "document_sha256": document_sha256,
-                "act": (grounded.get("act") or {}).get("code") or "",
-                "reason": reason,
-            })
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256,
+                            (grounded.get("act") or {}).get("code") or code, reason))
             continue
         canonical = (found or {}).get("canonical") or _canonical_actor(text, slot, records)
         if not canonical:
             counts["actor_rejected"] += 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, "actor_rejected"))
             continue
-        code = (grounded.get("act") or {}).get("code")
+        code = (grounded.get("act") or {}).get("code") or code
         if not sentence or not code:
             counts["not_found"] += 1
+            counts.setdefault("_refusals", []).append(
+                refusal_row(case_id, coder_id, run_id, document_sha256, code, "not_found"))
             continue
         act = {"quote": sentence, "action": code, "actor": canonical, "actor_role": "offender"}
         if grounded.get("keep_earliest"):
@@ -915,6 +946,18 @@ def pages_with_acts(log_path: Path) -> set:
     return out
 
 
+def _write_refusals(text_root: Path, case_id: str, coder: str, rows: List[dict]) -> None:
+    """Rewrite this coder's refusal file. A run with no refusals leaves the file empty."""
+    folder = text_root / case_id
+    folder.mkdir(parents=True, exist_ok=True)
+    body = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
+    safe = re.sub(r"[^A-Za-z0-9_.-]+", "_", coder or "coder")
+    (folder / f"{safe}.v2_refusals.jsonl").write_text(body, encoding="utf-8")
+    # The case file is the coder that just ran, so existing readers keep working.
+    # A second coder keeps a separate file and does not append to a stale log.
+    (folder / "v2_refusals.jsonl").write_text(body, encoding="utf-8")
+
+
 def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] = None, deny: Optional[List[str]] = None,
               progress=None, only_pages: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
     """``only_pages``: model pages to read (others get no acts). With the selective second pass the
@@ -951,6 +994,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         for i, ans in zip(jobs, pool.map(lambda i: ask(spec, answers[i][3], cache), jobs)):
             answers[i][3] = ans
     framing = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
+    run_id = uuid.uuid4().hex
     from state_machines.coding.workflow import case_defendants
     info = case_defendants(case_id, text_root) if framing else {"records": [], "generic": "one"}
     records = info["records"]
@@ -972,7 +1016,8 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     generic=doc_scope.get("generic", generic), scope=doc_scope.get("record"),
                     other_surnames=info.get("other_surnames"),
                     caption_reason=doc_scope.get("reason"),
-                    case_id=case_id, document_sha256=item[0].get("sha256"))
+                    case_id=case_id, document_sha256=item[0].get("sha256"),
+                    coder_id=coder, run_id=run_id)
                 item[3] = {"acts": acts}
                 item[5] = counts
                 add_drops(totals, counts)
@@ -1008,9 +1053,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
             log.append(f"party_snapshot {recorded['sha256']}")
         if info.get("caption_snapshot_disagreement"):
             totals["caption_snapshot_disagreement"] = totals.get("caption_snapshot_disagreement", 0) + 1
-        if refusals:
-            path = text_root / case_id / "v2_refusals.jsonl"
-            path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in refusals), encoding="utf-8")
+        _write_refusals(text_root, case_id, coder, refusals)
         log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
         log.append("frame_drops " + json.dumps(totals, sort_keys=True))
     # An empty bundle has no participant, so repair cannot make it validate. The zero-frame

@@ -12,7 +12,10 @@ corrected acts are machine products, not adjudicated ones.
 """
 from __future__ import annotations
 
+import json
 import os
+import uuid
+from pathlib import Path
 from typing import Callable, Iterable, List, Optional, Sequence
 
 POLICY_ID = "propose-verify-1.0"
@@ -187,6 +190,15 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None,
     generic = info["generic"]
     aligned = list(page_docs or [])
 
+    from state_machines.coding.coder import refusal_row
+    run_id = uuid.uuid4().hex
+    sources = {}
+    source_path = Path(text_root) / case_id / "sources.json"
+    if source_path.is_file():
+        sources = json.loads(source_path.read_text(encoding="utf-8"))
+    sha_of = {doc.get("doc_id"): doc.get("sha256") for doc in sources.get("documents") or []}
+    dropped = []
+
     def recover(sent):
         text = sent.get("text") or ""
         doc_id = next((doc for page, doc in zip(pages, aligned) if text and text in page), None)
@@ -196,12 +208,21 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None,
             generic=scope.get("generic", generic) if scope else generic,
             scope=scope.get("record") if scope else None,
             other_surnames=info.get("other_surnames"),
+            caption_reason=scope.get("reason") if scope else None,
         )
         if reason or not found or "canonical" not in found:
+            for code in sent.get("codes") or []:
+                dropped.append(refusal_row(
+                    case_id, "recovery", run_id, sha_of.get(doc_id), code, reason or "actor_rejected"))
             return []
         return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},
                  "actor": {"id": "defendant", "text": found["canonical"]}} for code in sent.get("codes") or []]
 
-    return propose_verify(proposals, reviews, missed=missed, means_sentence_ids=means_ids, recover=recover)
+    result = propose_verify(proposals, reviews, missed=missed, means_sentence_ids=means_ids, recover=recover)
+    folder = Path(text_root) / case_id
+    folder.mkdir(parents=True, exist_ok=True)
+    body = "".join(json.dumps(row, sort_keys=True) + "\n" for row in dropped)
+    (folder / "recovery.v2_refusals.jsonl").write_text(body, encoding="utf-8")
+    return result
 
 
