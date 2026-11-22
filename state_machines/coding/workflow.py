@@ -1194,13 +1194,7 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
     if word in PRONOUN_WORDS or _PRONOUN.fullmatch(phrase):
         if subject.dep_ not in _SUBJECT_DEPS:
             return None, "pronoun_object"
-        if os.environ.get("CASELINKER_COREFERENCE") != "1":
-            return None, "actor_rejected"
-        if scope is not None and generic == "one":
-            return _hit_for(scope, records, scope, generic), None
-        if len(records) == 1:
-            return _hit_for(records[0], records, scope, generic), None
-        return None, "multi_defendant_caption"
+        return None, "actor_rejected"
     if word in {"defendant", "accused"}:
         if any(child.dep_ == "case" for child in subject.children):
             return None, "appositive_relation"
@@ -1248,16 +1242,11 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     This is the only actor decision. A clause is published only when its act
     verb is a main-clause verb, the subject is the defendant or one unique
     name, and the clause is not negated, modal, coordinated, or modified by
-    an appositive. A pronoun is the actor only when it is that subject and
-    coreference is on.
+    an appositive. A pronoun subject is refused.
     """
     records = list(records or [])
     if generic is None:
         generic = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
-    if _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
-        # A pronoun object is refused before the caption gate. The subject check
-        # below still requires it to be the main-clause nsubj.
-        pass
     if caption_reason and _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())):
         return None, caption_reason
     if generic == "no_defendant_record" or not records:

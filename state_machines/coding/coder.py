@@ -820,26 +820,13 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
     """The caption defendant this span matched, as one participant label.
 
     The span itself stays in the quote. One caption defendant is ``the defendant``.
-    Each person in a multi-defendant caption keeps that person's name. A pronoun
-    uses the same records, and only when coreference is on.
+    Each person in a multi-defendant caption keeps that person's name.
     """
-    from state_machines.coding.workflow import _PRONOUN, match_actor
+    from state_machines.coding.workflow import match_actor
     found = match_actor((slot or {}).get("text") or "", records)
     if found and found.get("canonical"):
         return found["canonical"]
-    text = " ".join(((slot or {}).get("text") or "").split())
-    if os.environ.get("CASELINKER_COREFERENCE") != "1" or not _PRONOUN.fullmatch(text):
-        return None
-    if len(records) != 1:
-        return None
-    from state_machines.coding.coreference import make_inventory, resolve_mentions, subject_is_offender
-    names = [record["full"] for record in records]
-    actors = make_inventory(defendant=names[0], defendant_names=names)
-    mentions = resolve_mentions(page, actors)
-    end = (slot or {}).get("end")
-    if not isinstance(end, int) or not subject_is_offender(mentions, end, actors):
-        return None
-    return "the defendant"
+    return None
 
 
 def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
