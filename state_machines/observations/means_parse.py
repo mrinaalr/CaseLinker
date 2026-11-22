@@ -154,10 +154,21 @@ def _subject(tokens: Sequence[dict], verb_i: int):
     return None, None
 
 
-def _subject_is_offender(sentence: str, tokens: Sequence[dict], verb_i: int, actors) -> bool:
+def _subject_is_offender(sentence: str, tokens: Sequence[dict], verb_i: int, actors,
+                         records=None, generic=None, scope=None) -> bool:
     _, subj = _subject(tokens, verb_i)
     if subj is None:
         return False
+    from state_machines.coding.workflow import decide_actor, v2_active
+    if v2_active():
+        # A pronoun is not resolved. The actor decision is decide_actor when the
+        # case records are known; otherwise only the word "defendant" stands.
+        if _THEY.match(subj["text"]):
+            return False
+        if records:
+            found, reason = decide_actor(sentence, subj["text"], records, generic=generic, scope=scope)
+            return reason is None and bool(found)
+        return bool(_OFFENDER_WORD.match(subj["text"]))
     if _OFFENDER_WORD.match(subj["text"]):
         return True
     if not _THEY.match(subj["text"]):
@@ -173,7 +184,8 @@ def _negated(tokens: Sequence[dict], verb_i: int) -> bool:
     return any(t.get("head") == verb_i and t.get("deprel") == "neg" for t in tokens)
 
 
-def instrument_means(sentence: str, observation: dict, tokens: Sequence[dict], actors=None) -> Optional[dict]:
+def instrument_means(sentence: str, observation: dict, tokens: Sequence[dict], actors=None,
+                     records=None, generic=None, scope=None) -> Optional[dict]:
     """The instrument of the act, or None.
 
     Returns None unless ``CASELINKER_MEANS_PARSER=dep``. The dict has
@@ -196,7 +208,8 @@ def instrument_means(sentence: str, observation: dict, tokens: Sequence[dict], a
         verb_i, cue, crossed = found
         if _negated(tokens, verb_i):
             continue
-        if not _subject_is_offender(sentence, tokens, verb_i, actors):
+        if not _subject_is_offender(sentence, tokens, verb_i, actors, records=records,
+                                    generic=generic, scope=scope):
             continue
         method = "fallback" if fallback_enabled() else "dep"
         return {"relationship": "Supports_Action", "cue": cue, "method": method,

@@ -407,14 +407,16 @@ def _offender_acts(b: dict) -> List[tuple]:
             for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
 
 
-def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None, actors=None):
+def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None, actors=None,
+                     records=None, generic=None, scope=None):
     """The means tie ``relate`` publishes.
 
     With ``CASELINKER_COREFERENCE`` and ``CASELINKER_MEANS_PARSER`` unset this is
     ``_means`` and nothing else. Coreference retries a ``they`` subject. The
     dependency parser runs only when the word window missed.
     """
-    coref = os.environ.get("CASELINKER_COREFERENCE") == "1"
+    from state_machines.coding.workflow import v2_active
+    coref = os.environ.get("CASELINKER_COREFERENCE") == "1" and not v2_active()
     parser = os.environ.get("CASELINKER_MEANS_PARSER") == "dep"
     if not coref and not parser:
         return _means(kind, sentence, o, subject)
@@ -429,7 +431,7 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
     from state_machines.observations.means_parse import instrument_means, parser_provenance, tokens_for
     term = o.get("feature_term") or o.get("named_as") or ""
     dep = instrument_means(sentence, {"feature_term": term}, tokens_for(sentence),
-                           actors=actors if coref else None)
+                           actors=actors if coref else None, records=records, generic=generic, scope=scope)
     if not dep:
         return None
     return dep["relationship"], dep["cue"], parser_provenance()
@@ -443,13 +445,16 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
     acts = [t[:5] for t in _offender_acts(bundle)]
     by_coder = {name: _offender_acts(b) for name, b in sorted((coded or {}).items())}
     coref_actors = None
-    if os.environ.get("CASELINKER_COREFERENCE") == "1":
-        from state_machines.coding.coreference import make_inventory
+    from state_machines.coding.workflow import v2_active
+    actor_records = None
+    actor_generic = None
+    by_document = {}
+    if v2_active():
         from state_machines.coding.workflow import case_defendants
         info = case_defendants(bundle["case_id"], text_root)
-        if info.get("generic") == "one" and info.get("records"):
-            named = [info["records"][0]["full"]]
-            coref_actors = make_inventory(defendant=named[0], defendant_names=named)
+        actor_records = info.get("records") or []
+        actor_generic = info.get("generic")
+        by_document = info.get("by_document") or {}
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
@@ -476,7 +481,11 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             if a < o["char_start"] - 1 or b > o["char_end"] + 1:
                 o["act_passage_runs_on"] = True
                 continue
-            hit = _published_means(o["kind"], pages[(d, pg)][a:b], o, actors=coref_actors)
+            scope = by_document.get(d) or {}
+            hit = _published_means(
+                o["kind"], pages[(d, pg)][a:b], o, actors=coref_actors,
+                records=actor_records, generic=scope.get("generic", actor_generic),
+                scope=scope.get("record"))
             if hit and all(r["event_id"] != eid for r in o["relations"]):
                 relation = {"event_id": eid, "relationship": hit[0], "cue": hit[1],
                             "basis": "means_stated_in_act_sentence"}
