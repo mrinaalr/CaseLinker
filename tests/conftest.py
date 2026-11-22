@@ -26,15 +26,26 @@ _REPO_DB = ROOT / "caselinker.db"
 _DB_EXISTED_AT_START = _REPO_DB.exists()
 
 
-@_pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    """A missing spaCy model fails closed. Those v2 tests skip instead of failing."""
-    outcome = yield
-    report = outcome.get_result()
-    if call.when == "call" and call.excinfo is not None and call.excinfo.typename == "SystemExit":
-        if "spaCy model" in str(call.excinfo.value):
-            report.outcome = "skipped"
-            report.longrepr = (str(call.excinfo.value), "", "")
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "needs_spacy: this test calls the spaCy model and skips when that model is not available",
+    )
+
+
+def _spacy_model_available() -> bool:
+    try:
+        import spacy
+        spacy.load("en_core_web_sm")
+        return True
+    except Exception:
+        return False
+
+
+def pytest_runtest_setup(item):
+    """Skip a marked test when the model is absent. An unmarked test still fails closed."""
+    if item.get_closest_marker("needs_spacy") and not _spacy_model_available():
+        _pytest.skip("the spaCy model en_core_web_sm is not available")
 
 
 @_pytest.fixture(scope="session", autouse=True)

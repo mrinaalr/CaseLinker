@@ -47,6 +47,7 @@ def _one(name, sentence, actor="the defendant"):
     ("The defendant downloaded and sent the files.", "the defendant", "", "the files", None),
     ("He sent the files.", "He", "", "the files", {"CASELINKER_COREFERENCE": "1"}),
 ])
+@pytest.mark.needs_spacy
 def test_plain_positive_clauses_publish(tmp_path, monkeypatch, sentence, actor, means, object_text, extra):
     events, _log = code_events(
         tmp_path, monkeypatch, "plain", _one("Michael Smith", sentence), sentence, actor,
@@ -65,6 +66,7 @@ def test_plain_positive_clauses_publish(tmp_path, monkeypatch, sentence, actor, 
     ("Smith, his sister, sent the files.", "Smith", "appositive_relation", None),
     ("Agent Porter sent him the files.", "him", "pronoun_object", {"CASELINKER_COREFERENCE": "1"}),
 ])
+@pytest.mark.needs_spacy
 def test_each_refusal_reason_is_counted(tmp_path, monkeypatch, sentence, actor, reason, env):
     events, _log = code_events(
         tmp_path, monkeypatch, "why", _one("Michael Smith", sentence), sentence, actor,
@@ -73,6 +75,7 @@ def test_each_refusal_reason_is_counted(tmp_path, monkeypatch, sentence, actor, 
     assert reason in _reasons(tmp_path, "why")
 
 
+@pytest.mark.needs_spacy
 def test_caption_layouts_and_labels(tmp_path, monkeypatch):
     from state_machines.coding.workflow import case_defendants, defendant_records_in
     assert [r["surname"] for r in defendant_records_in(
@@ -113,6 +116,7 @@ def test_caption_layouts_and_labels(tmp_path, monkeypatch):
     ("SMITH sent the files.", "SMITH"),
     ("M. Smith sent the files.", "M. Smith"),
 ])
+@pytest.mark.needs_spacy
 def test_a_bare_or_courtesy_surname_publishes(tmp_path, monkeypatch, sentence, actor):
     events, _log = code_events(
         tmp_path, monkeypatch, "nameok", _one("Michael Smith", sentence), sentence, actor,
@@ -127,6 +131,7 @@ def test_a_bare_or_courtesy_surname_publishes(tmp_path, monkeypatch, sentence, a
     ("Agent Smith sent the files.", "Agent Smith"),
     ("His wife, Jane Smith, was present. Smith sent the files.", "Smith"),
 ])
+@pytest.mark.needs_spacy
 def test_a_conflicting_name_or_role_title_is_refused(tmp_path, monkeypatch, sentence, actor):
     events, _log = code_events(
         tmp_path, monkeypatch, "namebad", _one("Michael Smith", sentence), sentence, actor,
@@ -144,6 +149,7 @@ def test_a_conflicting_name_or_role_title_is_refused(tmp_path, monkeypatch, sent
     "The defendant agreed to distribute the files.",
     "The defendant threatened to post the files.",
 ])
+@pytest.mark.needs_spacy
 def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, sentence):
     events, _log = code_events(
         tmp_path, monkeypatch, "inf", _one("Michael Smith", sentence), sentence, "the defendant",
@@ -157,6 +163,7 @@ def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, senten
     "1. The defendant sent the files.",
     "(1) The defendant sent the files.",
 ])
+@pytest.mark.needs_spacy
 def test_a_count_heading_does_not_hide_the_defendant(tmp_path, monkeypatch, sentence):
     events, _log = code_events(
         tmp_path, monkeypatch, "hd", _one("Michael Smith", sentence), sentence, "the defendant",
@@ -173,6 +180,7 @@ def test_a_count_heading_does_not_hide_the_defendant(tmp_path, monkeypatch, sent
     "The defendant refused to send the files.",
     "The defendant failed to send the files.",
 ])
+@pytest.mark.needs_spacy
 def test_a_negated_clause_is_refused(tmp_path, monkeypatch, sentence):
     events, _log = code_events(
         tmp_path, monkeypatch, "neg", _one("Michael Smith", sentence), sentence, "the defendant",
@@ -189,6 +197,7 @@ def test_a_negated_clause_is_refused(tmp_path, monkeypatch, sentence):
     "The defendant had Minor Victim 1 send the files.",
     "The defendant made Minor Victim 1 send the files.",
 ])
+@pytest.mark.needs_spacy
 def test_an_object_controlled_complement_is_refused(tmp_path, monkeypatch, sentence):
     events, log = code_events(
         tmp_path, monkeypatch, "ctl", _one("Michael Smith", sentence), sentence, "the defendant",
@@ -202,6 +211,7 @@ def test_an_object_controlled_complement_is_refused(tmp_path, monkeypatch, sente
     ("She sent the files.", "She"),
     ("They sent the files.", "They"),
 ])
+@pytest.mark.needs_spacy
 def test_a_pronoun_subject_is_refused(tmp_path, monkeypatch, sentence, actor):
     events, _log = code_events(
         tmp_path, monkeypatch, "pron", _one("Michael Smith", sentence), sentence, actor,
@@ -215,6 +225,7 @@ def test_a_pronoun_subject_is_refused(tmp_path, monkeypatch, sentence, actor):
     "Smith gave the defendant her phone.",
     "Jane Smith sent the defendant a photo.",
 ])
+@pytest.mark.needs_spacy
 def test_the_defendant_as_an_object_is_refused(tmp_path, monkeypatch, sentence):
     actor = "Jane Smith" if sentence.startswith("Jane") else "Smith"
     events, _log = code_events(
@@ -223,6 +234,7 @@ def test_the_defendant_as_an_object_is_refused(tmp_path, monkeypatch, sentence):
     assert events == []
 
 
+@pytest.mark.needs_spacy
 def test_multi_defendant_and_shared_surname_are_counted(tmp_path, monkeypatch):
     generic = "The defendant sent the files."
     events, _log = code_events(
@@ -247,6 +259,7 @@ def test_multi_defendant_and_shared_surname_are_counted(tmp_path, monkeypatch):
     f"The defendant's mother sent {_TAIL}",
     f"The defendant's mother distributed {_TAIL}",
 ])
+@pytest.mark.needs_spacy
 def test_the_defendant_is_only_the_grammatical_subject(tmp_path, monkeypatch, sentence):
     events, _log = code_events(tmp_path, monkeypatch, "subj", _one("Michael Smith", sentence), sentence)
     assert events == []
@@ -260,12 +273,14 @@ def test_the_defendant_is_only_the_grammatical_subject(tmp_path, monkeypatch, se
     f"The defendant's neighbor sent {_TAIL}",
     f"Smith, the defendant's cousin, sent {_TAIL}",
 ])
+@pytest.mark.needs_spacy
 def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, sentence):
     actor = "Smith" if sentence.startswith("Smith") else "the defendant"
     events, _log = code_events(tmp_path, monkeypatch, "poss", _one("Michael Smith", sentence), sentence, actor)
     assert events == []
 
 
+@pytest.mark.needs_spacy
 def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     sentence = f"The defendant sent {_TAIL}"
     docs = [
@@ -289,6 +304,7 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     assert recovered == []
 
 
+@pytest.mark.needs_spacy
 def test_citation_lines_are_not_defendants(tmp_path, monkeypatch):
     from state_machines.coding.workflow import defendant_records_in, eyecite_version
     assert eyecite_version()
@@ -345,6 +361,7 @@ def test_extract_records_court_case_number_and_document_hash(tmp_path, monkeypat
     assert maryland != new_york
 
 
+@pytest.mark.needs_spacy
 def test_a_court_line_matches_a_snapshot_entry(tmp_path, monkeypatch):
     from state_machines.coding.workflow import court_and_docket, extract
     from state_machines.coding import parties as parties_mod
@@ -459,6 +476,7 @@ def test_a_changed_snapshot_is_read_again(tmp_path, monkeypatch):
     assert defendants_for("dcd", "1:24-cr-8")[0]["surname"] == "Porter"
 
 
+@pytest.mark.needs_spacy
 def test_one_snapshot_defendant_and_two_caption_defendants_refuse(tmp_path, monkeypatch):
     sentence = f"The defendant sent {_TAIL}"
     snapshot = tmp_path / "parties.json"
@@ -485,6 +503,7 @@ def test_one_snapshot_defendant_and_two_caption_defendants_refuse(tmp_path, monk
     assert bundle["events"] == []
 
 
+@pytest.mark.needs_spacy
 def test_a_snapshot_last_name_drops_a_suffix(tmp_path, monkeypatch):
     snapshot = tmp_path / "parties.json"
     snapshot.write_text(json.dumps([{
@@ -513,6 +532,7 @@ def test_a_snapshot_last_name_drops_a_suffix(tmp_path, monkeypatch):
     assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
 
 
+@pytest.mark.needs_spacy
 def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
     from state_machines.coding.workflow import case_defendants, defendant_records_in
     wrapped = "UNITED STATES v. MICHAEL SMITH and\n/\nROBERT BROWN, Defendants."
@@ -547,6 +567,7 @@ def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("kind", ["judgment", "sentencing_memorandum", "statement_of_facts", "order"])
+@pytest.mark.needs_spacy
 def test_any_other_caption_is_refused(tmp_path, monkeypatch, kind):
     sentence = "The defendant sent the files."
     events, _log = code_events(
@@ -558,6 +579,7 @@ def test_any_other_caption_is_refused(tmp_path, monkeypatch, kind):
     assert "caption_mismatch" in _reasons(tmp_path, "cross")
 
 
+@pytest.mark.needs_spacy
 def test_a_snapshot_refuses_a_different_caption(tmp_path, monkeypatch):
     sentence = "The defendant sent the files."
     snapshot = tmp_path / "parties.json"
@@ -583,6 +605,7 @@ def test_a_snapshot_refuses_a_different_caption(tmp_path, monkeypatch):
     assert "caption_mismatch" in _reasons(tmp_path, "snapcross")
 
 
+@pytest.mark.needs_spacy
 def test_a_plea_for_a_stranger_is_refused(tmp_path, monkeypatch):
     sentence = f"The defendant sent {_TAIL}"
     snapshot = tmp_path / "parties.json"
@@ -611,6 +634,7 @@ def test_a_plea_for_a_stranger_is_refused(tmp_path, monkeypatch):
     assert bundle["events"] == []
 
 
+@pytest.mark.needs_spacy
 def test_a_shared_surname_is_not_the_first_party(tmp_path, monkeypatch):
     sentence = f"Smith sent {_TAIL}"
     snapshot = tmp_path / "parties.json"
@@ -637,6 +661,7 @@ def test_a_shared_surname_is_not_the_first_party(tmp_path, monkeypatch):
     assert bundle["events"] == []
 
 
+@pytest.mark.needs_spacy
 def test_a_refusal_row_names_the_category_and_is_rewritten(tmp_path, monkeypatch):
     sentence = "The defendant sent the files."
     # The means words are not on the page, so grounding refuses before an act is published.
@@ -664,6 +689,7 @@ def test_a_refusal_row_names_the_category_and_is_rewritten(tmp_path, monkeypatch
     assert coder_file.read_text(encoding="utf-8") == ""
 
 
+@pytest.mark.needs_spacy
 def test_two_defendants_with_one_name_are_refused(tmp_path, monkeypatch):
     sentence = f"Michael Smith sent {_TAIL}"
     snapshot = tmp_path / "parties.json"
