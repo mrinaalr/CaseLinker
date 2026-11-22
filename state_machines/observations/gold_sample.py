@@ -11,18 +11,20 @@ reads a model score or an interestingness field. Stratum sizes and the seed
 come from the config.
 
 Each stratum is a simple random sample. The inclusion probability of a drawn
-unit is n_h / N_h, and the sampling weight used for recall is N_h / n_h. The
-SHA-256 of the drawn list (unit, stratum, inclusion probability) is computed
-before the grading sheet. The sheet has the sentence and the clipped context.
-Machine labels go only in the key.
+unit is n_h / N_h, and the sampling weight is N_h / n_h. Precision and recall
+both use that weight. The SHA-256 of the drawn list (unit, stratum, inclusion
+probability) is computed before the grading sheet. The sheet has the sentence
+and the clipped context. Machine labels go only in the key.
 
 ``score`` checks the sealed manifest hash before it computes anything. Precision
-is per stated unit (act, means tie, level C), with a Wilson interval. Recall
-weights each gold-positive unit by N_h / n_h. Krippendorff's alpha (nominal)
-and Cohen's kappa are computed across the human coders, with a percentile
-bootstrap interval. The same rows, with the known probabilities, are emitted
-for a design-based correction (DSL or prediction-powered inference). This
-module does not run those estimators.
+is the Horvitz-Thompson ratio of true positives to machine statements, with a
+within-stratum bootstrap interval and a Wilson interval inside each stratum.
+Recall weights each gold-positive unit by N_h / n_h and reports how many gold
+positives each stratum contributed. A second grader marks a fixed seeded
+subset; Krippendorff's alpha (nominal) and Cohen's kappa are computed on the
+rows that have two grades, with a percentile bootstrap interval. The same rows,
+with the known probabilities, are emitted for a design-based correction (DSL or
+prediction-powered inference). This module does not run those estimators.
 """
 from __future__ import annotations
 
@@ -145,21 +147,119 @@ def _hit(unit: str, machine, gold) -> bool:
     return bool(machine) and bool(gold)
 
 
-def precision_unit(rows: Sequence[dict], unit: str) -> dict:
-    """Unweighted precision among units the machine stated, with a Wilson interval."""
-    tp = fp = 0
+def _gold_positive(unit: str, row: dict) -> bool:
+    value = row["gold"][unit]
+    if unit == "act":
+        return value not in (None, "")
+    return bool(value)
+
+
+def gold_positive_counts(rows: Sequence[dict], unit: str) -> dict:
+    """How many sampled rows in each stratum the gold marks positive."""
+    counts = {}
     for row in rows:
-        machine, gold = row["machine"][unit], row["gold"][unit]
+        counts.setdefault(row["stratum"], 0)
+        if _gold_positive(unit, row):
+            counts[row["stratum"]] += 1
+    return counts
+
+
+def _stratum_statements(rows: Sequence[dict], unit: str) -> dict:
+    """Per stratum: true positives, false positives, and the weight N_h / n_h."""
+    by = {}
+    for row in rows:
+        bucket = by.setdefault(row["stratum"], [0, 0, _weight(row)])
+        machine = row["machine"][unit]
         if not _stated(unit, machine):
             continue
-        if _hit(unit, machine, gold):
-            tp += 1
+        if _hit(unit, machine, row["gold"][unit]):
+            bucket[0] += 1
         else:
-            fp += 1
+            bucket[1] += 1
+    return by
+
+
+def ipw_precision(rows: Sequence[dict], unit: str) -> Optional[float]:
+    """Horvitz-Thompson precision: sum w_h*TP_h / sum w_h*(TP_h+FP_h)."""
+    num = den = 0.0
+    for tp, fp, weight in _stratum_statements(rows, unit).values():
+        num += weight * tp
+        den += weight * (tp + fp)
+    if den == 0:
+        return None
+    return num / den
+
+
+def unweighted_precision(rows: Sequence[dict], unit: str) -> Optional[float]:
+    """Pooled TP / (TP+FP), ignoring the sampling weights. For the contrast test."""
+    tp = fp = 0
+    for stp, sfp, _weight_h in _stratum_statements(rows, unit).values():
+        tp += stp
+        fp += sfp
+    stated = tp + fp
+    if stated == 0:
+        return None
+    return tp / stated
+
+
+def precision_unit(rows: Sequence[dict], unit: str) -> dict:
+    """Weighted precision, plus a Wilson interval inside each stratum."""
+    by = _stratum_statements(rows, unit)
+    tp = fp = 0
+    strata = {}
+    for name, (stp, sfp, weight) in by.items():
+        tp += stp
+        fp += sfp
+        stated = stp + sfp
+        strata[name] = {
+            "tp": stp,
+            "fp": sfp,
+            "stated": stated,
+            "weight": weight,
+            "wilson_95": wilson(stp, stated) if stated else None,
+        }
     stated = tp + fp
     return {"unit": unit, "tp": tp, "fp": fp, "stated": stated,
-            "precision": (tp / stated) if stated else None,
-            "interval_95": wilson(tp, stated) if stated else None}
+            "precision": ipw_precision(rows, unit),
+            "by_stratum": strata}
+
+
+def _precision_interval(rows: Sequence[dict], unit: str, replicates: int, seed: int) -> Optional[list]:
+    """Percentile interval from resampling each stratum with replacement, at its drawn size."""
+    if not rows:
+        return None
+    groups = {}
+    for row in rows:
+        groups.setdefault(row["stratum"], []).append(row)
+    rng = random.Random(seed)
+    stats = []
+    for _ in range(replicates):
+        sample = []
+        for group in groups.values():
+            sample.extend(group[rng.randrange(len(group))] for _ in group)
+        value = ipw_precision(sample, unit)
+        if value is not None:
+            stats.append(value)
+    if not stats:
+        return None
+    stats.sort()
+    return [stats[int(0.025 * (len(stats) - 1))], stats[int(0.975 * (len(stats) - 1))]]
+
+
+def recall_report(rows: Sequence[dict], unit: str, replicates: int, seed: int) -> dict:
+    """Weighted recall, its interval, gold-positive counts, and a thin-stratum warning."""
+    counts = gold_positive_counts(rows, unit)
+    warnings = [
+        f"{name}: fewer than 5 gold positives; its bootstrap interval is unreliable"
+        for name, count in sorted(counts.items()) if count < 5
+    ]
+    point = ipw_recall(rows, unit)
+    return {
+        "recall": point,
+        "interval_95": _recall_interval(rows, unit, replicates, seed) if point is not None else None,
+        "gold_positives_by_stratum": counts,
+        "warnings": warnings,
+    }
 
 
 def ipw_total(rows: Sequence[dict], include: Callable[[dict], bool]) -> float:
@@ -283,33 +383,35 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 1000, seed
     """Score a graded sheet against its key. The manifest hash is checked first."""
     digest = verify_manifest(sealed)
     rows = _joined(graded, key)
-    precision = {unit: precision_unit(rows, unit) for unit in UNITS}
-    recall = {}
+    precision = {}
     for unit in UNITS:
-        point = ipw_recall(rows, unit)
-        recall[unit] = {"recall": point, "interval_95": _recall_interval(rows, unit, replicates, seed) if point is not None else None}
+        block = precision_unit(rows, unit)
+        block["interval_95"] = _precision_interval(rows, unit, replicates, seed) if block["precision"] is not None else None
+        precision[unit] = block
+    recall = {unit: recall_report(rows, unit, replicates, seed) for unit in UNITS}
     alpha = {}
     kappa = {}
     for unit in UNITS:
-        coded = _coder_units(rows, unit)
+        names = sorted({name for row in rows for name in row["coders"]})
+        paired = [row for row in rows if len(names) >= 2 and names[0] in row["coders"] and names[1] in row["coders"]]
+        coded = _coder_units(paired, unit)
         alpha_point = krippendorff_alpha(coded)
         alpha[unit] = {
             "alpha": alpha_point,
             "interval_95": _bootstrap(lambda sample: krippendorff_alpha(sample), coded, replicates, seed),
         }
-        names = sorted({name for row in rows for name in row["coders"]})
-        if len(names) >= 2:
-            a = [row["coders"].get(names[0], {}).get(unit) for row in rows]
-            b = [row["coders"].get(names[1], {}).get(unit) for row in rows]
+        if len(names) >= 2 and paired:
+            a = [row["coders"][names[0]].get(unit) for row in paired]
+            b = [row["coders"][names[1]].get(unit) for row in paired]
             kappa_point = cohen_kappa(a, b)
             kappa[unit] = {
                 "coders": names[:2],
                 "kappa": kappa_point,
                 "interval_95": _bootstrap(
                     lambda sample, n0=names[0], n1=names[1]: cohen_kappa(
-                        [row["coders"].get(n0, {}).get(unit) for row in sample],
-                        [row["coders"].get(n1, {}).get(unit) for row in sample]),
-                    rows, replicates, seed),
+                        [row["coders"][n0].get(unit) for row in sample],
+                        [row["coders"][n1].get(unit) for row in sample]),
+                    paired, replicates, seed),
             }
         else:
             kappa[unit] = {"coders": names, "kappa": None, "interval_95": None}

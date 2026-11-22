@@ -56,11 +56,19 @@ sum (weight * hit) / sum (weight * gold)
 
 `hit` is 1 when the machine and the gold agree that the unit is positive. `gold` is 1 when the gold says it is positive. For an act, positive means a stated action code. For a means tie and for level C, positive means the boolean on the sheet. The same weights, averaged over every sample the design can draw, recover the population totals. That check is a synthetic test. The interval resamples inside each stratum at that stratum's drawn size.
 
+The score reports the number of gold positives in each stratum next to the recall and its interval. A stratum with fewer than 5 gold positives carries a warning that its bootstrap interval is unreliable.
+
 This is the Horvitz–Thompson estimator of a total: each sampled unit is weighted by the inverse of its inclusion probability (Horvitz and Thompson 1952).
 
 ## Precision
 
-Precision is reported for each stated unit: an act (the action code the machine emitted), a means tie, and level C. A unit enters the denominator when the machine stated it. The numerator is the number of those statements the gold confirms. The ratio is unweighted. The interval is Wilson's score interval (Wilson 1927). Brown, Cai and DasGupta (2001) compare binomial intervals and are why that interval is the one reported for a small count.
+Precision uses the same weights. A stratum drawn more heavily would otherwise pull an unweighted ratio toward itself. For each stated unit (an act, a means tie, level C):
+
+```
+sum_h (weight_h * TP_h) / sum_h (weight_h * (TP_h + FP_h))
+```
+
+`weight_h` is `N_h / n_h`. A unit enters when the machine stated it. `TP` is a statement the gold confirms. The interval resamples inside each stratum at that stratum's drawn size, the same bootstrap as recall. Each stratum also has its own Wilson interval (Wilson 1927) on its count of statements. Brown, Cai and DasGupta (2001) compare binomial intervals and are why the within-stratum interval is Wilson's.
 
 ## Validation mode
 
@@ -72,7 +80,7 @@ The sheet contains the sentence and at most two sentences of context on either s
 
 ## Agreement
 
-At least two people grade the sheet, independently, under the same instructions. Agreement is Krippendorff's nominal alpha (Hayes and Krippendorff 2007) and, for a pair, Cohen's kappa.
+One grader marks the whole sheet. A second grader marks a fixed, seeded subset of about 40 rows. Agreement is computed on that double-graded subset only: Krippendorff's nominal alpha (Hayes and Krippendorff 2007) and, for the pair, Cohen's kappa.
 
 Alpha uses the coincidence matrix. Pairs of values on a unit contribute to the observed coincidence. A missing value is left out. A unit with fewer than two values does not enter. Observed disagreement is the off-diagonal mass. Expected disagreement is the disagreement implied by the category totals. Alpha is 1 minus the ratio. Perfect agreement, observed disagreement 0, is alpha 1. Alpha takes any number of coders and missing cells.
 

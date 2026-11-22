@@ -10,6 +10,7 @@ import pytest
 from state_machines.observations import gold_sample as G
 from state_machines.observations import seal as S
 from state_machines.observations.seal import SEAL_VERSION
+from state_machines.observations.validation import wilson
 
 CONFIG = Path(__file__).resolve().parents[2] / "state_machines" / "observations" / "seal_config.json"
 
@@ -165,6 +166,8 @@ def test_score_checks_the_manifest_hash_and_reports_agreement():
     result = G.score_drawn(graded, key, sample, sealed=manifest, replicates=40, seed=0)
     assert result["manifest_sha256"] == manifest["sha256"]
     assert result["precision"]["act"]["precision"] == 1
+    assert "gold_positives_by_stratum" in result["recall"]["act"]
+    assert "warnings" in result["recall"]["act"]
     assert result["krippendorff_alpha"]["act"]["alpha"] == 1
     assert result["design_based"]["ready_for"] == ["DSL", "PPI"]
     assert result["design_based"]["population_by_stratum"]["published_acts"] == len(manifest["gold_frame_ids"])
@@ -175,3 +178,38 @@ def test_score_checks_the_manifest_hash_and_reports_agreement():
         G.score(graded, key, sealed=bad)
     assert G.krippendorff_alpha([["a", "b"]]) == pytest.approx(0.0)
     assert G.cohen_kappa(["a", "b"], ["a", "b"]) == 1
+
+
+def _scored(stratum, population, drawn, machine, gold):
+    return {
+        "stratum": stratum,
+        "stratum_population": population,
+        "stratum_drawn": drawn,
+        "machine": {"act": machine, "means_tie": False, "level_c": False},
+        "gold": {"act": gold, "means_tie": False, "level_c": False},
+    }
+
+
+def test_weighted_precision_matches_a_hand_computation():
+    """Two strata at different rates. Unweighted precision is 1/2; the weighted value is 10/12."""
+    rows = [
+        _scored("wide", 100, 10, "CONTACT", "CONTACT"),
+        _scored("tight", 20, 10, "CONTACT", "OTHER"),
+    ]
+    assert G.unweighted_precision(rows, "act") == pytest.approx(0.5)
+    # w_wide = 100/10 = 10, TP=1, FP=0; w_tight = 20/10 = 2, TP=0, FP=1.
+    # 10*1 / (10*1 + 2*1) = 10/12.
+    assert G.ipw_precision(rows, "act") == pytest.approx(10 / 12)
+    block = G.precision_unit(rows, "act")
+    assert block["precision"] == pytest.approx(10 / 12)
+    assert block["by_stratum"]["wide"]["wilson_95"] == wilson(1, 1)
+    assert block["by_stratum"]["tight"]["wilson_95"] == wilson(0, 1)
+
+
+def test_a_stratum_with_fewer_than_five_gold_positives_warns():
+    rows = [_scored("thin", 8, 4, "CONTACT", "CONTACT") for _ in range(4)]
+    rows += [_scored("wide", 10, 5, "CONTACT", "CONTACT") for _ in range(5)]
+    report = G.recall_report(rows, "act", replicates=20, seed=0)
+    assert report["gold_positives_by_stratum"] == {"thin": 4, "wide": 5}
+    assert report["warnings"] == ["thin: fewer than 5 gold positives; its bootstrap interval is unreliable"]
+    assert report["recall"] == pytest.approx(1.0)
