@@ -191,7 +191,7 @@ PROBES = [
     ("then-smith-no-comma", "actor",
      ("United States v. Michael Smith, Defendant.",
       "Then Smith sent the files to other users via an encrypted channel.", "Smith"),
-     "actor_rejected"),
+     {"spacy": "actor_rejected", "none": "no_parser"}),
     ("possessive-mother", "actor",
      ("United States v. Michael Smith, Defendant.",
       "The defendant's mother distributed the files to other users via an encrypted channel.",
