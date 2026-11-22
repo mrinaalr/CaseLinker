@@ -51,13 +51,43 @@ def _weight(row: dict) -> float:
     return row["stratum_population"] / row["stratum_drawn"]
 
 
+def merge_dockets(rows: Sequence[dict]) -> list:
+    """One case per court and case number. A repeated document hash is dropped.
+
+    Rows without a court and case number stay on their own case id. The merged
+    id is the first case id in the group, so a sealed frame id is unchanged
+    when that case is the first copy.
+    """
+    seen_documents = set()
+    kept = []
+    for row in rows:
+        digest = row.get("document_sha256")
+        if digest:
+            if digest in seen_documents:
+                continue
+            seen_documents.add(digest)
+        kept.append(row)
+    canonical = {}
+    merged = []
+    for row in kept:
+        court, number = row.get("court"), row.get("docket_number")
+        if court and number:
+            key = (str(court), str(number))
+            canonical.setdefault(key, row["case_id"])
+            row = {**row, "case_id": canonical[key]}
+        merged.append(row)
+    return merged
+
+
 def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
     """A stratified sample of the sealed gold frame.
 
     ``config`` is ``{"seed": int, "strata": {name: {"n": int}}}``. Selection uses
-    the stratum name and the seed only.
+    the stratum name and the seed only. Rows that share a court and case number
+    are one case before the draw.
     """
     verify_manifest(sealed)
+    population = merge_dockets(population)
     frame = set(sealed["gold_frame_ids"])
     banned = set(sealed.get("exclusion_ids") or [])
     outside = sorted({row["case_id"] for row in population if row["case_id"] not in frame})
@@ -395,7 +425,7 @@ def _coder_units(rows: Sequence[dict], unit: str) -> list:
 def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed: int = 0) -> dict:
     """Score a graded sheet against its key. The manifest hash is checked first."""
     digest = verify_manifest(sealed)
-    rows = _joined(graded, key)
+    rows = merge_dockets(_joined(graded, key))
     precision = {}
     for unit in UNITS:
         block = precision_unit(rows, unit)
