@@ -392,7 +392,7 @@ def _coder_units(rows: Sequence[dict], unit: str) -> list:
     return [[row["coders"].get(name, {}).get(unit) for name in names] for row in rows]
 
 
-def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 1000, seed: int = 0) -> dict:
+def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed: int = 0) -> dict:
     """Score a graded sheet against its key. The manifest hash is checked first."""
     digest = verify_manifest(sealed)
     rows = _joined(graded, key)
@@ -457,7 +457,7 @@ def _population_counts(sample: dict) -> dict:
     return {name: spec["population"] for name, spec in sample["strata"].items()}
 
 
-def score_drawn(graded: dict, key: dict, sample: dict, *, sealed: dict, replicates: int = 1000, seed: int = 0) -> dict:
+def score_drawn(graded: dict, key: dict, sample: dict, *, sealed: dict, replicates: int = 2000, seed: int = 0) -> dict:
     result = score(graded, key, sealed=sealed, replicates=replicates, seed=seed)
     result["design_based"]["population_by_stratum"] = _population_counts(sample)
     result["draw_sha256"] = draw_sha256(sample)
@@ -490,7 +490,7 @@ def main(argv=None) -> int:
     s.add_argument("--key", type=Path, required=True)
     s.add_argument("--draw", type=Path, required=True)
     s.add_argument("--sealed", type=Path, required=True)
-    s.add_argument("--replicates", type=int, default=1000)
+    s.add_argument("--replicates", type=int, default=2000)
     s.add_argument("--seed", type=int, default=0)
     args = ap.parse_args(argv)
     for path in (getattr(args, "population", None), getattr(args, "config", None), args.sealed,

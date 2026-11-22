@@ -263,6 +263,13 @@ def test_cluster_bootstrap_keeps_a_case_whole_and_is_wider_than_rows():
             assert copies >= 1 and ids == full[case] * copies
 
 
+def test_bootstrap_default_is_two_thousand():
+    import inspect
+    from state_machines.observations.gold_sample import score, score_drawn
+    assert inspect.signature(score).parameters["replicates"].default == 2000
+    assert inspect.signature(score_drawn).parameters["replicates"].default == 2000
+
+
 def test_bootstrap_draws_a_case_across_strata_or_not_at_all():
     """A case with rows in two strata is taken with all of those rows, or with none."""
     import random
