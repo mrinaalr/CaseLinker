@@ -744,6 +744,39 @@ def _one_capital(text: str) -> Optional[str]:
     return None
 
 
+def _passive_voice(sentence: str):
+    """``(recipient, agent)`` when the clause is passive, else None.
+
+    ``no_parser`` when a passive mark is present and spaCy is absent. The
+    recipient is nsubjpass. The actor, if named, is the object of ``by``.
+    """
+    if not is_passive(sentence or ""):
+        return None
+    nlp = _actor_nlp()
+    if nlp is None:
+        return "no_parser"
+    doc = nlp(sentence or "")
+    recipients = [token for token in doc if token.dep_ in {"nsubjpass", "nsubj:pass"}]
+    agent = next((token for token in doc if token.dep_ == "pobj" and token.head.text.lower() == "by"), None)
+    if not recipients:
+        return None
+    return recipients[0], agent
+
+
+def _token_names_defendant(token, actor_text: str, records: List[dict]) -> bool:
+    if token is None:
+        return False
+    actor = " ".join((actor_text or "").split()).lower()
+    word = token.text.lower()
+    generic = bool(_GENERIC_ACTOR.fullmatch(actor))
+    if word in {"defendant", "accused"} and (generic or word in actor):
+        return True
+    surnames = _known_surnames(records)
+    if word in surnames and (word in actor.split() or generic):
+        return True
+    return False
+
+
 def _surname_is_subject(sentence: str, surname: str) -> Optional[bool]:
     """True when ``surname`` is nsubj or nsubjpass. None when no parser is available."""
     nlp = _actor_nlp()
@@ -786,16 +819,24 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     if generic == "no_defendant_record" or not records:
         return None, "no_defendant_record"
     subject = clause_subject(sentence)
-    if is_passive(sentence):
-        hit = match_actor(subject, records, generic=generic)
-        if not hit or "canonical" not in hit:
+    voice = _passive_voice(sentence)
+    agent_is_actor = False
+    if voice == "no_parser":
+        return None, "no_parser"
+    if voice:
+        recipient, agent = voice
+        if _token_names_defendant(recipient, actor_text, records):
             return None, "passive_subject"
+        if agent and _token_names_defendant(agent, actor_text, records):
+            subject = agent.text
+            agent_is_actor = True
     if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())) and generic != "one":
         return None, "ambiguous"
-    for candidate in (actor_text, subject):
-        reason = _bare_surname_reason(sentence, candidate, records)
-        if reason:
-            return None, reason
+    if not agent_is_actor:
+        for candidate in (actor_text, subject):
+            reason = _bare_surname_reason(sentence, candidate, records)
+            if reason:
+                return None, reason
     if re.fullmatch(r"(?:he|him|she|her|they|them|their)", " ".join((actor_text or "").split()), re.I):
         return None, None
     found = match_actor(actor_text, records, generic=generic)

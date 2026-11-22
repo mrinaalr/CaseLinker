@@ -197,10 +197,14 @@ PROBES = [
      ("United States v. Michael Smith, Defendant.",
       "Agent Porter sent the files to the defendant via an encrypted channel.", "the defendant"),
      "actor_rejected"),
-    ("passive", "actor",
+    ("passive-agent", "actor",
      ("United States v. Michael Smith, Defendant.",
       "The files were sent by Smith to other users via an encrypted channel.", "Smith"),
-     "passive_subject"),
+     {"spacy": "the defendant", "none": "no_parser"}),
+    ("passive-recipient", "actor",
+     ("United States v. Michael Smith, Defendant.",
+      "The defendant was sent the files by Minor Victim 1.", "the defendant"),
+     {"spacy": "passive_subject", "none": "no_parser"}),
     ("generic-one", "actor",
      ("United States v. Michael Smith, Defendant.",
       "The defendant sent the files to other users via an encrypted channel.", "the defendant"),
@@ -370,12 +374,13 @@ def test_two_defendants_publish_no_generic_charged_defendant(tmp_path, monkeypat
 
 
 def test_a_passive_clause_is_counted(tmp_path, monkeypatch):
-    passive = "The files were sent by Smith to other users via an encrypted channel."
+    passive = "The defendant was sent the files by Minor Victim 1."
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
-    _ask_frames(monkeypatch, [_plain_frame(passive, "DISTRIBUTE_MATERIAL", "Smith", object_text="The files")])
+    _ask_frames(monkeypatch, [_plain_frame(passive, "DISTRIBUTE_MATERIAL", "the defendant", means="", object_text="the files")])
     _store(tmp_path, "passive", _page(passive))
     from state_machines.coding.workflow import build_deny
     bundle, _, log = C.code_case("passive", "coder_A", tmp_path, deny=build_deny("passive", tmp_path))
     assert bundle["events"] == []
-    assert C.drops_from_log(log)["passive_subject"] >= 1
+    reason = "passive_subject" if _parser_up() else "no_parser"
+    assert C.drops_from_log(log)[reason] >= 1
