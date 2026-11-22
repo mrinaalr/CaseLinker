@@ -134,6 +134,39 @@ def test_a_conflicting_name_or_role_title_is_refused(tmp_path, monkeypatch, sent
     assert events == []
 
 
+@pytest.mark.parametrize("sentence", [
+    "The defendant used Snapchat to send the files.",
+    "The defendant used Kik to send the files.",
+    "The defendant used his phone to record the files.",
+    "The defendant tried to send the files.",
+    "The defendant attempted to send the files.",
+    "The defendant began to send the files.",
+    "The defendant agreed to distribute the files.",
+    "The defendant threatened to post the files.",
+])
+def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, sentence):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "inf", _one("Michael Smith", sentence), sentence, "the defendant",
+        means="", object_text="the files")
+    assert events == ["DISTRIBUTE_MATERIAL"]
+
+
+@pytest.mark.parametrize("sentence", [
+    "The defendant asked Minor Victim 1 to send the files.",
+    "The defendant told Minor Victim 1 to send the files.",
+    "The defendant persuaded Minor Victim 1 to send the files.",
+    "The defendant used Minor Victim 1 to send the files.",
+    "The defendant had Minor Victim 1 send the files.",
+    "The defendant made Minor Victim 1 send the files.",
+])
+def test_an_object_controlled_complement_is_refused(tmp_path, monkeypatch, sentence):
+    events, log = code_events(
+        tmp_path, monkeypatch, "ctl", _one("Michael Smith", sentence), sentence, "the defendant",
+        means="", object_text="the files")
+    assert events == []
+    assert "reported_speech" not in _reasons(tmp_path, "ctl")
+
+
 @pytest.mark.parametrize("sentence,actor", [
     ("He sent the files.", "He"),
     ("She sent the files.", "She"),

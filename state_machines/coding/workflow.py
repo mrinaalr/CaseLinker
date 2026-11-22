@@ -1064,11 +1064,42 @@ def _clause_of(token) -> Optional[str]:
     return None
 
 
+def _object_controls(governor) -> bool:
+    """A direct object controls the governor's infinitive when it can be a person.
+
+    A pronoun, an unpossessed common noun, or a multi-token proper name controls.
+    One unmodified proper name, or a noun with a possessor, is an instrument.
+    """
+    for child in governor.children:
+        if child.dep_ not in {"dobj", "dative", "iobj"}:
+            continue
+        if any(grandchild.dep_ == "poss" for grandchild in child.children):
+            return False
+        if child.pos_ == "PRON":
+            return True
+        if child.pos_ == "NOUN":
+            return True
+        if child.pos_ == "PROPN" and any(grandchild.dep_ in {"compound", "nummod"} for grandchild in child.children):
+            return True
+        return False
+    return False
+
+
 def _act_verb(doc):
-    """The conduct verb the sentence would be coded as, else the root verb."""
+    """The conduct verb the sentence would be coded as, else the root verb.
+
+    An infinitive or a bare complement of the root is the act, whoever its
+    controller is. The controller is decided from the governor's object.
+    """
+    root = next((token for token in doc if token.dep_ == "ROOT"), None)
+    if root is not None:
+        complement = next((child for child in root.children
+                           if child.dep_ in {"xcomp", "ccomp"} and child.pos_ == "VERB"), None)
+        if complement is not None:
+            return complement
     conduct = [token for token in doc if token.pos_ in {"VERB", "AUX"} and token.lemma_.lower() in _CONDUCT]
     if not conduct:
-        return next((token for token in doc if token.dep_ == "ROOT"), None)
+        return root
     main = [token for token in conduct if _is_main_verb(token)]
     return main[-1] if main else conduct[-1]
 
@@ -1086,10 +1117,17 @@ def _verb_block(verb) -> Optional[str]:
     if any(child.dep_ == "mark" and child.lemma_.lower() in {"if", "unless"} for child in verb.children):
         return "modal_conditional"
     where = _clause_of(verb)
-    if where == "ccomp" or (verb.head.lemma_.lower() in _SPEECH and where):
-        return "reported_speech"
+    if where == "ccomp":
+        marked = any(child.dep_ == "mark" for child in verb.children)
+        own_subject = any(child.dep_ in _SUBJECT_DEPS for child in verb.children)
+        if marked or verb.head.lemma_.lower() in _SPEECH or not own_subject:
+            return "reported_speech"
     if where == "xcomp" and verb.head.lemma_.lower() in _NEG_VERBS:
         return "negated"
+    if where == "xcomp":
+        if _object_controls(verb.head):
+            return "actor_rejected"
+        return None
     if where in _BLOCKED_CLAUSE:
         return "subordinate_clause"
     if not _is_main_verb(verb):
@@ -1266,6 +1304,8 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
             return _subject_of(head.head)
         return found
 
+    if verb is not None and verb.dep_ == "xcomp" and not _object_controls(verb.head):
+        verb = verb.head
     subject = _subject_of(verb) if verb is not None else None
     if _defendant_is_other_argument(verb, subject):
         return None, "actor_rejected"
