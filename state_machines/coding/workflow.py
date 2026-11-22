@@ -256,6 +256,20 @@ def _base_deny_tokens(text: str) -> set:
     return names
 
 
+def spacy_model_record() -> dict:
+    """Name and version of the spaCy model a v2 run uses. Missing model stops the run."""
+    from state_machines.observations.means_parse import load_spacy_model, model_name
+    name = model_name()
+    try:
+        nlp = load_spacy_model(name)
+    except Exception as exc:
+        raise SystemExit(
+            f"v2 coding needs the spaCy model {name}, which is not available ({type(exc).__name__}: {exc})"
+        ) from exc
+    version = (getattr(nlp, "meta", {}) or {}).get("version")
+    return {"model": name, "model_version": version}
+
+
 def v2_active() -> bool:
     """True when a v2 flag changes published behavior. Unset flags stay on the base path."""
     if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
@@ -315,8 +329,14 @@ def _one_person(chunk: str) -> Optional[dict]:
 
 
 _REPORTER = re.compile(
-    r"\d+\s+F\.\s*\d+d|\d+\s+F\.\s*Supp(?:\.\s*\d+d)?|\d+\s+S\.\s*Ct\.|"
-    r"\d+\s+U\.?\s*S\.|\b\d+\s*WL\b|\bWL\s+\d+|\bsupra\b|\bNo\.\s*\d",
+    r"\d+\s+F\.\s*(?:\d+d|4th)|\d+\s+F\.\s*Supp(?:\.\s*\d+d)?|\d+\s+F\.\s*App['’]?x|"
+    r"\bFed\.\s*Appx\.?|\d+\s+L\.\s*Ed\.\s*2d|\d+\s+S\.\s*Ct\.|"
+    r"\d+\s+U\.?\s*S\.|\b\d+\s*WL\b|\bWL\s+\d+|\bsupra\b|\bid\.|\bNo\.\s*\d",
+    re.I,
+)
+_CASE_NO = re.compile(r"\bCase\s+No\.\s*\d[\w:-]*", re.I)
+_CITATION_SIGNAL = re.compile(
+    r"\b(?:as\s+held\s+in|see|cf\.|accord|id\.)\s+(?:united\s+states|u\.s\.)\s+v\.?\s*$",
     re.I,
 )
 _COMPANY = re.compile(r"\b(?:L\.L\.C\.|L\.P\.|LLC|INC|CORP|LTD|CO)\b\.?", re.I)
@@ -392,7 +412,8 @@ def _citation_follows(text: str, start: int) -> bool:
     """True when the text just after a 'v.' is a citation, not a caption of defendants."""
     window = text[start:start + 220]
     head = re.split(r"(?<=[A-Za-z]{3})\.\s+", window, maxsplit=1)[0]
-    if _REPORTER.search(head):
+    pre = text[max(0, start - 80):start]
+    if _REPORTER.search(_CASE_NO.sub(" ", head)) or _CITATION_SIGNAL.search(pre):
         return True
     for cite_start, cite_end in citation_spans(text):
         if cite_start < start + len(window) and cite_end > start:
@@ -801,24 +822,41 @@ def _strip_lead(text: str) -> str:
         text = text[match.end():]
 
 
-def clause_subject(sentence: str) -> str:
-    """The grammatical subject of the act's clause, after a leading adverbial or date.
+def _require_actor_nlp():
+    """The spaCy model. A v2 run stops when it is missing instead of guessing."""
+    nlp = _actor_nlp()
+    if nlp is None and v2_active():
+        raise SystemExit("v2 coding needs the spaCy model en_core_web_sm, which is not available")
+    return nlp
 
-    A possessive (``Smith's mother``, ``the defendant's mother``) is that whole
-    phrase, so it is not read as the defendant. A following lowercase word is not
-    part of the name. Whether a bare surname is the clause subject is decided by
-    the dependency parse, not by a verb list.
+
+def _noun_phrase(doc, token) -> str:
+    """The subject token plus the determiner and possessive that modify it."""
+    start = token.i
+    for child in token.children:
+        if child.dep_ in {"det", "poss", "case", "compound", "amod"} and child.i < start:
+            start = child.left_edge.i
+    return doc[start:token.i + 1].text
+
+
+def clause_subject(sentence: str) -> str:
+    """The clause subject from the dependency parse.
+
+    A passive ``by`` phrase is the actor. ``the defendant's <word>`` stays that
+    whole phrase. A missing model stops a v2 run.
     """
-    text = _strip_lead((sentence or "").strip())
-    possessive = re.match(
-        r"((?:[Tt]he\s+[Dd]efendant|[Tt]he\s+[Aa]ccused|[A-Z][\w'.-]+)(?:'s|\u2019s)"
-        r"\s+[A-Za-z][\w'.-]+)",
-        text,
-    )
-    if possessive:
-        return possessive.group(1)
-    match = _SUBJECT.match(text)
-    return match.group(1) if match else ""
+    nlp = _require_actor_nlp()
+    if nlp is None:
+        return ""
+    doc = nlp(sentence or "")
+    agent = next((token for token in doc
+                  if token.dep_ == "pobj" and token.head.dep_ == "agent" and token.head.text.lower() == "by"), None)
+    if agent is not None:
+        return _noun_phrase(doc, agent)
+    subjects = [token for token in doc if token.dep_ in _SUBJECT_DEPS]
+    if not subjects:
+        return ""
+    return _noun_phrase(doc, subjects[0])
 
 
 def is_passive(sentence: str) -> bool:
@@ -868,7 +906,7 @@ def _passive_voice(sentence: str):
     """
     if not is_passive(sentence or ""):
         return None
-    nlp = _actor_nlp()
+    nlp = _require_actor_nlp()
     if nlp is None:
         return "no_parser"
     doc = nlp(sentence or "")

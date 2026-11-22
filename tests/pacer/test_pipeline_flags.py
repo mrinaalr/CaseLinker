@@ -771,6 +771,9 @@ def test_frame_drops_are_in_the_manifest_only_when_the_flag_is_on(tmp_path, monk
     on = build("drops-on", data_root=root, text_root=tmp_path / "on" / "text",
                frame_drops={"not_found": 1, "ambiguous": 0})
     assert on["frame_drops"]["not_found"] == 1
+    assert on["spacy_model"]["model"] == "en_core_web_sm"
+    assert on["spacy_model"]["model_version"]
+    assert "spacy_model" not in off
 
 
 def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):

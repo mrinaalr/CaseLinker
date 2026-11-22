@@ -198,6 +198,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     recorded = snapshot_record()
     if recorded:
         manifest["party_snapshot"] = recorded["sha256"]
+    if _v2_release_guard():
+        from state_machines.coding.workflow import spacy_model_record
+        manifest["spacy_model"] = spacy_model_record()
     if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0" and frame_drops is not None:
         manifest["frame_drops"] = frame_drops
     if allow_empty_registry:
