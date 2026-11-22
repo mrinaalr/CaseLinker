@@ -32,6 +32,15 @@ def test_years_are_sane_and_sourced():
         assert row["source_url"].startswith("http")
 
 
+def test_messenger_dates_from_the_2011_app_and_the_rule_stays_short():
+    row = next(item for item in load() if item["platform_id"] == "Facebook Messenger")
+    assert row["launch_year"] == 2011
+    assert "9 August 2011" in row["note"]
+    text = (ROOT / "ontology/platform_affordance_evidence/LAUNCH_YEARS.md").read_text(encoding="utf-8")
+    assert "launch_year = year of first public release, including public beta or early access." in text
+    assert "same service continued" not in text
+
+
 def test_generation_boundaries():
     assert generation(2003) == "<=2003"
     assert generation(2004) == "2004-2010"
