@@ -282,7 +282,7 @@ By the standing of the document: 282 observations are in sworn affidavits, 221 i
 
 ## Gold sample
 
-The validation sample is sealed before anyone tunes on it. [`seal.py`](seal.py) draws a held-out case split and a gold-sample frame from a config. The config in the repo, [`seal_config.json`](seal_config.json), is blank. Excluded ids are not drawn. The manifest records the seed, the sizes, the population counts, the code version and a SHA-256 of itself.
+The validation sample is sealed before anyone tunes on it. [`seal.py`](seal.py) can draw a held-out case split and a gold-sample frame as a simple random sample of the eligible ids. That draw is one way to choose an evaluation set. An evaluation set may also be fixed by a pre-declared label rule, for example a folder. The corpus list and the exclusion list record that set. The config in the repo, [`seal_config.json`](seal_config.json), is blank. Excluded ids are not drawn. The manifest records the seed, the sizes, the population counts, the code version and a SHA-256 of itself.
 
 [`gold_sample.py`](gold_sample.py) draws a stratified sentence sample from that frame only. It records each stratum's population and each row's inclusion probability, hashes the drawn list before grading, and writes a grading sheet with no machine labels. The key is a separate file. Scoring checks the manifest hash first. Precision is per stated unit. Recall is weighted by the inverse of the inclusion probability. Agreement is Krippendorff's alpha and Cohen's kappa, with a bootstrap interval. The scored rows keep the sampling weights for a design-based correction.
 

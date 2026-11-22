@@ -1,6 +1,6 @@
 # Gold sample
 
-How a held-out case split and a sentence sample are drawn, and how that sample is scored. The commands are [`seal.py`](seal.py) and [`gold_sample.py`](gold_sample.py). Neither reads page text. Neither writes into `state_machines/data/`, `local/` or `caselinker_oxigraph/`.
+How an evaluation set is recorded, how a sentence sample is drawn, and how that sample is scored. The commands are [`seal.py`](seal.py) and [`gold_sample.py`](gold_sample.py). Neither reads page text. Neither writes into `state_machines/data/`, `local/` or `caselinker_oxigraph/`.
 
 **Contents:**
 
@@ -24,7 +24,9 @@ python -m state_machines.observations.seal --config <config.json> --out <dir>
 
 [`seal_config.json`](seal_config.json) is blank: no corpus ids, no excluded ids, no seed, no sizes. The command refuses a blank config. Fill it, then run the command once.
 
-Eligible ids are the corpus with the exclusion list removed. Held-out cases are a simple random sample of that list. The gold frame is a simple random sample of what remains, so the two sets do not overlap. An excluded id is not eligible. If the two sizes ask for more cases than remain, the command stops and writes nothing.
+A simple random split is one way to choose the evaluation set. Eligible ids are the corpus with the exclusion list removed. Held-out cases are a simple random sample of that list. The gold frame is a simple random sample of what remains, so the two sets do not overlap. An excluded id is not eligible. If the two sizes ask for more cases than remain, the command stops and writes nothing.
+
+An evaluation set may also be fixed by a pre-declared label rule, for example every case in a folder. The corpus list and the exclusion list record that set: the ids the rule keeps go in the corpus, and the rest go on the exclusion list. The draw then runs inside the recorded set.
 
 The manifest records the seed, both sizes, the population counts (corpus, excluded, eligible, held out, gold frame, and the remainder), the code version, and a SHA-256 of that body. The same inputs produce the same file. The digest is checked before any later command uses the ids. A file whose stored digest is not the hash of its body is rejected.
 
@@ -80,11 +82,11 @@ The sheet contains the sentence and at most two sentences of context on either s
 
 ## Agreement
 
-One grader marks the whole sheet. A second grader marks a fixed, seeded subset of about 40 rows. Agreement is computed on that double-graded subset only: Krippendorff's nominal alpha (Hayes and Krippendorff 2007) and, for the pair, Cohen's kappa.
+The agreement step is optional. By default one grader marks the sheet, and no agreement figure is reported. Krippendorff's nominal alpha (Hayes and Krippendorff 2007) and Cohen's kappa are computed and reported only when a second grader's marks are supplied. They are computed on the rows both graders marked.
 
 Alpha uses the coincidence matrix. Pairs of values on a unit contribute to the observed coincidence. A missing value is left out. A unit with fewer than two values does not enter. Observed disagreement is the off-diagonal mass. Expected disagreement is the disagreement implied by the category totals. Alpha is 1 minus the ratio. Perfect agreement, observed disagreement 0, is alpha 1. Alpha takes any number of coders and missing cells.
 
-Kappa is the two-coder coefficient: observed agreement corrected by the agreement expected from each coder's own marginals. It is undefined when both coders use only one category, because the chance term is then 1. Both coefficients are reported.
+Kappa is the two-coder coefficient: observed agreement corrected by the agreement expected from each coder's own marginals. It is undefined when both coders use only one category, because the chance term is then 1. When a second grader's marks are supplied, both coefficients are reported.
 
 The interval on each is the same case-level bootstrap: within each stratum, whole cases are drawn with replacement, and a case's sentences are not split. The bootstrap seed and the number of replicates are stored with the score.
 
