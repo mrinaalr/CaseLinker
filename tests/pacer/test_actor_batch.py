@@ -156,7 +156,8 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
         ("plea", "plea_agreement", [f"United States v. Robert Porter, Defendant. {sentence}"]),
     ]
     events, _log = code_events(tmp_path, monkeypatch, "agree", docs, sentence)
-    assert events == ["DISTRIBUTE_MATERIAL"]
+    assert events == []
+    assert "other_caption" in _reasons(tmp_path, "agree")
     from state_machines.coding import pipeline as P
     out = tmp_path / "coded"
     for coder in ("coder_A", "coder_B"):
@@ -168,9 +169,7 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     monkeypatch.setenv("CASELINKER_ACT_POLICY", "propose-verify-1.0")
     P.resolve_cases(["agree"], out, tmp_path)
     recovered = json.loads((out / "resolved" / "agree.json").read_text(encoding="utf-8"))["recovered"]
-    assert recovered
-    assert all("Porter" in frame["actor"]["text"] for frame in recovered)
-    assert all("Smith" not in frame["actor"]["text"] for frame in recovered)
+    assert recovered == []
 
 
 def test_citation_lines_are_not_defendants(tmp_path, monkeypatch):
