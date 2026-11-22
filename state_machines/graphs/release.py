@@ -194,6 +194,10 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     }
     if os.environ.get("CASELINKER_MEANS_PARSER") == "dep":
         manifest["means_parser"] = _means_parser_record()
+    from state_machines.coding.parties import snapshot_record
+    recorded = snapshot_record()
+    if recorded:
+        manifest["party_snapshot"] = recorded["sha256"]
     if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0" and frame_drops is not None:
         manifest["frame_drops"] = frame_drops
     if allow_empty_registry:

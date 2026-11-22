@@ -998,6 +998,12 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                                    drops=totals if framing else None)
     log = coverage + log
     if framing:
+        from state_machines.coding.parties import snapshot_record
+        recorded = snapshot_record()
+        if recorded:
+            log.append(f"party_snapshot {recorded['sha256']}")
+        if info.get("caption_snapshot_disagreement"):
+            totals["caption_snapshot_disagreement"] = totals.get("caption_snapshot_disagreement", 0) + 1
         log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
         log.append("frame_drops " + json.dumps(totals, sort_keys=True))
     # An empty bundle has no participant, so repair cannot make it validate. The zero-frame

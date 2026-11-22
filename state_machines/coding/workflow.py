@@ -580,7 +580,7 @@ def defendant_records_in(text: str) -> List[dict]:
 
 def _same_party(left: dict, right: dict) -> bool:
     """A bare surname and the full name with that surname are one person."""
-    if left["key"] == right["key"]:
+    if left["key"] == right["key"] or left["full"].lower() == right["full"].lower():
         return True
     left_full, right_full = left["full"].lower(), right["full"].lower()
     left_sur, right_sur = left["surname"].lower(), right["surname"].lower()
@@ -614,8 +614,9 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
     """
     root = E.text_root(text_root) / case_id
     listed = root / "sources.json"
+    meta = json.loads(listed.read_text(encoding="utf-8")) if listed.is_file() else {}
     if listed.is_file():
-        documents = json.loads(listed.read_text(encoding="utf-8")).get("documents") or []
+        documents = meta.get("documents") or []
     else:
         documents = [{"doc_id": path.parent.name, "doc_type": "other"}
                      for path in sorted(root.glob("*/p0001.txt"))]
@@ -635,30 +636,56 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
     primary = [item for item in found if item["doc_type"] in _CHARGING_DOCS | _PLEA_DOCS]
     chosen = primary or found
     if not chosen:
-        return {"records": [], "generic": "no_defendant_record", "et_al": False, "conflict": False}
-    signatures = {_signature(item["records"]) for item in chosen}
-    conflict = len(signatures) > 1
-    et_al = any(item["et_al"] for item in chosen)
-    records: List[dict] = []
-    for item in chosen:
-        for record in item["records"]:
-            _absorb(records, record)
-    if conflict or et_al or len(records) != 1:
-        generic = "ambiguous"
+        records = []
+        generic = "no_defendant_record"
+        et_al = False
+        conflict = False
+        by_document = {}
     else:
-        generic = "one"
-    by_document = {}
-    for item in found:
-        own = item["records"]
-        match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
-        if match is not None and not item["et_al"]:
-            by_document[item["doc_id"]] = {"generic": "one", "record": match}
-        elif generic == "one":
-            by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
+        signatures = {_signature(item["records"]) for item in chosen}
+        conflict = len(signatures) > 1
+        et_al = any(item["et_al"] for item in chosen)
+        records = []
+        for item in chosen:
+            for record in item["records"]:
+                _absorb(records, record)
+        if conflict or et_al or len(records) != 1:
+            generic = "ambiguous"
         else:
-            by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
+            generic = "one"
+        by_document = {}
+        for item in found:
+            own = item["records"]
+            match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
+            if match is not None and not item["et_al"]:
+                by_document[item["doc_id"]] = {"generic": "one", "record": match}
+            elif generic == "one":
+                by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
+            else:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
+    from state_machines.coding.parties import defendants_for
+    snapshot = defendants_for(str(meta.get("court") or ""), str(meta.get("docket_number") or ""))
+    disagreement = False
+    if snapshot is not None:
+        caption_names = {record["surname"].lower() for record in records}
+        snapshot_names = {record["surname"].lower() for record in snapshot}
+        disagreement = bool(records) and caption_names != snapshot_names
+        records = list(snapshot)
+        et_al = False
+        conflict = False
+        generic = "one" if len(records) == 1 else ("ambiguous" if records else "no_defendant_record")
+        by_document = {}
+        for item in found:
+            own = item["records"]
+            match = next((party for party in records if len(own) == 1 and _same_party(own[0], party)), None)
+            if match is not None and not item["et_al"]:
+                by_document[item["doc_id"]] = {"generic": "one", "record": match}
+            elif generic == "one":
+                by_document[item["doc_id"]] = {"generic": "one", "record": records[0]}
+            else:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None}
     return {"records": records, "generic": generic, "et_al": et_al, "conflict": conflict,
-            "by_document": by_document}
+            "by_document": by_document, "caption_snapshot_disagreement": disagreement}
 
 
 def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -> List[dict]:

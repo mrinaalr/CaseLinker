@@ -346,6 +346,62 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         raise AssertionError(kind)
 
 
+def test_a_party_snapshot_wins_and_records_its_hash(tmp_path, monkeypatch):
+    import hashlib
+    import socket
+    from state_machines.coding.parties import defendants_for, load
+    from state_machines.coding.workflow import case_defendants
+    from state_machines.graphs.release import build
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-1",
+        "parties": [
+            {"party_id": "p-porter", "name": "Robert Porter", "role": "defendant"},
+            {"party_id": "p-plaintiff", "name": "United States", "role": "plaintiff"},
+            {"party_id": "p-smith", "name": "Michael Smith", "role": "defendant", "date_terminated": "2020-01-01"},
+        ],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+
+    def _offline(*_args, **_kwargs):
+        raise AssertionError("the snapshot loader called the network")
+
+    monkeypatch.setattr(socket, "socket", _offline)
+    monkeypatch.setattr(socket, "create_connection", _offline)
+    loaded = load()
+    assert loaded["sha256"] == digest
+    assert [row["party_id"] for row in defendants_for("dcd", "1:24-cr-1")] == ["p-porter", "p-smith"]
+    _store_docs(tmp_path / "text", "snap", [
+        ("complaint", "complaint", ["United States v. Michael Smith, Defendant."]),
+    ])
+    sources = json.loads((tmp_path / "text" / "snap" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-1"
+    (tmp_path / "text" / "snap" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    info = case_defendants("snap", tmp_path / "text")
+    assert [row["party_id"] for row in info["records"]] == ["p-porter", "p-smith"]
+    assert info["generic"] == "ambiguous"
+    assert info["caption_snapshot_disagreement"] is True
+    from state_machines.coding.parties import snapshot_record
+    from state_machines.graphs.release import build
+    assert snapshot_record()["sha256"] == digest
+    pytest.importorskip("case_uco")
+    from tests.pacer import fixtures as F
+    from tests.pacer.test_release import _adjudicated, _release
+    bundle = _adjudicated(F.build()[0])
+    root = _release(tmp_path / "rel", bundle, release="snap-rel")
+    manifest = build("snap-rel", data_root=root, text_root=tmp_path / "rel" / "text", allow_empty_registry=True)
+    assert manifest["party_snapshot"] == digest
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", "0" * 64)
+    load.cache_clear() if hasattr(load, "cache_clear") else None
+    from state_machines.coding import parties as parties_mod
+    parties_mod._CACHE.clear()
+    with pytest.raises(SystemExit, match="does not match"):
+        load()
+
+
 def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     """A complaint naming Smith does not absorb a plea that names Porter."""
     sentence = "The defendant sent the files to other users via an encrypted channel."
