@@ -137,7 +137,7 @@ A second path for section labels, actor ids, event frames, propose-then-verify, 
 | `CASELINKER_SECTION_FILTER` | off | `coder.route` returns `section_blocked`, and `coder.code_case` writes no acts, for a technology explainer or affiant background |
 | `CASELINKER_COREFERENCE` | off | `observe.relate` calls `coreference.means_with_resolved_subject` before it attributes a means |
 | `CASELINKER_ADJACENT_LEVEL` | off | `observe.relate` writes `adjacent_sentence` from `coreference.adjacent_links`, kept out of the means relations |
-| `CASELINKER_EXTRACTOR` | unset | `coder.route` returns `frame`, and `coder.code_case` writes acts from `frames.extract_frames` after `verify_frame` |
+| `CASELINKER_EXTRACTOR` | unset | `coder.code_case` still calls each coder's own model. The model returns frames. `acts_from_model_frames` runs `verify_frame` and drops a frame that fails. The actor is that frame's actor slot, and the act is an offender act only when the slot is the defendant (`coreference` when `CASELINKER_COREFERENCE=1`). `extract_frames` is not either coder |
 | `CASELINKER_ACT_POLICY` | `intersection-1.0` | `pipeline.resolve_cases` calls `propose_verify.from_bundles`, including the missed-act pass when page text is available |
 | `CASELINKER_MEANS_PARSER` | unset | `observe.relate` calls `means_parse.instrument_means` when the five-word window misses |
 | `CASELINKER_MEANS_RULE` | unset | `observe.features_in` and `observe._means` also match `virtual private network(s)`, `VPN(s)`, and `on` / `via` after a conduct verb |

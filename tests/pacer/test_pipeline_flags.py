@@ -16,7 +16,8 @@ FLAGS = (
     "CASELINKER_ACT_POLICY", "CASELINKER_MEANS_PARSER", "CASELINKER_MEANS_RULE",
     "CASELINKER_DISAGREEMENT",
 )
-# observe + relate on the fictional Kitebox page, with every flag unset, before these modules were called.
+# observe + relate on the Kitebox fixture below, flags unset, run on fix/generic-platform-tags
+# at 3f43d9e724128706d95286fee1829c575254809c. Recomputed there, not from this branch.
 _FLAGS_OFF_SHA256 = "e632063b64d05f489215a2ff668bcc86a3262f611fa4974436a1b08813200899"
 _KITEBOX = (
     "STATEMENT OF FACTS. On May 2, 2020, the defendant asked Minor Victim 1 for images through the Kitebox application. "
@@ -182,11 +183,31 @@ def test_e075_affiant_boilerplate_yields_no_acts(tmp_path, monkeypatch):
     assert off["events"] and on["events"] == []
 
 
-def _framed(tmp, case, text, monkeypatch):
+def _model_frame(page: str, code: str, actor: str, *, bad: bool = False) -> dict:
+    """A model frame whose slots are verbatim on ``page``, unless ``bad`` breaks the hash."""
+    spans = list(O.sentences(page))
+    start, end = next((a, b) for a, b in spans if actor in page[a:b])
+    verb = "received" if "received" in page[start:end] else "sent"
+    means_at = page.index("encrypted")
+    actor_at = page.index(actor)
+    verb_at = page.index(verb, start)
+    return {
+        "passage_hash": "0" * 64 if bad else E.sha256_text(page),
+        "sentence": {"text": page[start:end], "start": start, "end": end},
+        "actor": {"text": actor, "start": actor_at, "end": actor_at + len(actor)},
+        "act": {"text": verb, "start": verb_at, "end": verb_at + len(verb), "code": code},
+        "means": {"text": "encrypted", "start": means_at, "end": means_at + len("encrypted"),
+                  "level": "C", "kind": "feature", "feature_class": "unmonitored_communication"},
+        "level_c": True,
+    }
+
+
+def _framed(tmp, case, text, monkeypatch, code):
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
-    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {"acts": []})
+    frame = _model_frame(text, code, "The defendant")
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache, frame=frame: {"frames": [frame]})
     _store(tmp / "on", case, text)
     on, _, _ = C.code_case(case, "coder_A", tmp / "on", deny=[])
     _clear(monkeypatch)
@@ -198,7 +219,7 @@ def _framed(tmp, case, text, monkeypatch):
 
 def test_doj_ceos_2025_023_o0005_receipt_carries_the_means(tmp_path, monkeypatch):
     text = "The defendant received the files from the sender via an encrypted channel."
-    off, on = _framed(tmp_path, "receipt", text, monkeypatch)
+    off, on = _framed(tmp_path, "receipt", text, monkeypatch, "RECEIVE_SELF_GENERATED")
     assert [e["action"] for e in off["events"]] == ["STORE_MATERIAL"]
     event = next(e for e in on["events"] if e["action"] == "RECEIVE_SELF_GENERATED")
     assert event["actor"]["role"] == "offender"
@@ -208,7 +229,7 @@ def test_doj_ceos_2025_023_o0005_receipt_carries_the_means(tmp_path, monkeypatch
 
 def test_ncis_2023_001_o0002_second_instrument(tmp_path, monkeypatch):
     text = "The defendant sent the files to other users via an encrypted channel."
-    off, on = _framed(tmp_path, "instrument", text, monkeypatch)
+    off, on = _framed(tmp_path, "instrument", text, monkeypatch, "DISTRIBUTE_MATERIAL")
     assert [e["action"] for e in off["events"]] == ["STORE_MATERIAL"]
     event = next(e for e in on["events"] if e["action"] == "DISTRIBUTE_MATERIAL")
     assert event["actor"]["role"] == "offender"
@@ -230,6 +251,58 @@ def _event_bundle(case, coder, action):
                         "affordances": [], "candidate_affordances": [], "harms": [], "access": [],
                         "time": {"assertions": []}}],
             "relations": [], "tracks": [], "coding": {"coder_id": coder}}
+
+
+def test_a_victim_frame_is_not_an_offender_act(tmp_path, monkeypatch):
+    text = "Minor Victim 1 sent the files to other users via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
+    frame = _model_frame(text, "DISTRIBUTE_MATERIAL", "Minor Victim 1")
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache, frame=frame: {"frames": [frame]})
+    _store(tmp_path, "victim", text)
+    bundle, _, _ = C.code_case("victim", "coder_A", tmp_path, deny=[])
+    assert bundle["events"] == []
+    assert all(e["actor"]["role"] != "offender" for e in bundle["events"])
+
+
+def test_frame_verification_keeps_a_verbatim_frame_and_drops_a_bad_one(tmp_path, monkeypatch):
+    text = "The defendant sent the files to other users via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
+    good = _model_frame(text, "DISTRIBUTE_MATERIAL", "The defendant")
+    bad = _model_frame(text, "RECEIVE_SELF_GENERATED", "The defendant", bad=True)
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache, good=good, bad=bad: {"frames": [bad, good]})
+    _store(tmp_path, "verify", text)
+    bundle, _, _ = C.code_case("verify", "coder_A", tmp_path, deny=[])
+    assert [e["action"] for e in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+
+
+def test_frame_coders_disagree_and_intersection_drops_the_act(tmp_path, monkeypatch):
+    text = "The defendant sent the files to other users via an encrypted channel."
+    case = "two_coders"
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
+    _store(tmp_path, case, text)
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {
+        "frames": [_model_frame(text, "RECEIVE_SELF_GENERATED", "The defendant")]})
+    a, _, _ = C.code_case(case, "coder_A", tmp_path, deny=[])
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {
+        "frames": [_model_frame(text, "DISTRIBUTE_MATERIAL", "The defendant")]})
+    b, _, _ = C.code_case(case, "coder_B", tmp_path, deny=[])
+    assert [e["action"] for e in a["events"]] == ["RECEIVE_SELF_GENERATED"]
+    assert [e["action"] for e in b["events"]] == ["DISTRIBUTE_MATERIAL"]
+    out = tmp_path / "coded"
+    for coder, bundle in (("coder_A", a), ("coder_B", b)):
+        (out / coder).mkdir(parents=True)
+        (out / coder / f"{case}.json").write_text(json.dumps(bundle), encoding="utf-8")
+    summary = P.resolve_cases([case], out, None)
+    assert summary[case].get("events", 0) == 0 or summary[case].get("failed")
+    kappa = summary[case]["report"]["agreement_model_coded"]["action_code"]["kappa"]
+    assert kappa == 0
+    assert not (out / "resolved" / f"{case}.json").exists()
 
 
 def test_propose_verify_recovers_a_missed_act(tmp_path, monkeypatch):
