@@ -196,7 +196,7 @@ def test_score_checks_the_manifest_hash_and_reports_agreement():
     assert "gold_positives_by_stratum" in result["recall"]["act"]
     assert "warnings" in result["recall"]["act"]
     assert result["krippendorff_alpha"]["act"]["alpha"] == 1
-    assert result["design_based"]["ready_for"] == ["DSL", "PPI"]
+    assert result["design_based"]["ready_for"] == ["DSL"]
     assert result["design_based"]["population_by_stratum"]["published_acts"] == len(manifest["gold_frame_ids"])
     assert all(row["sampling_weight"] == pytest.approx(1 / row["inclusion_probability"])
                for row in result["design_based"]["rows"])

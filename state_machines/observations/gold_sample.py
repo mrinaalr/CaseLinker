@@ -22,11 +22,11 @@ interval, and the intervals on recall and on agreement, resample whole cases
 from the frame. A drawn case brings every sentence it has, in every stratum.
 A Wilson interval is also reported inside each stratum.
 Recall weights each gold-positive unit by N_h / n_h and reports how many gold
-positives each stratum contributed. A second grader marks a fixed seeded
-subset; Krippendorff's alpha (nominal) and Cohen's kappa are computed on the
-rows that have two grades. The same rows,
-with the known probabilities, are emitted for a design-based correction (DSL or
-prediction-powered inference). This module does not run those estimators.
+positives each stratum contributed. When a second grader has marked rows,
+Krippendorff's alpha (nominal) and Cohen's kappa are computed on the rows that
+have two grades. Those rows, with their inclusion probabilities, are emitted
+for a design-based correction (Egami, Hinck, Stewart and Wei 2023). This module
+does not run that estimator.
 """
 from __future__ import annotations
 
@@ -444,11 +444,10 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed
         "krippendorff_alpha": alpha,
         "cohen_kappa": kappa,
         "design_based": {
-            "ready_for": ["DSL", "PPI"],
+            "ready_for": ["DSL"],
             "rows": ready,
             "note": "Each row carries its inclusion probability and the sampling weight N_h/n_h. "
-                    "DSL (Egami, Hinck, Stewart and Wei 2023) and prediction-powered inference "
-                    "(Angelopoulos, Bates, Fannjiang, Jordan and Zrnic, Science 382, 2023) both need those probabilities.",
+                    "DSL (Egami, Hinck, Stewart and Wei 2023) needs those probabilities.",
         },
     }
 
