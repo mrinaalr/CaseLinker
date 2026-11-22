@@ -19,7 +19,8 @@ and the clipped context. Machine labels go only in the key.
 ``score`` checks the sealed manifest hash before it computes anything. Precision
 is the Horvitz-Thompson ratio of true positives to machine statements. Its
 interval, and the intervals on recall and on agreement, resample whole cases
-inside each stratum. A Wilson interval is also reported inside each stratum.
+from the frame. A drawn case brings every sentence it has, in every stratum.
+A Wilson interval is also reported inside each stratum.
 Recall weights each gold-positive unit by N_h / n_h and reports how many gold
 positives each stratum contributed. A second grader marks a fixed seeded
 subset; Krippendorff's alpha (nominal) and Cohen's kappa are computed on the
@@ -253,18 +254,15 @@ def _clusters(group: Sequence[dict]) -> list:
 
 
 def cluster_resample(rows: Sequence[dict], rng: random.Random) -> list:
-    """Within each stratum, draw that stratum's cases with replacement.
+    """Draw cases with replacement from every case in the frame.
 
-    A drawn case contributes every one of its rows. Rows are not drawn one by one.
+    Every sentence of a drawn case comes along, in every stratum that case has
+    rows in. Each row keeps its ``N_h / n_h`` weight. Rows are not drawn one by one.
     """
-    by = {}
-    for row in rows:
-        by.setdefault(row["stratum"], []).append(row)
+    clusters = _clusters(rows)
     sample = []
-    for group in by.values():
-        clusters = _clusters(group)
-        for _ in range(len(clusters)):
-            sample.extend(clusters[rng.randrange(len(clusters))])
+    for _ in range(len(clusters)):
+        sample.extend(clusters[rng.randrange(len(clusters))])
     return sample
 
 
@@ -276,13 +274,10 @@ def _percentile(stats: list) -> Optional[list]:
 
 
 def _cluster_interval(rows: Sequence[dict], statistic: Callable, replicates: int, seed: int) -> Optional[list]:
-    """Percentile interval from a within-stratum case bootstrap. None with fewer than two cases."""
+    """Percentile interval from a whole-case bootstrap. None with fewer than two cases."""
     if not rows:
         return None
-    by = {}
-    for row in rows:
-        by.setdefault(row["stratum"], []).append(row)
-    n_cases = sum(len(_clusters(group)) for group in by.values())
+    n_cases = len({row["case_id"] for row in rows})
     if n_cases < 2:
         return None
     rng = random.Random(seed)

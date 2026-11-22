@@ -263,6 +263,32 @@ def test_cluster_bootstrap_keeps_a_case_whole_and_is_wider_than_rows():
             assert copies >= 1 and ids == full[case] * copies
 
 
+def test_bootstrap_draws_a_case_across_strata_or_not_at_all():
+    """A case with rows in two strata is taken with all of those rows, or with none."""
+    import random
+    rows = [
+        _scored("wide", 10, 5, "CONTACT", "CONTACT", case_id="both", unit_id="a"),
+        _scored("tight", 8, 4, "CONTACT", "OTHER", case_id="both", unit_id="b"),
+        _scored("wide", 10, 5, "CONTACT", "CONTACT", case_id="only", unit_id="c"),
+    ]
+    rng = random.Random(2)
+    saw_both = saw_none = False
+    for _ in range(40):
+        sample = G.cluster_resample(rows, rng)
+        ids = [row["unit_id"] for row in sample]
+        assert ids.count("a") == ids.count("b")
+        for row in sample:
+            if row["unit_id"] == "a":
+                assert row["stratum"] == "wide" and G._weight(row) == pytest.approx(2)
+            if row["unit_id"] == "b":
+                assert row["stratum"] == "tight" and G._weight(row) == pytest.approx(2)
+        if ids.count("a"):
+            saw_both = True
+        else:
+            saw_none = True
+    assert saw_both and saw_none
+
+
 def test_a_stratum_with_fewer_than_five_gold_positives_warns():
     rows = [_scored("thin", 8, 4, "CONTACT", "CONTACT") for _ in range(4)]
     rows += [_scored("wide", 10, 5, "CONTACT", "CONTACT") for _ in range(5)]
