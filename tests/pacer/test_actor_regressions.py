@@ -68,9 +68,32 @@ PROBES = [
     ("middle-q", "records", "United States v. MICHAEL Q. SMITH, Defendant.", ["SMITH"]),
     ("middle-j", "records", "United States v. Michael J. Smith, Defendant.", ["Smith"]),
     ("surname-first", "records", "UNITED STATES v. SMITH, MICHAEL, Defendant.", ["SMITH"]),
+    ("surname-two-givens", "records", "UNITED STATES v. SMITH, MICHAEL ALLEN, Defendant.", ["SMITH"]),
+    ("numbered-column", "records",
+     "UNITED STATES OF AMERICA\nv. Case No. 1:24-cr-1\n(1) JOHN DOE\n(2) JANE ROE\n",
+     ["DOE", "ROE"]),
+    ("sentence-not-a-name", "records",
+     "United States v. Booker made the Guidelines advisory.", []),
     ("suffix-between", "records", "United States v. SMITH, JR., MICHAEL, Defendant.", ["SMITH"]),
     ("suffix-after", "records", "United States v. John Smith Jr., Defendant.", ["Smith"]),
-    ("entity-and", "records", "United States v. ACME WIDGETS AND HOLDINGS LLC, Defendant.", ["LLC"]),
+    ("entity-and", "records", "United States v. ACME WIDGETS AND HOLDINGS LLC, Defendant.", []),
+    ("entity-comma", "records", "United States v. ACME WIDGETS, INC., Defendant.", []),
+    ("entity-holdings", "records", "United States v. SMITH AND JONES HOLDINGS, LLC, Defendant.", []),
+    ("alias-and-next", "records",
+     "UNITED STATES v. JOHN DOE, a/k/a 'JD', and JANE ROE, Defendants.", ["DOE", "ROE"]),
+    ("alias-and-unclean", "records",
+     "UNITED STATES v. JOHN DOE, a/k/a JD and JANE ROE, Defendants.", []),
+    ("cite-f3d-above", "records",
+     "See United States v. Booker, 375 F.3d 508.\nUnited States v. Michael Smith, Defendant.", ["Smith"]),
+    ("cite-toa", "records",
+     "See United States v. Booker, 375 F.3d 508. See United States v. Gall, 552 S. Ct. 38. 2020 WL 123.", []),
+    ("cite-supra", "records", "United States v. Booker, supra.", []),
+    ("cite-no", "records", "United States v. Booker, No. 04-104.", []),
+    ("docket-date-filed", "records", "United States v. Smith Date Filed 01/02/2020", ["Smith"]),
+    ("judgment-label", "records", "UNITED STATES v. MICHAEL SMITH JUDGMENT IN A CRIMINAL CASE", ["SMITH"]),
+    ("v-case-no", "records", "United States v.   Case No. 1:24-cr-1", []),
+    ("paren-column", "records", "UNITED STATES OF AMERICA )\n v.\nJOHN DOE )\nDefendant.", ["DOE"]),
+    ("plaintiff-first", "records", "JANE ROE, Plaintiff, v. JOHN DOE, Defendant.", []),
     ("comma-three", "records",
      "United States v. Michael Smith, Robert Brown, and Alan Price, Defendants.",
      ["Smith", "Brown", "Price"]),
@@ -149,6 +172,18 @@ PROBES = [
      ("United States v. ROBERT YOUNG, Defendant.",
       "The young victim sent nothing.", "young"),
      "actor_rejected"),
+    ("the-smith-lower", "actor",
+     ("United States v. Michael Smith, Defendant.",
+      "The smith sent the files to other users via an encrypted channel.", "The smith"),
+     "actor_rejected"),
+    ("blacksmith", "actor",
+     ("United States v. Michael Smith, Defendant.",
+      "The blacksmith sent the files to other users via an encrypted channel.", "blacksmith"),
+     "actor_rejected"),
+    ("then-smith-no-comma", "actor",
+     ("United States v. Michael Smith, Defendant.",
+      "Then Smith sent the files to other users via an encrypted channel.", "Smith"),
+     "actor_rejected"),
     ("possessive-mother", "actor",
      ("United States v. Michael Smith, Defendant.",
       "The defendant's mother distributed the files to other users via an encrypted channel.",
@@ -204,7 +239,7 @@ PROBES = [
      [("docket", "docket", ["USA v. Smith et al, Defendants."]),
       ("sof", "statement_of_facts",
        ["United States v. Michael Smith and Robert Porter, Defendants. The defendant sent the files."])],
-     ("ambiguous", ["Smith", "Smith", "Porter"])),
+     ("ambiguous", ["Smith", "Porter"])),
     ("charging-preferred", "case",
      [("exhibit", "other", ["No caption on this cover page."]),
       ("indictment", "indictment", ["United States v. Michael Smith, Defendant."]),
@@ -253,6 +288,10 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         assert _surnames(payload) == expected
         if name == "alias-one":
             assert defendant_records_in(payload)[0]["aliases"] == ["Jay Sample"]
+        if name == "alias-and-next":
+            records = defendant_records_in(payload)
+            assert records[0]["aliases"] == ["JD"]
+            assert records[1]["aliases"] == []
     elif kind == "subject":
         assert clause_subject(payload) == expected
     elif kind == "actor":
@@ -293,3 +332,50 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
             assert C.drops_from_log(log)[want] >= 1
     else:
         raise AssertionError(kind)
+
+
+def test_an_alias_stays_one_charged_defendant(tmp_path, monkeypatch):
+    text = ("United States v. Jordan Example a/k/a Jay Sample, Defendant. "
+            "Example uploaded the files using an encrypted app. "
+            "Sample sent the files to other users via an encrypted channel.")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [
+        _plain_frame("Example uploaded the files using an encrypted app.", "STORE_MATERIAL", "Example"),
+        _plain_frame("Sample sent the files to other users via an encrypted channel.", "DISTRIBUTE_MATERIAL", "Sample"),
+    ])
+    _store(tmp_path, "alias", text)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _ = C.code_case("alias", "coder_A", tmp_path, deny=build_deny("alias", tmp_path))
+    if _parser_up():
+        assert len(bundle["events"]) == 2
+        assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 1
+    else:
+        assert bundle["events"] == []
+
+
+def test_two_defendants_publish_no_generic_charged_defendant(tmp_path, monkeypatch):
+    sentence = "The defendant sent the files to other users via an encrypted channel."
+    text = _page(sentence, "Michael Smith and Robert Porter")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "the defendant")])
+    _store(tmp_path, "generic", text)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("generic", "coder_A", tmp_path, deny=build_deny("generic", tmp_path))
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["ambiguous"] >= 1
+    charged = [p for p in bundle["participants"] if p["legal_status"][0]["status"] == "charged_defendant"]
+    assert charged == []
+
+
+def test_a_passive_clause_is_counted(tmp_path, monkeypatch):
+    passive = "The files were sent by Smith to other users via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(passive, "DISTRIBUTE_MATERIAL", "Smith", object_text="The files")])
+    _store(tmp_path, "passive", _page(passive))
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("passive", "coder_A", tmp_path, deny=build_deny("passive", tmp_path))
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["passive_subject"] >= 1

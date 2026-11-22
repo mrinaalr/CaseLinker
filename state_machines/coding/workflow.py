@@ -252,7 +252,7 @@ def _caption_tokens(raw: str) -> List[str]:
         word = token.strip(".,'-/").lower()
         if word in _SUFFIXES:
             break
-        if word in {"defendant", "defendants", "plaintiff"}:
+        if word in {"defendant", "defendants", "plaintiff", "date", "filed", "judgment", "judgement"}:
             break
         if re.fullmatch(r"[a-z]", word):
             continue
@@ -283,7 +283,21 @@ def _one_person(chunk: str) -> Optional[dict]:
     return {"full": " ".join(words), "surname": words[-1]}
 
 
-_REPORTER = re.compile(r"\d+\s+U\.?\s*S\.?", re.I)
+_REPORTER = re.compile(
+    r"\d+\s+F\.\s*\d+d|\d+\s+F\.\s*Supp(?:\.\s*\d+d)?|\d+\s+S\.\s*Ct\.|"
+    r"\d+\s+U\.?\s*S\.|\b\d+\s*WL\b|\bWL\s+\d+|\bsupra\b|\bNo\.\s*\d",
+    re.I,
+)
+_COMPANY = re.compile(r"\b(?:L\.L\.C\.|L\.P\.|LLC|INC|CORP|LTD|CO)\b\.?", re.I)
+_COMPANY_PHRASE = re.compile(
+    r"\b(?:[A-Z][\w.'-]*[,]?\s+){1,12}(?:L\.L\.C\.|L\.P\.|LLC|INC|CORP|LTD|CO)\b\.?",
+    re.I,
+)
+_DOCKET_LABEL = re.compile(
+    r"\b(?:date\s+filed|date|filed|judgment|judgement|magistrate|honorable|"
+    r"case\s+no|docket)\b",
+    re.I,
+)
 _CASE_V = re.compile(
     r"(?:UNITED STATES OF AMERICA|United States of America|UNITED STATES|United States|USA|U\.S\.|CRIMINAL CASE)"
     r"[^.]{0,240}?(?<![A-Za-z])[Vv][Ss]?\.\s+"
@@ -307,17 +321,49 @@ _ENTITY_AND = re.compile(
     re.I,
 )
 _SURNAME_GIVEN = re.compile(
-    r"\b([A-Z][A-Za-z'\-]+),\s+([A-Z][A-Za-z'\-]+(?:\s+[A-Z]\.?)?)"
+    r"([A-Z][A-Za-z'\-]+),\s+"
+    r"([A-Z][A-Za-z'\-]+(?:\s+(?:[A-Z]\.?|[A-Z][A-Za-z'\-]+)){0,3})"
     r"(?=\s*(?:,|;|\band\b|$))"
 )
+_NUMBERED_DEFENDANT = re.compile(r"(?m)^\s*\(\d+\)\s+([A-Z][A-Za-z' .,()-]{1,80}?)(?=\s*$|\s+\()")
+_SENTENCE_NAME = re.compile(r"\b[A-Z][\w']+\s+(?!and\b|or\b)[a-z]{3,}\b")
 _PERSON_SPLIT = re.compile(r"\s*;\s*and\s+|\s*,\s*and\s+|\s+and\s+|\s*;\s*|\s*,\s*", re.I)
 
 
+def eyecite_version() -> Optional[str]:
+    """Installed eyecite version, or None when the package is absent."""
+    try:
+        import eyecite
+        return getattr(eyecite, "__version__", None) or "present"
+    except Exception:
+        return None
+
+
+def citation_spans(text: str) -> List[Tuple[int, int]]:
+    """Character spans eyecite calls a citation. Empty when eyecite is not installed."""
+    if eyecite_version() is None:
+        return []
+    from eyecite import get_citations
+    spans = []
+    for cite in get_citations(text or ""):
+        span = getattr(cite, "span", None)
+        if callable(span):
+            span = span()
+        if span and len(span) == 2:
+            spans.append((int(span[0]), int(span[1])))
+    return spans
+
+
 def _citation_follows(text: str, start: int) -> bool:
-    """True when the raw text just after a 'v.' is a reporter citation, not a caption."""
-    window = text[start:start + 160]
-    head = re.split(r"(?<=[A-Za-z]{2})\.\s+", window, maxsplit=1)[0]
-    return bool(_REPORTER.search(head))
+    """True when the text just after a 'v.' is a citation, not a caption of defendants."""
+    window = text[start:start + 220]
+    head = re.split(r"(?<=[A-Za-z]{3})\.\s+", window, maxsplit=1)[0]
+    if _REPORTER.search(head):
+        return True
+    for cite_start, cite_end in citation_spans(text):
+        if cite_start < start + len(window) and cite_end > start:
+            return True
+    return False
 
 
 def _caption_block(page: str) -> str:
@@ -353,7 +399,13 @@ def _split_caption_people(head: str) -> List[str]:
     head = _ENTITY_AND.sub(_hold_entity, head)
     held: List[str] = []
 
+    def _surname_ok(match: re.Match) -> bool:
+        prefix = head[:match.start()].rstrip()
+        return not prefix or bool(re.search(r"(?:^|\band|;)\s*$", " " + prefix, re.I))
+
     def _hold(match: re.Match) -> str:
+        if not _surname_ok(match):
+            return match.group(0)
         held.append(f"{match.group(1)}, {match.group(2)}")
         return f"\x00{len(held) - 1}\x00"
 
@@ -371,30 +423,90 @@ def _split_caption_people(head: str) -> List[str]:
     return chunks
 
 
-def _people_in_caption(fragment: str) -> List[dict]:
-    """Caption people. An alias is the same person. A reporter check is not done here."""
-    head = re.split(r"(?<=[A-Za-z]{2})\.\s+", fragment, maxsplit=1)[0]
-    head = _CAPTION_STOP.split(head)[0]
-    parts = _ALIAS.split(head)
+def _name_line(fragment: str) -> str:
+    """The party line after 'v.'. Stops at the line end and at a docket label."""
+    line = ""
+    for raw in (fragment or "").splitlines():
+        if raw.strip():
+            line = raw.strip()
+            break
+    else:
+        line = (fragment or "").strip()
+    line = re.split(r"(?<=[A-Za-z]{2})\.\s+", line, maxsplit=1)[0]
+    line = _CAPTION_STOP.split(line)[0]
+    label = _DOCKET_LABEL.search(line)
+    if label:
+        line = line[:label.start()]
+    return line.strip(" ,;")
+
+
+def _attach_aliases(person: dict, indexes: List[int], saved: List[str]) -> None:
+    for index in indexes:
+        alias = _one_person(saved[index])
+        if not alias:
+            continue
+        person.setdefault("aliases", []).append(alias["full"])
+        person.setdefault("alias_surnames", []).append(alias["surname"])
+
+
+def _alias_and_is_unclean(head: str) -> bool:
+    """True when 'and' after an alias is not separated as the next defendant."""
+    match = _ALIAS.search(head or "")
+    if not match:
+        return False
+    tail = head[match.end():]
+    if re.search(r"[,;]\s*and\b", tail, re.I):
+        return False
+    return bool(re.search(r"\band\b", tail, re.I))
+
+
+def _people_in_caption(fragment: str) -> Tuple[List[dict], bool]:
+    """Caption people, and whether the caption was refused as uncertain.
+
+    An alias stays on the person it follows. The next defendant is split off
+    before that. A company suffix is not a person. An 'and' jammed onto an
+    alias, with no comma or semicolon, refuses the caption.
+    """
+    head = _name_line(fragment)
+    if not head:
+        return [], False
+    if _alias_and_is_unclean(head):
+        return [], True
+    head = _COMPANY_PHRASE.sub(" ", head)
+    saved: List[str] = []
+
+    def _hold_alias(match: re.Match) -> str:
+        saved.append(match.group(1).strip(" '\""))
+        return f" \x02{len(saved) - 1}\x02 "
+
+    masked = re.sub(
+        r"\b(?:a/k/a|aka|also known as)\s+"
+        r"((?:'[^']+'|\"[^\"]+\"|(?:[A-Z][\w.'-]+\s+){0,3}[A-Z][\w.'-]+))"
+        r"(?=\s*(?:,\s*(?:and|Defendants?)\b|$))",
+        _hold_alias, head, flags=re.I,
+    )
     people = []
-    for chunk in _split_caption_people(parts[0]):
-        person = _one_person(chunk)
-        if person:
-            people.append(person)
-    if len(people) != 1:
-        return people
-    primary = people[0]
-    aliases, alias_surnames = [], []
-    for part in parts[1:]:
-        for chunk in _split_caption_people(part):
-            alias = _one_person(chunk)
-            if not alias:
-                continue
-            aliases.append(alias["full"])
-            alias_surnames.append(alias["surname"])
-    primary["aliases"] = aliases
-    primary["alias_surnames"] = alias_surnames
-    return [primary]
+    pending: List[int] = []
+    for chunk in _split_caption_people(masked):
+        marks = [int(n) for n in re.findall(r"\x02(\d+)\x02", chunk)]
+        plain = re.sub(r"\x02\d+\x02", " ", chunk)
+        if not plain.strip():
+            if people:
+                _attach_aliases(people[-1], marks, saved)
+            else:
+                pending.extend(marks)
+            continue
+        if _COMPANY.search(plain):
+            continue
+        person = _one_person(plain)
+        if not person or _COMPANY.search(person["full"]):
+            continue
+        person["aliases"] = []
+        person["alias_surnames"] = []
+        _attach_aliases(person, pending + marks, saved)
+        pending = []
+        people.append(person)
+    return people, False
 
 
 def _keep_record(record: dict, seen: set) -> bool:
@@ -410,20 +522,48 @@ def _keep_record(record: dict, seen: set) -> bool:
     return True
 
 
+def _numbered_people(block: str) -> List[dict]:
+    """Defendants written as ``(1) NAME`` under a column caption."""
+    people = []
+    for match in _NUMBERED_DEFENDANT.finditer(block or ""):
+        person = _one_person(match.group(1).strip(" ,.)"))
+        if person and not _COMPANY.search(person["full"]):
+            person.setdefault("aliases", [])
+            person.setdefault("alias_surnames", [])
+            people.append(person)
+    return people
+
+
 def _parse_caption(text: str) -> Tuple[List[dict], bool]:
-    """Records from the first real caption in ``text``, and whether it says ``et al``."""
+    """Records from the first real caption in ``text``, and whether it says ``et al``.
+
+    A citation is never a defendant. With eyecite absent, a ``v.`` whose
+    following text is a reporter, ``No.``, or ``supra`` is refused, including
+    on a page that has no party caption. A refused alias split yields no person.
+    """
     block = _caption_block(text or "")
     et_al = bool(_ET_AL.search(block))
     records = []
     seen: set = set()
+    for person in _numbered_people(block):
+        if _keep_record(person, seen):
+            records.append(person)
+    if records:
+        return records, et_al
     for match in _CASE_V.finditer(block):
         if _citation_follows(block, match.end()):
             continue
         fragment = _ET_AL.sub(" ", block[match.end():])
-        for record in _people_in_caption(fragment):
+        if _SENTENCE_NAME.search(_name_line(fragment)):
+            return [], False
+        people, refused = _people_in_caption(fragment)
+        if refused:
+            return [], False
+        for record in people:
             if _keep_record(record, seen):
                 records.append(record)
-        break
+        if records or people:
+            break
     return records, et_al
 
 
@@ -437,8 +577,29 @@ def defendant_records_in(text: str) -> List[dict]:
     return records
 
 
+def _same_party(left: dict, right: dict) -> bool:
+    """A bare surname and the full name with that surname are one person."""
+    if left["key"] == right["key"]:
+        return True
+    left_full, right_full = left["full"].lower(), right["full"].lower()
+    left_sur, right_sur = left["surname"].lower(), right["surname"].lower()
+    return left_full == right_sur or right_full == left_sur
+
+
+def _fuller(left: dict, right: dict) -> dict:
+    return left if len(left["full"].split()) >= len(right["full"].split()) else right
+
+
+def _absorb(records: List[dict], record: dict) -> None:
+    for index, held in enumerate(records):
+        if _same_party(held, record):
+            records[index] = _fuller(held, record)
+            return
+    records.append(record)
+
+
 def _signature(records: List[dict]) -> Tuple[str, ...]:
-    return tuple(sorted(record["key"] for record in records))
+    return tuple(sorted({record["surname"].lower() for record in records}))
 
 
 def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
@@ -473,13 +634,10 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
     signatures = {_signature(item["records"]) for item in chosen}
     conflict = len(signatures) > 1
     et_al = any(item["et_al"] for item in chosen)
-    records = []
-    seen: set = set()
+    records: List[dict] = []
     for item in chosen:
         for record in item["records"]:
-            if record["key"] not in seen:
-                seen.add(record["key"])
-                records.append(record)
+            _absorb(records, record)
     if conflict or et_al or len(records) != 1:
         generic = "ambiguous"
     else:
