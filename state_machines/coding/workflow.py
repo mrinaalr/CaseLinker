@@ -830,19 +830,39 @@ def _surname_is_subject(sentence: str, surname: str) -> Optional[bool]:
     return any(token.text.lower() == target and token.dep_ in _SUBJECT_DEPS for token in doc)
 
 
-_OTHER_ROLE = {"sister", "brother", "mother", "father", "parent", "victim", "friend", "wife", "husband", "daughter", "son"}
+_POSSESSIVE_SUBJECT = re.compile(
+    r"^(?:the\s+)?defendant(?:'s|\u2019s)\s+\S+",
+    re.I,
+)
+_APPOSITIVE_POSSESSIVE = re.compile(
+    r",\s+the\s+defendant(?:'s|\u2019s)\s+\S+\s*,",
+    re.I,
+)
+
+
+def _generic_subject(text: str) -> bool:
+    """True when the phrase is the words 'the defendant' or 'the accused'."""
+    return " ".join((text or "").split()).lower() in {
+        "the defendant", "defendant", "the accused", "accused",
+    }
+
+
+def _possessive_other(sentence: str, subject: str) -> bool:
+    """True when the subject is 'the defendant's <word>', whatever that word is."""
+    if _POSSESSIVE_SUBJECT.match(" ".join((subject or "").split())):
+        return True
+    return bool(_APPOSITIVE_POSSESSIVE.search(sentence or ""))
 
 
 def _distinguished_from_defendant(sentence: str, records: List[dict]) -> bool:
-    """True when the surname is an appositive relative or is not the defendant."""
+    """True when the subject is someone the sentence sets apart from the defendant."""
+    if _possessive_other(sentence, clause_subject(sentence)):
+        return True
     nlp = _actor_nlp()
     if nlp is None:
         return False
     doc = nlp(sentence or "")
     surnames = _known_surnames(records)
-    for token in doc:
-        if token.dep_ == "appos" and token.text.lower() in _OTHER_ROLE and token.head.text.lower() in surnames:
-            return True
     reflexive = any(token.text.lower() in {"herself", "himself"} for token in doc)
     defendant_is_other = any(token.text.lower() == "defendant" and token.dep_ in {"dative", "dobj", "pobj"} for token in doc)
     surname_is_subject = any(token.text.lower() in surnames and token.dep_ == "nsubj" for token in doc)
@@ -893,6 +913,8 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
             subject = agent.text
             agent_is_actor = True
     if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())):
+        if not agent_is_actor and not _generic_subject(subject):
+            return None, "actor_rejected"
         if scope is not None and generic == "one":
             alone = len(records) == 1
             canonical = "the defendant" if alone else "defendant " + scope["full"]

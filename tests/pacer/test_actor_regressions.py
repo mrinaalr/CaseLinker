@@ -183,7 +183,7 @@ PROBES = [
     ("sister-appositive", "actor",
      ("United States v. Michael Smith, Defendant.",
       "Smith, the defendant's sister, sent the files to other users via an encrypted channel.", "Smith"),
-     {"spacy": "actor_rejected", "none": "no_parser"}),
+     {"spacy": "actor_rejected", "none": "actor_rejected"}),
     ("photo-of-herself", "actor",
      ("United States v. Michael Smith, Defendant.",
       "Smith sent the defendant a photo of herself.", "Smith"),
