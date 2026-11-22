@@ -24,7 +24,7 @@ if [ -d ".venv" ] && "$(venv_python)" -m pip --version &> /dev/null && supported
 else
     rm -rf .venv
     TRIED=""
-    for PY in ${PYTHON:-} python3.12 python3.13 python3.11 python3.10 python3.14 python3 python; do
+    for PY in ${PYTHON:-} python3.12 python3.11 python3.10 python3.14 python3 python; do
         command -v "$PY" &> /dev/null || continue
         supported "$PY" || { TRIED="$TRIED\n   $PY: $("$PY" --version 2>&1) (needs 3.10–3.14)"; continue; }
         if "$PY" -m venv .venv &> /dev/null && "$(venv_python)" -m pip --version &> /dev/null; then
@@ -47,6 +47,11 @@ else
     fi
 fi
 VPY="$(venv_python)"
+if "$VPY" -c 'import sys; sys.exit(0 if sys.version_info[:2] == (3, 13) else 1)'; then
+    echo "❌ $($VPY --version) cannot install eyecite: fast-diff-match-patch has no Python 3.13 wheel."
+    echo "   Use Python 3.12 (PYTHON=python3.12 ./setup.sh). v2 coding does not run without eyecite."
+    exit 1
+fi
 if "$VPY" -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3, 14) else 1)'; then
     echo "⚠️  $("$VPY" --version): the web app, API and graphs work; spaCy NER does not load on 3.14 yet,"
     echo "   so ingest extracts differently. Use Python 3.12 to ingest (PYTHON=python3.12 ./setup.sh after rm -rf .venv)."
