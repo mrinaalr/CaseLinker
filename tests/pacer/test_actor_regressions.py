@@ -357,6 +357,20 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     assert C.drops_from_log(log)["ambiguous"] == 0
 
 
+def test_a_pronoun_in_a_two_defendant_case_is_refused(tmp_path, monkeypatch):
+    sentence = "The defendant met the sender. He sent the files to other users via an encrypted channel."
+    quote = "He sent the files to other users via an encrypted channel."
+    text = _page(sentence, "Michael Smith and Robert Porter")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    monkeypatch.setenv("CASELINKER_COREFERENCE", "1")
+    _ask_frames(monkeypatch, [_plain_frame(quote, "DISTRIBUTE_MATERIAL", "He")])
+    _store(tmp_path, "pronouns", text)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _log = C.code_case("pronouns", "coder_A", tmp_path, deny=build_deny("pronouns", tmp_path))
+    assert bundle["events"] == []
+
+
 def test_an_alias_stays_one_charged_defendant(tmp_path, monkeypatch):
     text = ("United States v. Jordan Example a/k/a Jay Sample, Defendant. "
             "Example uploaded the files using an encrypted app. "

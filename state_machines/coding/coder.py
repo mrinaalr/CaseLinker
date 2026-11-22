@@ -824,25 +824,21 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
     """
     from state_machines.coding.workflow import match_actor
     found = match_actor((slot or {}).get("text") or "", records)
-    if found:
+    if found and found.get("canonical"):
         return found["canonical"]
     text = " ".join(((slot or {}).get("text") or "").split())
     if os.environ.get("CASELINKER_COREFERENCE") != "1" or not _PRONOUN.fullmatch(text):
         return None
+    if len(records) != 1:
+        return None
     from state_machines.coding.coreference import make_inventory, resolve_mentions, subject_is_offender
     names = [record["full"] for record in records]
-    actors = make_inventory(defendant=names[0] if names else "the defendant", defendant_names=names)
+    actors = make_inventory(defendant=names[0], defendant_names=names)
     mentions = resolve_mentions(page, actors)
     end = (slot or {}).get("end")
     if not isinstance(end, int) or not subject_is_offender(mentions, end, actors):
         return None
-    if len(records) <= 1:
-        return "the defendant"
-    prior = [m for m in mentions if m["end"] <= end and "defendant" in m.get("actor_ids", []) and m.get("kind") != "pronoun"]
-    if not prior:
-        return "the defendant"
-    named = match_actor(prior[-1]["text"], records)
-    return named["canonical"] if named else "the defendant"
+    return "the defendant"
 
 
 def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
