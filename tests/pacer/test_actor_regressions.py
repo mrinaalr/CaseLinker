@@ -147,7 +147,7 @@ PROBES = [
     ("long-texted", "actor",
      ("United States v. Long, Defendant.",
       "Long texted the files to other users via an encrypted channel.", "Long"),
-     {"spacy": "actor_rejected", "none": "no_parser"}),
+     {"spacy": "the defendant", "none": "no_parser"}),
     ("price-messaged", "actor",
      ("United States v. Price, Defendant.",
       "Price messaged the files to other users via an encrypted channel.", "Price"),
@@ -159,7 +159,7 @@ PROBES = [
     ("long-repeatedly", "actor",
      ("United States v. Long, Defendant.",
       "Long repeatedly sent the files to other users via an encrypted channel.", "Long"),
-     {"spacy": "actor_rejected", "none": "no_parser"}),
+     {"spacy": "the defendant", "none": "no_parser"}),
     ("smith-from-middle-initial", "actor",
      ("United States v. MICHAEL Q. SMITH, Defendant.",
       "Smith sent the files to other users via an encrypted channel.", "Smith"),
@@ -285,8 +285,17 @@ def _outcome(found, reason):
     return reason or (found or {}).get("canonical")
 
 
+_MODEL_XFAIL = {
+    "long-texted": "en_core_web_sm 3.8.0 labels Long as advmod of texted, not nsubj",
+    "long-repeatedly": "en_core_web_sm 3.8.0 labels Long as advmod of sent, not nsubj",
+}
+
+
 def _check(name, got, expected):
-    assert got == _expect(expected), name
+    want = _expect(expected)
+    if got != want and name in _MODEL_XFAIL and _parser_up():
+        pytest.xfail(f"{_MODEL_XFAIL[name]}; got {got}")
+    assert got == want, name
 
 
 @pytest.mark.parametrize("name,kind,payload,expected", PROBES, ids=[row[0] for row in PROBES])
