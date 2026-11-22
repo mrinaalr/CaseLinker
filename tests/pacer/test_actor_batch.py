@@ -106,6 +106,32 @@ def test_caption_layouts_and_labels(tmp_path, monkeypatch):
     assert "caption_mismatch" in _reasons(tmp_path, "memo")
 
 
+@pytest.mark.parametrize("sentence,actor", [
+    ("Mr. Smith sent the files.", "Mr. Smith"),
+    ("SMITH sent the files.", "SMITH"),
+    ("M. Smith sent the files.", "M. Smith"),
+])
+def test_a_bare_or_courtesy_surname_publishes(tmp_path, monkeypatch, sentence, actor):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "nameok", _one("Michael Smith", sentence), sentence, actor,
+        means="", object_text="the files")
+    assert events == ["DISTRIBUTE_MATERIAL"]
+
+
+@pytest.mark.parametrize("sentence,actor", [
+    ("Jane Smith sent the files.", "Jane Smith"),
+    ("J. Smith sent the files.", "J. Smith"),
+    ("Ms. Smith sent the files.", "Ms. Smith"),
+    ("Agent Smith sent the files.", "Agent Smith"),
+    ("His wife, Jane Smith, was present. Smith sent the files.", "Smith"),
+])
+def test_a_conflicting_name_or_role_title_is_refused(tmp_path, monkeypatch, sentence, actor):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "namebad", _one("Michael Smith", sentence), sentence, actor,
+        means="", object_text="the files")
+    assert events == []
+
+
 @pytest.mark.parametrize("sentence", [
     "Smith sent the defendant a photo of herself.",
     "Smith texted the defendant a picture of herself.",

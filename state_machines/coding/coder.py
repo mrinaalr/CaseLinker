@@ -873,7 +873,7 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
         from state_machines.coding.workflow import decide_actor
         found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic,
                                      scope=scope, other_surnames=other_surnames,
-                                     caption_reason=caption_reason)
+                                     caption_reason=caption_reason, page_text=text)
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
             counts.setdefault("_refusals", []).append({

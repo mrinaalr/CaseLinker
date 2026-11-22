@@ -1122,7 +1122,64 @@ def _defendant_is_other_argument(verb, subject) -> bool:
     return False
 
 
-def _subject_decision(subject, records, generic, scope, other_surnames, actor_text):
+_COURTESY = {"mr", "mister"}
+_ROLE_TITLE = {"agent", "officer", "detective", "dr", "doctor", "victim", "special", "sgt", "sergeant"}
+_FEMININE = {"ms", "mrs", "miss"}
+
+
+def _given_names(record: dict) -> set:
+    parts = [part.strip(".").lower() for part in record["full"].split()[:-1]]
+    return {part for part in parts if part}
+
+
+def _name_modifiers(subject):
+    """Left compounds of a surname: courtesy titles, role titles, and given names."""
+    titles, givens = [], []
+    for child in subject.children:
+        if child.dep_ != "compound" or child.i > subject.i:
+            continue
+        low = child.text.strip(".").lower()
+        if low in _COURTESY or low in _ROLE_TITLE or low in _FEMININE:
+            titles.append(low)
+        else:
+            givens.append(child.text.strip("."))
+    return titles, givens
+
+
+def _conflicts_with_record(subject, record, page_text: str) -> bool:
+    """A given name, initial, or role title that is not this defendant."""
+    titles, givens = _name_modifiers(subject)
+    if any(title in _ROLE_TITLE for title in titles):
+        return True
+    known = _given_names(record)
+    if any(title in _FEMININE for title in titles) and not givens and known:
+        return True
+    for given in givens:
+        low = given.lower()
+        if low == "defendant":
+            continue
+        if len(low) <= 2:
+            if not any(name.startswith(low[:1]) for name in known):
+                return True
+        elif low not in known:
+            return True
+    if not givens and not titles:
+        surname = subject.text.lower()
+        doc = subject.doc
+        for token in doc:
+            if token.i == subject.i or token.text.lower() != surname:
+                continue
+            others = [child.text.strip(".").lower() for child in token.children
+                      if child.dep_ == "compound" and child.i < token.i]
+            others = [name for name in others
+                      if name not in _COURTESY and name not in _FEMININE and name not in _ROLE_TITLE
+                      and name != "defendant"]
+            if any(name not in known for name in others):
+                return True
+    return False
+
+
+def _subject_decision(subject, records, generic, scope, other_surnames, actor_text, page_text=""):
     """``(hit, None)`` or ``(None, reason)`` for one main-clause subject token."""
     if subject is None:
         return None, "actor_rejected"
@@ -1173,13 +1230,19 @@ def _subject_decision(subject, records, generic, scope, other_surnames, actor_te
         return None, "actor_rejected"
     if _PRONOUN.fullmatch(" ".join((actor_text or "").split())) and subject.dep_ not in _SUBJECT_DEPS:
         return None, "pronoun_object"
+    if _conflicts_with_record(subject, found["record"], page_text):
+        titles, givens = _name_modifiers(subject)
+        if not titles and not givens:
+            return None, "ambiguous_surname"
+        return None, "actor_rejected"
     return found, None
 
 
 def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
                  generic: Optional[str] = None, scope: Optional[dict] = None,
                  other_surnames: Optional[List[str]] = None,
-                 caption_reason: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
+                 caption_reason: Optional[str] = None,
+                 page_text: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
     """``(match, reason code)``. A reason means the act is not published.
 
     This is the only actor decision. A clause is published only when its act
@@ -1238,7 +1301,8 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
         if pronoun is None or pronoun.dep_ not in _SUBJECT_DEPS or not _is_main_verb(pronoun.head):
             return None, "pronoun_object"
         subject = pronoun
-    hit, reason = _subject_decision(subject, records, generic, scope, other_surnames, actor_text)
+    hit, reason = _subject_decision(subject, records, generic, scope, other_surnames, actor_text,
+                                    page_text if page_text is not None else sentence)
     if reason:
         return None, reason
     if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())) or _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
