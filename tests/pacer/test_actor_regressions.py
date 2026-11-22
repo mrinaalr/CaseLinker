@@ -285,16 +285,8 @@ def _outcome(found, reason):
     return reason or (found or {}).get("canonical")
 
 
-_MODEL_XFAIL = {
-    "long-texted": "en_core_web_sm 3.8.0 labels Long as advmod of texted, not nsubj",
-    "long-repeatedly": "en_core_web_sm 3.8.0 labels Long as advmod of sent, not nsubj",
-}
-
-
 def _check(name, got, expected):
     want = _expect(expected)
-    if got != want and name in _MODEL_XFAIL and _parser_up():
-        pytest.xfail(f"{_MODEL_XFAIL[name]}; got {got}")
     assert got == want, name
 
 

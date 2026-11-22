@@ -1434,6 +1434,13 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     if verb is not None and verb.dep_ == "xcomp" and _controlling_object(verb.head, records) is None:
         verb = verb.head
     subject = _subject_of(verb) if verb is not None else None
+    if subject is None and verb is not None:
+        surnames = _known_surnames(records)
+        mistagged = [token for token in verb.children
+                     if token.dep_ == "advmod" and _one_capital(token.text)
+                     and token.text.lower() in surnames]
+        if len(mistagged) == 1:
+            subject = mistagged[0]
     if _someone_else_in_a_subordinate(verb) or _defendant_is_other_argument(verb, subject):
         return None, "actor_rejected"
     if re.search(r"\b(?:watched|saw|observed)\s+as\s+(?!the\s+defendant\b)", sentence or "", re.I):
