@@ -445,9 +445,11 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
     coref_actors = None
     if os.environ.get("CASELINKER_COREFERENCE") == "1":
         from state_machines.coding.coreference import make_inventory
-        from state_machines.coding.workflow import defendant_records_for_case
-        named = [record["full"] for record in defendant_records_for_case(bundle["case_id"], text_root)]
-        coref_actors = make_inventory(defendant=named[0] if named else "the defendant", defendant_names=named)
+        from state_machines.coding.workflow import case_defendants
+        info = case_defendants(bundle["case_id"], text_root)
+        if info.get("generic") == "one" and info.get("records"):
+            named = [info["records"][0]["full"]]
+            coref_actors = make_inventory(defendant=named[0], defendant_names=named)
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
