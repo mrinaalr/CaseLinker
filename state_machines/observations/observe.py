@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from collections import Counter
 from pathlib import Path
@@ -173,6 +174,11 @@ _PLATFORM_CUES = [
 _FEATURE_MEANS = (r"\b(?P<cue>through|via|using|used|uses|by means of|with|utilized|utilizing|enabled|activated|turned on|"
                   r"created|creating|made|making|opened|set up|registered|published|posted|sent|shared|joined|ran|operated|"
                   r"administered|maintained|installed)\s+(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
+# extra feature cue for CASELINKER_MEANS_RULE=1.4-recall only: a conduct verb, then on/via.
+# The {0,5} and {0,70} windows above are unchanged.
+_FEATURE_ON_VIA = (r"\b" + _CONDUCT + r"\b[^.;,]{{0,70}}?\b(?P<cue>on|via)\s+" + _DET
+                   + r"(?:[\w'-]+\s+){{0,5}}?{term}(?![A-Za-z0-9])")
+_RECALL_TERMS = ("virtual private network", "virtual private networks", "VPNs")
 _CLAUSE_BREAK = re.compile(r"[,;]\s+(?:and|but|while|when|after|before|because|which|who|so)\b|;\s+|\s(?:and then|after|before|when|while|because)\s", re.I)
 _LEAD = r"^\s*(?:and\s+|but\s+|then\s+|later\s+|after\s+|before\s+|when\s+|while\s+|because\s+|which\s+|who\s+|so\s+)*"
 # a clause whose subject is a third party is never the offender's act ("..., and agents served a warrant on Kitebox")
@@ -264,6 +270,18 @@ def features_in(sentence: str) -> List[Tuple[str, str, int, int]]:
                 continue
             taken.append((m.start(), m.end()))
             out.setdefault((cls, phrase), (cls, phrase, m.start(), m.end()))
+    if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
+        extra = (
+            ("anonymity", "virtual private networks", re.compile(r"virtual private networks(?![A-Za-z0-9])", re.I)),
+            ("anonymity", "virtual private network", re.compile(r"virtual private network(?![A-Za-z])", re.I)),
+            ("anonymity", "VPNs", re.compile(r"VPNs(?![A-Za-z0-9])")),
+        )
+        for cls, phrase, pat in extra:
+            for m in pat.finditer(sentence):
+                if any(m.start() < e and s < m.end() for s, e in taken):
+                    continue
+                taken.append((m.start(), m.end()))
+                out.setdefault((cls, phrase), (cls, phrase, m.start(), m.end()))
     return sorted(out.values(), key=lambda t: t[2])
 
 
@@ -322,7 +340,10 @@ def _means(kind: str, sentence: str, o: dict, subject: Optional[str] = None) -> 
         name = "(?:" + _breakable(o["named_as"]) + "|" + _breakable(o["named_as"].upper()) + ")"
         patterns = [(rel, pat.format(name=name), 0) for rel, pat in _PLATFORM_CUES]
     else:
-        patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), 0 if o["feature_term"] in ("Tor", "VPN") else re.I)]
+        flags = 0 if o["feature_term"] in ("Tor", "VPN", "VPNs") else re.I
+        patterns = [("Supports_Action", _FEATURE_MEANS.format(term=_breakable(o["feature_term"])), flags)]
+        if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
+            patterns.append(("Supports_Action", _FEATURE_ON_VIA.format(term=_breakable(o["feature_term"])), flags))
     if N.states_a_rule_not_conduct(sentence):               # "the Terms of Service prohibit storing such material on ..."
         return None
     if _GENERIC_DESCRIPTION.search(sentence) and not _OFFENDER.search(sentence):   # how the technology works, not anyone's act
@@ -489,6 +510,8 @@ def check(doc: dict, text_root: Path, bundle: Optional[dict] = None) -> List[str
     re-hashed, every name and term on its list, every relation inside its act's cited sentence."""
     problems = []
     terms = {(cls, ph) for cls, phrases in FEATURES.items() for ph in phrases}
+    if os.environ.get("CASELINKER_MEANS_RULE") == "1.4-recall":
+        terms |= {("anonymity", phrase) for phrase in _RECALL_TERMS}
     events = {e["event_id"]: e for e in (bundle or {}).get("events", [])}
     passages = {p["passage_id"]: p for p in (bundle or {}).get("passages", [])}
     pages: Dict[tuple, Optional[str]] = {}

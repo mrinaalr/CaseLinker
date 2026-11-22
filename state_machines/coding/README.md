@@ -141,6 +141,8 @@ A second path for section labels, actor ids, event frames, propose-then-verify, 
 | `CASELINKER_ADJACENT_LEVEL` | off | `adjacent-sentence` links, kept out of same-sentence level C |
 | `CASELINKER_EXTRACTOR` | unset | `frame-1.0` writes one frame per cued act, each slot a verbatim span |
 | `CASELINKER_ACT_POLICY` | `intersection-1.0` | `propose-verify-1.0` is the other mode |
+| `CASELINKER_MEANS_PARSER` | unset | `dep` walks a dependency parse for the instrument, including through a parenthesis, and accepts `they` when coreference resolves it to the actor |
+| `CASELINKER_MEANS_RULE` | unset | `1.4-recall` also matches `virtual private network(s)` and `VPN(s)`, and `on` / `via` after a conduct verb |
 
 ```bash
 python -m state_machines.coding.pipeline preflight <case_id> [...] --text-root DIR --out DIR [--release-root DIR]
