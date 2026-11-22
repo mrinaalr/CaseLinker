@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -288,7 +289,13 @@ def preflight(case_ids: List[str], text_root: Path, out_dir: Path, *,
     fingerprint table was passed, none of the fingerprint checks fire. A missing
     text directory or bundle is reported too. No page file is opened and no id
     is rewritten.
+
+    When ``CASELINKER_MEANS_PARSER=dep`` and the fallback flag is unset, the
+    spaCy model is loaded here. A model that cannot load stops the command.
     """
+    if os.environ.get("CASELINKER_MEANS_PARSER") == "dep" and os.environ.get("CASELINKER_MEANS_PARSER_FALLBACK") != "1":
+        from state_machines.observations.means_parse import require_spacy_model
+        require_spacy_model()
     collected = collected_as_map() if collected_as is None else collected_as
     aliases = []
     for case_id in case_ids:

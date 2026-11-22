@@ -426,13 +426,13 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
     if hit or not parser:
         return hit
     from state_machines.coding.coreference import make_inventory
-    from state_machines.observations.means_parse import instrument_means, tokens_for
+    from state_machines.observations.means_parse import instrument_means, parser_provenance, tokens_for
     term = o.get("feature_term") or o.get("named_as") or ""
     dep = instrument_means(sentence, {"feature_term": term}, tokens_for(sentence),
                            actors=make_inventory() if coref else None)
     if not dep:
         return None
-    return dep["relationship"], dep["cue"]
+    return dep["relationship"], dep["cue"], parser_provenance()
 
 
 def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, dict]] = None) -> dict:
@@ -470,7 +470,13 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
                 continue
             hit = _published_means(o["kind"], pages[(d, pg)][a:b], o)
             if hit and all(r["event_id"] != eid for r in o["relations"]):
-                o["relations"].append({"event_id": eid, "relationship": hit[0], "cue": hit[1], "basis": "means_stated_in_act_sentence"})
+                relation = {"event_id": eid, "relationship": hit[0], "cue": hit[1],
+                            "basis": "means_stated_in_act_sentence"}
+                if len(hit) > 2 and hit[2].get("parser"):
+                    relation["parser"] = hit[2]["parser"]
+                    relation["model"] = hit[2]["model"]
+                    relation["model_version"] = hit[2]["model_version"]
+                o["relations"].append(relation)
     # The disputed tier. The sentence states the means, each coder coded an offender act in that sentence, and
     # no act was published there because the coders differ on what the act is or on who did it. Nothing is tied
     # to an act: the record says how something was done, and the two coders disagree on what was done.

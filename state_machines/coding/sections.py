@@ -8,9 +8,10 @@ consulted only when ``CASELINKER_SECTION_MODEL=1`` and the caller passes a
 The label is stored on the passage dict the new preprocessing path uses. It is
 not a schema-2.0 field and it is not written into a release bundle.
 
-Technology-explainer and affiant-background passages produce no offender act
-and no means when ``CASELINKER_SECTION_FILTER=1``. The filter is off by
-default, and with it off this module changes no published output.
+A technology-explainer or affiant-background sentence produces no offender act
+and no means when ``CASELINKER_SECTION_FILTER=1``. Another sentence on the
+same page still can. The filter is off by default, and with it off this module
+changes no published output.
 """
 from __future__ import annotations
 
@@ -146,19 +147,20 @@ def passage_products(text: str, *, heading: Optional[str] = None) -> dict:
 
     Acts come from the frame extractor, which itself stays empty unless
     ``CASELINKER_EXTRACTOR=frame-1.0``. Means come from the current stated-means
-    rule. A blocked role yields neither, and the passage label is still returned
+    rule. A blocked sentence yields neither. The passage label is still returned
     so the passage stays in the record as context.
     """
     from state_machines.coding.frames import extract_frames
     from state_machines.observations.observe import _means, features_in, platforms_in, sentences
 
     label = classify(text, heading=heading)
-    if blocks_offender_products(label["role"]):
-        return {"section": label, "acts": [], "means": []}
     digest = E.sha256_text(text)
     acts, means = [], []
     for start, end in sentences(text):
         sentence = text[start:end]
+        # One explainer or affiant sentence does not blank the rest of the passage.
+        if blocks_offender_products(classify(sentence)["role"]):
+            continue
         acts.extend(extract_frames(sentence, page_text=text, sentence_start=start, passage_hash=digest))
         for _cls, phrase, a, b in features_in(sentence):
             hit = _means("feature", sentence, {"feature_term": phrase})

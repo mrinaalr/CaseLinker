@@ -117,6 +117,20 @@ SCHEMA = {
             "by": {"type": "string"},
         }}}},
 }
+# What a frame model is asked for. Every field is text. The hash and the offsets are not in the schema.
+FRAME_SCHEMA = {
+    "type": "object", "required": ["frames"],
+    "properties": {"frames": {"type": "array", "items": {
+        "type": "object", "required": ["act", "actor", "quote", "means", "means_level"],
+        "properties": {
+            "act": {"type": "string", "enum": ACTIONS},
+            "actor": {"type": "string"},
+            "object": {"type": "string"},
+            "quote": {"type": "string"},
+            "means": {"type": "string"},
+            "means_level": {"type": "string", "enum": ["A", "B", "C"]},
+        }}}},
+}
 
 PROMPT = """You code a federal court record for a research codebook. Read the ONE page below and list every act it describes:
 something a person or agency DID (contact, ask, send, threaten, travel, record, distribute, arrest, plead, sentence, ...).
@@ -142,6 +156,38 @@ PAGE:
 <<<
 {text}
 >>>"""
+
+FRAME_PROMPT = """You code a federal court record for a research codebook. Read the ONE page below and list every act it describes:
+something a person or agency DID (contact, ask, send, threaten, travel, record, distribute, arrest, plead, sentence, ...).
+Skip legal argument, statutes, guideline calculations and boilerplate.
+
+Return frames. Each frame is plain text copied from this page, plus the action code and the means level:
+  act         = the action code
+  actor       = the verbatim words of who the codebook treats as the actor
+  object      = the verbatim words of what was acted on, or an empty string
+  quote       = the verbatim sentence that states the act
+  means       = the verbatim words of the instrument, or an empty string
+  means_level = A, B or C from the codebook. A is a capability the platform made available.
+                B is a capability relevant to that kind of action. C is a feature this sentence
+                states was used to carry out the act. A platform name is never C.
+Do not return offsets, hashes, or ids.
+
+Action codes:
+{codes}
+
+Document type: {doc_type}. Page {page}.
+PAGE:
+<<<
+{text}
+>>>"""
+
+
+def render_frame_prompt(**fields: str) -> str:
+    """FRAME_PROMPT with its slots filled. The model is not asked for offsets or a hash."""
+    out = FRAME_PROMPT
+    for k, v in fields.items():
+        out = out.replace("{" + k + "}", v)
+    return out
 
 
 def render_prompt(**fields: str) -> str:
@@ -261,18 +307,29 @@ class Cache:
         self.db.commit()
 
 
+def request_body(spec: dict, prompt: str, *, frames: bool = False) -> dict:
+    """The JSON sent to the model. ``frames`` selects the frame schema; otherwise the acts schema."""
+    body = {"model": spec["model"], "messages": [{"role": "user", "content": prompt}], "stream": False,
+            "format": FRAME_SCHEMA if frames else SCHEMA, "options": MODELS["options"],
+            "keep_alive": MODELS["runtime"].get("keep_alive", "2m")}
+    if spec.get("think") is False:
+        body["think"] = False
+    return body
+
+
 def ask(spec: dict, prompt: str, cache: Cache) -> dict:
     env = MODELS["runtime"].get("env") or {}
     numerics = {k: env[k] for k in ("OLLAMA_FLASH_ATTENTION", "OLLAMA_KV_CACHE_TYPE") if k in env}   # settings that change outputs
-    key = hashlib.sha256(json.dumps([spec["digest"], PROMPT_VERSION, MODELS["options"], numerics, prompt]).encode()).hexdigest()
+    frames = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
+    key_parts = [spec["digest"], PROMPT_VERSION, MODELS["options"], numerics, prompt]
+    if frames:
+        key_parts.append("frames")
+    key = hashlib.sha256(json.dumps(key_parts).encode()).hexdigest()
     hit = cache.get(key)
     if hit is not None:
         return json.loads(hit)
     wait_for_memory()
-    body = {"model": spec["model"], "messages": [{"role": "user", "content": prompt}], "stream": False,
-            "format": SCHEMA, "options": MODELS["options"], "keep_alive": MODELS["runtime"].get("keep_alive", "2m")}
-    if spec.get("think") is False:
-        body["think"] = False
+    body = request_body(spec, prompt, frames=frames)
     req = urllib.request.Request(MODELS["runtime"]["base_url"] + "/api/chat", data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json"})
     t = time.time()
@@ -282,7 +339,7 @@ def ask(spec: dict, prompt: str, cache: Cache) -> dict:
     try:
         out = json.loads(content)
     except json.JSONDecodeError:
-        out = {"acts": [], "unparsed": True}
+        out = {"frames": [], "unparsed": True} if frames else {"acts": [], "unparsed": True}
     cache.put(key, spec, json.dumps(out), time.time() - t, raw)
     return out
 
@@ -498,6 +555,13 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
             if len(qn.split()) < 4:
                 log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: quote too short")
                 continue
+            if os.environ.get("CASELINKER_SECTION_FILTER") == "1":
+                from state_machines.coding.sections import blocks_offender_products, classify
+                role = classify(qn)["role"]
+                if blocks_offender_products(role):
+                    log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: section filter, "
+                               f"the quote's sentence is {role}")
+                    continue
             action = act.get("action")
             if action not in _DEF:
                 continue
@@ -702,29 +766,48 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
-_DEFENDANT = re.compile(r"\b(?:the defendant|the accused)\b", re.I)
-_FRAME_ASK = (
-    "\n\nReturn frames, not the compact act list. Each frame has act (code and the "
-    "verbatim span), actor (the verbatim span of who acted), object and means spans, "
-    "and character offsets into this page. A frame whose span is not the page text "
-    "at those offsets is dropped."
-)
+_BARE_DEFENDANT = re.compile(r"^(?:the defendant|the accused)$", re.I)
+_NAMED_DEFENDANT = re.compile(r"^defendant\s+(.+)$", re.I)
+_PRONOUN = re.compile(r"^(?:he|him|his|she|her|they|them|their)$", re.I)
+_POSSESSIVE = re.compile("\\b(?:defendant|accused)(?:'s|\u2019s)\\b", re.I)
 
 
-def _actor_is_defendant(page: str, slot: dict) -> bool:
-    """True when the frame's actor slot is the defendant.
+def _name_forms(names: Optional[List[str]]) -> set:
+    forms = set()
+    for name in names or []:
+        cleaned = " ".join(name.split())
+        if not cleaned:
+            continue
+        forms.add(cleaned.lower())
+        forms.add(cleaned.split()[-1].lower())
+    return forms
 
-    ``the defendant`` and ``the accused`` are that actor on the page. A pronoun is
-    the defendant only when ``CASELINKER_COREFERENCE=1`` resolves it to one. Nothing
-    here treats every actor as the defendant.
+
+def _actor_is_defendant(page: str, slot: dict, defendant_names: Optional[List[str]] = None) -> bool:
+    """True when the actor slot's whole noun phrase is the defendant.
+
+    The match is the head phrase itself: ``the defendant``, ``the accused``, the
+    defendant's name or surname, or ``defendant <Name>``. A possessive or a longer
+    phrase (``the defendant's mother``, ``the defendant's co-conspirator``) is not
+    that head. A pronoun is the defendant only when ``CASELINKER_COREFERENCE=1``
+    resolves it, using the same names.
     """
-    text = (slot or {}).get("text") or ""
-    if _DEFENDANT.search(text):
+    text = " ".join(((slot or {}).get("text") or "").split())
+    if not text or _POSSESSIVE.search(text):
+        return False
+    if _BARE_DEFENDANT.fullmatch(text):
         return True
-    if os.environ.get("CASELINKER_COREFERENCE") != "1":
+    forms = _name_forms(defendant_names)
+    if text.lower() in forms:
+        return True
+    named = _NAMED_DEFENDANT.fullmatch(text)
+    if named and named.group(1).strip().lower() in forms:
+        return True
+    if os.environ.get("CASELINKER_COREFERENCE") != "1" or not _PRONOUN.fullmatch(text):
         return False
     from state_machines.coding.coreference import make_inventory, resolve_mentions, subject_is_offender
-    actors = make_inventory()
+    primary = next((name for name in (defendant_names or []) if name.strip()), "the defendant")
+    actors = make_inventory(defendant=primary, defendant_names=defendant_names or ())
     mentions = resolve_mentions(page, actors)
     end = slot.get("end")
     if not isinstance(end, int):
@@ -732,48 +815,56 @@ def _actor_is_defendant(page: str, slot: dict) -> bool:
     return subject_is_offender(mentions, end, actors)
 
 
-def acts_from_model_frames(text: str, frames: List[dict]) -> List[dict]:
-    """Acts a coder's model frames survive as.
+def acts_from_model_frames(text: str, frames: List[dict], defendant_names: Optional[List[str]] = None):
+    """Acts a coder's model frames survive as, and why the others were dropped.
 
-    A frame ``verify_frame`` rejects is dropped. A frame it accepts is kept only
-    when its actor slot is the defendant, and then the act's actor is that slot,
-    not a fixed label. ``extract_frames`` is not called.
+    The model returns text. The hash and the offsets are computed from the page.
+    A span that is not on the page is ``not_found``. An actor that is not the
+    defendant is ``actor_not_offender``. Anything else is ``other``. A repeated
+    span with no offset, or two occurrences equally near an offset, adds to
+    ``ambiguous``. ``extract_frames`` is not called.
     """
-    from state_machines.coding.frames import verify_frame
+    from state_machines.coding.enrich import feature
+    from state_machines.coding.frames import ground_frame
     acts = []
-    for frame in frames:
-        if verify_frame(frame, text):
+    counts = {"not_found": 0, "actor_not_offender": 0, "other": 0, "ambiguous": 0}
+    for frame in frames or []:
+        grounded, reason, ambiguous = ground_frame(text, frame)
+        counts["ambiguous"] += ambiguous
+        if grounded is None:
+            counts[reason if reason in counts else "other"] += 1
             continue
-        slot = frame.get("actor") or {}
-        if not _actor_is_defendant(text, slot):
+        slot = grounded.get("actor") or {}
+        if not _actor_is_defendant(text, slot, defendant_names):
+            counts["actor_not_offender"] += 1
             continue
-        sentence = (frame.get("sentence") or {}).get("text") or ""
-        code = (frame.get("act") or {}).get("code")
+        sentence = (grounded.get("sentence") or {}).get("text") or ""
+        code = (grounded.get("act") or {}).get("code")
         if not sentence or not code:
+            counts["other"] += 1
             continue
-        act = {"quote": sentence, "action": code, "actor": slot["text"], "actor_role": "offender"}
-        means = frame.get("means") or {}
-        if means.get("level") == "C" and means.get("text"):
-            act["affordance"] = {"class": means.get("feature_class"), "feature": means["text"]}
+        act = {"quote": sentence, "action": code, "actor": slot.get("text") or "", "actor_role": "offender"}
+        if grounded.get("means_level") == "C":
+            means_text = (grounded.get("means") or {}).get("text") or ""
+            found = feature(means_text) or feature(sentence)
+            if found and found[1].lower() in E.normalize(sentence).lower():
+                act["affordance"] = {"class": found[0], "feature": found[1]}
         acts.append(act)
-    return acts
+    return acts, counts
 
 
 def route(doc: dict, text: str) -> str:
     """How a page is read: "docket" (parser), "boilerplate" (skipped judgment form page) or "model".
 
-    ``CASELINKER_SECTION_FILTER=1`` adds ``section_blocked`` for a technology explainer or
-    affiant background. ``CASELINKER_EXTRACTOR=frame-1.0`` does not change this: both
-    coders still take the model path.
+    The section filter does not decide the page. It drops an act whose own quote
+    sentence is an explainer or affiant background, and leaves the other sentences.
+    ``CASELINKER_EXTRACTOR=frame-1.0`` does not change this: both coders still take
+    the model path.
     """
     if doc["doc_type"] == "docket":
         return "docket"
     if doc["doc_type"] in ("judgment", "amended_judgment") and BOILERPLATE.search(text):
         return "boilerplate"
-    if os.environ.get("CASELINKER_SECTION_FILTER") == "1":
-        from state_machines.coding.sections import blocks_offender_products, classify
-        if blocks_offender_products(classify(text)["role"]):
-            return "section_blocked"
     return "model"
 
 
@@ -781,7 +872,7 @@ def pages_with_acts(log_path: Path) -> set:
     """(doc_id, page) pairs where a coder's model reported at least one act, read from its coverage log."""
     out = set()
     for line in log_path.read_text(encoding="utf-8").splitlines():
-        m = re.match(r"page (\S+) p(\d+): model.*?, (\d+) acts$", line)
+        m = re.match(r"page (\S+) p(\d+): model.*?, (\d+) acts\b", line)
         if m and int(m.group(3)) > 0:
             out.add((m.group(1), int(m.group(2))))
     return out
@@ -802,46 +893,74 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
             ans, how = docket_acts(full), "docket parser"
         elif kind == "boilerplate":
             ans, how = {"acts": []}, "skipped: judgment form page"
-        elif kind == "section_blocked":
-            ans, how = {"acts": []}, "skipped: section filter"
         elif only_pages is not None and (doc["doc_id"], page_no) not in only_pages:
             ans, how = {"acts": []}, "skipped: first coder found no act"
         else:
             text = full[:MAX_PAGE_CHARS]
-            prompt = render_prompt(codes=codes, harms=HARM_LINES, affordances=AFF_LINES, doc_type=doc["doc_type"].replace("_", " "),
-                               page=str(page_no), text=text)
+            fields = dict(codes=codes, harms=HARM_LINES, affordances=AFF_LINES,
+                          doc_type=doc["doc_type"].replace("_", " "), page=str(page_no), text=text)
             if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
-                prompt += _FRAME_ASK
+                prompt = render_frame_prompt(**fields)
                 how = "model frame-1.0" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
             else:
+                prompt = render_prompt(**fields)
                 how = "model" + (" (truncated)" if len(full) > MAX_PAGE_CHARS else "")
             ans, how = prompt, how
             jobs.append(len(answers))
-        answers.append([doc, page_no, full, ans, how])
+        answers.append([doc, page_no, full, ans, how, None])
     # model pages run with up to runtime.parallel requests in flight (the server batches them)
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=max(1, int(MODELS["runtime"].get("parallel", 1)))) as pool:
         for i, ans in zip(jobs, pool.map(lambda i: ask(spec, answers[i][3], cache), jobs)):
             answers[i][3] = ans
-    if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
+    framing = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
+    totals = {"not_found": 0, "actor_not_offender": 0, "other": 0, "ambiguous": 0}
+    zero_pages = 0
+    if framing:
         for item in answers:
             ans, how = item[3], item[4]
             if isinstance(ans, dict) and str(how).startswith("model"):
-                item[3] = {"acts": acts_from_model_frames(item[2], ans.get("frames") or [])}
-    for doc, page_no, full, ans, how in answers:
-        coverage.append(f"page {doc['doc_id']} p{page_no}: {how}, {len(ans.get('acts', []))} acts")
+                acts, counts = acts_from_model_frames(item[2], ans.get("frames") or [], deny or [])
+                item[3] = {"acts": acts}
+                item[5] = counts
+                for key in totals:
+                    totals[key] += counts[key]
+    for doc, page_no, full, ans, how, counts in answers:
+        n_acts = len(ans.get("acts", []))
+        line = f"page {doc['doc_id']} p{page_no}: {how}, {n_acts} acts"
+        if counts is not None:
+            line += (f", dropped not_found={counts['not_found']} actor_not_offender={counts['actor_not_offender']} "
+                     f"other={counts['other']} ambiguous={counts['ambiguous']}")
+            if n_acts == 0:
+                zero_pages += 1
+                if not (ans.get("acts") or []) and counts == {"not_found": 0, "actor_not_offender": 0, "other": 0, "ambiguous": 0}:
+                    why = "model returned no frames"
+                else:
+                    why = (f"not_found={counts['not_found']} actor_not_offender={counts['actor_not_offender']} "
+                           f"other={counts['other']}")
+                line += f", zero frames: {why}"
+        coverage.append(line)
         if progress:
-            progress(doc["doc_id"], page_no, len(ans.get("acts", [])))
+            progress(doc["doc_id"], page_no, n_acts)
+    if framing:
+        coverage.append(
+            f"case {case_id}: dropped not_found={totals['not_found']} "
+            f"actor_not_offender={totals['actor_not_offender']} other={totals['other']} "
+            f"ambiguous={totals['ambiguous']}, zero-frame pages: {zero_pages}")
     answers = [tuple(a[:4]) for a in answers]
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
                                    caption_names={w.lower() for term in (deny or []) for w in term.split()})
     log = coverage + log
-    # A page the section filter blocks has no act and no participant. That is the published
-    # result of the filter. Repair still runs for every other bundle, including one with no acts
-    # from the model, so the unset flag keeps the previous failure.
-    if not bundle["events"] and (any("section filter" in line for line in coverage)
-                                 or os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"):
-        return bundle, quotes, log
+    # An empty bundle has no participant, so repair cannot make it validate. The zero-frame
+    # lines above say why. Repair still runs, and a stop is logged rather than returned before
+    # it is tried. With the flags unset, an empty model answer still raises as it did.
+    if not bundle["events"] and (framing or os.environ.get("CASELINKER_SECTION_FILTER") == "1"):
+        try:
+            bundle, rlog = repair(bundle, text_root, deny or [])
+        except SystemExit as exc:
+            log.append(f"repair stopped: {exc}")
+            return bundle, quotes, log
+        return bundle, quotes, log + rlog
     bundle, rlog = repair(bundle, text_root, deny or [])
     return bundle, quotes, log + rlog
 

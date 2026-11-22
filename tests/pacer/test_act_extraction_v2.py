@@ -80,7 +80,9 @@ def test_tor_explainer_yields_no_act_and_no_means(monkeypatch):
     assert open_path["acts"] and open_path["means"]
     monkeypatch.setenv("CASELINKER_SECTION_FILTER", "1")
     blocked = S.passage_products(text)
-    assert blocked["acts"] == [] and blocked["means"] == []
+    # The explainer sentence is dropped. The contact sentence on the same page is not.
+    assert any(frame["act"]["code"] == "INITIATE_CONTACT" for frame in blocked["acts"])
+    assert all("Tor is a network" not in frame["sentence"]["text"] for frame in blocked["acts"])
     affiant = "I know from my training and experience that the defendant initiated contact with Minor Victim 1 through Kitebox."
     assert S.passage_products(affiant)["acts"] == [] and S.passage_products(affiant)["means"] == []
 

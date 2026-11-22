@@ -70,7 +70,11 @@ echo "Installing dependencies ($REQS)..."
 # Download spaCy English model (required for NER)
 echo ""
 echo "Downloading spaCy English model (en_core_web_sm)..."
-"$VPY" -m spacy download en_core_web_sm || echo "⚠️  Warning: Could not download spaCy model. NER will not work until you run: python -m spacy download en_core_web_sm"
+if ! "$VPY" -m spacy download en_core_web_sm-3.8.0; then
+    echo "spaCy model en_core_web_sm-3.8.0 did not install."
+    echo "Install it with: python -m spacy download en_core_web_sm-3.8.0"
+    exit 1
+fi
 
 echo ""
 echo "============================================================"

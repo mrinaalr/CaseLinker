@@ -190,6 +190,7 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         "capability_registry_loaded": loaded,
         "extension": EXTENSION.name,
         "sdk": sdk_pin(),
+        "means_parser": _means_parser_record(),
         "review_mode": "preview" if allow_unreviewed else mode,
         "adjudicated": all(set(c["review"]) <= {"adjudicated"} for c in cases),
         "cases": cases,
@@ -335,6 +336,12 @@ def verify_store(manifest: dict, query: Callable[[str], List[dict]], *, min_case
 
 COMMITTED = ("graphs/*", "derived/*", "observations/*", "research_table.json", "research_table.csv", "affordance_matrix.json", "affordance_matrix.csv",
              "affordance_case_grid.csv", "validation.json", "manifest.json", "lifecycle.json", "report.json", "REPORT.md", "ADJUDICATION.md")
+
+
+def _means_parser_record() -> dict:
+    """The dependency parser this release was built with. Null fields when it is off."""
+    from state_machines.observations.means_parse import manifest_parser
+    return manifest_parser()
 
 
 def sdk_pin() -> Optional[str]:

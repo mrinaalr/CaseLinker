@@ -191,6 +191,20 @@ def ipw_precision(rows: Sequence[dict], unit: str) -> Optional[float]:
     return num / den
 
 
+def unweighted_recall(rows: Sequence[dict], unit: str) -> Optional[float]:
+    """Pooled hits over gold positives, ignoring the sampling weights."""
+    gold = hits = 0
+    for row in rows:
+        if not _gold_positive(unit, row):
+            continue
+        gold += 1
+        if _hit(unit, row["machine"][unit], row["gold"][unit]):
+            hits += 1
+    if gold == 0:
+        return None
+    return hits / gold
+
+
 def unweighted_precision(rows: Sequence[dict], unit: str) -> Optional[float]:
     """Pooled TP / (TP+FP), ignoring the sampling weights. For the contrast test."""
     tp = fp = 0

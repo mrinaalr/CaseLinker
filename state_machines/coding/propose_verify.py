@@ -1,4 +1,4 @@
-"""Propose-then-verify resolution, for a production run a researcher turns on.
+"""Propose-then-verify resolution, selected by setting ``CASELINKER_ACT_POLICY``.
 
 ``CASELINKER_ACT_POLICY=propose-verify-1.0`` selects it. The default is
 ``intersection-1.0``, and ``resolve_case`` then returns exactly what
@@ -13,6 +13,7 @@ corrected acts are machine products, not adjudicated ones.
 from __future__ import annotations
 
 import os
+import re
 from typing import Callable, Iterable, List, Optional, Sequence
 
 POLICY_ID = "propose-verify-1.0"
@@ -118,6 +119,23 @@ def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
     return missed, means_ids
 
 
+def actor_from_sentence(sentence: str) -> dict:
+    """The head noun phrase of ``sentence``, not a fixed defendant label.
+
+    A sentence whose subject is someone else keeps that subject. ``the defendant``
+    and ``the accused`` are the defendant. A possessive (``the defendant's mother``)
+    is not.
+    """
+    text = sentence.strip()
+    named = re.match(r"((?:[Tt]he |[Aa]n? )?(?:defendant|accused))\b", text)
+    if named and not text[named.end():named.end() + 1] in "'\u2019":
+        return {"text": named.group(1), "id": "defendant"}
+    other = re.match(r"(Minor Victim \d+|Victim \d+|Agent [A-Z][a-z]+)", text)
+    if other:
+        return {"text": other.group(1), "id": "other"}
+    return {"text": text.split(",")[0][:80], "id": "other"}
+
+
 def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dict:
     """Run propose-then-verify on two coder bundles.
 
@@ -172,8 +190,9 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
     missed, means_ids = _missed_on_pages(pages, covered)
 
     def recover(sent):
+        actor = actor_from_sentence(sent.get("text") or "")
         return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},
-                 "actor": {"id": "defendant"}} for code in sent.get("codes") or []]
+                 "actor": actor} for code in sent.get("codes") or []]
 
     return propose_verify(proposals, reviews, missed=missed, means_sentence_ids=means_ids, recover=recover)
 

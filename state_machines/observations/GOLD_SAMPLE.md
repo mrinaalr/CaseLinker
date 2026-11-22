@@ -54,7 +54,7 @@ Recall is a property of the gold-positive units in the frame. A stratum that was
 sum (weight * hit) / sum (weight * gold)
 ```
 
-`hit` is 1 when the machine and the gold agree that the unit is positive. `gold` is 1 when the gold says it is positive. For an act, positive means a stated action code. For a means tie and for level C, positive means the boolean on the sheet. The same weights, averaged over every sample the design can draw, recover the population totals. That check is a synthetic test. The interval is a cluster bootstrap: inside each stratum it draws that stratum's cases with replacement, and every sentence from a drawn case stays with the case. It does not resample sentences on their own.
+`hit` is 1 when the machine and the gold agree that the unit is positive. `gold` is 1 when the gold says it is positive. For an act, positive means a stated action code. For a means tie and for level C, positive means the boolean on the sheet. The same weights, averaged over every sample the design can draw, recover the population totals. That check is a synthetic test. The interval is a cluster bootstrap: inside each stratum it draws that stratum's cases with replacement, and every sentence from a drawn case stays with the case. It does not resample sentences on their own. One case can have sentences in several strata. The bootstrap resamples each stratum on its own, so it ignores correlation across strata for that case. The intervals can be slightly narrow because of that.
 
 The score reports the number of gold positives in each stratum next to the recall and its interval. A stratum with fewer than 5 gold positives carries a warning that its bootstrap interval is unreliable.
 

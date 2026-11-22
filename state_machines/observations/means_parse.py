@@ -9,8 +9,11 @@ still the instrument of the verb outside them. When ``CASELINKER_COREFERENCE=1``
 and the verb's subject is ``they``, the resolved actor decides. With
 coreference off, ``they`` is not an offender subject.
 
-``tokens_from_spacy`` uses ``en_core_web_sm`` only when that model is already
-installed. This module does not download one and does not add a dependency.
+``tokens_from_spacy`` loads ``en_core_web_sm`` (or ``CASELINKER_SPACY_MODEL``) once
+and keeps it. If that model cannot load, the call raises. It does not return an
+empty token list. ``CASELINKER_MEANS_PARSER_FALLBACK=1`` is the only way to use
+the small parenthetical tokenizer instead, and a relation from that path says
+``parser: fallback``. This module does not download a model.
 Nothing here reads ``state_machines/data``, ``local``, or ``caselinker_oxigraph``.
 """
 from __future__ import annotations
@@ -27,8 +30,59 @@ _THEY = re.compile(r"^(?:they|them|their)$", re.I)
 _BLOCKED = ("state_machines/data", "caselinker_oxigraph")
 
 
+_NLP = None
+_LOADS = 0
+
+
 def parser_enabled() -> bool:
     return os.environ.get("CASELINKER_MEANS_PARSER") == "dep"
+
+
+def model_name() -> str:
+    return os.environ.get("CASELINKER_SPACY_MODEL", "en_core_web_sm")
+
+
+def fallback_enabled() -> bool:
+    return os.environ.get("CASELINKER_MEANS_PARSER_FALLBACK") == "1"
+
+
+def load_spacy_model(name: str):
+    """The installed spaCy model. Tests replace this to simulate a missing model."""
+    import spacy
+    return spacy.load(name)
+
+
+def require_spacy_model():
+    """The dependency model, loaded once. Raises SystemExit when it cannot load."""
+    global _NLP, _LOADS
+    if _NLP is not None:
+        return _NLP
+    name = model_name()
+    try:
+        _NLP = load_spacy_model(name)
+    except Exception as exc:
+        raise SystemExit(
+            f"CASELINKER_MEANS_PARSER=dep requires the spaCy model {name}, which did not load "
+            f"({type(exc).__name__}: {exc}). Install it with: python -m spacy download {name}"
+        ) from exc
+    _LOADS += 1
+    return _NLP
+
+
+def parser_provenance() -> dict:
+    """Who produced a parser relation. The fallback never reports ``dep``."""
+    if fallback_enabled():
+        return {"parser": "fallback", "model": None, "model_version": None}
+    nlp = require_spacy_model()
+    meta = getattr(nlp, "meta", {}) or {}
+    return {"parser": "dep", "model": model_name(), "model_version": meta.get("version")}
+
+
+def manifest_parser() -> dict:
+    """The release-manifest record. Null when the dependency parser is not selected."""
+    if not parser_enabled():
+        return {"parser": None, "model": None, "model_version": None}
+    return parser_provenance()
 
 
 def refuse_corpus_path(path: str) -> None:
@@ -39,16 +93,15 @@ def refuse_corpus_path(path: str) -> None:
         raise SystemExit(f"refusing a corpus path: {path}")
 
 
-def tokens_from_spacy(sentence: str) -> Optional[List[dict]]:
-    """Token dicts from an already-installed ``en_core_web_sm``. None when it is absent."""
-    try:
-        import spacy
-        nlp = spacy.load("en_core_web_sm")
-    except Exception:
-        return None
+def tokens_from_spacy(sentence: str) -> List[dict]:
+    """Token dicts from the cached model. Raises when the model cannot load or returns nothing."""
+    nlp = require_spacy_model()
     doc = nlp(sentence)
-    return [{"text": t.text, "start": t.idx, "end": t.idx + len(t.text),
-             "head": t.head.i, "deprel": t.dep_, "pos": t.pos_} for t in doc]
+    tokens = [{"text": t.text, "start": t.idx, "end": t.idx + len(t.text),
+               "head": t.head.i, "deprel": t.dep_, "pos": t.pos_} for t in doc]
+    if sentence.strip() and not tokens:
+        raise SystemExit(f"spaCy model {model_name()} returned no tokens for a non-empty sentence")
+    return tokens
 
 
 def _is_verb(tok: dict) -> bool:
@@ -144,7 +197,8 @@ def instrument_means(sentence: str, observation: dict, tokens: Sequence[dict], a
             continue
         if not _subject_is_offender(sentence, tokens, verb_i, actors):
             continue
-        return {"relationship": "Supports_Action", "cue": cue, "method": "dep",
+        method = "fallback" if fallback_enabled() else "dep"
+        return {"relationship": "Supports_Action", "cue": cue, "method": method,
                 "crossed_parentheses": crossed}
     return None
 
@@ -157,7 +211,8 @@ _SUBJECTS = {"defendant", "accused", "he", "they"}
 def _fallback_tokens(sentence: str) -> List[dict]:
     """A small dependency parse for a means verb and a parenthetical instrument.
 
-    Used only when ``CASELINKER_MEANS_PARSER=dep`` and ``en_core_web_sm`` is not installed.
+    Used only when ``CASELINKER_MEANS_PARSER_FALLBACK=1``. It is not a silent stand-in
+    for a model that failed to load.
     """
     tokens = [{"text": m.group(), "start": m.start(), "end": m.end(), "head": 0, "deprel": "dep", "pos": ""}
               for m in _WORD.finditer(sentence)]
@@ -189,9 +244,16 @@ def _fallback_tokens(sentence: str) -> List[dict]:
 
 
 def tokens_for(sentence: str) -> List[dict]:
-    """Tokens for the instrument walk. An installed spaCy model wins; otherwise the fallback."""
-    parsed = tokens_from_spacy(sentence)
-    return parsed if parsed else _fallback_tokens(sentence)
+    """Tokens for the instrument walk.
+
+    With the parser off, an empty list. With it on, the cached model, or the
+    fallback tokenizer when that flag is set. A missing model raises.
+    """
+    if not parser_enabled():
+        return []
+    if fallback_enabled():
+        return _fallback_tokens(sentence)
+    return tokens_from_spacy(sentence)
 
 
 def compare(sentence: str, observation: dict, tokens: Sequence[dict] = (), actors=None) -> dict:

@@ -127,6 +127,33 @@ def test_sampler_draws_only_the_sealed_frame_and_hides_machine_labels(tmp_path):
 
 
 def test_weights_recover_a_known_recall():
+    """Unequal sampling rates. Unweighted recall follows the over-sampled stratum. Weighted recall does not.
+
+    Wide stratum: N=100, n=10, weight 10. One sampled gold positive, and the machine hit it.
+    Tight stratum: N=10, n=10, weight 1. Nine sampled gold positives, and the machine missed all nine.
+    Unweighted recall is 1/10. Weighted recall is 10 / (10 + 9) = 10/19.
+    """
+    rows = [_scored("wide", 100, 10, "CONTACT", "CONTACT", case_id="wide", unit_id="w0")]
+    rows += [_scored("tight", 10, 10, "OTHER", "CONTACT", case_id="tight", unit_id=f"t{i}") for i in range(9)]
+    assert G.unweighted_recall(rows, "act") == pytest.approx(0.1)
+    assert G.ipw_recall(rows, "act") == pytest.approx(10 / 19)
+
+
+def test_cohen_kappa_matches_a_hand_computation():
+    """Ten items, three labels, one disagreement. Kappa is (0.9 - 0.36) / 0.64 = 0.84375.
+
+    left  A A A A A B B B C C
+    right A A A A B B B B C C
+    Observed agreement is 9/10. Chance is (5*4 + 3*4 + 2*2) / 100 = 0.36.
+    """
+    left = ["A", "A", "A", "A", "A", "B", "B", "B", "C", "C"]
+    right = ["A", "A", "A", "A", "B", "B", "B", "B", "C", "C"]
+    assert len(left) >= 10
+    assert G.cohen_kappa(left, right) == pytest.approx(0.84375)
+    assert G.cohen_kappa(["A"] * 10, ["A"] * 10) is None
+
+
+def test_equal_rates_recover_the_population_totals():
     """The mean Horvitz-Thompson totals, over every stratified sample, are the population totals."""
     def stratum():
         return [{"gold": True, "hit": True}, {"gold": True, "hit": False}, {"gold": False, "hit": False}]
@@ -177,7 +204,6 @@ def test_score_checks_the_manifest_hash_and_reports_agreement():
     with pytest.raises(SystemExit, match="does not match"):
         G.score(graded, key, sealed=bad)
     assert G.krippendorff_alpha([["a", "b"]]) == pytest.approx(0.0)
-    assert G.cohen_kappa(["a", "b"], ["a", "b"]) == 1
 
 
 def _scored(stratum, population, drawn, machine, gold, case_id=None, unit_id="u"):

@@ -59,11 +59,29 @@ class Actor:
         return f"Actor({self.actor_id!r}, {self.kind!r})"
 
 
-def make_inventory(*, defendant: str = "the defendant", co_offenders: Iterable[str] = (),
+def make_inventory(*, defendant: str = "the defendant", defendant_names: Iterable[str] = (),
+                   co_offenders: Iterable[str] = (),
                    victims: Iterable[str] = (), platforms: Iterable[str] = (),
                    accounts: Iterable[str] = ()) -> List[Actor]:
-    """The closed list. The defendant id is ``defendant``; the caption string is only a name."""
-    actors = [Actor("defendant", "defendant", (defendant, "the defendant", "the accused"))]
+    """The closed list. The defendant id is ``defendant``; the caption string is only a name.
+
+    ``defendant_names`` are the caption forms. A multi-word name also contributes its
+    last word, so a surname on the page resolves to the same actor.
+    """
+    forms = [defendant, "the defendant", "the accused"]
+    for name in defendant_names:
+        cleaned = " ".join(str(name).split())
+        if not cleaned:
+            continue
+        forms.append(cleaned)
+        parts = cleaned.split()
+        if len(parts) > 1:
+            forms.append(parts[-1])
+    seen = []
+    for form in forms:
+        if form not in seen:
+            seen.append(form)
+    actors = [Actor("defendant", "defendant", tuple(seen))]
     for i, name in enumerate(co_offenders, 1):
         actors.append(Actor(f"co_offender:{i}", "co_offender", (name,)))
     for i, label in enumerate(victims, 1):
