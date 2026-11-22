@@ -56,6 +56,34 @@ def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, senten
     assert events == []
 
 
+def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import case_defendants, defendant_records_in
+    wrapped = "UNITED STATES v. MICHAEL SMITH and\n/\nROBERT BROWN, Defendants."
+    assert [r["surname"] for r in defendant_records_in(wrapped)] == ["SMITH", "BROWN"]
+    inline = "UNITED STATES v. (1) SMITH, (2) PORTER, Defendants."
+    assert [r["surname"] for r in defendant_records_in(inline)] == ["SMITH", "PORTER"]
+    company = "UNITED STATES v. MICHAEL SMITH and ACME WIDGETS, INC., Defendants."
+    assert [r["surname"] for r in defendant_records_in(company)] == ["SMITH"]
+    alias = "UNITED STATES v. JOHN DOE, a/k/a JD, a/k/a Johnny, Defendant."
+    records = defendant_records_in(alias)
+    assert len(records) == 1 and records[0]["aliases"] == ["JD", "Johnny"]
+    _store_docs(tmp_path, "wrap", [
+        ("indictment", "indictment", [
+            "UNITED STATES v. MICHAEL SMITH and",
+            "ROBERT BROWN, Defendants. The defendant sent the files.",
+        ]),
+    ])
+    info = case_defendants("wrap", tmp_path)
+    assert [r["surname"] for r in info["records"]] == ["SMITH", "BROWN"]
+    sentence = f"The defendant sent {_TAIL}"
+    events, _log = code_events(
+        tmp_path, monkeypatch, "wrap2",
+        [("indictment", "indictment", [f"UNITED STATES v. (1) SMITH, (2) PORTER, Defendants. {sentence}"])],
+        sentence,
+    )
+    assert events == []
+
+
 def test_a_plea_for_a_stranger_is_refused(tmp_path, monkeypatch):
     sentence = f"The defendant sent {_TAIL}"
     snapshot = tmp_path / "parties.json"

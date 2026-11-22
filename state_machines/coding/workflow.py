@@ -290,7 +290,8 @@ _REPORTER = re.compile(
 )
 _COMPANY = re.compile(r"\b(?:L\.L\.C\.|L\.P\.|LLC|INC|CORP|LTD|CO)\b\.?", re.I)
 _COMPANY_PHRASE = re.compile(
-    r"\b(?:[A-Z][\w.'-]*[,]?\s+){1,12}(?:L\.L\.C\.|L\.P\.|LLC|INC|CORP|LTD|CO)\b\.?",
+    r"(?:^|\band\s+)((?:(?!and\b)[A-Z][\w.'-]+,?\s+){0,8}"
+    r"(?:L\.L\.C\.|L\.P\.|LLC|INC|CORP|LTD|CO)\b\.?)",
     re.I,
 )
 _DOCKET_LABEL = re.compile(
@@ -327,6 +328,7 @@ _SURNAME_GIVEN = re.compile(
     r"(?=\s*(?:,|;|\band\b|$))"
 )
 _NUMBERED_DEFENDANT = re.compile(r"(?m)^\s*\(\d+\)\s+([A-Z][A-Za-z' .,()-]{1,80}?)(?=\s*$|\s+\()")
+_INLINE_NUMBERED = re.compile(r"\(\d+\)\s+([A-Z][A-Z'\-]+(?:\s+[A-Z][A-Z'\-]+){0,3})")
 _SENTENCE_NAME = re.compile(r"\b[A-Z][\w']+\s+(?!and\b|or\b)[a-z]{3,}\b")
 _PERSON_SPLIT = re.compile(r"\s*;\s*and\s+|\s*,\s*and\s+|\s+and\s+|\s*;\s*|\s*,\s*", re.I)
 
@@ -425,20 +427,31 @@ def _split_caption_people(head: str) -> List[str]:
 
 
 def _name_line(fragment: str) -> str:
-    """The party line after 'v.'. Stops at the line end and at a docket label."""
-    line = ""
-    for raw in (fragment or "").splitlines():
-        if raw.strip():
-            line = raw.strip()
+    """The party lines after 'v.', including a name wrapped onto the next line.
+
+    A line that is only a slash is the wrapped 'and'. A docket label ends the name.
+    """
+    lines = []
+    for raw in (fragment or "").splitlines() or [fragment or ""]:
+        piece = raw.strip()
+        if not piece:
+            if lines:
+                break
+            continue
+        if piece in {"/", "\\"}:
+            continue
+        if _DEFENDANT_LINE.search(piece) and not re.search(r"[A-Za-z]{3}", piece.replace("Defendant", "").replace("Defendants", "")):
             break
-    else:
-        line = (fragment or "").strip()
-    line = re.split(r"(?<=[A-Za-z]{2})\.\s+", line, maxsplit=1)[0]
-    line = _CAPTION_STOP.split(line)[0]
-    label = _DOCKET_LABEL.search(line)
-    if label:
-        line = line[:label.start()]
-    return line.strip(" ,;")
+        label = _DOCKET_LABEL.search(piece)
+        if label:
+            piece = piece[:label.start()]
+        piece = re.split(r"(?<=[A-Za-z]{2})\.\s+", piece, maxsplit=1)[0]
+        piece = piece.strip(" ,;")
+        if piece:
+            lines.append(piece)
+        if _DEFENDANT_LINE.search(raw):
+            break
+    return " ".join(lines)
 
 
 def _attach_aliases(person: dict, indexes: List[int], saved: List[str]) -> None:
@@ -473,7 +486,11 @@ def _people_in_caption(fragment: str) -> Tuple[List[dict], bool]:
         return [], False
     if _alias_and_is_unclean(head):
         return [], True
+    original = head
+    if re.search(r"\bHOLDINGS\b", original, re.I):
+        return [], False
     head = _COMPANY_PHRASE.sub(" ", head)
+    head = re.sub(r",?\s*Defendants?\.?$", "", head, flags=re.I).strip(" ,")
     saved: List[str] = []
 
     def _hold_alias(match: re.Match) -> str:
@@ -483,7 +500,7 @@ def _people_in_caption(fragment: str) -> Tuple[List[dict], bool]:
     masked = re.sub(
         r"\b(?:a/k/a|aka|also known as)\s+"
         r"((?:'[^']+'|\"[^\"]+\"|(?:[A-Z][\w.'-]+\s+){0,3}[A-Z][\w.'-]+))"
-        r"(?=\s*(?:,\s*(?:and|Defendants?)\b|$))",
+        r"(?=\s*(?:,\s*)?(?:a/k/a|aka|also known as)\b|,\s*(?:and|Defendants?)\b|$)",
         _hold_alias, head, flags=re.I,
     )
     people = []
@@ -549,6 +566,11 @@ def _parse_caption(text: str) -> Tuple[List[dict], bool]:
     for person in _numbered_people(block):
         if _keep_record(person, seen):
             records.append(person)
+    if not records:
+        for match in _INLINE_NUMBERED.finditer(block):
+            person = _one_person(match.group(1).strip(" ,.)"))
+            if person and not _COMPANY.search(person["full"]) and _keep_record(person, seen):
+                records.append(person)
     if records:
         return records, et_al
     for match in _CASE_V.finditer(block):
@@ -627,7 +649,12 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
         page = root / doc["doc_id"] / "p0001.txt"
         if not page.is_file():
             continue
-        records, et_al = _parse_caption(page.read_text(encoding="utf-8", errors="replace"))
+        text = page.read_text(encoding="utf-8", errors="replace")
+        closed = bool(re.search(r"\bDefendants?\b", text) or _BODY_HEADING.search(text))
+        nxt = root / doc["doc_id"] / "p0002.txt"
+        if not closed and nxt.is_file():
+            text = text + "\n" + nxt.read_text(encoding="utf-8", errors="replace")
+        records, et_al = _parse_caption(text)
         if not records and not et_al:
             continue
         found.append({"doc_id": doc["doc_id"], "doc_type": doc.get("doc_type") or "other",
