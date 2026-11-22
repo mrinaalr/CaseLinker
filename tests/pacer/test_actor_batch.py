@@ -56,6 +56,75 @@ def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, senten
     assert events == []
 
 
+def test_a_snapshot_without_its_hash_or_file_is_an_error(tmp_path, monkeypatch):
+    from state_machines.coding import parties as parties_mod
+    parties_mod._CACHE.clear()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", "ab" * 32)
+    monkeypatch.delenv("CASELINKER_PARTY_SNAPSHOT", raising=False)
+    with pytest.raises(SystemExit, match="no snapshot file"):
+        parties_mod.load()
+    parties_mod._CACHE.clear()
+    snapshot = tmp_path / "parties.json"
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.delenv("CASELINKER_PARTY_SNAPSHOT_SHA256", raising=False)
+    with pytest.raises(SystemExit, match="requires CASELINKER_PARTY_SNAPSHOT_SHA256"):
+        parties_mod.load()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", "cd" * 32)
+    with pytest.raises(SystemExit, match="not available"):
+        parties_mod.load()
+    snapshot.write_text(json.dumps([{"parties": [{"party_id": "p", "name": "Michael Smith", "role": "defendant"}]}]),
+                        encoding="utf-8")
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", hashlib.sha256(snapshot.read_bytes()).hexdigest())
+    with pytest.raises(SystemExit, match="missing a court"):
+        parties_mod.load()
+
+
+def test_a_changed_snapshot_is_read_again(tmp_path, monkeypatch):
+    from state_machines.coding.parties import defendants_for, load
+    from state_machines.coding import parties as parties_mod
+    parties_mod._CACHE.clear()
+    snapshot = tmp_path / "parties.json"
+
+    def _write(name):
+        snapshot.write_text(json.dumps([{
+            "court": "dcd", "docket_number": "1:24-cr-8",
+            "parties": [{"party_id": "p", "name": name, "role": "defendant"}],
+        }]), encoding="utf-8")
+        monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+        monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", hashlib.sha256(snapshot.read_bytes()).hexdigest())
+
+    _write("Michael Smith")
+    assert load()["index"][("dcd", "1:24-cr-8")][0]["surname"] == "Smith"
+    _write("Robert Porter")
+    assert defendants_for("dcd", "1:24-cr-8")[0]["surname"] == "Porter"
+
+
+def test_one_snapshot_defendant_and_two_caption_defendants_refuse(tmp_path, monkeypatch):
+    sentence = f"The defendant sent {_TAIL}"
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-7",
+        "parties": [{"party_id": "p-smith", "name": "Michael Smith", "role": "defendant"}],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    events, _log = code_events(
+        tmp_path, monkeypatch, "both",
+        [("sof", "statement_of_facts",
+          [f"United States v. Michael Smith and Robert Porter, Defendants. {sentence}"])],
+        sentence,
+    )
+    # code_events stores sources without court. Write them, then code again.
+    sources = json.loads((tmp_path / "both" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-7"
+    (tmp_path / "both" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    from state_machines.coding.workflow import build_deny
+    bundle, _, _log = C.code_case("both", "coder_A", tmp_path, deny=build_deny("both", tmp_path))
+    assert bundle["events"] == []
+
+
 def test_a_snapshot_last_name_drops_a_suffix(tmp_path, monkeypatch):
     snapshot = tmp_path / "parties.json"
     snapshot.write_text(json.dumps([{

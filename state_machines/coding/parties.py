@@ -63,26 +63,36 @@ def _entries(text: str) -> list:
 def load(path: Optional[str] = None) -> Optional[dict]:
     """``{sha256, index}`` or None when no snapshot is configured.
 
-    ``index`` maps ``(court, docket_number)`` to defendant records.
+    ``index`` maps ``(court, docket_number)`` to defendant records. A path
+    requires ``CASELINKER_PARTY_SNAPSHOT_SHA256``. A hash with no path is an
+    error. An entry with no court or case number is an error. The cache key
+    is the file hash, so a changed file is read again.
     """
     target = path if path is not None else os.environ.get("CASELINKER_PARTY_SNAPSHOT")
-    if not target:
+    expected = os.environ.get("CASELINKER_PARTY_SNAPSHOT_SHA256")
+    if not target and not expected:
         return None
+    if not target:
+        raise SystemExit("party snapshot hash is set but no snapshot file was given")
+    if not expected:
+        raise SystemExit("party snapshot file requires CASELINKER_PARTY_SNAPSHOT_SHA256")
     file = Path(target)
-    key = str(file.resolve()) if file.exists() else str(file)
-    cached = _CACHE.get(key)
-    if cached is not None:
-        return cached
+    if not file.is_file():
+        raise SystemExit(f"party snapshot file is not available: {file}")
     raw = file.read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
-    expected = os.environ.get("CASELINKER_PARTY_SNAPSHOT_SHA256")
-    if expected and expected != digest:
+    if expected != digest:
         raise SystemExit(f"party snapshot sha256 {digest} does not match {expected}")
+    cached = _CACHE.get(digest)
+    if cached is not None:
+        return cached
     index = {}
     others = {}
     for entry in _entries(raw.decode("utf-8")):
         court = str(entry.get("court") or "")
         docket = str(entry.get("docket_number") or "")
+        if not court or not docket:
+            raise SystemExit("party snapshot entry is missing a court or a case number")
         people = []
         other_names = set()
         for party in entry.get("parties") or []:
@@ -100,7 +110,7 @@ def load(path: Optional[str] = None) -> Optional[dict]:
         index[(court, docket)] = people
         others[(court, docket)] = other_names
     loaded = {"sha256": digest, "index": index, "others": others}
-    _CACHE[key] = loaded
+    _CACHE[digest] = loaded
     return loaded
 
 
