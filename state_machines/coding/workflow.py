@@ -608,7 +608,12 @@ def _same_party(left: dict, right: dict) -> bool:
         return True
     left_full, right_full = left["full"].lower(), right["full"].lower()
     left_sur, right_sur = left["surname"].lower(), right["surname"].lower()
-    return left_full == right_sur or right_full == left_sur
+    if left_full == right_sur or right_full == left_sur:
+        return True
+    if left_sur == right_sur:
+        left_tokens, right_tokens = set(left_full.split()), set(right_full.split())
+        return left_tokens <= right_tokens or right_tokens <= left_tokens
+    return False
 
 
 def _fuller(left: dict, right: dict) -> dict:
@@ -1021,6 +1026,15 @@ def match_actor(text: str, records: List[dict], *, generic: Optional[str] = None
         return {"ambiguous": True}
     if len(full_hits) == 1:
         return _record_hit(full_hits[0], records)
+    if len(parts) > 1:
+        actor_tokens = set(low.split())
+        subset = [record for record in records
+                  if actor_tokens <= set(record["full"].lower().split())
+                  and record["surname"].lower() in actor_tokens]
+        if len(subset) > 1:
+            return {"ambiguous": True}
+        if len(subset) == 1:
+            return _record_hit(subset[0], records)
     if len(parts) == 1 and (named or parts[0][:1].isupper()):
         hits = []
         for record in records:

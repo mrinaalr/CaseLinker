@@ -56,6 +56,34 @@ def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, senten
     assert events == []
 
 
+def test_a_snapshot_last_name_drops_a_suffix(tmp_path, monkeypatch):
+    snapshot = tmp_path / "parties.json"
+    snapshot.write_text(json.dumps([{
+        "court": "dcd", "docket_number": "1:24-cr-9",
+        "parties": [{"party_id": "p-smith", "name": "SMITH, MICHAEL ALLEN (1) JR.", "role": "defendant"}],
+    }]), encoding="utf-8")
+    digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT", str(snapshot))
+    monkeypatch.setenv("CASELINKER_PARTY_SNAPSHOT_SHA256", digest)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    sentence = f"Michael Smith sent {_TAIL}"
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "Michael Smith")])
+    _store_docs(tmp_path, "suffix", [("sof", "statement_of_facts",
+                                      [f"United States v. Michael Smith, Defendant. {sentence}"])])
+    sources = json.loads((tmp_path / "suffix" / "sources.json").read_text(encoding="utf-8"))
+    sources["court"] = "dcd"
+    sources["docket_number"] = "1:24-cr-9"
+    (tmp_path / "suffix" / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    from state_machines.coding.workflow import build_deny, case_defendants
+    info = case_defendants("suffix", tmp_path)
+    assert info["records"][0]["surname"] == "SMITH"
+    assert info["records"][0]["full"] == "MICHAEL ALLEN SMITH"
+    deny = build_deny("suffix", tmp_path)
+    assert "jr" not in deny and "(1)" not in deny
+    bundle, _, _log = C.code_case("suffix", "coder_A", tmp_path, deny=deny)
+    assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+
+
 def test_wrapped_inline_and_company_captions(tmp_path, monkeypatch):
     from state_machines.coding.workflow import case_defendants, defendant_records_in
     wrapped = "UNITED STATES v. MICHAEL SMITH and\n/\nROBERT BROWN, Defendants."

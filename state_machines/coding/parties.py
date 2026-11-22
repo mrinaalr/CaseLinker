@@ -14,10 +14,35 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 from typing import Optional
 
 _CACHE: dict = {}
+_GENERATION = re.compile(r"\b(?:Jr|Sr|II|III|IV)\.?\b", re.I)
+_PARTY_NUMBER = re.compile(r"\(\d+\)")
+
+
+def party_name(raw: str) -> tuple:
+    """``(full, surname)`` from a snapshot name.
+
+    ``LAST, FIRST MIDDLE`` keeps LAST as the surname. A leading ``(1)`` and a
+    generational suffix are not part of the name.
+    """
+    cleaned = _PARTY_NUMBER.sub(" ", raw or "")
+    cleaned = _GENERATION.sub(" ", cleaned)
+    cleaned = cleaned.replace(".", " ")
+    cleaned = " ".join(cleaned.split()).strip(" ,")
+    if not cleaned:
+        return "", ""
+    if "," in cleaned:
+        last, rest = cleaned.split(",", 1)
+        surname = last.strip().split()[-1] if last.strip() else ""
+        given = " ".join(rest.split())
+        full = " ".join(part for part in (given, surname) if part)
+        return full, surname
+    parts = cleaned.split()
+    return cleaned, parts[-1]
 
 
 def _entries(text: str) -> list:
@@ -61,16 +86,15 @@ def load(path: Optional[str] = None) -> Optional[dict]:
         people = []
         other_names = set()
         for party in entry.get("parties") or []:
-            name = " ".join(str(party.get("name") or "").split())
-            if not name or not party.get("party_id"):
+            full, surname = party_name(str(party.get("name") or ""))
+            name = full
+            if not name or not surname or not party.get("party_id"):
                 continue
-            parts = name.split()
-            surname = parts[-1]
             if str(party.get("role") or "").lower() != "defendant":
                 other_names.add(surname.lower())
                 continue
             people.append({
-                "full": name, "surname": surname, "aliases": [], "alias_surnames": [],
+                "full": full, "surname": surname, "aliases": [], "alias_surnames": [],
                 "key": str(party["party_id"]), "party_id": str(party["party_id"]),
             })
         index[(court, docket)] = people
