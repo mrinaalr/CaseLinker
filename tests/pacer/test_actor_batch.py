@@ -16,18 +16,76 @@ from tests.pacer.test_pipeline_flags import _ask_frames, _clear, _plain_frame
 _TAIL = "the files to other users via an encrypted channel."
 
 
-def code_events(tmp, monkeypatch, case, docs, sentence, actor="the defendant"):
+def code_events(tmp, monkeypatch, case, docs, sentence, actor="the defendant", *, means="encrypted",
+                object_text="the files", env=None):
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
-    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", actor, means="encrypted")])
+    for key, value in (env or {}).items():
+        monkeypatch.setenv(key, value)
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", actor, means=means, object_text=object_text)])
     _store_docs(tmp, case, docs)
     from state_machines.coding.workflow import build_deny
     bundle, _, log = C.code_case(case, "coder_A", tmp, deny=build_deny(case, tmp))
     return [event["action"] for event in bundle["events"]], log
 
 
+def _reasons(tmp, case):
+    path = tmp / case / "v2_refusals.jsonl"
+    if not path.is_file():
+        return []
+    return [json.loads(line)["reason"] for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
 def _one(name, sentence, actor="the defendant"):
     return [("sof", "statement_of_facts", [f"United States v. {name}, Defendant. {sentence}"])]
+
+
+@pytest.mark.parametrize("sentence,actor,means,object_text,extra", [
+    ("The defendant sent the files to Agent Porter.", "the defendant", "", "the files", None),
+    ("Michael Smith distributed the images.", "Michael Smith", "", "the images", None),
+    ("The files were sent by the defendant.", "the defendant", "", "The files", None),
+    ("The defendant downloaded and sent the files.", "the defendant", "", "the files", None),
+    ("He sent the files.", "He", "", "the files", {"CASELINKER_COREFERENCE": "1"}),
+])
+def test_plain_positive_clauses_publish(tmp_path, monkeypatch, sentence, actor, means, object_text, extra):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "plain", _one("Michael Smith", sentence), sentence, actor,
+        means=means, object_text=object_text, env=extra)
+    assert events == ["DISTRIBUTE_MATERIAL"]
+
+
+@pytest.mark.parametrize("sentence,actor,reason,env", [
+    ("After the defendant logged in, Agent Porter sent the files.", "the defendant", "subordinate_clause", None),
+    ("The defendant said that the victim sent the files.", "the defendant", "reported_speech", None),
+    ("The defendant did not send the files.", "the defendant", "negated", None),
+    ("The defendant would have sent the files.", "the defendant", "modal_conditional", None),
+    ("The defendant and Agent Porter sent the files.", "the defendant", "coordinated_subject", None),
+    ("Smith, his sister, sent the files.", "Smith", "appositive_relation", None),
+    ("Agent Porter sent him the files.", "him", "pronoun_object", {"CASELINKER_COREFERENCE": "1"}),
+])
+def test_each_refusal_reason_is_counted(tmp_path, monkeypatch, sentence, actor, reason, env):
+    events, _log = code_events(
+        tmp_path, monkeypatch, "why", _one("Michael Smith", sentence), sentence, actor,
+        means="", env=env)
+    assert events == []
+    assert reason in _reasons(tmp_path, "why")
+
+
+def test_multi_defendant_and_shared_surname_are_counted(tmp_path, monkeypatch):
+    generic = "The defendant sent the files."
+    events, _log = code_events(
+        tmp_path, monkeypatch, "multi",
+        [("sof", "statement_of_facts", [f"United States v. Michael Smith and Robert Porter, Defendants. {generic}"])],
+        generic, means="")
+    assert events == []
+    assert "multi_defendant_caption" in _reasons(tmp_path, "multi")
+    shared = "Smith sent the files."
+    events, _log = code_events(
+        tmp_path, monkeypatch, "same",
+        [("sof", "statement_of_facts", [f"United States v. Michael Smith and Robert Smith, Defendants. {shared}"])],
+        shared, actor="Smith", means="")
+    assert events == []
+    assert "ambiguous_surname" in _reasons(tmp_path, "same")
 
 
 @pytest.mark.parametrize("sentence", [

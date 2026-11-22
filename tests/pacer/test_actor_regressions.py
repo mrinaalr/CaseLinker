@@ -183,11 +183,11 @@ PROBES = [
     ("sister-appositive", "actor",
      ("United States v. Michael Smith, Defendant.",
       "Smith, the defendant's sister, sent the files to other users via an encrypted channel.", "Smith"),
-     {"spacy": "actor_rejected", "none": "actor_rejected"}),
+     {"spacy": "appositive_relation", "none": "actor_rejected"}),
     ("photo-of-herself", "actor",
      ("United States v. Michael Smith, Defendant.",
       "Smith sent the defendant a photo of herself.", "Smith"),
-     {"spacy": "actor_rejected", "none": "no_parser"}),
+     {"spacy": "the defendant", "none": "no_parser"}),
     ("then-smith-no-comma", "actor",
      ("United States v. Michael Smith, Defendant.",
       "Then Smith sent the files to other users via an encrypted channel.", "Smith"),
@@ -220,7 +220,7 @@ PROBES = [
     ("generic-two", "actor",
      ("United States v. Michael Smith and Robert Porter, Defendants.",
       "The defendant sent the files to other users via an encrypted channel.", "the defendant"),
-     "ambiguous"),
+     "multi_defendant_caption"),
     ("no-caption", "actor",
      ("The files moved through an encrypted channel.",
       "The defendant sent the files to other users via an encrypted channel.", "the defendant"),
@@ -469,7 +469,7 @@ def test_two_defendants_publish_no_generic_charged_defendant(tmp_path, monkeypat
     from state_machines.coding.workflow import build_deny
     bundle, _, log = C.code_case("generic", "coder_A", tmp_path, deny=build_deny("generic", tmp_path))
     assert bundle["events"] == []
-    assert C.drops_from_log(log)["ambiguous"] >= 1
+    assert C.drops_from_log(log)["multi_defendant_caption"] >= 1
     charged = [p for p in bundle["participants"] if p["legal_status"][0]["status"] == "charged_defendant"]
     assert charged == []
 

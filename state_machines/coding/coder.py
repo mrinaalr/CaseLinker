@@ -803,6 +803,8 @@ def add_drops(total: dict, part: dict) -> None:
             bucket = total.setdefault("verify_failed", {})
             for problem, count in value.items():
                 bucket[problem] = bucket.get(problem, 0) + count
+        elif key == "_refusals":
+            total.setdefault("_refusals", []).extend(value)
         else:
             total[key] = total.get(key, 0) + value
 
@@ -842,7 +844,9 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
 
 def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None,
                            generic: Optional[str] = None, scope: Optional[dict] = None,
-                           other_surnames: Optional[List[str]] = None):
+                           other_surnames: Optional[List[str]] = None,
+                           caption_reason: Optional[str] = None,
+                           case_id: Optional[str] = None, document_sha256: Optional[str] = None):
     """Acts a coder's model frames survive as, and why the others were dropped.
 
     The model returns text. The hash and the offsets are computed from the page.
@@ -868,9 +872,16 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
         sentence = (grounded.get("sentence") or {}).get("text") or ""
         from state_machines.coding.workflow import decide_actor
         found, reason = decide_actor(sentence, slot.get("text") or "", records, generic=generic,
-                                     scope=scope, other_surnames=other_surnames)
+                                     scope=scope, other_surnames=other_surnames,
+                                     caption_reason=caption_reason)
         if reason:
             counts[reason] = counts.get(reason, 0) + 1
+            counts.setdefault("_refusals", []).append({
+                "case_id": case_id,
+                "document_sha256": document_sha256,
+                "act": (grounded.get("act") or {}).get("code") or "",
+                "reason": reason,
+            })
             continue
         canonical = (found or {}).get("canonical") or _canonical_actor(text, slot, records)
         if not canonical:
@@ -972,7 +983,9 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                 acts, counts = acts_from_model_frames(
                     item[2], ans.get("frames") or [], records,
                     generic=doc_scope.get("generic", generic), scope=doc_scope.get("record"),
-                    other_surnames=info.get("other_surnames"))
+                    other_surnames=info.get("other_surnames"),
+                    caption_reason=doc_scope.get("reason"),
+                    case_id=case_id, document_sha256=item[0].get("sha256"))
                 item[3] = {"acts": acts}
                 item[5] = counts
                 add_drops(totals, counts)
@@ -996,6 +1009,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         if progress:
             progress(doc["doc_id"], page_no, n_acts)
     answers = [tuple(a[:4]) for a in answers]
+    refusals = totals.pop("_refusals", []) if framing else []
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
                                    caption_names={w.lower() for term in (deny or []) for w in term.split()},
                                    drops=totals if framing else None)
@@ -1007,6 +1021,9 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
             log.append(f"party_snapshot {recorded['sha256']}")
         if info.get("caption_snapshot_disagreement"):
             totals["caption_snapshot_disagreement"] = totals.get("caption_snapshot_disagreement", 0) + 1
+        if refusals:
+            path = text_root / case_id / "v2_refusals.jsonl"
+            path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in refusals), encoding="utf-8")
         log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
         log.append("frame_drops " + json.dumps(totals, sort_keys=True))
     # An empty bundle has no participant, so repair cannot make it validate. The zero-frame

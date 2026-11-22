@@ -827,10 +827,11 @@ def _strip_lead(text: str) -> str:
 
 
 def _require_actor_nlp():
-    """The spaCy model. A v2 run stops when it is missing instead of guessing."""
+    """The spaCy model. A missing model is an error, not an empty subject."""
     nlp = _actor_nlp()
-    if nlp is None and v2_active():
-        raise SystemExit("v2 coding needs the spaCy model en_core_web_sm, which is not available")
+    if nlp is None:
+        from state_machines.observations.means_parse import model_name
+        raise SystemExit(f"the spaCy model {model_name()} is not available")
     return nlp
 
 
@@ -1003,59 +1004,208 @@ def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optio
     return "actor_rejected"
 
 
+_CONDUCT = {"send", "distribute", "upload", "download", "receive", "trade", "message",
+             "email", "text", "post", "share", "transmit", "forward"}
+_SPEECH = {"say", "tell", "claim", "know", "quote", "report", "state", "write"}
+_NEG_VERBS = {"deny", "refuse", "fail"}
+_MODALS = {"would", "could", "may", "might", "should"}
+_BLOCKED_CLAUSE = {"advcl", "ccomp", "xcomp", "relcl"}
+
+
+def _is_main_verb(token) -> bool:
+    if token.dep_ == "ROOT":
+        return True
+    seen = set()
+    head = token
+    while head.dep_ == "conj" and head.i not in seen:
+        seen.add(head.i)
+        head = head.head
+        if head.dep_ == "ROOT":
+            return True
+    return False
+
+
+def _clause_of(token) -> Optional[str]:
+    """The nearest blocked clause that contains ``token``, if it is not the main clause.
+
+    spaCy returns a new Token object for ``.head``, so identity is not a stop.
+    """
+    seen = set()
+    head = token
+    while head.head.i != head.i and head.i not in seen:
+        seen.add(head.i)
+        if head.dep_ in _BLOCKED_CLAUSE:
+            return head.dep_
+        head = head.head
+    return None
+
+
+def _act_verb(doc):
+    """The conduct verb the sentence would be coded as, else the root verb."""
+    conduct = [token for token in doc if token.pos_ in {"VERB", "AUX"} and token.lemma_.lower() in _CONDUCT]
+    if not conduct:
+        return next((token for token in doc if token.dep_ == "ROOT"), None)
+    main = [token for token in conduct if _is_main_verb(token)]
+    return main[-1] if main else conduct[-1]
+
+
+def _verb_block(verb) -> Optional[str]:
+    """Why this verb is not a publishable main-clause act, or None."""
+    if verb is None:
+        return "actor_rejected"
+    if any(child.dep_ == "neg" or child.lemma_.lower() == "never" for child in verb.children):
+        return "negated"
+    if verb.lemma_.lower() in _NEG_VERBS:
+        return "negated"
+    if any(child.dep_ == "aux" and child.lemma_.lower() in _MODALS for child in verb.children):
+        return "modal_conditional"
+    if any(child.dep_ == "mark" and child.lemma_.lower() in {"if", "unless"} for child in verb.children):
+        return "modal_conditional"
+    where = _clause_of(verb)
+    if where == "ccomp" or (verb.head.lemma_.lower() in _SPEECH and where):
+        return "reported_speech"
+    if where == "xcomp" and verb.head.lemma_.lower() in _NEG_VERBS:
+        return "negated"
+    if where in _BLOCKED_CLAUSE:
+        return "subordinate_clause"
+    if not _is_main_verb(verb):
+        return "subordinate_clause"
+    return None
+
+
+def _hit_for(record: dict, records: List[dict], scope: Optional[dict], generic: Optional[str]) -> dict:
+    if scope is not None and generic == "one" and _same_party(record, scope):
+        record = scope
+    alone = len(records) == 1
+    canonical = "the defendant" if alone else "defendant " + record["full"]
+    return {"canonical": canonical, "record": record, "generic": alone}
+
+
+def _subject_decision(subject, records, generic, scope, other_surnames, actor_text):
+    """``(hit, None)`` or ``(None, reason)`` for one main-clause subject token."""
+    if subject is None:
+        return None, "actor_rejected"
+    if any(child.dep_ == "conj" for child in subject.children) or subject.dep_ == "conj":
+        return None, "coordinated_subject"
+    if any(child.dep_ in {"appos", "relcl"} for child in subject.children):
+        return None, "appositive_relation"
+    if any(child.dep_ == "prep" and any(g.text.lower() == "defendant" for g in child.subtree) for child in subject.children):
+        return None, "appositive_relation"
+    word = subject.text.lower()
+    phrase = _noun_phrase(subject.doc, subject)
+    if word in PRONOUN_WORDS or _PRONOUN.fullmatch(phrase):
+        if subject.dep_ not in _SUBJECT_DEPS:
+            return None, "pronoun_object"
+        if os.environ.get("CASELINKER_COREFERENCE") != "1":
+            return None, "actor_rejected"
+        if scope is not None and generic == "one":
+            return _hit_for(scope, records, scope, generic), None
+        if len(records) == 1:
+            return _hit_for(records[0], records, scope, generic), None
+        return None, "multi_defendant_caption"
+    if word in {"defendant", "accused"}:
+        if any(child.dep_ == "case" for child in subject.children):
+            return None, "appositive_relation"
+        if scope is not None and generic == "one":
+            return _hit_for(scope, records, scope, generic), None
+        if len(records) == 1 and generic == "one":
+            return _hit_for(records[0], records, scope, generic), None
+        if len(records) > 1:
+            return None, "multi_defendant_caption"
+        return None, "no_defendant_record"
+    found = match_actor(phrase, records, generic=generic, other_surnames=other_surnames)
+    if not found or found.get("drop"):
+        bare = match_actor(subject.text, records, generic=generic, other_surnames=other_surnames)
+        found = bare or found
+    if found and found.get("ambiguous"):
+        return None, "ambiguous_surname"
+    if found and found.get("drop"):
+        return None, found["drop"]
+    if not found or "canonical" not in found:
+        named = match_actor(actor_text, records, generic=generic, other_surnames=other_surnames)
+        if named and named.get("ambiguous"):
+            return None, "ambiguous_surname"
+        if (subject is not None and _one_capital(actor_text)
+                and actor_text.lower() == subject.text.lower()
+                and subject.text.lower() not in _known_surnames(records)):
+            return None, "surname_not_established"
+        return None, "actor_rejected"
+    if _PRONOUN.fullmatch(" ".join((actor_text or "").split())) and subject.dep_ not in _SUBJECT_DEPS:
+        return None, "pronoun_object"
+    return found, None
+
+
 def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] = None,
                  generic: Optional[str] = None, scope: Optional[dict] = None,
-                 other_surnames: Optional[List[str]] = None) -> Tuple[Optional[dict], Optional[str]]:
-    """``(match, drop reason)`` for one act. A reason means the act is not published.
+                 other_surnames: Optional[List[str]] = None,
+                 caption_reason: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
+    """``(match, reason code)``. A reason means the act is not published.
 
-    The coder and missed-act recovery both use this. A full name, ``Defendant
-    <Surname>``, and ``the defendant`` do not need the parser. A bare surname does.
+    This is the only actor decision. A clause is published only when its act
+    verb is a main-clause verb, the subject is the defendant or one unique
+    name, and the clause is not negated, modal, coordinated, or modified by
+    an appositive. A pronoun is the actor only when it is that subject and
+    coreference is on.
     """
     records = list(records or [])
     if generic is None:
         generic = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
+    if _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
+        # A pronoun object is refused before the caption gate. The subject check
+        # below still requires it to be the main-clause nsubj.
+        pass
+    if caption_reason and _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())):
+        return None, caption_reason
     if generic == "no_defendant_record" or not records:
         return None, "no_defendant_record"
-    subject = clause_subject(sentence)
-    voice = _passive_voice(sentence)
-    agent_is_actor = False
-    if voice == "no_parser":
+    nlp = _require_actor_nlp()
+    if nlp is None:
         return None, "no_parser"
-    if voice:
-        recipient, agent = voice
-        if _token_names_defendant(recipient, actor_text, records):
+    doc = nlp(sentence or "")
+    verb = _act_verb(doc)
+    blocked = _verb_block(verb)
+    if blocked:
+        return None, blocked
+
+    def _subject_of(head):
+        found = next((token for token in doc if token.dep_ in _SUBJECT_DEPS and token.head == head), None)
+        if found is None and head.dep_ == "conj":
+            return _subject_of(head.head)
+        return found
+
+    subject = _subject_of(verb) if verb is not None else None
+    wanted = " ".join((actor_text or "").split()).lower()
+    if subject is not None and wanted and subject.text.lower() not in wanted and "defendant" not in wanted:
+        in_advcl = [token for token in doc if token.text.lower() in wanted.split() and _clause_of(token) == "advcl"]
+        if in_advcl:
+            return None, "subordinate_clause"
+    if "defendant" in wanted:
+        mention = next((token for token in doc if token.text.lower() == "defendant"), None)
+        if mention is not None and _clause_of(mention) == "advcl" and (subject is None or subject.text.lower() != "defendant"):
+            return None, "subordinate_clause"
+    agent = next((token for token in doc if token.dep_ == "pobj" and token.head.dep_ == "agent"
+                  and token.head.head == verb), None)
+    if subject is not None and subject.dep_ in {"nsubjpass", "nsubj:pass"}:
+        if agent is not None and _token_names_defendant(agent, actor_text, records):
+            subject = agent
+        elif _token_names_defendant(subject, actor_text, records):
             return None, "passive_subject"
-        if agent and _token_names_defendant(agent, actor_text, records):
-            subject = agent.text
-            agent_is_actor = True
-    if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())):
-        if not agent_is_actor and not _generic_subject(subject):
-            return None, "actor_rejected"
-        if scope is not None and generic == "one":
-            alone = len(records) == 1
-            canonical = "the defendant" if alone else "defendant " + scope["full"]
-            return {"canonical": canonical, "record": scope, "generic": True}, None
-        if generic != "one":
-            return None, "ambiguous"
-    if _distinguished_from_defendant(sentence, records):
-        return None, "actor_rejected"
-    if not agent_is_actor:
-        for candidate in (actor_text, subject):
-            reason = _bare_surname_reason(sentence, candidate, records)
-            if reason:
-                return None, reason
     if _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
-        return None, None
-    found = match_actor(actor_text, records, generic=generic, other_surnames=other_surnames)
-    if found and found.get("drop"):
-        return None, found["drop"]
-    if found and found.get("ambiguous"):
-        return None, "ambiguous"
-    if not same_actor(actor_text, subject, records, generic=generic):
+        pronoun = next((token for token in doc if token.text.lower() == actor_text.strip().lower()), None)
+        if pronoun is None or pronoun.dep_ not in _SUBJECT_DEPS or not _is_main_verb(pronoun.head):
+            return None, "pronoun_object"
+        subject = pronoun
+    hit, reason = _subject_decision(subject, records, generic, scope, other_surnames, actor_text)
+    if reason:
+        return None, reason
+    if _GENERIC_ACTOR.fullmatch(" ".join((actor_text or "").split())) or _PRONOUN.fullmatch(" ".join((actor_text or "").split())):
+        return hit, None
+    proposed = match_actor(actor_text, records, generic=generic, other_surnames=other_surnames)
+    if proposed and proposed.get("ambiguous"):
+        return None, "ambiguous_surname"
+    if proposed and proposed.get("canonical") and hit and not _same_party(proposed["record"], hit["record"]):
         return None, "actor_rejected"
-    if not found or "canonical" not in found:
-        return None, "actor_rejected"
-    return found, None
+    return hit, None
 
 
 def _record_hit(record: dict, records: List[dict]) -> dict:
