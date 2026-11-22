@@ -1,0 +1,177 @@
+"""Seal and gold-sample tooling. Synthetic ids and sentences only."""
+from __future__ import annotations
+
+import itertools
+import json
+from pathlib import Path
+
+import pytest
+
+from state_machines.observations import gold_sample as G
+from state_machines.observations import seal as S
+from state_machines.observations.seal import SEAL_VERSION
+
+CONFIG = Path(__file__).resolve().parents[2] / "state_machines" / "observations" / "seal_config.json"
+
+
+def _seal(corpus, exclusion, seed=1, held=2, frame=2, version="test-commit"):
+    return S.seal(corpus, exclusion_ids=exclusion, seed=seed, held_out_size=held,
+                  gold_frame_size=frame, code_version=version)
+
+
+def test_blank_config_is_refused():
+    with pytest.raises(SystemExit, match="blank"):
+        S.load_config(CONFIG)
+
+
+def test_seal_is_deterministic_and_never_draws_an_excluded_id(tmp_path):
+    corpus = ["pilot_a", "pilot_b", "case_01", "case_02", "case_03", "case_04", "case_05"]
+    exclusion = ["pilot_a", "pilot_b"]
+    first = _seal(list(reversed(corpus)), exclusion)
+    second = _seal(corpus, exclusion)
+    assert first == second
+    assert first["seal_version"] == SEAL_VERSION
+    assert S.manifest_sha256(first) == first["sha256"]
+    assert set(first["held_out_ids"]).isdisjoint(exclusion)
+    assert set(first["gold_frame_ids"]).isdisjoint(exclusion)
+    assert set(first["held_out_ids"]).isdisjoint(first["gold_frame_ids"])
+    assert first["population"]["excluded"] == 2
+    assert first["population"]["eligible"] == 5
+    left = S.write_manifest(first, tmp_path / "a").read_bytes()
+    right = S.write_manifest(second, tmp_path / "b").read_bytes()
+    assert left == right
+    with pytest.raises(SystemExit, match="eligible"):
+        _seal(corpus, exclusion, held=4, frame=2)
+
+
+def test_development_refuses_sealed_ids_and_a_bad_hash():
+    manifest = _seal(["case_01", "case_02", "case_03", "case_04"], [], held=1, frame=1)
+    sealed = manifest["held_out_ids"][0]
+    dev = next(case for case in ("case_01", "case_02", "case_03", "case_04")
+               if case not in S.sealed_ids(manifest))
+    with pytest.raises(SystemExit, match="development"):
+        S.development_load([sealed], manifest)
+    with pytest.raises(SystemExit, match="development"):
+        S.extraction_debug([sealed, dev], manifest)
+    assert S.development_load([dev], manifest) == [dev]
+    with pytest.raises(SystemExit, match="hash"):
+        S.development_load([sealed], manifest, final_evaluation=True, manifest_hash="0" * 64)
+    tampered = dict(manifest, seed=manifest["seed"] + 1)
+    with pytest.raises(SystemExit, match="does not match"):
+        S.verify_manifest(tampered)
+    assert S.development_load([sealed], manifest, final_evaluation=True, manifest_hash=manifest["sha256"]) == [sealed]
+
+
+def test_benchmark_score_refuses_a_sealed_benchmark_case(tmp_path):
+    from state_machines.benchmark.score import main as score_main
+
+    manifest = _seal(["synth_001", "synth_002", "synth_003", "synth_004"], [], held=1, frame=1)
+    path = S.write_manifest(manifest, tmp_path)
+    with pytest.raises(SystemExit, match="development"):
+        score_main([str(tmp_path / "coded"), "--sealed-manifest", str(path)])
+    with pytest.raises(SystemExit, match="final evaluation"):
+        score_main([str(tmp_path / "coded"), "--sealed-manifest", str(path),
+                    "--final-evaluation", "--manifest-hash", "0" * 64])
+
+
+def _population(frame_ids):
+    rows = []
+    for case_id in frame_ids:
+        for stratum, sentence in (
+            ("published_acts", "The defendant initiated contact with Minor Victim 1."),
+            ("means_rule_no_act", "The record names a messaging application and states no act."),
+            ("other", "The hearing was continued to the following week."),
+        ):
+            rows.append({
+                "unit_id": f"{case_id}:{stratum}",
+                "case_id": case_id,
+                "stratum": stratum,
+                "sentence": sentence,
+                "context_before": [f"before {i} {case_id}" for i in range(5)],
+                "context_after": [f"after {i} {case_id}" for i in range(5)],
+                "machine": {"act": "INITIATE_CONTACT" if stratum == "published_acts" else None,
+                            "means_tie": stratum == "published_acts", "level_c": False},
+                "uncertainty": 0.1,
+            })
+    return rows
+
+
+def test_sampler_draws_only_the_sealed_frame_and_hides_machine_labels(tmp_path):
+    manifest = _seal(["case_01", "case_02", "case_03", "case_04", "pilot_a"], ["pilot_a"], held=1, frame=2)
+    population = _population(manifest["gold_frame_ids"])
+    config = {"seed": 3, "strata": {"published_acts": {"n": 1}, "means_rule_no_act": {"n": 1}, "other": {"n": 2}}}
+    sample = G.draw_sample(population, config, sealed=manifest)
+    assert {row["case_id"] for row in sample["rows"]} <= set(manifest["gold_frame_ids"])
+    assert all(row["stratum_population"] >= row["stratum_drawn"] for row in sample["rows"])
+    noisy = [dict(row, uncertainty=0.99) for row in population]
+    again = G.draw_sample(noisy, config, sealed=manifest)
+    assert [row["unit_id"] for row in sample["rows"]] == [row["unit_id"] for row in again["rows"]]
+    digest = G.draw_sha256(sample)
+    assert G.draw_sha256(again) == digest
+    sheet = G.grading_sheet(sample)
+    assert "machine" not in json.dumps(sheet) and "stratum" not in json.dumps(sheet)
+    assert all(len(unit["context_before"]) == 2 and len(unit["context_after"]) == 2 for unit in sheet["units"])
+    key = G.key_file(sample)
+    assert all("machine" in unit for unit in key["units"])
+    written = G.write_draw(sample, tmp_path / "draw")
+    assert (tmp_path / "draw" / "draw.sha256").read_text(encoding="utf-8").strip() == written["sha256"] == digest
+    outside = _population(["not_in_frame"])
+    with pytest.raises(SystemExit, match="sealed frame"):
+        G.draw_sample(outside, config, sealed=manifest)
+    forced = dict(manifest)
+    forced["gold_frame_ids"] = sorted(set(manifest["gold_frame_ids"]) | {"pilot_a"})
+    forced["sha256"] = S.manifest_sha256(forced)
+    with pytest.raises(SystemExit, match="excluded"):
+        G.draw_sample(_population(["pilot_a"]), config, sealed=forced)
+
+
+def test_weights_recover_a_known_recall():
+    """The mean Horvitz-Thompson totals, over every stratified sample, are the population totals."""
+    def stratum():
+        return [{"gold": True, "hit": True}, {"gold": True, "hit": False}, {"gold": False, "hit": False}]
+
+    samples = []
+    for left in itertools.combinations(stratum(), 2):
+        for right in itertools.combinations(stratum(), 2):
+            rows = []
+            for unit in (*left, *right):
+                rows.append({"stratum_population": 3, "stratum_drawn": 2, **unit})
+            samples.append(rows)
+    mean_hits = sum(G.ipw_total(rows, lambda row: row["gold"] and row["hit"]) for rows in samples) / len(samples)
+    mean_gold = sum(G.ipw_total(rows, lambda row: row["gold"]) for rows in samples) / len(samples)
+    assert mean_hits == pytest.approx(2.0)
+    assert mean_gold == pytest.approx(4.0)
+    assert mean_hits / mean_gold == pytest.approx(0.5)
+
+
+def test_score_checks_the_manifest_hash_and_reports_agreement():
+    manifest = _seal(["case_01", "case_02", "case_03", "case_04"], [], held=1, frame=2)
+    population = _population(manifest["gold_frame_ids"])
+    config = {"seed": 1, "strata": {"published_acts": {"n": len(manifest["gold_frame_ids"])},
+                                    "means_rule_no_act": {"n": 1}, "other": {"n": 1}}}
+    sample = G.draw_sample(population, config, sealed=manifest)
+    key = G.key_file(sample)
+    graded = {"units": []}
+    for unit in key["units"]:
+        gold_act = unit["machine"]["act"]
+        graded["units"].append({
+            "unit_id": unit["unit_id"],
+            "gold": {"act": gold_act, "means_tie": unit["machine"]["means_tie"], "level_c": False},
+            "coders": {
+                "h1": {"act": gold_act, "means_tie": unit["machine"]["means_tie"], "level_c": False},
+                "h2": {"act": gold_act, "means_tie": unit["machine"]["means_tie"], "level_c": False},
+            },
+        })
+    result = G.score_drawn(graded, key, sample, sealed=manifest, replicates=40, seed=0)
+    assert result["manifest_sha256"] == manifest["sha256"]
+    assert result["precision"]["act"]["precision"] == 1
+    assert result["krippendorff_alpha"]["act"]["alpha"] == 1
+    assert result["design_based"]["ready_for"] == ["DSL", "PPI"]
+    assert result["design_based"]["population_by_stratum"]["published_acts"] == len(manifest["gold_frame_ids"])
+    assert all(row["sampling_weight"] == pytest.approx(1 / row["inclusion_probability"])
+               for row in result["design_based"]["rows"])
+    bad = dict(manifest, sha256="ab" * 32)
+    with pytest.raises(SystemExit, match="does not match"):
+        G.score(graded, key, sealed=bad)
+    assert G.krippendorff_alpha([["a", "b"]]) == pytest.approx(0.0)
+    assert G.cohen_kappa(["a", "b"], ["a", "b"]) == 1
