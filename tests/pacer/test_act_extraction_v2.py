@@ -503,11 +503,16 @@ def test_cross_source_alias_checks_the_surviving_id_only():
     assert missed["bundle_resolves_to_surviving"] is False
 
 
-def test_collected_as_entries_postdate_the_fingerprint_lock():
+def test_collected_as_lines_were_added_after_96ffb1a35():
     from pathlib import Path
     repo = Path(__file__).resolve().parents[2]
     for retired in COLLECTED_AS:
-        assert PF.fingerprint_lock_relation(repo, retired) == "postdates"
+        assert PF.fingerprint_lock_relation(repo, retired) == "alias recorded in workflow.py after 96ffb1a35"
+    audit = PF.audit_collected_as(COLLECTED_AS, repo=repo)
+    assert all(row["id_change_date"] == "not determinable from the code" for row in audit)
+    dedup = next(row for row in audit if row["retired_id"] == "doj_safe_childhood_2023_420")
+    assert dedup["kind"] == "merge/dedup alias"
+    assert dedup["note"] == "deliberate duplicate removal; the kept id is the value"
 
 
 def test_preflight_command_does_not_read_page_text_or_rewrite_ids(tmp_path, monkeypatch):

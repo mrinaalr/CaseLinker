@@ -152,19 +152,21 @@ def _first_commit_time(repo: Path, needle: str) -> Optional[str]:
 
 
 def fingerprint_lock_relation(repo: Path, case_id: str) -> str:
-    """Whether ``case_id`` first appears in ``workflow.py`` before or after the fingerprint lock.
+    """When the alias line was added to ``workflow.py``, relative to ``96ffb1a35``.
 
-    ``not determinable`` when either commit time cannot be read.
+    This is the date of the line in this file, not the date the id changed.
+    The renumbering date is not determinable from the code. ``not determinable``
+    when either commit time cannot be read.
     """
     lock = _commit_time(repo, FINGERPRINT_LOCK)
     first = _first_commit_time(repo, case_id)
     if not lock or not first:
         return "not determinable"
     if first < lock:
-        return "predates"
+        return "alias recorded in workflow.py before 96ffb1a35"
     if first > lock:
-        return "postdates"
-    return "same commit"
+        return "alias recorded in workflow.py after 96ffb1a35"
+    return "alias recorded in workflow.py in 96ffb1a35"
 
 
 def audit_collected_as(mapping: Dict[str, str], *, live_cases: Optional[Iterable[str]] = None,
@@ -185,8 +187,11 @@ def audit_collected_as(mapping: Dict[str, str], *, live_cases: Optional[Iterable
             "retired_id": retired,
             "surviving_id": surviving,
             "kind": alias_class(retired, surviving),
-            "fingerprint_lock": fingerprint_lock_relation(repo, retired) if repo is not None else "not checked",
+            "alias_recorded": fingerprint_lock_relation(repo, retired) if repo is not None else "not checked",
+            "id_change_date": "not determinable from the code",
         }
+        if retired == "doj_safe_childhood_2023_420" and surviving == "ncmec_2023_190":
+            row["note"] = "deliberate duplicate removal; the kept id is the value"
         if live is None and fingerprints is None and bundles is None:
             rows.append(row)
             continue

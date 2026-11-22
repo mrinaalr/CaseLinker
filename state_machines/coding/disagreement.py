@@ -2,8 +2,8 @@
 
 Both resolution modes feed the same sheet: case id, passage id, the sentence
 span, each coder's frame, and blank columns for the human decision. Nothing
-here decides. A count taken from events a reviewer has already marked
-``adjudicated`` is labelled ``adjudicated``. It is refused if a caller asks to
+here decides. A count taken from events already marked ``adjudicated`` is
+labelled ``adjudicated``. It is refused if a caller asks to
 label that count ``machine``.
 """
 from __future__ import annotations
