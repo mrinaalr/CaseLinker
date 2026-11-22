@@ -805,11 +805,11 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
             matches = [party for party in records if len(own) == 1 and _same_party(own[0], party)]
             if len(matches) > 1 or item["et_al"]:
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "ambiguous_surname"}
+            elif len(own) > 1:
+                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
             elif own and not matches:
                 reason = "other_caption" if item["doc_type"] in _PLEA_DOCS else "caption_mismatch"
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": reason}
-            elif len(own) > 1:
-                by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "multi_defendant_caption"}
             elif len(matches) == 1 and matches[0].get("with_company"):
                 by_document[item["doc_id"]] = {"generic": "ambiguous", "record": None, "reason": "other_caption"}
             elif len(matches) == 1:
@@ -864,12 +864,6 @@ def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -
 
 
 _ANY_POSSESSIVE = re.compile(r"\b[\w.\-]+(?:'s|\u2019s)\b")
-_PASSIVE = re.compile(
-    r"\b(?:was|were|been|be)\s+(?:sent|used|distributed|uploaded|received|stored|transmitted|"
-    r"shared|posted|forwarded|asked|told|made|kept|given|taken|viewed|accessed|produced|"
-    r"possessed|\w+ed)\b",
-    re.I,
-)
 
 
 def _require_actor_nlp():
@@ -897,8 +891,6 @@ def clause_subject(sentence: str) -> str:
     whole phrase. A missing model stops a v2 run.
     """
     nlp = _require_actor_nlp()
-    if nlp is None:
-        return ""
     doc = nlp(sentence or "")
     agent = next((token for token in doc
                   if token.dep_ == "pobj" and token.head.dep_ == "agent" and token.head.text.lower() == "by"), None)
@@ -908,11 +900,6 @@ def clause_subject(sentence: str) -> str:
     if not subjects:
         return ""
     return _noun_phrase(doc, subjects[0])
-
-
-def is_passive(sentence: str) -> bool:
-    """True when the clause's subject is the patient of a passive verb."""
-    return bool(_PASSIVE.search(sentence or ""))
 
 
 _ACTOR_NLP = None
@@ -949,25 +936,6 @@ def _one_capital(text: str) -> Optional[str]:
     return None
 
 
-def _passive_voice(sentence: str):
-    """``(recipient, agent)`` when the clause is passive, else None.
-
-    ``no_parser`` when a passive mark is present and spaCy is absent. The
-    recipient is nsubjpass. The actor, if named, is the object of ``by``.
-    """
-    if not is_passive(sentence or ""):
-        return None
-    nlp = _require_actor_nlp()
-    if nlp is None:
-        return "no_parser"
-    doc = nlp(sentence or "")
-    recipients = [token for token in doc if token.dep_ in {"nsubjpass", "nsubj:pass"}]
-    agent = next((token for token in doc if token.dep_ == "pobj" and token.head.text.lower() == "by"), None)
-    if not recipients:
-        return None
-    return recipients[0], agent
-
-
 def _token_names_defendant(token, actor_text: str, records: List[dict]) -> bool:
     if token is None:
         return False
@@ -980,74 +948,6 @@ def _token_names_defendant(token, actor_text: str, records: List[dict]) -> bool:
     if word in surnames and (word in actor.split() or generic):
         return True
     return False
-
-
-def _surname_is_subject(sentence: str, surname: str) -> Optional[bool]:
-    """True when ``surname`` is nsubj or nsubjpass. None when no parser is available."""
-    nlp = _actor_nlp()
-    if nlp is None:
-        return None
-    doc = nlp(sentence or "")
-    target = surname.lower()
-    return any(token.text.lower() == target and token.dep_ in _SUBJECT_DEPS for token in doc)
-
-
-_POSSESSIVE_SUBJECT = re.compile(
-    r"^(?:the\s+)?defendant(?:'s|\u2019s)\s+\S+",
-    re.I,
-)
-_APPOSITIVE_POSSESSIVE = re.compile(
-    r",\s+the\s+defendant(?:'s|\u2019s)\s+\S+\s*,",
-    re.I,
-)
-
-
-def _generic_subject(text: str) -> bool:
-    """True when the phrase is the words 'the defendant' or 'the accused'."""
-    return " ".join((text or "").split()).lower() in {
-        "the defendant", "defendant", "the accused", "accused",
-    }
-
-
-def _possessive_other(sentence: str, subject: str) -> bool:
-    """True when the subject is 'the defendant's <word>', whatever that word is."""
-    if _POSSESSIVE_SUBJECT.match(" ".join((subject or "").split())):
-        return True
-    return bool(_APPOSITIVE_POSSESSIVE.search(sentence or ""))
-
-
-def _distinguished_from_defendant(sentence: str, records: List[dict]) -> bool:
-    """True when the subject is someone the sentence sets apart from the defendant."""
-    if _possessive_other(sentence, clause_subject(sentence)):
-        return True
-    nlp = _actor_nlp()
-    if nlp is None:
-        return False
-    doc = nlp(sentence or "")
-    surnames = _known_surnames(records)
-    reflexive = any(token.text.lower() in {"herself", "himself"} for token in doc)
-    defendant_is_other = any(token.text.lower() == "defendant" and token.dep_ in {"dative", "dobj", "pobj"} for token in doc)
-    surname_is_subject = any(token.text.lower() in surnames and token.dep_ == "nsubj" for token in doc)
-    return bool(reflexive and defendant_is_other and surname_is_subject)
-
-
-def _bare_surname_reason(sentence: str, text: str, records: List[dict]) -> Optional[str]:
-    """Why a bare surname may not be the actor, or None when this phrase is not one.
-
-    Establishment is the case's parsed surnames. The dependency parse decides
-    whether that token is the clause subject. No parser means ``no_parser``.
-    """
-    token = _one_capital(text)
-    if token is None or token.lower() in {"defendant", "defendants", "accused", "the", "a", "an"} or token.lower() in PRONOUN_WORDS:
-        return None
-    if token.lower() not in _known_surnames(records):
-        return "surname_not_established"
-    parsed = _surname_is_subject(sentence, token)
-    if parsed is None:
-        return "no_parser"
-    if parsed:
-        return None
-    return "actor_rejected"
 
 
 _CONDUCT = {"send", "distribute", "upload", "download", "receive", "trade", "message",
@@ -1331,8 +1231,6 @@ def decide_actor(sentence: str, actor_text: str, records: Optional[List[dict]] =
     if generic == "no_defendant_record" or not records:
         return None, "no_defendant_record"
     nlp = _require_actor_nlp()
-    if nlp is None:
-        return None, "no_parser"
     doc = nlp(_strip_heading(sentence or ""))
     verb = _act_verb(doc)
     blocked = _verb_block(verb)
