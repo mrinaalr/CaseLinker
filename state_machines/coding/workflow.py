@@ -90,22 +90,39 @@ def _ocr(page, dpi: int = 300) -> Tuple[str, Optional[float]]:
 
 
 _DISTRICT = re.compile(
-    r"((?:NORTHERN|SOUTHERN|EASTERN|WESTERN|MIDDLE|CENTRAL)\s+DISTRICT\s+OF\s+[A-Z][A-Z .]+"
-    r"|DISTRICT\s+OF\s+[A-Z][A-Z .]+)",
+    r"((?:NORTHERN|SOUTHERN|EASTERN|WESTERN|MIDDLE|CENTRAL)\s+DISTRICT\s+OF\s+[A-Z]+(?:\s+[A-Z]+)?"
+    r"|DISTRICT\s+OF\s+[A-Z]+(?:\s+[A-Z]+)?)",
     re.I,
 )
 _CASE_NUMBER = re.compile(
-    r"\b(?:Case|Criminal|Cr\.?)\s+No\.?\s*([0-9][\w:.-]*(?:\s*\([A-Za-z0-9]+\))?)",
+    r"\b(?:(?:Case|Criminal|Crim\.?|Cr\.?)\s+(?:No\.?|Number)?|No\.)\s*[:.]?\s*"
+    r"([0-9][\w:.-]*(?:\s*\([A-Za-z0-9]+\))?)",
     re.I,
 )
+_COURT_LINE = re.compile(r"\bDISTRICT\b", re.I)
+
+
+def _court_lines(text: str) -> str:
+    """The court lines only. A caption line after the court is not part of the key."""
+    lines = [re.sub(r"\s+", " ", line).strip() for line in (text or "").splitlines() if line.strip()]
+    kept = []
+    for line in lines:
+        if _COURT_LINE.search(line) or (kept and re.match(r"^(?:FOR\s+THE\s+)?[A-Z .]+DISTRICT\b", line, re.I)):
+            kept.append(line)
+            continue
+        if kept:
+            break
+    return " ".join(kept)
 
 
 def _normalise_court(text: str) -> Optional[str]:
     """The district name, with whitespace collapsed. Two districts do not share a key."""
-    found = _DISTRICT.search(re.sub(r"\s+", " ", text or ""))
+    lines = _court_lines(text or "")
+    found = _DISTRICT.search(lines or re.sub(r"\s+", " ", text or ""))
     if not found:
         return None
-    name = re.split(r"\b(?:CASE|CRIMINAL|NO|JUDGMENT|PLAINTIFF)\b", found.group(1), maxsplit=1, flags=re.I)[0]
+    name = re.split(r"\b(?:CASE|CRIMINAL|CRIM|NO|NUMBER|JUDGMENT|PLAINTIFF|DOCUMENT)\b",
+                    found.group(1), maxsplit=1, flags=re.I)[0]
     return " ".join(name.split()).upper().rstrip(".")
 
 
@@ -174,10 +191,13 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
         docs.append(doc)                      # in file-name order, as collected: a rerun lists a case's documents as before
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "files.json").write_text(json.dumps(files, indent=1, sort_keys=True) + "\n", encoding="utf-8")   # names on disk: local only
-    if court or docket:
-        (folder / "case_key.json").write_text(
+    key_path = folder / "case_key.json"
+    if v2_active() and (court or docket):
+        key_path.write_text(
             json.dumps({"court": court, "docket_number": docket}, indent=1, sort_keys=True) + "\n",
             encoding="utf-8")
+    elif key_path.is_file():
+        key_path.unlink()
     return {"case_id": case_id, "documents": docs}
 
 
