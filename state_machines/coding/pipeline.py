@@ -81,8 +81,15 @@ def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) 
                 store.update(quotes)
                 E.save_quotes(case_id, store, text_root)
                 (d / f"{case_id}.log").write_text("\n".join(log) + "\n", encoding="utf-8")
-                status[f"{coder}/{case_id}"] = {"events": len(bundle["events"]), "seconds": round(time.time() - t)}
-                print(f"{coder} {case_id}: {len(bundle['events'])} events in {time.time() - t:.0f}s", flush=True)
+                entry = {"events": len(bundle["events"]), "seconds": round(time.time() - t)}
+                drops = C.drops_from_log(log)
+                if drops is not None:
+                    entry["frame_drops"] = drops
+                    corpus = status.setdefault("frame_drops", C.empty_drops())
+                    C.add_drops(corpus, drops)
+                status[f"{coder}/{case_id}"] = entry
+                suffix = f" frame_drops {json.dumps(drops, sort_keys=True)}" if drops else ""
+                print(f"{coder} {case_id}: {len(bundle['events'])} events in {time.time() - t:.0f}s{suffix}", flush=True)
             except BaseException as exc:            # noqa: BLE001 - a failed case is recorded, not fatal
                 if isinstance(exc, KeyboardInterrupt):
                     raise
@@ -249,8 +256,18 @@ def release(release_id: str, cases: List[str], out: Path, text_root: Path, obser
         if src.is_file():
             shutil.copy(src, root / f"{case_id}.json")
             included.append(case_id)
+    frame_drops = None
+    if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0":
+        frame_drops = C.empty_drops()
+        for case_id in included:
+            for coder in ("coder_A", "coder_B"):
+                path = out / coder / f"{case_id}.log"
+                if path.is_file():
+                    part = C.drops_from_log(path.read_text(encoding="utf-8").splitlines())
+                    if part:
+                        C.add_drops(frame_drops, part)
     manifest = build(release_id, text_root=text_root, deny_lists={c: _deny(text_root, c) for c in included}, mode="machine",
-                     observations=observations, coders_root=out)
+                     observations=observations, coders_root=out, frame_drops=frame_drops)
     return {"release": release_id, "cases": len(manifest["cases"]), "left_out": sorted(set(cases) - set(included))}
 
 

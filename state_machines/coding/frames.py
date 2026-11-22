@@ -174,12 +174,31 @@ _QUOTES = str.maketrans({"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": 
 _SENTENCE_END = re.compile(r"[.;!?](?=\s|$)")
 
 
-def _normalize_map(text: str) -> Tuple[str, List[Tuple[int, int]]]:
+def _break_hyphen(text: str, i: int) -> Optional[int]:
+    """Index after a line-break hyphen at ``i``, or None when this hyphen is not one."""
+    if text[i] != "-" or i == 0 or not text[i - 1].isalnum():
+        return None
+    j = i + 1
+    if j < len(text) and text[j] == "\r":
+        j += 1
+    if j >= len(text) or text[j] != "\n":
+        return None
+    k = j + 1
+    while k < len(text) and text[k] in " \t":
+        k += 1
+    if k < len(text) and text[k].isalnum():
+        return k
+    return None
+
+
+def _normalize_map(text: str, *, join_break_hyphen: bool) -> Tuple[str, List[Tuple[int, int]]]:
     """Normalized text and, for each output character, the original ``[start, end)`` it covers.
 
     Both the span and the page go through this before a match: NFKC, curly quotes
-    and apostrophes to straight, soft hyphens removed, a hyphen at a line break
-    joined (``distrib-\\nution`` becomes ``distribution``), and whitespace collapsed.
+    and apostrophes to straight, soft hyphens removed, whitespace collapsed.
+    A hyphen at a line break is either dropped (``distrib-\\nution`` becomes
+    ``distribution``) or kept and the break dropped (``end-to-\\nend`` stays
+    ``end-to-end``). Callers search both.
     """
     pieces: List[Tuple[str, int, int]] = []
     i, n = 0, len(text)
@@ -188,17 +207,14 @@ def _normalize_map(text: str) -> Tuple[str, List[Tuple[int, int]]]:
         if ch == "\u00ad":
             i += 1
             continue
-        if ch == "-" and i > 0 and text[i - 1].isalnum():
-            j = i + 1
-            if j < n and text[j] == "\r":
-                j += 1
-            if j < n and text[j] == "\n":
-                k = j + 1
-                while k < n and text[k] in " \t":
-                    k += 1
-                if k < n and text[k].isalnum():
-                    i = k
-                    continue
+        nxt = _break_hyphen(text, i)
+        if nxt is not None:
+            if join_break_hyphen:
+                i = nxt
+                continue
+            pieces.append(("-", i, i + 1))
+            i = nxt
+            continue
         j = i + 1
         while j < n and unicodedata.combining(text[j]):
             j += 1
@@ -227,10 +243,9 @@ def _normalize_map(text: str) -> Tuple[str, List[Tuple[int, int]]]:
     return "".join(out), spans
 
 
-def locate_span(page: str, needle: str) -> List[Tuple[int, int]]:
-    """Original-page offsets of ``needle`` after the shared normalization. Empty if it is not there."""
-    page_n, spans = _normalize_map(page)
-    needle_n, _needle_spans = _normalize_map(needle)
+def _locate_one(page: str, needle: str, *, join_break_hyphen: bool) -> List[Tuple[int, int]]:
+    page_n, spans = _normalize_map(page, join_break_hyphen=join_break_hyphen)
+    needle_n, _needle_spans = _normalize_map(needle, join_break_hyphen=join_break_hyphen)
     if not needle_n:
         return []
     hits = []
@@ -241,28 +256,27 @@ def locate_span(page: str, needle: str) -> List[Tuple[int, int]]:
             break
         a = spans[i][0]
         b = spans[i + len(needle_n) - 1][1]
-        if (a == 0 or not page[a - 1].isalnum()) and (b >= len(page) or not page[b].isalnum()) and not (
-                b < len(page) and page[b] in "'\u2019"):
+        if (a == 0 or not page[a - 1].isalnum()) and (b >= len(page) or not page[b].isalnum()):
             hits.append((a, b))
         start = i + max(1, len(needle_n))
     return hits
 
 
-def choose_occurrence(hits: List[Tuple[int, int]], hint: Optional[int]) -> Tuple[Optional[Tuple[int, int]], bool]:
-    """The occurrence nearest ``hint``. A tie, or no hint when there are several, is ambiguous.
+def locate_span(page: str, needle: str) -> List[Tuple[int, int]]:
+    """Original-page offsets of ``needle``. A line-break hyphen matches either joined or kept.
 
-    The earliest of a tie is kept, and the ambiguity is reported. It is not a silent first hit.
+    A match followed by an apostrophe is still a match. The actor check, not this
+    search, decides whether a possessive phrase is the defendant.
     """
-    if not hits:
-        return None, False
-    if len(hits) == 1:
-        return hits[0], False
-    if hint is None:
-        return hits[0], True
-    best = min(abs(start - hint) for start, _end in hits)
-    nearest = [hit for hit in hits if abs(hit[0] - hint) == best]
-    nearest.sort(key=lambda hit: hit[0])
-    return nearest[0], len(nearest) > 1
+    found = []
+    seen = set()
+    for join in (True, False):
+        for hit in _locate_one(page, needle, join_break_hyphen=join):
+            if hit not in seen:
+                seen.add(hit)
+                found.append(hit)
+    found.sort()
+    return found
 
 
 def _sentence_bounds(page: str, start: int, end: int) -> Tuple[int, int]:
@@ -288,50 +302,65 @@ def _plain(frame: dict, key: str) -> str:
     return ""
 
 
-def ground_frame(page: str, frame: dict) -> Tuple[Optional[dict], str, int]:
+def _inside(page: str, needle: str, sent_start: int, sent_end: int) -> Optional[Tuple[int, int]]:
+    if not needle:
+        return None
+    inner = [span for span in locate_span(page, needle) if sent_start <= span[0] and span[1] <= sent_end]
+    return inner[0] if inner else None
+
+
+def _occurrence_actor(page: str, sentence: str, sent_start: int, sent_end: int, actor: str, records: List[dict]):
+    """Who this copy of the quote is about: the model's actor if it sits here, else the clause subject."""
+    from state_machines.coding.workflow import clause_subject, match_actor
+    if actor and _inside(page, actor, sent_start, sent_end):
+        found = match_actor(actor, records)
+        return found["canonical"] if found else actor
+    found = match_actor(clause_subject(sentence), records)
+    return found["canonical"] if found else clause_subject(sentence)
+
+
+def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None) -> Tuple[Optional[dict], str, List[str]]:
     """Place a model's plain-text frame on ``page``.
 
-    Returns ``(frame, "", ambiguous)`` or ``(None, reason, ambiguous)``. ``reason``
-    is ``not_found`` when a span is not on the page, and ``other`` when the frame
-    has no quote or code. The hash and the offsets are computed here. A number the
-    model included is only a hint for which copy of a repeated span to keep.
+    Returns ``(frame, "", [])`` or ``(None, reason, problems)``. The hash and the
+    offsets are computed here. When the quote occurs more than once, each copy's
+    section verdict and resolved actor are compared. Copies that disagree are
+    ``ambiguous`` and the frame is dropped. Copies that agree keep the earliest.
     """
+    from state_machines.coding.sections import blocks_offender_products, classify
     quote = _plain(frame, "quote") or _plain(frame, "sentence")
-    code = frame.get("act") if isinstance(frame.get("act"), str) else (frame.get("act") or {}).get("code")
+    code = frame.get("act") if isinstance(frame.get("act"), str) else ""
     actor = _plain(frame, "actor")
     means = _plain(frame, "means")
     obj = _plain(frame, "object")
     level = _plain(frame, "means_level").upper()
+    records = records or []
     if not quote or not code:
-        return None, "other", 0
-    hint = frame.get("start") if isinstance(frame.get("start"), int) else None
-    ambiguous = 0
+        return None, "not_found", []
     hits = locate_span(page, quote)
-    chosen, amb = choose_occurrence(hits, hint)
-    ambiguous += int(amb)
-    if chosen is None:
-        return None, "not_found", ambiguous
-    sent_start, sent_end = _sentence_bounds(page, *chosen)
-    sentence = page[sent_start:sent_end]
-
-    def _inside(needle: str) -> Optional[Tuple[int, int]]:
-        nonlocal ambiguous
-        if not needle:
-            return None
-        inner = [(a, b) for a, b in locate_span(page, needle) if sent_start <= a and b <= sent_end]
-        pick, was_amb = choose_occurrence(inner, hint)
-        ambiguous += int(was_amb)
-        return pick
-
-    actor_at = _inside(actor) if actor else None
+    if not hits:
+        return None, "not_found", []
+    views = []
+    for hit in hits:
+        sent_start, sent_end = _sentence_bounds(page, *hit)
+        sentence = page[sent_start:sent_end]
+        blocked = blocks_offender_products(classify(sentence)["role"])
+        label = _occurrence_actor(page, sentence, sent_start, sent_end, actor, records)
+        views.append((blocked, label, sent_start, sent_end, sentence))
+    if len(views) > 1 and len({(blocked, label) for blocked, label, *_rest in views}) > 1:
+        return None, "ambiguous", []
+    blocked, _label, sent_start, sent_end, sentence = views[0]
+    if blocked:
+        return None, "section_filtered", []
+    actor_at = _inside(page, actor, sent_start, sent_end) if actor else None
     if actor and actor_at is None:
-        return None, "not_found", ambiguous
-    means_at = _inside(means) if means else None
+        return None, "not_found", []
+    means_at = _inside(page, means, sent_start, sent_end) if means else None
     if means and means_at is None:
-        return None, "not_found", ambiguous
-    object_at = _inside(obj) if obj else None
+        return None, "not_found", []
+    object_at = _inside(page, obj, sent_start, sent_end) if obj else None
     if obj and object_at is None:
-        return None, "not_found", ambiguous
+        return None, "not_found", []
     grounded = {
         "passage_hash": E.sha256_text(page),
         "sentence": {"text": sentence, "start": sent_start, "end": sent_end},
@@ -354,5 +383,5 @@ def ground_frame(page: str, frame: dict) -> Tuple[Optional[dict], str, int]:
         grounded["means"] = slot
     problems = verify_frame(grounded, page)
     if problems:
-        return None, "other", ambiguous
-    return grounded, "", ambiguous
+        return None, "verify_failed", problems
+    return grounded, "", []

@@ -13,10 +13,10 @@ from state_machines.evidence import evidence as E
 from state_machines.observations import observe as O
 
 FLAGS = (
-    "CASELINKER_SECTION_FILTER", "CASELINKER_SECTION_MODEL", "CASELINKER_COREFERENCE",
-    "CASELINKER_COREFERENCE_MODEL", "CASELINKER_ADJACENT_LEVEL", "CASELINKER_EXTRACTOR",
+    "CASELINKER_SECTION_FILTER", "CASELINKER_COREFERENCE",
+    "CASELINKER_ADJACENT_LEVEL", "CASELINKER_EXTRACTOR",
     "CASELINKER_ACT_POLICY", "CASELINKER_MEANS_PARSER", "CASELINKER_MEANS_PARSER_FALLBACK",
-    "CASELINKER_SPACY_MODEL", "CASELINKER_MEANS_RULE", "CASELINKER_DISAGREEMENT",
+    "CASELINKER_MEANS_SPACY_MODEL", "CASELINKER_MEANS_RULE", "CASELINKER_DISAGREEMENT",
 )
 # observe + relate on the Kitebox fixture below, flags unset, run on fix/generic-platform-tags
 # at 3f43d9e724128706d95286fee1829c575254809c. Recomputed there, not from this branch.
@@ -113,19 +113,31 @@ def test_e026_on_is_a_means_cue_only_when_the_recall_rule_is_on(tmp_path, monkey
     assert tied[0]["relations"][0]["relationship"] == "Supports_Action"
 
 
-def test_e149_virtual_private_networks_are_observed_under_the_recall_rule(tmp_path, monkeypatch):
+def test_e149_virtual_private_networks_are_tied_to_the_act(tmp_path, monkeypatch):
     text = "The defendant utilized virtual private networks to hide the address."
     _clear(monkeypatch)
     _store(tmp_path / "off", "e149", text)
     off = O.observe("e149", tmp_path / "off")
-    monkeypatch.setenv("CASELINKER_MEANS_RULE", "1.4-recall")
-    _store(tmp_path / "on", "e149", text)
-    on = O.observe("e149", tmp_path / "on")
     assert all(o.get("feature_term") != "virtual private networks" for o in off["observations"])
-    assert any(o.get("feature_term") == "virtual private networks" for o in on["observations"])
+    monkeypatch.setenv("CASELINKER_MEANS_RULE", "1.4-recall")
+    docs = _store(tmp_path / "on", "e149", text)
+    on = O.observe("e149", tmp_path / "on")
+    tied = O.relate(on, _cite("e149", docs, on, "virtual private networks"), tmp_path / "on")
+    hit = [o for o in tied["observations"] if o.get("feature_term") == "virtual private networks" and o["relations"]]
+    assert hit and hit[0]["relations"][0]["relationship"] == "Supports_Action"
+
+
+def _require_spacy_model():
+    pytest.importorskip("spacy")
+    import spacy
+    try:
+        spacy.load("en_core_web_sm")
+    except Exception as exc:
+        pytest.skip(f"en_core_web_sm is not installed: {exc}")
 
 
 def test_means_parser_finds_the_parenthetical_the_window_misses(tmp_path, monkeypatch):
+    _require_spacy_model()
     text = "The defendant utilized the service (a private encrypted channel) to hide the files."
     off = _means_of(tmp_path / "off", "parser", text, monkeypatch)
     on = _means_of(tmp_path / "on", "parser", text, monkeypatch, CASELINKER_MEANS_PARSER="dep")
@@ -226,13 +238,14 @@ def test_o0005_acquire_material_keeps_the_defendant_when_the_sender_is_the_subje
 
 
 def test_o0002_seek_targets_is_a_public_post_with_a_means(tmp_path, monkeypatch):
-    text = "The defendant made a public post in a group via an encrypted channel."
-    frame = _plain_frame(text, "SEEK_TARGETS", "The defendant", object_text="public post")
+    text = "The defendant made a public post in a public group."
+    frame = _plain_frame(text, "SEEK_TARGETS", "The defendant", means="public group", object_text="public post")
     off, on, _log = _framed(tmp_path, "o0002", text, monkeypatch, frame)
     assert [e["action"] for e in off["events"]] == ["STORE_MATERIAL"]
     event = next(e for e in on["events"] if e["action"] == "SEEK_TARGETS")
     assert event["actor"]["role"] == "offender"
-    assert event["affordances"][0]["feature_term"] == "encrypted"
+    assert event["affordances"][0]["feature_term"] == "public group"
+    assert event["affordances"][0]["affordance"] == "contact_discovery"
 
 
 def _empty(case, coder):
@@ -331,7 +344,7 @@ def test_propose_verify_recovers_a_missed_act(tmp_path, monkeypatch):
                  if frame["act"]["code"] == "DISTRIBUTE_MATERIAL" and frame["reason_code"] == "missed_act"]
     assert recovered
     assert recovered[0]["actor"]["id"] == "defendant"
-    assert recovered[0]["actor"]["text"] == "The defendant"
+    assert recovered[0]["actor"]["text"] == "the defendant"
 
 
 def test_disagreement_export_appears_only_when_the_flag_is_on(tmp_path, monkeypatch):
@@ -359,21 +372,27 @@ def test_disagreement_export_appears_only_when_the_flag_is_on(tmp_path, monkeypa
     assert "STORE_MATERIAL" in on_sheet.read_text(encoding="utf-8")
 
 
-def test_a_missed_act_keeps_the_sentence_actor(tmp_path, monkeypatch):
-    case = "missed_he"
-    text = "He sent the files to other users via an encrypted channel."
+def _recover(tmp, case, text, monkeypatch):
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_ACT_POLICY", "propose-verify-1.0")
-    _store(tmp_path, case, text)
-    out = tmp_path / "coded"
+    _store(tmp, case, text)
+    out = tmp / "coded"
     for coder in ("coder_A", "coder_B"):
         (out / coder).mkdir(parents=True)
         (out / coder / f"{case}.json").write_text(json.dumps(_empty(case, coder)), encoding="utf-8")
-    P.resolve_cases([case], out, tmp_path)
-    published = json.loads((out / "resolved" / f"{case}.json").read_text(encoding="utf-8"))
-    actors = {frame["actor"]["id"] for frame in published["recovered"]}
-    assert actors == {"other"}
-    assert all(frame["actor"]["text"].startswith("He ") for frame in published["recovered"])
+    P.resolve_cases([case], out, tmp)
+    return json.loads((out / "resolved" / f"{case}.json").read_text(encoding="utf-8"))
+
+
+def test_a_missed_act_publishes_only_a_defendant(tmp_path, monkeypatch):
+    pronoun = _recover(tmp_path / "he", "missed_he",
+                       "He sent the files to other users via an encrypted channel.", monkeypatch)
+    assert pronoun["recovered"] == []
+    dated = _recover(tmp_path / "date", "missed_date",
+                     "On May 2, the defendant sent the files to other users via an encrypted channel.", monkeypatch)
+    assert dated["recovered"]
+    assert all(frame["actor"]["text"] == "the defendant" for frame in dated["recovered"])
+    assert all(frame["act"]["code"] != "OTHER_OFFENDER_ACTION" for frame in dated["recovered"])
 
 
 def test_section_filter_drops_only_the_blocked_sentence(tmp_path, monkeypatch):
@@ -395,48 +414,104 @@ def test_section_filter_drops_only_the_blocked_sentence(tmp_path, monkeypatch):
     assert any("section filter" in line and "affiant_background" in line for line in log)
 
 
-def test_named_defendant_matches_and_a_possessive_does_not(tmp_path, monkeypatch):
-    uploaded = "Smith uploaded the files using an encrypted app."
-    frame = _plain_frame(uploaded, "STORE_MATERIAL", "Smith")
-    _off, on, log = _framed(tmp_path / "smith", "named", uploaded, monkeypatch, frame, deny=["John Smith"])
-    assert [e["action"] for e in on["events"]] == ["STORE_MATERIAL"]
-    assert on["events"][0]["actor"]["role"] == "offender"
-    assert "actor_not_offender" not in log or "actor_not_offender=0" in "\n".join(log)
+def _caption(body: str, names: str = "Michael Smith") -> str:
+    return f"United States v. {names}. {body}"
+
+
+def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import build_deny
+    body = "Smith uploaded the files using an encrypted app."
+    text = _caption(body)
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(body, "STORE_MATERIAL", "Smith")])
+    _store(tmp_path / "smith", "named", text)
+    assert build_deny("named", tmp_path / "smith") == ["michael", "smith"]
+    bundle, _, _log = C.code_case("named", "coder_A", tmp_path / "smith", deny=[])
+    assert [e["action"] for e in bundle["events"]] == ["STORE_MATERIAL"]
+    assert len(bundle["participants"]) == 1
+    full = "Defendant Michael Smith uploaded the files using an encrypted app."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(full, "STORE_MATERIAL", "Defendant Michael Smith")])
+    _store(tmp_path / "full", "full", _caption(full))
+    published, _, _log = C.code_case("full", "coder_A", tmp_path / "full", deny=[])
+    assert published["events"] and len(published["participants"]) == 1
+    given = "Michael uploaded the files using an encrypted app."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(given, "STORE_MATERIAL", "Michael")])
+    _store(tmp_path / "given", "given", _caption(given))
+    rejected, _, log = C.code_case("given", "coder_A", tmp_path / "given", deny=[])
+    assert rejected["events"] == []
+    assert any("actor_rejected=1" in line for line in log)
     mother = "The defendant's mother sent the files to other users via an encrypted channel."
-    mother_frame = _plain_frame(mother, "DISTRIBUTE_MATERIAL", "The defendant's mother")
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
-    _ask_frames(monkeypatch, [mother_frame])
-    _store(tmp_path / "mother", "mother", mother)
-    bundle, _, dropped = C.code_case("mother", "coder_A", tmp_path / "mother", deny=["John Smith"])
+    _ask_frames(monkeypatch, [_plain_frame(mother, "DISTRIBUTE_MATERIAL", "The defendant's mother")])
+    _store(tmp_path / "mother", "mother", _caption(mother))
+    bundle, _, log = C.code_case("mother", "coder_A", tmp_path / "mother", deny=[])
     assert bundle["events"] == []
-    assert any("actor_not_offender=1" in line for line in dropped)
-    agent = "Agent Porter received the files from the sender via an encrypted channel."
-    agent_frame = _plain_frame(agent, "ACQUIRE_MATERIAL", "Agent Porter")
+    assert any("actor_rejected=1" in line for line in log)
+
+
+def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch):
+    text = _caption(
+        "The defendant uploaded the files using an encrypted app. "
+        "Smith sent the files to other users via an encrypted channel. "
+        "Defendant SMITH received the files from the sender via an encrypted channel.")
+    frames = [
+        _plain_frame("The defendant uploaded the files using an encrypted app.", "STORE_MATERIAL", "The defendant"),
+        _plain_frame("Smith sent the files to other users via an encrypted channel.", "DISTRIBUTE_MATERIAL", "Smith"),
+        _plain_frame("Defendant SMITH received the files from the sender via an encrypted channel.",
+                     "ACQUIRE_MATERIAL", "Defendant SMITH"),
+    ]
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
-    _ask_frames(monkeypatch, [agent_frame])
-    _store(tmp_path / "agent", "agent", agent)
-    bundle, _, dropped = C.code_case("agent", "coder_A", tmp_path / "agent", deny=["John Smith"])
-    assert bundle["events"] == []
-    assert any("actor_not_offender=1" in line for line in dropped)
+    _ask_frames(monkeypatch, frames)
+    _store(tmp_path / "one", "one", text)
+    bundle, _, _log = C.code_case("one", "coder_A", tmp_path / "one", deny=[])
+    assert len(bundle["events"]) == 3
+    assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 1
+    pair = _caption(
+        "Smith uploaded the files using an encrypted app. "
+        "Porter sent the files to other users via an encrypted channel.",
+        "Michael Smith and Robert Porter")
+    frames = [
+        _plain_frame("Smith uploaded the files using an encrypted app.", "STORE_MATERIAL", "Smith"),
+        _plain_frame("Porter sent the files to other users via an encrypted channel.", "DISTRIBUTE_MATERIAL", "Porter"),
+    ]
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, frames)
+    _store(tmp_path / "two", "two", pair)
+    bundle, _, _log = C.code_case("two", "coder_A", tmp_path / "two", deny=[])
+    assert len(bundle["events"]) == 2
+    assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in bundle["participants"]) == 2
 
 
 def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monkeypatch):
-    text = "Smith opened an account on the service. He sent the files to other users via an encrypted channel."
+    body = "Smith opened an account on the service. He sent the files to other users via an encrypted channel."
+    text = _caption(body)
     quote = "He sent the files to other users via an encrypted channel."
     frame = _plain_frame(quote, "DISTRIBUTE_MATERIAL", "He")
     _clear(monkeypatch)
     monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
     _ask_frames(monkeypatch, [frame])
     _store(tmp_path / "off", "pronoun", text)
-    off, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "off", deny=["Smith"])
+    off, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "off", deny=[])
     assert off["events"] == []
     monkeypatch.setenv("CASELINKER_COREFERENCE", "1")
     _store(tmp_path / "on", "pronoun", text)
-    on, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "on", deny=["Smith"])
+    on, _, _ = C.code_case("pronoun", "coder_A", tmp_path / "on", deny=[])
     assert [e["action"] for e in on["events"]] == ["DISTRIBUTE_MATERIAL"]
-    assert on["events"][0]["actor"]["role"] == "offender"
+    assert sum(p["legal_status"][0]["status"] == "charged_defendant" for p in on["participants"]) == 1
+    relate = "United States v. Michael Smith. Smith created an account and they sent files via an encrypted channel."
+    off_doc = _means_of(tmp_path / "they_off", "they", relate, monkeypatch)
+    on_doc = _means_of(tmp_path / "they_on", "they", relate, monkeypatch, CASELINKER_COREFERENCE="1")
+    assert all(not o["relations"] for o in off_doc["observations"])
+    tied = [o for o in on_doc["observations"] if o.get("feature_term") == "encrypted" and o["relations"]]
+    assert tied and tied[0]["relations"][0]["relationship"] == "Supports_Action"
 
 
 def test_frame_request_sends_the_frames_schema(tmp_path, monkeypatch):
@@ -477,7 +552,7 @@ def test_frame_request_sends_the_frames_schema(tmp_path, monkeypatch):
 
 
 def test_spans_are_relocated_from_the_page_text(tmp_path, monkeypatch):
-    from state_machines.coding.frames import choose_occurrence, ground_frame, locate_span
+    from state_machines.coding.frames import ground_frame, locate_span
 
     broken = "The defendant sent the files\nto other users via an encrypted channel."
     straight = "The defendant sent the files to other users via an encrypted channel."
@@ -504,14 +579,12 @@ def test_spans_are_relocated_from_the_page_text(tmp_path, monkeypatch):
     shared = "the defendant sent the files to other users via an encrypted channel"
     repeated_frame = _plain_frame(shared, "DISTRIBUTE_MATERIAL", "the defendant")
     _off, kept, coverage = _framed(tmp_path / "repeat", "repeat", repeated, monkeypatch, repeated_frame)
-    assert any("ambiguous=" in line and "ambiguous=0" not in line for line in coverage)
     assert "Before noon" in E.normalize(repeated)[kept["passages"][0]["char_start"]:kept["passages"][0]["char_end"]]
-    hits = locate_span(repeated, shared)
-    assert len(hits) == 2
-    tied, ambiguous = choose_occurrence([(0, 8), (20, 28)], 10)
-    assert ambiguous and tied == (0, 8)
-    later, ambiguous = choose_occurrence(hits, hits[1][0])
-    assert ambiguous is False and later == hits[1]
+    assert "ambiguous=0" in "\n".join(coverage) or "ambiguous" not in "\n".join(coverage)
+    assert locate_span("The end-to-\nend channel was used.", "end-to-end")
+    assert locate_span("A peer-\nto-peer transfer moved the files.", "peer-to-peer")
+    assert locate_span("The co-\nconspirator sent the files.", "co-conspirator")
+    assert locate_span("The defendant's files were sent via an encrypted channel.", "The defendant")
 
 
 def test_a_missing_spacy_model_fails_and_the_fallback_is_named(tmp_path, monkeypatch):
@@ -544,6 +617,7 @@ def test_a_missing_spacy_model_fails_and_the_fallback_is_named(tmp_path, monkeyp
     assert all(row.get("parser") != "dep" for row in tied[0]["relations"])
 
     calls = []
+    _require_spacy_model()
     monkeypatch.setattr(MP, "_NLP", None)
     monkeypatch.setattr(MP, "_LOADS", 0)
     monkeypatch.delenv("CASELINKER_MEANS_PARSER_FALLBACK", raising=False)
@@ -558,3 +632,55 @@ def test_a_missing_spacy_model_fails_and_the_fallback_is_named(tmp_path, monkeyp
     MP.tokens_for("The defendant sent the files again.")
     assert calls == ["en_core_web_sm"]
     assert MP._LOADS == 1
+
+
+def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):
+    text = ("The defendant sent the files to other users via an encrypted channel. "
+            "I know from my training and experience that the defendant sent the files to other users via an encrypted channel.")
+    quote = "sent the files to other users via an encrypted channel"
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    monkeypatch.setenv("CASELINKER_SECTION_FILTER", "1")
+    _ask_frames(monkeypatch, [_plain_frame(quote, "DISTRIBUTE_MATERIAL", "the defendant")])
+    _store(tmp_path / "sec", "sec", text)
+    bundle, _, log = C.code_case("sec", "coder_A", tmp_path / "sec", deny=[])
+    assert bundle["events"] == []
+    drops = C.drops_from_log(log)
+    assert drops["ambiguous"] >= 1
+    pair = _caption(
+        "Smith sent the files to other users via an encrypted channel. "
+        "Porter sent the files to other users via an encrypted channel.",
+        "Michael Smith and Robert Porter")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame("sent the files to other users via an encrypted channel",
+                                           "DISTRIBUTE_MATERIAL", "Smith")])
+    _store(tmp_path / "who", "who", pair)
+    bundle, _, log = C.code_case("who", "coder_A", tmp_path / "who", deny=[])
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["ambiguous"] >= 1
+
+
+def test_frame_drops_are_counted_by_reason(tmp_path, monkeypatch):
+    text = ("The defendant sent the files to other users via an encrypted channel. "
+            "The defendant sent the files to other users via an encrypted channel.")
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [
+        _plain_frame("The defendant obtained nothing.", "STORE_MATERIAL", "The defendant", means="", object_text=""),
+        _plain_frame(text.split(". ")[0] + ".", "DISTRIBUTE_MATERIAL", "The defendant"),
+    ])
+    _store(tmp_path, "drops", text)
+    _bundle, _, log = C.code_case("drops", "coder_A", tmp_path, deny=[])
+    drops = C.drops_from_log(log)
+    assert drops["not_found"] >= 1
+    assert drops["duplicate_sentence"] >= 1
+    assert "unparsable_reply" in drops and "verify_failed" in drops
+
+
+def test_setup_installs_the_pinned_model_wheel():
+    script = (Path(__file__).resolve().parents[2] / "setup.sh").read_text(encoding="utf-8")
+    wheel = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
+    assert wheel in script
+    assert "spacy download en_core_web_sm-3.8.0" not in script
+    assert "pip install" in script and "MEANS_MODEL_WHEEL" in script

@@ -1,8 +1,8 @@
 """Propose-then-verify resolution, selected by setting ``CASELINKER_ACT_POLICY``.
 
 ``CASELINKER_ACT_POLICY=propose-verify-1.0`` selects it. The default is
-``intersection-1.0``, and ``resolve_case`` then returns exactly what
-``coding.resolve.resolve`` returns. That function is not modified.
+``intersection-1.0``, and ``pipeline.resolve_cases`` then calls
+``coding.resolve.resolve``. That function is not modified.
 
 Coder 1 proposes frames. Coder 2 accepts a frame, rejects it with a reason
 code, or corrects one slot. A third pass looks only at sentences neither coder
@@ -13,7 +13,6 @@ corrected acts are machine products, not adjudicated ones.
 from __future__ import annotations
 
 import os
-import re
 from typing import Callable, Iterable, List, Optional, Sequence
 
 POLICY_ID = "propose-verify-1.0"
@@ -119,23 +118,6 @@ def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
     return missed, means_ids
 
 
-def actor_from_sentence(sentence: str) -> dict:
-    """The head noun phrase of ``sentence``, not a fixed defendant label.
-
-    A sentence whose subject is someone else keeps that subject. ``the defendant``
-    and ``the accused`` are the defendant. A possessive (``the defendant's mother``)
-    is not.
-    """
-    text = sentence.strip()
-    named = re.match(r"((?:[Tt]he |[Aa]n? )?(?:defendant|accused))\b", text)
-    if named and not text[named.end():named.end() + 1] in "'\u2019":
-        return {"text": named.group(1), "id": "defendant"}
-    other = re.match(r"(Minor Victim \d+|Victim \d+|Agent [A-Z][a-z]+)", text)
-    if other:
-        return {"text": other.group(1), "id": "other"}
-    return {"text": text.split(",")[0][:80], "id": "other"}
-
-
 def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dict:
     """Run propose-then-verify on two coder bundles.
 
@@ -189,20 +171,23 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
     covered += [(pid, start, end) for pid, start, end, _event in b_events]
     missed, means_ids = _missed_on_pages(pages, covered)
 
+    from state_machines.coding.workflow import clause_subject, defendant_records_in, match_actor
+    records = []
+    seen = set()
+    for page in pages or []:
+        for record in defendant_records_in(page):
+            if record["key"] not in seen:
+                seen.add(record["key"])
+                records.append(record)
+
     def recover(sent):
-        actor = actor_from_sentence(sent.get("text") or "")
+        subject = clause_subject(sent.get("text") or "")
+        found = match_actor(subject, records)
+        if not found:
+            return []
         return [{"frame_id": f"recovered:{sent['sentence_id']}:{code}", "act": {"code": code},
-                 "actor": actor} for code in sent.get("codes") or []]
+                 "actor": {"id": "defendant", "text": found["canonical"]}} for code in sent.get("codes") or []]
 
     return propose_verify(proposals, reviews, missed=missed, means_sentence_ids=means_ids, recover=recover)
 
 
-def resolve_case(a: dict, b: dict, text_root=None, settle_codes: bool = False):
-    """The selected act policy. The default is intersection, unchanged."""
-    policy = selected_policy()
-    if policy == INTERSECTION_ID:
-        from state_machines.coding.resolve import resolve
-        return resolve(a, b, text_root, settle_codes)
-    if policy == POLICY_ID:
-        return from_bundles(a, b)
-    raise ValueError(f"unknown act policy {policy}")

@@ -19,8 +19,8 @@ from state_machines.graphs.release import DATA, build
 
 
 def _off(monkeypatch):
-    for name in ("CASELINKER_SECTION_FILTER", "CASELINKER_SECTION_MODEL", "CASELINKER_COREFERENCE",
-                 "CASELINKER_COREFERENCE_MODEL", "CASELINKER_ADJACENT_LEVEL", "CASELINKER_EXTRACTOR",
+    for name in ("CASELINKER_SECTION_FILTER", "CASELINKER_COREFERENCE",
+                 "CASELINKER_ADJACENT_LEVEL", "CASELINKER_EXTRACTOR",
                  "CASELINKER_ACT_POLICY"):
         monkeypatch.delenv(name, raising=False)
 
@@ -43,48 +43,28 @@ def test_section_rules_label_each_role(text, role):
     assert S.classify(text)["role"] == role
 
 
-def test_section_label_is_stored_on_the_passage():
-    labeled = S.label_passage({"passage_id": "p1"}, "PLEA AGREEMENT. The defendant admits the conduct as charged.")
-    assert labeled["section_role"] == "plea_admissions"
-    assert labeled["section_rule"] and "passage_id" in labeled
-
-
-def test_section_model_is_off_unless_asked(monkeypatch):
+def test_a_heading_word_inside_a_sentence_is_not_a_heading(monkeypatch):
     _off(monkeypatch)
-    calls = []
-
-    def complete(text):
-        calls.append(text)
-        return "sentencing_argument"
-
-    plain = "The filing continues with ordinary narrative about a meeting downtown yesterday afternoon."
-    assert S.classify(plain, model=complete)["role"] == "unclassified"
-    assert calls == []
-    monkeypatch.setenv("CASELINKER_SECTION_MODEL", "1")
-    assert S.classify(plain, model=complete)["role"] == "sentencing_argument"
-    assert calls == [plain]
-    assert S.classify(plain, model=lambda _t: "not-a-role")["rule"] == "model_rejected"
-    # a rule hit does not call the model
-    calls.clear()
-    assert S.classify("Tor is a network that routes packets through relays.", model=complete)["role"] == "technology_explainer"
-    assert calls == []
-
-
-def test_tor_explainer_yields_no_act_and_no_means(monkeypatch):
-    _off(monkeypatch)
-    text = ("Tor is a network that routes packets through relays. "
-            "The defendant initiated contact with Minor Victim 1 through the Kitebox application.")
-    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
-    open_path = S.passage_products(text)
-    assert open_path["section"]["role"] == "technology_explainer"
-    assert open_path["acts"] and open_path["means"]
     monkeypatch.setenv("CASELINKER_SECTION_FILTER", "1")
-    blocked = S.passage_products(text)
-    # The explainer sentence is dropped. The contact sentence on the same page is not.
-    assert any(frame["act"]["code"] == "INITIATE_CONTACT" for frame in blocked["acts"])
-    assert all("Tor is a network" not in frame["sentence"]["text"] for frame in blocked["acts"])
+    sentences = (
+        "Technology companies stored the files on a server in another district.",
+        "Affiant observed the defendant send the files to other users.",
+        "Definitions aside, the defendant sent the files to other users.",
+        "A VPN is what the defendant used to send the files.",
+    )
+    for sentence in sentences:
+        assert S.blocks_offender_products(S.classify(sentence)["role"]) is False
+
+
+def test_tor_explainer_sentence_is_blocked_and_the_act_sentence_is_not(monkeypatch):
+    _off(monkeypatch)
+    monkeypatch.setenv("CASELINKER_SECTION_FILTER", "1")
+    tor = "Tor is a network that routes packets through relays."
+    act = "The defendant initiated contact with Minor Victim 1 through the Kitebox application."
+    assert S.blocks_offender_products(S.classify(tor)["role"]) is True
+    assert S.blocks_offender_products(S.classify(act)["role"]) is False
     affiant = "I know from my training and experience that the defendant initiated contact with Minor Victim 1 through Kitebox."
-    assert S.passage_products(affiant)["acts"] == [] and S.passage_products(affiant)["means"] == []
+    assert S.blocks_offender_products(S.classify(affiant)["role"]) is True
 
 
 def test_section_filter_defaults_off(monkeypatch):
@@ -113,24 +93,15 @@ def test_they_includes_smith_and_affiant_i_is_not_the_defendant(monkeypatch):
     assert "defendant" not in i_mention["actor_ids"]
 
 
-def test_coreference_off_resolves_nothing_and_model_ids_stay_on_the_list(monkeypatch):
+def test_coreference_off_resolves_nothing(monkeypatch):
     _off(monkeypatch)
     actors = CF.make_inventory(defendant="Smith")
     text = "Smith created an account and they communicated via an encrypted channel."
-    calls = []
-
-    def complete(sentence, ids):
-        calls.append(ids)
-        return [{"text": "they", "start": sentence.index("they"), "end": sentence.index("they") + 4,
-                 "actor_id": "not-on-the-list", "confidence": 0.99},
-                {"text": "Smith", "start": 0, "end": 5, "actor_id": "defendant", "confidence": 0.6}]
-
-    assert CF.resolve_mentions(text, actors, complete=complete) == []
-    assert calls == []
-    monkeypatch.setenv("CASELINKER_COREFERENCE_MODEL", "1")
-    kept = CF.resolve_mentions(text, actors, complete=complete)
-    assert calls and all(m["actor_ids"] == ["defendant"] for m in kept)
-    assert all("not-on-the-list" not in m["actor_ids"] for m in kept)
+    assert CF.resolve_mentions(text, actors) == []
+    monkeypatch.setenv("CASELINKER_COREFERENCE", "1")
+    mentions = CF.resolve_mentions(text, actors)
+    they = next(m for m in mentions if m["text"].lower() == "they")
+    assert "defendant" in they["actor_ids"]
 
 
 def test_resolved_they_is_an_offender_for_the_subject_test(monkeypatch):
@@ -280,10 +251,11 @@ def test_intersection_outputs_are_unchanged(monkeypatch):
     from tests.pacer.test_resolve import _coders
 
     a, b = _coders()
-    assert PV.resolve_case(a, b) == resolve(a, b)
-    assert all("produced_by" not in event for event in resolve(a, b)[0]["events"])
+    bundle, _report = resolve(a, b)
+    assert all("produced_by" not in event for event in bundle["events"])
     monkeypatch.setenv("CASELINKER_ACT_POLICY", "propose-verify-1.0")
-    produced = PV.resolve_case(a, b)
+    assert PV.selected_policy() == "propose-verify-1.0"
+    produced = PV.from_bundles(a, b)
     assert produced["act_policy"] == "propose-verify-1.0"
     assert all(item["produced_by"] == "propose-verify-1.0" for item in produced["published"])
 
@@ -539,7 +511,7 @@ def test_new_release_refuses_an_empty_registry(tmp_path, monkeypatch):
     cases.mkdir(parents=True)
     (cases / "synth_case.json").write_text("{}", encoding="utf-8")
     with pytest.raises(SystemExit, match="capability_registry_loaded"):
-        build("rel", data_root=tmp_path, allow_empty_registry=False)
+        build("rel", data_root=tmp_path, require_registry=True, allow_empty_registry=False)
     assert not (tmp_path / "rel" / "graphs").exists()
 
 
@@ -567,5 +539,24 @@ def test_allow_empty_registry_records_the_flag(tmp_path, monkeypatch):
     monkeypatch.setattr("state_machines.trajectories.affordances.load", lambda paths=None: {"platforms": {}})
     bundle = _adjudicated(F.build()[0])
     root = _release(tmp_path, bundle, release="empty-reg")
-    manifest = build("empty-reg", data_root=root, text_root=tmp_path / "text", allow_empty_registry=True)
+    manifest = build("empty-reg", data_root=root, text_root=tmp_path / "text",
+                     allow_empty_registry=True, require_registry=True)
+    assert manifest["allow_empty_registry"] is True
     assert manifest["capability_registry_loaded"] is False
+
+
+def test_flags_off_manifest_has_the_base_keys(tmp_path, monkeypatch):
+    pytest.importorskip("case_uco")
+    from tests.pacer import fixtures as F
+    from tests.pacer.test_release import _adjudicated, _release
+
+    _off(monkeypatch)
+    monkeypatch.setattr("state_machines.trajectories.affordances.load", lambda paths=None: {"platforms": {"one": {}}})
+    bundle = _adjudicated(F.build()[0])
+    root = _release(tmp_path, bundle, release="base-keys")
+    manifest = build("base-keys", data_root=root, text_root=tmp_path / "text")
+    assert set(manifest) == {
+        "manifest_version", "release_id", "schema_version", "codebook_version",
+        "derivation_rule", "act_policy", "capability_registry_loaded", "extension",
+        "sdk", "review_mode", "adjudicated", "cases",
+    }

@@ -1,9 +1,8 @@
 """Label a passage by the role it plays in a filing.
 
-Cheap rules first: a heading, an affiant's training boilerplate, a technology
-definition ("Tor is…", a numbered definition). An optional local model is
-consulted only when ``CASELINKER_SECTION_MODEL=1`` and the caller passes a
-``complete`` callable. Nothing here calls a model on its own.
+Cheap rules first: a real heading, an affiant's training boilerplate, a technology
+definition ("Tor is a…", a numbered definition). A sentence that merely starts
+with those words is not a heading. Nothing here calls a model.
 
 The label is stored on the passage dict the new preprocessing path uses. It is
 not a schema-2.0 field and it is not written into a release bundle.
@@ -17,9 +16,7 @@ from __future__ import annotations
 
 import os
 import re
-from typing import Callable, Optional
-
-from state_machines.evidence import evidence as E
+from typing import Optional
 
 ROLES = (
     "statement_of_offense",
@@ -41,8 +38,8 @@ _HEADING = (
     ("charging_allegations", re.compile(r"^\s*(?:indictment|criminal complaint|information|the grand jury charges)\b", re.I)),
     ("sentencing_argument", re.compile(r"^\s*sentencing\b", re.I)),
     ("legal_standard", re.compile(r"^\s*(?:legal standard|applicable law)\b", re.I)),
-    ("technology_explainer", re.compile(r"^\s*(?:technology|definitions)\b", re.I)),
-    ("affiant_background", re.compile(r"^\s*(?:affiant|background and training|training and experience)\b", re.I)),
+    ("technology_explainer", re.compile(r"^\s*(?:technology|definitions)\s*\.?\s*$", re.I)),
+    ("affiant_background", re.compile(r"^\s*(?:affiant|background and training|training and experience)\s*\.?\s*$", re.I)),
 )
 # Content cues outrank a document heading: an explainer pasted under "statement of facts"
 # is still an explainer. The cues are specific so a factual sentence does not trip them.
@@ -52,7 +49,7 @@ _CONTENT = (
                 r"|\bI (?:am|have been) (?:a |an )?(?:special agent|task force officer|police officer)\b", re.I)),
     ("technology_explainer", "technology_definition",
      re.compile(r"(?:^|\n)\s*(?:\d+\.\s+|\([a-z]\)\s+|\([ivx]+\)\s+)?"
-                r"(?:Tor|A VPN|VPNs|A virtual private network|The Onion Router)\b[^.]*\b(?:is|are|routes|refers to)\b", re.I)),
+                r"(?:Tor|A VPN|VPNs|A virtual private network|The Onion Router)\b[^.]*\b(?:is an?|are|routes|refers to)\b", re.I)),
     ("technology_explainer", "routes_packets", re.compile(r"\b(?:Tor|VPN) routes packets\b", re.I)),
     ("legal_standard", "legal_standard",
      re.compile(r"\bprobable cause to believe\b|\belements of the offense\b|\bthe government must prove\b|\bas a matter of law\b", re.I)),
@@ -69,8 +66,12 @@ def section_filter_enabled() -> bool:
     return os.environ.get("CASELINKER_SECTION_FILTER") == "1"
 
 
-def section_model_enabled() -> bool:
-    return os.environ.get("CASELINKER_SECTION_MODEL") == "1"
+def _is_heading(text: str) -> bool:
+    """A heading line, not a sentence that happens to start with a heading word."""
+    stripped = (text or "").strip()
+    if not stripped or len(stripped) > 80 or re.search(r"[.!?]", stripped):
+        return False
+    return True
 
 
 def _pack(role: str, rule: str, confidence: float) -> dict:
@@ -91,21 +92,12 @@ def _content_hit(text: str) -> Optional[tuple]:
     return None
 
 
-def _from_model(raw) -> dict:
-    if isinstance(raw, dict):
-        role, confidence = str(raw.get("role", "")), float(raw.get("confidence", 0.6))
-    else:
-        role, confidence = str(raw).strip(), 0.6
-    if role not in ROLES:
-        return _pack("unclassified", "model_rejected", 0.0)
-    return _pack(role, "local_model", confidence)
+def classify(text: str, heading: Optional[str] = None) -> dict:
+    """The passage's role.
 
-
-def classify(text: str, heading: Optional[str] = None, model: Optional[Callable] = None) -> dict:
-    """The passage's role. ``model`` is called only when the model flag is on and no rule matched.
-
-    A blocked-role content cue wins over a document heading, so a technology
-    definition filed inside a statement of facts stays a technology explainer.
+    Heading rules apply to a heading argument or to a heading line, not to a
+    sentence. A blocked-role content cue still wins over a document heading, so
+    a technology definition filed inside a statement of facts stays an explainer.
     """
     content = _content_hit(text)
     if content and content[0] in BLOCKED_ROLES:
@@ -116,21 +108,11 @@ def classify(text: str, heading: Optional[str] = None, model: Optional[Callable]
     if content:
         return _pack(content[0], content[1], 0.9)
     opened = _heading_role(text)
-    if opened:
+    # A document heading may open a longer passage. The short blocked headings
+    # match only when the line is the heading itself.
+    if opened and (opened not in BLOCKED_ROLES or _is_heading(text)):
         return _pack(opened, "heading", 0.9)
-    if section_model_enabled() and model is not None:
-        return _from_model(model(text))
     return _pack("unclassified", "none", 0.0)
-
-
-def label_passage(passage: dict, text: str, heading: Optional[str] = None, model: Optional[Callable] = None) -> dict:
-    """A copy of ``passage`` with the section label stored on it. The input is not mutated."""
-    label = classify(text, heading=heading, model=model)
-    out = dict(passage)
-    out["section_role"] = label["role"]
-    out["section_rule"] = label["rule"]
-    out["section_confidence"] = label["confidence"]
-    return out
 
 
 def blocks_offender_products(role: str, *, enabled: Optional[bool] = None) -> bool:
@@ -142,34 +124,3 @@ def blocks_offender_products(role: str, *, enabled: Optional[bool] = None) -> bo
     return bool(enabled) and role in BLOCKED_ROLES
 
 
-def passage_products(text: str, *, heading: Optional[str] = None) -> dict:
-    """Acts and stated means in one passage, after the section filter.
-
-    Acts come from the frame extractor, which itself stays empty unless
-    ``CASELINKER_EXTRACTOR=frame-1.0``. Means come from the current stated-means
-    rule. A blocked sentence yields neither. The passage label is still returned
-    so the passage stays in the record as context.
-    """
-    from state_machines.coding.frames import extract_frames
-    from state_machines.observations.observe import _means, features_in, platforms_in, sentences
-
-    label = classify(text, heading=heading)
-    digest = E.sha256_text(text)
-    acts, means = [], []
-    for start, end in sentences(text):
-        sentence = text[start:end]
-        # One explainer or affiant sentence does not blank the rest of the passage.
-        if blocks_offender_products(classify(sentence)["role"]):
-            continue
-        acts.extend(extract_frames(sentence, page_text=text, sentence_start=start, passage_hash=digest))
-        for _cls, phrase, a, b in features_in(sentence):
-            hit = _means("feature", sentence, {"feature_term": phrase})
-            if hit:
-                means.append({"kind": "feature", "term": phrase, "relationship": hit[0], "cue": hit[1],
-                              "start": start + a, "end": start + b, "level": "C"})
-        for name, a, b in platforms_in(sentence):
-            hit = _means("platform", sentence, {"named_as": name})
-            if hit:
-                means.append({"kind": "platform", "term": name, "relationship": hit[0], "cue": hit[1],
-                              "start": start + a, "end": start + b, "level": "stated-platform"})
-    return {"section": label, "acts": acts, "means": means}

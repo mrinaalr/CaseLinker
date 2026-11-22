@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from collections import Counter
 from pathlib import Path
@@ -99,7 +100,8 @@ def require_loaded_registry(allow_empty_registry: bool = False) -> bool:
 def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] = None,
           deny_lists: Optional[Dict[str, List[str]]] = None, allow_unreviewed: bool = False,
           mode: str = "adjudicated", observations: bool = False, coders_root: Optional[Path] = None,
-          allow_empty_registry: bool = False) -> dict:
+          allow_empty_registry: bool = False, require_registry: bool = False,
+          frame_drops: Optional[dict] = None) -> dict:
     """Validate, derive, emit and SHACL-check every bundle of a release; write the manifest.
 
     ``observations`` also reads every page of each case for the platforms and features it names
@@ -111,7 +113,10 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     # A new release records whether the registry loaded. pacer-v1 was built when it did not;
     # reading that release does not come through here. The check is before the graph
     # libraries load, so a refusal does not depend on them.
-    loaded = require_loaded_registry(allow_empty_registry)
+    loaded = _registry_loaded()
+    if require_registry and not loaded and not allow_empty_registry:
+        raise SystemExit("refusing to build a release with capability_registry_loaded false; "
+                         "pass --allow-empty-registry to build one anyway")
     from state_machines.evidence.validate import release_errors
     from state_machines.graphs.emit import evidence_graph, observation_graph, serialize, trajectory_graph
     from state_machines.graphs.shacl import validation_report
@@ -190,11 +195,16 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
         "capability_registry_loaded": loaded,
         "extension": EXTENSION.name,
         "sdk": sdk_pin(),
-        "means_parser": _means_parser_record(),
         "review_mode": "preview" if allow_unreviewed else mode,
         "adjudicated": all(set(c["review"]) <= {"adjudicated"} for c in cases),
         "cases": cases,
     }
+    if os.environ.get("CASELINKER_MEANS_PARSER") == "dep":
+        manifest["means_parser"] = _means_parser_record()
+    if os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0" and frame_drops is not None:
+        manifest["frame_drops"] = frame_drops
+    if allow_empty_registry:
+        manifest["allow_empty_registry"] = True
     (root / "manifest.json").write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     from state_machines.trajectories.payload import build_payload
     (root / "lifecycle.json").write_text(json.dumps(build_payload(root, from_bundles=True), sort_keys=True) + "\n",

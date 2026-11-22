@@ -130,7 +130,7 @@ Each item is one question with a fixed set of answers that `apply` carries out:
 
 ## Act extraction v2
 
-A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless it is set. With the flags unset, resolution is `intersection-1.0` and a release is built as before. The one exception is a new release: `graphs/release.py build` refuses to write one when the capability registry has no platforms, unless `--allow-empty-registry` is passed. Reading `pacer-v1` does not build, so that refusal does not apply to it.
+A second path for section labels, actor ids, event frames, propose-then-verify, disagreement sheets, a quote check and a case-id preflight. Every flag is off unless it is set. With the flags unset, resolution is `intersection-1.0` and a release is built as before. A release refuses an empty capability registry only when `require_registry` is set; `--allow-empty-registry` records that it was allowed and builds anyway. Reading `pacer-v1` does not build.
 
 | Flag or mode | Default | Pipeline function it changes |
 |---|---|---|
@@ -139,7 +139,7 @@ A second path for section labels, actor ids, event frames, propose-then-verify, 
 | `CASELINKER_ADJACENT_LEVEL` | off | `observe.relate` writes `adjacent_sentence` from `coreference.adjacent_links`, kept out of the means relations |
 | `CASELINKER_EXTRACTOR` | unset | `coder.code_case` still calls each coder's own model, with the frames schema and prompt. The model returns plain text (act code, actor, object, quote, means, means level). `acts_from_model_frames` stamps the page hash, re-locates each span, and drops a frame whose span is not on the page or whose actor is not the defendant. The actor matches the head phrase exactly: `the defendant`, `the accused`, the caption name or surname, or `defendant <Name>`. A pronoun matches only when `CASELINKER_COREFERENCE=1`. `extract_frames` is not either coder |
 | `CASELINKER_ACT_POLICY` | `intersection-1.0` | `pipeline.resolve_cases` calls `propose_verify.from_bundles`, including the missed-act pass when page text is available |
-| `CASELINKER_MEANS_PARSER` | unset | `observe.relate` calls `means_parse.instrument_means` when the five-word window misses. `dep` loads `en_core_web_sm` once (override with `CASELINKER_SPACY_MODEL`) and `pipeline preflight` loads it too. A model that cannot load raises. `CASELINKER_MEANS_PARSER_FALLBACK=1` uses the small tokenizer and records `parser: fallback` |
+| `CASELINKER_MEANS_PARSER` | unset | `observe.relate` calls `means_parse.instrument_means` when the five-word window misses. `dep` loads `en_core_web_sm` once (override with `CASELINKER_MEANS_SPACY_MODEL`) and `pipeline preflight` loads it too. A model that cannot load raises. `CASELINKER_MEANS_PARSER_FALLBACK=1` uses the small tokenizer and records `parser: fallback` |
 | `CASELINKER_MEANS_RULE` | unset | `observe.features_in` and `observe._means` also match `virtual private network(s)`, `VPN(s)`, and `on` / `via` after a conduct verb |
 | `CASELINKER_DISAGREEMENT` | off | `pipeline.resolve_cases` writes the adjudication sheet from `disagreement.rows_from_intersection` or `rows_from_propose_verify` |
 

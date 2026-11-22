@@ -67,13 +67,16 @@ echo ""
 echo "Installing dependencies ($REQS)..."
 "$VPY" -m pip install $REQS
 
-# Download spaCy English model (required for NER)
-echo ""
-echo "Downloading spaCy English model (en_core_web_sm)..."
-if ! "$VPY" -m spacy download en_core_web_sm-3.8.0; then
-    echo "spaCy model en_core_web_sm-3.8.0 did not install."
-    echo "Install it with: python -m spacy download en_core_web_sm-3.8.0"
-    exit 1
+# The means parser and ingest NER use this model. Install the pinned wheel.
+# A versioned download name is not a package spaCy 3.8.11 can resolve.
+MEANS_MODEL_WHEEL="https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
+if [ "${1:-}" != "--core" ]; then
+    echo ""
+    echo "Installing spaCy English model (en_core_web_sm 3.8.0)..."
+    if ! "$VPY" -m pip install "$MEANS_MODEL_WHEEL"; then
+        echo "spaCy model en_core_web_sm-3.8.0 did not install."
+        exit 1
+    fi
 fi
 
 echo ""

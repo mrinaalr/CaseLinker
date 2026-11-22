@@ -3,12 +3,10 @@
 Stanza's neural coreference is a poor fit here: the actors are already a closed
 list (the defendant from the caption, co-offenders, victims by the record's own
 label, the affiant, agents, and the platforms and accounts the inventory names).
-A deterministic linker over that list is the same on every run. An optional
-local model may only choose an id from that same list;
-any other id is dropped. The model runs only when ``CASELINKER_COREFERENCE_MODEL=1``
-and the caller passes ``complete``. Neither flag calls out on its own.
+A deterministic linker over that list is the same on every run. Names match
+without regard to case. The flag does not call out on its own.
 
-Both flags are off by default. With them off, ``resolve_mentions`` returns nothing
+The flag is off by default. With it off, ``resolve_mentions`` returns nothing
 and the current subject test in ``observe._means`` is untouched.
 
 Names stay on the inventory the caller holds in memory. A mention stores an
@@ -37,10 +35,6 @@ _PERSON = re.compile(r"\b(?:he|she|the defendant|the affiant|the agent|agents)\b
 
 def coreference_enabled() -> bool:
     return os.environ.get("CASELINKER_COREFERENCE") == "1"
-
-
-def coreference_model_enabled() -> bool:
-    return os.environ.get("CASELINKER_COREFERENCE_MODEL") == "1"
 
 
 def adjacent_level_enabled() -> bool:
@@ -107,7 +101,7 @@ def _name_mentions(text: str, actors: Sequence[Actor]) -> List[dict]:
     taken: List[tuple] = []
     out = []
     for name, actor in forms:
-        for m in re.finditer(rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])", text):
+        for m in re.finditer(rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])", text, re.I):
             if any(m.start() < e and s < m.end() for s, e in taken):
                 continue
             taken.append(m.span())
@@ -170,37 +164,11 @@ def _rule_mentions(text: str, actors: Sequence[Actor], voice: str) -> List[dict]
     return out
 
 
-def _accept_model(text: str, proposed: Sequence[dict], actors: Sequence[Actor]) -> List[dict]:
-    """Keep a model link only when its id is on the list and its span matches the text."""
-    allowed = {a.actor_id for a in actors}
-    kept = []
-    for m in proposed:
-        actor_id = m.get("actor_id")
-        start, end = m.get("start"), m.get("end")
-        if actor_id not in allowed or not isinstance(start, int) or not isinstance(end, int):
-            continue
-        if not (0 <= start <= end <= len(text)) or text[start:end] != m.get("text"):
-            continue
-        kept.append({"text": text[start:end], "start": start, "end": end, "actor_ids": [actor_id],
-                     "confidence": float(m.get("confidence", 0.6)), "kind": "model"})
-    return kept
-
-
-def resolve_mentions(text: str, actors: Sequence[Actor], *, voice: str = "narrative",
-                     complete: Optional[Callable] = None) -> List[dict]:
-    """Mentions with actor ids. Empty unless a coreference flag is on.
-
-    ``complete(text, actor_ids)`` is the local model. It is not called unless
-    ``CASELINKER_COREFERENCE_MODEL=1``. Ids it returns that are not on ``actors``
-    are dropped.
-    """
-    if not coreference_enabled() and not coreference_model_enabled():
+def resolve_mentions(text: str, actors: Sequence[Actor], *, voice: str = "narrative") -> List[dict]:
+    """Mentions with actor ids. Empty unless coreference is on."""
+    if not coreference_enabled():
         return []
-    ruled = _rule_mentions(text, actors, voice) if coreference_enabled() else []
-    if not coreference_model_enabled() or complete is None:
-        return ruled
-    proposed = complete(text, [a.actor_id for a in actors]) or []
-    return ruled + _accept_model(text, proposed, actors)
+    return _rule_mentions(text, actors, voice)
 
 
 def subject_is_offender(mentions: Sequence[dict], at: int, actors: Sequence[Actor]) -> bool:

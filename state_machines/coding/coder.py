@@ -521,7 +521,7 @@ ACTOR_NOTES = ("actor-not-named", "actor-named-in-caption", "actor-renamed-from-
 
 
 def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, dict]], coder: str, spec: dict,
-             caption_names: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
+             caption_names: Optional[set] = None, drops: Optional[dict] = None) -> Tuple[dict, Dict[str, str], List[str]]:
     """answers: (document, page number, page text, model answer). Returns (bundle, quotes, log)."""
     log: List[str] = []
     participants: Dict[str, dict] = {}
@@ -539,6 +539,11 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
         return labels[lab]
 
     proc_seen: set = set()
+
+    def _drop(kind: str) -> None:
+        if drops is not None and kind in drops:
+            drops[kind] += 1
+
     for doc, page_no, text, ans in answers:
         page_events: List[Tuple[str, str, int, bool]] = []   # (event id, action, sentence end, same page)
         page_quotes: List[Tuple[str, str]] = []
@@ -551,9 +556,11 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                     start, end, qn = locate_sentence(text, act.get("start") or "")
             except E.QuoteNotFound as exc:
                 log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: quote {exc}")
+                _drop("duplicate_sentence" if "more than once" in str(exc) else "assemble_dropped")
                 continue
             if len(qn.split()) < 4:
                 log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: quote too short")
+                _drop("assemble_dropped")
                 continue
             if os.environ.get("CASELINKER_SECTION_FILTER") == "1":
                 from state_machines.coding.sections import blocks_offender_products, classify
@@ -561,9 +568,11 @@ def assemble(case_id: str, sources: dict, answers: List[Tuple[dict, int, str, di
                 if blocks_offender_products(role):
                     log.append(f"dropped {doc['doc_id']} p{page_no} {act.get('action')}: section filter, "
                                f"the quote's sentence is {role}")
+                    _drop("section_filtered")
                     continue
             action = act.get("action")
             if action not in _DEF:
+                _drop("assemble_dropped")
                 continue
             fam = V.FAMILY_OF[action]
             if fam == "offender" and states_a_rule_not_conduct(qn):
@@ -766,84 +775,94 @@ def pages_of(case_id: str, text_root: Path):
                 yield sources, doc, p["pdf_page"], text
 
 
-_BARE_DEFENDANT = re.compile(r"^(?:the defendant|the accused)$", re.I)
-_NAMED_DEFENDANT = re.compile(r"^defendant\s+(.+)$", re.I)
 _PRONOUN = re.compile(r"^(?:he|him|his|she|her|they|them|their)$", re.I)
-_POSSESSIVE = re.compile("\\b(?:defendant|accused)(?:'s|\u2019s)\\b", re.I)
+DROP_KEYS = ("not_found", "ambiguous", "section_filtered", "actor_rejected",
+             "assemble_dropped", "duplicate_sentence", "unparsable_reply")
 
 
-def _name_forms(names: Optional[List[str]]) -> set:
-    forms = set()
-    for name in names or []:
-        cleaned = " ".join(name.split())
-        if not cleaned:
-            continue
-        forms.add(cleaned.lower())
-        forms.add(cleaned.split()[-1].lower())
-    return forms
+def empty_drops() -> dict:
+    return {key: 0 for key in DROP_KEYS} | {"verify_failed": {}}
 
 
-def _actor_is_defendant(page: str, slot: dict, defendant_names: Optional[List[str]] = None) -> bool:
-    """True when the actor slot's whole noun phrase is the defendant.
+def add_drops(total: dict, part: dict) -> None:
+    for key, value in part.items():
+        if key == "verify_failed":
+            bucket = total.setdefault("verify_failed", {})
+            for problem, count in value.items():
+                bucket[problem] = bucket.get(problem, 0) + count
+        else:
+            total[key] = total.get(key, 0) + value
 
-    The match is the head phrase itself: ``the defendant``, ``the accused``, the
-    defendant's name or surname, or ``defendant <Name>``. A possessive or a longer
-    phrase (``the defendant's mother``, ``the defendant's co-conspirator``) is not
-    that head. A pronoun is the defendant only when ``CASELINKER_COREFERENCE=1``
-    resolves it, using the same names.
+
+def drops_from_log(log: List[str]) -> Optional[dict]:
+    for line in log:
+        if line.startswith("frame_drops "):
+            return json.loads(line[len("frame_drops "):])
+    return None
+
+
+def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str]:
+    """The caption defendant this span matched, as one participant label.
+
+    The span itself stays in the quote. One caption defendant is ``the defendant``.
+    Each person in a multi-defendant caption keeps that person's name. A pronoun
+    uses the same records, and only when coreference is on.
     """
+    from state_machines.coding.workflow import match_actor
+    found = match_actor((slot or {}).get("text") or "", records)
+    if found:
+        return found["canonical"]
     text = " ".join(((slot or {}).get("text") or "").split())
-    if not text or _POSSESSIVE.search(text):
-        return False
-    if _BARE_DEFENDANT.fullmatch(text):
-        return True
-    forms = _name_forms(defendant_names)
-    if text.lower() in forms:
-        return True
-    named = _NAMED_DEFENDANT.fullmatch(text)
-    if named and named.group(1).strip().lower() in forms:
-        return True
     if os.environ.get("CASELINKER_COREFERENCE") != "1" or not _PRONOUN.fullmatch(text):
-        return False
+        return None
     from state_machines.coding.coreference import make_inventory, resolve_mentions, subject_is_offender
-    primary = next((name for name in (defendant_names or []) if name.strip()), "the defendant")
-    actors = make_inventory(defendant=primary, defendant_names=defendant_names or ())
+    names = [record["full"] for record in records]
+    actors = make_inventory(defendant=names[0] if names else "the defendant", defendant_names=names)
     mentions = resolve_mentions(page, actors)
-    end = slot.get("end")
-    if not isinstance(end, int):
-        return False
-    return subject_is_offender(mentions, end, actors)
+    end = (slot or {}).get("end")
+    if not isinstance(end, int) or not subject_is_offender(mentions, end, actors):
+        return None
+    if len(records) <= 1:
+        return "the defendant"
+    prior = [m for m in mentions if m["end"] <= end and "defendant" in m.get("actor_ids", []) and m.get("kind") != "pronoun"]
+    if not prior:
+        return "the defendant"
+    named = match_actor(prior[-1]["text"], records)
+    return named["canonical"] if named else "the defendant"
 
 
-def acts_from_model_frames(text: str, frames: List[dict], defendant_names: Optional[List[str]] = None):
+def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List[dict]] = None):
     """Acts a coder's model frames survive as, and why the others were dropped.
 
     The model returns text. The hash and the offsets are computed from the page.
-    A span that is not on the page is ``not_found``. An actor that is not the
-    defendant is ``actor_not_offender``. Anything else is ``other``. A repeated
-    span with no offset, or two occurrences equally near an offset, adds to
-    ``ambiguous``. ``extract_frames`` is not called.
+    ``extract_frames`` is not called. The actor stored on the act is the caption
+    defendant's canonical label, not the model's raw span.
     """
     from state_machines.coding.enrich import feature
     from state_machines.coding.frames import ground_frame
     acts = []
-    counts = {"not_found": 0, "actor_not_offender": 0, "other": 0, "ambiguous": 0}
+    counts = empty_drops()
+    records = records or []
     for frame in frames or []:
-        grounded, reason, ambiguous = ground_frame(text, frame)
-        counts["ambiguous"] += ambiguous
-        if grounded is None:
-            counts[reason if reason in counts else "other"] += 1
+        grounded, reason, problems = ground_frame(text, frame, records)
+        if reason == "verify_failed":
+            for problem in problems:
+                counts["verify_failed"][problem] = counts["verify_failed"].get(problem, 0) + 1
+            continue
+        if reason:
+            counts[reason] = counts.get(reason, 0) + 1
             continue
         slot = grounded.get("actor") or {}
-        if not _actor_is_defendant(text, slot, defendant_names):
-            counts["actor_not_offender"] += 1
+        canonical = _canonical_actor(text, slot, records)
+        if not canonical:
+            counts["actor_rejected"] += 1
             continue
         sentence = (grounded.get("sentence") or {}).get("text") or ""
         code = (grounded.get("act") or {}).get("code")
         if not sentence or not code:
-            counts["other"] += 1
+            counts["not_found"] += 1
             continue
-        act = {"quote": sentence, "action": code, "actor": slot.get("text") or "", "actor_role": "offender"}
+        act = {"quote": sentence, "action": code, "actor": canonical, "actor_role": "offender"}
         if grounded.get("means_level") == "C":
             means_text = (grounded.get("means") or {}).get("text") or ""
             found = feature(means_text) or feature(sentence)
@@ -914,43 +933,50 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         for i, ans in zip(jobs, pool.map(lambda i: ask(spec, answers[i][3], cache), jobs)):
             answers[i][3] = ans
     framing = os.environ.get("CASELINKER_EXTRACTOR") == "frame-1.0"
-    totals = {"not_found": 0, "actor_not_offender": 0, "other": 0, "ambiguous": 0}
+    from state_machines.coding.workflow import defendant_records_for_case
+    records = defendant_records_for_case(case_id, text_root) if framing else []
+    totals = empty_drops()
     zero_pages = 0
     if framing:
         for item in answers:
             ans, how = item[3], item[4]
             if isinstance(ans, dict) and str(how).startswith("model"):
-                acts, counts = acts_from_model_frames(item[2], ans.get("frames") or [], deny or [])
+                if ans.get("unparsed"):
+                    totals["unparsable_reply"] += 1
+                    item[3] = {"acts": []}
+                    item[5] = {"unparsed": True}
+                    continue
+                acts, counts = acts_from_model_frames(item[2], ans.get("frames") or [], records)
                 item[3] = {"acts": acts}
                 item[5] = counts
-                for key in totals:
-                    totals[key] += counts[key]
+                add_drops(totals, counts)
     for doc, page_no, full, ans, how, counts in answers:
         n_acts = len(ans.get("acts", []))
         line = f"page {doc['doc_id']} p{page_no}: {how}, {n_acts} acts"
         if counts is not None:
-            line += (f", dropped not_found={counts['not_found']} actor_not_offender={counts['actor_not_offender']} "
-                     f"other={counts['other']} ambiguous={counts['ambiguous']}")
+            if counts.get("unparsed"):
+                why = "unparsable reply"
+            elif n_acts == 0 and not any(counts.get(key) for key in DROP_KEYS) and not counts.get("verify_failed"):
+                why = "model returned no frames"
+            else:
+                why = (f"not_found={counts.get('not_found', 0)} actor_rejected={counts.get('actor_rejected', 0)} "
+                       f"ambiguous={counts.get('ambiguous', 0)} section_filtered={counts.get('section_filtered', 0)}")
             if n_acts == 0:
                 zero_pages += 1
-                if not (ans.get("acts") or []) and counts == {"not_found": 0, "actor_not_offender": 0, "other": 0, "ambiguous": 0}:
-                    why = "model returned no frames"
-                else:
-                    why = (f"not_found={counts['not_found']} actor_not_offender={counts['actor_not_offender']} "
-                           f"other={counts['other']}")
                 line += f", zero frames: {why}"
+            else:
+                line += f", {why}"
         coverage.append(line)
         if progress:
             progress(doc["doc_id"], page_no, n_acts)
-    if framing:
-        coverage.append(
-            f"case {case_id}: dropped not_found={totals['not_found']} "
-            f"actor_not_offender={totals['actor_not_offender']} other={totals['other']} "
-            f"ambiguous={totals['ambiguous']}, zero-frame pages: {zero_pages}")
     answers = [tuple(a[:4]) for a in answers]
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
-                                   caption_names={w.lower() for term in (deny or []) for w in term.split()})
+                                   caption_names={w.lower() for term in (deny or []) for w in term.split()},
+                                   drops=totals if framing else None)
     log = coverage + log
+    if framing:
+        log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
+        log.append("frame_drops " + json.dumps(totals, sort_keys=True))
     # An empty bundle has no participant, so repair cannot make it validate. The zero-frame
     # lines above say why. Repair still runs, and a stop is logged rather than returned before
     # it is tried. With the flags unset, an empty model answer still raises as it did.
@@ -985,8 +1011,10 @@ def main(argv=None) -> int:
         store = E.load_quotes(case_id, args.text_root)
         store.update(quotes)
         E.save_quotes(case_id, store, args.text_root)
+        drops = drops_from_log(log)
+        extra = f" frame_drops {json.dumps(drops, sort_keys=True)}" if drops else ""
         print(f"{args.coder} {case_id}: {len(bundle['events'])} events, {len(bundle['relations'])} relations, "
-              f"{sum(l.startswith('dropped') for l in log)} dropped, {time.time() - t:.0f}s", flush=True)
+              f"{sum(l.startswith('dropped') for l in log)} dropped, {time.time() - t:.0f}s{extra}", flush=True)
     return 0
 
 

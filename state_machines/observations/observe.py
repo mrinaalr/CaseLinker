@@ -407,7 +407,7 @@ def _offender_acts(b: dict) -> List[tuple]:
             for e in b["events"] if V.FAMILY_OF[e["action"]] == "offender" for s in e["support"] if s["facet"] == "action"]
 
 
-def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None):
+def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] = None, actors=None):
     """The means tie ``relate`` publishes.
 
     With ``CASELINKER_COREFERENCE`` and ``CASELINKER_MEANS_PARSER`` unset this is
@@ -420,7 +420,7 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
         return _means(kind, sentence, o, subject)
     if coref:
         from state_machines.coding.coreference import make_inventory, means_with_resolved_subject
-        hit = means_with_resolved_subject(kind, sentence, o, make_inventory())
+        hit = means_with_resolved_subject(kind, sentence, o, actors if actors is not None else make_inventory())
     else:
         hit = _means(kind, sentence, o, subject)
     if hit or not parser:
@@ -429,7 +429,7 @@ def _published_means(kind: str, sentence: str, o: dict, subject: Optional[str] =
     from state_machines.observations.means_parse import instrument_means, parser_provenance, tokens_for
     term = o.get("feature_term") or o.get("named_as") or ""
     dep = instrument_means(sentence, {"feature_term": term}, tokens_for(sentence),
-                           actors=make_inventory() if coref else None)
+                           actors=actors if coref else None)
     if not dep:
         return None
     return dep["relationship"], dep["cue"], parser_provenance()
@@ -442,6 +442,12 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
     Returns the document with ``relations`` filled."""
     acts = [t[:5] for t in _offender_acts(bundle)]
     by_coder = {name: _offender_acts(b) for name, b in sorted((coded or {}).items())}
+    coref_actors = None
+    if os.environ.get("CASELINKER_COREFERENCE") == "1":
+        from state_machines.coding.coreference import make_inventory
+        from state_machines.coding.workflow import defendant_records_for_case
+        named = [record["full"] for record in defendant_records_for_case(bundle["case_id"], text_root)]
+        coref_actors = make_inventory(defendant=named[0] if named else "the defendant", defendant_names=named)
     pages: Dict[tuple, str] = {}
     for o in doc["observations"]:
         o["relations"] = []
@@ -468,7 +474,7 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             if a < o["char_start"] - 1 or b > o["char_end"] + 1:
                 o["act_passage_runs_on"] = True
                 continue
-            hit = _published_means(o["kind"], pages[(d, pg)][a:b], o)
+            hit = _published_means(o["kind"], pages[(d, pg)][a:b], o, actors=coref_actors)
             if hit and all(r["event_id"] != eid for r in o["relations"]):
                 relation = {"event_id": eid, "relationship": hit[0], "cue": hit[1],
                             "basis": "means_stated_in_act_sentence"}
@@ -499,7 +505,8 @@ def relate(doc: dict, bundle: dict, text_root: Path, coded: Optional[Dict[str, d
             pages[key] = E.normalize(E.read_page(bundle["case_id"], *key, text_root) or "")
         # no agreed act vouches for the reading here, so the stricter subject test applies to platforms too: a clause
         # about the victim, with no offender acting in it, states the victim's conduct
-        hit = _published_means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature")
+        hit = _published_means(o["kind"], pages[key][o["char_start"]:o["char_end"]], o, subject="feature",
+                               actors=coref_actors)
         if not hit:
             continue
         a_codes, b_codes = (set(v) for v in inside.values())

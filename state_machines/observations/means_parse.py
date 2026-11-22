@@ -9,7 +9,7 @@ still the instrument of the verb outside them. When ``CASELINKER_COREFERENCE=1``
 and the verb's subject is ``they``, the resolved actor decides. With
 coreference off, ``they`` is not an offender subject.
 
-``tokens_from_spacy`` loads ``en_core_web_sm`` (or ``CASELINKER_SPACY_MODEL``) once
+``tokens_from_spacy`` loads ``en_core_web_sm`` (or ``CASELINKER_MEANS_SPACY_MODEL``) once
 and keeps it. If that model cannot load, the call raises. It does not return an
 empty token list. ``CASELINKER_MEANS_PARSER_FALLBACK=1`` is the only way to use
 the small parenthetical tokenizer instead, and a relation from that path says
@@ -39,7 +39,7 @@ def parser_enabled() -> bool:
 
 
 def model_name() -> str:
-    return os.environ.get("CASELINKER_SPACY_MODEL", "en_core_web_sm")
+    return os.environ.get("CASELINKER_MEANS_SPACY_MODEL", "en_core_web_sm")
 
 
 def fallback_enabled() -> bool:
