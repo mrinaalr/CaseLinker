@@ -10,8 +10,8 @@
 bundle exists is skipped). ``resolve`` applies ``resolve.resolve`` and writes the reliability report.
 ``bench`` runs both coders on the synthetic benchmark and scores each coder and the resolution
 against the gold. ``release`` copies the resolved bundles into a release and builds it as
-``machine``. A case that fails (no events, an unrepairable bundle, a model error) is recorded with
-its reason and left out; it is never forced through.
+``machine``. A case where both coders return no acts is written as an explicit record and
+released with the others. Any other failure is recorded with its reason and left out.
 
 Outputs (local, gitignored; they hold quotes and model output): ``<out>/coder_A``, ``<out>/coder_B``,
 ``<out>/resolved``, ``<out>/reports``.
@@ -146,6 +146,24 @@ def _record_disagreement(case_id: str, a: dict, b: dict, out: Path, entry: dict,
         entry["disagreement_sheet"] = "refused"
 
 
+def zero_act_record(case_id: str, bundle: dict) -> dict:
+    """Both coders found no acts. This is the decision file. It is not a case bundle:
+    a bundle still needs at least one participant, and this record has none."""
+    from state_machines.evidence import vocab as V
+
+    return {
+        "case_id": case_id,
+        "no_acts": True,
+        "events": [],
+        "passages": [],
+        "relations": [],
+        "tracks": [],
+        "participants": [],
+        "documents": list(bundle.get("documents") or []),
+        "codebook_version": V.CODEBOOK_VERSION,
+    }
+
+
 def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
                   sub: str = "resolved") -> dict:
     """Resolve each case's two codings into ``out/<sub>``; reports beside it. ``settle_codes`` turns on
@@ -170,6 +188,11 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
+        if not a.get("events") and not b.get("events"):
+            record = zero_act_record(case_id, a)
+            (out / sub / f"{case_id}.json").write_text(json.dumps(record, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            summary[case_id] = {"events": 0, "no_acts": True}
+            continue
         if policy == POLICY_ID:
             loaded = _pages(text_root, case_id)
             pages, page_docs = loaded if loaded else (None, None)

@@ -766,6 +766,9 @@ def repair(bundle: dict, text_root: Path, deny: List[str]) -> Tuple[dict, List[s
                 if i < len(items):
                     (bad_events if m.group(1) == "events" else bad_rel).add(items[i]["event_id" if m.group(1) == "events" else "relation_id"])
         if not bad_events and not bad_rel:
+            if not bundle["events"]:
+                log.append("zero acts: nothing remains to repair")
+                return bundle, log
             raise SystemExit("unrepairable bundle: " + "; ".join(f"{f.code} {f.where}: {f.message}" for f in errs[:5]))
         for f in errs:
             log.append(f"dropped by {f.code} at {f.where}: {f.message[:120]}")
@@ -1047,9 +1050,9 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         _write_refusals(text_root, case_id, coder, refusals)
         log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
         log.append("frame_drops " + json.dumps(totals, sort_keys=True))
-    # An empty bundle has no participant, so repair cannot make it validate. The zero-frame
-    # lines above say why. Repair still runs, and a stop is logged rather than returned before
-    # it is tried. With the flags unset, an empty model answer still raises as it did.
+    # An empty bundle has no participant, so it cannot pass validation. Repair still runs.
+    # When nothing remains, the empty bundle is returned and the case is recorded as having
+    # no acts. A bundle that still has events and cannot be repaired still stops.
     if not bundle["events"] and (framing or os.environ.get("CASELINKER_SECTION_FILTER") == "1"):
         try:
             bundle, rlog = repair(bundle, text_root, deny or [])

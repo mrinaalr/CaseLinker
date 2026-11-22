@@ -122,10 +122,14 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     for path in bundles:
         bundle = json.loads(path.read_text(encoding="utf-8"))
         case_id = bundle["case_id"]
-        problems = release_errors(bundle, text_root=text_root, deny_list=(deny_lists or {}).get(case_id, ()),
-                                  mode="preview" if allow_unreviewed else mode)
-        if problems:
-            raise SystemExit(f"{case_id}: not releasable:\n  " + "\n  ".join(problems[:20]))
+        if bundle.get("no_acts") is True:
+            if bundle.get("events"):
+                raise SystemExit(f"{case_id}: a no-acts record cannot contain events")
+        else:
+            problems = release_errors(bundle, text_root=text_root, deny_list=(deny_lists or {}).get(case_id, ()),
+                                      mode="preview" if allow_unreviewed else mode)
+            if problems:
+                raise SystemExit(f"{case_id}: not releasable:\n  " + "\n  ".join(problems[:20]))
         for threshold in ("DIRECT", "INFERRED"):
             (root / "derived" / f"{case_id}.{threshold.lower()}.json").write_text(derived_json(bundle, threshold), encoding="utf-8")
         ev = serialize(evidence_graph(bundle))
