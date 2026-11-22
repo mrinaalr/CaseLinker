@@ -39,10 +39,12 @@ What may be inspected on the development cases is whether the coding recovered t
 ## Stratified draw
 
 ```bash
-python -m state_machines.observations.gold_sample draw --population <units.json> --config <strata.json> --sealed <sealed_manifest.json> --out <dir>
+python -m state_machines.observations.gold_sample draw --population <units.json> --config <seed.json> --sealed <sealed_manifest.json> --sheet-out <sheet-dir> --record-out <record-dir> --decisions <flags-off-bundles> --observations <flags-off-observations> --decisions-v2 <v2-bundles> --observations-v2 <v2-observations>
 ```
 
-Inside the gold frame, the human sample is a stratified simple random sample of sentences. Stratum names, sizes and the seed come from the config. A unit whose case is outside the frame is refused. A unit whose case is on the exclusion list is refused. A field such as model uncertainty is not read.
+The sheet directory receives the shuffled blind sheet and CSV. The record directory receives ``draw.json`` and ``key.json``. A missing decision file or a missing ``observations/{case}.json`` stops the command. v2 labels are read from v2's own observations file.
+
+Inside the gold frame, each case contributes up to two published-act sentences and fills the rest of its three from its other sentences. Level C is a separate stratum of at most 43 sentences. A unit whose case is outside the frame is refused. A unit whose case is on the exclusion list is refused. A field such as model uncertainty is not read.
 
 `population_from_case` reads the flags-off decision file. A missing file is an error. A sentence is `{case_id}:act` when that file published an act there, `level_c` when it tied a feature means and published no act there, and `{case_id}:other` otherwise. A platform name alone is not an act. Per case the draw takes `n_act = min(2, N_act)` and `n_other = min(3 - n_act, N_other)`. Level C is one stratum, at most 43 sentences. An empty or short stratum is logged on the draw and does not stop it. Inside a stratum the order is `sha256(seed‖case_id‖sentence_id)`. The sheet and the CSV are shuffled with that seed. Weights stay `N_h/n_h`. Flags-off labels are `machine` in the key. v2 labels are `machine_v2`. The sheet has neither.
 

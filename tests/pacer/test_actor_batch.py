@@ -315,7 +315,12 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     P.resolve_cases(["agree"], out, tmp_path)
     recovered = json.loads((out / "resolved" / "agree.json").read_text(encoding="utf-8"))["recovered"]
     assert recovered and recovered[0]["act"]["code"] == "DISTRIBUTE_MATERIAL"
-    assert "Smith" not in json.dumps(recovered[0].get("actor"))
+    actor = recovered[0].get("actor")
+    assert actor, recovered
+    text = actor if isinstance(actor, str) else json.dumps(actor)
+    assert "Porter" in text and "Smith" not in text, text
+    text = actor if isinstance(actor, str) else json.dumps(actor)
+    assert "Porter" in text and "Smith" not in text, text
 
 
 @needs_spacy

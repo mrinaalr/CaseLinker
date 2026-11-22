@@ -81,7 +81,7 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
     population = [{
         "unit_id": "u-send",
         "case_id": case_id,
-        "stratum": "published_acts",
+        "stratum": f"{case_id}:act",
         "sentence": "The defendant sent the files through an encrypted channel.",
         "context_before": ["The caption names one defendant."],
         "context_after": ["The next sentence is background."],
@@ -89,7 +89,7 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
     }, {
         "unit_id": "u-app",
         "case_id": case_id,
-        "stratum": "published_acts",
+        "stratum": f"{case_id}:other",
         "sentence": "A later sentence names a messaging application.",
         "context_before": [],
         "context_after": [],
@@ -150,50 +150,109 @@ def test_population_writer_emits_the_file_draw_reads(tmp_path):
         "documents": [{"doc_id": "sof", "sha256": "abc123", "pages": [{"pdf_page": 1}]}],
     }), encoding="utf-8")
     out = tmp_path / "units.json"
-    decisions = tmp_path / "decisions.json"
-    decisions.write_text(json.dumps({"events": [], "passages": [], "observations": []}), encoding="utf-8")
-    assert G.write_population([case], tmp_path, out, decisions=decisions) == 2
+    decisions, observations, decisions_v2, observations_v2 = _four(tmp_path, case)
+    assert G.write_population([case], tmp_path, out, decisions, observations, decisions_v2, observations_v2) == 2
     rows = json.loads(out.read_text(encoding="utf-8"))
     assert rows[0]["court"] == "dcd" and rows[0]["sentence"]
     sentences = {row["sentence"]: row["stratum"] for row in rows}
     assert sentences["The defendant sent the files."] == "stamp:other"
     assert sentences["The hearing was continued."] == "stamp:other"
-    assert all("machine" not in row for row in rows)
+    assert all("machine" not in row and "machine_v2" not in row for row in rows)
     with pytest.raises(SystemExit, match="decision file"):
-        G.population_from_case(case, tmp_path, decisions=tmp_path / "missing.json")
+        G.population_from_case(case, tmp_path, tmp_path / "missing", observations, decisions_v2, observations_v2)
+    with pytest.raises(SystemExit, match="observations file"):
+        G.population_from_case(case, tmp_path, decisions, tmp_path / "missing-obs", decisions_v2, observations_v2)
 
 
-def test_a_published_act_with_no_platform_or_feature_is_machine_positive(tmp_path):
+def _four(tmp, case, bundle=None, observed=None, v2_bundle=None, v2_observed=None):
+    decisions, observations = tmp / "decisions", tmp / "observations"
+    decisions_v2, observations_v2 = tmp / "decisions_v2", tmp / "observations_v2"
+    for folder in (decisions, observations, decisions_v2, observations_v2):
+        folder.mkdir(parents=True, exist_ok=True)
+    empty_bundle = {"case_id": case, "events": [], "passages": []}
+    empty_obs = {"observations": []}
+    (decisions / f"{case}.json").write_text(json.dumps(bundle or empty_bundle), encoding="utf-8")
+    (decisions_v2 / f"{case}.json").write_text(json.dumps(v2_bundle or empty_bundle), encoding="utf-8")
+    (observations / f"{case}.json").write_text(json.dumps(observed or empty_obs), encoding="utf-8")
+    (observations_v2 / f"{case}.json").write_text(json.dumps(v2_observed or empty_obs), encoding="utf-8")
+    return decisions, observations, decisions_v2, observations_v2
+
+
+def test_the_command_line_fills_both_label_sets_and_keeps_them_off_the_sheet(tmp_path):
     from state_machines.evidence import evidence as E
     from state_machines.observations.observe import sentences
+    from state_machines.observations.gold_sample import main as gold_main
 
     case = "synth_act"
-    text = "The hearing was continued. The calendar was reset."
-    E.write_page(case, "sof", 1, text, tmp_path)
+    text = "The hearing was continued. The defendant sent the files on Snapchat."
+    E.write_page(case, "sof", 1, text, tmp_path / "text")
     norm = E.normalize(text)
-    start, end = list(sentences(norm))[0]
-    hearing = norm[start:end].strip()
-    assert G.stratum_for_sentence(hearing) == "other"
-    bundle = {
-        "events": [{"event_id": "e1", "action": "DISTRIBUTE_MATERIAL",
-                    "support": [{"facet": "action", "passage_id": "q1"}]}],
-        "passages": [{"passage_id": "q1", "doc_id": "sof", "pdf_page": 1,
-                      "char_start": start, "char_end": end}],
-    }
-    decisions = tmp_path / "head.json"
-    decisions.write_text(json.dumps(bundle), encoding="utf-8")
-    (tmp_path / case / "sources.json").write_text(json.dumps({
+    spans = list(sentences(norm))
+    start, end = spans[0]
+    (tmp_path / "text" / case / "sources.json").write_text(json.dumps({
         "case_id": case, "court": "dcd", "docket_number": "1:24-cr-9",
         "documents": [{"doc_id": "sof", "sha256": "abc123", "pages": [{"pdf_page": 1}]}],
     }), encoding="utf-8")
-    rows = G.population_from_case(case, tmp_path, decisions=decisions)
-    strata = {row["sentence"]: row["stratum"] for row in rows}
-    assert strata[hearing] == "synth_act:act"
-    assert strata["The calendar was reset."] == "synth_act:other"
-    assert any(row["machine"]["act"] == "DISTRIBUTE_MATERIAL" for row in rows)
-    sheet = G.grading_sheet({"seed": 1, "rows": [{
-        "unit_id": row["unit_id"], "case_id": case, "sentence": row["sentence"],
-        "context_before": [], "context_after": [],
-    } for row in rows]})
-    assert "machine" not in json.dumps(sheet)
-    assert "DISTRIBUTE_MATERIAL" not in json.dumps(sheet)
+    bundle = {"case_id": case, "events": [{"event_id": "e1", "action": "DISTRIBUTE_MATERIAL",
+              "support": [{"facet": "action", "passage_id": "q1"}]}],
+              "passages": [{"passage_id": "q1", "doc_id": "sof", "pdf_page": 1,
+                            "char_start": start, "char_end": end}]}
+    v2_bundle = {"case_id": case, "events": [{"event_id": "e1", "action": "SOLICIT_IMAGERY",
+                 "support": [{"facet": "action", "passage_id": "q1"}]}],
+                 "passages": bundle["passages"]}
+    observed = {"observations": [{
+        "kind": "platform", "doc_id": "sof", "pdf_page": 1, "char_start": start, "char_end": end,
+        "relations": [{"relationship": "Carried_Out_Through", "cue": "on"}],
+    }]}
+    decisions, observations, decisions_v2, observations_v2 = _four(
+        tmp_path, case, bundle, observed, v2_bundle, {"observations": []})
+    units = tmp_path / "units.json"
+    assert gold_main(["population", "--text-root", str(tmp_path / "text"), "--out", str(units),
+                      "--decisions", str(decisions), "--observations", str(observations),
+                      "--decisions-v2", str(decisions_v2), "--observations-v2", str(observations_v2),
+                      case]) == 0
+    population = json.loads(units.read_text(encoding="utf-8"))
+    assert all("machine" not in row and "machine_v2" not in row for row in population)
+    for row in population:
+        row["machine"] = None
+        row["machine_v2"] = {"act": "WRONG", "means_tie": True, "level_c": True}
+    units.write_text(json.dumps(population), encoding="utf-8")
+    manifest = S.seal(["synth_act", "case_02", "case_03", "case_04"], exclusion_ids=[],
+                      seed=1, held_out_size=1, gold_frame_size=1, code_version="test")
+    if manifest["gold_frame_ids"] != ["synth_act"]:
+        manifest = dict(manifest, gold_frame_ids=["synth_act"], held_out_ids=["case_02"])
+        manifest["sha256"] = S.manifest_sha256(manifest)
+    sealed = tmp_path / "sealed.json"
+    config = tmp_path / "config.json"
+    sealed.write_text(json.dumps(manifest), encoding="utf-8")
+    config.write_text(json.dumps({"seed": 1}), encoding="utf-8")
+    sheet_dir, record_dir = tmp_path / "sheet", tmp_path / "record"
+    assert gold_main(["draw", "--population", str(units), "--config", str(config), "--sealed", str(sealed),
+                      "--sheet-out", str(sheet_dir), "--record-out", str(record_dir),
+                      "--decisions", str(decisions), "--observations", str(observations),
+                      "--decisions-v2", str(decisions_v2), "--observations-v2", str(observations_v2)]) == 0
+    sheet = json.loads((sheet_dir / "grading_sheet.json").read_text(encoding="utf-8"))
+    csv_text = (sheet_dir / "grading_sheet.csv").read_text(encoding="utf-8")
+    key = json.loads((record_dir / "key.json").read_text(encoding="utf-8"))
+    assert "machine" not in json.dumps(sheet) and "machine_v2" not in json.dumps(sheet)
+    assert "DISTRIBUTE_MATERIAL" not in csv_text and "SOLICIT_IMAGERY" not in csv_text
+    assert not (sheet_dir / "key.json").exists() and not (sheet_dir / "draw.json").exists()
+    hearing = next(unit for unit in sheet["units"] if unit["sentence"].startswith("The hearing"))
+    hearing_key = next(unit for unit in key["units"] if unit["unit_id"] == hearing["unit_id"])
+    assert hearing_key["machine"]["act"] == "DISTRIBUTE_MATERIAL"
+    assert hearing_key["machine"]["means_tie"] is True
+    assert hearing_key["machine_v2"]["act"] == "SOLICIT_IMAGERY"
+    assert hearing_key["machine_v2"]["means_tie"] is False
+    graded = {"units": [{"unit_id": unit["unit_id"],
+                         "gold": {"act": unit["machine"]["act"], "means_tie": unit["machine"]["means_tie"],
+                                  "level_c": unit["machine"]["level_c"]}} for unit in key["units"]]}
+    graded_path = tmp_path / "graded.json"
+    graded_path.write_text(json.dumps(graded), encoding="utf-8")
+    assert gold_main(["score", "--graded", str(graded_path), "--key", str(record_dir / "key.json"),
+                      "--draw", str(record_dir / "draw.json"), "--sealed", str(sealed),
+                      "--replicates", "10"]) == 0
+    with pytest.raises(SystemExit, match="decision file"):
+        gold_main(["draw", "--population", str(units), "--config", str(config), "--sealed", str(sealed),
+                   "--sheet-out", str(tmp_path / "sheet2"), "--record-out", str(tmp_path / "record2"),
+                   "--decisions", str(decisions), "--observations", str(observations),
+                   "--decisions-v2", str(tmp_path / "absent"), "--observations-v2", str(observations_v2)])

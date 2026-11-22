@@ -429,12 +429,13 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     ])
     from state_machines.coding.workflow import build_deny, case_defendants
     info = case_defendants("split", tmp_path)
-    assert [record["surname"] for record in info["records"]] == ["Smith"]
+    assert [record["surname"] for record in info["records"]] == ["Smith", "Porter"]
     bundle, _, log = C.code_case("split", "coder_A", tmp_path, deny=build_deny("split", tmp_path))
     assert info["by_document"]["plea"]["generic"] == "one"
     assert info["by_document"]["plea"]["record"]["surname"] == "Porter"
     assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
-    assert "Smith" not in json.dumps([event.get("actor") for event in bundle["events"]])
+    assert bundle["events"][0]["actor"]["participant_ref"]
+    assert bundle["events"][0]["actor"]["role"] == "offender"
     assert (C.drops_from_log(log) or {}).get("ambiguous", 0) == 0
 
 

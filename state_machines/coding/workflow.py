@@ -781,7 +781,7 @@ def case_defendants(case_id: str, text_root: Optional[Path] = None) -> dict:
     # when no charging or plea caption exists.
     charging = [item for item in found if item["doc_type"] in _CHARGING_DOCS]
     pleas = [item for item in found if item["doc_type"] in _PLEA_DOCS]
-    chosen = charging or pleas or found
+    chosen = (charging + pleas) or found
     if not chosen:
         records = []
         generic = "no_defendant_record"

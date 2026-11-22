@@ -96,24 +96,25 @@ def merge_dockets(rows: Sequence[dict]) -> list:
 _STAMPED = ("court", "docket_number", "document_sha256", "doc_id")
 
 
-def stratum_for_sentence(sentence: str, *, published_act: bool = False) -> str:
-    """``machine_positive`` when a platform or level-C feature is named, or an act was published.
+def _observations_file(directory, case_id: str) -> dict:
+    """The release file ``observations/{case}.json``. A missing file is an error."""
+    if directory is None:
+        raise SystemExit("an observations file is required")
+    path = Path(directory)
+    if path.is_dir():
+        path = path / f"{case_id}.json"
+    if not path.is_file():
+        raise SystemExit(f"observations file is missing: {path}")
+    return json.loads(path.read_text(encoding="utf-8"))
 
-    ``published_act`` is the frozen head's label. This function does not run that head.
-    The name ``published_acts`` is not a stratum and is not a filter.
-    """
-    from state_machines.observations.observe import features_in, platforms_in
 
-    if published_act or platforms_in(sentence) or features_in(sentence):
-        return "machine_positive"
-    return "other"
-
-
-def _load_bundle(decisions):
-    """The head's decision file. A missing file is an error."""
-    if decisions is None:
+def _decision_file(directory, case_id: str) -> dict:
+    """The head's case bundle. A missing file is an error."""
+    if directory is None:
         raise SystemExit("a decision file is required")
-    path = Path(decisions)
+    path = Path(directory)
+    if path.is_dir():
+        path = path / f"{case_id}.json"
     if not path.is_file():
         raise SystemExit(f"decision file is missing: {path}")
     return json.loads(path.read_text(encoding="utf-8"))
@@ -138,9 +139,10 @@ def _act_spans(bundle: dict) -> list:
     return spans
 
 
-def _tied_spans(bundle: dict, kind: str) -> list:
+def _tied_spans(document: dict, kind: str) -> list:
+    """Means ties from ``observations/{case}.json``, not from the decision bundle."""
     spans = []
-    for obs in bundle.get("observations") or []:
+    for obs in document.get("observations") or []:
         if obs.get("kind") != kind or not obs.get("relations"):
             continue
         spans.append((obs["doc_id"], obs["pdf_page"], obs["char_start"], obs["char_end"]))
@@ -157,25 +159,29 @@ def _machine_labels(act_spans, platform_spans, feature_spans, doc_id, page, star
     }
 
 
-def population_from_case(case_id: str, text_root, decisions=None, decisions_v2=None) -> list:
-    """Every sentence on every filed page, labelled from the flags-off head's file.
+def population_from_case(case_id: str, text_root, decisions=None, observations=None,
+                         decisions_v2=None, observations_v2=None) -> list:
+    """Every sentence on every filed page.
 
-    ``{case_id}:act`` when that file published an act in the sentence.
-    ``level_c`` when it tied a feature means and did not publish an act there.
-    ``{case_id}:other`` otherwise. A platform name alone is not an act.
-    ``decisions`` is required. ``decisions_v2`` supplies ``machine_v2``.
+    ``{case_id}:act`` when the flags-off bundle published an act there.
+    ``level_c`` when ``observations/{case}.json`` tied a feature means and no act
+    was published there. ``{case_id}:other`` otherwise. A platform name alone is
+    not an act. The v2 bundle and v2 observations file are required and supply
+    ``machine_v2``. A missing file is an error.
     """
     from state_machines.evidence import evidence as E
     from state_machines.observations.observe import sentences
 
-    bundle = _load_bundle(decisions)
-    v2 = _load_bundle(decisions_v2) if decisions_v2 is not None else None
+    bundle = _decision_file(decisions, case_id)
+    observed = _observations_file(observations, case_id)
+    v2 = _decision_file(decisions_v2, case_id)
+    observed_v2 = _observations_file(observations_v2, case_id)
     act_spans = _act_spans(bundle)
-    feature_spans = _tied_spans(bundle, "feature")
-    platform_spans = _tied_spans(bundle, "platform")
-    v2_acts = _act_spans(v2) if v2 else []
-    v2_features = _tied_spans(v2, "feature") if v2 else []
-    v2_platforms = _tied_spans(v2, "platform") if v2 else []
+    feature_spans = _tied_spans(observed, "feature")
+    platform_spans = _tied_spans(observed, "platform")
+    v2_acts = _act_spans(v2)
+    v2_features = _tied_spans(observed_v2, "feature")
+    v2_platforms = _tied_spans(observed_v2, "platform")
     root = Path(text_root) / case_id
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
     key_path = root / "case_key.json"
@@ -217,32 +223,10 @@ def population_from_case(case_id: str, text_root, decisions=None, decisions_v2=N
                     "context_before": texts[max(0, index - 2):index],
                     "context_after": texts[index + 1:index + 3],
                     "machine": _machine_labels(act_spans, platform_spans, feature_spans, doc_id, page_no, start, end),
+                    "machine_v2": _machine_labels(v2_acts, v2_platforms, v2_features, doc_id, page_no, start, end),
                 }
-                if v2 is not None:
-                    row["machine_v2"] = _machine_labels(v2_acts, v2_platforms, v2_features, doc_id, page_no, start, end)
                 rows.append(row)
     return rows
-
-
-def _strata_from_config(config: dict, by: dict) -> dict:
-    """Stratum sizes. ``take_all`` draws every row of one stratum and fills the rest.
-
-    ``{"take_all": "machine_positive", "fill": "other", "total": 129, "seed": 1}``
-    never asks a stratum for more rows than it has.
-    """
-    if config.get("take_all"):
-        take = config["take_all"]
-        fill = config.get("fill") or "other"
-        total = int(config["total"])
-        n_take = len(by.get(take, []))
-        n_fill = min(len(by.get(fill, [])), max(0, total - n_take))
-        strata = {}
-        if n_take:
-            strata[take] = {"n": n_take}
-        if n_fill:
-            strata[fill] = {"n": n_fill}
-        return strata
-    return config["strata"]
 
 
 def _order_key(seed, row: dict) -> str:
@@ -250,19 +234,21 @@ def _order_key(seed, row: dict) -> str:
     return hashlib.sha256(blob).hexdigest()
 
 
-def _v15_plan(config: dict, by: dict) -> tuple:
+def _v15_plan(by: dict, frame_ids, *, cap: int = 43) -> tuple:
     """Up to two act sentences per case, the rest of three from other, and level C up to 43.
 
-    Sizes are fixed from the stratum counts. An empty or short stratum is logged
-    and does not stop the draw.
+    A case in the frame with no sentences is logged. An empty or short stratum
+    does not stop the draw.
     """
-    cap = int(config.get("level_c_cap", 43))
-    cases = sorted({name[:name.rfind(":")] for name in by if name.endswith(":act") or name.endswith(":other")})
     strata = {}
     shortfalls = []
-    for case_id in cases:
+    present = {name[:name.rfind(":")] for name in by if name.endswith(":act") or name.endswith(":other")}
+    for case_id in sorted(set(frame_ids) | present):
         act_name, other_name = f"{case_id}:act", f"{case_id}:other"
         n_act_pop, n_other_pop = len(by.get(act_name, [])), len(by.get(other_name, []))
+        if n_act_pop == 0 and n_other_pop == 0:
+            shortfalls.append({"stratum": case_id, "population": 0, "asked": 3, "drawn": 0})
+            continue
         n_act, n_other = min(2, n_act_pop), min(3 - min(2, n_act_pop), n_other_pop)
         if n_act < 2:
             shortfalls.append({"stratum": act_name, "population": n_act_pop, "asked": 2, "drawn": n_act})
@@ -282,11 +268,9 @@ def _v15_plan(config: dict, by: dict) -> tuple:
 
 
 def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
-    """A stratified sample of the sealed gold frame.
+    """The per-case draw. ``config`` is ``{"seed": int}``.
 
-    ``config`` is ``{"seed": int, "strata": {name: {"n": int}}}``. Selection uses
-    the stratum name and the seed only. Rows that share a court and case number
-    are one case before the draw.
+    Rows that share a court and case number are one case before the draw.
     """
     verify_manifest(sealed)
     population = merge_dockets(population)
@@ -300,14 +284,10 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
         raise SystemExit("excluded ids cannot be drawn: " + ", ".join(leaked))
     if config.get("select") not in (None, "stratified_random"):
         raise SystemExit("selection is stratified random; model uncertainty is not a selection method")
-    rng = random.Random(config["seed"])
     by = {}
     for row in population:
         by.setdefault(row["stratum"], []).append(row)
-    if config.get("rule") == "v15":
-        strata, shortfalls = _v15_plan(config, by)
-    else:
-        strata, shortfalls = _strata_from_config(config, by), []
+    strata, shortfalls = _v15_plan(by, frame, cap=int(config.get("level_c_cap", 43)))
     drawn = []
     meta = {}
     for name, spec in strata.items():
@@ -317,11 +297,7 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
             raise SystemExit(f"{name}: asked for {asked} from a stratum of {size}")
         pi = (asked / size) if size else None
         meta[name] = {"population": size, "drawn": asked, "inclusion_probability": pi}
-        if config.get("rule") == "v15":
-            picks = sorted(pool, key=lambda row: _order_key(config["seed"], row))[:asked]
-        else:
-            pool = sorted(pool, key=lambda row: row["unit_id"])
-            picks = pool if asked == size else rng.sample(pool, asked)
+        picks = sorted(pool, key=lambda row: _order_key(config["seed"], row))[:asked]
         for row in picks:
             drawn_row = {
                 "unit_id": row["unit_id"],
@@ -341,9 +317,7 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
                 if row.get(field):
                     drawn_row[field] = row[field]
             drawn.append(drawn_row)
-    sample = {"seed": config["seed"], "rows": drawn, "strata": meta}
-    if config.get("rule") == "v15":
-        sample["shortfalls"] = shortfalls
+    sample = {"seed": config["seed"], "rows": drawn, "strata": meta, "shortfalls": shortfalls}
     return sample
 
 
@@ -743,16 +717,37 @@ def score_drawn(graded: dict, key: dict, sample: dict, *, sealed: dict, replicat
     return result
 
 
-def write_population(case_ids: Sequence[str], text_root: Path, out: Path, decisions: Path = None) -> int:
-    """Write the sentence units ``draw --population`` reads."""
+def label_rows(rows: Sequence[dict], decisions, observations, decisions_v2, observations_v2) -> list:
+    """Machine labels from the decision and observations files. Labels in ``rows`` are ignored."""
+    labelled = []
+    cache = {}
+    for row in rows:
+        case_id = row["case_id"]
+        if case_id not in cache:
+            cache[case_id] = (
+                _act_spans(_decision_file(decisions, case_id)),
+                _tied_spans(_observations_file(observations, case_id), "platform"),
+                _tied_spans(_observations_file(observations, case_id), "feature"),
+                _act_spans(_decision_file(decisions_v2, case_id)),
+                _tied_spans(_observations_file(observations_v2, case_id), "platform"),
+                _tied_spans(_observations_file(observations_v2, case_id), "feature"),
+            )
+        acts, platforms, features, v2_acts, v2_platforms, v2_features = cache[case_id]
+        clean = {key: value for key, value in row.items() if key not in {"machine", "machine_v2"}}
+        clean["machine"] = _machine_labels(acts, platforms, features, row["doc_id"], row["pdf_page"], row["char_start"], row["char_end"])
+        clean["machine_v2"] = _machine_labels(v2_acts, v2_platforms, v2_features, row["doc_id"], row["pdf_page"], row["char_start"], row["char_end"])
+        labelled.append(clean)
+    return labelled
+
+
+def write_population(case_ids: Sequence[str], text_root: Path, out: Path, decisions, observations,
+                     decisions_v2, observations_v2) -> int:
+    """Write the sentence units ``draw --population`` reads. Machine labels are not in the file."""
     refuse_store(out)
     rows = []
     for case_id in case_ids:
-        bundle = None
-        if decisions is not None:
-            candidate = decisions / f"{case_id}.json" if decisions.is_dir() else decisions
-            bundle = candidate if candidate.is_file() else None
-        rows.extend(population_from_case(case_id, text_root, decisions=bundle))
+        rows.extend(population_from_case(
+            case_id, text_root, decisions, observations, decisions_v2, observations_v2))
     out.parent.mkdir(parents=True, exist_ok=True)
     public = [{key: value for key, value in row.items() if key not in {"machine", "machine_v2"}} for row in rows]
     out.write_text(json.dumps(public, indent=1, sort_keys=True) + "\n", encoding="utf-8")
@@ -820,16 +815,21 @@ def import_graded_csv(path: Path) -> dict:
     return {"units": units}
 
 
-def write_draw(sample: dict, out_dir: Path) -> dict:
-    """Write the hash, then the blind sheet and the key. The hash file is first."""
-    refuse_store(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+def write_draw(sample: dict, sheet_dir: Path, record_dir: Path) -> dict:
+    """The sheet folder gets the blind sheet and CSV. The record folder gets the draw and the key."""
+    refuse_store(sheet_dir)
+    refuse_store(record_dir)
+    if sheet_dir.resolve() == record_dir.resolve():
+        raise SystemExit("the draw record is kept out of the sheet folder")
+    sheet_dir.mkdir(parents=True, exist_ok=True)
+    record_dir.mkdir(parents=True, exist_ok=True)
     digest = draw_sha256(sample)
-    (out_dir / "draw.sha256").write_text(digest + "\n", encoding="utf-8")
-    (out_dir / "draw.json").write_text(json.dumps(sample, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    (record_dir / "draw.sha256").write_text(digest + "\n", encoding="utf-8")
+    (record_dir / "draw.json").write_text(json.dumps(sample, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     sheet = grading_sheet(sample)
-    (out_dir / "grading_sheet.json").write_text(json.dumps(sheet, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    (out_dir / "key.json").write_text(json.dumps(key_file(sample), indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    (sheet_dir / "grading_sheet.json").write_text(json.dumps(sheet, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    export_grading_csv(sheet, sheet_dir / "grading_sheet.csv")
+    (record_dir / "key.json").write_text(json.dumps(key_file(sample), indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return {"sha256": digest, "units": len(sample["rows"])}
 
 
@@ -840,11 +840,19 @@ def main(argv=None) -> int:
     d.add_argument("--population", type=Path, required=True)
     d.add_argument("--config", type=Path, required=True)
     d.add_argument("--sealed", type=Path, required=True)
-    d.add_argument("--out", type=Path, required=True)
+    d.add_argument("--sheet-out", type=Path, required=True)
+    d.add_argument("--record-out", type=Path, required=True)
+    d.add_argument("--decisions", type=Path, required=True)
+    d.add_argument("--observations", type=Path, required=True)
+    d.add_argument("--decisions-v2", type=Path, required=True)
+    d.add_argument("--observations-v2", type=Path, required=True)
     p = sub.add_parser("population")
     p.add_argument("--text-root", type=Path, required=True)
     p.add_argument("--out", type=Path, required=True)
-    p.add_argument("--decisions", type=Path, default=None)
+    p.add_argument("--decisions", type=Path, required=True)
+    p.add_argument("--observations", type=Path, required=True)
+    p.add_argument("--decisions-v2", type=Path, required=True)
+    p.add_argument("--observations-v2", type=Path, required=True)
     p.add_argument("cases", nargs="+")
     e = sub.add_parser("export-csv")
     e.add_argument("--sheet", type=Path, required=True)
@@ -868,7 +876,8 @@ def main(argv=None) -> int:
         if path is not None:
             refuse_store(path)
     if args.cmd == "population":
-        print(write_population(args.cases, args.text_root, args.out, decisions=getattr(args, "decisions", None)))
+        print(write_population(args.cases, args.text_root, args.out, args.decisions, args.observations,
+                               args.decisions_v2, args.observations_v2))
         return 0
     if args.cmd == "export-csv":
         sheet = json.loads(args.sheet.read_text(encoding="utf-8"))
@@ -881,10 +890,12 @@ def main(argv=None) -> int:
         return 0
     sealed = json.loads(args.sealed.read_text(encoding="utf-8"))
     if args.cmd == "draw":
-        population = json.loads(args.population.read_text(encoding="utf-8"))
+        population = label_rows(
+            json.loads(args.population.read_text(encoding="utf-8")),
+            args.decisions, args.observations, args.decisions_v2, args.observations_v2)
         config = json.loads(args.config.read_text(encoding="utf-8"))
         sample = draw_sample(population, config, sealed=sealed)
-        print(json.dumps(write_draw(sample, args.out), indent=1))
+        print(json.dumps(write_draw(sample, args.sheet_out, args.record_out), indent=1))
     else:
         graded = json.loads(args.graded.read_text(encoding="utf-8"))
         key = json.loads(args.key.read_text(encoding="utf-8"))
