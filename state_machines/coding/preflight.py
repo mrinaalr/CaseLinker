@@ -31,13 +31,20 @@ text and bundles ``ncmec_2025_1035``, ``COLLECTED_AS`` ``ncmec_2025_1116``.
 """
 from __future__ import annotations
 
+import ast
 import json
+import re
+import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Iterable, List, Optional
 
 from state_machines.coding.workflow import COLLECTED_AS
 
 FP_VERSION = "fp-1"
+# The commit that locks a case id to a fingerprint of the article text.
+FINGERPRINT_LOCK = "96ffb1a354b59367ee3b0a4d872be1f91916169b"
+_WORKFLOW = Path(__file__).resolve().parent / "workflow.py"
+_CASE_ID = re.compile(r"^(?P<org>.+)_(?P<year>(?:19|20)\d{2})_(?P<ordinal>\d+)$")
 
 
 def _case_id_of(path: Path) -> Optional[str]:
@@ -80,6 +87,120 @@ def _bundle_ids(case_id: str, out_dir: Path) -> Dict[str, Optional[str]]:
                     break
         found[coder] = stem
     return found
+
+
+def parse_collected_as(source: str) -> Dict[str, str]:
+    """Every entry of ``COLLECTED_AS`` in ``workflow.py``, including a map that wraps a line.
+
+    The dict in the source is the map. A shorter list is not substituted for it.
+    """
+    tree = ast.parse(source)
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        for target in node.targets:
+            if isinstance(target, ast.Name) and target.id == "COLLECTED_AS":
+                value = ast.literal_eval(node.value)
+                if not isinstance(value, dict):
+                    raise ValueError("COLLECTED_AS is not a dict")
+                return {str(k): str(v) for k, v in value.items()}
+    raise ValueError("COLLECTED_AS was not found")
+
+
+def collected_as_map(path: Optional[Path] = None) -> Dict[str, str]:
+    return parse_collected_as((path or _WORKFLOW).read_text(encoding="utf-8"))
+
+
+def org_of(case_id: str) -> Optional[str]:
+    """The source stem of a ``{org}_{year}_{ordinal}`` id.
+
+    The stem is everything before the year, so two ids that share only a first
+    token are not treated as the same source.
+    """
+    match = _CASE_ID.match(case_id or "")
+    return match.group("org") if match else None
+
+
+def alias_class(left: str, right: str) -> str:
+    """``merge/dedup alias`` when the source stems differ, ``renumbering`` when they do not."""
+    left_org, right_org = org_of(left), org_of(right)
+    if not left_org or not right_org:
+        return "unparsed"
+    if left_org != right_org:
+        return "merge/dedup alias"
+    return "renumbering"
+
+
+def _commit_time(repo: Path, rev: str) -> Optional[str]:
+    try:
+        out = subprocess.check_output(
+            ["git", "show", "-s", "--format=%cI", rev], cwd=repo, text=True, stderr=subprocess.DEVNULL)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    return out.strip() or None
+
+
+def _first_commit_time(repo: Path, needle: str) -> Optional[str]:
+    try:
+        out = subprocess.check_output(
+            ["git", "log", "--reverse", "-S", needle, "--format=%cI", "--", "state_machines/coding/workflow.py"],
+            cwd=repo, text=True, stderr=subprocess.DEVNULL)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    lines = [line for line in out.splitlines() if line.strip()]
+    return lines[0] if lines else None
+
+
+def fingerprint_lock_relation(repo: Path, case_id: str) -> str:
+    """Whether ``case_id`` first appears in ``workflow.py`` before or after the fingerprint lock.
+
+    ``not determinable`` when either commit time cannot be read.
+    """
+    lock = _commit_time(repo, FINGERPRINT_LOCK)
+    first = _first_commit_time(repo, case_id)
+    if not lock or not first:
+        return "not determinable"
+    if first < lock:
+        return "predates"
+    if first > lock:
+        return "postdates"
+    return "same commit"
+
+
+def audit_collected_as(mapping: Dict[str, str], *, live_cases: Optional[Iterable[str]] = None,
+                       fingerprint_ids: Optional[Iterable[str]] = None,
+                       bundle_ids: Optional[Iterable[str]] = None,
+                       repo: Optional[Path] = None) -> List[dict]:
+    """Classify each map entry and, when the sets are supplied, check the surviving id.
+
+    The map key is the retired id. The value is the surviving id: the id the
+    PACER bundle is filed under. Nothing here renames a file or a row.
+    """
+    live = set(live_cases) if live_cases is not None else None
+    fingerprints = set(fingerprint_ids) if fingerprint_ids is not None else None
+    bundles = set(bundle_ids) if bundle_ids is not None else None
+    rows = []
+    for retired, surviving in mapping.items():
+        row = {
+            "retired_id": retired,
+            "surviving_id": surviving,
+            "kind": alias_class(retired, surviving),
+            "fingerprint_lock": fingerprint_lock_relation(repo, retired) if repo is not None else "not checked",
+        }
+        if live is None and fingerprints is None and bundles is None:
+            rows.append(row)
+            continue
+        row["bundle_resolves_to_surviving"] = None if bundles is None else (surviving in bundles and retired not in bundles)
+        row["surviving_in_corpus"] = None if live is None else surviving in live
+        row["surviving_has_fingerprint"] = None if fingerprints is None else surviving in fingerprints
+        row["retired_is_live"] = None if live is None else retired in live
+        checked = [row["bundle_resolves_to_surviving"], row["surviving_in_corpus"],
+                   row["surviving_has_fingerprint"], False if row["retired_is_live"] is None else not row["retired_is_live"]]
+        row["ok"] = all(item is True for item in checked) if None not in (
+            row["bundle_resolves_to_surviving"], row["surviving_in_corpus"],
+            row["surviving_has_fingerprint"], row["retired_is_live"]) else None
+        rows.append(row)
+    return rows
 
 
 def _pacer_ids(case_ids: List[str], collected: Dict[str, str]) -> List[str]:
@@ -151,7 +272,11 @@ def preflight(case_ids: List[str], text_root: Path, out_dir: Path, *,
               release_root: Optional[Path] = None,
               collected_as: Optional[Dict[str, str]] = None,
               fingerprint_table: Optional[List[dict]] = None,
-              collected_fingerprints: Optional[Dict[str, str]] = None) -> dict:
+              collected_fingerprints: Optional[Dict[str, str]] = None,
+              live_cases: Optional[Iterable[str]] = None,
+              fingerprint_ids: Optional[Iterable[str]] = None,
+              bundle_ids: Optional[Iterable[str]] = None,
+              repo: Optional[Path] = None) -> dict:
     """Aliases among release id, text-dir id, coder-bundle id and the collected PDF id.
 
     ``ok`` is true when every supplied case agrees on all four and, if a
@@ -159,7 +284,7 @@ def preflight(case_ids: List[str], text_root: Path, out_dir: Path, *,
     text directory or bundle is reported too. No page file is opened and no id
     is rewritten.
     """
-    collected = COLLECTED_AS if collected_as is None else collected_as
+    collected = collected_as_map() if collected_as is None else collected_as
     aliases = []
     for case_id in case_ids:
         if release_root is not None and not (release_root / "cases" / f"{case_id}.json").is_file():
@@ -188,6 +313,12 @@ def preflight(case_ids: List[str], text_root: Path, out_dir: Path, *,
         if pdf_id != case_id:
             aliases.append({"case_id": case_id, "kind": "collected_as", "release_id": case_id, "other_id": pdf_id})
     report = {"ok": not aliases, "aliases": aliases}
+    if collected:
+        audit = audit_collected_as(collected, live_cases=live_cases, fingerprint_ids=fingerprint_ids,
+                                   bundle_ids=bundle_ids, repo=repo)
+        report["collected_as_audit"] = audit
+        if any(row.get("ok") is False for row in audit):
+            report["ok"] = False
     if fingerprint_table is not None:
         fingerprints = fingerprint_checks(
             case_ids, fingerprint_table, collected_fingerprints=collected_fingerprints, collected_as=collected)

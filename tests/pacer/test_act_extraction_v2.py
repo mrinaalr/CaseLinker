@@ -453,6 +453,63 @@ def test_fingerprint_preflight_does_not_rewrite_ids(tmp_path):
     assert sources.name == "sources.json" and bundle.name == "synth_case.json"
 
 
+def test_collected_as_is_parsed_in_full_and_classified_without_a_shared_prefix():
+    from pathlib import Path
+    source = Path("state_machines/coding/workflow.py").read_text(encoding="utf-8")
+    parsed = PF.parse_collected_as(source)
+    assert parsed == COLLECTED_AS
+    assert parsed == {
+        "ncmec_2022_575": "ncmec_2022_586",
+        "ncmec_2023_222": "ncmec_2023_224",
+        "ncmec_2025_1026": "ncmec_2025_1116",
+        "usss_2021_017": "usss_2021_019",
+        "doj_safe_childhood_2023_420": "ncmec_2023_190",
+    }
+    kinds = {retired: PF.alias_class(retired, surviving) for retired, surviving in parsed.items()}
+    assert kinds["ncmec_2022_575"] == "renumbering"
+    assert kinds["ncmec_2023_222"] == "renumbering"
+    assert kinds["ncmec_2025_1026"] == "renumbering"
+    assert kinds["usss_2021_017"] == "renumbering"
+    assert kinds["doj_safe_childhood_2023_420"] == "merge/dedup alias"
+    # the shared first token is not the source: these are different orgs
+    assert PF.alias_class("doj_safe_childhood_2024_001", "doj_ceos_2024_009") == "merge/dedup alias"
+    assert PF.org_of("doj_safe_childhood_2024_001") == "doj_safe_childhood"
+    assert PF.org_of("doj_ceos_2024_009") == "doj_ceos"
+
+
+def test_cross_source_alias_checks_the_surviving_id_only():
+    retired, surviving = "agency_one_2021_003", "bureau_two_2021_008"
+    rows = PF.audit_collected_as(
+        {retired: surviving},
+        live_cases={surviving, "other_2020_001"},
+        fingerprint_ids={surviving},
+        bundle_ids={surviving},
+    )
+    row = rows[0]
+    assert row["kind"] == "merge/dedup alias"
+    assert row["bundle_resolves_to_surviving"] is True
+    assert row["surviving_in_corpus"] is True
+    assert row["surviving_has_fingerprint"] is True
+    assert row["retired_is_live"] is False
+    assert row["ok"] is True
+    missed = PF.audit_collected_as(
+        {retired: surviving},
+        live_cases={retired, surviving},
+        fingerprint_ids={surviving},
+        bundle_ids={retired},
+    )[0]
+    assert missed["ok"] is False
+    assert missed["retired_is_live"] is True
+    assert missed["bundle_resolves_to_surviving"] is False
+
+
+def test_collected_as_entries_postdate_the_fingerprint_lock():
+    from pathlib import Path
+    repo = Path(__file__).resolve().parents[2]
+    for retired in COLLECTED_AS:
+        assert PF.fingerprint_lock_relation(repo, retired) == "postdates"
+
+
 def test_preflight_command_does_not_read_page_text_or_rewrite_ids(tmp_path, monkeypatch):
     _off(monkeypatch)
     text_root, out, _release = _layout(tmp_path, text_name="synth_case", bundle_name="synth_case")
