@@ -14,6 +14,7 @@ What a court record names: the platforms, the services it refers to without a na
 - [Review on the real text](#review-on-the-real-text)
 - [Measured](#measured)
 - [Limits](#limits)
+- [Gold sample](#gold-sample)
 
 ## Three levels of evidence
 
@@ -278,3 +279,11 @@ By the standing of the document: 282 observations are in sworn affidavits, 221 i
 - **Relationships are few because acts are few, and the rule prefers silence.** A relationship needs a published act in that sentence (the dataset publishes 162 offender acts) and a construction the rule recognises. A true means stated another way is not tied. Six agreed acts share a sentence with a feature phrase (the matrix's `in_agreed_act_sentence` column). A sign-off review showed that three of them describe the technology and not the defendant's use, and a second review read one that does state the feature as the means and that the rule misses: `doj_ceos_2026_001`, act `e149`, observation `o0093` (anonymity, "VPN", admitted): the cue stands 13 words before the term. The rule's finding is "no tie made", not "no record states one".
 - **Three records give nothing about a service.** One case's narrative filings are sealed, and for two CourtListener holds no docket sheet to collect from. A thin record is represented as thin.
 - **Known rough edges with no hit in the 30 cases:** "Line 7" or a surname "Tor" would be observed; a hyphenated feature phrase broken across a line stops the build; a relationship can take a different IRI from the evidence graph's when the two rules disagree on "through" versus "moved to"; "Websites A and B" yields only "Website A".
+
+## Gold sample
+
+The validation sample is sealed before anyone tunes on it. [`seal.py`](seal.py) draws a held-out case split and a gold-sample frame from a config. The config in the repo, [`seal_config.json`](seal_config.json), is blank. Excluded ids are not drawn. The manifest records the seed, the sizes, the population counts, the code version and a SHA-256 of itself.
+
+[`gold_sample.py`](gold_sample.py) draws a stratified sentence sample from that frame only. It records each stratum's population and each row's inclusion probability, hashes the drawn list before grading, and writes a grading sheet with no machine labels. The key is a separate file. Scoring checks the manifest hash first. Precision is per stated unit. Recall is weighted by the inverse of the inclusion probability. Agreement is Krippendorff's alpha and Cohen's kappa, with a bootstrap interval. The scored rows keep the sampling weights for a design-based correction.
+
+Development loading, extraction debug and `benchmark/score.py` refuse a sealed case id unless `--final-evaluation` is passed with the manifest hash. The draw and the score are set out in [GOLD_SAMPLE.md](GOLD_SAMPLE.md).
