@@ -751,6 +751,8 @@ def test_verification_compares_which_defendant(tmp_path, monkeypatch):
     result = from_bundles(bundle("coder_A", "P1"), bundle("coder_B", "P2"))
     assert result["published"] == []
     assert result["rejected"][0]["reason_code"] == "wrong_actor"
+    with pytest.raises(ValueError, match="case id"):
+        from_bundles(bundle("coder_A", "P1"), bundle("coder_B", "P2"), pages=["The defendant sent files."])
 
 
 def test_frame_drops_are_in_the_manifest_only_when_the_flag_is_on(tmp_path, monkeypatch):

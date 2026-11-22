@@ -179,10 +179,9 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None,
     missed, means_ids = _missed_on_pages(pages, covered)
 
     from state_machines.coding.workflow import case_defendants, clause_subject, decide_actor
-    if case_id is not None and text_root is not None:
-        info = case_defendants(case_id, text_root)
-    else:
-        info = {"records": [], "generic": "no_defendant_record"}
+    if case_id is None or text_root is None:
+        raise ValueError("recovery needs a case id and a text root")
+    info = case_defendants(case_id, text_root)
     records = info["records"]
     generic = info["generic"]
 
