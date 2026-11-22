@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -12,7 +13,7 @@ ENV = dict(os.environ, PYTHONHASHSEED="0")
 
 
 def _run(script: Path, cwd: Path) -> str:
-    result = subprocess.run(["python3", str(script)], cwd=cwd, env=ENV, check=True, capture_output=True, text=True)
+    result = subprocess.run([sys.executable, str(script)], cwd=cwd, env=ENV, check=True, capture_output=True, text=True)
     return result.stdout
 
 
