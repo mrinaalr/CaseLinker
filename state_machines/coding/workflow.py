@@ -89,6 +89,20 @@ def _ocr(page, dpi: int = 300) -> Tuple[str, Optional[float]]:
     return text, (round(sum(confs) / len(confs), 1) if confs else None)
 
 
+_COURT_NAME = re.compile(
+    r"((?:UNITED STATES )?DISTRICT COURT(?:\s+FOR THE\s+[A-Z][A-Z ]+)?)",
+    re.I,
+)
+_CASE_NUMBER = re.compile(r"\b(?:Case|Criminal)\s+No\.?\s*(\d+:\d{2}-[A-Za-z]+-\d+)\b", re.I)
+
+
+def court_and_docket(text: str) -> Tuple[Optional[str], Optional[str]]:
+    """Court name and case number printed on a filing, when the page states them."""
+    court = _COURT_NAME.search(text or "")
+    number = _CASE_NUMBER.search(text or "")
+    return (court.group(1).strip() if court else None, number.group(1) if number else None)
+
+
 def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
     """Page text for every PDF of a case into the local store; returns the source manifest.
     A document already in the store (same SHA-256) keeps its id and its page text; a new PDF is added."""
@@ -99,6 +113,14 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
     known = {d["sha256"]: d for d in old}
     used = Counter(re.sub(r"_\d+$", "", d["doc_id"]) for d in old)
     docs, files, seen = [], {}, set()
+    court, docket = None, None
+
+    def _notice(text: str) -> None:
+        nonlocal court, docket
+        found_court, found_number = court_and_docket(text)
+        court = court or found_court
+        docket = docket or found_number
+
     pdfs = case_pdfs(case_id)
     if not pdfs:
         raise FileNotFoundError(f"no PDF for case {case_id!r}: expected <source>/BULK_FOLDER/pacer -- {case_id} -- <document type>.pdf "
@@ -111,6 +133,9 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
         seen.add(sha)
         if sha in known:
             doc = known[sha]
+            first = folder / doc["doc_id"] / "p0001.txt"
+            if first.is_file():
+                _notice(first.read_text(encoding="utf-8", errors="replace"))
         else:
             kind = doc_type_of(pdf)
             used[kind] += 1
@@ -123,6 +148,8 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
                 else:
                     text, conf = _ocr(page)
                     method = "ocr"
+                if i == 1:
+                    _notice(text)
                 digest = E.write_page(case_id, doc_id, i, text, text_root)
                 pages.append({"pdf_page": i, "text_method": method, "page_text_sha256": digest, "court_page_label": None,
                               "ocr_engine": "tesseract 5 (psm 6, 300 dpi)" if method == "ocr" else None,
@@ -131,10 +158,14 @@ def extract(case_id: str, text_root: Optional[Path] = None) -> dict:
                    "page_count": len(pages), "pages": pages}
         doc["source_path"] = f"{pdf.parent.name}/pacer -- {case_id} -- {doc['doc_id'].replace('_', ' ')}.pdf"
         files[doc["doc_id"]] = str(pdf.relative_to(source_root()))
+        if court:
+            doc["court"] = court
+        if docket:
+            doc["docket_number"] = docket
         docs.append(doc)                      # in file-name order, as collected: a rerun lists a case's documents as before
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "files.json").write_text(json.dumps(files, indent=1, sort_keys=True) + "\n", encoding="utf-8")   # names on disk: local only
-    return {"case_id": case_id, "documents": docs}
+    return {"case_id": case_id, "court": court, "docket_number": docket, "documents": docs}
 
 
 def local_file(case_id: str, doc_id: str, text_root: Optional[Path] = None) -> Optional[Path]:

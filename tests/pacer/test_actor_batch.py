@@ -56,6 +56,30 @@ def test_a_possessive_subject_is_not_the_defendant(tmp_path, monkeypatch, senten
     assert events == []
 
 
+def test_extract_records_court_case_number_and_document_hash(tmp_path, monkeypatch):
+    import pymupdf
+    from state_machines.coding.workflow import extract
+    source = tmp_path / "src" / "BULK_FOLDER"
+    source.mkdir(parents=True)
+    pdf = source / "pacer -- sample_2024_001 -- complaint.pdf"
+    document = pymupdf.open()
+    page = document.new_page()
+    page.insert_text((72, 72), "IN THE UNITED STATES DISTRICT COURT FOR THE DISTRICT OF COLUMBIA")
+    page.insert_text((72, 100), "Case No. 1:24-cr-4")
+    page.insert_text((72, 130), "United States v. Michael Smith, Defendant. " + ("The defendant sent the files to other users via an encrypted channel. " * 8))
+    document.save(pdf)
+    document.close()
+    monkeypatch.setattr("state_machines.coding.workflow.MIN_TEXT_CHARS", 1)
+    monkeypatch.setenv("CASELINKER_PACER_SOURCE", str(tmp_path / "src"))
+    monkeypatch.setenv("CASELINKER_PACER_TEXT", str(tmp_path / "text"))
+    manifest = extract("sample_2024_001")
+    assert manifest["court"] == "UNITED STATES DISTRICT COURT FOR THE DISTRICT OF COLUMBIA"
+    assert manifest["docket_number"] == "1:24-cr-4"
+    assert manifest["documents"][0]["sha256"]
+    assert manifest["documents"][0]["court"] == manifest["court"]
+    assert manifest["documents"][0]["docket_number"] == "1:24-cr-4"
+
+
 def test_a_snapshot_without_its_hash_or_file_is_an_error(tmp_path, monkeypatch):
     from state_machines.coding import parties as parties_mod
     parties_mod._CACHE.clear()
