@@ -953,7 +953,7 @@ def _write_refusals(text_root: Path, case_id: str, coder: str, rows: List[dict])
 
 
 def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] = None, deny: Optional[List[str]] = None,
-              progress=None, only_pages: Optional[set] = None) -> Tuple[dict, Dict[str, str], List[str]]:
+              progress=None, only_pages: Optional[set] = None, counts: Optional[dict] = None) -> Tuple[dict, Dict[str, str], List[str]]:
     """``only_pages``: model pages to read (others get no acts). With the selective second pass the
     second coder reads only pages where the first found acts: resolution publishes only acts both
     coded, so the release is unchanged; reliability is then measured on those pages."""
@@ -1005,7 +1005,7 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     item[5] = {"unparsed": True}
                     continue
                 doc_scope = (info.get("by_document") or {}).get(item[0]["doc_id"], {})
-                acts, counts = acts_from_model_frames(
+                acts, frame_counts = acts_from_model_frames(
                     item[2], ans.get("frames") or [], records,
                     generic=doc_scope.get("generic", generic), scope=doc_scope.get("record"),
                     other_surnames=info.get("other_surnames"),
@@ -1013,19 +1013,19 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
                     case_id=case_id, document_sha256=item[0].get("sha256"),
                     coder_id=coder, run_id=run_id)
                 item[3] = {"acts": acts}
-                item[5] = counts
-                add_drops(totals, counts)
-    for doc, page_no, full, ans, how, counts in answers:
+                item[5] = frame_counts
+                add_drops(totals, frame_counts)
+    for doc, page_no, full, ans, how, page_counts in answers:
         n_acts = len(ans.get("acts", []))
         line = f"page {doc['doc_id']} p{page_no}: {how}, {n_acts} acts"
-        if counts is not None:
-            if counts.get("unparsed"):
+        if page_counts is not None:
+            if page_counts.get("unparsed"):
                 why = "unparsable reply"
-            elif n_acts == 0 and not any(counts.get(key) for key in DROP_KEYS) and not counts.get("verify_failed"):
+            elif n_acts == 0 and not any(page_counts.get(key) for key in DROP_KEYS) and not page_counts.get("verify_failed"):
                 why = "model returned no frames"
             else:
-                why = (f"not_found={counts.get('not_found', 0)} actor_rejected={counts.get('actor_rejected', 0)} "
-                       f"ambiguous={counts.get('ambiguous', 0)} section_filtered={counts.get('section_filtered', 0)}")
+                why = (f"not_found={page_counts.get('not_found', 0)} actor_rejected={page_counts.get('actor_rejected', 0)} "
+                       f"ambiguous={page_counts.get('ambiguous', 0)} section_filtered={page_counts.get('section_filtered', 0)}")
             if n_acts == 0:
                 zero_pages += 1
                 line += f", zero frames: {why}"
@@ -1037,10 +1037,10 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
     page_count = len(answers)
     model_pages = 0
     unparsable = 0
-    for _doc, _page_no, _full, ans, how, counts in answers:
+    for _doc, _page_no, _full, ans, how, page_counts in answers:
         if str(how).startswith("model"):
             model_pages += 1
-            if (isinstance(ans, dict) and ans.get("unparsed")) or (isinstance(counts, dict) and counts.get("unparsed")):
+            if (isinstance(ans, dict) and ans.get("unparsed")) or (isinstance(page_counts, dict) and page_counts.get("unparsed")):
                 unparsable += 1
     answers = [tuple(a[:4]) for a in answers]
     refusals = totals.pop("_refusals", []) if framing else []
@@ -1065,7 +1065,9 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
     def _done(done: dict, extra: List[str]):
         if not done["events"] and unparsable:
             raise SystemExit(f"{case_id}: {unparsable} model page(s) did not parse")
-        done["coding_counts"] = {"pages": page_count, "model_pages": model_pages, "unparsable": unparsable}
+        if counts is not None:
+            counts.clear()
+            counts.update({"pages": page_count, "model_pages": model_pages, "unparsable": unparsable})
         return done, quotes, log + extra
 
     if not bundle["events"] and (framing or os.environ.get("CASELINKER_SECTION_FILTER") == "1"):
@@ -1079,9 +1081,8 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
     return _done(bundle, rlog)
 
 
-def store_bundle(directory: Path, case_id: str, bundle: dict) -> None:
+def store_bundle(directory: Path, case_id: str, bundle: dict, counts: Optional[dict] = None) -> None:
     """Write the coder bundle. Page counts go in a side file, not in the bundle."""
-    counts = bundle.pop("coding_counts", None)
     directory.mkdir(parents=True, exist_ok=True)
     (directory / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     if counts is not None:
@@ -1101,9 +1102,10 @@ def main(argv=None) -> int:
         t = time.time()
         deny_path = args.text_root / case_id / "deny.json"
         deny = json.loads(deny_path.read_text()) if deny_path.is_file() else []
-        bundle, quotes, log = code_case(case_id, args.coder, args.text_root, cache, deny)
+        counts: dict = {}
+        bundle, quotes, log = code_case(case_id, args.coder, args.text_root, cache, deny, counts=counts)
         out = args.out / args.coder
-        store_bundle(out, case_id, bundle)
+        store_bundle(out, case_id, bundle, counts)
         (out / f"{case_id}.log").write_text("\n".join(log) + "\n", encoding="utf-8")
         store = E.load_quotes(case_id, args.text_root)
         store.update(quotes)

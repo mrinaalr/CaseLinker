@@ -75,8 +75,9 @@ def code(cases: List[str], text_root: Path, out: Path, selective: bool = False) 
                 if selective and coder == "coder_B":
                     first_log = out / "coder_A" / f"{case_id}.log"
                     only = C.pages_with_acts(first_log) if first_log.is_file() else None
-                bundle, quotes, log = C.code_case(case_id, coder, text_root, cache, _deny(text_root, case_id), only_pages=only)
-                C.store_bundle(d, case_id, bundle)
+                counts: dict = {}
+                bundle, quotes, log = C.code_case(case_id, coder, text_root, cache, _deny(text_root, case_id), only_pages=only, counts=counts)
+                C.store_bundle(d, case_id, bundle, counts)
                 store = E.load_quotes(case_id, text_root)
                 store.update(quotes)
                 E.save_quotes(case_id, store, text_root)
@@ -210,8 +211,6 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
-        a.pop("coding_counts", None)
-        b.pop("coding_counts", None)
         left_counts, right_counts = _counts_file(out, "coder_A", case_id), _counts_file(out, "coder_B", case_id)
         # Propose-verify reads two empty codings and can still recover an act. The empty
         # record is only for the intersection policy, and only when every model page parsed.
@@ -251,7 +250,6 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
                                 "agreement_model_coded": report["agreement_model_coded"]}
             _record_disagreement(case_id, a, b, out, summary[case_id], policy)
             continue
-        bundle.pop("coding_counts", None)
         (out / sub / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
         summary[case_id] = {"events": len(bundle["events"]), "parser_events": report["parser_events"],

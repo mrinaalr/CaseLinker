@@ -64,6 +64,17 @@ def _coder_files(out: Path, case: str, docs: list, *, counts: bool = True) -> No
                 encoding="utf-8")
 
 
+def test_code_case_does_not_return_coding_counts(tmp_path, monkeypatch):
+    _clear(monkeypatch)
+    monkeypatch.setattr(C, "check_model", lambda coder: {"model": "stub", "digest": "sha256:0"})
+    monkeypatch.setattr(C, "ask", lambda spec, prompt, cache: {"acts": []})
+    _sources(tmp_path, "plain", "The hearing was continued.")
+    counted: dict = {}
+    bundle, _quotes, _log = C.code_case("plain", "coder_A", tmp_path, deny=[], counts=counted)
+    assert "coding_counts" not in bundle
+    assert counted == {"pages": 1, "model_pages": 1, "unparsable": 0}
+
+
 def test_a_bundle_with_events_and_no_participants_still_fails_validation():
     findings = validate({"participants": [], "events": [{"event_id": "e1"}]})
     assert any(f.where == "participants" and "non-empty" in f.message for f in findings)
@@ -79,9 +90,11 @@ def test_zero_acts_are_recorded_and_the_draw_completes(tmp_path, monkeypatch):
     blank_docs = _sources(text_root, blank, "")
     out = tmp_path / "coded"
     for coder in ("coder_A", "coder_B"):
-        bundle, _quotes, _log = C.code_case(zero, coder, text_root, deny=[])
+        counted: dict = {}
+        bundle, _quotes, _log = C.code_case(zero, coder, text_root, deny=[], counts=counted)
         assert bundle["events"] == []
-        C.store_bundle(out / coder, zero, bundle)
+        assert "coding_counts" not in bundle
+        C.store_bundle(out / coder, zero, bundle, counted)
         written = json.loads((out / coder / f"{zero}.json").read_text(encoding="utf-8"))
         assert "coding_counts" not in written
     _coder_files(out, blank, blank_docs)
