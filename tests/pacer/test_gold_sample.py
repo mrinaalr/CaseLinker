@@ -364,6 +364,39 @@ def test_bootstrap_draws_a_case_across_strata_or_not_at_all():
     assert saw_both and saw_none
 
 
+def test_population_rows_carry_court_docket_and_document_hash(tmp_path):
+    from state_machines.evidence import evidence as E
+    case = "stamp"
+    text = "The defendant sent the files to other users via an encrypted channel."
+    E.write_page(case, "sof", 1, text, tmp_path)
+    (tmp_path / case / "sources.json").write_text(json.dumps({
+        "case_id": case,
+        "court": "dcd",
+        "docket_number": "1:24-cr-9",
+        "documents": [{
+            "doc_id": "sof", "sha256": "abc123",
+            "pages": [{"pdf_page": 1}],
+        }],
+    }), encoding="utf-8")
+    rows = G.population_from_case(case, tmp_path)
+    assert rows
+    assert rows[0]["court"] == "dcd"
+    assert rows[0]["docket_number"] == "1:24-cr-9"
+    assert rows[0]["document_sha256"] == "abc123"
+    manifest = _seal(["stamp"], [], held=0, frame=1)
+    sample = G.draw_sample(rows, {"seed": 1, "strata": {"published_acts": {"n": len(rows)}}}, sealed=manifest)
+    assert sample["rows"][0]["document_sha256"] == "abc123"
+    blank = {"act": "", "means_tie": False, "level_c": False}
+    graded = {"units": [{"unit_id": row["unit_id"], "gold": dict(blank)} for row in sample["rows"]]}
+    key = G.key_file(sample)
+    for unit in key["units"]:
+        unit["machine"] = dict(blank)
+        unit["coders"] = {}
+    scored = G.score(graded, key, sealed=manifest, replicates=10)
+    assert scored["design_based"]["rows"][0]["document_sha256"] == "abc123"
+    assert scored["design_based"]["rows"][0]["court"] == "dcd"
+
+
 def test_a_stratum_with_fewer_than_five_gold_positives_warns():
     rows = [_scored("thin", 8, 4, "CONTACT", "CONTACT") for _ in range(4)]
     rows += [_scored("wide", 10, 5, "CONTACT", "CONTACT") for _ in range(5)]

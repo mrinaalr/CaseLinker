@@ -5,7 +5,11 @@ import hashlib
 import json
 from pathlib import Path
 
+import importlib.util
+
 import pytest
+
+needs_spacy = pytest.mark.skipif(importlib.util.find_spec("spacy") is None, reason="spaCy cannot be imported")
 
 from state_machines.coding import coder as C
 from state_machines.coding import pipeline as P
@@ -128,12 +132,8 @@ def test_virtual_private_networks_are_tied_to_the_act_when_the_means_rule_is_on(
 
 
 def _require_spacy_model():
-    pytest.importorskip("spacy")
-    import spacy
-    try:
-        spacy.load("en_core_web_sm")
-    except Exception as exc:
-        pytest.skip(f"en_core_web_sm is not installed: {exc}")
+    spacy = pytest.importorskip("spacy")
+    spacy.load("en_core_web_sm")
 
 
 def test_means_parser_finds_the_parenthetical_the_window_misses(tmp_path, monkeypatch):
@@ -237,7 +237,7 @@ def _framed(tmp, case, text, monkeypatch, frame, names="Michael Smith"):
     return off, on, log
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_o0005_acquire_material_keeps_the_defendant_when_the_sender_is_the_subject(tmp_path, monkeypatch):
     text = "The defendant received the files from the facilitator via an encrypted channel."
     frame = _plain_frame(text, "ACQUIRE_MATERIAL", "The defendant")
@@ -253,7 +253,7 @@ def test_o0005_acquire_material_keeps_the_defendant_when_the_sender_is_the_subje
     assert passage["char_start"] == start
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_o0002_seek_targets_is_a_public_post_with_a_means(tmp_path, monkeypatch):
     text = "The defendant made a public post in a public group."
     frame = _plain_frame(text, "SEEK_TARGETS", "The defendant", means="public group", object_text="public post")
@@ -296,7 +296,7 @@ def test_a_victim_frame_is_not_an_offender_act(tmp_path, monkeypatch):
     assert all(e["actor"]["role"] != "offender" for e in bundle["events"])
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_a_verbatim_frame_is_kept_and_a_paraphrase_is_not_found(tmp_path, monkeypatch):
     text = "The defendant sent the files to other users via an encrypted channel."
     _clear(monkeypatch)
@@ -312,7 +312,7 @@ def test_a_verbatim_frame_is_kept_and_a_paraphrase_is_not_found(tmp_path, monkey
     assert any("not_found=1" in line for line in log)
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_frame_coders_disagree_and_intersection_drops_the_act(tmp_path, monkeypatch):
     text = "The defendant sent the files to other users via an encrypted channel."
     case = "two_coders"
@@ -341,7 +341,7 @@ def test_frame_coders_disagree_and_intersection_drops_the_act(tmp_path, monkeypa
     assert not (out / "resolved" / f"{case}.json").exists()
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_propose_verify_recovers_a_missed_act(tmp_path, monkeypatch):
     case = "missed"
     text = _page("The defendant sent the files to other users via an encrypted channel.")
@@ -408,7 +408,7 @@ def _recover(tmp, case, text, monkeypatch):
     return json.loads((out / "resolved" / f"{case}.json").read_text(encoding="utf-8"))
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_a_missed_act_publishes_only_a_defendant(tmp_path, monkeypatch):
     pronoun = _recover(tmp_path / "he", "missed_he",
                        "He sent the files to other users via an encrypted channel.", monkeypatch)
@@ -454,7 +454,7 @@ def _parser_up():
         return False
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
     from state_machines.coding.workflow import build_deny
     body = "Smith uploaded the files using an encrypted app."
@@ -496,7 +496,7 @@ def test_caption_names_match_and_a_possessive_does_not(tmp_path, monkeypatch):
     assert any("actor_rejected=1" in line for line in log)
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch):
     text = _caption(
         "The defendant uploaded the files using an encrypted app. "
@@ -541,7 +541,7 @@ def test_one_defendant_is_one_participant_and_two_stay_two(tmp_path, monkeypatch
             C.code_case("two", "coder_A", tmp_path / "two", deny=build_deny("two", tmp_path / "two"))
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monkeypatch):
     body = "Smith opened an account on the service. He sent the files to other users via an encrypted channel."
     text = _caption(body)
@@ -565,7 +565,7 @@ def test_he_resolves_to_the_named_defendant_only_with_coreference(tmp_path, monk
     assert all(not o["relations"] for o in on_doc["observations"])
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_frame_request_sends_the_frames_schema(tmp_path, monkeypatch):
     text = "The defendant sent the files to other users via an encrypted channel."
     _clear(monkeypatch)
@@ -606,7 +606,7 @@ def test_frame_request_sends_the_frames_schema(tmp_path, monkeypatch):
     assert bundle["passages"][0]["char_start"] == start and bundle["passages"][0]["char_end"] == end
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_spans_are_relocated_from_the_page_text(tmp_path, monkeypatch):
     from state_machines.coding.frames import ground_frame, locate_span
 
@@ -769,7 +769,7 @@ def test_verification_compares_which_defendant(tmp_path, monkeypatch):
         from_bundles(bundle("coder_A", "P1"), bundle("coder_B", "P2"), pages=["The defendant sent files."])
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_frame_drops_are_in_the_manifest_only_when_the_flag_is_on(tmp_path, monkeypatch):
     pytest.importorskip("case_uco")
     from state_machines.graphs.release import build
@@ -791,7 +791,7 @@ def test_frame_drops_are_in_the_manifest_only_when_the_flag_is_on(tmp_path, monk
     assert "spacy_model" not in off
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):
     text = ("The defendant sent the files to other users via an encrypted channel. "
             "I know from my training and experience that the defendant sent the files to other users via an encrypted channel.")
@@ -820,7 +820,7 @@ def test_repeated_quotes_that_disagree_are_ambiguous(tmp_path, monkeypatch):
     assert C.drops_from_log(log)["ambiguous"] >= 1
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_frame_drops_are_counted_by_reason(tmp_path, monkeypatch):
     text = ("The defendant sent the files to other users via an encrypted channel. "
             "The defendant sent the files to other users via an encrypted channel.")

@@ -838,16 +838,15 @@ def _canonical_actor(page: str, slot: dict, records: List[dict]) -> Optional[str
 
 
 def refusal_row(case_id, coder_id, run_id, document_sha256, code, reason) -> dict:
-    """One refusal. ``behavior_category`` is the conduct group, not the act code."""
+    """One refusal. ``act`` is the code. ``behavior_category`` is its conduct group."""
     code = code or ""
     reason_code = reason if reason in REASON_CODES else "actor_rejected"
     return {
         "case_id": case_id,
-        "coder_id": coder_id,
-        "run_id": run_id,
         "document_sha256": document_sha256 or "",
+        "coder": coder_id or "",
+        "act": code,
         "behavior_category": V.GROUP_OF.get(code, ""),
-        "reason_code": reason_code,
         "reason": reason_code,
     }
 
@@ -953,9 +952,9 @@ def _write_refusals(text_root: Path, case_id: str, coder: str, rows: List[dict])
     body = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
     safe = re.sub(r"[^A-Za-z0-9_.-]+", "_", coder or "coder")
     (folder / f"{safe}.v2_refusals.jsonl").write_text(body, encoding="utf-8")
-    # The case file is the coder that just ran, so existing readers keep working.
-    # A second coder keeps a separate file and does not append to a stale log.
-    (folder / "v2_refusals.jsonl").write_text(body, encoding="utf-8")
+    stale = folder / "v2_refusals.jsonl"
+    if stale.is_file():
+        stale.unlink()
 
 
 def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] = None, deny: Optional[List[str]] = None,

@@ -92,6 +92,50 @@ def merge_dockets(rows: Sequence[dict]) -> list:
     return merged
 
 
+_STAMPED = ("court", "docket_number", "document_sha256", "doc_id")
+
+
+def population_from_case(case_id: str, text_root, *, stratum: str = "published_acts") -> list:
+    """Sentence rows for one case, each stamped with court, docket and document hash.
+
+    Court and docket come from ``case_key.json`` when that file exists, otherwise
+    from ``sources.json``. The document hash is the filing's own sha256.
+    """
+    from state_machines.evidence import evidence as E
+    from state_machines.observations.observe import sentences
+
+    root = Path(text_root) / case_id
+    sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
+    key_path = root / "case_key.json"
+    key = json.loads(key_path.read_text(encoding="utf-8")) if key_path.is_file() else {}
+    court = key.get("court") or sources.get("court") or ""
+    docket = key.get("docket_number") or sources.get("docket_number") or ""
+    rows = []
+    for doc in sources.get("documents") or []:
+        sha = doc.get("sha256") or ""
+        doc_id = doc.get("doc_id") or ""
+        for page in doc.get("pages") or []:
+            text = E.read_page(case_id, doc_id, page["pdf_page"], text_root) or ""
+            spans = list(sentences(E.normalize(text)))
+            texts = [E.normalize(text)[start:end].strip() for start, end in spans]
+            for index, sentence in enumerate(texts):
+                if not sentence:
+                    continue
+                rows.append({
+                    "unit_id": f"{case_id}:{doc_id}:{page['pdf_page']}:{index}",
+                    "case_id": case_id,
+                    "doc_id": doc_id,
+                    "court": court,
+                    "docket_number": docket,
+                    "document_sha256": sha,
+                    "stratum": stratum,
+                    "sentence": sentence,
+                    "context_before": texts[max(0, index - 2):index],
+                    "context_after": texts[index + 1:index + 3],
+                })
+    return rows
+
+
 def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
     """A stratified sample of the sealed gold frame.
 
@@ -126,7 +170,7 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
         meta[name] = {"population": size, "drawn": asked, "inclusion_probability": pi}
         picks = pool if asked == size else rng.sample(pool, asked)
         for row in picks:
-            drawn.append({
+            drawn_row = {
                 "unit_id": row["unit_id"],
                 "case_id": row["case_id"],
                 "stratum": name,
@@ -137,7 +181,11 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
                 "context_before": list(row.get("context_before") or []),
                 "context_after": list(row.get("context_after") or []),
                 "machine": row.get("machine"),
-            })
+            }
+            for field in _STAMPED:
+                if row.get(field):
+                    drawn_row[field] = row[field]
+            drawn.append(drawn_row)
     return {"seed": config["seed"], "rows": drawn, "strata": meta}
 
 
@@ -158,26 +206,36 @@ def grading_sheet(sample: dict, window: int = 2) -> dict:
     """The sentence and at most ``window`` sentences of context. No machine labels, no stratum."""
     units = []
     for row in sample["rows"]:
-        units.append({
+        units.append(_stamp(row, {
             "unit_id": row["unit_id"],
             "context_before": _clip(row.get("context_before") or [], window, last=True),
             "sentence": row["sentence"],
             "context_after": _clip(row.get("context_after") or [], window, last=False),
-        })
+        }))
     return {"units": units}
+
+
+def _stamp(row: dict, base: dict) -> dict:
+    for field in _STAMPED:
+        if row.get(field):
+            base[field] = row[field]
+    return base
 
 
 def key_file(sample: dict) -> dict:
     """Machine labels, stratum and inclusion probability, kept apart from the sheet."""
-    return {"units": [{
-        "unit_id": row["unit_id"],
-        "case_id": row["case_id"],
-        "stratum": row["stratum"],
-        "inclusion_probability": row["inclusion_probability"],
-        "stratum_population": row["stratum_population"],
-        "stratum_drawn": row["stratum_drawn"],
-        "machine": row["machine"],
-    } for row in sample["rows"]]}
+    units = []
+    for row in sample["rows"]:
+        units.append(_stamp(row, {
+            "unit_id": row["unit_id"],
+            "case_id": row["case_id"],
+            "stratum": row["stratum"],
+            "inclusion_probability": row["inclusion_probability"],
+            "stratum_population": row["stratum_population"],
+            "stratum_drawn": row["stratum_drawn"],
+            "machine": row["machine"],
+        }))
+    return {"units": units}
 
 
 def _stated(unit: str, value) -> bool:
@@ -472,14 +530,20 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed
             }
         else:
             kappa[unit] = {"coders": names, "kappa": None, "interval_95": None}
-    ready = [{
-        "unit_id": row["unit_id"],
-        "stratum": row["stratum"],
-        "inclusion_probability": row["inclusion_probability"],
-        "sampling_weight": _weight(row),
-        "gold": row["gold"],
-        "machine": row["machine"],
-    } for row in rows]
+    ready = []
+    for row in rows:
+        stamped = {
+            "unit_id": row["unit_id"],
+            "stratum": row["stratum"],
+            "inclusion_probability": row["inclusion_probability"],
+            "sampling_weight": _weight(row),
+            "gold": row["gold"],
+            "machine": row["machine"],
+        }
+        for field in _STAMPED:
+            if row.get(field):
+                stamped[field] = row[field]
+        ready.append(stamped)
     return {
         "manifest_sha256": digest,
         "precision": precision,

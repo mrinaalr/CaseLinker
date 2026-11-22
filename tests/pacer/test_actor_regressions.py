@@ -7,7 +7,11 @@ from __future__ import annotations
 
 import json
 
+import importlib.util
+
 import pytest
+
+needs_spacy = pytest.mark.skipif(importlib.util.find_spec("spacy") is None, reason="spaCy cannot be imported")
 
 from state_machines.coding import coder as C
 from state_machines.coding.frames import locate_span
@@ -296,12 +300,10 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
             assert records[0]["aliases"] == ["JD"]
             assert records[1]["aliases"] == []
     elif kind == "subject":
-        if not _parser_up():
-            pytest.skip("needs_spacy: the spaCy model en_core_web_sm is not available")
+        pytest.importorskip("spacy")
         assert clause_subject(payload) == expected
     elif kind == "actor":
-        if not _parser_up():
-            pytest.skip("needs_spacy: the spaCy model en_core_web_sm is not available")
+        pytest.importorskip("spacy")
         caption, sentence, actor = payload
         records = defendant_records_in(caption)
         generic = "no_defendant_record" if not records else ("one" if len(records) == 1 else "ambiguous")
@@ -317,8 +319,7 @@ def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_pat
         assert info["generic"] == status
         assert [record["surname"] for record in info["records"]] == surnames
     elif kind == "case_actor":
-        if not _parser_up():
-            pytest.skip("needs_spacy: the spaCy model en_core_web_sm is not available")
+        pytest.importorskip("spacy")
         _store_docs(tmp_path, name.replace("-", "_"), payload["docs"])
         info = case_defendants(name.replace("-", "_"), tmp_path)
         found, reason = decide_actor(payload["sentence"], payload["actor"], info["records"], generic=info["generic"])
@@ -403,7 +404,7 @@ def test_a_party_snapshot_wins_and_records_its_hash(tmp_path, monkeypatch):
         load()
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     """A complaint naming Smith does not absorb a plea that names Porter."""
     sentence = "The defendant sent the files to other users via an encrypted channel."
@@ -420,10 +421,10 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     bundle, _, log = C.code_case("split", "coder_A", tmp_path, deny=build_deny("split", tmp_path))
     assert info["by_document"]["plea"]["reason"] == "other_caption"
     assert bundle["events"] == []
-    assert "other_caption" in {row["reason"] for row in json.loads("[" + ",".join((tmp_path / "split" / "v2_refusals.jsonl").read_text().splitlines()) + "]")}
+    assert "other_caption" in {row["reason"] for row in json.loads("[" + ",".join((tmp_path / "split" / "coder_A.v2_refusals.jsonl").read_text().splitlines()) + "]")}
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_a_pronoun_in_a_two_defendant_case_is_refused(tmp_path, monkeypatch):
     sentence = "The defendant met the sender. He sent the files to other users via an encrypted channel."
     quote = "He sent the files to other users via an encrypted channel."
@@ -438,7 +439,7 @@ def test_a_pronoun_in_a_two_defendant_case_is_refused(tmp_path, monkeypatch):
     assert bundle["events"] == []
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_an_alias_stays_one_charged_defendant(tmp_path, monkeypatch):
     text = ("United States v. Jordan Example a/k/a Jay Sample, Defendant. "
             "Example uploaded the files using an encrypted app. "
@@ -459,7 +460,7 @@ def test_an_alias_stays_one_charged_defendant(tmp_path, monkeypatch):
         assert bundle["events"] == []
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_two_defendants_publish_no_generic_charged_defendant(tmp_path, monkeypatch):
     sentence = "The defendant sent the files to other users via an encrypted channel."
     text = _page(sentence, "Michael Smith and Robert Porter")
@@ -475,7 +476,7 @@ def test_two_defendants_publish_no_generic_charged_defendant(tmp_path, monkeypat
     assert charged == []
 
 
-@pytest.mark.needs_spacy
+@needs_spacy
 def test_a_passive_clause_is_counted(tmp_path, monkeypatch):
     passive = "The defendant was sent the files by Minor Victim 1."
     _clear(monkeypatch)

@@ -26,28 +26,6 @@ _REPO_DB = ROOT / "caselinker.db"
 _DB_EXISTED_AT_START = _REPO_DB.exists()
 
 
-def pytest_configure(config):
-    config.addinivalue_line(
-        "markers",
-        "needs_spacy: this test calls the spaCy model and skips when that model is not available",
-    )
-
-
-def _spacy_model_available() -> bool:
-    try:
-        import spacy
-        spacy.load("en_core_web_sm")
-        return True
-    except Exception:
-        return False
-
-
-def pytest_runtest_setup(item):
-    """Skip a marked test when the model is absent. An unmarked test still fails closed."""
-    if item.get_closest_marker("needs_spacy") and not _spacy_model_available():
-        _pytest.skip("the spaCy model en_core_web_sm is not available")
-
-
 @_pytest.fixture(scope="session", autouse=True)
 def _remove_empty_db_created_by_this_session():
     yield
