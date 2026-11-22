@@ -790,7 +790,7 @@ def pages_of(case_id: str, text_root: Path):
 
 _PRONOUN = re.compile(r"^(?:he|him|his|she|her|they|them|their)$", re.I)
 DROP_KEYS = ("not_found", "ambiguous", "section_filtered", "actor_rejected",
-             "assemble_dropped", "duplicate_sentence", "unparsable_reply")
+             "passive_subject", "assemble_dropped", "duplicate_sentence", "unparsable_reply")
 
 
 def empty_drops() -> dict:
@@ -867,8 +867,24 @@ def acts_from_model_frames(text: str, frames: List[dict], records: Optional[List
             continue
         slot = grounded.get("actor") or {}
         sentence = (grounded.get("sentence") or {}).get("text") or ""
-        from state_machines.coding.workflow import clause_subject, match_actor, same_actor
+        from state_machines.coding.workflow import (
+            bare_surname_established, clause_subject, is_passive, match_actor, same_actor,
+        )
         subject = clause_subject(sentence)
+        start = (grounded.get("sentence") or {}).get("start") or 0
+        if not bare_surname_established(subject, text[:start], records):
+            counts["actor_rejected"] += 1
+            continue
+        parts = subject.split()
+        surnames = {record["surname"].lower() for record in records}
+        if len(parts) >= 2 and parts[0][:1].isupper() and parts[0].lower() in surnames and parts[1][:1].islower():
+            counts["actor_rejected"] += 1
+            continue
+        if is_passive(sentence):
+            subject_hit = match_actor(subject, records)
+            if not subject_hit or subject_hit.get("ambiguous") or "canonical" not in subject_hit:
+                counts["passive_subject"] += 1
+                continue
         found = match_actor(slot.get("text") or "", records)
         if found and found.get("ambiguous"):
             counts["ambiguous"] += 1

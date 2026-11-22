@@ -104,6 +104,7 @@ def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
     from state_machines.evidence import vocab as V
     from state_machines.observations.observe import _means, features_in, sentences
     missed, means_ids = [], []
+    earlier = ""
     for page in pages:
         for start, end in sentences(page):
             if any(s < end and start < e for _pid, s, e in covered):
@@ -114,7 +115,9 @@ def _missed_on_pages(pages: Sequence[str], covered: Sequence[tuple]) -> tuple:
             sid = f"page:{start}:{end}"
             codes = sorted(c for c in CUES if V.FAMILY_OF.get(c) == "offender" and CUES[c].search(sentence))
             means_ids.append(sid)
-            missed.append({"sentence_id": sid, "text": sentence, "codes": codes})
+            missed.append({"sentence_id": sid, "text": sentence, "codes": codes,
+                           "prior": earlier + page[:start]})
+        earlier += page + "\n"
     return missed, means_ids
 
 
@@ -174,17 +177,22 @@ def from_bundles(a: dict, b: dict, pages: Optional[Sequence[str]] = None) -> dic
     covered += [(pid, start, end) for pid, start, end, _event in b_events]
     missed, means_ids = _missed_on_pages(pages, covered)
 
-    from state_machines.coding.workflow import clause_subject, defendant_records_in, match_actor
-    records = []
-    seen = set()
-    for page in pages or []:
-        for record in defendant_records_in(page):
-            if record["key"] not in seen:
-                seen.add(record["key"])
-                records.append(record)
+    from state_machines.coding.workflow import (
+        bare_surname_established, clause_subject, defendant_records_in, is_passive, match_actor,
+    )
+    records = defendant_records_in(pages[0]) if pages else []
 
     def recover(sent):
-        subject = clause_subject(sent.get("text") or "")
+        text = sent.get("text") or ""
+        subject = clause_subject(text)
+        if not bare_surname_established(subject, sent.get("prior") or "", records):
+            return []
+        parts = subject.split()
+        surnames = {record["surname"].lower() for record in records}
+        if len(parts) >= 2 and parts[0][:1].isupper() and parts[0].lower() in surnames and parts[1][:1].islower():
+            return []
+        if is_passive(text) and not (match_actor(subject, records) or {}).get("canonical"):
+            return []
         found = match_actor(subject, records)
         if not found or found.get("ambiguous") or "canonical" not in found:
             return []

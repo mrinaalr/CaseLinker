@@ -78,6 +78,7 @@ def _break_hyphen(text: str, i: int) -> Optional[int]:
     return None
 
 
+# Separate from evidence.normalize: that function keeps a line-break hyphen and turns the break into a space, which flags-off hashes and quote offsets use. This map is only for frame spans.
 def _normalize_map(text: str, *, join_break_hyphen: bool) -> Tuple[str, List[Tuple[int, int]]]:
     """Normalized text and, for each output character, the original ``[start, end)`` it covers.
 
@@ -130,7 +131,7 @@ def _normalize_map(text: str, *, join_break_hyphen: bool) -> Tuple[str, List[Tup
     return "".join(out), spans
 
 
-def _locate_one(page: str, needle: str, *, join_break_hyphen: bool) -> List[Tuple[int, int]]:
+def _locate_one(page: str, needle: str, *, join_break_hyphen: bool, ignore_case: bool = False) -> List[Tuple[int, int]]:
     page_n, spans = _normalize_map(page, join_break_hyphen=join_break_hyphen)
     needle_n, _needle_spans = _normalize_map(needle, join_break_hyphen=join_break_hyphen)
     if not needle_n:
@@ -138,7 +139,11 @@ def _locate_one(page: str, needle: str, *, join_break_hyphen: bool) -> List[Tupl
     hits = []
     start = 0
     while True:
-        i = page_n.find(needle_n, start)
+        if ignore_case:
+            found = re.search(re.escape(needle_n), page_n[start:], re.I)
+            i = start + found.start() if found else -1
+        else:
+            i = page_n.find(needle_n, start)
         if i < 0:
             break
         a = spans[i][0]
@@ -149,16 +154,17 @@ def _locate_one(page: str, needle: str, *, join_break_hyphen: bool) -> List[Tupl
     return hits
 
 
-def locate_span(page: str, needle: str) -> List[Tuple[int, int]]:
+def locate_span(page: str, needle: str, *, ignore_case: bool = False) -> List[Tuple[int, int]]:
     """Original-page offsets of ``needle``. A line-break hyphen matches either joined or kept.
 
     A match followed by an apostrophe is still a match. The actor check, not this
-    search, decides whether a possessive phrase is the defendant.
+    search, decides whether a possessive phrase is the defendant. ``ignore_case``
+    is for an actor phrase such as ``the defendant``.
     """
     found = []
     seen = set()
     for join in (True, False):
-        for hit in _locate_one(page, needle, join_break_hyphen=join):
+        for hit in _locate_one(page, needle, join_break_hyphen=join, ignore_case=ignore_case):
             if hit not in seen:
                 seen.add(hit)
                 found.append(hit)
@@ -189,10 +195,11 @@ def _plain(frame: dict, key: str) -> str:
     return ""
 
 
-def _inside(page: str, needle: str, sent_start: int, sent_end: int) -> Optional[Tuple[int, int]]:
+def _inside(page: str, needle: str, sent_start: int, sent_end: int, *, ignore_case: bool = False) -> Optional[Tuple[int, int]]:
     if not needle:
         return None
-    inner = [span for span in locate_span(page, needle) if sent_start <= span[0] and span[1] <= sent_end]
+    inner = [span for span in locate_span(page, needle, ignore_case=ignore_case)
+             if sent_start <= span[0] and span[1] <= sent_end]
     return inner[0] if inner else None
 
 
@@ -206,7 +213,7 @@ def _occurrence_actor(page: str, sentence: str, sent_start: int, sent_end: int, 
             return "ambiguous"
         return found.get("canonical") or fallback
 
-    if actor and _inside(page, actor, sent_start, sent_end):
+    if actor and _inside(page, actor, sent_start, sent_end, ignore_case=True):
         return _label(match_actor(actor, records), actor)
     return _label(match_actor(clause_subject(sentence), records), clause_subject(sentence))
 
@@ -248,7 +255,7 @@ def ground_frame(page: str, frame: dict, records: Optional[List[dict]] = None) -
     if blocked:
         return None, "section_filtered", []
     keep_earliest = len(views) > 1
-    actor_at = _inside(page, actor, sent_start, sent_end) if actor else None
+    actor_at = _inside(page, actor, sent_start, sent_end, ignore_case=True) if actor else None
     if actor and actor_at is None:
         return None, "not_found", []
     means_at = _inside(page, means, sent_start, sent_end) if means else None

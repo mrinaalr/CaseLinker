@@ -265,7 +265,7 @@ def _caption_tokens(raw: str) -> List[str]:
 
 
 def _one_person(chunk: str) -> Optional[dict]:
-    chunk = chunk.strip(" ,")
+    chunk = chunk.strip(" ,;")
     if not chunk:
         return None
     if re.match(r"^[A-Z][A-Za-z'\-]+,\s+[A-Z]", chunk):
@@ -284,17 +284,61 @@ def _one_person(chunk: str) -> Optional[dict]:
 
 
 _REPORTER = re.compile(r"\d+\s+U\.?\s*S\.?", re.I)
+_CASE_V = re.compile(
+    r"(?:UNITED STATES OF AMERICA|United States of America|UNITED STATES|United States|USA|U\.S\.|CRIMINAL CASE)"
+    r"[^.]{0,80}?(?<![A-Za-z])[Vv][Ss]?\.\s+"
+)
+_BODY_START = re.compile(
+    r"(?:\n\s*\n|\n\s*(?:STATEMENT OF FACTS|INTRODUCTION|BACKGROUND|COUNT\b|ARGUMENT|CONCLUSION|"
+    r"FINDINGS OF FACT|PROCEDURAL HISTORY|OFFENSE CONDUCT|THE OFFENSE)\b)",
+    re.I,
+)
+_SURNAME_GIVEN = re.compile(
+    r"\b([A-Z][A-Za-z'\-]+),\s+([A-Z][A-Za-z'\-]+(?:\s+[A-Z]\.?)?)"
+    r"(?=\s*(?:,|;|\band\b|$))"
+)
+_PERSON_SPLIT = re.compile(r"\s*;\s*and\s+|\s*,\s*and\s+|\s+and\s+|\s*;\s*|\s*,\s*", re.I)
+
+
+def _citation_follows(text: str, start: int) -> bool:
+    """True when the raw text just after a 'v.' is a reporter citation, not a caption."""
+    window = text[start:start + 160]
+    head = re.split(r"(?<=[A-Za-z]{2})\.\s+", window, maxsplit=1)[0]
+    return bool(_REPORTER.search(head))
+
+
+def _caption_block(page: str) -> str:
+    """Opening of a page, through the caption and before the first body heading or paragraph."""
+    found = _BODY_START.search(page or "")
+    return page[:found.start()] if found else (page or "")
+
+
+def _split_caption_people(head: str) -> List[str]:
+    """People in one caption list. 'SURNAME, Given' stays one person; other commas split."""
+    held: List[str] = []
+
+    def _hold(match: re.Match) -> str:
+        held.append(f"{match.group(1)}, {match.group(2)}")
+        return f"\x00{len(held) - 1}\x00"
+
+    masked = _SURNAME_GIVEN.sub(_hold, head)
+    chunks = []
+    for chunk in _PERSON_SPLIT.split(masked):
+        chunk = chunk.strip(" ,;")
+        if not chunk:
+            continue
+        chunk = re.sub(r"\x00(\d+)\x00", lambda m: held[int(m.group(1))], chunk)
+        chunks.append(chunk)
+    return chunks
 
 
 def _people_in_caption(fragment: str) -> List[dict]:
-    """Caption people only. A reporter citation is not a defendant. An alias is the same person."""
+    """Caption people. An alias is the same person. A reporter check is not done here."""
     head = re.split(r"(?<=[A-Za-z]{2})\.\s+", fragment, maxsplit=1)[0]
-    if _REPORTER.search(head):
-        return []
     head = _CAPTION_STOP.split(head)[0]
     parts = _ALIAS.split(head)
     people = []
-    for chunk in re.split(r"\s+and\s+|;\s+", parts[0]):
+    for chunk in _split_caption_people(parts[0]):
         person = _one_person(chunk)
         if person:
             people.append(person)
@@ -303,7 +347,7 @@ def _people_in_caption(fragment: str) -> List[dict]:
     primary = people[0]
     aliases, alias_surnames = [], []
     for part in parts[1:]:
-        for chunk in re.split(r"\s+and\s+", part):
+        for chunk in _split_caption_people(part):
             alias = _one_person(chunk)
             if not alias:
                 continue
@@ -314,46 +358,57 @@ def _people_in_caption(fragment: str) -> List[dict]:
     return [primary]
 
 
+def _keep_record(record: dict, seen: set) -> bool:
+    key = record["full"].lower()
+    if key in seen or key in {"united states", "united states of america"}:
+        return False
+    if record["surname"].lower() in {"united", "states", "america"}:
+        return False
+    seen.add(key)
+    record.setdefault("aliases", [])
+    record.setdefault("alias_surnames", [])
+    record["key"] = key
+    return True
+
+
 def defendant_records_in(text: str) -> List[dict]:
-    """Defendants named in the caption, not in a later case citation."""
+    """Defendants in the first case caption of this page, before the body.
+
+    A 'v.' whose raw following text is a reporter citation is not a caption.
+    Later captions on the page are not defendants.
+    """
+    block = _caption_block(text or "")
     records = []
-    seen = set()
-    norm = E.normalize(text or "")
-    for match in _CAPTION.finditer(norm):
-        fragment = match.group(1)
-        head = re.split(r"(?<=[A-Za-z]{2})\.\s+", fragment, maxsplit=1)[0]
-        if _REPORTER.search(head):
+    seen: set = set()
+    for match in _CASE_V.finditer(block):
+        if _citation_follows(block, match.end()):
             continue
-        for record in _people_in_caption(fragment):
-            key = record["full"].lower()
-            if key in seen or key in {"united states", "united states of america"}:
-                continue
-            if record["surname"].lower() in {"united", "states", "america"}:
-                continue
-            seen.add(key)
-            record.setdefault("aliases", [])
-            record.setdefault("alias_surnames", [])
-            record["key"] = key
-            records.append(record)
+        for record in _people_in_caption(block[match.end():]):
+            if _keep_record(record, seen):
+                records.append(record)
+        break
     return records
 
 
 def defendant_records_for_case(case_id: str, text_root: Optional[Path] = None) -> List[dict]:
+    """Defendants from the first page's caption. A citation on a later page is not a defendant."""
     root = E.text_root(text_root) / case_id
-    records = []
-    seen = set()
-    for page in sorted(root.glob("*/p*.txt")):
-        for record in defendant_records_in(page.read_text(encoding="utf-8", errors="replace")):
-            if record["key"] in seen:
-                continue
-            seen.add(record["key"])
-            records.append(record)
-    return records
+    first = sorted(root.glob("*/p0001.txt"))
+    if not first:
+        return []
+    text = first[0].read_text(encoding="utf-8", errors="replace")
+    return defendant_records_in(text)
 
 
-_LEAD_IN = re.compile(
-    r"^(?:(?:on|in|during|after|before)\s+[A-Za-z]+\s+\d{1,2},?\s+\d{4},?\s*"
-    r"|(?:on|in|during|after|before)\s+[^,]{0,40},\s*)+",
+_LEAD_PIECE = re.compile(
+    r"^(?:"
+    r"on\s+or\s+about\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
+    r"|between\s+\w+\s+and\s+\w+(?:\s+\w+)?\s+\d{4}\s*,\s*"
+    r"|in\s+or\s+(?:around|about)\s+\d{4}\s*,\s*"
+    r"|(?:on|in|during|after|before)\s+\w+\s+\d{1,2},?\s+\d{4}\s*,\s*"
+    r"|(?:on|in|during|after|before)\s+[^,]{0,60},\s*"
+    r"|(?:then|later|however|thereafter)\s*,\s*"
+    r")",
     re.I,
 )
 _SUBJECT = re.compile(
@@ -362,15 +417,45 @@ _SUBJECT = re.compile(
     r"|[A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})"
 )
 _ANY_POSSESSIVE = re.compile(r"\b[\w.\-]+(?:'s|\u2019s)\b")
+_NP_SKIP = re.compile(
+    r"^(?:then|later|also|subsequently|thereafter|however|next|soon|immediately|eventually|"
+    r"thus|therefore|again|already|still|just|now|once|often|previously|finally|"
+    r"sent|send|sends|sending|used|use|uses|using|distributed|distribute|distributes|distributing|"
+    r"was|were|is|are|be|been|being|had|has|have|did|does|do|"
+    r"uploaded|received|stored|opened|created|posted|shared|downloaded|accessed|viewed|"
+    r"possessed|produced|transported|communicated|asked|told|went|made|took|gave|kept|said|"
+    r"transmitted|forwarded|admitted|began|started|continued|would|could|should|will|can|may|might)$",
+    re.I,
+)
+_PASSIVE = re.compile(
+    r"\b(?:was|were|been|be)\s+(?:sent|used|distributed|uploaded|received|stored|transmitted|"
+    r"shared|posted|forwarded|asked|told|made|kept|given|taken|viewed|accessed|produced|"
+    r"possessed|\w+ed)\b",
+    re.I,
+)
+
+
+def _strip_lead(text: str) -> str:
+    while True:
+        match = _LEAD_PIECE.match(text)
+        if not match:
+            return text
+        text = text[match.end():]
+
+
+def _continues_noun_phrase(word: str) -> bool:
+    """A lowercase noun or adjective after a name, not the verb or a sentence adverb."""
+    return bool(word) and word[:1].islower() and not _NP_SKIP.match(word)
 
 
 def clause_subject(sentence: str) -> str:
-    """The grammatical subject of the act's clause, after a leading date.
+    """The grammatical subject of the act's clause, after a leading adverbial or date.
 
     A possessive (``Smith's mother``, ``the defendant's mother``) is that whole
-    phrase, so it is not read as the defendant. Lowercase words do not extend a name.
+    phrase, so it is not read as the defendant. A capitalized name followed by a
+    lowercase noun or adjective is that whole noun phrase, not a bare surname.
     """
-    text = _LEAD_IN.sub("", (sentence or "").strip())
+    text = _strip_lead((sentence or "").strip())
     possessive = re.match(
         r"((?:[Tt]he\s+[Dd]efendant|[Tt]he\s+[Aa]ccused|[A-Z][\w'.-]+)(?:'s|\u2019s)"
         r"\s+[A-Za-z][\w'.-]+)",
@@ -379,7 +464,46 @@ def clause_subject(sentence: str) -> str:
     if possessive:
         return possessive.group(1)
     match = _SUBJECT.match(text)
-    return match.group(1) if match else ""
+    if not match:
+        return ""
+    subject = match.group(1)
+    if re.fullmatch(r"[A-Z][\w'.-]+", subject):
+        rest = text[match.end():]
+        words = []
+        for word in re.findall(r"[A-Za-z][\w'.-]*", rest):
+            if not _continues_noun_phrase(word):
+                break
+            words.append(word)
+        if words:
+            subject = subject + " " + " ".join(words)
+    return subject
+
+
+def is_passive(sentence: str) -> bool:
+    """True when the clause's subject is the patient of a passive verb."""
+    return bool(_PASSIVE.search(sentence or ""))
+
+
+def bare_surname_established(subject: str, prior: str, records: List[dict]) -> bool:
+    """A one-word surname counts only after the full name or ``Defendant <Surname>``."""
+    token = " ".join((subject or "").split())
+    if not re.fullmatch(r"[A-Z][\w'.-]+", token):
+        return True
+    hits = [record for record in records
+            if token.lower() in {record["surname"].lower(),
+                                 *[name.lower() for name in record.get("alias_surnames", [])]}]
+    if len(hits) != 1:
+        return True
+    record = hits[0]
+    prior_text = prior or ""
+    if re.search(rf"\b{re.escape(record['full'])}\b", prior_text, re.I):
+        return True
+    if re.search(rf"\bdefendants?\s+{re.escape(record['surname'])}\b", prior_text, re.I):
+        return True
+    for alias in record.get("aliases") or []:
+        if re.search(rf"\b{re.escape(alias)}\b", prior_text, re.I):
+            return True
+    return False
 
 
 def _record_hit(record: dict, records: List[dict]) -> dict:
@@ -412,7 +536,7 @@ def match_actor(text: str, records: List[dict]) -> Optional[dict]:
         forms = [record["full"].lower(), *[alias.lower() for alias in record.get("aliases", [])]]
         if low in forms:
             return _record_hit(record, records)
-    if len(parts) == 1 and parts[0][:1].isupper():
+    if len(parts) == 1 and (named or parts[0][:1].isupper()):
         hits = []
         for record in records:
             surnames = [record["surname"].lower(), *[name.lower() for name in record.get("alias_surnames", [])]]
@@ -445,15 +569,14 @@ def build_deny(case_id: str, text_root: Optional[Path] = None) -> List[str]:
     """
     root = E.text_root(text_root) / case_id
     names = set()
-    extra = v2_active()
     for page in sorted(root.glob("*/p*.txt")):
         text = page.read_text(encoding="utf-8", errors="replace")
         names |= _base_deny_tokens(text)
-        if extra:
-            for record in defendant_records_in(text):
-                names |= set(record["full"].lower().split())
-                for alias in record.get("aliases", []):
-                    names |= set(alias.lower().split())
+    if v2_active():
+        for record in defendant_records_for_case(case_id, text_root):
+            names |= set(record["full"].lower().split())
+            for alias in record.get("aliases", []):
+                names |= set(alias.lower().split())
     terms = sorted(names)
     (root / "deny.json").write_text(json.dumps(terms, indent=1) + "\n", encoding="utf-8")
     return terms

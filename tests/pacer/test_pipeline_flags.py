@@ -717,6 +717,16 @@ def test_clause_subject_and_possessive_actor(tmp_path, monkeypatch):
     assert clause_subject("Defendant Smith sent the files to other users via an encrypted channel.") == "Defendant Smith"
     assert clause_subject("On May 1, 2020, Smith sent the files to other users via an encrypted channel.") == "Smith"
     assert clause_subject("On May 2, 2021, the defendant sent the files to other users via an encrypted channel.") == "the defendant"
+    for lead in (
+        "On or about May 2, 2020,",
+        "Between May and June 2021,",
+        "Then,",
+        "Later,",
+        "However,",
+        "Thereafter,",
+        "In or around 2019,",
+    ):
+        assert clause_subject(f"{lead} Smith sent the files to other users via an encrypted channel.") == "Smith", lead
     mother = "The defendant's mother distributed the files to other users via an encrypted channel."
     smith = "Smith's mother sent the files to other users via an encrypted channel."
     agent = "Agent Porter sent the files to the defendant via an encrypted channel."
@@ -786,6 +796,8 @@ def test_a_real_hyphen_and_a_line_break_hyphen_both_locate():
     from state_machines.coding.frames import locate_span
     page = "The defendant sent the files via a peer-to-\npeer channel."
     assert locate_span(page, "peer-to-peer")
+    both = "The defendant sent the files via a peer-to-\npeer-based channel."
+    assert locate_span(both, "peer-to-peer-based")
 
 
 def test_a_lowercase_surname_is_not_the_defendant():
@@ -880,6 +892,130 @@ def test_frame_drops_are_counted_by_reason(tmp_path, monkeypatch):
     assert drops["duplicate_sentence"] == 0
     assert [e["action"] for e in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
     assert "unparsable_reply" in drops and "verify_failed" in drops
+
+
+def _store_pages(tmp: Path, case: str, pages: list) -> None:
+    listed = []
+    for number, text in enumerate(pages, 1):
+        E.write_page(case, "sof", number, text, tmp)
+        listed.append({"pdf_page": number, "text_method": "text_layer",
+                       "page_text_sha256": E.sha256_text(E.normalize(text)),
+                       "court_page_label": None, "ocr_engine": None, "ocr_mean_confidence": None,
+                       "image_checked": False, "limitations": []})
+    docs = [{"doc_id": "sof", "doc_type": "statement_of_facts", "source_path": f"FICTIONAL/{case}.pdf",
+             "sha256": E.sha256_text(case), "ecf_document_number": None, "filed_date": None,
+             "page_count": len(pages), "pages": listed}]
+    (tmp / case / "sources.json").write_text(json.dumps({"case_id": case, "documents": docs}), encoding="utf-8")
+
+
+def test_a_common_surname_is_not_the_subject_of_a_following_noun(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import clause_subject
+    assert clause_subject("Young people sent the files to other users via an encrypted channel.") == "Young people"
+    young = "Young people sent the files to other users via an encrypted channel."
+    rejected = _recover(tmp_path / "young-people", "young_people", _page(young, "Robert Young"), monkeypatch)
+    assert rejected["recovered"] == []
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(young, "DISTRIBUTE_MATERIAL", "Young")])
+    _store(tmp_path / "young-frame", "young_frame", _page(young, "Robert Young"))
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("young_frame", "coder_A", tmp_path / "young-frame",
+                                 deny=build_deny("young_frame", tmp_path / "young-frame"))
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["actor_rejected"] >= 1
+    followed = ("Robert Young wrote to a friend. "
+                "Young then used an encrypted messaging application and sent the files to other users.")
+    accepted = _recover(tmp_path / "young-then", "young_then", _page(followed, "Robert Young"), monkeypatch)
+    assert accepted["recovered"]
+    assert all(frame["actor"]["text"] == "the defendant" for frame in accepted["recovered"])
+    later = "Young then used an encrypted messaging application and sent the files to other users."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(later, "DISTRIBUTE_MATERIAL", "Young", means="encrypted messaging application")])
+    _store(tmp_path / "young-later", "young_later", _page(followed, "Robert Young"))
+    kept, _, _ = C.code_case("young_later", "coder_A", tmp_path / "young-later",
+                             deny=build_deny("young_later", tmp_path / "young-later"))
+    assert [event["action"] for event in kept["events"]] == ["DISTRIBUTE_MATERIAL"]
+    brown = "Brown packages were sent to other users via an encrypted channel."
+    brown_page = _recover(tmp_path / "brown", "brown_packages", _page(brown, "BROWN"), monkeypatch)
+    assert brown_page["recovered"] == []
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(brown, "DISTRIBUTE_MATERIAL", "Brown", object_text="Brown packages")])
+    _store(tmp_path / "brown-frame", "brown_frame", _page(brown, "BROWN"))
+    dropped, _, brown_log = C.code_case("brown_frame", "coder_A", tmp_path / "brown-frame",
+                                        deny=build_deny("brown_frame", tmp_path / "brown-frame"))
+    assert dropped["events"] == []
+    assert C.drops_from_log(brown_log)["actor_rejected"] >= 1
+
+
+def test_caption_lists_split_on_commas_and_a_generic_actor_is_ambiguous(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import defendant_records_in, match_actor
+    three = defendant_records_in(
+        "United States v. Michael Smith, Robert Brown, and Alan Price, Defendants.")
+    two = defendant_records_in("United States v. MICHAEL SMITH, ROBERT BROWN, Defendant.")
+    semis = defendant_records_in("United States v. SMITH; JONES; and PRICE, Defendants.")
+    assert [record["surname"] for record in three] == ["Smith", "Brown", "Price"]
+    assert [record["surname"] for record in two] == ["SMITH", "BROWN"]
+    assert [record["surname"] for record in semis] == ["SMITH", "JONES", "PRICE"]
+    assert match_actor("the defendant", three)["ambiguous"]
+    assert match_actor("The defendant", two)["ambiguous"]
+    assert match_actor("the defendant", semis)["ambiguous"]
+    one = defendant_records_in("United States v. SMITH, MICHAEL, Defendant.")
+    assert len(one) == 1 and one[0]["full"] == "MICHAEL SMITH" and one[0]["surname"] == "SMITH"
+    pair = defendant_records_in("United States v. SMITH, MICHAEL A. and JONES, ROBERT, Defendants.")
+    assert [(record["full"], record["surname"]) for record in pair] == [
+        ("MICHAEL SMITH", "SMITH"), ("ROBERT JONES", "JONES")]
+    sentence = "The defendant sent the files to other users via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "the defendant")])
+    page = _page(sentence, "Michael Smith, Robert Brown, and Alan Price")
+    _store(tmp_path, "trio", page)
+    from state_machines.coding.workflow import build_deny
+    bundle, _, log = C.code_case("trio", "coder_A", tmp_path, deny=build_deny("trio", tmp_path))
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["ambiguous"] >= 1
+
+
+def test_a_later_citation_is_not_a_second_defendant(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import build_deny, defendant_records_for_case, defendant_records_in
+    statute = ("The statute provides that distribution in interstate commerce is an offense under "
+               "title 18. ") * 4
+    sentence = "The defendant sent the files to other users via an encrypted channel."
+    page1 = ("United States v. Michael Smith, Defendant. " + statute
+             + "See United States v. Booker, 543 U.S. 220 (2005). "
+             + "Gall v. United States, 552 U.S. 38 (2007). " + sentence)
+    page3 = "The discussion cites United States v. Booker, 543 U.S. 220 (2005) and does not name another person."
+    assert [record["full"] for record in defendant_records_in(page1)] == ["Michael Smith"]
+    _store_pages(tmp_path, "cite", [page1, "This middle page has no caption.", page3])
+    assert [record["full"] for record in defendant_records_for_case("cite", tmp_path)] == ["Michael Smith"]
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "the defendant")])
+    bundle, _, _log = C.code_case("cite", "coder_A", tmp_path, deny=build_deny("cite", tmp_path))
+    assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+
+
+def test_a_passive_clause_is_counted_and_a_lowercase_name_matches(tmp_path, monkeypatch):
+    from state_machines.coding.workflow import build_deny, match_actor, defendant_records_in
+    passive = "The files were sent by Smith to other users via an encrypted channel."
+    _clear(monkeypatch)
+    monkeypatch.setenv("CASELINKER_EXTRACTOR", "frame-1.0")
+    _ask_frames(monkeypatch, [_plain_frame(passive, "DISTRIBUTE_MATERIAL", "Smith", object_text="The files")])
+    _store(tmp_path / "passive", "passive", _page(passive))
+    bundle, _, log = C.code_case("passive", "coder_A", tmp_path / "passive",
+                                 deny=build_deny("passive", tmp_path / "passive"))
+    assert bundle["events"] == []
+    assert C.drops_from_log(log)["passive_subject"] >= 1
+    sentence = "The defendant sent the files to other users via an encrypted channel."
+    _ask_frames(monkeypatch, [_plain_frame(sentence, "DISTRIBUTE_MATERIAL", "the defendant")])
+    _store(tmp_path / "case", "casefold", _page(sentence))
+    published, _, _ = C.code_case("casefold", "coder_A", tmp_path / "case",
+                                  deny=build_deny("casefold", tmp_path / "case"))
+    assert [event["action"] for event in published["events"]] == ["DISTRIBUTE_MATERIAL"]
+    records = defendant_records_in("United States v. Michael Smith, Defendant.")
+    assert match_actor("defendant smith", records)["canonical"] == "the defendant"
 
 
 def test_setup_installs_the_pinned_model_wheel():
