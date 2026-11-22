@@ -751,8 +751,7 @@ def acts_from_model_frames(text: str, frames: List[dict]) -> List[dict]:
         code = (frame.get("act") or {}).get("code")
         if not sentence or not code:
             continue
-        act = {"quote": sentence, "action": code, "actor": slot.get("text") or "the defendant",
-               "actor_role": "offender"}
+        act = {"quote": sentence, "action": code, "actor": slot["text"], "actor_role": "offender"}
         means = frame.get("means") or {}
         if means.get("level") == "C" and means.get("text"):
             act["affordance"] = {"class": means.get("feature_class"), "feature": means["text"]}
