@@ -290,7 +290,21 @@ def _check(name, got, expected):
     assert got == want, name
 
 
-@pytest.mark.parametrize("name,kind,payload,expected", PROBES, ids=[row[0] for row in PROBES])
+_NEEDS_SPACY_IDS = {
+    "subject-smith", "subject-defendant-name", "subject-date", "subject-the-defendant",
+    "lead-on-or-about", "lead-between-months", "lead-between-days", "lead-then",
+    "lead-later", "lead-however", "lead-thereafter", "lead-around", "lead-clock",
+    "generic-one", "generic-two", "defendant-smith-case",
+}
+
+
+def _marked(row):
+    if row[0] in _NEEDS_SPACY_IDS:
+        return pytest.param(*row, marks=needs_spacy)
+    return row
+
+
+@pytest.mark.parametrize("name,kind,payload,expected", [_marked(row) for row in PROBES], ids=[row[0] for row in PROBES])
 def test_v2_caption_and_actor_regressions(name, kind, payload, expected, tmp_path, monkeypatch):
     if kind == "records":
         assert _surnames(payload) == expected
@@ -420,6 +434,8 @@ def test_each_document_keeps_its_own_defendant(tmp_path, monkeypatch):
     assert info["by_document"]["plea"]["generic"] == "one"
     assert info["by_document"]["plea"]["record"]["surname"] == "Porter"
     assert [event["action"] for event in bundle["events"]] == ["DISTRIBUTE_MATERIAL"]
+    assert "Smith" not in json.dumps([event.get("actor") for event in bundle["events"]])
+    assert (C.drops_from_log(log) or {}).get("ambiguous", 0) == 0
 
 
 @needs_spacy

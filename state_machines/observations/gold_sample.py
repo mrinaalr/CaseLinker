@@ -109,12 +109,21 @@ def stratum_for_sentence(sentence: str, *, published_act: bool = False) -> str:
     return "other"
 
 
-def _published_spans(decisions) -> list:
-    """Action spans the head already published. This does not decide an act."""
-    if not decisions:
-        return []
+def _load_bundle(decisions):
+    """The head's decision file. A missing file is an error."""
+    if decisions is None:
+        raise SystemExit("a decision file is required")
     path = Path(decisions)
-    bundle = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else decisions
+    if not path.is_file():
+        raise SystemExit(f"decision file is missing: {path}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _covers(spans, doc_id, page, start, end) -> bool:
+    return any(doc == doc_id and pg == page and a < end and start < b for doc, pg, a, b, *_rest in spans)
+
+
+def _act_spans(bundle: dict) -> list:
     passages = {p["passage_id"]: p for p in bundle.get("passages") or []}
     spans = []
     for event in bundle.get("events") or []:
@@ -124,31 +133,55 @@ def _published_spans(decisions) -> list:
             passage = passages.get(support.get("passage_id"))
             if not passage:
                 continue
-            spans.append((passage["doc_id"], passage["pdf_page"], passage["char_start"], passage["char_end"]))
+            spans.append((passage["doc_id"], passage["pdf_page"], passage["char_start"], passage["char_end"],
+                          event.get("action") or ""))
     return spans
 
 
-def population_from_case(case_id: str, text_root, decisions=None) -> list:
-    """Every sentence on every filed page.
+def _tied_spans(bundle: dict, kind: str) -> list:
+    spans = []
+    for obs in bundle.get("observations") or []:
+        if obs.get("kind") != kind or not obs.get("relations"):
+            continue
+        spans.append((obs["doc_id"], obs["pdf_page"], obs["char_start"], obs["char_end"]))
+    return spans
 
-    A sentence that names a listed platform or a level-C feature is
-    ``machine_positive``. So is a sentence the head's own decision file already
-    published an act in. ``decisions`` is that bundle (events and passages).
-    Every other sentence is ``other``. The old stamp ``published_acts`` is not a
-    stratum and not a filter. No machine label is written here; those labels
-    belong in ``key.json``. Court and docket come from ``case_key.json`` when
-    that file exists, otherwise from ``sources.json``.
+
+def _machine_labels(act_spans, platform_spans, feature_spans, doc_id, page, start, end) -> dict:
+    act = next((code for doc, pg, a, b, code in act_spans
+                if doc == doc_id and pg == page and a < end and start < b), "")
+    return {
+        "act": act,
+        "means_tie": _covers(platform_spans, doc_id, page, start, end),
+        "level_c": _covers(feature_spans, doc_id, page, start, end),
+    }
+
+
+def population_from_case(case_id: str, text_root, decisions=None, decisions_v2=None) -> list:
+    """Every sentence on every filed page, labelled from the flags-off head's file.
+
+    ``{case_id}:act`` when that file published an act in the sentence.
+    ``level_c`` when it tied a feature means and did not publish an act there.
+    ``{case_id}:other`` otherwise. A platform name alone is not an act.
+    ``decisions`` is required. ``decisions_v2`` supplies ``machine_v2``.
     """
     from state_machines.evidence import evidence as E
     from state_machines.observations.observe import sentences
 
+    bundle = _load_bundle(decisions)
+    v2 = _load_bundle(decisions_v2) if decisions_v2 is not None else None
+    act_spans = _act_spans(bundle)
+    feature_spans = _tied_spans(bundle, "feature")
+    platform_spans = _tied_spans(bundle, "platform")
+    v2_acts = _act_spans(v2) if v2 else []
+    v2_features = _tied_spans(v2, "feature") if v2 else []
+    v2_platforms = _tied_spans(v2, "platform") if v2 else []
     root = Path(text_root) / case_id
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
     key_path = root / "case_key.json"
     key = json.loads(key_path.read_text(encoding="utf-8")) if key_path.is_file() else {}
     court = key.get("court") or sources.get("court") or ""
     docket = key.get("docket_number") or sources.get("docket_number") or ""
-    published = _published_spans(decisions)
     rows = []
     for doc in sources.get("documents") or []:
         sha = doc.get("sha256") or ""
@@ -160,20 +193,34 @@ def population_from_case(case_id: str, text_root, decisions=None) -> list:
             for index, ((start, end), sentence) in enumerate(zip(spans, texts)):
                 if not sentence:
                     continue
-                cited = any(doc_id == doc and page["pdf_page"] == pg and a < end and start < b
-                            for doc, pg, a, b in published)
-                rows.append({
-                    "unit_id": f"{case_id}:{doc_id}:{page['pdf_page']}:{index}",
+                page_no = page["pdf_page"]
+                acted = _covers(act_spans, doc_id, page_no, start, end)
+                level = _covers(feature_spans, doc_id, page_no, start, end)
+                if acted:
+                    stratum = f"{case_id}:act"
+                elif level:
+                    stratum = "level_c"
+                else:
+                    stratum = f"{case_id}:other"
+                row = {
+                    "unit_id": f"{case_id}:{doc_id}:{page_no}:{index}",
                     "case_id": case_id,
                     "doc_id": doc_id,
                     "court": court,
                     "docket_number": docket,
                     "document_sha256": sha,
-                    "stratum": stratum_for_sentence(sentence, published_act=cited),
+                    "pdf_page": page_no,
+                    "char_start": start,
+                    "char_end": end,
+                    "stratum": stratum,
                     "sentence": sentence,
                     "context_before": texts[max(0, index - 2):index],
                     "context_after": texts[index + 1:index + 3],
-                })
+                    "machine": _machine_labels(act_spans, platform_spans, feature_spans, doc_id, page_no, start, end),
+                }
+                if v2 is not None:
+                    row["machine_v2"] = _machine_labels(v2_acts, v2_platforms, v2_features, doc_id, page_no, start, end)
+                rows.append(row)
     return rows
 
 
@@ -196,6 +243,42 @@ def _strata_from_config(config: dict, by: dict) -> dict:
             strata[fill] = {"n": n_fill}
         return strata
     return config["strata"]
+
+
+def _order_key(seed, row: dict) -> str:
+    blob = f"{seed}‖{row['case_id']}‖{row['unit_id']}".encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()
+
+
+def _v15_plan(config: dict, by: dict) -> tuple:
+    """Up to two act sentences per case, the rest of three from other, and level C up to 43.
+
+    Sizes are fixed from the stratum counts. An empty or short stratum is logged
+    and does not stop the draw.
+    """
+    cap = int(config.get("level_c_cap", 43))
+    cases = sorted({name[:name.rfind(":")] for name in by if name.endswith(":act") or name.endswith(":other")})
+    strata = {}
+    shortfalls = []
+    for case_id in cases:
+        act_name, other_name = f"{case_id}:act", f"{case_id}:other"
+        n_act_pop, n_other_pop = len(by.get(act_name, [])), len(by.get(other_name, []))
+        n_act, n_other = min(2, n_act_pop), min(3 - min(2, n_act_pop), n_other_pop)
+        if n_act < 2:
+            shortfalls.append({"stratum": act_name, "population": n_act_pop, "asked": 2, "drawn": n_act})
+        if n_other < 3 - n_act:
+            shortfalls.append({"stratum": other_name, "population": n_other_pop, "asked": 3 - n_act, "drawn": n_other})
+        if n_act:
+            strata[act_name] = {"n": n_act}
+        if n_other:
+            strata[other_name] = {"n": n_other}
+    level_pop = len(by.get("level_c", []))
+    n_level = min(cap, level_pop)
+    if level_pop == 0 or n_level < level_pop:
+        shortfalls.append({"stratum": "level_c", "population": level_pop, "asked": min(cap, level_pop), "drawn": n_level})
+    if n_level:
+        strata["level_c"] = {"n": n_level}
+    return strata, shortfalls
 
 
 def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> dict:
@@ -221,17 +304,24 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
     by = {}
     for row in population:
         by.setdefault(row["stratum"], []).append(row)
-    strata = _strata_from_config(config, by)
+    if config.get("rule") == "v15":
+        strata, shortfalls = _v15_plan(config, by)
+    else:
+        strata, shortfalls = _strata_from_config(config, by), []
     drawn = []
     meta = {}
     for name, spec in strata.items():
-        pool = sorted(by.get(name, []), key=lambda row: row["unit_id"])
+        pool = list(by.get(name, []))
         size, asked = len(pool), spec["n"]
         if asked > size:
             raise SystemExit(f"{name}: asked for {asked} from a stratum of {size}")
         pi = (asked / size) if size else None
         meta[name] = {"population": size, "drawn": asked, "inclusion_probability": pi}
-        picks = pool if asked == size else rng.sample(pool, asked)
+        if config.get("rule") == "v15":
+            picks = sorted(pool, key=lambda row: _order_key(config["seed"], row))[:asked]
+        else:
+            pool = sorted(pool, key=lambda row: row["unit_id"])
+            picks = pool if asked == size else rng.sample(pool, asked)
         for row in picks:
             drawn_row = {
                 "unit_id": row["unit_id"],
@@ -245,11 +335,16 @@ def draw_sample(population: Sequence[dict], config: dict, *, sealed: dict) -> di
                 "context_after": list(row.get("context_after") or []),
                 "machine": row.get("machine"),
             }
+            if row.get("machine_v2") is not None:
+                drawn_row["machine_v2"] = row["machine_v2"]
             for field in _STAMPED:
                 if row.get(field):
                     drawn_row[field] = row[field]
             drawn.append(drawn_row)
-    return {"seed": config["seed"], "rows": drawn, "strata": meta}
+    sample = {"seed": config["seed"], "rows": drawn, "strata": meta}
+    if config.get("rule") == "v15":
+        sample["shortfalls"] = shortfalls
+    return sample
 
 
 def draw_sha256(sample: dict) -> str:
@@ -275,7 +370,8 @@ def grading_sheet(sample: dict, window: int = 2) -> dict:
             "sentence": row["sentence"],
             "context_after": _clip(row.get("context_after") or [], window, last=False),
         }))
-    return {"units": units}
+    random.Random(sample["seed"]).shuffle(units)
+    return {"seed": sample["seed"], "units": units}
 
 
 def _stamp(row: dict, base: dict) -> dict:
@@ -298,6 +394,8 @@ def key_file(sample: dict) -> dict:
             "stratum_drawn": row["stratum_drawn"],
             "machine": row["machine"],
         }))
+        if row.get("machine_v2") is not None:
+            units[-1]["machine_v2"] = row["machine_v2"]
     return {"units": units}
 
 
@@ -607,7 +705,7 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed
             if row.get(field):
                 stamped[field] = row[field]
         ready.append(stamped)
-    return {
+    result = {
         "manifest_sha256": digest,
         "precision": precision,
         "recall": recall,
@@ -620,6 +718,18 @@ def score(graded: dict, key: dict, *, sealed: dict, replicates: int = 2000, seed
                     "DSL (Egami, Hinck, Stewart and Wei 2023) needs those probabilities.",
         },
     }
+    if rows and all(row.get("machine_v2") is not None for row in rows):
+        alt = [{**row, "machine": row["machine_v2"]} for row in rows]
+        v2_precision = {}
+        for unit in UNITS:
+            block = precision_unit(alt, unit)
+            block["interval_95"] = _precision_interval(alt, unit, replicates, seed) if block["precision"] is not None else None
+            v2_precision[unit] = block
+        result["machine_v2"] = {
+            "precision": v2_precision,
+            "recall": {unit: recall_report(alt, unit, replicates, seed) for unit in UNITS},
+        }
+    return result
 
 
 def _population_counts(sample: dict) -> dict:
@@ -644,7 +754,8 @@ def write_population(case_ids: Sequence[str], text_root: Path, out: Path, decisi
             bundle = candidate if candidate.is_file() else None
         rows.extend(population_from_case(case_id, text_root, decisions=bundle))
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(rows, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    public = [{key: value for key, value in row.items() if key not in {"machine", "machine_v2"}} for row in rows]
+    out.write_text(json.dumps(public, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return len(rows)
 
 

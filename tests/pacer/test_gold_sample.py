@@ -25,6 +25,12 @@ def test_blank_config_is_refused():
         S.load_config(CONFIG)
 
 
+def _empty_bundle(tmp_path):
+    path = tmp_path / "decisions.json"
+    path.write_text(json.dumps({"events": [], "passages": [], "observations": []}), encoding="utf-8")
+    return path
+
+
 def test_seal_is_deterministic_and_never_draws_an_excluded_id(tmp_path):
     corpus = ["pilot_a", "pilot_b", "case_01", "case_02", "case_03", "case_04", "case_05"]
     exclusion = ["pilot_a", "pilot_b"]
@@ -378,15 +384,14 @@ def test_population_rows_carry_court_docket_and_document_hash(tmp_path):
             "pages": [{"pdf_page": 1}],
         }],
     }), encoding="utf-8")
-    rows = G.population_from_case(case, tmp_path)
+    rows = G.population_from_case(case, tmp_path, decisions=_empty_bundle(tmp_path))
     assert rows
     assert rows[0]["court"] == "dcd"
     assert rows[0]["docket_number"] == "1:24-cr-9"
     assert rows[0]["document_sha256"] == "abc123"
-    assert rows[0]["stratum"] == "machine_positive"
-    assert "machine" not in rows[0]
+    assert rows[0]["stratum"] == "stamp:other"
     manifest = _seal(["stamp"], [], held=0, frame=1)
-    sample = G.draw_sample(rows, {"seed": 1, "strata": {"machine_positive": {"n": len(rows)}}}, sealed=manifest)
+    sample = G.draw_sample(rows, {"seed": 1, "strata": {"stamp:other": {"n": len(rows)}}}, sealed=manifest)
     assert sample["rows"][0]["document_sha256"] == "abc123"
     blank = {"act": "", "means_tie": False, "level_c": False}
     graded = {"units": [{"unit_id": row["unit_id"], "gold": dict(blank)} for row in sample["rows"]]}
@@ -452,3 +457,36 @@ def test_two_strata_weights_recover_the_population_total():
         samples.append(rows)
     mean = sum(G.ipw_total(rows, lambda row: row["gold"]) for rows in samples) / len(samples)
     assert mean == pytest.approx(6.0)
+
+
+def test_v15_refills_other_and_an_empty_level_c_does_not_exit():
+    manifest = _seal(["case_01", "case_02", "case_03", "case_04"], [], held=1, frame=2)
+    case_id = manifest["gold_frame_ids"][0]
+    population = []
+    for index in range(1):
+        population.append({
+            "unit_id": f"a{index}", "case_id": case_id, "stratum": f"{case_id}:act",
+            "sentence": f"Act sentence {index}.", "context_before": [], "context_after": [],
+            "machine": {"act": "DISTRIBUTE_MATERIAL", "means_tie": False, "level_c": False},
+        })
+    for index in range(4):
+        population.append({
+            "unit_id": f"o{index}", "case_id": case_id, "stratum": f"{case_id}:other",
+            "sentence": f"Other sentence {index}.", "context_before": [], "context_after": [],
+            "machine": {"act": "", "means_tie": False, "level_c": False},
+        })
+    sample = G.draw_sample(population, {"seed": 7, "rule": "v15"}, sealed=manifest)
+    counts = {}
+    for row in sample["rows"]:
+        counts[row["stratum"]] = counts.get(row["stratum"], 0) + 1
+    assert counts[f"{case_id}:act"] == 1
+    assert counts[f"{case_id}:other"] == 2
+    assert any(item["stratum"] == "level_c" and item["drawn"] == 0 for item in sample["shortfalls"])
+    ordered = sorted(
+        [row for row in population if row["stratum"].endswith(":other")],
+        key=lambda row: __import__("hashlib").sha256(f"7‖{row['case_id']}‖{row['unit_id']}".encode()).hexdigest(),
+    )
+    assert [row["unit_id"] for row in sample["rows"] if row["stratum"].endswith(":other")] == [row["unit_id"] for row in ordered[:2]]
+    sheet = G.grading_sheet(sample)
+    assert "machine" not in json.dumps(sheet)
+    assert sheet["units"] != sample["rows"] or len(sheet["units"]) == 1

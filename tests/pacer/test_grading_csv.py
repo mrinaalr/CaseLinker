@@ -7,6 +7,8 @@ from __future__ import annotations
 import csv
 import json
 
+import pytest
+
 from state_machines.observations import gold_sample as G
 from state_machines.observations import seal as S
 from state_machines.observations.gold_sample import export_grading_csv, import_graded_csv
@@ -55,6 +57,7 @@ def test_the_csv_round_trip_keeps_the_marks_and_leaves_the_key_out(tmp_path):
     }
     assert graded["units"][0]["platform"] == "Kitebox"
     assert graded["units"][0]["feature"] == "encrypted"
+    assert graded["units"][0]["actor"] == "the defendant"
     assert graded["units"][1]["gold"]["act"] == ""
     assert graded["units"][1]["gold"]["means_tie"] is False
     assert graded["units"][1]["gold"]["level_c"] is False
@@ -132,6 +135,7 @@ def test_the_filled_csv_scores_and_a_swapped_column_does_not(tmp_path):
     wrong = G.score(swapped, key, sealed=manifest, replicates=20, seed=0)
     assert wrong["precision"]["means_tie"]["precision"] == 0
     assert wrong["precision"]["level_c"]["precision"] == 0
+    assert wrong["precision"]["act"]["precision"] == 0
 
 
 def test_population_writer_emits_the_file_draw_reads(tmp_path):
@@ -146,13 +150,17 @@ def test_population_writer_emits_the_file_draw_reads(tmp_path):
         "documents": [{"doc_id": "sof", "sha256": "abc123", "pages": [{"pdf_page": 1}]}],
     }), encoding="utf-8")
     out = tmp_path / "units.json"
-    assert G.write_population([case], tmp_path, out) == 2
+    decisions = tmp_path / "decisions.json"
+    decisions.write_text(json.dumps({"events": [], "passages": [], "observations": []}), encoding="utf-8")
+    assert G.write_population([case], tmp_path, out, decisions=decisions) == 2
     rows = json.loads(out.read_text(encoding="utf-8"))
+    assert rows[0]["court"] == "dcd" and rows[0]["sentence"]
     sentences = {row["sentence"]: row["stratum"] for row in rows}
-    assert sentences["The defendant sent the files."] == "other"
-    assert sentences["The hearing was continued."] == "other"
-    assert "published_acts" not in sentences.values()
+    assert sentences["The defendant sent the files."] == "stamp:other"
+    assert sentences["The hearing was continued."] == "stamp:other"
     assert all("machine" not in row for row in rows)
+    with pytest.raises(SystemExit, match="decision file"):
+        G.population_from_case(case, tmp_path, decisions=tmp_path / "missing.json")
 
 
 def test_a_published_act_with_no_platform_or_feature_is_machine_positive(tmp_path):
@@ -180,7 +188,12 @@ def test_a_published_act_with_no_platform_or_feature_is_machine_positive(tmp_pat
     }), encoding="utf-8")
     rows = G.population_from_case(case, tmp_path, decisions=decisions)
     strata = {row["sentence"]: row["stratum"] for row in rows}
-    assert strata[hearing] == "machine_positive"
-    assert "The calendar was reset." in strata
-    assert strata["The calendar was reset."] == "other"
-    assert all("machine" not in row for row in rows)
+    assert strata[hearing] == "synth_act:act"
+    assert strata["The calendar was reset."] == "synth_act:other"
+    assert any(row["machine"]["act"] == "DISTRIBUTE_MATERIAL" for row in rows)
+    sheet = G.grading_sheet({"seed": 1, "rows": [{
+        "unit_id": row["unit_id"], "case_id": case, "sentence": row["sentence"],
+        "context_before": [], "context_after": [],
+    } for row in rows]})
+    assert "machine" not in json.dumps(sheet)
+    assert "DISTRIBUTE_MATERIAL" not in json.dumps(sheet)

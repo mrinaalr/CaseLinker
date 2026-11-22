@@ -27,7 +27,6 @@ _PREPS = {"through", "via", "using", "with", "on", "over", "by"}
 _USE = {"utilize", "utilized", "utilizing", "use", "used", "uses", "using",
         "conceal", "concealed", "concealing", "send", "sent", "sending"}
 _OFFENDER_WORD = re.compile(r"^(?:defendants?|accused)$", re.I)
-from state_machines.coding.workflow import _PRONOUN as _THEY
 _BLOCKED = ("state_machines/data", "caselinker_oxigraph")
 
 
@@ -152,36 +151,6 @@ def _subject(tokens: Sequence[dict], verb_i: int):
         if tok.get("head") == verb_i and tok.get("deprel") in ("nsubj", "nsubjpass"):
             return i, tok
     return None, None
-
-
-def _subject_is_offender(sentence: str, tokens: Sequence[dict], verb_i: int, actors,
-                         records=None, generic=None, scope=None) -> bool:
-    _, subj = _subject(tokens, verb_i)
-    if subj is None:
-        return False
-    from state_machines.coding.workflow import decide_actor, v2_active
-    if v2_active():
-        # A pronoun is not resolved. The actor decision is decide_actor when the
-        # case records are known; otherwise only the word "defendant" stands.
-        if _THEY.match(subj["text"]):
-            return False
-        if records:
-            found, reason = decide_actor(sentence, subj["text"], records, generic=generic, scope=scope)
-            return reason is None and bool(found)
-        return bool(_OFFENDER_WORD.match(subj["text"]))
-    if _OFFENDER_WORD.match(subj["text"]):
-        return True
-    if not _THEY.match(subj["text"]):
-        return False
-    if os.environ.get("CASELINKER_COREFERENCE") != "1" or not actors:
-        return False
-    from state_machines.coding.coreference import resolve_mentions, _offender_ids
-    mentions = resolve_mentions(sentence, actors)
-    offenders = _offender_ids(actors)
-    prior = [mention for mention in mentions if mention["end"] <= subj["end"] and mention["actor_ids"]]
-    if not prior:
-        return False
-    return any(actor_id in offenders for actor_id in prior[-1]["actor_ids"])
 
 
 def _negated(tokens: Sequence[dict], verb_i: int) -> bool:

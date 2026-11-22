@@ -159,6 +159,15 @@ def test_a_subject_controlled_infinitive_publishes(tmp_path, monkeypatch, senten
     assert events == ["DISTRIBUTE_MATERIAL"]
 
 
+@needs_spacy
+def test_a_caption_surname_that_is_a_listed_platform_is_not_an_instrument(tmp_path, monkeypatch):
+    sentence = "The defendant used Snapchat to send the files."
+    events, _log = code_events(
+        tmp_path, monkeypatch, "collide", _one("Snapchat", sentence), sentence, "the defendant",
+        means="", object_text="the files")
+    assert events == []
+
+
 @pytest.mark.parametrize("sentence", [
     "COUNT ONE: The defendant sent the files.",
     "Count 1. The defendant sent the files.",
@@ -293,6 +302,7 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     events, _log = code_events(tmp_path, monkeypatch, "agree", docs, sentence)
     assert events == ["DISTRIBUTE_MATERIAL"]
     assert "other_caption" not in _reasons(tmp_path, "agree")
+    assert _reasons(tmp_path, "agree").count("ambiguous") == 0
     from state_machines.coding import pipeline as P
     out = tmp_path / "coded"
     for coder in ("coder_A", "coder_B"):
@@ -305,6 +315,7 @@ def test_recovery_uses_the_same_document_defendant(tmp_path, monkeypatch):
     P.resolve_cases(["agree"], out, tmp_path)
     recovered = json.loads((out / "resolved" / "agree.json").read_text(encoding="utf-8"))["recovered"]
     assert recovered and recovered[0]["act"]["code"] == "DISTRIBUTE_MATERIAL"
+    assert "Smith" not in json.dumps(recovered[0].get("actor"))
 
 
 @needs_spacy
