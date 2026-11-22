@@ -146,22 +146,37 @@ def _record_disagreement(case_id: str, a: dict, b: dict, out: Path, entry: dict,
         entry["disagreement_sheet"] = "refused"
 
 
-def zero_act_record(case_id: str, bundle: dict) -> dict:
-    """Both coders found no acts. This is the decision file. It is not a case bundle:
-    a bundle still needs at least one participant, and this record has none."""
+def _unparsed(bundle: dict) -> int:
+    return int((bundle.get("coding_counts") or {}).get("unparsable") or 0)
+
+
+def empty_case_record(case_id: str, left: dict, right: dict, *, reason: str) -> dict:
+    """A decision file for a case with no published acts. Not a case bundle.
+
+    ``no_acts`` means every model page parsed and neither coder found an act.
+    ``no_agreed_acts`` means both found acts and the resolution published none.
+    """
     from state_machines.evidence import vocab as V
 
-    return {
+    if reason not in ("no_acts", "no_agreed_acts"):
+        raise ValueError(reason)
+    counts = left.get("coding_counts") or right.get("coding_counts") or {}
+    record = {
         "case_id": case_id,
-        "no_acts": True,
         "events": [],
         "passages": [],
         "relations": [],
         "tracks": [],
         "participants": [],
-        "documents": list(bundle.get("documents") or []),
+        "documents": list(left.get("documents") or []),
         "codebook_version": V.CODEBOOK_VERSION,
+        "pages": counts.get("pages"),
+        "model_pages": counts.get("model_pages"),
+        "unparsable": _unparsed(left) + _unparsed(right),
+        "reason": reason,
     }
+    record[reason] = True
+    return record
 
 
 def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None, settle_codes: bool = False,
@@ -188,8 +203,13 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
             summary[case_id] = {"failed": "a coder produced no bundle"}
             continue
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (pa, pb))
-        if not a.get("events") and not b.get("events"):
-            record = zero_act_record(case_id, a)
+        # Propose-verify reads two empty codings and can still recover an act. The empty
+        # record is only for the intersection policy, and only when every model page parsed.
+        if policy != POLICY_ID and not a.get("events") and not b.get("events"):
+            if _unparsed(a) or _unparsed(b):
+                summary[case_id] = {"failed": "a model page did not parse"}
+                continue
+            record = empty_case_record(case_id, a, b, reason="no_acts")
             (out / sub / f"{case_id}.json").write_text(json.dumps(record, indent=1, sort_keys=True) + "\n", encoding="utf-8")
             summary[case_id] = {"events": 0, "no_acts": True}
             continue
@@ -209,9 +229,15 @@ def resolve_cases(cases: List[str], out: Path, text_root: Optional[Path] = None,
         report["agreement_model_coded"] = {k: v for k, v in model_agree.items() if k != "pairs"}
         report["parser_events"] = sum(e.get("notes") == "docket-parser" for e in bundle["events"])
         if not bundle["events"]:
-            summary[case_id] = {"failed": "no event both coders coded", "report": report}
+            record = empty_case_record(case_id, a, b, reason="no_agreed_acts")
+            (out / sub / f"{case_id}.json").write_text(json.dumps(record, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+            summary[case_id] = {"events": 0, "no_agreed_acts": True, "report": report,
+                                "parser_events": report["parser_events"],
+                                "agreement_model_coded": report["agreement_model_coded"]}
             _record_disagreement(case_id, a, b, out, summary[case_id], policy)
             continue
+        bundle.pop("coding_counts", None)
         (out / sub / f"{case_id}.json").write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         (out / reports / f"{case_id}.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
         summary[case_id] = {"events": len(bundle["events"]), "parser_events": report["parser_events"],

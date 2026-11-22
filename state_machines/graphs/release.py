@@ -122,9 +122,9 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
     for path in bundles:
         bundle = json.loads(path.read_text(encoding="utf-8"))
         case_id = bundle["case_id"]
-        if bundle.get("no_acts") is True:
+        if bundle.get("no_acts") is True or bundle.get("no_agreed_acts") is True:
             if bundle.get("events"):
-                raise SystemExit(f"{case_id}: a no-acts record cannot contain events")
+                raise SystemExit(f"{case_id}: a record of no published acts cannot contain events")
         else:
             problems = release_errors(bundle, text_root=text_root, deny_list=(deny_lists or {}).get(case_id, ()),
                                       mode="preview" if allow_unreviewed else mode)
@@ -183,6 +183,10 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             "shacl": {"conformance": shacl["conformance"], "violations": len(shacl["violations"]),
                       "upstream_defect_violations": len(shacl["upstream_defect_violations"]),
                       "applicable_skipped": shacl["applicable_skipped"]},
+            **({"no_acts": True} if bundle.get("no_acts") is True else {}),
+            **({"no_agreed_acts": True} if bundle.get("no_agreed_acts") is True else {}),
+            **({"pages": bundle["pages"], "model_pages": bundle["model_pages"], "unparsable": bundle["unparsable"]}
+               if "pages" in bundle else {}),
         })
     from state_machines.graphs.shacl import EXTENSION
     manifest = {

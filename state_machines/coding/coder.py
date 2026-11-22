@@ -1034,6 +1034,14 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         coverage.append(line)
         if progress:
             progress(doc["doc_id"], page_no, n_acts)
+    page_count = len(answers)
+    model_pages = 0
+    unparsable = 0
+    for _doc, _page_no, _full, ans, how, counts in answers:
+        if str(how).startswith("model"):
+            model_pages += 1
+            if (isinstance(ans, dict) and ans.get("unparsed")) or (isinstance(counts, dict) and counts.get("unparsed")):
+                unparsable += 1
     answers = [tuple(a[:4]) for a in answers]
     refusals = totals.pop("_refusals", []) if framing else []
     bundle, quotes, log = assemble(case_id, sources, answers, "coder_candidate" if coder.startswith("model:") else coder, spec,
@@ -1051,17 +1059,24 @@ def code_case(case_id: str, coder: str, text_root: Path, cache: Optional[Cache] 
         log.append(f"case {case_id}: zero-frame pages: {zero_pages}")
         log.append("frame_drops " + json.dumps(totals, sort_keys=True))
     # An empty bundle has no participant, so it cannot pass validation. Repair still runs.
-    # When nothing remains, the empty bundle is returned and the case is recorded as having
-    # no acts. A bundle that still has events and cannot be repaired still stops.
+    # A parsed case with nothing left is returned and recorded as having no acts. A page whose
+    # reply did not parse is not that case: it stops here. A bundle that still has events and
+    # cannot be repaired still stops.
+    def _done(done: dict, extra: List[str]):
+        if not done["events"] and unparsable:
+            raise SystemExit(f"{case_id}: {unparsable} model page(s) did not parse")
+        done["coding_counts"] = {"pages": page_count, "model_pages": model_pages, "unparsable": unparsable}
+        return done, quotes, log + extra
+
     if not bundle["events"] and (framing or os.environ.get("CASELINKER_SECTION_FILTER") == "1"):
         try:
             bundle, rlog = repair(bundle, text_root, deny or [])
         except SystemExit as exc:
             log.append(f"repair stopped: {exc}")
-            return bundle, quotes, log
-        return bundle, quotes, log + rlog
+            return _done(bundle, [])
+        return _done(bundle, rlog)
     bundle, rlog = repair(bundle, text_root, deny or [])
-    return bundle, quotes, log + rlog
+    return _done(bundle, rlog)
 
 
 def main(argv=None) -> int:

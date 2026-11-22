@@ -338,7 +338,9 @@ def test_frame_coders_disagree_and_intersection_drops_the_act(tmp_path, monkeypa
     assert summary[case].get("events", 0) == 0 or summary[case].get("failed")
     kappa = summary[case]["report"]["agreement_model_coded"]["action_code"]["kappa"]
     assert kappa == 0
-    assert not (out / "resolved" / f"{case}.json").exists()
+    record = json.loads((out / "resolved" / f"{case}.json").read_text(encoding="utf-8"))
+    assert record["no_agreed_acts"] is True and record["events"] == []
+    assert "no_acts" not in record
 
 
 @needs_spacy
