@@ -170,7 +170,7 @@ LIMIT 50
 | Fact | How to read it |
 |---|---|
 | Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite / live Postgres **10,802**) |
-| Extracted features / agencies | `GET /api/stats` → `unique_features` **132,676**, `unique_organizations` **4,326** distinct LE agencies after ingest normalize, variant merge (PD/SO, Sheriff's Department/Office, state abbreviations, possessives, punctuation) and LE-only filter (`source_count` **76** = 74 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; `DOJ ARCHIVES` folds into CEOS; `DOJ AI CSAM` folds into Safe Childhood) |
+| Extracted features / agencies | `GET /api/stats` → `unique_features` **190,023**, `unique_organizations` **4,326** distinct LE agencies after ingest normalize, variant merge (PD/SO, Sheriff's Department/Office, state abbreviations, possessives, punctuation) and LE-only filter (`source_count` **76** = 74 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; `DOJ ARCHIVES` folds into CEOS; `DOJ AI CSAM` folds into Safe Childhood) |
 | Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/")) }` (live store **10,802**) |
 | Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance")) }` (live store **10,802**) |
 | Named graphs (press release) | one per case + one provenance graph; **10,802** cases live |

@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -10,10 +10,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_246" ;
-    dcterms:created "2026-11-19T18:23:50.447127"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:14:02.367231"^^xsd:dateTime ;
     dcterms:date "2024-04-10"^^xsd:date ;
     dcterms:identifier "ncmec_2024_246" ;
-    dcterms:modified "2026-11-19T18:23:50.447127"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:14:02.367231"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_246/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://cbs12.com/news/local/okeechobee-man-arrested-accused-for-child-pornography-following-investigation-and-raid-okeechobee-county-sheriffs-office-residential-group-home-florida-news-april-10-2024> ;
@@ -23,8 +23,9 @@
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_246/phase/booked> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_246/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_246/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_246/agency/okeechobee-county-sheriffs-office> ;
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/operation> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_246/agency/okeechobee-county-sheriffs-office> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_246/cybertip>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1> .
 
@@ -36,16 +37,12 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_246/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/agency/okeechobee-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Okeechobee County Sheriff's Office" ;
     ns1:name "Okeechobee County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/2> a ns2:CSAM_Distribution,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/1> a ns4:CSAM_Distribution,
+        ns4:CriminalCharge ;
     rdfs:label "transmission of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -53,19 +50,22 @@
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Okeechobee County Jail" ;
-    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/2> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_246/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_246/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_246/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_246/event/possession> .
 

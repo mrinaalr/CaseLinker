@@ -2,18 +2,19 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2009_011> a ns3:CACInvestigation,
         ns2:EnduringEntity ;
     rdfs:label "Case nz_dia_2009_011" ;
-    dcterms:created "2026-11-19T20:01:42.125266"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:55:12.862224"^^xsd:dateTime ;
     dcterms:date "2009-11-05"^^xsd:date ;
     dcterms:identifier "nz_dia_2009_011" ;
-    dcterms:modified "2026-11-19T20:01:42.125266"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:55:12.862224"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/provenance> ;
     dcterms:publisher "NZ DIA" ;
     dcterms:source <https://www.dia.govt.nz/press.nsf/d77da9b523f12931cc256ac5000d19b6/5b02355521ea80ffcc257664007d07ec!OpenDocument> ;
@@ -23,9 +24,10 @@
         <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/event/possession>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/legal-step/sentenced> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> ;
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> ;
     ns1:object <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/person/offender/1>,
-        <https://w3id.org/caselinker/resource/platform/chat> .
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/internet> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -49,7 +51,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns2:OrganizationLikeEntity,
-        ns4:InternationalAgency ;
+        ns6:InternationalAgency ;
     rdfs:label "NZ DIA" ;
     ns1:name "NZ DIA" .
 
@@ -74,11 +76,20 @@
     rdfs:label "20 months" ;
     ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/role/offender/1> .
 
+<https://w3id.org/caselinker/resource/platform/chat> a ns2:DigitalSystemEntity ;
+    rdfs:label "chat" ;
+    ns4:platformType "generic-tag" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/internet> a ns2:DigitalSystemEntity ;
+    rdfs:label "internet" ;
+    ns4:platformType "generic-tag" ;
+    ns1:name "internet" .
+
 <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/event/possession> a ns3:CSAMIncident,
         ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
+    ns3:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
@@ -90,9 +101,4 @@
 <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2009_011/event/possession> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a ns2:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
 

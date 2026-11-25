@@ -4,30 +4,28 @@
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2019_007> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case alert_ice_2019_007" ;
-    dcterms:created "2026-11-19T18:40:54.095461"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:32:55.225302"^^xsd:dateTime ;
     dcterms:date "2019-02-08"^^xsd:date ;
     dcterms:identifier "alert_ice_2019_007" ;
-    dcterms:modified "2026-11-19T18:40:54.095461"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:32:55.225302"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/provenance> ;
     dcterms:publisher "ALERT ICE" ;
     dcterms:source <https://alert-ab.ca/cybertip-submission-leads-to-child-exploitation-charges/> ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/edmonton-city>,
-        <https://w3id.org/caselinker/resource/location/el-paso-city-tx>,
-        <https://w3id.org/caselinker/resource/location/texas-tx> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/phase/charged> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/phase/charged> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/event/distribution>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/event/possession>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/legal-proceeding> ;
+        <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/operation> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ice>,
         <https://w3id.org/caselinker/resource/agency/ice-unit>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/agency/calgary-police-department>,
@@ -37,13 +35,15 @@
     ns1:object <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/cybertip>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/offender/1>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/victim/1>,
-        <https://w3id.org/caselinker/resource/platform/chat> .
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/internet>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
-<https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/victim/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/victim/1/age> a ns7:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/victim/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 10.0 .
+    ns7:ageSubject <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/victim/1> ;
+    ns7:concernsAgeQuality ns7:Age ;
+    ns7:hasAgeInYears 10.0 .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -115,9 +115,13 @@
         <https://cacontology.projectvic.org/core#LegalEvent>,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/charge/1>,
         <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/alert_ice_2019_007/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/relationship/father> a ns2:CustodialRelationship,
         ns2:FamilialRelationship ;
@@ -129,25 +133,20 @@
     ns1:source <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/location/edmonton-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Edmonton city" ;
-    dcterms:identifier "fips:2123968" ;
-    skos:altLabel "Edmonton" ;
-    ns1:name "Edmonton city" .
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "chat" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "chat" .
 
-<https://w3id.org/caselinker/resource/location/el-paso-city-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "El Paso city" ;
-    dcterms:identifier "fips:4824000" ;
-    skos:altLabel "El Paso" ;
-    ns1:name "El Paso city" .
+<https://w3id.org/caselinker/resource/platform/internet> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "internet" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "internet" .
 
-<https://w3id.org/caselinker/resource/location/texas-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Texas" ;
-    dcterms:identifier "fips:48" ;
-    ns1:name "Texas" .
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "online" .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
@@ -156,16 +155,10 @@
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
 <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/event/possession> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
+    ns3:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/alert_ice_2019_007/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .

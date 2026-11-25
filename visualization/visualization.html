@@ -99,8 +99,14 @@
     .pf-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; background: var(--ink); }
     .pf-tab__n { font-family: var(--mono); font-size: 11px; color: var(--ink-4); margin-left: 4px; }
     .pf-detail__body { padding: 16px 20px 20px; overflow-y: auto; min-height: 0; flex: 1 1 auto; overscroll-behavior: contain; }
-    /* the panel's inner wrapper must be allowed to shrink, or the body can never scroll */
-    .pf-detail > div:not(.pf-detail__head) { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
+    /* Only the filled panel is a flex child. The empty-state sibling must not get
+       display:flex — that beats the [hidden] attribute and keeps "Select a platform…"
+       on screen (and steals height) after a platform is selected. */
+    .pf-detail > #detail-content:not([hidden]) {
+      display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto;
+    }
+    .pf-detail > #detail-empty[hidden],
+    .pf-detail > #detail-content[hidden] { display: none; }
     .pf-section[hidden] { display: none; }
     .pf-harm { list-style: none; margin: 0; padding: 0; }
     .pf-harm li { padding: 9px 0 9px 14px; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; position: relative; }

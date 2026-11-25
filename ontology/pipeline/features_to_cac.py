@@ -2992,7 +2992,7 @@ class CaseToCAC:
         try:
             CaseToCAC._storage_layer_dir()
             from storage import CaseStorage as SqliteCaseStorage  # type: ignore
-            return SqliteCaseStorage(db_path=str(db_path))
+            return SqliteCaseStorage.read_only(str(db_path))   # export only reads: never write the corpus
         except Exception as exc:
             logger.warning("SQLite open failed (db=%s): %s", db_path, exc)
             return None

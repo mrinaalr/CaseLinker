@@ -5,6 +5,7 @@ This folder is where the PACER court records live on a researcher's machine: the
 | What | Where |
 |---|---|
 | Source PDFs and their page text | here, and in `local/pacer_text/<case_id>/` (both gitignored) |
+| Records outside the AfH release | `EXTERNAL/` (kept, not coded; for example a case with no press record) |
 | Coded evidence, derived trajectories, CASE/UCO/CAC graphs | [`state_machines/`](../../state_machines/README.md); releases in `state_machines/data/<release_id>/` |
 | Graphs in the SPARQL store | named graphs `urn:caselinker:pacer:<case_id>:evidence`, `…:trajectories` and, where the release has them, `…:observations` |
 

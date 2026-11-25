@@ -262,16 +262,11 @@ logger = logging.getLogger(__name__)
 # (PSC umbrella; not a separate agency — splitting AI/Archives would hit 57–58).
 # Bump _STATS_TAXONOMY_VER when this map changes so Redis stats keys invalidate
 # even if case_count is unchanged (stale cache previously reported 55 when PSC
-# was incorrectly folded into DOJ CEOS).
-_STATS_TAXONOMY_VER = 2
-_SOURCE_COUNT_FAMILY = {
-    "DOJ AI CSAM": "DOJ SAFE CHILDHOOD",
-    "DOJ ARCHIVES": "DOJ CEOS",
-}
-
-
-def _source_count_key(source: str) -> str:
-    return _SOURCE_COUNT_FAMILY.get(source, source)
+# was incorrectly folded into DOJ CEOS). 3: unique_features counts every value read from the
+# case text and stored (run/feature_count.py), not the March 2026 list.
+_STATS_TAXONOMY_VER = 3
+from feature_count import SOURCE_COUNT_FAMILY as _SOURCE_COUNT_FAMILY  # noqa: E402  (shared with the AfH numbers)
+from feature_count import source_count_key as _source_count_key  # noqa: E402
 
 
 def read_utf8_text_file(path: Path) -> str:
@@ -1712,8 +1707,9 @@ try:
             except Exception as e:
                 print(f"⚠️  Error pre-computing clusters: {e}")
         
-        cluster_thread = threading.Thread(target=precompute_clusters_background, daemon=True)
-        cluster_thread.start()
+        if os.environ.get("CASELINKER_NO_WARMUP") != "1":   # tests set this: no background thread output
+            cluster_thread = threading.Thread(target=precompute_clusters_background, daemon=True)
+            cluster_thread.start()
 except Exception as e:
     print(f"⚠️  Database initialization warning: {e}")
     if db_path:
@@ -2467,26 +2463,10 @@ def get_stats(request: Request):
             if source:
                 sources.add(source)
         
-        # Calculate total extracted features - DIRECT COUNT from actual database data
-        total_features = 0
-        for case in cases:
-            # Count array/list features - each item counts as 1 feature
-            platforms = case.get('platforms_used', [])
-            if isinstance(platforms, list) and platforms:
-                total_features += len([p for p in platforms if p])
-            
-            topics = case.get('case_topics', [])
-            if isinstance(topics, list) and topics:
-                total_features += len([t for t in topics if t])
-            
-            severity = case.get('severity_indicators', [])
-            if isinstance(severity, list) and severity:
-                total_features += len([s for s in severity if s])
-            
-            agencies = case.get('agencies_involved', [])
-            if isinstance(agencies, list) and agencies:
-                total_features += len([a for a in agencies if a])
-        
+        # Extracted features: every value read from the case text and stored (run/feature_count.py).
+        from feature_count import EXCLUDED_ROLES, count_extracted_features
+        total_features = count_extracted_features(cases, storage.count_assertion_feature_values(EXCLUDED_ROLES))
+
         # Calculate unique organizations (already normalized at ingestion time)
         def parse_field(field):
             """Parse JSON string fields or return list/array as-is"""
@@ -2505,40 +2485,7 @@ def get_stats(request: Request):
                     if org and isinstance(org, str) and org.strip():
                         agency_labels.append(org.strip())
             
-            # Count single-value features (1 if exists)
-            if case.get('investigation_type'):
-                total_features += 1
-            if case.get('relationship_to_victim'):
-                total_features += 1
-            if case.get('perpetrator_registered_sex_offender') is True:
-                total_features += 1
-            if case.get('perpetrator_age') is not None:
-                total_features += 1
-            if case.get('victim_count') and isinstance(case.get('victim_count'), (int, float)) and case.get('victim_count') > 0:
-                total_features += 1
-            
-            # Count complex objects (1 if has any data)
-            evidence = case.get('evidence_volume')
-            if evidence and isinstance(evidence, dict):
-                if evidence.get('images') or evidence.get('videos') or evidence.get('storage_size'):
-                    total_features += 1
-            
-            prosecution = case.get('prosecution_outcome')
-            if prosecution and isinstance(prosecution, dict):
-                if prosecution.get('booking_status') or prosecution.get('charges') or prosecution.get('jail'):
-                    total_features += 1
-            
-            victim_demo = case.get('case_demographics') or case.get('victim_demographics')
-            if victim_demo and isinstance(victim_demo, dict):
-                if (
-                    victim_demo.get('ages')
-                    or victim_demo.get('age_range')
-                    or victim_demo.get('victim_gender')
-                ):
-                    total_features += 1
-            if case.get('perpetrator_gender'):
-                total_features += 1
-        
+
         # Prefer publication starts for corpus bounds. Year-only rows historically
         # stored end=YYYY-12-31 (#23); ignore those synthetic Dec 31 ends so
         # get_corpus_stats does not advertise a future cutoff.

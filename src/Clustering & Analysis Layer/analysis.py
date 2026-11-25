@@ -1281,7 +1281,7 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
         
         base_description = f"All {len(all_online_only_cases)} cases are online-only"
         additional_info = []
-        top_named = list((characteristics.get('statistics') or {}).get('top_platforms') or {}.items())
+        top_named = list(((characteristics.get('statistics') or {}).get('top_platforms') or {}).items())
         if top_named:
             top_platform, top_n = top_named[0]
             additional_info.append(

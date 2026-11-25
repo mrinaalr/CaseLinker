@@ -2,9 +2,9 @@
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_862> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_862" ;
-    dcterms:created "2026-11-19T18:38:59.367657"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:26:40.049436"^^xsd:dateTime ;
     dcterms:date "2025-02-07"^^xsd:date ;
     dcterms:identifier "ncmec_2025_862" ;
-    dcterms:modified "2026-11-19T18:38:59.367657"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:26:40.049436"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_862/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://wcyb.com/news/local/blountville-man-arrested-as-part-of-child-pornography-investigation-authorities-say> ;
@@ -24,8 +24,9 @@
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_862/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_862/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_862/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_862/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_862/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_862/operation> ;
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_862/agency/sullivan-county-sheriffs-office> ;
     ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_862/cybertip>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_862/person/offender/1> .
@@ -44,7 +45,7 @@
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_862/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_862/agency/sullivan-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Sullivan County Sheriff's Office" ;
     ns3:name "Sullivan County Sheriff's Office" .
 
@@ -56,22 +57,22 @@
         ns1:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_862/charge/3> a ns1:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_862/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_862/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
         ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_862/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_862/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_862/charge/3> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_862/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_862/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_862/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -92,8 +93,8 @@
     ns3:name "Tennessee" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:HotlineOrganization,
-        ns4:FederalAgency ;
+        ns4:HotlineOrganization,
+        ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns3:name "National Center for Missing and Exploited Children" .

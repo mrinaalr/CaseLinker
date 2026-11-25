@@ -126,8 +126,8 @@ def tier_sample_rows(records, texts) -> List[Dict]:
     return rows
 
 
-HARMS = ("h1_groomed_toward_in_person", "h2_coerced_self_generated", "h3_material_distributed",
-         "h4_sextorted", "h6_likeness_synthesized")
+HARMS = ("h1_contact_sexual_abuse", "h2_depicted_in_abuse_imagery", "h3_imagery_circulated",
+         "h4_coerced_by_exposure_threat", "h5_commercial_sexual_exploitation")
 
 
 def harm_sample_rows(records) -> List[Dict]:
@@ -144,8 +144,8 @@ def harm_sample_rows(records) -> List[Dict]:
         for label, n in (("direct", 6), ("case_level_only", 4), ("negative", 4)):
             for r in sorted(groups[label], key=lambda r: _key(r.case_id, r.platform, h, label))[:n]:
                 rows.append(_harm_row(r, f"harm:{h}:{label}", h))
-    for cls, h, n in (("DistributionInfrastructure", "h3_material_distributed", 6),
-                      ("GenerativeSynthesis", "h6_likeness_synthesized", 4)):
+    for cls, h, n in (("DistributionInfrastructure", "h3_imagery_circulated", 6),
+                      ("GenerativeSynthesis", "h2_depicted_in_abuse_imagery", 4)):
         pool = [r for r in used if r.instrumental[cls] and r.harm_direct[h]]
         for r in sorted(pool, key=lambda r: _key(r.case_id, r.platform, "overlap", h))[:n]:
             rows.append(_harm_row(r, f"overlap:{cls}:{h}", h))

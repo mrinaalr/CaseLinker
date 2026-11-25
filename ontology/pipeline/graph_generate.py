@@ -68,6 +68,7 @@ def generate_graphs(
     resume: bool = True,
     postgres_only: Optional[bool] = None,
     storage: Any = None,
+    year_fixes: Optional[Dict[str, Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     from features_to_cac import CaseToCAC, flatten_dataset, _write_serialized  # noqa: E402
     from provenance_export import evidence_coverage, export_stored_case  # noqa: E402
@@ -100,6 +101,15 @@ def generate_graphs(
             if case is None:
                 skipped.append({"case_id": cid, "reason": "not in DB"})
                 continue
+            if year_fixes and cid in year_fixes:
+                # Publication-year correction at load (afhq1.labels.year_corrections). The graph date comes from
+                # date_range/date_start; replace it only when its year disagrees with the corrected year (then
+                # the corrected value is known to the year only); a date already in the right year keeps its precision.
+                year = str(year_fixes[cid]["corrected"])
+                dr = case.get("date_range") if isinstance(case.get("date_range"), dict) else {}
+                start = str((dr or {}).get("start") or case.get("date_start") or "")
+                if start[:4] != year:
+                    case = {**case, "date_start": year, "date_range": {"start": year, "end": None}}
 
             graph, _warnings = mapper.map_case(case)
             conforms, shacl_report = True, ""
@@ -263,6 +273,18 @@ def load_all_case_ids(db_path: Optional[Path] = None, *, postgres_only: Optional
         conn.close()
 
 
+def _year_fixes() -> Dict[str, Dict[str, Any]]:
+    """Publication-year corrections from the local corpus (same rule as the AfH numbers)."""
+    import sqlite3
+    sys.path.insert(0, str(ONTOLOGY / "platform_affordance_evidence" / "afh_manifest"))
+    from afhq1.labels import year_corrections  # noqa: E402
+    conn = sqlite3.connect(f"file:{REPO_ROOT / 'caselinker.db'}?mode=ro", uri=True)
+    try:
+        return year_corrections(conn)
+    finally:
+        conn.close()
+
+
 def _load_dotenv() -> None:
     env = REPO_ROOT / ".env"
     if not env.is_file() or os.getenv("DATABASE_URL"):
@@ -288,6 +310,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = parser.parse_args(argv)
     postgres_only = False if args.sqlite else None
     ids = args.ids or load_all_case_ids(postgres_only=postgres_only)
+    year_fixes = _year_fixes() if args.sqlite else None
     print(f"Exporting {len(ids)} cases to {args.out}", flush=True)
     result = generate_graphs(
         ids,
@@ -296,6 +319,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         provenance=not args.no_provenance,
         resume=not args.no_resume,
         postgres_only=postgres_only,
+        year_fixes=year_fixes,
     )
     print(
         f"DONE generated={len(result['generated'])} skipped={len(result['skipped'])} "

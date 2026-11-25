@@ -1,18 +1,19 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/europol_2018_001> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case europol_2018_001" ;
-    dcterms:created "2026-11-19T19:34:28.952496"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:22:47.334139"^^xsd:dateTime ;
     dcterms:date "2018-05-08"^^xsd:date ;
     dcterms:identifier "europol_2018_001" ;
-    dcterms:modified "2026-11-19T19:34:28.952496"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:22:47.334139"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/europol_2018_001/provenance> ;
     dcterms:publisher "EUROPOL" ;
     dcterms:source <https://www.europol.europa.eu/media-press/newsroom/news/eight-arrested-for-distribution-of-child-sexual-abuse-material-through-skype-and-darknet> ;
@@ -21,34 +22,35 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/europol_2018_001/event/csam>,
         <https://w3id.org/caselinker/resource/case/europol_2018_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/europol_2018_001/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/national-police-department>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/national-police-department>,
         <https://w3id.org/caselinker/resource/agency/spanish-national-police-department>,
         <https://w3id.org/caselinker/resource/case/europol_2018_001/agency/joint-cybercrime-action-taskforce> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/europol_2018_001/person/offender/1>,
+    ns2:object <https://w3id.org/caselinker/resource/case/europol_2018_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online>,
         <https://w3id.org/caselinker/resource/platform/skype>,
         <https://w3id.org/caselinker/resource/platform/tor> .
 
-<https://w3id.org/caselinker/resource/case/europol_2018_001/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/europol_2018_001/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/europol_2018_001/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/europol_2018_001/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/europol_2018_001/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/europol_2018_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/national-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:InternationalAgency ;
+        ns3:InternationalAgency ;
     rdfs:label "National Police Department" ;
-    ns3:name "National Police Department" .
+    ns2:name "National Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/spanish-national-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:InternationalAgency ;
+        ns3:InternationalAgency ;
     rdfs:label "Spanish National Police Department" ;
-    ns3:name "Spanish National Police Department" .
+    ns2:name "Spanish National Police Department" .
 
 <https://w3id.org/caselinker/resource/case/europol_2018_001/agency/joint-cybercrime-action-taskforce> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:InternationalAgency ;
+        ns3:InternationalAgency ;
     rdfs:label "Joint Cybercrime Action Taskforce" ;
-    ns3:name "Joint Cybercrime Action Taskforce" .
+    ns2:name "Joint Cybercrime Action Taskforce" .
 
 <https://w3id.org/caselinker/resource/case/europol_2018_001/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -73,6 +75,11 @@
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2018_001/event/csam> .
 
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns5:platformType "generic-tag" ;
+    ns2:name "online" .
+
 <https://w3id.org/caselinker/resource/case/europol_2018_001/event/csam> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" ;
@@ -88,12 +95,12 @@
     rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/platform/skype> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+        ns5:MessagingService ;
     rdfs:label "Skype" ;
-    ns3:name "Skype" .
+    ns2:name "Skype" .
 
 <https://w3id.org/caselinker/resource/platform/tor> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#DarkWebService> ;
+        ns5:DarkWebService ;
     rdfs:label "Tor" ;
-    ns3:name "Tor" .
+    ns2:name "Tor" .
 

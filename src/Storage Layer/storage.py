@@ -72,8 +72,16 @@ except ImportError:
     )
 
 
+def _file_of(db_path: str) -> str:
+    """The file behind a path or a ``file:...?mode=ro`` URI."""
+    db_path = str(db_path)
+    return db_path[5:].split("?", 1)[0] if db_path.startswith("file:") else db_path
+
+
 def get_connection(db_path: str, encryption_key: Optional[str] = None):
-    """Get database connection"""
+    """Get database connection. A ``file:...?mode=ro`` URI opens the file read-only."""
+    if str(db_path).startswith("file:"):
+        return sqlite3.connect(db_path, uri=True)
     return sqlite3.connect(db_path)
 
 
@@ -96,6 +104,14 @@ class CaseStorage:
         """
         self.db_path = db_path
         self.init_database()
+
+    @classmethod
+    def read_only(cls, db_path: str) -> "CaseStorage":
+        """Storage over an existing file opened with SQLite ``mode=ro``: no schema setup, no writes.
+        Used by the AfH numbers, which must never change their input database."""
+        obj = cls.__new__(cls)
+        obj.db_path = f"file:{Path(db_path).resolve()}?mode=ro"
+        return obj
     
     def init_database(self):
         """
@@ -543,6 +559,15 @@ class CaseStorage:
         finally:
             conn.close()
 
+    def count_assertion_feature_values(self, excluded_roles) -> Dict[str, int]:
+        """Distinct asserted values per field in each case's current run (feature count)."""
+        from assertion_store import count_assertion_feature_values
+        conn = get_connection(self.db_path)
+        try:
+            return count_assertion_feature_values(conn.cursor(), excluded_roles, dialect="sqlite")
+        finally:
+            conn.close()
+
     def get_case_assertions(self, case_id: str, field: Optional[str] = None) -> Dict[str, Any]:
         """Per-method assertions and the latest resolutions for one case (3.0)."""
         conn = get_connection(self.db_path)
@@ -784,7 +809,7 @@ class CaseStorage:
         """
         try:
             # Check if database file exists
-            db_path_obj = Path(self.db_path)
+            db_path_obj = Path(_file_of(self.db_path))
             if not db_path_obj.exists():
                 print(f"⚠️  Database file not found: {self.db_path}")
                 return []
@@ -925,7 +950,7 @@ class CaseStorage:
         if not ordered_unique:
             return []
         try:
-            db_path_obj = Path(self.db_path)
+            db_path_obj = Path(_file_of(self.db_path))
             if not db_path_obj.exists():
                 return []
             conn = get_connection(self.db_path)
@@ -1041,7 +1066,7 @@ class CaseStorage:
         only id, source, platforms_used, agencies_involved, organizations.
         """
         try:
-            db_path_obj = Path(self.db_path)
+            db_path_obj = Path(_file_of(self.db_path))
             if not db_path_obj.exists():
                 return []
             conn = get_connection(self.db_path)
@@ -1098,7 +1123,7 @@ class CaseStorage:
         offset = max(0, int(offset))
         limit = max(1, min(int(limit), 500))
         try:
-            db_path_obj = Path(self.db_path)
+            db_path_obj = Path(_file_of(self.db_path))
             if not db_path_obj.exists():
                 return []
             conn = get_connection(self.db_path)

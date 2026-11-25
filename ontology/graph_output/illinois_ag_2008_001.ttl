@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001> a ns3:CACInvestigation,
         ns4:EnduringEntity ;
     rdfs:label "Case illinois_ag_2008_001" ;
-    dcterms:created "2026-11-19T19:41:01.400477"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:32:05.379447"^^xsd:dateTime ;
     dcterms:date "2008-12-16"^^xsd:date ;
     dcterms:identifier "illinois_ag_2008_001" ;
-    dcterms:modified "2026-11-19T19:41:01.400477"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:32:05.379447"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/provenance> ;
     dcterms:publisher "ILLINOIS AG" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2006-2018-Press-Archive/200812-16%20WILL%20COUNTY%20MAN%20SENTENCED%20ON%20CHILD%20PRONOGRAPHY%20CONVICTION.pdf> ;
@@ -27,11 +28,13 @@
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/bolingbrook-police-department-il>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/bolingbrook-police-department-il>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/illinois-department-of-corrections>,
         <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/person/offender/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/internet>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -41,58 +44,58 @@
     ns1:target <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/bolingbrook-police-department-il> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Bolingbrook Police Department" ;
     dcterms:identifier "ori:IL0990200" ;
     ns1:name "Bolingbrook Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/illinois-department-of-corrections> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Illinois Department of Corrections" ;
     ns1:name "Illinois Department of Corrections" .
 
 <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Illinois High Tech Crimes Bureau" ;
     ns1:name "Illinois High Tech Crimes Bureau" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns2:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility: held in the Will County Jail" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/charge/1> ;
-    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/1>,
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/charge/1> ;
+    ns6:resultsSentence <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/1>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/2> .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/legal-step/sentenced> a ns4:Event,
         ns4:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
+        ns6:LegalProceeding,
+        ns6:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/1> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/1> a ns6:CriminalSentence,
+        ns6:PrisonSentence ;
     rdfs:label "four years" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/2> a ns2:CriminalSentence,
-        ns2:SupervisedRelease ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/sentence/2> a ns6:CriminalSentence,
+        ns6:SupervisedRelease ;
     rdfs:label "two years supervised release" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/role/offender/1> .
 
@@ -116,6 +119,16 @@
     dcterms:identifier "fips:17" ;
     ns1:name "Illinois" .
 
+<https://w3id.org/caselinker/resource/platform/internet> a ns4:DigitalSystemEntity ;
+    rdfs:label "internet" ;
+    ns5:platformType "generic-tag" ;
+    ns1:name "internet" .
+
+<https://w3id.org/caselinker/resource/platform/online> a ns4:DigitalSystemEntity ;
+    rdfs:label "online" ;
+    ns5:platformType "generic-tag" ;
+    ns1:name "online" .
+
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/event/csam> a ns3:CSAMIncident,
         ns4:Event ;
     rdfs:label "CSAMIncident · event/csam" ;
@@ -125,7 +138,7 @@
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/phase/sentenced> a ns4:Phase,
-        ns2:SentencingPhase ;
+        ns6:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_001/role/offender/1> a ns3:OffenderRole ;

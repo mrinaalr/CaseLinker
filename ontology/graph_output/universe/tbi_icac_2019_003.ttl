@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case tbi_icac_2019_003" ;
-    dcterms:created "2026-11-19T20:21:29.996075"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T13:17:12.662900"^^xsd:dateTime ;
     dcterms:date "2019-02-04"^^xsd:date ;
     dcterms:identifier "tbi_icac_2019_003" ;
-    dcterms:modified "2026-11-19T20:21:29.996075"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T13:17:12.662900"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/provenance> ;
     dcterms:publisher "TBI ICAC" ;
     dcterms:source <https://tbinewsroom.com/2019/02/04/tbi-investigation-into-exploitation-complaints-results-in-arrest-of-man-in-indiana/> ;
@@ -26,8 +27,9 @@
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/operation> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> ;
     ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/cybertip>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/person/offender/1>,
@@ -41,7 +43,7 @@
     ns2:target <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Tennessee Bureau of Investigation" ;
     dcterms:identifier "ori:TNTBI0000" ;
     ns2:name "Tennessee Bureau of Investigation" .
@@ -50,21 +52,21 @@
         ns4:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/charge/2> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
-
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
         ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/charge/1>,
-        <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/charge/2> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
@@ -101,9 +103,14 @@
     dcterms:identifier "fips:47" ;
     ns2:name "Tennessee" .
 
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "social media" ;
+    ns6:platformType "generic-tag" ;
+    ns2:name "social media" .
+
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:HotlineOrganization,
-        ns3:FederalAgency ;
+        ns3:HotlineOrganization,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
@@ -111,8 +118,7 @@
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/event/hands-on> a ns1:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+    ns1:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
@@ -120,9 +126,4 @@
 <https://w3id.org/caselinker/resource/case/tbi_icac_2019_003/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns2:name "social media" .
 

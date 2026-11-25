@@ -22,7 +22,7 @@ for sub in ("src", "src/Processing Layer", "src/Storage Layer", "src/Ingestion L
 import processing  # noqa: E402
 from case_storage_utils import EXTRACTED_FEATURE_FIELDS  # noqa: E402
 
-LOCAL_URL = "postgresql://127.0.0.1:5432/caselinker_parity"
+LOCAL_URL = "postgresql://127.0.0.1:5432/caselinker_parity"   # default; local_pg may start its own on another port
 MARKERS = ("railway", "rlwy.net", "proxy.rlwy")
 
 
@@ -135,10 +135,11 @@ def _sqlite(tmp_path: Path):
     return CaseStorage(str(tmp_path / "parity.db"))
 
 
-def _postgres():
-    _forbid_remote(LOCAL_URL)
+def _postgres(server: str, monkeypatch):
+    url = f"{server}/caselinker_parity"
+    _forbid_remote(url)
     import psycopg2
-    admin = psycopg2.connect("postgresql://127.0.0.1:5432/postgres")
+    admin = psycopg2.connect(f"{server}/postgres")
     admin.autocommit = True
     cur = admin.cursor()
     cur.execute("SELECT 1 FROM pg_database WHERE datname = 'caselinker_parity'")
@@ -146,7 +147,7 @@ def _postgres():
         cur.execute("CREATE DATABASE caselinker_parity")
     cur.close()
     admin.close()
-    os.environ["DATABASE_URL"] = LOCAL_URL
+    monkeypatch.setenv("DATABASE_URL", url)   # restored after the test; never leaks to later tests
     import storage_postgres
     storage_postgres._pool = None
     storage = storage_postgres.CaseStorage()
@@ -176,13 +177,42 @@ def test_sqlite_loaders_share_the_field_list(tmp_path: Path):
     assert snap["resolutions"]["age"]["final_value"]["victims"] == [12]
 
 
-def test_postgres_matches_sqlite(tmp_path: Path):
+@pytest.fixture(scope="module")
+def local_pg(tmp_path_factory):
+    """A Postgres on 127.0.0.1: the one already on 5432, or a throwaway cluster started here and
+    stopped afterwards (initdb + pg_ctl from PATH or Homebrew). TCP only: a temp-dir Unix socket path
+    can exceed macOS's 103-byte limit."""
+    import shutil
+    import socket
+    import subprocess
+    import psycopg2
     try:
-        import psycopg2
-        probe = psycopg2.connect("postgresql://127.0.0.1:5432/postgres")
-        probe.close()
-    except Exception as exc:
-        pytest.skip(f"local postgres is not accepting connections: {exc}")
+        psycopg2.connect("postgresql://127.0.0.1:5432/postgres", connect_timeout=2).close()
+        yield "postgresql://127.0.0.1:5432"
+        return
+    except Exception:
+        pass
+    bindirs = [None] + sorted(Path("/opt/homebrew/opt").glob("postgresql@*/bin"), reverse=True)
+    initdb = next((shutil.which("initdb", path=str(d)) if d else shutil.which("initdb") for d in bindirs
+                   if (shutil.which("initdb", path=str(d)) if d else shutil.which("initdb"))), None)
+    assert initdb, "Postgres is not installed: install it (e.g. brew install postgresql@16) to run the parity test"
+    pg_ctl = str(Path(initdb).with_name("pg_ctl"))
+    data = tmp_path_factory.mktemp("pgdata")
+    env = {**os.environ, "LC_ALL": "C", "LANG": "C"}   # postmaster refuses to start without a valid locale
+    with socket.socket() as sock:
+        sock.bind(("127.0.0.1", 0))
+        port = sock.getsockname()[1]
+    subprocess.run([initdb, "-D", str(data), "-U", os.environ.get("USER", "postgres"), "--auth=trust", "-E", "UTF8"],
+                   check=True, capture_output=True, env=env)
+    subprocess.run([pg_ctl, "-D", str(data), "-l", str(data / "log"), "-w", "-o",
+                    f"-p {port} -c listen_addresses=127.0.0.1 -c unix_socket_directories=''", "start"], check=True, capture_output=True, env=env)
+    try:
+        yield f"postgresql://127.0.0.1:{port}"
+    finally:
+        subprocess.run([pg_ctl, "-D", str(data), "-m", "fast", "-w", "stop"], capture_output=True, env=env)
+
+
+def test_postgres_matches_sqlite(tmp_path: Path, local_pg, monkeypatch):
     left = exercise(_sqlite(tmp_path))
-    right = exercise(_postgres())
+    right = exercise(_postgres(local_pg, monkeypatch))
     assert left == right

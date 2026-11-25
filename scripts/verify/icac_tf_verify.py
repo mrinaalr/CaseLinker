@@ -431,7 +431,7 @@ def run(db_path: Path, include_agencies: bool, cross_csv: Path | None, aggregato
         print(f"No database at {db_path}", file=sys.stderr)
         return 1
 
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(f"file:{db_path.resolve()}?mode=ro", uri=True)   # read-only: never touch the input
     analysis = analyze_icac_task_forces(conn, include_agencies=include_agencies)
     conn.close()
 

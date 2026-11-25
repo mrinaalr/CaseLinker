@@ -1,10 +1,11 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,10 +13,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1120> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_1120" ;
-    dcterms:created "2026-11-19T18:29:01.377230"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:20:13.605988"^^xsd:dateTime ;
     dcterms:date "2024-07-22"^^xsd:date ;
     dcterms:identifier "ncmec_2024_1120" ;
-    dcterms:modified "2026-11-19T18:29:01.377230"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:20:13.605988"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://www.whsv.com/2024/07/22/man-arrested-possession-child-pornography-shenandoah-county/> ;
@@ -26,11 +27,13 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/legal-proceeding> ;
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/operation> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/agency/shenandoah-county-sheriffs-office> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/person/offender/1> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -50,28 +53,32 @@
     rdfs:label "Shenandoah County Sheriff's Office" ;
     ns1:name "Shenandoah County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1120/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1120/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Rappahannock Shenandoah Warren Regional Jail" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/charge/1> .
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1120/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1120/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1120/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1120/event/possession> .
 
@@ -95,8 +102,13 @@
     skos:altLabel "Va." ;
     ns1:name "Virginia" .
 
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns7:platformType "generic-tag" ;
+    ns1:name "online" .
+
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:HotlineOrganization,
+        ns3:HotlineOrganization,
         ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;

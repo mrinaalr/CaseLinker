@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/fresno_so_2024_010> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case fresno_so_2024_010" ;
-    dcterms:created "2026-11-19T19:35:44.633389"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:23:35.796609"^^xsd:dateTime ;
     dcterms:date "2024-11-15"^^xsd:date ;
     dcterms:identifier "fresno_so_2024_010" ;
-    dcterms:modified "2026-11-19T19:35:44.633389"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:23:35.796609"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/provenance> ;
     dcterms:publisher "FRESNO SO" ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/icac-detectives-arrest-u-s-marine-corps-staff-sergeant-after-contacting-minors-for-sexual-purposes.html> ;
@@ -28,8 +29,9 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/phase/booked> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/event/possession>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/person/offender/1> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -45,24 +47,24 @@
     ns1:target <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2024_010/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2024_010/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Vista Detention Facility" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/charge/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2024_010/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2024_010/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/event/possession> .
 
@@ -104,6 +106,11 @@
     rdfs:label "San Diego County" ;
     dcterms:identifier "fips:06073" ;
     ns1:name "San Diego County" .
+
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns5:platformType "generic-tag" ;
+    ns1:name "online" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2024_010/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;

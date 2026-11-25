@@ -1,0 +1,5334 @@
+{
+ "inputs": {
+  "corpus_cases": 10802,
+  "codebook": "codebook-9",
+  "registry": "platforms-3",
+  "pacer_release": "pacer-v2",
+  "snapshot_identity": "99a5f4119b8efd79209aa8ea32f832522e17f85975689c1f3582b6d56b3a7e8e",
+  "db_sha256": "867e2a573876586a6990efd20dca818fec0ab94f05e8b29faa5df9fe72df833f",
+  "db_cases": 10802,
+  "pacer_sha256": "ec56f1dfe11cb187e64fbf0bfd111ce315892536fdaff374c6ea227961a356b3",
+  "db_matches_afh_2_0": true,
+  "pacer_matches_afh_2_0": true,
+  "pacer_is_public_subset": false,
+  "afh_2_0_snapshot": true,
+  "afh_2_0_reference": {
+   "_note": "The frozen AfH 2.0 inputs (SNAPSHOT.md). A run on other inputs is computed in full and labelled afh_2_0_snapshot: false.",
+   "frozen": "2026-11-24",
+   "db_sha256": "867e2a573876586a6990efd20dca818fec0ab94f05e8b29faa5df9fe72df833f",
+   "db_cases": 10802,
+   "pacer_release": "pacer-v2",
+   "pacer_sha256": "ec56f1dfe11cb187e64fbf0bfd111ce315892536fdaff374c6ea227961a356b3",
+   "data_doi": "10.5281/zenodo.24520066",
+   "pacer_note": "pacer_sha256 is the full release (219 files), in pacer-v2.zip on Zenodo (restricted); run_all.sh needs it",
+   "pacer_public_sha256": "24296c3b13938a6459bf74c4b8ce2a66067db18d81e7df9c3290fb828ad156a3",
+   "pacer_public_note": "the 189 files git ships (the 30 cases/ bundles stay out); document-type counts ship as numbers/pacer_doc_types.json",
+   "zenodo_files_sha256": {
+    "caselinker.db": "867e2a573876586a6990efd20dca818fec0ab94f05e8b29faa5df9fe72df833f",
+    "pacer-v2.zip": "19db3fcb4b80802353b0dd0cc4bf15c7aab30dde45553049277be9fffc26e0af"
+   }
+  }
+ },
+ "1_cover": {
+  "NCases": 10802,
+  "NFeatures": 190023,
+  "NFeatures_breakdown": {
+   "rule": "a value read from the case text and stored for the case; a list counts each value; labels count, and the quoted spans behind them are listed, not counted; placeholders, program boilerplate, provenance and copies of other attributes are excluded",
+   "counted_case_attributes": {
+    "platforms_used": 10971,
+    "case_topics": 31532,
+    "severity_indicators": 7386,
+    "agencies_involved": 40492,
+    "perpetrator_admission_themes": 1676,
+    "anonymization_network": 112,
+    "p2p_clients": 3,
+    "relationship_to_victim": 796,
+    "perpetrator_gender": 308,
+    "multi_defendant_operation": 125,
+    "victim_count": 161,
+    "prosecution_outcome": 27711,
+    "evidence_volume": 1988,
+    "case_demographics": 288
+   },
+   "counted_span_checked_assertions": {
+    "age": 16271,
+    "date": 25530,
+    "sentence": 18187,
+    "investigation_type": 2636,
+    "legal_context": 2437,
+    "prior_history": 1212,
+    "cybertip_reporter": 201
+   },
+   "asserted_copies_not_counted_again": {
+    "perpetrator_age": "age assertions",
+    "investigation_type": "investigation_type assertions",
+    "investigation_types": "investigation_type assertions",
+    "legal_context": "legal_context assertions",
+    "prior_history": "prior_history assertions",
+    "previous_conviction": "prior_history assertions",
+    "perpetrator_registered_sex_offender": "prior_history assertions (registered_offender)",
+    "cybertip_reporter": "cybertip_reporter assertions"
+   },
+   "excluded": {
+    "agency_grounds": {
+     "reason": "provenance: where each agency was found",
+     "stored_items": 40492
+    },
+    "location_grounds": {
+     "reason": "provenance: where each location was found",
+     "stored_items": 41965
+    },
+    "person_spans": {
+     "reason": "provenance: name spans used for masking",
+     "stored_items": 98470
+    },
+    "comparison_values": {
+     "reason": "derived comparison keys, not read from the text",
+     "stored_items": 10802
+    },
+    "ml_features": {
+     "reason": "model input vector, not an extracted value",
+     "stored_items": 10802
+    },
+    "date_range": {
+     "reason": "publication dates, counted from date assertions",
+     "stored_items": 10802
+    },
+    "document_version_id": {
+     "reason": "ingest bookkeeping",
+     "stored_items": 329
+    },
+    "extraction_run_id": {
+     "reason": "ingest bookkeeping",
+     "stored_items": 10802
+    },
+    "press_digest_pollution": {
+     "reason": "quality flag on the source text",
+     "stored_items": 26
+    },
+    "organizations": {
+     "reason": "superset of agencies_involved (counted there)",
+     "stored_items": 35666
+    },
+    "pathway_agencies_federal": {
+     "reason": "derived from agencies_involved",
+     "stored_items": 17436
+    },
+    "pathway_agencies_state_local": {
+     "reason": "derived from agencies_involved",
+     "stored_items": 23104
+    },
+    "severity_phrases": {
+     "reason": "quoted spans behind severity_indicators (the labels are counted)",
+     "stored_items": 4955
+    },
+    "perpetrator_admissions": {
+     "reason": "quoted spans behind perpetrator_admission_themes (the labels are counted)",
+     "stored_items": 1974
+    },
+    "investigation_technology": {
+     "reason": "one flag value ('CyberTipline'); in 745 of 1,810 frozen-corpus cases its only mention is a report-to-the-CyberTipline line (program boilerplate), and the stored value cannot tell the two apart",
+     "stored_items": 1810
+    },
+    "locations": {
+     "reason": "place names; location_grounds records what a place is (state, city), never its role, so offense locations cannot be told from an agency's or court's; left out by the maintainer 2026-11-24",
+     "stored_items": 41965
+    }
+   }
+  },
+  "NSources": 76,
+  "NSourceLabels": 78,
+  "NAgencies_corpus_normalized": 4326,
+  "NAgencyVariants_raw_labels": 5052,
+  "NPacerCases": 30,
+  "NPacerDocs": 98,
+  "NPacerDocs_by_type": {
+   "indictment": 17,
+   "judgment": 14,
+   "docket": 13,
+   "sentencing_memorandum": 13,
+   "plea_agreement": 10,
+   "superseding_indictment": 8,
+   "complaint": 4,
+   "trial_brief": 3,
+   "statement_of_facts": 3,
+   "statement_of_offense": 2,
+   "factual_proffer": 2,
+   "findings_of_fact": 1,
+   "information": 1,
+   "amended_judgment": 1,
+   "opinion": 1,
+   "brief": 1,
+   "stipulation_of_facts": 1,
+   "statement_of_reasons": 1,
+   "factual_basis": 1,
+   "plea_transcript": 1
+  },
+  "NPacerIndictments_docs": 25,
+  "NPacerIndictments_cases": 24,
+  "NPacerSoO_docs_strict": 2,
+  "NPacerSoO_docs_factual_family": 9,
+  "NPacerSoO_cases_factual_family": 8,
+  "NNamedPlatforms_q1": 52,
+  "NManifestPlatforms": 36,
+  "YearStart_api_stats": "1992",
+  "YearStart_publication_year": 2002,
+  "YearEnd_publication_year": 2026,
+  "cases_before_2002_publication_year": 0,
+  "cases_before_2002_ids": [],
+  "publication_year_corrections": {
+   "ncmec_2022_056": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_146": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_167": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_173": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_222": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_309": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_314": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_415": [
+    2021,
+    2022
+   ],
+   "ncmec_2022_506": [
+    1992,
+    2022
+   ],
+   "ncmec_2022_512": [
+    2019,
+    2022
+   ],
+   "ncmec_2022_543": [
+    2021,
+    2022
+   ],
+   "ncmec_2023_013": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_080": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_175": [
+    2020,
+    2023
+   ],
+   "ncmec_2023_178": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_245": [
+    2020,
+    2023
+   ],
+   "ncmec_2023_275": [
+    2017,
+    2023
+   ],
+   "ncmec_2023_301": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_400": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_405": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_510": [
+    2022,
+    2023
+   ],
+   "ncmec_2023_582": [
+    2019,
+    2023
+   ],
+   "ncmec_2023_597": [
+    2007,
+    2023
+   ],
+   "ncmec_2024_1203": [
+    2025,
+    2024
+   ],
+   "ncmec_2024_609": [
+    2023,
+    2024
+   ],
+   "ncmec_2024_905": [
+    2002,
+    2024
+   ],
+   "ncmec_2025_299": [
+    2022,
+    2025
+   ],
+   "ncmec_2025_559": [
+    2022,
+    2025
+   ],
+   "ncmec_2025_843": [
+    2022,
+    2025
+   ]
+  },
+  "NTaskForces_list": 61,
+  "NTaskForces_corpus_mentioned": 61,
+  "NTaskForces_corpus_aligned": 43,
+  "NTaskForces_corpus_non_federal_feed": 59
+ },
+ "2_recurrence": {
+  "launch_cohort": {
+   "bins": [
+    "<=2003",
+    "2004-2010",
+    "2011-2016",
+    ">=2017"
+   ],
+   "cases_per_bin": {
+    "<=2003": 82,
+    "2004-2010": 747,
+    "2011-2016": 498,
+    ">=2017": 2
+   },
+   "qualifying": [
+    "<=2003",
+    "2004-2010",
+    "2011-2016"
+   ],
+   "classes": {
+    "Anonymity": {
+     "verdict": "recurs",
+     "cases": {
+      "<=2003": 81,
+      "2004-2010": 454,
+      "2011-2016": 448,
+      ">=2017": 2
+     },
+     "present": [
+      "<=2003",
+      "2004-2010",
+      "2011-2016"
+     ]
+    },
+    "Ephemerality": {
+     "verdict": "first appears in the last qualifying cohort; recurrence untestable",
+     "cases": {
+      "<=2003": 0,
+      "2004-2010": 0,
+      "2011-2016": 318,
+      ">=2017": 0
+     },
+     "present": [
+      "2011-2016"
+     ]
+    },
+    "ContactDiscovery": {
+     "verdict": "recurs",
+     "cases": {
+      "<=2003": 52,
+      "2004-2010": 261,
+      "2011-2016": 359,
+      ">=2017": 1
+     },
+     "present": [
+      "<=2003",
+      "2004-2010",
+      "2011-2016"
+     ]
+    },
+    "UnmonitoredCommunication": {
+     "verdict": "recurs",
+     "cases": {
+      "<=2003": 18,
+      "2004-2010": 485,
+      "2011-2016": 456,
+      ">=2017": 0
+     },
+     "present": [
+      "<=2003",
+      "2004-2010",
+      "2011-2016"
+     ]
+    },
+    "DistributionInfrastructure": {
+     "verdict": "recurs",
+     "cases": {
+      "<=2003": 52,
+      "2004-2010": 272,
+      "2011-2016": 109,
+      ">=2017": 0
+     },
+     "present": [
+      "<=2003",
+      "2004-2010",
+      "2011-2016"
+     ]
+    }
+   },
+   "generative_synthesis_descriptive": {
+    "<=2003": 0,
+    "2004-2010": 0,
+    "2011-2016": 0,
+    ">=2017": 1
+   }
+  },
+  "publication_era": {
+   "bins": [
+    "<=2016",
+    "2017-2019",
+    "2020-2022",
+    "2023-2026"
+   ],
+   "cases_per_bin": {
+    "<=2016": 60,
+    "2017-2019": 20,
+    "2020-2022": 253,
+    "2023-2026": 900
+   },
+   "qualifying": [
+    "<=2016",
+    "2020-2022",
+    "2023-2026"
+   ],
+   "cases_after_2026": 0,
+   "classes": {
+    "Anonymity": {
+     "verdict": "persists",
+     "cases": {
+      "<=2016": 28,
+      "2017-2019": 6,
+      "2020-2022": 179,
+      "2023-2026": 722
+     },
+     "present": [
+      "<=2016",
+      "2020-2022",
+      "2023-2026"
+     ],
+     "top_platform_share": {
+      "<=2016": [
+       "IRC",
+       0.25
+      ],
+      "2017-2019": [
+       "Craigslist",
+       0.333
+      ],
+      "2020-2022": [
+       "Kik",
+       0.486
+      ],
+      "2023-2026": [
+       "Kik",
+       0.461
+      ]
+     }
+    },
+    "Ephemerality": {
+     "verdict": "persists",
+     "cases": {
+      "<=2016": 0,
+      "2017-2019": 1,
+      "2020-2022": 65,
+      "2023-2026": 254
+     },
+     "present": [
+      "2020-2022",
+      "2023-2026"
+     ],
+     "top_platform_share": {
+      "<=2016": [
+       null,
+       null
+      ],
+      "2017-2019": [
+       "Snapchat",
+       1.0
+      ],
+      "2020-2022": [
+       "Snapchat",
+       1.0
+      ],
+      "2023-2026": [
+       "Snapchat",
+       0.992
+      ]
+     }
+    },
+    "ContactDiscovery": {
+     "verdict": "persists",
+     "cases": {
+      "<=2016": 51,
+      "2017-2019": 15,
+      "2020-2022": 139,
+      "2023-2026": 441
+     },
+     "present": [
+      "<=2016",
+      "2020-2022",
+      "2023-2026"
+     ],
+     "top_platform_share": {
+      "<=2016": [
+       "Webcam platform",
+       0.294
+      ],
+      "2017-2019": [
+       "Facebook",
+       0.333
+      ],
+      "2020-2022": [
+       "Snapchat",
+       0.468
+      ],
+      "2023-2026": [
+       "Snapchat",
+       0.571
+      ]
+     }
+    },
+    "UnmonitoredCommunication": {
+     "verdict": "persists",
+     "cases": {
+      "<=2016": 9,
+      "2017-2019": 8,
+      "2020-2022": 178,
+      "2023-2026": 724
+     },
+     "present": [
+      "<=2016",
+      "2020-2022",
+      "2023-2026"
+     ],
+     "top_platform_share": {
+      "<=2016": [
+       "Skype",
+       0.667
+      ],
+      "2017-2019": [
+       "FaceTime",
+       0.25
+      ],
+      "2020-2022": [
+       "Kik",
+       0.489
+      ],
+      "2023-2026": [
+       "Kik",
+       0.46
+      ]
+     }
+    },
+    "DistributionInfrastructure": {
+     "verdict": "persists",
+     "cases": {
+      "<=2016": 53,
+      "2017-2019": 14,
+      "2020-2022": 91,
+      "2023-2026": 282
+     },
+     "present": [
+      "<=2016",
+      "2020-2022",
+      "2023-2026"
+     ],
+     "top_platform_share": {
+      "<=2016": [
+       "Webcam platform",
+       0.283
+      ],
+      "2017-2019": [
+       "Facebook",
+       0.357
+      ],
+      "2020-2022": [
+       "Facebook",
+       0.385
+      ],
+      "2023-2026": [
+       "Facebook",
+       0.266
+      ]
+     }
+    }
+   },
+   "generative_synthesis_descriptive": {
+    "<=2016": 0,
+    "2017-2019": 0,
+    "2020-2022": 0,
+    "2023-2026": 62
+   }
+  }
+ },
+ "3_contact_discovery_g1": {
+  "generation": "<=2003",
+  "p2p_platforms": [
+   "BitTorrent",
+   "Kazaa",
+   "LimeWire"
+  ],
+  "with_p2p": {
+   "g1_coded_cases": 82,
+   "g1_qualifies": true,
+   "contact_discovery_cases": 52,
+   "present": true
+  },
+  "without_p2p": {
+   "g1_coded_cases": 47,
+   "g1_qualifies": true,
+   "contact_discovery_cases": 17,
+   "present": true
+  },
+  "cases_only_via_p2p": 35,
+  "check_matches_committed_count": true
+ },
+ "4_affordance_harm": {
+  "strict_closed": {
+   "counts": {
+    "Anonymity": {
+     "h1_contact_sexual_abuse": 7,
+     "h2_depicted_in_abuse_imagery": 11,
+     "h3_imagery_circulated": 544,
+     "h4_coerced_by_exposure_threat": 8,
+     "h5_commercial_sexual_exploitation": 2
+    },
+    "Ephemerality": {
+     "h1_contact_sexual_abuse": 3,
+     "h2_depicted_in_abuse_imagery": 9,
+     "h3_imagery_circulated": 131,
+     "h4_coerced_by_exposure_threat": 4,
+     "h5_commercial_sexual_exploitation": 0
+    },
+    "ContactDiscovery": {
+     "h1_contact_sexual_abuse": 12,
+     "h2_depicted_in_abuse_imagery": 14,
+     "h3_imagery_circulated": 292,
+     "h4_coerced_by_exposure_threat": 23,
+     "h5_commercial_sexual_exploitation": 1
+    },
+    "UnmonitoredCommunication": {
+     "h1_contact_sexual_abuse": 7,
+     "h2_depicted_in_abuse_imagery": 11,
+     "h3_imagery_circulated": 504,
+     "h4_coerced_by_exposure_threat": 10,
+     "h5_commercial_sexual_exploitation": 1
+    },
+    "DistributionInfrastructure": {
+     "h1_contact_sexual_abuse": 8,
+     "h2_depicted_in_abuse_imagery": 2,
+     "h3_imagery_circulated": 225,
+     "h4_coerced_by_exposure_threat": 21,
+     "h5_commercial_sexual_exploitation": 1
+    },
+    "GenerativeSynthesis": {
+     "h1_contact_sexual_abuse": 0,
+     "h2_depicted_in_abuse_imagery": 20,
+     "h3_imagery_circulated": 12,
+     "h4_coerced_by_exposure_threat": 0,
+     "h5_commercial_sexual_exploitation": 0
+    }
+   },
+   "stated_cases_with_default_on": 1291,
+   "stated_mentions_with_default_on": 1489
+  },
+  "broad_closed": {
+   "counts": {
+    "Anonymity": {
+     "h1_contact_sexual_abuse": 145,
+     "h2_depicted_in_abuse_imagery": 169,
+     "h3_imagery_circulated": 822,
+     "h4_coerced_by_exposure_threat": 36,
+     "h5_commercial_sexual_exploitation": 22
+    },
+    "Ephemerality": {
+     "h1_contact_sexual_abuse": 48,
+     "h2_depicted_in_abuse_imagery": 71,
+     "h3_imagery_circulated": 252,
+     "h4_coerced_by_exposure_threat": 20,
+     "h5_commercial_sexual_exploitation": 3
+    },
+    "ContactDiscovery": {
+     "h1_contact_sexual_abuse": 114,
+     "h2_depicted_in_abuse_imagery": 157,
+     "h3_imagery_circulated": 537,
+     "h4_coerced_by_exposure_threat": 50,
+     "h5_commercial_sexual_exploitation": 13
+    },
+    "UnmonitoredCommunication": {
+     "h1_contact_sexual_abuse": 142,
+     "h2_depicted_in_abuse_imagery": 167,
+     "h3_imagery_circulated": 803,
+     "h4_coerced_by_exposure_threat": 39,
+     "h5_commercial_sexual_exploitation": 21
+    },
+    "DistributionInfrastructure": {
+     "h1_contact_sexual_abuse": 84,
+     "h2_depicted_in_abuse_imagery": 100,
+     "h3_imagery_circulated": 380,
+     "h4_coerced_by_exposure_threat": 41,
+     "h5_commercial_sexual_exploitation": 10
+    },
+    "GenerativeSynthesis": {
+     "h1_contact_sexual_abuse": 17,
+     "h2_depicted_in_abuse_imagery": 38,
+     "h3_imagery_circulated": 43,
+     "h4_coerced_by_exposure_threat": 1,
+     "h5_commercial_sexual_exploitation": 0
+    }
+   },
+   "stated_cases_with_default_on": 1291,
+   "stated_mentions_with_default_on": 1489
+  },
+  "moved_by_closing_rows_open_to_closed": {
+   "strict": {
+    "Anonymity|h3_imagery_circulated": [
+     546,
+     544
+    ],
+    "Ephemerality|h3_imagery_circulated": [
+     133,
+     131
+    ],
+    "ContactDiscovery|h3_imagery_circulated": [
+     293,
+     292
+    ],
+    "UnmonitoredCommunication|h3_imagery_circulated": [
+     506,
+     504
+    ]
+   },
+   "broad": {
+    "Anonymity|h1_contact_sexual_abuse": [
+     146,
+     145
+    ],
+    "Anonymity|h2_depicted_in_abuse_imagery": [
+     172,
+     169
+    ],
+    "Anonymity|h3_imagery_circulated": [
+     827,
+     822
+    ],
+    "Ephemerality|h2_depicted_in_abuse_imagery": [
+     72,
+     71
+    ],
+    "Ephemerality|h3_imagery_circulated": [
+     255,
+     252
+    ],
+    "ContactDiscovery|h2_depicted_in_abuse_imagery": [
+     159,
+     157
+    ],
+    "ContactDiscovery|h3_imagery_circulated": [
+     539,
+     537
+    ],
+    "UnmonitoredCommunication|h1_contact_sexual_abuse": [
+     143,
+     142
+    ],
+    "UnmonitoredCommunication|h2_depicted_in_abuse_imagery": [
+     170,
+     167
+    ],
+    "UnmonitoredCommunication|h3_imagery_circulated": [
+     808,
+     803
+    ]
+   }
+  },
+  "stated_cases_with_default_on_open_vs_closed": [
+   1298,
+   1291
+  ],
+  "h1_form": {
+   "in_person": 1674,
+   "online": 71,
+   "both": 12,
+   "none": 9045
+  },
+  "excluded_groups": {
+   "ai_no_identifiable_child": 54,
+   "attempted_contact": 57,
+   "sting_no_minor": 4
+  },
+  "excluded_overlap": {
+   "ai_no_identifiable_child & attempted_contact": 0,
+   "ai_no_identifiable_child & sting_no_minor": 0,
+   "attempted_contact & sting_no_minor": 2,
+   "all_three": 0
+  },
+  "excluded_union": 113,
+  "uncovered_share": {
+   "numerator": 1040,
+   "denominator": 10689,
+   "share": 0.0973,
+   "rule": "Empty harm set among cases in none of ai_no_identifiable_child, attempted_contact, and sting_no_minor, over that same set."
+  },
+  "stings_keeping_h2_or_h3": 5,
+  "stings_with_another_harm": 0
+ },
+ "5_q1": {
+  "q1_candidate_cases": 3057,
+  "q1_share_of_corpus": 0.283,
+  "platform_case_records": 4628,
+  "record_tiers_linewrap_primary": {
+   "stated": 2335,
+   "named_only": 1889,
+   "inferred": 404
+  },
+  "record_tiers_tiers1_baseline": {
+   "named_only": 2508,
+   "stated": 1806,
+   "inferred": 314
+  },
+  "cases_with_named_platform": 1843,
+  "named_platform_records": 2441,
+  "named_record_tiers_linewrap_primary": {
+   "inferred": 267,
+   "stated": 1522,
+   "named_only": 652
+  },
+  "named_record_tiers_tiers1_baseline": {
+   "named_only": 992,
+   "inferred": 244,
+   "stated": 1205
+  },
+  "named_platforms": 52,
+  "no_platform_beyond_online_internet_share": 0.7168,
+  "per_platform": {
+   "BitTorrent": {
+    "stated_cases": 28,
+    "total_cases": 36,
+    "use_documented_cases": 33
+   },
+   "Cash App": {
+    "stated_cases": 8,
+    "total_cases": 20,
+    "use_documented_cases": 8
+   },
+   "Craigslist": {
+    "stated_cases": 9,
+    "total_cases": 15,
+    "use_documented_cases": 12
+   },
+   "Discord": {
+    "stated_cases": 79,
+    "total_cases": 128,
+    "use_documented_cases": 94
+   },
+   "Dropbox": {
+    "stated_cases": 86,
+    "total_cases": 147,
+    "use_documented_cases": 107
+   },
+   "FaceTime": {
+    "stated_cases": 3,
+    "total_cases": 11,
+    "use_documented_cases": 4
+   },
+   "Facebook": {
+    "stated_cases": 129,
+    "total_cases": 295,
+    "use_documented_cases": 155
+   },
+   "Facebook Messenger": {
+    "stated_cases": 35,
+    "total_cases": 45,
+    "use_documented_cases": 38
+   },
+   "Gen AI": {
+    "stated_cases": 62,
+    "total_cases": 86,
+    "use_documented_cases": 67
+   },
+   "Google Drive": {
+    "stated_cases": 27,
+    "total_cases": 53,
+    "use_documented_cases": 36
+   },
+   "Grindr": {
+    "stated_cases": 6,
+    "total_cases": 14,
+    "use_documented_cases": 7
+   },
+   "IRC": {
+    "stated_cases": 7,
+    "total_cases": 15,
+    "use_documented_cases": 7
+   },
+   "Instagram": {
+    "stated_cases": 77,
+    "total_cases": 149,
+    "use_documented_cases": 95
+   },
+   "Kazaa": {
+    "stated_cases": 5,
+    "total_cases": 6,
+    "use_documented_cases": 6
+   },
+   "Kik": {
+    "stated_cases": 424,
+    "total_cases": 550,
+    "use_documented_cases": 480
+   },
+   "MeWe": {
+    "stated_cases": 10,
+    "total_cases": 10,
+    "use_documented_cases": 10
+   },
+   "Mega.nz": {
+    "stated_cases": 15,
+    "total_cases": 38,
+    "use_documented_cases": 18
+   },
+   "MySpace": {
+    "stated_cases": 1,
+    "total_cases": 3,
+    "use_documented_cases": 3
+   },
+   "Omegle": {
+    "stated_cases": 11,
+    "total_cases": 19,
+    "use_documented_cases": 13
+   },
+   "OneDrive": {
+    "stated_cases": 3,
+    "total_cases": 3,
+    "use_documented_cases": 3
+   },
+   "Reddit": {
+    "stated_cases": 19,
+    "total_cases": 32,
+    "use_documented_cases": 24
+   },
+   "Roblox": {
+    "stated_cases": 4,
+    "total_cases": 7,
+    "use_documented_cases": 4
+   },
+   "Skype": {
+    "stated_cases": 20,
+    "total_cases": 30,
+    "use_documented_cases": 23
+   },
+   "Snapchat": {
+    "stated_cases": 318,
+    "total_cases": 411,
+    "use_documented_cases": 381
+   },
+   "Telegram": {
+    "stated_cases": 48,
+    "total_cases": 83,
+    "use_documented_cases": 56
+   },
+   "TikTok": {
+    "stated_cases": 10,
+    "total_cases": 29,
+    "use_documented_cases": 10
+   },
+   "Tor": {
+    "stated_cases": 8,
+    "total_cases": 10,
+    "use_documented_cases": 9
+   },
+   "Tumblr": {
+    "stated_cases": 12,
+    "total_cases": 20,
+    "use_documented_cases": 13
+   },
+   "Twitch": {
+    "stated_cases": 1,
+    "total_cases": 4,
+    "use_documented_cases": 3
+   },
+   "Twitter / X": {
+    "stated_cases": 39,
+    "total_cases": 105,
+    "use_documented_cases": 50
+   },
+   "Webcam platform": {
+    "stated_cases": 24,
+    "total_cases": 47,
+    "use_documented_cases": 35
+   },
+   "WhatsApp": {
+    "stated_cases": 47,
+    "total_cases": 58,
+    "use_documented_cases": 51
+   },
+   "Whisper": {
+    "stated_cases": 9,
+    "total_cases": 17,
+    "use_documented_cases": 10
+   },
+   "Wickr": {
+    "stated_cases": 10,
+    "total_cases": 11,
+    "use_documented_cases": 10
+   },
+   "YouTube": {
+    "stated_cases": 8,
+    "total_cases": 19,
+    "use_documented_cases": 8
+   },
+   "iCloud": {
+    "stated_cases": 6,
+    "total_cases": 18,
+    "use_documented_cases": 9
+   }
+  }
+ },
+ "6_families": {
+  "base": "Q1 candidate cases",
+  "base_n": 3057,
+  "counts": {
+   "contact_and_approach": 648,
+   "production": 578,
+   "possession_and_trade": 2625,
+   "coordination": 32
+  },
+  "coordination_parts": {
+   "multi_defendant_operation": 31,
+   "enterprise_charge_text": 2,
+   "enterprise_only": [
+    "anchorage_pd_2022_007"
+   ]
+  },
+  "in_no_family": 229,
+  "rules": {
+   "contact_and_approach": "topic hands_on or sextortion, or h1 or h4 in the codebook-9 case harm set",
+   "production": "topic production, or h2 in the case harm set",
+   "possession_and_trade": "topic possession or distribution, or h3 in the case harm set",
+   "coordination": "extracted multi_defendant_operation, or a \u00a72252A(g) child exploitation enterprise charge named in the case text; naming Discord or a game platform alone does not count",
+   "overlap": "a case can be in several families"
+  }
+ },
+ "7_pacer": {
+  "cases": 30,
+  "press_linked": 30,
+  "documents": 98,
+  "agreed_acts": 290,
+  "chains": 170,
+  "observations": 875,
+  "derived_steps": 420,
+  "derived_steps_with_capability_candidates": 20,
+  "reliability_overall": {
+   "cases": 30,
+   "events_coder_A": 2684,
+   "events_coder_B": 5904,
+   "matched": 1070,
+   "mean_event_f1": 0.229,
+   "pooled_action_agreement": {
+    "exact": 365,
+    "of": 1070
+   },
+   "mean_action_kappa": 0.296,
+   "note": "agreement on acts the models coded; the docket parser's acts are excluded"
+  },
+  "per_case": {
+   "anchorage_pd_2022_004": {
+    "agreed_acts": 9,
+    "chains": 7,
+    "observations": 16,
+    "documents": 3,
+    "coder_a_events": 130,
+    "coder_b_events": 211,
+    "matched": 58,
+    "event_f1": 0.34,
+    "action_exact": 11,
+    "action_of": 58,
+    "action_kappa": 0.147
+   },
+   "anchorage_pd_2022_006": {
+    "agreed_acts": 15,
+    "chains": 4,
+    "observations": 4,
+    "documents": 4,
+    "coder_a_events": 163,
+    "coder_b_events": 397,
+    "matched": 59,
+    "event_f1": 0.211,
+    "action_exact": 18,
+    "action_of": 59,
+    "action_kappa": 0.28
+   },
+   "anchorage_pd_2022_007": {
+    "agreed_acts": 25,
+    "chains": 19,
+    "observations": 175,
+    "documents": 2,
+    "coder_a_events": 290,
+    "coder_b_events": 338,
+    "matched": 91,
+    "event_f1": 0.29,
+    "action_exact": 33,
+    "action_of": 91,
+    "action_kappa": 0.322
+   },
+   "doj_ceos_2025_004": {
+    "agreed_acts": 1,
+    "chains": 0,
+    "observations": 5,
+    "documents": 3,
+    "coder_a_events": 14,
+    "coder_b_events": 107,
+    "matched": 3,
+    "event_f1": 0.05,
+    "action_exact": 1,
+    "action_of": 3,
+    "action_kappa": 0.25
+   },
+   "doj_ceos_2025_007": {
+    "agreed_acts": 5,
+    "chains": 1,
+    "observations": 13,
+    "documents": 2,
+    "coder_a_events": 81,
+    "coder_b_events": 170,
+    "matched": 26,
+    "event_f1": 0.207,
+    "action_exact": 10,
+    "action_of": 26,
+    "action_kappa": 0.321
+   },
+   "doj_ceos_2025_014": {
+    "agreed_acts": 6,
+    "chains": 0,
+    "observations": 32,
+    "documents": 3,
+    "coder_a_events": 49,
+    "coder_b_events": 186,
+    "matched": 19,
+    "event_f1": 0.162,
+    "action_exact": 5,
+    "action_of": 19,
+    "action_kappa": 0.238
+   },
+   "doj_ceos_2025_023": {
+    "agreed_acts": 9,
+    "chains": 8,
+    "observations": 10,
+    "documents": 3,
+    "coder_a_events": 41,
+    "coder_b_events": 163,
+    "matched": 27,
+    "event_f1": 0.265,
+    "action_exact": 10,
+    "action_of": 27,
+    "action_kappa": 0.336
+   },
+   "doj_ceos_2025_025": {
+    "agreed_acts": 19,
+    "chains": 10,
+    "observations": 225,
+    "documents": 5,
+    "coder_a_events": 432,
+    "coder_b_events": 671,
+    "matched": 205,
+    "event_f1": 0.372,
+    "action_exact": 65,
+    "action_of": 205,
+    "action_kappa": 0.252
+   },
+   "doj_ceos_2025_026": {
+    "agreed_acts": 15,
+    "chains": 9,
+    "observations": 3,
+    "documents": 3,
+    "coder_a_events": 33,
+    "coder_b_events": 27,
+    "matched": 21,
+    "event_f1": 0.7,
+    "action_exact": 10,
+    "action_of": 21,
+    "action_kappa": 0.439
+   },
+   "doj_ceos_2025_031": {
+    "agreed_acts": 14,
+    "chains": 4,
+    "observations": 72,
+    "documents": 6,
+    "coder_a_events": 178,
+    "coder_b_events": 285,
+    "matched": 66,
+    "event_f1": 0.285,
+    "action_exact": 21,
+    "action_of": 66,
+    "action_kappa": 0.255
+   },
+   "doj_ceos_2026_001": {
+    "agreed_acts": 32,
+    "chains": 27,
+    "observations": 93,
+    "documents": 2,
+    "coder_a_events": 147,
+    "coder_b_events": 106,
+    "matched": 57,
+    "event_f1": 0.451,
+    "action_exact": 27,
+    "action_of": 57,
+    "action_kappa": 0.437
+   },
+   "doj_ceos_2026_003": {
+    "agreed_acts": 2,
+    "chains": 1,
+    "observations": 2,
+    "documents": 3,
+    "coder_a_events": 109,
+    "coder_b_events": 421,
+    "matched": 21,
+    "event_f1": 0.079,
+    "action_exact": 8,
+    "action_of": 21,
+    "action_kappa": 0.352
+   },
+   "doj_ceos_2026_006": {
+    "agreed_acts": 14,
+    "chains": 9,
+    "observations": 18,
+    "documents": 4,
+    "coder_a_events": 180,
+    "coder_b_events": 348,
+    "matched": 90,
+    "event_f1": 0.341,
+    "action_exact": 23,
+    "action_of": 90,
+    "action_kappa": 0.216
+   },
+   "doj_ceos_2026_007": {
+    "agreed_acts": 4,
+    "chains": 1,
+    "observations": 3,
+    "documents": 6,
+    "coder_a_events": 52,
+    "coder_b_events": 375,
+    "matched": 17,
+    "event_f1": 0.08,
+    "action_exact": 7,
+    "action_of": 17,
+    "action_kappa": 0.375
+   },
+   "doj_ceos_2026_008": {
+    "agreed_acts": 6,
+    "chains": 5,
+    "observations": 8,
+    "documents": 4,
+    "coder_a_events": 44,
+    "coder_b_events": 233,
+    "matched": 17,
+    "event_f1": 0.123,
+    "action_exact": 7,
+    "action_of": 17,
+    "action_kappa": 0.354
+   },
+   "doj_ceos_2026_012": {
+    "agreed_acts": 9,
+    "chains": 3,
+    "observations": 2,
+    "documents": 4,
+    "coder_a_events": 16,
+    "coder_b_events": 135,
+    "matched": 10,
+    "event_f1": 0.132,
+    "action_exact": 5,
+    "action_of": 10,
+    "action_kappa": 0.462
+   },
+   "doj_safe_childhood_2023_420": {
+    "agreed_acts": 5,
+    "chains": 4,
+    "observations": 16,
+    "documents": 3,
+    "coder_a_events": 51,
+    "coder_b_events": 123,
+    "matched": 20,
+    "event_f1": 0.23,
+    "action_exact": 6,
+    "action_of": 20,
+    "action_kappa": 0.257
+   },
+   "ky_sp_2025_038": {
+    "agreed_acts": 2,
+    "chains": 2,
+    "observations": 5,
+    "documents": 3,
+    "coder_a_events": 61,
+    "coder_b_events": 120,
+    "matched": 28,
+    "event_f1": 0.309,
+    "action_exact": 5,
+    "action_of": 28,
+    "action_kappa": 0.155
+   },
+   "ncis_2022_002": {
+    "agreed_acts": 4,
+    "chains": 3,
+    "observations": 5,
+    "documents": 3,
+    "coder_a_events": 21,
+    "coder_b_events": 142,
+    "matched": 15,
+    "event_f1": 0.184,
+    "action_exact": 4,
+    "action_of": 15,
+    "action_kappa": 0.207
+   },
+   "ncis_2023_001": {
+    "agreed_acts": 4,
+    "chains": 3,
+    "observations": 5,
+    "documents": 3,
+    "coder_a_events": 60,
+    "coder_b_events": 84,
+    "matched": 16,
+    "event_f1": 0.222,
+    "action_exact": 4,
+    "action_of": 16,
+    "action_kappa": 0.19
+   },
+   "ncmec_2022_575": {
+    "agreed_acts": 21,
+    "chains": 24,
+    "observations": 38,
+    "documents": 3,
+    "coder_a_events": 96,
+    "coder_b_events": 182,
+    "matched": 45,
+    "event_f1": 0.324,
+    "action_exact": 25,
+    "action_of": 45,
+    "action_kappa": 0.46
+   },
+   "ncmec_2023_222": {
+    "agreed_acts": 1,
+    "chains": 0,
+    "observations": 0,
+    "documents": 2,
+    "coder_a_events": 14,
+    "coder_b_events": 63,
+    "matched": 1,
+    "event_f1": 0.026,
+    "action_exact": 1,
+    "action_of": 1,
+    "action_kappa": null
+   },
+   "ncmec_2025_1026": {
+    "agreed_acts": 0,
+    "chains": 0,
+    "observations": 6,
+    "documents": 2,
+    "coder_a_events": 11,
+    "coder_b_events": 99,
+    "matched": 0,
+    "event_f1": 0.0,
+    "action_exact": 0,
+    "action_of": 0,
+    "action_kappa": null
+   },
+   "svicac_2022_009": {
+    "agreed_acts": 17,
+    "chains": 5,
+    "observations": 27,
+    "documents": 3,
+    "coder_a_events": 57,
+    "coder_b_events": 96,
+    "matched": 15,
+    "event_f1": 0.196,
+    "action_exact": 7,
+    "action_of": 15,
+    "action_kappa": 0.4
+   },
+   "texas_ag_2019_013": {
+    "agreed_acts": 19,
+    "chains": 4,
+    "observations": 26,
+    "documents": 6,
+    "coder_a_events": 96,
+    "coder_b_events": 232,
+    "matched": 45,
+    "event_f1": 0.274,
+    "action_exact": 17,
+    "action_of": 45,
+    "action_kappa": 0.344
+   },
+   "usss_2017_006": {
+    "agreed_acts": 14,
+    "chains": 5,
+    "observations": 49,
+    "documents": 2,
+    "coder_a_events": 106,
+    "coder_b_events": 85,
+    "matched": 37,
+    "event_f1": 0.387,
+    "action_exact": 13,
+    "action_of": 37,
+    "action_kappa": 0.269
+   },
+   "usss_2021_017": {
+    "agreed_acts": 7,
+    "chains": 7,
+    "observations": 10,
+    "documents": 3,
+    "coder_a_events": 88,
+    "coder_b_events": 175,
+    "matched": 32,
+    "event_f1": 0.243,
+    "action_exact": 13,
+    "action_of": 32,
+    "action_kappa": 0.354
+   },
+   "usss_2023_004": {
+    "agreed_acts": 3,
+    "chains": 3,
+    "observations": 0,
+    "documents": 3,
+    "coder_a_events": 42,
+    "coder_b_events": 127,
+    "matched": 21,
+    "event_f1": 0.249,
+    "action_exact": 6,
+    "action_of": 21,
+    "action_kappa": 0.255
+   },
+   "ut_ag_2026_006": {
+    "agreed_acts": 2,
+    "chains": 2,
+    "observations": 7,
+    "documents": 2,
+    "coder_a_events": 15,
+    "coder_b_events": 82,
+    "matched": 5,
+    "event_f1": 0.103,
+    "action_exact": 2,
+    "action_of": 5,
+    "action_kappa": 0.211
+   },
+   "wy_dci_2023_005": {
+    "agreed_acts": 6,
+    "chains": 0,
+    "observations": 0,
+    "documents": 3,
+    "coder_a_events": 7,
+    "coder_b_events": 121,
+    "matched": 3,
+    "event_f1": 0.047,
+    "action_exact": 1,
+    "action_of": 3,
+    "action_kappa": 0.143
+   }
+  }
+ },
+ "8_limitations": {
+  "rule": "topic csam, ai_csam, possession, distribution or production",
+  "NCSAM": 9676,
+  "PctCSAM": 89.6,
+  "NCSAM_with_named_platform": 1762,
+  "PctCSAM_with_named_platform": 18.2,
+  "NCSAMQOne": 2879,
+  "PctCSAMQOne": 29.8,
+  "NQOneCases": 3057,
+  "PctQOneCases": 28.3
+ },
+ "9_duplicate_pair": {
+  "doj_safe_childhood_2023_103": {
+   "source_url": "https://www.justice.gov/usao-sdwv/pr/missouri-man-pleads-guilty-child-pornography-crime",
+   "year": "2023",
+   "date_start": "2023-10-18",
+   "chars": 2968,
+   "dates_in_text": [
+    "October 18, 2023",
+    "November 27, 2022"
+   ],
+   "source_file": "DOJ_SAFE_CHILDHOOD.pdf"
+  },
+  "doj_safe_childhood_2024_461": {
+   "source_url": "https://www.justice.gov/usao-sdwv/pr/missouri-man-sentenced-10-years-prison-child-pornography-crime",
+   "year": "2024",
+   "date_start": "2024-02-06",
+   "chars": 2820,
+   "dates_in_text": [
+    "February 06, 2024",
+    "November 27, 2022"
+   ],
+   "source_file": "DOJ_SAFE_CHILDHOOD.pdf"
+  },
+  "same_url": false,
+  "text_similarity_ratio": 0.857,
+  "sentences_shared": 17,
+  "sentences_only_first": 7,
+  "sentences_only_second": 6,
+  "fingerprints": {
+   "doj_safe_childhood_2023_103": [
+    "735b8410e519a70df31540cdb43933c09122f84cfaff6e22d48005c288ed461e",
+    "fp-1"
+   ],
+   "doj_safe_childhood_2024_461": [
+    "bda3ff387e7fcfd2e0cabd2c6c58d5802c95c077f954da41453d5c494a6e6343",
+    "fp-1"
+   ]
+  }
+ },
+ "10_cooccurrence_bicm": {
+  "stated": {
+   "what": "stated tier, rows closed at `until`",
+   "cases": 1300,
+   "platforms": 45,
+   "edges": 1510,
+   "pairs_tested": 990,
+   "pairs_with_cooccurrence": 93,
+   "fit_degree_error": {
+    "rows_max_abs": 1.2079226507921703e-13,
+    "cols_max_abs": 4.092726157978177e-12
+   },
+   "package_crosscheck": {
+    "max_abs_diff": 1.1542156119759284e-13,
+    "pairs": 990
+   },
+   "significant_n": 1,
+   "significant_flagged_n": 0,
+   "significant": [
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 18,
+     "expected": 4.288,
+     "p": 5.175327840158031e-07,
+     "flags": [],
+     "sources": {
+      "DOJ SAFE CHILDHOOD": 7,
+      "NCMEC": 6,
+      "NBI": 1,
+      "PA AG": 1,
+      "USSS": 1,
+      "UT AG": 1,
+      "VT AG": 1
+     },
+     "classes": {
+      "Facebook": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Facebook Messenger": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    }
+   ],
+   "watch": [
+    {
+     "pair": [
+      "Discord",
+      "Fortnite"
+     ],
+     "observed": 0,
+     "expected": 0.078,
+     "p": 1.0,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Discord",
+      "TikTok"
+     ],
+     "observed": 0,
+     "expected": 0.777,
+     "p": 1.0,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Discord",
+      "Twitter / X"
+     ],
+     "observed": 6,
+     "expected": 2.985,
+     "p": 0.0814112567086035,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 18,
+     "expected": 4.288,
+     "p": 5.175327840158031e-07,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "Instagram",
+      "TikTok"
+     ],
+     "observed": 3,
+     "expected": 0.758,
+     "p": 0.04137573507245983,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "TikTok",
+      "Twitter / X"
+     ],
+     "observed": 0,
+     "expected": 0.392,
+     "p": 1.0,
+     "significant_bh05": false
+    }
+   ],
+   "mechanical_same_platform_class_pairs": {
+    "BitTorrent": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Call of Duty": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Craigslist": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Discord": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "DistributionInfrastructure",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Facebook": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Facebook Messenger": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Fortnite": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Grindr": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "IMVU": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "IRC": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Instagram": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kazaa": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kik": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "LimeWire": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Monkey": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Omegle": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Reddit": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Roblox": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Skype": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Snapchat": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "Ephemerality"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Stable Diffusion": [
+     [
+      "Anonymity",
+      "GenerativeSynthesis"
+     ]
+    ],
+    "Telegram": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "TikTok": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitch": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitter / X": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Whisper": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Wickr": [
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Wizard 101": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "YouTube": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ]
+   }
+  },
+  "all": {
+   "what": "all tiers",
+   "cases": 1833,
+   "platforms": 51,
+   "edges": 2423,
+   "pairs_tested": 1275,
+   "pairs_with_cooccurrence": 212,
+   "fit_degree_error": {
+    "rows_max_abs": 2.5016966276325547e-10,
+    "cols_max_abs": 4.969891165274021e-11
+   },
+   "package_crosscheck": {
+    "max_abs_diff": 1.618303269710665e-13,
+    "pairs": 1275
+   },
+   "significant_n": 51,
+   "significant_flagged_n": 45,
+   "significant": [
+    {
+     "pair": [
+      "Chat Avenue",
+      "Chatroulette"
+     ],
+     "observed": 4,
+     "expected": 0.027,
+     "p": 1.5247323361536857e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.027,
+     "p": 1.5247323361536857e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.027,
+     "p": 1.5247323361536857e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Fortnite"
+     ],
+     "observed": 4,
+     "expected": 0.04,
+     "p": 7.364349834820984e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Minecraft"
+     ],
+     "observed": 4,
+     "expected": 0.04,
+     "p": 7.364349834820984e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Minecraft": [
+       "Anonymity"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Fortnite"
+     ],
+     "observed": 4,
+     "expected": 0.04,
+     "p": 7.364349834820984e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Minecraft"
+     ],
+     "observed": 4,
+     "expected": 0.04,
+     "p": 7.364349834820984e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Minecraft": [
+       "Anonymity"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.04,
+     "p": 7.364349834820984e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Minecraft",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.04,
+     "p": 7.364349834820984e-08,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Minecraft": [
+       "Anonymity"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Skout"
+     ],
+     "observed": 4,
+     "expected": 0.046,
+     "p": 1.3331665198916026e-07,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Skout": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Skout"
+     ],
+     "observed": 4,
+     "expected": 0.046,
+     "p": 1.3331665198916026e-07,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Skout": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Skout",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.046,
+     "p": 1.3331665198916026e-07,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Skout": [
+       "ContactDiscovery"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Minecraft"
+     ],
+     "observed": 4,
+     "expected": 0.059,
+     "p": 3.543378164829851e-07,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Minecraft": [
+       "Anonymity"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Skout"
+     ],
+     "observed": 4,
+     "expected": 0.068,
+     "p": 6.402452116227055e-07,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Skout": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Minecraft",
+      "Skout"
+     ],
+     "observed": 4,
+     "expected": 0.068,
+     "p": 6.402452116227055e-07,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Minecraft": [
+       "Anonymity"
+      ],
+      "Skout": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Instagram",
+      "TikTok"
+     ],
+     "observed": 17,
+     "expected": 4.353,
+     "p": 1.3472408626394305e-06,
+     "flags": [],
+     "sources": {
+      "FRESNO SO": 9,
+      "NCMEC": 3,
+      "DOJ SAFE CHILDHOOD": 2,
+      "PA AG": 1,
+      "SOUTH FLORIDA ICAC": 1,
+      "SVICAC": 1
+     },
+     "classes": {
+      "Instagram": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "TikTok": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Grindr"
+     ],
+     "observed": 4,
+     "expected": 0.089,
+     "p": 1.8272303605493545e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Omegle"
+     ],
+     "observed": 4,
+     "expected": 0.089,
+     "p": 1.8272303605493545e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Grindr"
+     ],
+     "observed": 4,
+     "expected": 0.089,
+     "p": 1.8272303605493545e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Omegle"
+     ],
+     "observed": 4,
+     "expected": 0.089,
+     "p": 1.8272303605493545e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Grindr",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.089,
+     "p": 1.8272303605493545e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Omegle",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.089,
+     "p": 1.8272303605493545e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.106,
+     "p": 3.7306825915392053e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.106,
+     "p": 3.7306825915392053e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Whisper",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.106,
+     "p": 3.7306825915392053e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chat Avenue",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.123,
+     "p": 6.724467532274573e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chat Avenue": [
+       "Anonymity",
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Chatroulette",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.123,
+     "p": 6.724467532274573e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Chatroulette": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Tumblr",
+      "Yubo"
+     ],
+     "observed": 4,
+     "expected": 0.123,
+     "p": 6.724467532274573e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ],
+      "Yubo": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Grindr"
+     ],
+     "observed": 4,
+     "expected": 0.131,
+     "p": 8.662496225001713e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Omegle"
+     ],
+     "observed": 4,
+     "expected": 0.131,
+     "p": 8.662496225001713e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Grindr",
+      "Minecraft"
+     ],
+     "observed": 4,
+     "expected": 0.131,
+     "p": 8.662496225001713e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Minecraft": [
+       "Anonymity"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Minecraft",
+      "Omegle"
+     ],
+     "observed": 4,
+     "expected": 0.131,
+     "p": 8.662496225001713e-06,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Minecraft": [
+       "Anonymity"
+      ],
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Grindr",
+      "Skout"
+     ],
+     "observed": 4,
+     "expected": 0.152,
+     "p": 1.553762571489224e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Skout": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Omegle",
+      "Skout"
+     ],
+     "observed": 4,
+     "expected": 0.152,
+     "p": 1.553762571489224e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Skout": [
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.157,
+     "p": 1.7591437260029652e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Minecraft",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.157,
+     "p": 1.7591437260029652e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Minecraft": [
+       "Anonymity"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Skout",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.182,
+     "p": 3.146916145466327e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Skout": [
+       "ContactDiscovery"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Fortnite",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.182,
+     "p": 3.15407821941275e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Minecraft",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.182,
+     "p": 3.15407821941275e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Minecraft": [
+       "Anonymity"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Skout",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.212,
+     "p": 5.6275262626116586e-05,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Skout": [
+       "ContactDiscovery"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Discord",
+      "TikTok"
+     ],
+     "observed": 13,
+     "expected": 3.865,
+     "p": 0.00011350911651404041,
+     "flags": [],
+     "sources": {
+      "FRESNO SO": 9,
+      "NCMEC": 2,
+      "SVICAC": 2
+     },
+     "classes": {
+      "Discord": [
+       "Anonymity",
+       "DistributionInfrastructure",
+       "UnmonitoredCommunication"
+      ],
+      "TikTok": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Discord",
+      "Twitter / X"
+     ],
+     "observed": 26,
+     "expected": 12.224,
+     "p": 0.00018962353490858816,
+     "flags": [],
+     "sources": {
+      "FRESNO SO": 9,
+      "NCMEC": 9,
+      "DOJ SAFE CHILDHOOD": 6,
+      "SOUTH FLORIDA ICAC": 1,
+      "SVICAC": 1
+     },
+     "classes": {
+      "Discord": [
+       "Anonymity",
+       "DistributionInfrastructure",
+       "UnmonitoredCommunication"
+      ],
+      "Twitter / X": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Grindr",
+      "Omegle"
+     ],
+     "observed": 4,
+     "expected": 0.294,
+     "p": 0.00019993739337868438,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Grindr",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.352,
+     "p": 0.0003976314092650515,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Omegle",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.352,
+     "p": 0.0003976314092650515,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "TikTok",
+      "Twitter / X"
+     ],
+     "observed": 11,
+     "expected": 3.304,
+     "p": 0.0004104225520611578,
+     "flags": [],
+     "sources": {
+      "FRESNO SO": 9,
+      "DOJ SAFE CHILDHOOD": 1,
+      "SVICAC": 1
+     },
+     "classes": {
+      "TikTok": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Twitter / X": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Grindr",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.409,
+     "p": 0.0006984415189703263,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Grindr": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Omegle",
+      "Tumblr"
+     ],
+     "observed": 4,
+     "expected": 0.409,
+     "p": 0.0006984415189703263,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Omegle": [
+       "Anonymity",
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ],
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Tumblr",
+      "Whisper"
+     ],
+     "observed": 4,
+     "expected": 0.49,
+     "p": 0.001368308858110198,
+     "flags": [
+      "fewer_than_5_cases",
+      "one_source"
+     ],
+     "sources": {
+      "NJ AG": 4
+     },
+     "classes": {
+      "Tumblr": [
+       "DistributionInfrastructure"
+      ],
+      "Whisper": [
+       "Anonymity",
+       "DistributionInfrastructure"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Discord",
+      "Fortnite"
+     ],
+     "observed": 5,
+     "expected": 0.854,
+     "p": 0.001638842241193976,
+     "flags": [],
+     "sources": {
+      "NJ AG": 4,
+      "MCAO": 1
+     },
+     "classes": {
+      "Discord": [
+       "Anonymity",
+       "DistributionInfrastructure",
+       "UnmonitoredCommunication"
+      ],
+      "Fortnite": [
+       "Anonymity",
+       "ContactDiscovery"
+      ]
+     }
+    },
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 22,
+     "expected": 11.131,
+     "p": 0.0017663946286710132,
+     "flags": [],
+     "sources": {
+      "NCMEC": 9,
+      "DOJ SAFE CHILDHOOD": 7,
+      "NBI": 1,
+      "NM AG": 1,
+      "PA AG": 1,
+      "USSS": 1,
+      "UT AG": 1,
+      "VT AG": 1
+     },
+     "classes": {
+      "Facebook": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Facebook Messenger": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    }
+   ],
+   "watch": [
+    {
+     "pair": [
+      "Discord",
+      "Fortnite"
+     ],
+     "observed": 5,
+     "expected": 0.854,
+     "p": 0.001638842241193976,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "Discord",
+      "TikTok"
+     ],
+     "observed": 13,
+     "expected": 3.865,
+     "p": 0.00011350911651404041,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "Discord",
+      "Twitter / X"
+     ],
+     "observed": 26,
+     "expected": 12.224,
+     "p": 0.00018962353490858816,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 22,
+     "expected": 11.131,
+     "p": 0.0017663946286710132,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "Instagram",
+      "TikTok"
+     ],
+     "observed": 17,
+     "expected": 4.353,
+     "p": 1.3472408626394305e-06,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "TikTok",
+      "Twitter / X"
+     ],
+     "observed": 11,
+     "expected": 3.304,
+     "p": 0.0004104225520611578,
+     "significant_bh05": true
+    }
+   ],
+   "mechanical_same_platform_class_pairs": {
+    "AOL Instant Messenger": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "BitTorrent": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Call of Duty": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Chat Avenue": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Chatroulette": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Craigslist": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Discord": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "DistributionInfrastructure",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Facebook": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Facebook Messenger": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Fortnite": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Grindr": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "IMVU": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "IRC": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Instagram": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kazaa": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kik": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "LimeWire": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Monkey": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Omegle": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Reddit": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Roblox": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Skype": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Snapchat": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "Ephemerality"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Stable Diffusion": [
+     [
+      "Anonymity",
+      "GenerativeSynthesis"
+     ]
+    ],
+    "Telegram": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "TikTok": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitch": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitter / X": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Whisper": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Wickr": [
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Wizard 101": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Yahoo Chat": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "YouTube": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ]
+   }
+  },
+  "stated_clean": {
+   "what": "stated tier without the 0 boilerplate-only edges (cooc-boilerplate-1)",
+   "cases": 1300,
+   "platforms": 45,
+   "edges": 1510,
+   "pairs_tested": 990,
+   "pairs_with_cooccurrence": 93,
+   "fit_degree_error": {
+    "rows_max_abs": 1.2079226507921703e-13,
+    "cols_max_abs": 4.092726157978177e-12
+   },
+   "package_crosscheck": {
+    "max_abs_diff": 1.1542156119759284e-13,
+    "pairs": 990
+   },
+   "significant_n": 1,
+   "significant_flagged_n": 0,
+   "significant": [
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 18,
+     "expected": 4.288,
+     "p": 5.175327840158031e-07,
+     "flags": [],
+     "sources": {
+      "DOJ SAFE CHILDHOOD": 7,
+      "NCMEC": 6,
+      "NBI": 1,
+      "PA AG": 1,
+      "USSS": 1,
+      "UT AG": 1,
+      "VT AG": 1
+     },
+     "classes": {
+      "Facebook": [
+       "ContactDiscovery",
+       "DistributionInfrastructure"
+      ],
+      "Facebook Messenger": [
+       "ContactDiscovery",
+       "UnmonitoredCommunication"
+      ]
+     }
+    }
+   ],
+   "watch": [
+    {
+     "pair": [
+      "Discord",
+      "Fortnite"
+     ],
+     "observed": 0,
+     "expected": 0.078,
+     "p": 1.0,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Discord",
+      "TikTok"
+     ],
+     "observed": 0,
+     "expected": 0.777,
+     "p": 1.0,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Discord",
+      "Twitter / X"
+     ],
+     "observed": 6,
+     "expected": 2.985,
+     "p": 0.0814112567086035,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 18,
+     "expected": 4.288,
+     "p": 5.175327840158031e-07,
+     "significant_bh05": true
+    },
+    {
+     "pair": [
+      "Instagram",
+      "TikTok"
+     ],
+     "observed": 3,
+     "expected": 0.758,
+     "p": 0.04137573507245983,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "TikTok",
+      "Twitter / X"
+     ],
+     "observed": 0,
+     "expected": 0.392,
+     "p": 1.0,
+     "significant_bh05": false
+    }
+   ],
+   "mechanical_same_platform_class_pairs": {
+    "BitTorrent": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Call of Duty": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Craigslist": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Discord": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "DistributionInfrastructure",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Facebook": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Facebook Messenger": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Fortnite": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Grindr": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "IMVU": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "IRC": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Instagram": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kazaa": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kik": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "LimeWire": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Monkey": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Omegle": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Reddit": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Roblox": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Skype": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Snapchat": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "Ephemerality"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Stable Diffusion": [
+     [
+      "Anonymity",
+      "GenerativeSynthesis"
+     ]
+    ],
+    "Telegram": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "TikTok": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitch": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitter / X": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Whisper": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Wickr": [
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Wizard 101": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "YouTube": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ]
+   }
+  },
+  "all_clean": {
+   "what": "all tiers without the 106 boilerplate-only edges (cooc-boilerplate-1)",
+   "cases": 1823,
+   "platforms": 49,
+   "edges": 2317,
+   "pairs_tested": 1176,
+   "pairs_with_cooccurrence": 162,
+   "fit_degree_error": {
+    "rows_max_abs": 7.638334409421077e-14,
+    "cols_max_abs": 8.753886504564434e-12
+   },
+   "package_crosscheck": {
+    "max_abs_diff": 1.4213586904676667e-13,
+    "pairs": 1176
+   },
+   "significant_n": 0,
+   "significant_flagged_n": 0,
+   "significant": [],
+   "watch": [
+    {
+     "pair": [
+      "Discord",
+      "Fortnite"
+     ],
+     "observed": 1,
+     "expected": 0.18,
+     "p": 0.16464648278000615,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Discord",
+      "TikTok"
+     ],
+     "observed": 3,
+     "expected": 1.692,
+     "p": 0.2403999595398461,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Discord",
+      "Twitter / X"
+     ],
+     "observed": 16,
+     "expected": 8.148,
+     "p": 0.008912912374866784,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Facebook",
+      "Facebook Messenger"
+     ],
+     "observed": 22,
+     "expected": 9.148,
+     "p": 0.00018340701356748634,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "Instagram",
+      "TikTok"
+     ],
+     "observed": 7,
+     "expected": 2.021,
+     "p": 0.0046353393958656055,
+     "significant_bh05": false
+    },
+    {
+     "pair": [
+      "TikTok",
+      "Twitter / X"
+     ],
+     "observed": 1,
+     "expected": 1.412,
+     "p": 0.7572863785865986,
+     "significant_bh05": false
+    }
+   ],
+   "mechanical_same_platform_class_pairs": {
+    "AOL Instant Messenger": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "BitTorrent": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Call of Duty": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Chatroulette": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Craigslist": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Discord": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "DistributionInfrastructure",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Facebook": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Facebook Messenger": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Fortnite": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Grindr": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "IMVU": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "IRC": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Instagram": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kazaa": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Kik": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "LimeWire": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Monkey": [
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Omegle": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Reddit": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Roblox": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Skype": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Snapchat": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "ContactDiscovery",
+      "Ephemerality"
+     ],
+     [
+      "ContactDiscovery",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Stable Diffusion": [
+     [
+      "Anonymity",
+      "GenerativeSynthesis"
+     ]
+    ],
+    "Telegram": [
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "TikTok": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitch": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Twitter / X": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Whisper": [
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "Wickr": [
+     [
+      "Anonymity",
+      "Ephemerality"
+     ],
+     [
+      "Anonymity",
+      "UnmonitoredCommunication"
+     ],
+     [
+      "Ephemerality",
+      "UnmonitoredCommunication"
+     ]
+    ],
+    "Wizard 101": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ]
+    ],
+    "Yahoo Chat": [
+     [
+      "Anonymity",
+      "ContactDiscovery"
+     ],
+     [
+      "Anonymity",
+      "DistributionInfrastructure"
+     ],
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ],
+    "YouTube": [
+     [
+      "ContactDiscovery",
+      "DistributionInfrastructure"
+     ]
+    ]
+   }
+  },
+  "robust_stated_and_all": [
+   [
+    "Facebook",
+    "Facebook Messenger"
+   ]
+  ],
+  "robust_after_fixes": [],
+  "afh_inputs": {
+   "db_sha256": "867e2a573876586a6990efd20dca818fec0ab94f05e8b29faa5df9fe72df833f",
+   "db_cases": 10802,
+   "pacer_release": "pacer-v2",
+   "pacer_sha256": "ec56f1dfe11cb187e64fbf0bfd111ce315892536fdaff374c6ea227961a356b3",
+   "db_matches_afh_2_0": true,
+   "pacer_matches_afh_2_0": true,
+   "pacer_is_public_subset": false,
+   "afh_2_0_snapshot": true
+  }
+ },
+ "13_publication_year": {
+  "rule": "a stored publication year is corrected when >= 2 of the record's publication evidence fields (case-id year, compilation-file year, stated publication dates) agree on another year and none supports the stored one; an event date supports the stored year only when no publication date is stated",
+  "corrected_n": 29,
+  "flagged_n": 50,
+  "flagged_still_uncorrected_n": 39,
+  "corrections": {
+   "ncmec_2022_056": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_146": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_167": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_173": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_222": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_309": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_314": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_415": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_506": [
+    1992,
+    2022,
+    [
+     "id",
+     "file"
+    ]
+   ],
+   "ncmec_2022_512": [
+    2019,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2022_543": [
+    2021,
+    2022,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_013": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_080": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_175": [
+    2020,
+    2023,
+    [
+     "id",
+     "file"
+    ]
+   ],
+   "ncmec_2023_178": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_245": [
+    2020,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_275": [
+    2017,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_301": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_400": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_405": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_510": [
+    2022,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_582": [
+    2019,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2023_597": [
+    2007,
+    2023,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2024_1203": [
+    2025,
+    2024,
+    [
+     "id",
+     "file"
+    ]
+   ],
+   "ncmec_2024_609": [
+    2023,
+    2024,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2024_905": [
+    2002,
+    2024,
+    [
+     "id",
+     "file"
+    ]
+   ],
+   "ncmec_2025_299": [
+    2022,
+    2025,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2025_559": [
+    2022,
+    2025,
+    [
+     "id",
+     "file",
+     "publication"
+    ]
+   ],
+   "ncmec_2025_843": [
+    2022,
+    2025,
+    [
+     "id",
+     "file"
+    ]
+   ]
+  },
+  "sensitivity_flagged_left_out": 50,
+  "sensitivity_flagged_in_q1": 15,
+  "sensitivity_verdict_changes": [],
+  "sensitivity_values": "year_sensitivity.json (every year-dependent value with and without the flagged records)"
+ },
+ "11_prevalence": {
+  "records": 4628,
+  "records_by_tier": {
+   "stated": 2335,
+   "named_only": 1889,
+   "inferred": 404
+  },
+  "named_platform_records": 2441,
+  "levels": {
+   "A": "registry default_on on the platform, window (since..ended) open at publication",
+   "A_any": "capability available on the platform at publication (registry window since..ended open), default_on or not; B, I and C nest within it",
+   "B": "capability-relevant conduct",
+   "I": "inferred facilitation (B on a default_on platform with its window open, or C)",
+   "C": "instrumental (stated in the platform sentence)"
+  },
+  "classes": {
+   "Anonymity": {
+    "A": {
+     "records": 1463,
+     "share_of_q1_records": 0.3161,
+     "by_tier": {
+      "stated": {
+       "records": 1022,
+       "share_of_tier": 0.4377
+      },
+      "inferred": {
+       "records": 167,
+       "share_of_tier": 0.4134
+      },
+      "named_only": {
+       "records": 274,
+       "share_of_tier": 0.1451
+      }
+     }
+    },
+    "B": {
+     "records": 532,
+     "share_of_q1_records": 0.115,
+     "by_tier": {
+      "stated": {
+       "records": 482,
+       "share_of_tier": 0.2064
+      },
+      "inferred": {
+       "records": 50,
+       "share_of_tier": 0.1238
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "I": {
+     "records": 407,
+     "share_of_q1_records": 0.0879,
+     "by_tier": {
+      "stated": {
+       "records": 367,
+       "share_of_tier": 0.1572
+      },
+      "inferred": {
+       "records": 40,
+       "share_of_tier": 0.099
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "C": {
+     "records": 32,
+     "share_of_q1_records": 0.0069,
+     "by_tier": {
+      "stated": {
+       "records": 29,
+       "share_of_tier": 0.0124
+      },
+      "inferred": {
+       "records": 3,
+       "share_of_tier": 0.0074
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "A_any": {
+     "records": 2256,
+     "share_of_q1_records": 0.4875,
+     "by_tier": {
+      "stated": {
+       "records": 1454,
+       "share_of_tier": 0.6227
+      },
+      "inferred": {
+       "records": 254,
+       "share_of_tier": 0.6287
+      },
+      "named_only": {
+       "records": 548,
+       "share_of_tier": 0.2901
+      }
+     }
+    }
+   },
+   "Ephemerality": {
+    "A": {
+     "records": 415,
+     "share_of_q1_records": 0.0897,
+     "by_tier": {
+      "stated": {
+       "records": 321,
+       "share_of_tier": 0.1375
+      },
+      "inferred": {
+       "records": 63,
+       "share_of_tier": 0.1559
+      },
+      "named_only": {
+       "records": 31,
+       "share_of_tier": 0.0164
+      }
+     }
+    },
+    "B": {
+     "records": 402,
+     "share_of_q1_records": 0.0869,
+     "by_tier": {
+      "stated": {
+       "records": 371,
+       "share_of_tier": 0.1589
+      },
+      "inferred": {
+       "records": 31,
+       "share_of_tier": 0.0767
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "I": {
+     "records": 177,
+     "share_of_q1_records": 0.0382,
+     "by_tier": {
+      "stated": {
+       "records": 162,
+       "share_of_tier": 0.0694
+      },
+      "inferred": {
+       "records": 15,
+       "share_of_tier": 0.0371
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "C": {
+     "records": 0,
+     "share_of_q1_records": 0.0,
+     "by_tier": {
+      "stated": {
+       "records": 0,
+       "share_of_tier": 0.0
+      },
+      "inferred": {
+       "records": 0,
+       "share_of_tier": 0.0
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "A_any": {
+     "records": 1157,
+     "share_of_q1_records": 0.25,
+     "by_tier": {
+      "stated": {
+       "records": 691,
+       "share_of_tier": 0.2959
+      },
+      "inferred": {
+       "records": 132,
+       "share_of_tier": 0.3267
+      },
+      "named_only": {
+       "records": 334,
+       "share_of_tier": 0.1768
+      }
+     }
+    }
+   },
+   "ContactDiscovery": {
+    "A": {
+     "records": 1245,
+     "share_of_q1_records": 0.269,
+     "by_tier": {
+      "stated": {
+       "records": 717,
+       "share_of_tier": 0.3071
+      },
+      "inferred": {
+       "records": 147,
+       "share_of_tier": 0.3639
+      },
+      "named_only": {
+       "records": 381,
+       "share_of_tier": 0.2017
+      }
+     }
+    },
+    "B": {
+     "records": 596,
+     "share_of_q1_records": 0.1288,
+     "by_tier": {
+      "stated": {
+       "records": 544,
+       "share_of_tier": 0.233
+      },
+      "inferred": {
+       "records": 52,
+       "share_of_tier": 0.1287
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "I": {
+     "records": 323,
+     "share_of_q1_records": 0.0698,
+     "by_tier": {
+      "stated": {
+       "records": 299,
+       "share_of_tier": 0.1281
+      },
+      "inferred": {
+       "records": 24,
+       "share_of_tier": 0.0594
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "C": {
+     "records": 10,
+     "share_of_q1_records": 0.0022,
+     "by_tier": {
+      "stated": {
+       "records": 10,
+       "share_of_tier": 0.0043
+      },
+      "inferred": {
+       "records": 0,
+       "share_of_tier": 0.0
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "A_any": {
+     "records": 2300,
+     "share_of_q1_records": 0.497,
+     "by_tier": {
+      "stated": {
+       "records": 1456,
+       "share_of_tier": 0.6236
+      },
+      "inferred": {
+       "records": 246,
+       "share_of_tier": 0.6089
+      },
+      "named_only": {
+       "records": 598,
+       "share_of_tier": 0.3166
+      }
+     }
+    }
+   },
+   "UnmonitoredCommunication": {
+    "A": {
+     "records": 1353,
+     "share_of_q1_records": 0.2924,
+     "by_tier": {
+      "stated": {
+       "records": 990,
+       "share_of_tier": 0.424
+      },
+      "inferred": {
+       "records": 155,
+       "share_of_tier": 0.3837
+      },
+      "named_only": {
+       "records": 208,
+       "share_of_tier": 0.1101
+      }
+     }
+    },
+    "B": {
+     "records": 605,
+     "share_of_q1_records": 0.1307,
+     "by_tier": {
+      "stated": {
+       "records": 553,
+       "share_of_tier": 0.2368
+      },
+      "inferred": {
+       "records": 52,
+       "share_of_tier": 0.1287
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "I": {
+     "records": 416,
+     "share_of_q1_records": 0.0899,
+     "by_tier": {
+      "stated": {
+       "records": 379,
+       "share_of_tier": 0.1623
+      },
+      "inferred": {
+       "records": 37,
+       "share_of_tier": 0.0916
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "C": {
+     "records": 24,
+     "share_of_q1_records": 0.0052,
+     "by_tier": {
+      "stated": {
+       "records": 23,
+       "share_of_tier": 0.0099
+      },
+      "inferred": {
+       "records": 1,
+       "share_of_tier": 0.0025
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "A_any": {
+     "records": 2233,
+     "share_of_q1_records": 0.4825,
+     "by_tier": {
+      "stated": {
+       "records": 1391,
+       "share_of_tier": 0.5957
+      },
+      "inferred": {
+       "records": 242,
+       "share_of_tier": 0.599
+      },
+      "named_only": {
+       "records": 600,
+       "share_of_tier": 0.3176
+      }
+     }
+    }
+   },
+   "DistributionInfrastructure": {
+    "A": {
+     "records": 938,
+     "share_of_q1_records": 0.2027,
+     "by_tier": {
+      "stated": {
+       "records": 469,
+       "share_of_tier": 0.2009
+      },
+      "inferred": {
+       "records": 101,
+       "share_of_tier": 0.25
+      },
+      "named_only": {
+       "records": 368,
+       "share_of_tier": 0.1948
+      }
+     }
+    },
+    "B": {
+     "records": 1094,
+     "share_of_q1_records": 0.2364,
+     "by_tier": {
+      "stated": {
+       "records": 951,
+       "share_of_tier": 0.4073
+      },
+      "inferred": {
+       "records": 143,
+       "share_of_tier": 0.354
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "I": {
+     "records": 742,
+     "share_of_q1_records": 0.1603,
+     "by_tier": {
+      "stated": {
+       "records": 656,
+       "share_of_tier": 0.2809
+      },
+      "inferred": {
+       "records": 86,
+       "share_of_tier": 0.2129
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "C": {
+     "records": 571,
+     "share_of_q1_records": 0.1234,
+     "by_tier": {
+      "stated": {
+       "records": 521,
+       "share_of_tier": 0.2231
+      },
+      "inferred": {
+       "records": 50,
+       "share_of_tier": 0.1238
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "A_any": {
+     "records": 2462,
+     "share_of_q1_records": 0.532,
+     "by_tier": {
+      "stated": {
+       "records": 1529,
+       "share_of_tier": 0.6548
+      },
+      "inferred": {
+       "records": 279,
+       "share_of_tier": 0.6906
+      },
+      "named_only": {
+       "records": 654,
+       "share_of_tier": 0.3462
+      }
+     }
+    }
+   },
+   "GenerativeSynthesis": {
+    "A": {
+     "records": 87,
+     "share_of_q1_records": 0.0188,
+     "by_tier": {
+      "stated": {
+       "records": 63,
+       "share_of_tier": 0.027
+      },
+      "inferred": {
+       "records": 5,
+       "share_of_tier": 0.0124
+      },
+      "named_only": {
+       "records": 19,
+       "share_of_tier": 0.0101
+      }
+     }
+    },
+    "B": {
+     "records": 138,
+     "share_of_q1_records": 0.0298,
+     "by_tier": {
+      "stated": {
+       "records": 124,
+       "share_of_tier": 0.0531
+      },
+      "inferred": {
+       "records": 14,
+       "share_of_tier": 0.0347
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "I": {
+     "records": 63,
+     "share_of_q1_records": 0.0136,
+     "by_tier": {
+      "stated": {
+       "records": 59,
+       "share_of_tier": 0.0253
+      },
+      "inferred": {
+       "records": 4,
+       "share_of_tier": 0.0099
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "C": {
+     "records": 21,
+     "share_of_q1_records": 0.0045,
+     "by_tier": {
+      "stated": {
+       "records": 21,
+       "share_of_tier": 0.009
+      },
+      "inferred": {
+       "records": 0,
+       "share_of_tier": 0.0
+      },
+      "named_only": {
+       "records": 0,
+       "share_of_tier": 0.0
+      }
+     }
+    },
+    "A_any": {
+     "records": 876,
+     "share_of_q1_records": 0.1893,
+     "by_tier": {
+      "stated": {
+       "records": 539,
+       "share_of_tier": 0.2308
+      },
+      "inferred": {
+       "records": 97,
+       "share_of_tier": 0.2401
+      },
+      "named_only": {
+       "records": 240,
+       "share_of_tier": 0.1271
+      }
+     }
+    }
+   }
+  },
+  "named_platforms_per_case": {
+   "stated": {
+    "cases": 1300,
+    "exactly_1": 1127,
+    "two_plus": 173
+   },
+   "all": {
+    "cases": 1833,
+    "exactly_1": 1456,
+    "two_plus": 377
+   }
+  },
+  "afh_inputs": {
+   "db_sha256": "867e2a573876586a6990efd20dca818fec0ab94f05e8b29faa5df9fe72df833f",
+   "db_cases": 10802,
+   "pacer_release": "pacer-v2",
+   "pacer_sha256": "ec56f1dfe11cb187e64fbf0bfd111ce315892536fdaff374c6ea227961a356b3",
+   "db_matches_afh_2_0": true,
+   "pacer_matches_afh_2_0": true,
+   "pacer_is_public_subset": false,
+   "afh_2_0_snapshot": true
+  }
+ },
+ "12_data_checks": {
+  "boilerplate_app_lists": {
+   "rule": "every sentence naming the platform is awareness/list framing (is_awareness_or_list_framing), or names 3+ of the case's platforms and is a bare enumeration (is_enumeration_only)",
+   "records_boilerplate_only": 240,
+   "records_by_tier_linewrap": {
+    "named_only": 225,
+    "inferred": 12,
+    "stated": 3
+   },
+   "records_by_tier1": {
+    "named_only": 225,
+    "inferred": 12,
+    "stated": 3
+   },
+   "q1_cases_all_tags_boilerplate": 27,
+   "q1_cases_all_named_platform_tags_boilerplate": 43,
+   "manifest_platforms_with_boilerplate_use_documented_records": {
+    "Snapchat": 5,
+    "Whisper": 1,
+    "Discord": 1,
+    "Twitter / X": 1,
+    "TikTok": 1,
+    "Dropbox": 1,
+    "Tumblr": 1,
+    "Telegram": 1,
+    "Instagram": 2
+   },
+   "sources_of_all_boilerplate_cases": {
+    "DOJ SAFE CHILDHOOD": 13,
+    "NCMEC": 9,
+    "EUROPOL": 1,
+    "NBI": 1,
+    "SCOTLAND POLICE": 1,
+    "SOUTH FLORIDA ICAC": 1,
+    "TBI ICAC": 1
+   },
+   "named_only_records_flagged_unread": 225,
+   "status": "upper bound: every flagged record is counted as boilerplate"
+  },
+  "facebook_double_tag": {
+   "rule": "a 'Facebook' tag whose only textual source is the phrase 'Facebook Messenger' becomes 'Facebook Messenger' (afhq1/labels.py)",
+   "applied": "at load, in every AfH output (snapshot cases, Q1 records, manifest, harm tables, co-occurrence); the DB is unchanged",
+   "corpus_cases_tagged_facebook_raw": 321,
+   "corpus_double_tags": 23,
+   "corpus_cases_tagged_facebook_corrected": 298,
+   "q1_double_tags": 23,
+   "manifest_facebook_total_cases": 295,
+   "manifest_facebook_stated_cases": 129,
+   "double_tag_case_ids": [
+    "doj_safe_childhood_2021_049",
+    "doj_safe_childhood_2022_208",
+    "doj_safe_childhood_2022_242",
+    "doj_safe_childhood_2022_270",
+    "doj_safe_childhood_2022_437",
+    "doj_safe_childhood_2023_499",
+    "doj_safe_childhood_2024_191",
+    "doj_safe_childhood_2024_262",
+    "doj_safe_childhood_2024_387",
+    "doj_safe_childhood_2024_442",
+    "doj_safe_childhood_2026_204",
+    "doj_safe_childhood_2026_262",
+    "doj_safe_childhood_2026_354",
+    "doj_safe_childhood_2026_410",
+    "nbi_2020_001",
+    "nbi_2026_015",
+    "ncmec_2022_250",
+    "ncmec_2022_546",
+    "ncmec_2022_592",
+    "ncmec_2023_507",
+    "ncmec_2024_101",
+    "ncmec_2024_341",
+    "svicac_2026_024"
+   ],
+   "cause": "the platform matcher tags 'Facebook' inside the phrase 'Facebook Messenger'"
+  },
+  "bicm_power": {
+   "stated": {
+    "cases": 1300,
+    "cases_2plus": 173,
+    "cases_3plus": 30,
+    "degree_distribution": {
+     "1": 1127,
+     "2": 143,
+     "3": 25,
+     "4": 4,
+     "6": 1
+    }
+   },
+   "all": {
+    "cases": 1833,
+    "cases_2plus": 377,
+    "cases_3plus": 104,
+    "degree_distribution": {
+     "1": 1456,
+     "2": 273,
+     "3": 69,
+     "4": 14,
+     "5": 3,
+     "6": 3,
+     "7": 11,
+     "12": 4
+    }
+   }
+  },
+  "yahoo_chat": {
+   "conflict": "platform until 2012 vs unmonitored_communication ended 2018",
+   "resolution": "both capability years are right for their product (public chat rooms closed Dec 14, 2012; Yahoo! Messenger private messages until Jul 17, 2018). The platform-level end was wrong: the label also matches 'Yahoo! Messenger' (pattern_processing.py, the 'Yahoo Chat' platform pattern).",
+   "fix": "capability_sources/messaging.yaml Yahoo Chat ended 2012 -> 2018; platforms.yaml regenerated (until 2012 -> 2018)."
+  },
+  "feature_count": {
+   "unique_features_fresh": 190023,
+   "field_assertions_rows": 132956,
+   "field_assertions_cases": 10698,
+   "field_assertions_span_ok": 132956,
+   "field_assertions_by_field": {
+    "age": 64275,
+    "cybertip_reporter": 208,
+    "date": 36798,
+    "investigation_type": 4885,
+    "legal_context": 4237,
+    "prior_history": 1700,
+    "sentence": 20853
+   },
+   "breakdown": "see 1_cover.NFeatures_breakdown (generated from run/feature_count.py)"
+  }
+ }
+}

@@ -23,10 +23,9 @@ LIVE = os.environ.get("CASELINKER_SPARQL_LIVE") == "1"
 LIVE_ALL = os.environ.get("CASELINKER_SPARQL_LIVE_ALL") == "1"
 URL = os.environ.get("CASELINKER_SPARQL_URL", "https://caselinker.up.railway.app/sparql")
 
-pytestmark = pytest.mark.skipif(
-    not LIVE,
-    reason="set CASELINKER_SPARQL_LIVE=1 to hit production /sparql",
-)
+# Opt-in only: deselected from the default suite by pytest.ini (-m "not live"). Run with
+#   CASELINKER_SPARQL_LIVE=1 pytest -m live tests/api/test_sparql_live.py
+pytestmark = [pytest.mark.live, pytest.mark.skipif(not LIVE, reason="set CASELINKER_SPARQL_LIVE=1 to hit production /sparql")]
 
 Q_JSON = {
     "Content-Type": "application/sparql-query",

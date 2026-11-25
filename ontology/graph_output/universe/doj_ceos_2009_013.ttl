@@ -1,11 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns8: <https://cacontology.projectvic.org/legal-harmonization#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -13,10 +14,10 @@
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013> a ns1:CACInvestigation,
         ns6:EnduringEntity ;
     rdfs:label "Case doj_ceos_2009_013" ;
-    dcterms:created "2026-11-19T18:56:40.898393"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:45:19.559259"^^xsd:dateTime ;
     dcterms:date "2009-05-15"^^xsd:date ;
     dcterms:identifier "doj_ceos_2009_013" ;
-    dcterms:modified "2026-11-19T18:56:40.898393"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:45:19.559259"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/provenance> ;
     dcterms:publisher "DOJ CEOS" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/indianapolis-man-pleads-guilty-and-sentenced-child-pornography-case> ;
@@ -33,7 +34,9 @@
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/usao-southern-district-of-indiana> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/person/offender/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/internet>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -41,46 +44,39 @@
     ns3:concernsAgeQuality ns3:Age ;
     ns3:hasAgeInYears 50.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns6:OrganizationLikeEntity,
         ns5:FederalAgency ;
     rdfs:label "CEOS" ;
-    ns4:name "CEOS" .
+    ns2:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
         ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns4:name "U.S. Department of Justice" .
+    ns2:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns6:OrganizationLikeEntity,
         ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns4:name "Federal Bureau of Investigation" .
+    ns2:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/usao-southern-district-of-indiana> a ns6:OrganizationLikeEntity,
         ns5:FederalAgency ;
     rdfs:label "U.S. Attorney's Office, Southern District of Indiana" ;
     skos:altLabel "U.S. Attorney's Office" ;
     ns5:operatesInJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/southern-district-of-indiana> ;
-    ns4:name "U.S. Attorney's Office, Southern District of Indiana" .
+    ns2:name "U.S. Attorney's Office, Southern District of Indiana" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/3> a ns2:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/event/multi-jurisdiction> a ns6:Event,
         ns5:MultiJurisdictionalInvestigation ;
@@ -93,42 +89,50 @@
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/southern-district-of-indiana> ;
-    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/2>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/3> ;
-    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/sentence/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/charge/1> ;
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/legal-step/sentenced> a ns6:Event,
         ns6:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/sentence/1> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
     rdfs:label "five years" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/jurisdiction/united-states> a ns5:FederalJurisdiction ;
     rdfs:label "United States" ;
-    ns4:name "United States" .
+    ns2:name "United States" .
 
 <https://w3id.org/caselinker/resource/location/indiana-in> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indiana" ;
     dcterms:identifier "fips:18" ;
-    ns4:name "Indiana" .
+    ns2:name "Indiana" .
 
 <https://w3id.org/caselinker/resource/location/maryland-md> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maryland" ;
     dcterms:identifier "fips:24" ;
     skos:altLabel "Md." ;
-    ns4:name "Maryland" .
+    ns2:name "Maryland" .
+
+<https://w3id.org/caselinker/resource/platform/internet> a ns6:DigitalSystemEntity ;
+    rdfs:label "internet" ;
+    ns7:platformType "generic-tag" ;
+    ns2:name "internet" .
+
+<https://w3id.org/caselinker/resource/platform/online> a ns6:DigitalSystemEntity ;
+    rdfs:label "online" ;
+    ns7:platformType "generic-tag" ;
+    ns2:name "online" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/event/csam> a ns1:CSAMIncident,
         ns6:Event ;
@@ -136,7 +140,7 @@
     ns1:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/phase/sentenced> a ns6:Phase,
-        ns2:SentencingPhase ;
+        ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/role/offender/1> a ns1:OffenderRole ;
@@ -145,8 +149,8 @@
 
 <https://w3id.org/caselinker/resource/jurisdiction/southern-district-of-indiana> a ns5:FederalJurisdiction ;
     rdfs:label "Southern District of Indiana" ;
-    ns7:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
-    ns4:name "Southern District of Indiana" .
+    ns8:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
+    ns2:name "Southern District of Indiana" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2009_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

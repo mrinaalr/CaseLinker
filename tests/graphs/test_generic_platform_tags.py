@@ -77,3 +77,22 @@ def test_cluster_rankings_keep_tags_beside_named_platforms():
     assert titles == ["Most Common Platform"]
     assert "Snapchat" in insights[0]["description"]
     assert "online" not in insights[0]["description"]
+
+
+def test_online_only_cluster_names_top_platform() -> None:
+    """The online-only description reads (platform, count) pairs, not dict keys."""
+    cases = [
+        {
+            "id": f"fixture_online_{i:03d}",
+            "source": "TEST",
+            "date_start": "2024-06-01",
+            "date_end": "2024-06-01",
+            "platforms_used": ["Snapchat"],
+            "case_topics": ["online_only", "possession"],
+            "investigation_type": "unknown",
+        }
+        for i in range(3)
+    ]
+    groups = analysis.group_similar_cases(cases, similarity_threshold=0.45)
+    online = next(g for g in groups if g["group_id"] == "online_only_cluster")
+    assert "Most common named platform: Snapchat (3/3 cases)" in online["description"]

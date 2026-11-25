@@ -60,7 +60,8 @@ def verify(citations: Iterable[Citation], fingerprints: Mapping[str, str]) -> Li
 
 
 def load(path: Path) -> List[Citation]:
-    rows = json.loads(path.read_text(encoding="utf-8"))
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    rows = doc["citations"] if isinstance(doc, dict) else doc      # dict since AfH 2.0 (carries afh_inputs)
     return [Citation(**{k: r[k] for k in ("case_id", "fingerprint", "purpose", "platform") if k in r})
             for r in rows]
 

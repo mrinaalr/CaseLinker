@@ -19,7 +19,11 @@
 # Cues are case-insensitive regexes, matched against sentences that name the
 # platform (same sentence only). A cue anywhere else in the release produces a
 # review candidate, never a C row.
-version: codebook-6
+# codebook-9 (2026-11-23): the h1 live-conduct cue stays in one sentence (the gap cannot
+# cross . ! or ?). A sentence containing the § 2251 phrase "for the purpose of producing
+# a visual depiction" does not match. An h5 paid/payment/money match whose text contains
+# "restitution" does not count.
+version: codebook-9
 # codebook-6 (2026-11-17): "undress" alone is not synthesis (victim told to undress);
 # statute and capability wording ("software designed to create", "AI can create") and
 # "digitally/virtually/artificially generated" descriptions are not creation by someone in
@@ -110,23 +114,34 @@ classes:
 ai_material_cue: '\b(?:ai[- ]generated|computer[- ]generated|artificial\s+intelligence[- ]generated|ai\s+(?:csam|child\s+sexual\s+abuse\s+material|images?)|synthetic\s+(?:image|csam|material))'
 
 harms:
-  # Victim-facing harm categories from AfH 1.0 Sec. 7 (h1..h6, h5 unused there).
-  # support: direct = cue in the platform sentence; case_level = case_topics or
-  # cue elsewhere in the release; none.
-  h1_groomed_toward_in_person:
-    cue: '\b(?:meet\w*\s+(?:in\s+person|up|for\s+sex|to\s+engage)|travel\w*\s+(?:\w+\s+){0,4}to\s+meet|arrang\w*\s+(?:to\s+)?(?:a\s+)?meet\w*|hands[- ]on|in-person\s+(?:abuse|contact|meeting))'
+  # Five victim-facing harms. A plain cue or a listed topic matches.
+  # topics_require_cue matches only when the topic and the cue are both present.
+  # guarded_cue matches only when require matches the same sentence and exclude does not.
+  # live_cue matches only inside one sentence, and not when live_exclude matches that sentence.
+  # cue_reject drops a plain-cue match whose own text matches the pattern.
+  # ai_csam is not a topic of any harm. Meet / travel-to-meet / arrange-to-meet
+  # cues are enticement, not contact abuse, and are not on h1.
+  h1_contact_sexual_abuse:
+    cue: '\b(?:hands[- ]on|in-person\s+abuse|(?:sent|send\w*|transmitt\w*|showed)\s+(?:\w+\s+){0,6}(?:obscene|sexually\s+explicit)\s+(?:\w+\s+){0,4}(?:material|images?|photos?|videos?)?\s*(?:to\s+)?(?:a\s+)?(?:minor|child|victim))\b'
+    in_person_cue: '\b(?:hands[- ]on|in-person\s+abuse)\b'
+    online_cue: '\b(?:sent|send\w*|transmitt\w*|showed)\s+(?:\w+\s+){0,6}(?:obscene|sexually\s+explicit)\s+(?:\w+\s+){0,4}(?:material|images?|photos?|videos?)?\s*(?:to\s+)?(?:a\s+)?(?:minor|child|victim)\b'
+    live_cue: '\b(?:(?:webcam|video\s*(?:chat|call)s?|livestreams?|live\s*streams?)(?:[^.!?\w]+[\w]+){0,16}[^.!?\w]+(?:perform\w*\s+(?:sex|sexual)|performing\s+sexual|sex\s+acts?|masturbat\w*|sexually\s+explicit)|(?:perform\w*\s+(?:sex|sexual)|performing\s+sexual|sex\s+acts?|masturbat\w*|sexually\s+explicit)(?:[^.!?\w]+[\w]+){0,16}[^.!?\w]+(?:webcam|video\s*(?:chat|call)s?|livestreams?|live\s*streams?))\b'
+    live_exclude: 'for the purpose of producing a visual depiction'
     topics: [hands_on]
-  h2_coerced_self_generated:
+  h2_depicted_in_abuse_imagery:
     cue: '\b(?:(?:asked|convinced|persuaded|coerced|enticed|pressured|directed|instructed|requested|solicited|induced)\s+(?:\w+\s+){0,5}(?:send|take|produce|make|record|film)\w*\s+(?:\w+\s+){0,4}(?:images?|photos?|pictures?|videos?|nudes?)|self-generated)'
-    topics: []
-  h3_material_distributed:
-    cue: '\b(?:distribut\w*|shar(?:e|ed|ing)|trad(?:e|ed|ing)|upload\w*|disseminat\w*|re-?victimi\w*)'
-    topics: [distribution]
-  h4_sextorted:
-    cue: '\b(?:sextort\w*|extort\w*|threaten\w*\s+(?:to\s+)?(?:post|share|send|release|expose|distribut|publish)\w*|blackmail\w*)'
-    topics: [sextortion]
-  h6_likeness_synthesized:
-    cue: '(?:\b(?:creat\w*|generat\w*|produc\w*|made|mak\w*|alter\w*|manipulat\w*|edit\w*|transform\w*|turned\s+(?:\w+\s+){0,3}into|convert\w*)\b[^.]{0,80}\b(?:ai|a\.i\.|artificial\s+intelligence|generative|deep\s*fake\w*|nudif\w*|undress\w*|face[- ]?swap\w*)\b|\b(?:ai|a\.i\.|artificial\s+intelligence|generative)\b[^.]{0,40}\b(?:to|that)\s+(?:creat\w*|generat\w*|produc\w*|mak\w*|alter\w*|manipulat\w*|morph\w*|undress\w*|nudif\w*)|\b(?:deep\s*fake\w*|morph\w*|nudif\w*|face[- ]?swap\w*|superimpos\w*)|\bdigitally\s+(?:altered|manipulated|created|edited)|\btext[- ]to[- ]image|(?<!ai\s)(?<!a\.i\.\s)(?<!computer\s)(?<!intelligence\s)(?<!digitally\s)(?<!virtually\s)(?<!artificially\s)(?<![-\w])generat\w*\b[^.]{0,40}\b(?:images?|pictures?|photos?|videos?|simulations?|depictions?|content|material|csam|child\s+(?:pornography|sexual\s+abuse))\b)'
+    topics: [production]
+    guarded_cue: '(?:\b(?:creat\w*|generat\w*|produc\w*|made|mak\w*|alter\w*|manipulat\w*|edit\w*|transform\w*|turned\s+(?:\w+\s+){0,3}into|convert\w*)\b[^.]{0,80}\b(?:ai|a\.i\.|artificial\s+intelligence|generative|deep\s*fake\w*|nudif\w*|undress\w*|face[- ]?swap\w*)\b|\b(?:ai|a\.i\.|artificial\s+intelligence|generative)\b[^.]{0,40}\b(?:to|that)\s+(?:creat\w*|generat\w*|produc\w*|mak\w*|alter\w*|manipulat\w*|morph\w*|undress\w*|nudif\w*)|\b(?:deep\s*fake\w*|morph\w*|nudif\w*|face[- ]?swap\w*|superimpos\w*)|\bdigitally\s+(?:altered|manipulated|created|edited)|\btext[- ]to[- ]image|(?<!ai\s)(?<!a\.i\.\s)(?<!computer\s)(?<!intelligence\s)(?<!digitally\s)(?<!virtually\s)(?<!artificially\s)(?<![-\w])generat\w*\b[^.]{0,40}\b(?:images?|pictures?|photos?|videos?|simulations?|depictions?|content|material|csam|child\s+(?:pornography|sexual\s+abuse))\b)'
     require: '\b(?:he|she|they|him|her|his|defendant|suspect|accused|man|woman|teen\w*|juvenile\w*|student\w*|individual|offender|admit\w*|pleaded\s+guilty|pled\s+guilty|charged\s+with|accused\s+of|convicted\s+of|arrested\s+for|investigators\s+(?:said|say|found))\b'
     exclude: '\b(?:creat\w*|generat\w*|made|produc\w*|alter\w*)\s+(?:by|using|with|through|via)\s+(?:\w+\s+){0,3}(?:ai|a\.i\.|artificial\s+intelligence|generative|computer)\b|\b(?:possession|possess\w*)\s+of\b[^.]{0,60}\b(?:generated|created|made)\b|\b(?:threats?|crimes?|forms?|dangers?|risks?)\s+(?:like|such\s+as|including)\b|\bgenerated\s+ai\b|\b(?:designed|intended|used)\s+to\s+(?:create|generate|produce)\b|\b(?:can|could|may|are\s+able\s+to|allows?|enables?|lets?)\s+(?:\w+\s+){0,4}(?:create|generate|produce|make)\b'
-    topics: [ai_csam]
+  h3_imagery_circulated:
+    cue: '\b(?:distribut\w*|shar(?:e|ed|ing)|trad(?:e|ed|ing)|upload\w*|disseminat\w*|re-?victimi\w*)'
+    topics: [distribution, possession]
+  h4_coerced_by_exposure_threat:
+    cue: '\b(?:sextort\w*|extort\w*|blackmail\w*|threaten\w*\s+(?:to\s+)?(?:post|share|send|release|expose|distribut|publish)\w*)'
+    topics: [sextortion]
+  h5_commercial_sexual_exploitation:
+    cue: '\b(?:sex\s+traffick\w*|commercial\s+sex(?:\s+act)?|prostitut\w*\s+(?:\w+\s+){0,4}minor|minor\s+(?:\w+\s+){0,4}prostitut\w*|(?:paid|payment|money)\s+(?:\w+\s+){0,6}(?:for\s+)?(?:sex|sexual\s+acts?|the\s+minor|the\s+child))'
+    topics: [trafficking]
+    topics_require_cue: true
+    cue_reject: '\brestitution\b'

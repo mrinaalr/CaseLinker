@@ -22,15 +22,17 @@ def _app():
 
 
 def test_only_loaded_graphs_are_listed():
-    manifest = json.loads((ROOT / "state_machines/data/pacer-v1/manifest.json").read_text())
+    from state_machines.trajectories.payload import release_dir
+    manifest = json.loads((release_dir() / "manifest.json").read_text())     # the release the API serves (newest)
     empty = {(c["case_id"], k) for c in manifest["cases"] for k, v in c["graphs"].items()
              if 0 in (v.get("chains"), v.get("observations"))}
-    assert empty   # pacer-v1 has cases with no trajectory or no observation graph
+    assert empty   # the release has cases with no trajectory or no observation graph
     body = TestClient(_app()).get("/api/ontology/pacer").json()
     listed = {(c["case_id"], k) for c in body["cases"] for k in c["graphs"]}
     assert not listed & empty
     assert all("evidence" in c["graphs"] for c in body["cases"])
-    assert body["release_graph"] == "urn:caselinker:pacer-release:pacer-v1" and body["review_mode"] == "machine"
+    assert body["release_graph"] == f"urn:caselinker:pacer-release:{manifest['release_id']}" and body["review_mode"] == "machine"
+    assert manifest["release_id"] == "pacer-v2"
 
 
 def test_evidence_graphs_load_on_the_canvas():
