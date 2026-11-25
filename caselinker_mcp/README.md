@@ -185,7 +185,7 @@ Add `.cursor/mcp.json` to `.gitignore` if it contains secrets.
 
 ## Local corpus
 
-Useful once you are pointing MCP at localhost. The live corpus is **10,802 case reports**, **190,023 extracted features**, and **4,000+ distinct law-enforcement agencies** (**76** sources).
+Useful once you are pointing MCP at localhost. The live corpus is **10,802 case reports**, **231,988 extracted features**, and **4,000+ distinct law-enforcement agencies** (**76** sources).
 
 - **Railway:** same deployed snapshot, public rate limits. Set `CASELINKER_API_URL=https://caselinker.up.railway.app`.
 - **Localhost:** set `CASELINKER_API_URL=http://localhost:8000` after `python3 run/main.py`. The local DB starts empty unless you populate it.

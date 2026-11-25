@@ -42,6 +42,7 @@ def test_every_stored_attribute_is_counted_or_excluded():
 def test_fields_added_after_march_2026_are_counted():
     case = {
         "investigation_technology": ["PhotoDNA"],
+        "locations": ["Ohio", "Columbus"],
         "perpetrator_admissions": ["admitted downloading", "admitted chatting"],
         "perpetrator_admission_themes": ["possession"],
         "anonymization_network": ["Tor"],
@@ -52,10 +53,10 @@ def test_fields_added_after_march_2026_are_counted():
                                 "sentences": json.dumps(["10 years"])},
         "evidence_volume": {"images": 1100, "videos": 12, "storage_size": None},
     }
-    # theme 1 + network 1 + client 1 + flag 1 + status 1 + charges 2 + evidence 2 = 9.
+    # theme 1 + network 1 + client 1 + places 2 + flag 1 + status 1 + charges 2 + evidence 2 = 11.
     # Labels count; the quoted spans behind them (perpetrator_admissions) are listed, not counted.
-    # Not counted either: investigation_technology (a boilerplate-prone flag); sentences come from assertions.
-    assert count_case_attributes(case) == 9
+    # Not counted either: investigation_technology (program boilerplate); sentences come from assertions.
+    assert count_case_attributes(case) == 11
 
 
 def test_placeholders_and_empty_values_do_not_count():

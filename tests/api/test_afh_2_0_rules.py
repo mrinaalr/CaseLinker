@@ -85,9 +85,9 @@ def test_feature_breakdown_follows_the_counter_and_sums_to_nfeatures():
     assert set(b["excluded"]) == set(fc.EXCLUDED)
     assert not set(b["excluded"]) & (set(fc.COUNTED) | set(fc.ASSERTED_FIELDS))
     assert sum(b["counted_case_attributes"].values()) + sum(b["counted_span_checked_assertions"].values()) == cover["NFeatures"]
-    for field in ("perpetrator_admission_themes", "severity_indicators", "anonymization_network", "p2p_clients"):
+    for field in ("perpetrator_admission_themes", "severity_indicators", "anonymization_network", "p2p_clients", "locations"):
         assert field in b["counted_case_attributes"], field
-    for field in ("perpetrator_admissions", "severity_phrases", "investigation_technology", "locations"):
+    for field in ("perpetrator_admissions", "severity_phrases", "investigation_technology"):
         assert field in b["excluded"], field
 
 

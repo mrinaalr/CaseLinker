@@ -14,6 +14,10 @@ tests/api/test_feature_count.py fails when a stored attribute is in none, so a n
 go uncounted by accident. (Until 2026-11-24 the count was a hand-kept list from March 2026 that
 missed later fields and counted "unknown" placeholders: 5,161 investigation types, 10,006
 relationships.)
+
+Place names (`locations`) count. The stored value says what a place is (state, city), not its role:
+where the offense happened and where an agency or court sits are not told apart, which is left to
+downstream analysis.
 """
 from __future__ import annotations
 
@@ -102,6 +106,7 @@ COUNTED: Dict[str, Any] = {
     # Tor, BitTorrent, LimeWire ... are often also platform labels: a value already in platforms_used is a copy.
     "anonymization_network": _items,
     "p2p_clients": _items,
+    "locations": _items,                # place names; role not stated (see the module note)
     "relationship_to_victim": lambda v: int(_stated(v)),
     "perpetrator_gender": lambda v: int(_stated(v)),
     "multi_defendant_operation": lambda v: int(v is True),
@@ -127,10 +132,8 @@ EXCLUDED: Dict[str, str] = {
     # Labels count; the quoted spans behind them are listed, not counted (one rule for every span field).
     "severity_phrases": "quoted spans behind severity_indicators (the labels are counted)",
     "perpetrator_admissions": "quoted spans behind perpetrator_admission_themes (the labels are counted)",
-    "investigation_technology": ("one flag value ('CyberTipline'); in 745 of 1,810 frozen-corpus cases its only mention is a "
-                                 "report-to-the-CyberTipline line (program boilerplate), and the stored value cannot tell the two apart"),
-    "locations": ("place names; location_grounds records what a place is (state, city), never its role, so offense "
-                  "locations cannot be told from an agency's or court's; left out by the maintainer 2026-11-24"),
+    "investigation_technology": ("program boilerplate: one flag value ('CyberTipline'); in 745 of 1,810 frozen-corpus cases its "
+                                 "only mention is a report-to-the-CyberTipline line, and the stored value cannot tell the two apart"),
 }
 
 
