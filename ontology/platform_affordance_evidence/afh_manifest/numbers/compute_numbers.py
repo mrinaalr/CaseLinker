@@ -361,9 +361,20 @@ def walk(o, acc):
             walk(v, acc)
 
 
+# One derivation (DIRECT). The *.inferred.json files hold the same steps under the INFERRED threshold;
+# reading both counted every step twice. A step is one act in one chain, so an act in several chains
+# is several steps: unique acts are counted beside them.
 acc = [0, 0]
-for p in (PACER / "derived").glob("*.json"):
-    walk(json.loads(p.read_text()), acc)
+unique_acts, unique_with = set(), set()
+for p in sorted((PACER / "derived").glob("*.direct.json")):
+    derived = json.loads(p.read_text())
+    walk(derived, acc)
+    for track in derived["tracks"]:
+        for chain in track["trajectories"]:
+            for step in chain["steps"]:
+                unique_acts.add((derived["case_id"], step["event_id"]))
+                if step["claims"]["candidate_capabilities"]:
+                    unique_with.add((derived["case_id"], step["event_id"]))
 per_case = {}
 for c in pacer["cases"]:
     a = (rep["cases"].get(c["case_id"], {}).get("agreement_model_coded") or {})
@@ -385,6 +396,8 @@ out["7_pacer"] = {
     "chains": sum(v["chains"] for v in per_case.values()),
     "observations": sum(v["observations"] for v in per_case.values()),
     "derived_steps": acc[0], "derived_steps_with_capability_candidates": acc[1],
+    "derived_step_acts": len(unique_acts), "derived_step_acts_with_capability_candidates": len(unique_with),
+    "derived_steps_derivation": "DIRECT (derived/*.direct.json); the INFERRED derivation is not added",
     "reliability_overall": rep["reliability_real_cases"],
     "per_case": per_case,
 }
