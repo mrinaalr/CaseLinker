@@ -96,11 +96,19 @@ Generated locally by `run_all.py` and not committed. `\input{}` each table insid
 | Use-documented | Tier `stated` or `inferred` |
 | A available | Platform had the capability natively in the case's publication year |
 | B capability-relevant conduct | A, plus use-documented, plus conduct of the kind the class bears on, in a sentence naming the platform |
-| I inferred facilitation | B on a platform where the capability is on for every use by design (`default_on`), or C |
+| I inferred facilitation | B on a platform where the capability is `default_on` (see [Operational definitions](#operational-definitions)), or C |
 | C explicit instrumental use | B, plus a capability-specific cue in a sentence naming the platform |
 | Primary tier | `tiers-1+linewrap-3`: the published rules plus an additive repair of hard-wrapped lines that never demotes and refuses promotions earned only by agency social-media or reporting-duty boilerplate naming that platform. `tiers-1` is kept as the baseline. |
 | Harm direct / case-level | Harm cue in a platform sentence of a use-documented record / case topic or cue anywhere in the release |
 | Timeline | Publication year. An upper bound on conduct time, never relabelled as offense date. |
+
+## Operational definitions
+
+- **Anonymity:** an actor can act on the platform (create and use an account, post, message) without disclosing a verified real-world identity to the platform or to other users. A visible pseudonym is not a verified identity. Anonymity is not untraceability: the provider may still hold IP addresses, device, phone or payment records.
+- **Unmonitored communication:** exchanges outside public view: one-to-one or closed-group channels that other users, parents and proactive public moderation do not see. End-to-end encryption is the subset that is also outside the provider's view.
+- **default_on:** the platform's primary interaction (named per platform: posting, messaging, storing a file, downloading) uses the capability under the default configuration, without separate activation. Secondary features (Stories, vanish mode, opt-in groups) do not make a class default-on. A row the evidence cannot settle is uncertain.
+
+The registry rows were classified before this rule was written down. Rows known to depart from it are listed in the registry provenance audit and are not changed in AfH 2.0.
 
 ## Citations
 
