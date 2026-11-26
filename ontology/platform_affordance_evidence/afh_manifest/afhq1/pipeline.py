@@ -174,9 +174,166 @@ class Codebook:
                 "_guard": _compile(row.get("undercover_guard") or row.get("detection_guard")),
                 "_require": _compile(row.get("require_cues")),
             }
-        harms = {k: {**v, "_cue": _compile(v["cue"]), "_exclude": _compile(v.get("exclude")),
-                      "_require": _compile(v.get("require"))} for k, v in cfg["harms"].items()}
+        harms = {}
+        for k, v in cfg["harms"].items():
+            harms[k] = {
+                **v,
+                "_cue": _compile(v.get("cue")),
+                "_guarded": _compile(v.get("guarded_cue")),
+                "_exclude": _compile(v.get("exclude")),
+                "_require": _compile(v.get("require")),
+                "_live": _compile(v.get("live_cue")),
+                "_live_exclude": _compile(v.get("live_exclude")),
+                "_cue_reject": _compile(v.get("cue_reject")),
+                "_in_person": _compile(v.get("in_person_cue")),
+                "_online": _compile(v.get("online_cue")),
+            }
         return cls(cfg["version"], conduct, classes, harms, _compile(cfg.get("ai_material_cue")))
+
+
+def _sentences(text: str) -> List[str]:
+    return [part for part in re.split(r"(?<=[.!?])\s+", (text or "").strip()) if part.strip()]
+
+
+def _guarded_hit(sentence: str, harm: dict) -> bool:
+    """A likeness cue counts only with require on that sentence and without exclude."""
+    rx = harm.get("_guarded")
+    if not rx or not rx.search(sentence):
+        return False
+    if harm.get("_exclude") and harm["_exclude"].search(sentence):
+        return False
+    if harm.get("_require") and not harm["_require"].search(sentence):
+        return False
+    return True
+
+
+def _plain_cue_hit(text: str, harm: dict) -> bool:
+    """A plain cue match. cue_reject drops a match whose own text matches, and another match can still count."""
+    rx = harm.get("_cue")
+    if not rx:
+        return False
+    reject = harm.get("_cue_reject")
+    if not reject:
+        return bool(rx.search(text))
+    return any(not reject.search(match.group(0)) for match in rx.finditer(text))
+
+
+def _live_sentence(sentence: str, harm: dict) -> bool:
+    """Live conduct: medium and conduct in this sentence, and the sentence is not the production charge."""
+    rx = harm.get("_live")
+    if not rx or not rx.search(sentence):
+        return False
+    ban = harm.get("_live_exclude")
+    return not (ban and ban.search(sentence))
+
+
+def _live_hit(text: str, harm: dict) -> bool:
+    return any(_live_sentence(sentence, harm) for sentence in _sentences(text))
+
+
+def _cue_hit(text: str, harm: dict) -> bool:
+    if _plain_cue_hit(text, harm) or _live_hit(text, harm):
+        return True
+    return any(_guarded_hit(sentence, harm) for sentence in _sentences(text))
+
+
+def harm_case_hit(text: str, topics: set, harm: dict) -> bool:
+    """Case-level harm from the whole release. A topic and a plain cue are alternatives,
+    unless topics_require_cue, which needs both. guarded_cue carries require and exclude.
+    live_cue is sentence-bounded. cue_reject drops a plain-cue match, not the whole release."""
+    topic_hit = bool(set(topics) & set(harm.get("topics") or []))
+    cue_hit = _cue_hit(text, harm)
+    if harm.get("topics_require_cue"):
+        return topic_hit and cue_hit
+    return topic_hit or cue_hit
+
+
+def harm_direct_hit(sentences: List[str], harm: dict) -> bool:
+    """The platform sentence itself carries the cue. Topics do not."""
+    for sentence in sentences:
+        if _plain_cue_hit(sentence, harm) or _live_sentence(sentence, harm) or _guarded_hit(sentence, harm):
+            return True
+    return False
+
+
+def h1_form(text: str, topics: set, harm: dict) -> Optional[str]:
+    """in_person (hands_on topic, hands-on, or in-person abuse), online (live conduct or
+    obscene material sent to a minor), or both. None when neither side is present."""
+    topics = topics or set()
+    in_person = "hands_on" in topics or bool(harm.get("_in_person") and harm["_in_person"].search(text or ""))
+    online = _live_hit(text or "", harm) or bool(harm.get("_online") and harm["_online"].search(text or ""))
+    if in_person and online:
+        return "both"
+    if in_person:
+        return "in_person"
+    if online:
+        return "online"
+    return None
+
+
+def case_harm_set(text: str, topics: set, codebook: Codebook) -> set:
+    """Harms for one press release, including a release that names no platform."""
+    return {name for name, harm in codebook.harms.items() if harm_case_hit(text, topics, harm)}
+
+
+_UNDERCOVER_CLEAR = frozenset({"h1_contact_sexual_abuse", "h4_coerced_by_exposure_threat"})
+_DECOY_AGE_ROLES = frozenset({"decoy", "claimed"})
+# Removed from h1. Still identifies the attempted-contact group: enticement, not contact abuse.
+ENTICEMENT = re.compile(
+    r"\b(?:meet\w*\s+(?:in\s+person|up|for\s+sex|to\s+engage)"
+    r"|travel\w*\s+(?:\w+\s+){0,4}to\s+meet"
+    r"|arrang\w*\s+(?:to\s+)?(?:a\s+)?meet\w*)\b",
+    re.I,
+)
+
+
+def outside_uncovered_base(final: set, *, ai_no_identifiable_child: bool, attempted_contact: bool,
+                           strict_sting: bool) -> bool:
+    """Out of both the numerator and the denominator. A strict sting stays in when any harm remains."""
+    if ai_no_identifiable_child or attempted_contact:
+        return True
+    return bool(strict_sting and not final)
+
+
+def settled_age_roles(final: Optional[dict]) -> List[str]:
+    """Roles on the latest age resolution. A victim or perpetrator list is that role.
+    Excluded mentions carry their own role. An empty resolution is no settled role."""
+    final = final or {}
+    roles: List[str] = []
+    if final.get("victims"):
+        roles.append("victim")
+    if final.get("perpetrators"):
+        roles.append("perpetrator")
+    for item in final.get("excluded") or []:
+        if isinstance(item, dict) and item.get("role"):
+            roles.append(str(item["role"]))
+    return roles
+
+
+def undercover_no_real_minor(investigation_types, age_roles: Optional[List[str]]) -> bool:
+    """Strict: undercover, at least one settled age role, and every one is decoy or claimed.
+    An undercover case with no settled age role is not touched."""
+    types = investigation_types or []
+    if isinstance(types, str):
+        types = [types]
+    if "undercover" not in types:
+        return False
+    roles = [role for role in (age_roles or []) if role]
+    if not roles:
+        return False
+    return all(role in _DECOY_AGE_ROLES for role in roles)
+
+
+def apply_case_harm_gates(level: set, topics: set, investigation_types=None, age_roles: Optional[List[str]] = None) -> Tuple[set, List[str]]:
+    """Drop harms the case does not keep. Returns the kept set and the codes the undercover rule cleared."""
+    kept = set(level)
+    if "ai_csam" in topics and "h1_contact_sexual_abuse" not in kept and "h2_depicted_in_abuse_imagery" not in kept:
+        kept = set()
+    cleared: List[str] = []
+    if undercover_no_real_minor(investigation_types, age_roles):
+        cleared = sorted(kept & _UNDERCOVER_CLEAR)
+        kept -= _UNDERCOVER_CLEAR
+    return kept, cleared
 
 
 def conduct_of(sentence: str, codebook: Codebook) -> Optional[str]:
@@ -220,7 +377,8 @@ class Record:
     tier_linewrap: str = ""
     conduct: List[str] = field(default_factory=list)
     sentence_spans: List[Tuple[int, int]] = field(default_factory=list)
-    available: Dict[str, bool] = field(default_factory=dict)
+    available: Dict[str, bool] = field(default_factory=dict)          # A_any: shipped by the publication year
+    default_on_open: Dict[str, bool] = field(default_factory=dict)    # A: default_on, registry window open
     period_uncertain: Dict[str, bool] = field(default_factory=dict)
     action_relevant: Dict[str, bool] = field(default_factory=dict)
     inferred: Dict[str, bool] = field(default_factory=dict)
@@ -248,7 +406,8 @@ class Record:
             "sentence_spans": ";".join(f"{a}-{b}" for a, b in self.sentence_spans),
         }
         for c in CLASSES:
-            out[f"{c}.A"] = int(self.available.get(c, False))
+            out[f"{c}.A"] = int(self.default_on_open.get(c, False))
+            out[f"{c}.A_any"] = int(self.available.get(c, False))
             out[f"{c}.B"] = int(self.action_relevant.get(c, False))
             out[f"{c}.I"] = int(self.inferred.get(c, False))
             out[f"{c}.C"] = int(self.instrumental.get(c, False))
@@ -313,8 +472,15 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
         year = case["pub_year"]
         for cname, spec in codebook.classes.items():
             since = info.capabilities.get(spec["capability"])
-            avail = since is not None and year is not None and year >= since
+            # Every level closes at the registry end year (`ended`). The publication year stands in for the
+            # conduct year: a release published after a feature ended does not count it (limitation, §7.5).
+            ended = (info.cap_meta.get(spec["capability"]) or {}).get("ended")
+            avail = since is not None and year is not None and year >= since and (ended is None or year <= ended)
             rec.available[cname] = avail
+            # Level A (AfH 2.0): the capability is on for every use by design (registry default_on), with the
+            # same window. A_any is `available`.
+            on_open = bool(avail and info.default_on.get(spec["capability"], False))
+            rec.default_on_open[cname] = on_open
             rec.period_uncertain[cname] = bool(avail and year - since < PERIOD_UNCERTAIN_YEARS)
             used = rec.primary_tier in ("stated", "inferred")
             rec.action_relevant[cname] = bool(
@@ -330,10 +496,10 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
                         break
             rec.instrumental[cname] = hit_span is not None
             # Analytically inferred: the documented conduct of the relevant kind happened on a
-            # platform where this capability is on for every use by design (registry default_on),
-            # or the release states it outright (C).
-            rec.inferred[cname] = bool(rec.instrumental[cname] or (
-                rec.action_relevant[cname] and info.default_on.get(spec["capability"], False)))
+            # platform where this capability is on for every use by design (registry default_on) and
+            # its window is open in the publication year (closed at `ended`, like A, the harm tables
+            # and recurrence), or the release states it outright (C).
+            rec.inferred[cname] = bool(rec.instrumental[cname] or (rec.action_relevant[cname] and on_open))
             if hit_span:
                 rec.instrumental_span[cname] = hit_span
             # Review candidates: cue present but not admitted to C.
@@ -344,12 +510,13 @@ def classify_case(case: Dict[str, Any], fingerprint: str, registry: Dict[str, Pl
                     rec.review[cname] = "cue_elsewhere_in_release"
             if spec.get("_review") and any(spec["_review"].search(s) for s in sentences):
                 rec.review.setdefault(cname, "review_cue_in_platform_sentence")
+        level, _cleared = apply_case_harm_gates(
+            case_harm_set(text, topics, codebook), topics,
+            case.get("investigation_types"), case.get("age_roles"))
         for hname, h in codebook.harms.items():
-            direct = rec.primary_tier in ("stated", "inferred") and any(
-                h["_cue"].search(s) and not (h["_exclude"] and h["_exclude"].search(s))
-                and (not h["_require"] or h["_require"].search(s)) for s in sentences)
-            rec.harm_direct[hname] = bool(direct)
-            rec.harm_case[hname] = bool(topics & set(h["topics"]) or h["_cue"].search(lower_release))
+            rec.harm_direct[hname] = bool(
+                rec.primary_tier in ("stated", "inferred") and hname in level and harm_direct_hit(sentences, h))
+            rec.harm_case[hname] = hname in level
         out.append(rec)
     return out, excluded
 

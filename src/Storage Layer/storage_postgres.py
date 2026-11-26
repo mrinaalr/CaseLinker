@@ -776,6 +776,15 @@ class CaseStorage:
         finally:
             return_connection(conn)
 
+    def count_assertion_feature_values(self, excluded_roles) -> Dict[str, int]:
+        """Distinct asserted values per field in each case's current run (feature count)."""
+        from assertion_store import count_assertion_feature_values
+        conn = get_connection()
+        try:
+            return count_assertion_feature_values(conn.cursor(), excluded_roles, dialect="postgres")
+        finally:
+            return_connection(conn)
+
     def get_case_assertions(self, case_id: str, field: Optional[str] = None) -> Dict[str, Any]:
         """Per-method assertions and the latest resolutions for one case (3.0)."""
         conn = get_connection()

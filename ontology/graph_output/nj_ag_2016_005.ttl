@@ -3,7 +3,8 @@
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case nj_ag_2016_005" ;
-    dcterms:created "2026-11-19T19:55:17.439988"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:45:38.646323"^^xsd:dateTime ;
     dcterms:date "2016-02-10"^^xsd:date ;
     dcterms:identifier "nj_ag_2016_005" ;
-    dcterms:modified "2026-11-19T19:55:17.439988"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:45:38.646323"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/provenance> ;
     dcterms:publisher "NJ AG" ;
     dcterms:source <https://www.njoag.gov/camden-county-man-convicted-at-trial-of-distributing-child-pornography-on-the-internet-using-file-sharing-software> ;
@@ -33,7 +34,8 @@
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-nj> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/person/offender/1> .
+    ns2:object <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/internet> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -65,16 +67,16 @@
     skos:altLabel "New Jersey State Police Department" ;
     ns2:name "New Jersey State Police" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/2> a ns5:CSAM_Distribution,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/2> a ns6:CSAM_Distribution,
+        ns6:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/event/hands-on> a ns1:ChildSexualAbuseEvent,
@@ -87,16 +89,16 @@
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/1>,
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/1>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+        ns6:LegalProceeding,
+        ns6:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/role/offender/1> a ns1:OffenderRole ;
@@ -135,8 +137,13 @@
     skos:altLabel "N.j." ;
     ns2:name "New Jersey" .
 
+<https://w3id.org/caselinker/resource/platform/internet> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "internet" ;
+    ns5:platformType "generic-tag" ;
+    ns2:name "internet" .
+
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
-        ns5:SentencingPhase ;
+        ns6:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

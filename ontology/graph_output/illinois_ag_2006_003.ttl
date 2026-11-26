@@ -2,8 +2,9 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case illinois_ag_2006_003" ;
-    dcterms:created "2026-11-19T19:41:05.494382"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:32:09.907015"^^xsd:dateTime ;
     dcterms:date "2006-12-22"^^xsd:date ;
     dcterms:identifier "illinois_ag_2006_003" ;
-    dcterms:modified "2026-11-19T19:41:05.494382"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:32:09.907015"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/provenance> ;
     dcterms:publisher "ILLINOIS AG" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2006-2018-Press-Archive/200612-22%20WINFIELD%20POLICE%20ARREST%20ALLEGED%20ONLINE%20CHILD%20PREDATOR.pdf> ;
@@ -30,13 +31,15 @@
         <https://w3id.org/caselinker/resource/agency/illinois-department-of-corrections>,
         <https://w3id.org/caselinker/resource/agency/winfield-police-department-il> ;
     ns1:object <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/person/offender/1>,
-        <https://w3id.org/caselinker/resource/platform/chat> .
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/internet>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 36.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 36.0 .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -106,19 +109,28 @@
     skos:altLabel "Winfield" ;
     ns1:name "Winfield village" .
 
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "chat" ;
+    ns4:platformType "generic-tag" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/internet> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "internet" ;
+    ns4:platformType "generic-tag" ;
+    ns1:name "internet" .
+
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns4:platformType "generic-tag" ;
+    ns1:name "online" .
+
 <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/event/online-only> a ns3:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
-    rdfs:label "Child Sexual Abuse Event · event/online-only" ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2006_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

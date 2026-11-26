@@ -3,8 +3,9 @@
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,10 +13,10 @@
 <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001> a ns1:CACInvestigation,
         ns3:EnduringEntity ;
     rdfs:label "Case tbi_icac_2013_001" ;
-    dcterms:created "2026-11-19T20:21:02.182402"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T13:16:41.656340"^^xsd:dateTime ;
     dcterms:date "2013-03-02"^^xsd:date ;
     dcterms:identifier "tbi_icac_2013_001" ;
-    dcterms:modified "2026-11-19T20:21:02.182402"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T13:16:41.656340"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/provenance> ;
     dcterms:publisher "TBI ICAC" ;
     dcterms:source <https://tbinewsroom.com/2013/03/01/tbi-arrests-robertson-county-man-for-possession-of-child-pornography-after-hundreds-of-images-are-found-on-his-computers/> ;
@@ -27,8 +28,9 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/event/online-only>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/person/offender/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/assessment/semantic/evidence-seizure> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · evidence_seizure" ;
@@ -51,21 +53,18 @@
     ns2:target <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a ns3:OrganizationLikeEntity,
-        ns6:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Tennessee Bureau of Investigation" ;
     dcterms:identifier "ori:TNTBI0000" ;
     ns2:name "Tennessee Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/1> a ns7:CriminalCharge,
+        ns7:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/2> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/2> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "possession of child pornography" .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/3> a ns5:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/event/online-only> a ns1:ChildSexualAbuseEvent,
         ns3:Event ;
@@ -77,15 +76,14 @@
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns5:LegalProceeding ;
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Robertson County Jail" ;
-    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/1>,
-        <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/2>,
-        <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/3> .
+    ns7:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/1>,
+        <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/robertson-county-tn> a ns3:PlaceLikeEntity,
@@ -107,6 +105,11 @@
     dcterms:identifier "fips:4780200" ;
     skos:altLabel "White House" ;
     ns2:name "White House city" .
+
+<https://w3id.org/caselinker/resource/platform/online> a ns3:DigitalSystemEntity ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns2:name "online" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2013_001/phase/indicted> a ns1:LegalProcessPhase,
         ns3:Phase ;

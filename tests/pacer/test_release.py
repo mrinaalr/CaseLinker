@@ -182,6 +182,24 @@ def test_privacy_scan_finds_a_name_or_quote_in_committed_files(tmp_path):
     assert kinds == {"deny", "quote"}
 
 
+def test_privacy_scan_reads_a_no_agreed_acts_bundle_and_still_checks_its_file_names(tmp_path):
+    """A case the coders never agreed on is published as a placeholder with no coding block
+    (ncmec_2025_1026 in pacer-v2). The scan crashed on it; it must read it and check its documents."""
+    from state_machines.graphs.release import privacy_scan
+    b = _adjudicated(F.build()[0])
+    root = _release(tmp_path, b)
+    build("test-v1", data_root=root, text_root=tmp_path / "text")
+    path = root / "test-v1" / "cases" / f"{F.CASE}.json"
+    bundle = json.loads(path.read_text())
+    placeholder = {"case_id": bundle["case_id"], "codebook_version": bundle["codebook_version"],
+                   "documents": bundle["documents"], "events": [], "no_agreed_acts": True, "participants": []}
+    path.write_text(json.dumps(placeholder), encoding="utf-8")
+    assert [h for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"] if h["kind"] == "open_text"] == []
+    placeholder["documents"][0]["source_path"] = f"BULK_FOLDER/pacer -- {F.CASE} -- Smithson Factual Proffer.pdf"
+    path.write_text(json.dumps(placeholder), encoding="utf-8")
+    assert [h["kind"] for h in privacy_scan("test-v1", tmp_path / "text", data_root=root)["hits"]] == ["open_text"]
+
+
 def test_privacy_scan_refuses_an_unlisted_platform_name_in_a_machine_coded_bundle(tmp_path):
     from state_machines.graphs.release import privacy_scan
     b = _adjudicated(F.build()[0])

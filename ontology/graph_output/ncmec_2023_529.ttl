@@ -1,10 +1,11 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,10 +13,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_529> a ns4:CACInvestigation,
         ns5:EnduringEntity ;
     rdfs:label "Case ncmec_2023_529" ;
-    dcterms:created "2026-11-19T18:15:54.762170"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:11:09.887030"^^xsd:dateTime ;
     dcterms:date "2023-12"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_529" ;
-    dcterms:modified "2026-11-19T18:15:54.762170"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:11:09.887030"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_529/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://www.pinellas-park.com/1958/Man-Arrested-for-Child-Pornography> ;
@@ -26,8 +27,9 @@
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_529/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_529/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_529/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_529/agency/pinellas-park-police-department> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1> .
+    ns7:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_529/agency/pinellas-park-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_529/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -36,23 +38,23 @@
     ns5:hasConfidence 0.5108 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 59.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 59.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_529/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_529/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_529/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_529/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_529/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_529/agency/pinellas-park-police-department> a ns5:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns7:LocalAgency ;
     rdfs:label "Pinellas Park Police Department" ;
-    ns3:name "Pinellas Park Police Department" .
+    ns2:name "Pinellas Park Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_529/charge/1> a ns1:CriminalCharge ;
     rdfs:label "- Tampering with Physical Evidence" .
@@ -73,7 +75,7 @@
         ns5:LegalEvent,
         ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "13"^^xsd:nonNegativeInteger ;
+    ns1:chargeCount "11"^^xsd:nonNegativeInteger ;
     ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_529/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_529/charge/2> .
 
@@ -84,14 +86,19 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
-    ns3:name "Florida" .
+    ns2:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/pinellas-park-city> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pinellas Park city" ;
     dcterms:identifier "fips:1256975" ;
     skos:altLabel "Pinellas Park" ;
-    ns3:name "Pinellas Park city" .
+    ns2:name "Pinellas Park city" .
+
+<https://w3id.org/caselinker/resource/platform/online> a ns5:DigitalSystemEntity ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns2:name "online" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_529/phase/charged> a ns4:LegalProcessPhase,
         ns5:Phase ;

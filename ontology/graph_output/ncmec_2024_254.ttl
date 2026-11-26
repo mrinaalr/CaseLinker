@@ -4,7 +4,7 @@
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-harmonization#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,10 +12,11 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2024_254> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2024_254" ;
-    dcterms:created "2026-11-19T18:23:52.972602"^^xsd:dateTime ;
+    dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-florida> ;
+    dcterms:created "2026-11-23T11:14:05.644981"^^xsd:dateTime ;
     dcterms:date "2024-11-19"^^xsd:date ;
     dcterms:identifier "ncmec_2024_254" ;
-    dcterms:modified "2026-11-19T18:23:52.972602"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:14:05.644981"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_254/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://352today.com/news/257752-ocala-man-faces-serious-charges-in-child-sexual-abuse-case/> ;
@@ -26,7 +27,7 @@
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_254/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_254/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_254/event/project-safe-childhood>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_254/legal-proceeding> ;
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_254/operation> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/florida-department-of-law-enforcement>,
@@ -36,7 +37,9 @@
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_254/cybertip>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_254/person/offender/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_254/person/victim/1>,
-        <https://w3id.org/caselinker/resource/platform/facebook> .
+        <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/internet>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_254/person/victim/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
@@ -92,13 +95,6 @@
     rdfs:label "Ocala Police Department" ;
     ns1:name "Ocala Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_254/charge/1> a ns6:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_254/charge/2> a ns6:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns4:ChildSexualAbuseEvent .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_254/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
     ns1:name "observe" .
@@ -115,16 +111,11 @@
         ns3:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_254/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
-        <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
-    rdfs:label "Event · legal-proceeding" ;
-    dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/northern-district-of-florida> ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_254/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_254/charge/2> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_254/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_254/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_254/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_254/role/victim/1> a ns4:VictimRole ;
@@ -148,9 +139,19 @@
     ns1:name "Ocala city" .
 
 <https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+        ns6:SocialMediaPlatform ;
     rdfs:label "Facebook" ;
     ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/internet> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "internet" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "internet" .
+
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "online" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_254/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .

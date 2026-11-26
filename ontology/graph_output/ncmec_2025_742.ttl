@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +11,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2025_742" ;
-    dcterms:created "2026-11-19T18:38:15.324135"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:25:50.767879"^^xsd:dateTime ;
     dcterms:date "2025-03-12"^^xsd:date ;
     dcterms:identifier "ncmec_2025_742" ;
-    dcterms:modified "2026-11-19T18:38:15.324135"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:25:50.767879"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_742/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata> ;
@@ -26,10 +26,11 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_742/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_742/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_742/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_742/agency/enid-police-department> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_742/agency/enid-police-department> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_742/person/offender/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_742/person/victim/1>,
         <https://w3id.org/caselinker/resource/platform/dark-web>,
+        <https://w3id.org/caselinker/resource/platform/online>,
         <https://w3id.org/caselinker/resource/platform/snapchat>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
@@ -48,12 +49,12 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_742/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/agency/enid-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Enid Police Department" ;
     ns1:name "Enid Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_742/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_742/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/event/csam> a ns2:CSAMIncident,
@@ -61,7 +62,7 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -76,10 +77,10 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_742/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_742/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/relationship/coach> a ns3:Coach,
         ns3:CustodialRelationship ;
@@ -102,15 +103,20 @@
     rdfs:label "dark web" ;
     ns1:name "dark web" .
 
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "online" .
+
 <https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         ns6:MessagingService ;
     rdfs:label "Snapchat" ;
     ns6:encryptionLevel "end-to-end" ;
     ns1:name "Snapchat" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:SocialMediaPlatform ;
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
     rdfs:label "social media" ;
+    ns6:platformType "generic-tag" ;
     ns1:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
@@ -126,6 +132,6 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2025_742/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_742/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_742/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

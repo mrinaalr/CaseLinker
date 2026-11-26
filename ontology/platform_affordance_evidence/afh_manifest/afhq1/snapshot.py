@@ -19,6 +19,8 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Dict, Iterator, Optional
 
+from .labels import correct_platform_labels
+
 HERE = Path(__file__).resolve().parent
 RESEARCH = HERE.parent
 REPO = RESEARCH.parents[2]
@@ -26,8 +28,8 @@ DATA = RESEARCH / "data"
 SNAPSHOT = DATA / "snapshot.sqlite"
 # Text-free public snapshot, committed: case metadata, fingerprints, every record's classification,
 # exclusions and date roles. Every output except legacy_afh1_exemplars.json rebuilds from it exactly.
-PUBLIC = RESEARCH / "public"
-PUBLIC_CASE_FIELDS = ("id", "fingerprint", "source", "source_url", "pub_year", "platforms", "topics")
+PUBLIC = RESEARCH / "numbers" / "public"   # the shipped AfH 2.0 text-free snapshot
+PUBLIC_CASE_FIELDS = ("id", "fingerprint", "source", "pub_year", "platforms", "topics")   # no source_url: no computation reads it
 
 # The main checkout holds the corpus DB; a worktree does not (gitignored).
 DEFAULT_SOURCE_DB = Path(
@@ -73,11 +75,14 @@ def export_snapshot(source_db: Path = DEFAULT_SOURCE_DB, out: Path = SNAPSHOT) -
     dst = sqlite3.connect(tmp)
     dst.executescript(_SCHEMA)
     rows = src.execute(
-        "SELECT id, source, source_url, json_extract(raw_data,'$.year'), "
+        "SELECT id, source, source_url, json_extract(raw_data,'$.year'), json_extract(raw_data,'$.source_file'), "
         "json_extract(raw_data,'$.case_text'), platforms_used, case_topics, "
         "json_extract(extracted_features,'$.person_spans'), extraction_run_id FROM cases ORDER BY id"
     )
-    for cid, source, url, year, text, plats, topics, spans, run in rows:
+    from .labels import year_corrections
+    fixes = year_corrections(src)
+    for cid, source, url, year, source_file, text, plats, topics, spans, run in rows:
+        year = fixes[cid]["corrected"] if cid in fixes else (int(year) if year not in (None, "") else None)
         dst.execute(
             "INSERT INTO cases VALUES (?,?,?,?,?,?,?,?,?,?)",
             (cid, source, url, int(year) if year not in (None, "") else None, text or "",
@@ -153,7 +158,8 @@ def iter_cases(conn: sqlite3.Connection) -> Iterator[Dict[str, Any]]:
         cid, source, url, year, text, plats, topics, spans = row
         yield {
             "id": cid, "source": source, "source_url": url, "pub_year": year, "text": text or "",
-            "platforms": json.loads(plats or "[]"), "topics": json.loads(topics or "[]"),
+            "platforms": correct_platform_labels(json.loads(plats or "[]"), text or ""),
+            "topics": json.loads(topics or "[]"),
             "person_spans": json.loads(spans) if spans else None,
         }
 
@@ -170,16 +176,17 @@ def _read_jsonl(path: Path):
 
 
 def write_public(out: Path, meta: Dict[str, str], cases, fingerprints: Dict[str, str],
-                 records, excluded, dates: Dict[str, dict]) -> None:
+                 records, excluded, dates: Dict[str, dict], afh_inputs=None) -> None:
     """Write the text-free public snapshot. ``records`` are pipeline.Record objects."""
     from dataclasses import asdict
 
     out.mkdir(parents=True, exist_ok=True)
     (out / "meta.json").write_text(json.dumps(
-        {"dataset_identity": meta["dataset_identity"], "case_count": int(meta["case_count"])},
+        {"dataset_identity": meta["dataset_identity"], "case_count": int(meta["case_count"]),
+         **({"afh_inputs": afh_inputs} if afh_inputs is not None else {})},
         indent=1, sort_keys=True) + "\n", encoding="utf-8")
     _jsonl(out / "cases.jsonl", ({"id": c["id"], "fingerprint": fingerprints.get(c["id"], ""), "source": c["source"],
-                                 "source_url": c["source_url"], "pub_year": c["pub_year"], "platforms": c["platforms"],
+                                 "pub_year": c["pub_year"], "platforms": c["platforms"],
                                  "topics": c["topics"], "dates": dates[c["id"]]} for c in cases))
     _jsonl(out / "records.jsonl", (asdict(r) for r in records))
     _jsonl(out / "excluded.jsonl", excluded)
@@ -203,5 +210,6 @@ def load_public(src: Path = PUBLIC):
         d["instrumental_span"] = {k: tuple(v) for k, v in d["instrumental_span"].items()}
         records.append(pl.Record(**d))
     excluded = _read_jsonl(src / "excluded.jsonl")
-    return ({"dataset_identity": meta["dataset_identity"], "case_count": str(meta["case_count"])},
+    return ({"dataset_identity": meta["dataset_identity"], "case_count": str(meta["case_count"]),
+             **({"afh_inputs": meta["afh_inputs"]} if "afh_inputs" in meta else {})},
             cases, fingerprints, records, excluded, dates)

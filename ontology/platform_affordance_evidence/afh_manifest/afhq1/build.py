@@ -28,25 +28,28 @@ MIN_MANIFEST_CASES = 3
 EXEMPLARS_PER_CELL = 3
 # AfH 1.0 Sec. 7 conceptual mapping psi(a) (affordance class -> harms). Conceptual, not observed.
 AFH1_PSI = {
-    "Anonymity": ["h1_groomed_toward_in_person", "h2_coerced_self_generated", "h4_sextorted"],
-    "Ephemerality": ["h2_coerced_self_generated", "h4_sextorted"],
-    "ContactDiscovery": ["h1_groomed_toward_in_person"],
-    "UnmonitoredCommunication": ["h1_groomed_toward_in_person", "h2_coerced_self_generated", "h4_sextorted"],
-    "DistributionInfrastructure": ["h3_material_distributed"],
-    "GenerativeSynthesis": ["h6_likeness_synthesized"],
+    "Anonymity": ["h1_contact_sexual_abuse", "h2_depicted_in_abuse_imagery", "h4_coerced_by_exposure_threat"],
+    "Ephemerality": ["h2_depicted_in_abuse_imagery", "h4_coerced_by_exposure_threat"],
+    "ContactDiscovery": ["h1_contact_sexual_abuse"],
+    "UnmonitoredCommunication": ["h1_contact_sexual_abuse", "h2_depicted_in_abuse_imagery", "h4_coerced_by_exposure_threat"],
+    "DistributionInfrastructure": ["h3_imagery_circulated"],
+    "GenerativeSynthesis": ["h2_depicted_in_abuse_imagery"],
 }
 ANALYSED_STATUSES = ("specific", "technology", "ambiguous_alias")  # platforms the six classes are assessed on
-# Evidence levels, each a subset of the one before (A > B > I > C).
+# Evidence levels. B, I and C nest within A_any (C <= I <= B <= A_any). A counts only capabilities on by
+# default with the registry window open, so it is not part of that chain: C can sit on an opt-in feature.
 LEVELS = (
-    ("A_available_capability", "available"),
+    ("A_any_available_capability", "available"),
+    ("A_default_on_capability", "default_on_open"),
     ("B_capability_relevant_conduct", "action_relevant"),
     ("I_inferred_facilitation", "inferred"),
     ("C_explicit_instrumental_use", "instrumental"),
 )
 LEVEL_TEXT = {
-    "A_available_capability": "the platform offered the capability natively in the case's publication year",
+    "A_any_available_capability": "the platform offered the capability natively in the case's publication year (registry window since..ended open), on by default or not",
+    "A_default_on_capability": "the capability is on for every use by design (registry default_on) and its registry window (since..ended) is open in the publication year",
     "B_capability_relevant_conduct": "documented use of the platform for conduct of the kind the capability bears on",
-    "I_inferred_facilitation": "B on a platform where the capability is on for every use by design (registry default_on), or C",
+    "I_inferred_facilitation": "B on a platform where the capability is on for every use by design (registry default_on) with its window open in the publication year, or C",
     "C_explicit_instrumental_use": "the release states the capability-specific behaviour in a sentence naming the platform",
 }
 
@@ -68,7 +71,13 @@ def wilson(k: int, n: int, z: float = 1.96) -> Optional[Tuple[float, float]]:
     return (round((c - r) / d, 3), round((c + r) / d, 3))
 
 
+def _inputs_label():
+    return INPUTS or "unknown: run outside numbers/run_all.sh, inputs not identified"
+
+
 def dump(name: str, obj: Any) -> Path:
+    if isinstance(obj, dict) and name != "RUN_IDENTITY.json":
+        obj = {**obj, "afh_inputs": _inputs_label()}   # every JSON output says what it was computed from
     path = OUT / name
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=1, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -188,7 +197,7 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
         if c == "GenerativeSynthesis":
             row["ai_material_documented_cases"] = len({r.case_id for r in pool if r.ai_material})
             row["ai_material_without_creation_cases"] = len({r.case_id for r in pool if r.ai_material and not r.instrumental[c]})
-        row["A_only_cases"] = len({r.case_id for r in pool if r.available[c]} - {r.case_id for r in pool if r.action_relevant[c]})
+        row["A_any_only_cases"] = len({r.case_id for r in pool if r.available[c]} - {r.case_id for r in pool if r.action_relevant[c]})
         row["review_candidates"] = dict(sorted(Counter(r.review[c] for r in pool if r.review.get(c)).items()))
         out[c] = row
     strict_pool = [r for r in records if r.status == "specific"]
@@ -203,7 +212,8 @@ def affordance_coverage(records: List[pl.Record]) -> dict:
                                     "definition": "named platforms only; equals the paper's analytic set"},
             },
             "classes_named_platforms_only": strict,
-            "reading": ("Each level is a subset of the one before. C counts what press releases spell out; "
+            "reading": ("C, I and B each nest within the one before, and B within A_any. A counts only capabilities "
+                        "on by default (window open), so a C on an opt-in feature is not in A. C counts what press releases spell out; "
                         "releases rarely describe mechanisms, so a low C is a property of the record, not "
                         "evidence that a capability played no role.")}
 
@@ -229,7 +239,7 @@ def temporal_tables(cases: List[dict], records: List[pl.Record]) -> dict:
         }
         for cl in pl.CLASSES:
             rs = [r for c in group for r in by_case.get(c["id"], []) if r.status in ANALYSED_STATUSES]
-            for lvl, attr in (("A", "available"), ("B", "action_relevant"), ("I", "inferred"), ("C", "instrumental")):
+            for lvl, attr in (("A", "default_on_open"), ("A_any", "available"), ("B", "action_relevant"), ("I", "inferred"), ("C", "instrumental")):
                 row[f"{cl}.{lvl}"] = len({r.case_id for r in rs if getattr(r, attr)[cl]})
         return row
     annual = {str(y): summarize(c for c in cases if c["pub_year"] == y) for y in sorted({c["pub_year"] for c in cases if c["pub_year"]})}
@@ -357,12 +367,13 @@ def manifest(records: List[pl.Record], codebook: pl.Codebook) -> Tuple[dict, Lis
         }
         for c in pl.CLASSES:
             row["classes"][c] = {lvl: len({r.case_id for r in rs if getattr(r, attr)[c]})
-                                 for lvl, attr in (("A", "available"), ("B", "action_relevant"), ("I", "inferred"), ("C", "instrumental"))}
+                                 for lvl, attr in (("A", "default_on_open"), ("A_any", "available"), ("B", "action_relevant"), ("I", "inferred"), ("C", "instrumental"))}
             for r in pick([r for r in rs if r.instrumental[c]], f"{p}|{c}"):
                 purpose = f"manifest:{p}:instrumental:{c}"
                 cites.append(cit.Citation(r.case_id, r.fingerprint, purpose, p))
                 row["exemplars"].append({"purpose": purpose, "case_id": r.case_id, "fingerprint": r.fingerprint,
-                                         "span": list(r.instrumental_span.get(c, (-1, -1)))})
+                                         "span": list(r.instrumental_span.get(c, (-1, -1))),
+                                         "coding": EXEMPLAR_CODING})
         for h in sorted(codebook.harms):
             hs = [r for r in used if r.harm_direct[h]]
             row["harms_direct_cases"][h] = len({r.case_id for r in hs})
@@ -370,7 +381,8 @@ def manifest(records: List[pl.Record], codebook: pl.Codebook) -> Tuple[dict, Lis
                 purpose = f"manifest:{p}:harm:{h}"
                 cites.append(cit.Citation(r.case_id, r.fingerprint, purpose, p))
                 row["exemplars"].append({"purpose": purpose, "case_id": r.case_id, "fingerprint": r.fingerprint,
-                                         "span": list(r.sentence_spans[0]) if r.sentence_spans else [-1, -1]})
+                                         "span": list(r.sentence_spans[0]) if r.sentence_spans else [-1, -1],
+                                         "coding": EXEMPLAR_CODING})
         entries[p] = row
     return {"min_use_documented_cases": MIN_MANIFEST_CASES, "platforms": entries}, cites
 
@@ -478,14 +490,21 @@ def classify_snapshot(log=print):
     return meta, cases, fingerprints, records, excluded, dates
 
 
+# Input identity of this run (numbers/afh_inputs.py), set by numbers/run_afh.py; recorded in RUN_IDENTITY.json.
+INPUTS: Optional[dict] = None
+
+
 def build(log=print, public: bool = False) -> dict:
     """Write every output. ``public=True`` reads the committed text-free snapshot instead of
     data/snapshot.sqlite and skips TEXT_ONLY_OUTPUTS; the full build also rewrites the public snapshot."""
     if public:
         meta, cases, fingerprints, records, excluded, dates = snap.load_public(PUBLIC)
+        global INPUTS
+        if INPUTS is None and isinstance(meta.get("afh_inputs"), dict):
+            INPUTS = meta["afh_inputs"]                # a public rebuild carries the label it was published with
     else:
         meta, cases, fingerprints, records, excluded, dates = classify_snapshot(log)
-        snap.write_public(PUBLIC, meta, cases, fingerprints, records, excluded, dates)
+        snap.write_public(PUBLIC, meta, cases, fingerprints, records, excluded, dates, afh_inputs=INPUTS)
     texts = {c["id"]: c["text"] for c in cases}
     cb = pl.Codebook.load()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -500,12 +519,12 @@ def build(log=print, public: bool = False) -> dict:
     dump("manifest.json", man)
     dump("exemplar_inventory.json", exemplar_inventory(man))
     dump("registry_checks.json", {**registry_checks(), "uncertain_impact": uncertain_registry_impact(records)})
-    cit.dump(cites, OUT / "citations.json")
+    dump("citations.json", {"citations": sorted((c.to_json() for c in cites), key=lambda r: (r["purpose"], r["case_id"]))})
     if not public:
         dump("legacy_afh1_exemplars.json", legacy_manifest_check(records, texts))
     dump("validation.json", validation(records, fingerprints))
     dump("validation_round2.json", validation_round2(records))
-    dump("validation_sample.json", rv.sample_rows(records))
+    dump("validation_sample.json", {"rows": rv.sample_rows(records)})
     write_records_csv(records)
     from . import latex
     latex.write(OUT)
@@ -515,6 +534,7 @@ def build(log=print, public: bool = False) -> dict:
     code = sorted((RESEARCH / "afhq1").glob("*.py"))
     identity = {
         "dataset_identity": meta["dataset_identity"], "case_count": int(meta["case_count"]),
+        "afh_inputs": _inputs_label(),
         "git": git_head(),
         "configs": {n: {"version": pl.load_yaml(n)["version"], "sha256": pl.config_sha(n)}
                     for n in ("platforms.yaml", "codebook.yaml")},
@@ -673,24 +693,33 @@ def validation_round2(records: List[pl.Record]) -> dict:
     return out
 
 
+EXEMPLAR_CODING = "automatically coded"
+
+
 def exemplar_inventory(man: dict) -> dict:
-    """Every manifest exemplar with its blind review verdict (config/review_exemplars.csv)."""
+    """Every manifest exemplar. AfH 2.0 coding is machine-only, so every exemplar is labelled
+    "automatically coded". Verdicts in config/review_exemplars.csv are earlier blind reviews made
+    under codebooks 4 and 6; they are kept as historical metadata with that codebook version,
+    never as validation of the current coding."""
     reviews = {(r["item"], r["case_id"]): r for r in _csv("review_exemplars.csv")}
-    rows, tally = [], Counter()
+    rows, tally, historical = [], Counter(), Counter()
     for p, e in sorted(man["platforms"].items()):
         for x in e["exemplars"]:
             _, plat, kind, what = x["purpose"].split(":", 3)
             r = reviews.get((x["purpose"], x["case_id"]))
-            verdict = r["verdict"] if r and r.get("fingerprint") == x["fingerprint"] else "unreviewed"
-            tally[(kind, verdict)] += 1
+            hist = None
+            if r and r.get("fingerprint") == x["fingerprint"]:
+                hist = {"verdict": r["verdict"], "codebook": r.get("codebook_reviewed") or None}
+                historical[hist["codebook"]] += 1
+            tally[kind] += 1
             rows.append({"platform": plat, "kind": kind, "cited_for": what, "case_id": x["case_id"],
-                         "fingerprint": x["fingerprint"], "span": x["span"], "verdict": verdict})
-    by_kind: Dict[str, Dict[str, int]] = defaultdict(dict)
-    for (k, v), n in tally.items():
-        by_kind[k][v] = n
-    return {"exemplars": len(rows), "by_kind_and_verdict": {k: dict(sorted(v.items())) for k, v in sorted(by_kind.items())},
+                         "fingerprint": x["fingerprint"], "span": x["span"], "coding": EXEMPLAR_CODING,
+                         "historical_review": hist})
+    return {"exemplars": len(rows), "coding": EXEMPLAR_CODING, "by_kind": dict(sorted(tally.items())),
+            "historical_reviews_by_codebook": dict(sorted(historical.items(), key=lambda kv: str(kv[0]))),
             "rows": rows, "span_basis": pl.SPAN_BASIS,
-            "use": "cite only verdict == supported; partly_supported needs wording checked against the reviewer note in config/review_exemplars.csv"}
+            "use": ("every exemplar is automatically coded under the current codebook; historical_review is a blind-review "
+                    "verdict made under an earlier codebook and is not validation of this coding")}
 
 
 def registry_checks() -> dict:
@@ -730,16 +759,16 @@ def uncertain_registry_impact(records: List[pl.Record]) -> dict:
             c = CLASS_OF[key]
             rs = [r for r in records if r.platform == label and r.status in ANALYSED_STATUSES]
             rows.append({"platform": label, "capability": key, "since": cap["since"],
-                         "A_cases": len({r.case_id for r in rs if r.available[c]}),
+                         "A_any_cases": len({r.case_id for r in rs if r.available[c]}),
                          "B_cases": len({r.case_id for r in rs if r.action_relevant[c]}),
                          "I_cases": len({r.case_id for r in rs if r.inferred[c]}),
                          "manuscript_platform": label in MANUSCRIPT_PLATFORMS})
     total_a = {c: len({r.case_id for r in records if r.status in ANALYSED_STATUSES and r.available[c]}) for c in pl.CLASSES}
     by_class = defaultdict(int)
     for x in rows:
-        by_class[CLASS_OF[x["capability"]]] += x["A_cases"]
+        by_class[CLASS_OF[x["capability"]]] += x["A_any_cases"]
     return {"uncertain_rows": len(rows), "rows": rows,
-            "A_cases_resting_on_uncertain_rows_by_class": {c: {"cases": by_class.get(c, 0), "of_A": total_a[c]} for c in pl.CLASSES},
+            "A_any_cases_resting_on_uncertain_rows_by_class": {c: {"cases": by_class.get(c, 0), "of_A_any": total_a[c]} for c in pl.CLASSES},
             "manuscript_platform_rows": [f"{x['platform']}:{x['capability']}" for x in rows if x["manuscript_platform"]]}
 
 

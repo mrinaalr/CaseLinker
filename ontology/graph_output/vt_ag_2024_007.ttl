@@ -1,22 +1,23 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns8: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007> a ns4:CACInvestigation,
-        ns7:EnduringEntity ;
+        ns2:EnduringEntity ;
     rdfs:label "Case vt_ag_2024_007" ;
-    dcterms:created "2026-11-19T20:26:50.114464"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T13:21:47.326552"^^xsd:dateTime ;
     dcterms:date "2024-06-26"^^xsd:date ;
     dcterms:identifier "vt_ag_2024_007" ;
-    dcterms:modified "2026-11-19T20:26:50.114464"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T13:21:47.326552"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/provenance> ;
     dcterms:publisher "VT AG" ;
     dcterms:source <https://ago.vermont.gov/blog/2024/06/26/rutland-resident-arrested-possession-child-sexual-abuse-material> ;
@@ -28,22 +29,25 @@
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/possession>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/trafficking>,
-        <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified>,
+        <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/legal-proceeding>,
+        <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/operation> ;
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/rutland-police-department-vt>,
         <https://w3id.org/caselinker/resource/agency/vermont-state-police-vt> ;
     ns1:object <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/cybertip>,
-        <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/person/offender/1> .
+        <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/internet>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/assessment/semantic/possession-csam> a ns7:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns4:CSAMIncident ;
-    ns7:assesses <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/narrative> ;
-    ns7:hasConfidence 0.5066 ;
-    ns7:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns2:assesses <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/narrative> ;
+    ns2:hasConfidence 0.5066 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -58,107 +62,121 @@
     ns1:source <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified> a ns7:OrganizationLikeEntity,
-        ns2:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/attorney-generals-office-vt-unverified> a ns2:OrganizationLikeEntity,
+        ns3:StateAgency ;
     rdfs:label "Attorney General's Office" ;
     ns1:name "Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns7:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/hsi> a ns2:OrganizationLikeEntity,
+        ns3:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns1:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns7:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
+        ns3:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/rutland-police-department-vt> a ns7:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/rutland-police-department-vt> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
     rdfs:label "Rutland Police Department" ;
     dcterms:identifier "ori:VT0110200" ;
     skos:altLabel "Rutland City Police Department" ;
     ns1:name "Rutland Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/vermont-state-police-vt> a ns7:OrganizationLikeEntity,
-        ns2:StateAgency ;
+<https://w3id.org/caselinker/resource/agency/vermont-state-police-vt> a ns2:OrganizationLikeEntity,
+        ns3:StateAgency ;
     rdfs:label "Vermont State Police" ;
     dcterms:identifier "ori:VTVSP0500" ;
     ns1:name "Vermont State Police" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/2> a ns5:CriminalCharge,
-        ns5:OnlineEnticement ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/2> a ns7:CriminalCharge,
+        ns7:OnlineEnticement ;
     rdfs:label "online enticement" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/3> a ns5:CriminalCharge,
-        ns5:SexTrafficking ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/3> a ns7:CriminalCharge,
+        ns7:SexTrafficking ;
     rdfs:label "sex trafficking" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/4> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/4> a ns7:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns8:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/distribution> a ns7:Event,
-        ns5:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/distribution> a ns2:Event,
+        ns7:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/hands-on> a ns4:ChildSexualAbuseEvent,
-        ns7:Event ;
+        ns2:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/possession> a ns4:CSAMIncident,
-        ns7:Event ;
+        ns2:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/trafficking> a ns7:Event,
-        ns5:SexTrafficking ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/event/trafficking> a ns2:Event,
+        ns7:SexTrafficking ;
     rdfs:label "Sex Trafficking · event/trafficking" .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held without bail" ;
-    ns5:chargeCount "6"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/1>,
+    ns7:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/1>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/2>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/3>,
         <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/charge/4> .
 
-<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/operation> a ns2:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/vt_ag_2024_007/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/rutland-city-vt> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/rutland-city-vt> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Rutland city" ;
     dcterms:identifier "fips:5061225" ;
     skos:altLabel "Rutland" ;
     ns1:name "Rutland city" .
 
-<https://w3id.org/caselinker/resource/location/vermont-vt> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/vermont-vt> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Vermont" ;
     dcterms:identifier "fips:50" ;
     ns1:name "Vermont" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:OrganizationLikeEntity,
-        ns3:HotlineOrganization,
-        ns2:FederalAgency ;
+<https://w3id.org/caselinker/resource/platform/internet> a ns2:DigitalSystemEntity ;
+    rdfs:label "internet" ;
+    ns5:platformType "generic-tag" ;
+    ns1:name "internet" .
+
+<https://w3id.org/caselinker/resource/platform/online> a ns2:DigitalSystemEntity ;
+    rdfs:label "online" ;
+    ns5:platformType "generic-tag" ;
+    ns1:name "online" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:OrganizationLikeEntity,
+        ns8:HotlineOrganization,
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/phase/charged> a ns4:LegalProcessPhase,
-        ns7:Phase ;
+        ns2:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/vt_ag_2024_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

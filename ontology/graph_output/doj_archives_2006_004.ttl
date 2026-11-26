@@ -4,8 +4,9 @@
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns8: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -13,10 +14,10 @@
 <https://w3id.org/caselinker/resource/case/doj_archives_2006_004> a ns3:CACInvestigation,
         ns4:EnduringEntity ;
     rdfs:label "Case doj_archives_2006_004" ;
-    dcterms:created "2026-11-19T18:51:51.463553"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:42:44.914089"^^xsd:dateTime ;
     dcterms:date "2006-09-27"^^xsd:date ;
     dcterms:identifier "doj_archives_2006_004" ;
-    dcterms:modified "2026-11-19T18:51:51.463553"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:42:44.914089"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/provenance> ;
     dcterms:publisher "DOJ ARCHIVES" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/WDPA%20Fletcher%20indict%20PR_092706.pdf> ;
@@ -36,7 +37,8 @@
         <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/person/victim/2>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/person/victim/3>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/person/victim/4>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/person/victim/5> .
+        <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/person/victim/5>,
+        <https://w3id.org/caselinker/resource/platform/internet> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/assessment/semantic/sextortion> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · sextortion" ;
@@ -146,23 +148,17 @@
     ns5:operatesInJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/western-district-of-pennsylvania> ;
     ns1:name "U.S. Attorney's Office, Western District of Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2006_004/charge/1> a ns6:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns3:ChildSexualAbuseEvent .
-
 <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/event/distribution> a ns4:Event,
-        ns6:CSAM_Distribution ;
+        ns7:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns6:LegalProceeding ;
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/western-district-of-pennsylvania> ;
     dcterms:references <https://w3id.org/caselinker/resource/statute/18-usc-1462> ;
-    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/charge/1> ;
-    ns6:resultsSentence <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/sentence/1> .
+    ns7:resultsSentence <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
@@ -184,14 +180,14 @@
     rdfs:label "Victim Role · role/victim/5" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2006_004/sentence/1> a ns6:CriminalSentence,
-        ns6:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2006_004/sentence/1> a ns7:CriminalSentence,
+        ns7:MonetaryPenalty ;
     rdfs:label "$1,500,000" ;
     ns4:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/jurisdiction/united-states> a ns5:FederalJurisdiction ;
     rdfs:label "United States" ;
-    ns7:hasStatute <https://w3id.org/caselinker/resource/statute/18-usc-1462> ;
+    ns6:hasStatute <https://w3id.org/caselinker/resource/statute/18-usc-1462> ;
     ns1:name "United States" .
 
 <https://w3id.org/caselinker/resource/location/donora-borough-pa> a ns4:PlaceLikeEntity,
@@ -207,20 +203,25 @@
     dcterms:identifier "fips:42" ;
     ns1:name "Pennsylvania" .
 
+<https://w3id.org/caselinker/resource/platform/internet> a ns4:DigitalSystemEntity ;
+    rdfs:label "internet" ;
+    ns8:platformType "generic-tag" ;
+    ns1:name "internet" .
+
 <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/phase/charged> a ns3:LegalProcessPhase,
         ns4:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2006_004/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2006_004/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_archives_2006_004/event/hands-on> .
 
 <https://w3id.org/caselinker/resource/jurisdiction/western-district-of-pennsylvania> a ns5:FederalJurisdiction ;
     rdfs:label "Western District of Pennsylvania" ;
-    ns7:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
+    ns6:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
     ns1:name "Western District of Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/statute/18-usc-1462> a ns7:Statute ;
+<https://w3id.org/caselinker/resource/statute/18-usc-1462> a ns6:Statute ;
     rdfs:label "18 U.S.C. § 1462" ;
     ns1:name "18 U.S.C. § 1462" .
 

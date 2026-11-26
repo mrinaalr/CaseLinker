@@ -1,0 +1,228 @@
+=== ICAC TF text hit vs explicit CaseLinker source (aligned pipeline) ===
+Database: caselinker.db  |  cases: 10802
+
+Rules:
+  • Text hit: agency needles on normalized case_text [+ agencies] (smart ’ → ').
+  • Also: CCSAO / HICAC / Keiki Shield needles; mapped ingest source ⇒ text hit.
+  • Aligned hit: text hit AND cases.source is in that TF row’s mapped ingest set.
+  • Cross-source: text hit but NOT aligned (listed in CSV if --cross-csv).
+
+Geographic TF rows (61) with ≥1 text hit:              61
+Geographic TF rows (61) with ≥1 aligned hit:          43
+Geographic TF rows (61) with ≥1 hit on ICAC-like state source: 54 (any of 54 state/regional feeds; still not same-TF guarantee)
+Geographic TF rows (61) with ≥1 hit & source ∉ {NCMEC,DOJ}: 59
+At least 52 geographic rows with ≥1 aligned hit? NO
+At least 52 … ICAC-like-source hit?              YES
+At least 52 … non-federal-aggregator hit?        YES
+
+--- Interpretation (proxy; not human coding of ‘real’ ops) ---
+  Cross-source (TF text hit but not aligned) row count: 2052
+    • aggregator_or_federal_feed (NCMEC / DOJ): 1287  ← strongest ‘name-drop’ proxy
+    • other_state_or_misaligned_feed:          182
+    • no_aligned_source_in_repo:               583
+  Geographic TF rows with ≥1 aligned case (ingest mapped to that lead): 43
+
+Per-TF (geographic only): text | aligned | icac_like_src | non_fed_agg
+     42 |    11 |    12 |    12   [OK]  AL — Alabama Law Enforcement Agency
+     50 |    30 |    30 |    30   [OK]  AK — Anchorage Police Department
+     57 |    47 |    52 |    52   [OK]  AZ — Phoenix Police Department
+     73 |    33 |    34 |    35   [OK]  AR — Arkansas State Police
+    101 |    81 |    83 |    84   [OK]  CA — Fresno County Sheriff's Office
+     48 |    31 |    36 |    38   [OK]  CA — Los Angeles Police Department
+     12 |     1 |     1 |     1   [OK]  CA — Sacramento County Sheriff's Office
+     16 |    14 |    14 |    15   [OK]  CA — San Diego Police Department
+     57 |    40 |    55 |    55   [OK]  CA — San Jose Police Department
+     18 |    10 |    10 |    11   [OK]  CO — Colorado Springs Police Department
+     14 |     0 |     0 |     0   [no-aligned]  CT — Connecticut State Police
+    114 |   113 |   113 |   113   [OK]  DE — Delaware Department of Justice
+     18 |     8 |     9 |    10   [OK]  FL — Central (Osceola County Sheriff's Office)
+     19 |     0 |     2 |     3   [no-aligned]  FL — Northern (Gainesville Police Department)
+     99 |    81 |    81 |    81   [OK]  FL — Southern (Broward County Sheriff's Office)
+    137 |    66 |    72 |    72   [OK]  GA — Georgia Bureau of Investigation
+      5 |     4 |     5 |     5   [OK]  HI — Hawaii Department of the Attorney General
+    179 |   137 |   137 |   137   [OK]  ID — Idaho Office of Attorney General
+    309 |   253 |   253 |   253   [OK]  IL — Illinois Office of the Attorney General
+      7 |     1 |     2 |     3   [OK]  IL — Cook County State's Attorney's Office
+     90 |     0 |     3 |     8   [no-aligned]  IN — Indiana State Police
+     62 |     1 |     1 |     4   [OK]  IA — Iowa Division of Criminal Investigation
+      5 |     2 |     2 |     3   [OK]  KS — Sedgwick County Sheriff's Office
+    446 |   360 |   361 |   367   [OK]  KY — Kentucky State Police
+     71 |    45 |    45 |    46   [OK]  LA — Louisiana Department of Justice
+     20 |     0 |     0 |     2   [no-aligned]  ME — Maine State Police
+     45 |     0 |     2 |    11   [no-aligned]  MD — Maryland State Police
+     53 |     0 |     1 |     3   [no-aligned]  MA — Massachusetts State Police
+    109 |    46 |    46 |    47   [OK]  MI — Michigan State Police
+     28 |     0 |     0 |     3   [no-aligned]  MN — Minnesota Bureau of Criminal Apprehension
+     40 |    11 |    12 |    12   [OK]  MS — Mississippi Office of the Attorney General
+      7 |     0 |     0 |     0   [no-aligned]  MO — St. Charles County Police Department
+     28 |    16 |    16 |    16   [OK]  MT — Montana Division of Criminal Investigation
+     69 |     7 |     7 |     8   [OK]  NE — Nebraska State Patrol
+     10 |     2 |     2 |     4   [OK]  NV — Las Vegas Metropolitan Police Department
+      8 |     0 |     4 |     4   [no-aligned]  NH — Portsmouth Police Department
+    233 |   183 |   199 |   203   [OK]  NJ — New Jersey State Police
+     25 |    16 |    16 |    16   [OK]  NM — New Mexico Attorney General's Office
+    449 |   183 |   184 |   186   [OK]  NY — New York State Police
+     22 |     0 |     1 |     5   [no-aligned]  NY — New York City Police Department
+     67 |    20 |    23 |    25   [OK]  NC — North Carolina State Bureau of Investigation
+     21 |     0 |     1 |     1   [no-aligned]  ND — North Dakota Bureau of Criminal Investigation
+    105 |   102 |   102 |   102   [OK]  OH — Cuyahoga County Prosecuting Attorney's Office
+     29 |     0 |     0 |     1   [no-aligned]  OK — Oklahoma State Bureau of Investigation
+     12 |     5 |     5 |     5   [OK]  OR — Oregon Department of Justice
+     78 |    68 |    72 |    72   [OK]  PA — Delaware County District Attorney's Office
+     37 |     4 |     4 |     4   [OK]  RI — Rhode Island State Police
+    673 |   586 |   587 |   589   [OK]  SC — South Carolina Attorney General's Office
+     65 |    10 |    10 |    12   [OK]  SD — South Dakota Division of Criminal Investigation
+    194 |   175 |   175 |   176   [OK]  TN — Knoxville Police Department
+     44 |    28 |    28 |    32   [OK]  TX — Office of the Attorney General of Texas
+      6 |     0 |     0 |     1   [no-aligned]  TX — Dallas Police Department
+      6 |     0 |     1 |     2   [no-aligned]  TX — Houston Police Department
+     41 |    32 |    32 |    32   [OK]  UT — Utah Office of the Attorney General
+    150 |   143 |   143 |   143   [OK]  VT — Vermont Office of the Attorney General
+     87 |     0 |     5 |    12   [no-aligned]  VA — Virginia State Police
+      7 |     0 |     2 |     2   [no-aligned]  VA — Bedford County Sheriff's Office
+     37 |    29 |    34 |    35   [OK]  WA — Seattle Police Department
+     64 |     0 |     1 |     4   [no-aligned]  WV — West Virginia State Police
+     57 |     0 |     0 |    17   [no-aligned]  WI — Wisconsin Department of Justice
+     44 |    22 |    23 |    24   [OK]  WY — Wyoming Division of Criminal Investigation
+
+--- Ranked lists (geographic only; counts = distinct (case_id, source) pairs) ---
+
+A) CONFIRMED (pipeline): text hit + source in mapped ingest for this row — 43 rows
+rank	text	aligned	icac_like	non_NCMEC_DOJ	cross_all	cross_NCMEC_DOJ	cross_other_state	cross_no_map	label	mapped_sources
+1	673	586	587	589	87	84	3	0	SC — South Carolina Attorney General's Office	SCAG ICAC
+2	446	360	361	367	86	79	7	0	KY — Kentucky State Police	KY SP
+3	309	253	253	253	56	56	0	0	IL — Illinois Office of the Attorney General	ILLINOIS AG
+4	449	183	184	186	266	263	3	0	NY — New York State Police	NEWYORK SP
+5	233	183	199	203	50	30	20	0	NJ — New Jersey State Police	NJ AG
+6	194	175	175	176	19	18	1	0	TN — Knoxville Police Department	TBI ICAC
+7	150	143	143	143	7	7	0	0	VT — Vermont Office of the Attorney General	VT AG
+8	179	137	137	137	42	42	0	0	ID — Idaho Office of Attorney General	Idaho ICAC
+9	114	113	113	113	1	1	0	0	DE — Delaware Department of Justice	DE AG
+10	105	102	102	102	3	3	0	0	OH — Cuyahoga County Prosecuting Attorney's Office	OHIO AG
+11	101	81	83	84	20	17	3	0	CA — Fresno County Sheriff's Office	FRESNO SO
+12	99	81	81	81	18	18	0	0	FL — Southern (Broward County Sheriff's Office)	SOUTH FLORIDA ICAC
+13	78	68	72	72	10	6	4	0	PA — Delaware County District Attorney's Office	PA AG
+14	137	66	72	72	71	65	6	0	GA — Georgia Bureau of Investigation	GBI
+15	57	47	52	52	10	5	5	0	AZ — Phoenix Police Department	AZICAC
+16	109	46	46	47	63	62	1	0	MI — Michigan State Police	Michigan ICAC
+17	71	45	45	46	26	25	1	0	LA — Louisiana Department of Justice	LA AG
+18	57	40	55	55	17	2	15	0	CA — San Jose Police Department	SJPD
+19	73	33	34	35	40	38	2	0	AR — Arkansas State Police	ARKANSAS DPS
+20	41	32	32	32	9	9	0	0	UT — Utah Office of the Attorney General	UT AG
+21	48	31	36	38	17	10	7	0	CA — Los Angeles Police Department	LAPD
+22	50	30	30	30	20	20	0	0	AK — Anchorage Police Department	ANCHORAGE PD
+23	37	29	34	35	8	2	6	0	WA — Seattle Police Department	SPD
+24	44	28	28	32	16	12	4	0	TX — Office of the Attorney General of Texas	Texas AG
+25	44	22	23	24	22	20	2	0	WY — Wyoming Division of Criminal Investigation	WY DCI
+26	67	20	23	25	47	42	5	0	NC — North Carolina State Bureau of Investigation	NC SBI
+27	28	16	16	16	12	12	0	0	MT — Montana Division of Criminal Investigation	MT DOJ
+28	25	16	16	16	9	9	0	0	NM — New Mexico Attorney General's Office	NM AG
+29	16	14	14	15	2	1	1	0	CA — San Diego Police Department	SDPD
+30	42	11	12	12	31	30	1	0	AL — Alabama Law Enforcement Agency	ALEA
+31	40	11	12	12	29	28	1	0	MS — Mississippi Office of the Attorney General	MS AG
+32	65	10	10	12	55	53	2	0	SD — South Dakota Division of Criminal Investigation	SD AG
+33	18	10	10	11	8	7	1	0	CO — Colorado Springs Police Department	CSPD
+34	18	8	9	10	10	8	2	0	FL — Central (Osceola County Sheriff's Office)	OSCEOLA SO
+35	69	7	7	8	62	61	1	0	NE — Nebraska State Patrol	NE SP
+36	12	5	5	5	7	7	0	0	OR — Oregon Department of Justice	OREGON DOJ
+37	37	4	4	4	33	33	0	0	RI — Rhode Island State Police	RI AG
+38	5	4	5	5	1	0	1	0	HI — Hawaii Department of the Attorney General	HI AG
+39	10	2	2	4	8	6	2	0	NV — Las Vegas Metropolitan Police Department	LVMPD
+40	5	2	2	3	3	2	1	0	KS — Sedgwick County Sheriff's Office	SEDGWICK SO
+41	62	1	1	4	61	58	3	0	IA — Iowa Division of Criminal Investigation	IA DCI
+42	12	1	1	1	11	11	0	0	CA — Sacramento County Sheriff's Office	SACRAMENTO SO
+43	7	1	2	3	6	4	2	0	IL — Cook County State's Attorney's Office	CCSAO
+
+B) SECOND-HAND (pipeline): text/agency needle hit but zero aligned pairs — 18 rows (collab / name-drop / wrong card vs ingest; not “fake” by itself)
+rank	text	aligned	icac_like	non_NCMEC_DOJ	cross_all	cross_NCMEC_DOJ	cross_other_state	cross_no_map	label	mapped_sources
+1	90	0	3	8	90	0	0	90	IN — Indiana State Police	(no mapped ingest in repo)
+2	87	0	5	12	87	0	0	87	VA — Virginia State Police	(no mapped ingest in repo)
+3	64	0	1	4	64	0	0	64	WV — West Virginia State Police	(no mapped ingest in repo)
+4	57	0	0	17	57	0	0	57	WI — Wisconsin Department of Justice	(no mapped ingest in repo)
+5	53	0	1	3	53	0	0	53	MA — Massachusetts State Police	(no mapped ingest in repo)
+6	45	0	2	11	45	0	0	45	MD — Maryland State Police	(no mapped ingest in repo)
+7	29	0	0	1	29	0	0	29	OK — Oklahoma State Bureau of Investigation	(no mapped ingest in repo)
+8	28	0	0	3	28	0	0	28	MN — Minnesota Bureau of Criminal Apprehension	(no mapped ingest in repo)
+9	22	0	1	5	22	0	0	22	NY — New York City Police Department	(no mapped ingest in repo)
+10	21	0	1	1	21	0	0	21	ND — North Dakota Bureau of Criminal Investigation	(no mapped ingest in repo)
+11	20	0	0	2	20	0	0	20	ME — Maine State Police	(no mapped ingest in repo)
+12	19	0	2	3	19	0	0	19	FL — Northern (Gainesville Police Department)	(no mapped ingest in repo)
+13	14	0	0	0	14	0	0	14	CT — Connecticut State Police	(no mapped ingest in repo)
+14	8	0	4	4	8	0	0	8	NH — Portsmouth Police Department	(no mapped ingest in repo)
+15	7	0	0	0	7	0	0	7	MO — St. Charles County Police Department	(no mapped ingest in repo)
+16	7	0	2	2	7	0	0	7	VA — Bedford County Sheriff's Office	(no mapped ingest in repo)
+17	6	0	0	1	6	0	0	6	TX — Dallas Police Department	(no mapped ingest in repo)
+18	6	0	1	2	6	0	0	6	TX — Houston Police Department	(no mapped ingest in repo)
+
+C) NO_TEXT_HIT (needles never matched in case_text[+agencies]): 0 rows
+
+D) ALL geographic rows by text-hit frequency (most → least)
+rank	text	aligned	icac_like	non_NCMEC_DOJ	cross_all	cross_NCMEC_DOJ	cross_other_state	cross_no_map	label	mapped_sources
+1	673	586	587	589	87	84	3	0	SC — South Carolina Attorney General's Office	SCAG ICAC
+2	449	183	184	186	266	263	3	0	NY — New York State Police	NEWYORK SP
+3	446	360	361	367	86	79	7	0	KY — Kentucky State Police	KY SP
+4	309	253	253	253	56	56	0	0	IL — Illinois Office of the Attorney General	ILLINOIS AG
+5	233	183	199	203	50	30	20	0	NJ — New Jersey State Police	NJ AG
+6	194	175	175	176	19	18	1	0	TN — Knoxville Police Department	TBI ICAC
+7	179	137	137	137	42	42	0	0	ID — Idaho Office of Attorney General	Idaho ICAC
+8	150	143	143	143	7	7	0	0	VT — Vermont Office of the Attorney General	VT AG
+9	137	66	72	72	71	65	6	0	GA — Georgia Bureau of Investigation	GBI
+10	114	113	113	113	1	1	0	0	DE — Delaware Department of Justice	DE AG
+11	109	46	46	47	63	62	1	0	MI — Michigan State Police	Michigan ICAC
+12	105	102	102	102	3	3	0	0	OH — Cuyahoga County Prosecuting Attorney's Office	OHIO AG
+13	101	81	83	84	20	17	3	0	CA — Fresno County Sheriff's Office	FRESNO SO
+14	99	81	81	81	18	18	0	0	FL — Southern (Broward County Sheriff's Office)	SOUTH FLORIDA ICAC
+15	90	0	3	8	90	0	0	90	IN — Indiana State Police	(no mapped ingest in repo)
+16	87	0	5	12	87	0	0	87	VA — Virginia State Police	(no mapped ingest in repo)
+17	78	68	72	72	10	6	4	0	PA — Delaware County District Attorney's Office	PA AG
+18	73	33	34	35	40	38	2	0	AR — Arkansas State Police	ARKANSAS DPS
+19	71	45	45	46	26	25	1	0	LA — Louisiana Department of Justice	LA AG
+20	69	7	7	8	62	61	1	0	NE — Nebraska State Patrol	NE SP
+21	67	20	23	25	47	42	5	0	NC — North Carolina State Bureau of Investigation	NC SBI
+22	65	10	10	12	55	53	2	0	SD — South Dakota Division of Criminal Investigation	SD AG
+23	64	0	1	4	64	0	0	64	WV — West Virginia State Police	(no mapped ingest in repo)
+24	62	1	1	4	61	58	3	0	IA — Iowa Division of Criminal Investigation	IA DCI
+25	57	47	52	52	10	5	5	0	AZ — Phoenix Police Department	AZICAC
+26	57	40	55	55	17	2	15	0	CA — San Jose Police Department	SJPD
+27	57	0	0	17	57	0	0	57	WI — Wisconsin Department of Justice	(no mapped ingest in repo)
+28	53	0	1	3	53	0	0	53	MA — Massachusetts State Police	(no mapped ingest in repo)
+29	50	30	30	30	20	20	0	0	AK — Anchorage Police Department	ANCHORAGE PD
+30	48	31	36	38	17	10	7	0	CA — Los Angeles Police Department	LAPD
+31	45	0	2	11	45	0	0	45	MD — Maryland State Police	(no mapped ingest in repo)
+32	44	28	28	32	16	12	4	0	TX — Office of the Attorney General of Texas	Texas AG
+33	44	22	23	24	22	20	2	0	WY — Wyoming Division of Criminal Investigation	WY DCI
+34	42	11	12	12	31	30	1	0	AL — Alabama Law Enforcement Agency	ALEA
+35	41	32	32	32	9	9	0	0	UT — Utah Office of the Attorney General	UT AG
+36	40	11	12	12	29	28	1	0	MS — Mississippi Office of the Attorney General	MS AG
+37	37	4	4	4	33	33	0	0	RI — Rhode Island State Police	RI AG
+38	37	29	34	35	8	2	6	0	WA — Seattle Police Department	SPD
+39	29	0	0	1	29	0	0	29	OK — Oklahoma State Bureau of Investigation	(no mapped ingest in repo)
+40	28	0	0	3	28	0	0	28	MN — Minnesota Bureau of Criminal Apprehension	(no mapped ingest in repo)
+41	28	16	16	16	12	12	0	0	MT — Montana Division of Criminal Investigation	MT DOJ
+42	25	16	16	16	9	9	0	0	NM — New Mexico Attorney General's Office	NM AG
+43	22	0	1	5	22	0	0	22	NY — New York City Police Department	(no mapped ingest in repo)
+44	21	0	1	1	21	0	0	21	ND — North Dakota Bureau of Criminal Investigation	(no mapped ingest in repo)
+45	20	0	0	2	20	0	0	20	ME — Maine State Police	(no mapped ingest in repo)
+46	19	0	2	3	19	0	0	19	FL — Northern (Gainesville Police Department)	(no mapped ingest in repo)
+47	18	10	10	11	8	7	1	0	CO — Colorado Springs Police Department	CSPD
+48	18	8	9	10	10	8	2	0	FL — Central (Osceola County Sheriff's Office)	OSCEOLA SO
+49	16	14	14	15	2	1	1	0	CA — San Diego Police Department	SDPD
+50	14	0	0	0	14	0	0	14	CT — Connecticut State Police	(no mapped ingest in repo)
+51	12	1	1	1	11	11	0	0	CA — Sacramento County Sheriff's Office	SACRAMENTO SO
+52	12	5	5	5	7	7	0	0	OR — Oregon Department of Justice	OREGON DOJ
+53	10	2	2	4	8	6	2	0	NV — Las Vegas Metropolitan Police Department	LVMPD
+54	8	0	4	4	8	0	0	8	NH — Portsmouth Police Department	(no mapped ingest in repo)
+55	7	1	2	3	6	4	2	0	IL — Cook County State's Attorney's Office	CCSAO
+56	7	0	0	0	7	0	0	7	MO — St. Charles County Police Department	(no mapped ingest in repo)
+57	7	0	2	2	7	0	0	7	VA — Bedford County Sheriff's Office	(no mapped ingest in repo)
+58	6	0	0	1	6	0	0	6	TX — Dallas Police Department	(no mapped ingest in repo)
+59	6	0	1	2	6	0	0	6	TX — Houston Police Department	(no mapped ingest in repo)
+60	5	4	5	5	1	0	1	0	HI — Hawaii Department of the Attorney General	HI AG
+61	5	2	2	3	3	2	1	0	KS — Sedgwick County Sheriff's Office	SEDGWICK SO
+
+Wrote 2052 cross-source rows to task_forces/tf_cross.csv
+Wrote 1287 aggregator/federal cross rows to task_forces/tf_aggregator_only.csv
+
+Note: “Aligned” is pipeline match, not a human read of whether the agency
+      led the operation. NV row maps to WCSO (Washoe ingest) vs LV Metro card.
+      TN row maps to TBI ICAC vs Knoxville PD card.

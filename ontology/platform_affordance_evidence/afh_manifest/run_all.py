@@ -4,8 +4,9 @@
   run_all.py --export              refresh data/snapshot.sqlite from a CaseLinker DB (read-only), then build
   run_all.py --snapshot afh-2.0    download a frozen era snapshot (CaseLinker-Key), check its sha256, then build
   run_all.py                       build outputs/ and public/ from data/snapshot.sqlite
-  run_all.py --public              build outputs/ from the committed text-free public/ snapshot
-  run_all.py --verify [--public]   rebuild into a temp dir and compare with outputs/
+  run_all.py --public              build outputs/ (scratch, not shipped) from the shipped text-free numbers/public/ snapshot
+  run_all.py --verify [--public]   rebuild into a temp dir and compare with the shipped numbers/build/
+                                   (--public needs no caselinker.db: it reads numbers/public/ only)
 
 The source DB defaults to ../CaseLinker/caselinker.db; set AFH_Q1_SOURCE_DB to override. --snapshot reads
 CASELINKER_API_URL and CASELINKER_KEY. A --public build cannot write legacy_afh1_exemplars.json, which
@@ -54,6 +55,26 @@ def fetch_era(era: str) -> None:
     print(f"snapshot {era} sha256 ok")
 
 
+def verify_against_shipped(shipped: Path, rebuilt: dict, skip=frozenset()) -> list:
+    """Three-way check, file by file: the rebuilt output, the shipped file's actual bytes, and the hash
+    recorded in the shipped RUN_IDENTITY.json must all agree, with no file missing or extra on either side."""
+    recorded = json.loads((shipped / "RUN_IDENTITY.json").read_text())["outputs_sha256"]
+    on_disk = {str(p.relative_to(shipped)): hashlib.sha256(p.read_bytes()).hexdigest()
+               for p in sorted(shipped.rglob("*")) if p.is_file() and p.name != "RUN_IDENTITY.json"
+               and "latex" not in p.relative_to(shipped).parts}
+    problems = []
+    for k in sorted((set(recorded) | set(rebuilt) | set(on_disk)) - set(skip)):
+        if k not in on_disk:
+            problems.append(f"{k}: missing from the shipped build")
+        elif k not in recorded:
+            problems.append(f"{k}: shipped but not in RUN_IDENTITY.json")
+        elif k not in rebuilt:
+            problems.append(f"{k}: not produced by the rebuild")
+        elif not (rebuilt[k] == on_disk[k] == recorded[k]):
+            problems.append(f"{k}: rebuilt, shipped and recorded hashes disagree")
+    return problems
+
+
 def current_identity(public: bool) -> str:
     if public:
         return json.loads((snapshot.PUBLIC / "meta.json").read_text(encoding="utf-8"))["dataset_identity"]
@@ -77,7 +98,7 @@ def main(argv=None) -> int:
         print(f"snapshot {ident['dataset_identity']} cases={ident['case_count']}")
     if args.snapshot:
         fetch_era(args.snapshot)
-    committed = HERE / "outputs" / "RUN_IDENTITY.json"
+    committed = HERE / "numbers" / "build" / "RUN_IDENTITY.json"   # the shipped AfH 2.0 build
     if args.verify and not committed.is_file():
         print(f"{committed} missing: no committed outputs to verify against", file=sys.stderr)
         return 2
@@ -92,10 +113,8 @@ def main(argv=None) -> int:
             build.OUT = Path(tmp) / "outputs"
             build.PUBLIC = snapshot.PUBLIC if args.public else Path(tmp) / "public"
             ident = build.build(log=lambda *_: None, public=args.public)
-        want_files = json.loads(committed.read_text())["outputs_sha256"]
-        skip = set(build.TEXT_ONLY_OUTPUTS) if args.public else set()
-        diff = sorted(k for k in set(want_files) | set(ident["outputs_sha256"])
-                      if k not in skip and want_files.get(k) != ident["outputs_sha256"].get(k))
+        diff = verify_against_shipped(committed.parent, ident["outputs_sha256"],
+                                      skip=set(build.TEXT_ONLY_OUTPUTS) if args.public else set())
         print("identical" if not diff else f"differs: {diff}")
         return 0 if not diff else 1
     ident = build.build(public=args.public)

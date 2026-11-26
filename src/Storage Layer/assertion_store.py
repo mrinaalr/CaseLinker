@@ -414,3 +414,25 @@ def read_disagreements(cursor: Any, *, field: Optional[str] = None, status: Opti
         f, st, n = (row["field"], row["status"], row["count"]) if isinstance(row, dict) else row
         counts.setdefault(f, {})[st] = int(n)
     return {"items": items, "limit": limit, "offset": offset, "status_counts": counts}
+
+
+def count_assertion_feature_values(cursor: Any, excluded_roles, *, dialect: str = "sqlite") -> Dict[str, int]:
+    """Distinct (case, field, value) assertions in each case's current extraction run, per field,
+    leaving out the given roles (program boilerplate, not-an-age, statutory thresholds, ...).
+    Used by the /api/stats feature count (run/feature_count.py)."""
+    roles = sorted(excluded_roles)
+    ph = _ph(dialect)
+    not_in = f"AND fa.role NOT IN ({', '.join([ph] * len(roles))})" if roles else ""
+    cursor.execute(
+        f"""
+        SELECT t.field, COUNT(*) FROM (
+            SELECT DISTINCT fa.case_id, fa.field, fa.value_json
+            FROM field_assertions fa
+            JOIN cases c ON c.id = fa.case_id AND c.extraction_run_id = fa.run_id
+            WHERE fa.value_json IS NOT NULL {not_in}
+        ) t
+        GROUP BY t.field
+        """,
+        roles,
+    )
+    return {field: int(n) for field, n in cursor.fetchall()}

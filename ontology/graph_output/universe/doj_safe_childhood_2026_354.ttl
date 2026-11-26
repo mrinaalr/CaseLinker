@@ -1,11 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns8: <https://cacontology.projectvic.org/legal-harmonization#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -13,10 +14,10 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354> a ns1:CACInvestigation,
         ns7:EnduringEntity ;
     rdfs:label "Case doj_safe_childhood_2026_354" ;
-    dcterms:created "2026-11-19T19:18:30.710335"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T12:06:41.127232"^^xsd:dateTime ;
     dcterms:date "2026-01-30"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2026_354" ;
-    dcterms:modified "2026-11-19T19:18:30.710335"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T12:06:41.127232"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/provenance> ;
     dcterms:publisher "DOJ SAFE CHILDHOOD" ;
     dcterms:source <https://www.justice.gov/usao-edky/pr/leslie-county-man-sentenced-attempted-production-child-pornography> ;
@@ -38,7 +39,8 @@
         <https://w3id.org/caselinker/resource/agency/usao-eastern-district-of-kentucky> ;
     ns2:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/person/offender/1>,
         <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/facebook-messenger> .
+        <https://w3id.org/caselinker/resource/platform/facebook-messenger>,
+        <https://w3id.org/caselinker/resource/platform/internet> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -82,20 +84,9 @@
     ns5:operatesInJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/eastern-district-of-kentucky> ;
     ns2:name "U.S. Attorney's Office, Eastern District of Kentucky" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/2> a ns6:CSAM_Production,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/1> a ns3:CSAM_Production,
+        ns3:CriminalCharge ;
     rdfs:label "production of child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/3> a ns6:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/4> a ns6:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/event/csam> a ns1:CSAMIncident,
         ns7:Event ;
@@ -111,24 +102,21 @@
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/legal-proceeding> a ns7:Event,
         ns7:LegalEvent,
-        ns6:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     dcterms:coverage <https://w3id.org/caselinker/resource/jurisdiction/eastern-district-of-kentucky> ;
-    ns6:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/3>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/4> ;
-    ns6:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/sentence/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/charge/1> ;
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/sentence/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/legal-step/sentenced> a ns7:Event,
         ns7:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:SentencingHearing ;
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/sentence/1> a ns6:CriminalSentence,
-        ns6:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
     rdfs:label "180 months" ;
     ns7:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/role/offender/1> .
 
@@ -164,17 +152,22 @@
     ns2:name "Kentucky" .
 
 <https://w3id.org/caselinker/resource/platform/facebook> a ns7:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+        ns6:SocialMediaPlatform ;
     rdfs:label "Facebook" ;
     ns2:name "Facebook" .
 
 <https://w3id.org/caselinker/resource/platform/facebook-messenger> a ns7:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+        ns6:MessagingService ;
     rdfs:label "Facebook Messenger" ;
     ns2:name "Facebook Messenger" .
 
+<https://w3id.org/caselinker/resource/platform/internet> a ns7:DigitalSystemEntity ;
+    rdfs:label "internet" ;
+    ns6:platformType "generic-tag" ;
+    ns2:name "internet" .
+
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/phase/sentenced> a ns7:Phase,
-        ns6:SentencingPhase ;
+        ns3:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/role/offender/1> a ns1:OffenderRole ;
@@ -182,7 +175,7 @@
 
 <https://w3id.org/caselinker/resource/jurisdiction/eastern-district-of-kentucky> a ns5:FederalJurisdiction ;
     rdfs:label "Eastern District of Kentucky" ;
-    ns3:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
+    ns8:parentJurisdiction <https://w3id.org/caselinker/resource/jurisdiction/united-states> ;
     ns2:name "Eastern District of Kentucky" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_354/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;

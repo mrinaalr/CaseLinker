@@ -477,11 +477,34 @@ def test_new_release_refuses_an_empty_registry(tmp_path, monkeypatch):
     assert not (tmp_path / "rel" / "graphs").exists()
 
 
-def test_reading_committed_pacer_v1_does_not_raise():
-    manifest = json.loads((DATA / "pacer-v1" / "manifest.json").read_text(encoding="utf-8"))
-    assert manifest["capability_registry_loaded"] is False
-    derived = next((DATA / "pacer-v1" / "derived").glob("*.json"))
-    json.loads(derived.read_text(encoding="utf-8"))
+def _candidate_steps(node):
+    if isinstance(node, dict):
+        here = [bool(node["candidate_capabilities"])] if "candidate_capabilities" in node else []
+        return here + [x for v in node.values() for x in _candidate_steps(v)]
+    if isinstance(node, list):
+        return [x for v in node for x in _candidate_steps(v)]
+    return []
+
+
+def _assert_derived_with_the_registry(release):
+    manifest = json.loads((release / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["capability_registry_loaded"] is True
+    filled = []
+    for path in sorted((release / "derived").glob("*.json")):
+        derived = json.loads(path.read_text(encoding="utf-8"))
+        assert derived["derivation"]["capability_registry_loaded"] is True, path.name
+        filled += _candidate_steps(derived)
+    assert any(filled), "registry loaded but no step has candidate_capabilities"
+
+
+def test_pacer_v2_was_derived_with_the_capability_registry():
+    _assert_derived_with_the_registry(DATA / "pacer-v2")
+
+
+def test_pacer_v1_is_kept_as_built_without_the_registry():
+    """pacer-v1 stays on record as built: flag false, no candidates. pacer-v2 is its rebuild."""
+    with pytest.raises(AssertionError):
+        _assert_derived_with_the_registry(DATA / "pacer-v1")
 
 
 def test_allow_empty_registry_suppresses_the_refusal(tmp_path, monkeypatch):

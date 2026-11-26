@@ -49,7 +49,9 @@ DOC_TYPE_WORDS = [  # first match wins; order matters
     ("third superseding indictment", "superseding_indictment"), ("superseding indictment", "superseding_indictment"),
     ("statement of offense", "statement_of_offense"), ("statement of facts", "statement_of_facts"),
     ("stipulation of facts", "stipulation_of_facts"), ("factual basis", "factual_basis"), ("factual proffer", "factual_proffer"),
-    ("plea transcript", "plea_transcript"), ("plea agreement", "plea_agreement"), ("findings of fact", "findings_of_fact"),
+    ("plea transcript", "plea_transcript"), ("plea agreement", "plea_agreement"),
+    ("statement in advance of plea", "plea_agreement"),  # D. Utah's plea form: terms plus the factual basis
+    ("findings of fact", "findings_of_fact"),
     ("amended judgment", "amended_judgment"), ("statement of reasons", "statement_of_reasons"), ("judgment", "judgment"),
     ("sentencing", "sentencing_memorandum"), ("trial brief", "trial_brief"), ("response in opposition", "brief"),
     ("memorandum opinion", "opinion"), ("criminal complaint", "complaint"),

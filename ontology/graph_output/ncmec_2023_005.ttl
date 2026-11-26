@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_005> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2023_005" ;
-    dcterms:created "2026-11-19T18:12:52.133553"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:07:14.474275"^^xsd:dateTime ;
     dcterms:date "2023-05-25"^^xsd:date ;
     dcterms:identifier "ncmec_2023_005" ;
-    dcterms:modified "2026-11-19T18:12:52.133553"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:07:14.474275"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_005/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://www.wect.com/2023/05/25/pender-county-man-charged-with-sexual-exploitation-minor/> ;
@@ -24,8 +25,9 @@
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_005/phase/charged> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_005/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_005/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_005/agency/pender-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_005/person/offender/1> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_005/agency/pender-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_005/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_005/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -41,26 +43,22 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_005/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_005/agency/pender-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Pender County Sheriff's Office" ;
     ns1:name "Pender County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_005/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_005/charge/1> a ns2:CriminalCharge,
+        ns2:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_005/charge/2> a ns5:CriminalCharge ;
-    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_005/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_005/charge/2> .
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_005/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_005/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_005/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_005/event/hands-on> .
 
@@ -76,6 +74,11 @@
     rdfs:label "Pender County" ;
     dcterms:identifier "fips:37141" ;
     ns1:name "Pender County" .
+
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "online" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_005/event/hands-on> a ns3:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;

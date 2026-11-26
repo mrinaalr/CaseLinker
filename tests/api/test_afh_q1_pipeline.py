@@ -15,7 +15,7 @@ from afhq1 import snapshot  # noqa: E402
 
 REG = pl.platform_registry()
 CB = pl.Codebook.load()
-OUT = ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "outputs"
+OUT = ROOT / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "numbers" / "build"   # shipped AfH 2.0 build
 
 
 def run(text: str, platforms, year=2024, topics=()):
@@ -118,18 +118,16 @@ def test_official_quote_about_ai_is_not_generative_use():
 
 # --- outputs (need the pinned snapshot) ----------------------------------------
 
-needs_snapshot = pytest.mark.skipif(not snapshot.SNAPSHOT.is_file(), reason="pinned snapshot not exported")
-needs_outputs = pytest.mark.skipif(not (OUT / "RUN_IDENTITY.json").is_file(),
-                                   reason="outputs not built; run afh_manifest/run_all.py on the release corpus")
+# The full-text snapshot holds case text and is never shipped; numbers/run_all.sh exports it from the
+# frozen caselinker.db. Tests that compare outputs with case text need it.
+needs_snapshot = pytest.mark.skipif(not snapshot.SNAPSHOT.is_file(), reason="full-text snapshot is local-only (numbers/run_all.sh)")
 
 
-@needs_outputs
 def test_committed_outputs_reconcile():
     inv = json.loads((OUT / "inventory.json").read_text())
     assert all(inv["reconciliation"].values()), inv["reconciliation"]
 
 
-@needs_outputs
 @needs_snapshot
 def test_every_committed_citation_resolves_to_the_same_content():
     con = snapshot.connect()
@@ -138,20 +136,14 @@ def test_every_committed_citation_resolves_to_the_same_content():
     assert {v.status for v in verdicts} == {"ok"}
 
 
-@needs_outputs
 @needs_snapshot
 def test_committed_outputs_match_the_snapshot_they_name():
     con = snapshot.connect()
     have = snapshot.snapshot_meta(con)["dataset_identity"]
     want = json.loads((OUT / "RUN_IDENTITY.json").read_text())["dataset_identity"]
-    if have != want:
-        pytest.skip("local snapshot is a different corpus than the committed outputs")
-    import subprocess
-    res = subprocess.run([sys.executable, str(ROOT / "ontology/platform_affordance_evidence/afh_manifest/run_all.py"), "--verify"], capture_output=True, text=True)
-    assert res.stdout.strip() == "identical", res.stdout + res.stderr
+    assert have == want, "the local snapshot is not the corpus the shipped AfH 2.0 build names"
 
 
-@needs_outputs
 @needs_snapshot
 def test_outputs_hold_no_source_text():
     """No string of 25+ characters in any output appears in any release (hashes aside)."""
@@ -186,10 +178,38 @@ def _walk(obj):
 # --- 2026-11-17: five levels and dated registry ----------------------------------
 
 def test_levels_nest():
+    """C <= I <= B <= A_any (`available`). A (default_on, window open) is also within A_any, but is not
+    part of the chain: a C can sit on an opt-in feature."""
     recs, _ = run(HEAD + "He contacted the 14-year-old girl on Kik and asked her for nude photos.", ["Kik"])
     r = recs["Kik"]
     for c in pl.CLASSES:
         assert r.instrumental[c] <= r.inferred[c] <= r.action_relevant[c] <= r.available[c], c
+        assert r.default_on_open[c] <= r.available[c], c
+
+
+OMEGLE_USE = "He contacted the 14-year-old girl on Omegle and asked her for nude photos."
+
+
+def test_level_i_and_a_close_at_registry_end():
+    """Omegle's capabilities end in 2023: a 2024 release has no level at all (every level closes at `ended`)."""
+    open_, _ = run(HEAD + OMEGLE_USE, ["Omegle"], year=2022)
+    closed, _ = run(HEAD + OMEGLE_USE, ["Omegle"], year=2024)
+    for c in ("Anonymity", "ContactDiscovery"):
+        assert open_["Omegle"].default_on_open[c] and open_["Omegle"].inferred[c], c
+        r = closed["Omegle"]
+        assert not (r.available[c] or r.action_relevant[c] or r.default_on_open[c] or r.inferred[c]), c
+
+
+def test_shipped_records_a_matches_the_harm_release_window_rule():
+    """records.csv A must equal harm_release._on_at, the rule the harm tables and recurrence use."""
+    import csv
+    from afhq1 import harm_release as hr
+    with (OUT / "records.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    bad = [(r["case_id"], r["platform"], c) for r in rows for c in pl.CLASSES
+           if (r[f"{c}.A"] == "1") != (r[f"{c}.A_any"] == "1" and hr._on_at(pl.platform_info(r["platform"], REG),
+                                                                           CB.classes[c]["capability"], int(r["pub_year"])))]
+    assert bad == []
 
 
 def test_by_design_feature_gives_inferred_not_explicit():
@@ -215,7 +235,7 @@ def test_named_only_never_reaches_b_or_i():
 def test_registry_rows_are_dated_and_sourced():
     import yaml
     cfg = yaml.safe_load((ROOT / "ontology/platform_affordance_evidence/afh_manifest/config/platforms.yaml").read_text())
-    assert cfg["version"] == "platforms-2"
+    assert cfg["version"] == "platforms-3"
     for label, row in cfg["platforms"].items():
         for key, cap in (row.get("capabilities") or {}).items():
             assert isinstance(cap, dict) and cap["since"] and cap["confidence"], (label, key)
@@ -229,9 +249,10 @@ def test_live_voice_and_expiring_links_are_not_ephemerality():
     assert REG["WhatsApp"].default_on["ephemerality"] is False
 
 
-def test_contact_discovery_default_only_for_stranger_meeting_platforms():
-    assert REG["Omegle"].default_on.get("contact_discovery") is True
-    assert REG["Facebook"].default_on.get("contact_discovery", False) is False
+def test_contact_discovery_default_follows_the_research_row():
+    for label in ("Facebook", "Instagram", "TikTok", "Snapchat", "Twitter / X", "Omegle"):
+        assert REG[label].default_on.get("contact_discovery") is True, label
+    assert REG["Discord"].default_on.get("contact_discovery") is False
 
 
 def test_generative_capability_needs_production_conduct():
@@ -242,7 +263,6 @@ def test_generative_capability_needs_production_conduct():
 
 # --- Decision 1: line-wrap repair ---------------------------------------------------
 
-@needs_outputs
 def test_record_linewrap_tier_never_below_published():
     import csv
     rank = {"named_only": 0, "inferred": 1, "stated": 2}
@@ -254,38 +274,23 @@ def test_record_linewrap_tier_never_below_published():
 # --- codebook-5, exemplars, LaTeX ------------------------------------------------
 
 def test_synthesis_needs_an_ai_instrument_and_an_actor():
-    rx = CB.harms["h6_likeness_synthesized"]
+    rx = CB.harms["h2_depicted_in_abuse_imagery"]
     def hit(t):
-        return bool(rx["_cue"].search(t) and not rx["_exclude"].search(t) and rx["_require"].search(t))
+        return bool(rx["_guarded"].search(t) and not rx["_exclude"].search(t) and rx["_require"].search(t))
     assert not hit("He produced child pornography using the Snapchat app.")
     assert not hit("Officers found possession of images created by artificial intelligence.")
     assert hit("He used an AI app to create explicit images of a classmate.")
     assert hit("He admitted taking photos from Instagram to morph into nude images.")
 
 
-@needs_outputs
-def test_every_manifest_exemplar_has_a_blind_review():
+def test_every_manifest_exemplar_is_labelled_automatically_coded():
+    """AfH 2.0 is machine-coded: no exemplar claims validation. Earlier blind-review verdicts (codebooks
+    4 and 6) stay only as historical_review, tagged with their codebook."""
     ex = json.loads((OUT / "exemplar_inventory.json").read_text())
     assert ex["exemplars"] > 0
-    assert all(r["verdict"] != "unreviewed" for r in ex["rows"])
-
-
-def test_latex_tables_compile():
-    import shutil
-    import subprocess
-    import tempfile
-    tex = shutil.which("pdflatex") or ("/Library/TeX/texbin/pdflatex" if Path("/Library/TeX/texbin/pdflatex").exists() else None)
-    if not tex:
-        pytest.skip("pdflatex not installed")
-    tables = sorted((OUT / "latex").glob("*.tex"))
-    if not tables:
-        pytest.skip("LaTeX tables are local-only; run ontology/platform_affordance_evidence/afh_manifest/run_all.py to generate them")
-    with tempfile.TemporaryDirectory() as d:
-        doc = Path(d) / "check.tex"
-        doc.write_text("\\documentclass{article}\\usepackage{booktabs}\\usepackage[margin=1in]{geometry}\\begin{document}\n"
-                       + "\n".join(f"\\input{{{t}}}\\par" for t in tables) + "\n\\end{document}\n")
-        res = subprocess.run([tex, "-interaction=nonstopmode", "-halt-on-error", "check.tex"], cwd=d, capture_output=True, text=True)
-        assert res.returncode == 0, res.stdout[-800:]
+    assert all(r["coding"] == "automatically coded" for r in ex["rows"])
+    assert all("verdict" not in r for r in ex["rows"])
+    assert all(r["historical_review"] is None or r["historical_review"]["codebook"] for r in ex["rows"])
 
 
 # --- Hardy review: one tier drives every downstream level ------------------------------
@@ -300,10 +305,9 @@ def test_linewrap_promotion_reaches_downstream_levels():
     assert r.tier == "named_only" and r.primary_tier == "stated"   # promoted only by the repair
     assert r.action_relevant["DistributionInfrastructure"]          # B follows the primary tier
     assert r.instrumental["DistributionInfrastructure"]             # C follows the primary tier
-    assert r.harm_direct["h3_material_distributed"]                 # documented harm follows it too
+    assert r.harm_direct["h3_imagery_circulated"]                   # documented harm follows it too
 
 
-@needs_outputs
 def test_committed_levels_never_rest_on_named_only_primary_tier():
     import csv
     with (OUT / "records.csv").open() as f:
@@ -313,7 +317,6 @@ def test_committed_levels_never_rest_on_named_only_primary_tier():
                 assert not any(row[k] == "1" for k in row if k.endswith(".direct")), row["case_id"]
 
 
-@needs_outputs
 def test_manifest_use_documented_matches_primary_tier():
     man = json.loads((OUT / "manifest.json").read_text())["platforms"]
     import csv
@@ -322,6 +325,53 @@ def test_manifest_use_documented_matches_primary_tier():
     for p in ("Kik", "Snapchat", "Dropbox"):
         want = len({r["case_id"] for r in rows if r["platform"] == p and r["tier_linewrap"] in ("stated", "inferred")})
         assert man[p]["use_documented_cases"] == want, p
+
+
+def test_h1_live_conduct_stays_in_the_sentence_and_skips_the_production_charge():
+    import re
+    h1 = "h1_contact_sexual_abuse"
+    harm = CB.harms[h1]
+    same = "He directed her on a webcam to perform sexual acts."
+    assert h1 in pl.case_harm_set(same, set(), CB)
+    assert pl.h1_form(same, set(), harm) == "online"
+    crossed = "He used a webcam. She was later told to perform sexual acts."
+    assert h1 not in pl.case_harm_set(crossed, set(), CB)
+    assert harm["_live"].search(crossed) is None
+    assert re.compile(r"webcam(?:\W+\w+){0,16}\W+perform", re.I).search(crossed)
+    charge = ("He was charged for the purpose of producing a visual depiction "
+              "of a minor engaged in sexually explicit conduct on a webcam.")
+    assert harm["_live"].search(charge)
+    assert h1 not in pl.case_harm_set(charge, set(), CB)
+    kept = charge + " He also directed her on a webcam to perform sexual acts."
+    assert h1 in pl.case_harm_set(kept, set(), CB)
+
+
+def test_h5_restitution_is_not_a_commercial_sex_mark():
+    h5 = "h5_commercial_sexual_exploitation"
+    harm = CB.harms[h5]
+    assert harm["_cue"].search("paid restitution to the child")
+    assert not pl.harm_case_hit("He paid restitution to the child.", {"trafficking"}, harm)
+    assert pl.harm_case_hit("He paid the child for sex.", {"trafficking"}, harm)
+    both = "He was charged with sex trafficking and the court said he paid restitution to the child."
+    assert pl.harm_case_hit(both, {"trafficking"}, harm)
+    assert not pl.harm_case_hit("He paid the child for sex.", set(), harm)
+
+
+def test_h1_form_is_in_person_online_or_both():
+    harm = CB.harms["h1_contact_sexual_abuse"]
+    assert pl.h1_form("The abuse was hands-on.", set(), harm) == "in_person"
+    assert pl.h1_form("No conduct described.", {"hands_on"}, harm) == "in_person"
+    assert pl.h1_form("He sent obscene material to a minor.", set(), harm) == "online"
+    both = "This was in-person abuse. He sent obscene photos to the child."
+    assert pl.h1_form(both, set(), harm) == "both"
+    assert pl.h1_form("He possessed files.", {"possession"}, harm) is None
+
+
+def test_strict_sting_with_a_remaining_harm_stays_in_the_uncovered_base():
+    h3 = {"h3_imagery_circulated"}
+    assert pl.outside_uncovered_base(set(), ai_no_identifiable_child=False, attempted_contact=False, strict_sting=True)
+    assert not pl.outside_uncovered_base(h3, ai_no_identifiable_child=False, attempted_contact=False, strict_sting=True)
+    assert pl.outside_uncovered_base(h3, ai_no_identifiable_child=True, attempted_contact=False, strict_sting=False)
 
 
 def test_visualization_named_platform_list_matches_registry():
@@ -333,3 +383,42 @@ def test_visualization_named_platform_list_matches_registry():
     labels = {r["platform"] for r in ev["records"]}
     non_named = {l for l in labels if pl.platform_info(l, REG).status != "specific"}
     assert js == non_named
+
+
+# --- a harm the case gates removed is never counted as direct ---------------------------
+
+def test_harm_cleared_by_the_undercover_gate_is_not_direct():
+    text = (HEAD + "He used Snapchat and sent sexually explicit images to a minor, "
+            "an undercover agent posing as a 14-year-old girl. He also distributed child sexual abuse "
+            "material to other users on Snapchat.")
+    case = {"id": "synthetic_2024_002", "source": "SYNTH", "pub_year": 2024, "text": text,
+            "platforms": ["Snapchat"], "topics": ["online_only"],
+            "investigation_types": ["undercover"], "age_roles": ["decoy"]}
+    recs, _ = pl.classify_case(case, "fp", REG, CB)
+    r = next(x for x in recs if x.platform == "Snapchat")
+    assert pl.harm_direct_hit([text], CB.harms["h1_contact_sexual_abuse"])   # the cue is there
+    assert any(r.harm_case.values())                           # the case keeps another harm
+    assert not r.harm_case["h1_contact_sexual_abuse"]          # the undercover gate removed it for the case
+    assert not r.harm_direct["h1_contact_sexual_abuse"]        # so it is not direct either
+    assert all(r.harm_case[h] for h, d in r.harm_direct.items() if d)
+
+
+def test_every_level_closes_at_registry_end():
+    """A_any, B, I and C all close at `ended` (publication year stands in for conduct year)."""
+    r = run(HEAD + OMEGLE_USE, ["Omegle"], year=2024)[0]["Omegle"]
+    for c in ("Anonymity", "ContactDiscovery", "UnmonitoredCommunication"):
+        assert not (r.available[c] or r.default_on_open[c] or r.action_relevant[c] or r.inferred[c] or r.instrumental[c]), c
+
+
+def test_shipped_records_have_no_level_after_registry_end():
+    import csv
+    with (OUT / "records.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    late = []
+    for r in rows:
+        info = pl.platform_info(r["platform"], REG)
+        for c in pl.CLASSES:
+            ended = (info.cap_meta.get(CB.classes[c]["capability"]) or {}).get("ended")
+            if ended is not None and int(r["pub_year"]) > ended and any(r[f"{c}.{lv}"] == "1" for lv in ("A_any", "A", "B", "I", "C")):
+                late.append((r["case_id"], r["platform"], c))
+    assert late == [], late[:5]

@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_161> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2023_161" ;
-    dcterms:created "2026-11-19T18:13:46.191595"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:08:22.539686"^^xsd:dateTime ;
     dcterms:date "2023-11-08"^^xsd:date ;
     dcterms:identifier "ncmec_2023_161" ;
-    dcterms:modified "2026-11-19T18:13:46.191595"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:08:22.539686"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_161/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://myfox8.com/news/north-carolina/piedmont-triad/lexington-man-charged-with-sexual-exploitation-of-minors-sheriffs-office-says/> ;
@@ -23,8 +24,9 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_161/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_161/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_161/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_161/agency/davidson-county-sheriffs-office> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_161/person/offender/1> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_161/agency/davidson-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_161/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_161/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -40,22 +42,22 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_161/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_161/agency/davidson-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Davidson County Sheriff's Office" ;
     ns1:name "Davidson County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_161/charge/1> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_161/charge/1> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_161/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in the detention center" ;
-    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_161/charge/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_161/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_161/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_161/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_161/event/possession> .
 
@@ -65,6 +67,11 @@
     dcterms:identifier "fips:37" ;
     skos:altLabel "N.c." ;
     ns1:name "North Carolina" .
+
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns6:platformType "generic-tag" ;
+    ns1:name "online" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_161/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;

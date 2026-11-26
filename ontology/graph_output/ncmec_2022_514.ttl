@@ -1,9 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,10 +12,10 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2022_514> a ns1:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2022_514" ;
-    dcterms:created "2026-11-19T18:09:05.620510"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:06:39.881661"^^xsd:dateTime ;
     dcterms:date "2022-02-24"^^xsd:date ;
     dcterms:identifier "ncmec_2022_514" ;
-    dcterms:modified "2026-11-19T18:09:05.620510"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:06:39.881661"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_514/provenance> ;
     dcterms:publisher "NCMEC" ;
     dcterms:source <https://www.fontanaheraldnews.com/news/fontana-teen-is-arrested-for-allegedly-committing-sexual-offenses-police-say/article_786f905c-95bb-11ec-84a6-d73cb10b92d9.html> ;
@@ -23,10 +24,11 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_514/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_514/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_514/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_514/agency/fontana-police-department> ;
     ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_514/person/offender/1>,
-        <https://w3id.org/caselinker/resource/platform/instagram> .
+        <https://w3id.org/caselinker/resource/platform/instagram>,
+        <https://w3id.org/caselinker/resource/platform/internet> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_514/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -42,34 +44,39 @@
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_514/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_514/agency/fontana-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Fontana Police Department" ;
     ns2:name "Fontana Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_514/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_514/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_514/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_514/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_514/charge/1> .
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_514/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_514/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_514/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_514/event/possession> .
+
+<https://w3id.org/caselinker/resource/platform/internet> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "internet" ;
+    ns5:platformType "generic-tag" ;
+    ns2:name "internet" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_514/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -81,7 +88,7 @@
     rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/platform/instagram> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+        ns5:SocialMediaPlatform ;
     rdfs:label "Instagram" ;
     ns2:name "Instagram" .
 

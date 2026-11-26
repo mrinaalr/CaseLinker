@@ -1,19 +1,20 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case afp_2020_009" ;
-    dcterms:created "2026-11-19T18:40:21.148356"^^xsd:dateTime ;
+    dcterms:created "2026-11-23T11:32:43.129613"^^xsd:dateTime ;
     dcterms:date "2020-04-29"^^xsd:date ;
     dcterms:identifier "afp_2020_009" ;
-    dcterms:modified "2026-11-19T18:40:21.148356"^^xsd:dateTime ;
+    dcterms:modified "2026-11-23T11:32:43.129613"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/afp_2020_009/provenance> ;
     dcterms:publisher "AFP" ;
     dcterms:source <https://www.afp.gov.au/news-centre/media-release/darwin-man-charged-child-exploitation-offences> ;
@@ -22,15 +23,16 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/afp_2020_009/event/online-only>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/event/possession>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/agency/northern-territory-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/online> .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 28.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/afp_2020_009/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 28.0 .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -40,20 +42,20 @@
     ns1:target <https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:InternationalAgency ;
+        ns6:InternationalAgency ;
     rdfs:label "Australian Federal Police" ;
     ns1:name "Australian Federal Police" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/agency/northern-territory-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:InternationalAgency ;
+        ns6:InternationalAgency ;
     rdfs:label "Northern Territory Police Department" ;
     ns1:name "Northern Territory Police Department" .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/charge/2> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
@@ -67,14 +69,19 @@
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/afp_2020_009/charge/1>,
         <https://w3id.org/caselinker/resource/case/afp_2020_009/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/afp_2020_009/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/platform/online> a <https://cacontology.projectvic.org/core#DigitalSystemEntity> ;
+    rdfs:label "online" ;
+    ns4:platformType "generic-tag" ;
+    ns1:name "online" .
 
 <https://w3id.org/caselinker/resource/case/afp_2020_009/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

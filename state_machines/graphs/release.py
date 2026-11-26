@@ -415,7 +415,8 @@ def privacy_scan(release_id: str, text_root: Path, *, data_root: Path = DATA) ->
     open_values = 0
     for path in sorted((root / "cases").glob("*.json")):
         bundle = json.loads(path.read_text(encoding="utf-8"))
-        if not str(bundle["coding"].get("note", "")).startswith("machine resolution"):
+        machine = str((bundle.get("coding") or {}).get("note", "")).startswith("machine resolution")
+        if not (machine or bundle.get("no_agreed_acts")):    # a no-agreed-acts bundle has no coding block but still lists documents
             continue
         for d in bundle["documents"]:      # a path on disk can carry a surname: only the normalized form is published
             open_values += 1

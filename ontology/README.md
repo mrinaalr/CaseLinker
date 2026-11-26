@@ -104,7 +104,7 @@ How to query the live store, including GET vs POST, `VALUES` + `LIMIT` ordering,
 
 ## Graph pools
 
-The live Oxigraph store holds **10,802** press-release case graphs (`cac:CACInvestigation`, one named graph per case) plus matching provenance graphs. The live corpus is **10,802 case reports** and **132,676 extracted features**. Separately, each released PACER case has an evidence graph and, where it has any, a trajectory and an observation graph under `urn:caselinker:pacer:<case_id>:…` (see [docs/SPARQL.md](docs/SPARQL.md#pacer-graphs)). Ontology & Graphs **Find/load/compare** uses the full staging set (`pool=full`, max **2000** graphs merged at once). Big Bang / Universe / Analysis remain secret merge modes over locked subsets (`*_ids.txt`).
+The live Oxigraph store holds **10,802** press-release case graphs (`cac:CACInvestigation`, one named graph per case) plus matching provenance graphs. The live corpus is **10,802 case reports** and **231,988 extracted features**. Separately, each released PACER case has an evidence graph and, where it has any, a trajectory and an observation graph under `urn:caselinker:pacer:<case_id>:…` (see [docs/SPARQL.md](docs/SPARQL.md#pacer-graphs)). Ontology & Graphs **Find/load/compare** uses the full staging set (`pool=full`, max **2000** graphs merged at once). Big Bang / Universe / Analysis remain secret merge modes over locked subsets (`*_ids.txt`).
 
 | Pool | ID list | Folder | Used by |
 |---|---|---|---|

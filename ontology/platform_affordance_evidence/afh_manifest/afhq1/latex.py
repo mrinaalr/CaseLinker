@@ -14,7 +14,7 @@ CLASSES = ("Anonymity", "Ephemerality", "ContactDiscovery", "UnmonitoredCommunic
 CLASS_TEX = {"Anonymity": "Anonymity", "Ephemerality": "Ephemerality", "ContactDiscovery": "Contact discovery",
              "UnmonitoredCommunication": "Unmonitored communication",
              "DistributionInfrastructure": "Distribution infrastructure", "GenerativeSynthesis": "Generative synthesis"}
-LV = ("A_available_capability", "B_capability_relevant_conduct", "I_inferred_facilitation", "C_explicit_instrumental_use")
+LV = ("A_any_available_capability", "B_capability_relevant_conduct", "I_inferred_facilitation", "C_explicit_instrumental_use")  # the nesting chain
 _ESC = {"&": r"\&", "%": r"\%", "$": r"\$", "#": r"\#", "_": r"\_", "{": r"\{", "}": r"\}", "~": r"\textasciitilde{}", "^": r"\^{}"}
 
 
@@ -96,8 +96,7 @@ def write(out: Path) -> List[Path]:
     put("tab_platform_manifest.tex", tabular("lrrp{7cm}", ["Platform", "Cases", "Documented use", "Native capabilities (first year)"], rows,
                                              note="top 15 platforms by documented-use cases; full manifest in manifest.json"))
 
-    rows = [[esc(r["platform"]), esc(r["cited_for"]), esc(r["case_id"]), esc(r["verdict"])]
-            for r in ex["rows"] if r["verdict"] == "supported"]
-    put("tab_verified_exemplars.tex", tabular("llll", ["Platform", "Cited for", "Case", "Review"], rows,
-                                              note="exemplars a blind reviewer judged supported; case ids resolve through citations.json fingerprints"))
+    rows = [[esc(r["platform"]), esc(r["cited_for"]), esc(r["case_id"]), esc(r["coding"])] for r in ex["rows"]]
+    put("tab_exemplars.tex", tabular("llll", ["Platform", "Cited for", "Case", "Coding"], rows,
+                                     note="manifest exemplars, automatically coded; case ids resolve through citations.json fingerprints"))
     return paths
