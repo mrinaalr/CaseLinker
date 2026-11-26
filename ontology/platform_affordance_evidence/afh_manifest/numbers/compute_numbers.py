@@ -33,7 +33,8 @@ out = {"inputs": {}}
 # ---------------------------------------------------------------- inputs
 from afhq1 import pipeline as pl  # noqa: E402
 out["inputs"] = {
-    "corpus_cases": db.execute("select count(*) from cases").fetchone()[0],
+    "corpus_cases": db.execute("select count(*) from cases").fetchone()[0],          # analysis DB (exclusions applied)
+    "collected_corpus_cases": sqlite3.connect(f"file:{AI.COLLECTED}?mode=ro", uri=True).execute("select count(*) from cases").fetchone()[0],
     "codebook": pl.Codebook.load().version,
     "registry": pl.load_yaml("platforms.yaml")["version"],
     "pacer_release": json.loads((PACER / "manifest.json").read_text())["release_id"],
@@ -44,10 +45,12 @@ out["inputs"] = {
 # ---------------------------------------------------------------- 1. cover
 # Same rules as GET /api/stats (run/main.py get_stats), on the same storage rows, without importing the API:
 # run/main.py builds a writable CaseStorage at import. Every read here is SQLite mode=ro.
+# The cover describes the collected corpus (AFH_DB_COLLECTED): records, features, sources, agencies and task
+# forces count every collected record. Every later section reads the analysis DB (`db`, exclusions applied).
 from storage import CaseStorage  # noqa: E402
 from agency_label_normalize import distinct_named_agencies  # noqa: E402
 from feature_count import source_count_key  # noqa: E402
-store = CaseStorage.read_only(str(DB))
+store = CaseStorage.read_only(str(AI.COLLECTED))
 cases = store.get_all_cases(include_raw_data=False)
 
 

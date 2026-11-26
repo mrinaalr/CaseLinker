@@ -22,7 +22,7 @@ PR = I["pacer_release"]
 if I["afh_2_0_snapshot"]:
     w("# AfH 2.0 numbers")
     w("")
-    w(f"AfH 2.0 snapshot: corpus **{n(I['corpus_cases'])} cases** · `{I['codebook']}` · registry `{I['registry']}` · "
+    w(f"AfH 2.0 snapshot: collected corpus **{n(I['collected_corpus_cases'])} records** · `{I['codebook']}` · registry `{I['registry']}` · "
       f"PACER `{PR}` (hashes in SNAPSHOT.md). Values in numbers.json; run order in run_all.sh. Read-only on the DB and the PACER release.")
 else:
     w("# AfH numbers (not the AfH 2.0 snapshot)")
@@ -34,6 +34,12 @@ else:
     w("")
     w(f"Corpus **{n(I['corpus_cases'])} cases** · `{I['codebook']}` · registry `{I['registry']}` · PACER `{PR}`. Values in numbers.json.")
 w("")
+_ax = I.get("analysis_db")
+if _ax:
+    w(f"Analytical denominators use **{_ax['label']}**: {n(_ax['analysis_db_cases'])} records, leaving out {_ax['excluded_records']} verified "
+      f"redundant copies listed in `afh_manifest/config/exclusions.csv` (the same release ingested twice). "
+      "Corpus-level figures (NCases, NFeatures, NSources and the other cover counts) describe the collected corpus.")
+    w("")
 w("Data caveats are marked ⚑ and collected in [Flags](#flags).")
 w("")
 
@@ -41,9 +47,9 @@ w("## 1. Cover and abstract")
 w("")
 w("| Placeholder | Value | Definition | Source |")
 w("|---|---:|---|---|")
-w(f"| NCases | {n(c['NCases'])} | rows in `cases` | `CaseStorage.get_all_cases` |")
-w(f"| NFeatures | {n(c['NFeatures'])} | `/api/stats` `unique_features`: every value read from the case text and stored; each list value counts; labels count, and the quoted spans behind them are listed, not counted; place names count (their role is not stated); placeholders, program boilerplate (incl. the CyberTipline flag), provenance and copies excluded | `run/feature_count.py` |")
-w(f"| NSources | {n(c['NSources'])} | publishing families: distinct `source` labels after `_source_count_key` folding | `run/feature_count.py` `source_count_key` (as in `get_stats`) |")
+w(f"| NCases | {n(c['NCases'])} | collected corpus: rows in `cases` of the collected DB | `CaseStorage.get_all_cases` |")
+w(f"| NFeatures | {n(c['NFeatures'])} | collected corpus: `/api/stats` `unique_features`: every value read from the case text and stored; each list value counts; labels count, and the quoted spans behind them are listed, not counted; place names count (their role is not stated); placeholders, program boilerplate (incl. the CyberTipline flag), provenance and copies excluded | `run/feature_count.py` |")
+w(f"| NSources | {n(c['NSources'])} | collected corpus: publishing families: distinct `source` labels after `_source_count_key` folding | `run/feature_count.py` `source_count_key` (as in `get_stats`) |")
 w(f"| NSourceLabels | {n(c['NSourceLabels'])} | distinct raw `source` labels | same |")
 w(f"| NAgencies | {n(c['NAgencies_corpus_normalized'])} | distinct agencies named in the corpus after `distinct_named_agencies` | `agency_label_normalize.distinct_named_agencies` (as in `get_stats`) |")
 w(f"| NAgencyVariants | {n(c['NAgencyVariants_raw_labels'])} | distinct raw `agencies_involved` strings before normalization | `extracted_features.agencies_involved` |")

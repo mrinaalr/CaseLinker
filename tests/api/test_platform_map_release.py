@@ -9,9 +9,10 @@ PAE = ROOT / "ontology" / "platform_affordance_evidence"
 PINNED = PAE / "platform_affordance_evidence_afh-2.0.json"
 BUILD = PAE / "afh_manifest" / "numbers" / "build"
 
-# Top 12 by stated-tier cases in the AfH 2.0 release: (platform, stated cases, total cases).
+# Top 12 by stated-tier cases in the AfH 2.0 release, analysis DB (exclusions v1): (platform, stated cases, total cases).
+# Before the 23 exclusions: Kik 424 / 550, Facebook 129 / 295; the rest are unchanged.
 TOP12 = [
-    ("Kik", 424, 550), ("Snapchat", 318, 411), ("Facebook", 129, 295), ("Dropbox", 86, 147),
+    ("Kik", 423, 549), ("Snapchat", 318, 411), ("Facebook", 128, 294), ("Dropbox", 86, 147),
     ("Discord", 79, 128), ("Instagram", 77, 149), ("Telegram", 48, 83), ("WhatsApp", 47, 58),
     ("Twitter / X", 39, 105), ("Facebook Messenger", 35, 45), ("BitTorrent", 28, 36), ("Google Drive", 27, 53),
 ]
