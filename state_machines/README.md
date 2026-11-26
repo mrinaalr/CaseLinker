@@ -149,7 +149,7 @@ python -m state_machines.trajectories.digest pacer-v1 --registry <capability_sou
 | [`evidence/CODEBOOK.md`](evidence/CODEBOOK.md), [`evidence/CODER_GUIDE.md`](evidence/CODER_GUIDE.md) | What each code means; how to code a case |
 | [`trajectories/derive.py`](trajectories/derive.py) | Partial order, chains, interruptions, derivation metadata |
 | [`trajectories/affordances.py`](trajectories/affordances.py) | Affordance levels A and B from the shared capability registry |
-| [`trajectories/claims.py`](trajectories/claims.py) | One step, split into stated platform, registry candidates, and documented feature use |
+| [`trajectories/claims.py`](trajectories/claims.py) | One step, split into coded platform interactions, registry candidates, and documented feature use |
 | [`trajectories/digest.py`](trajectories/digest.py) | The analysis frame for a dataset, and the coding bench |
 | [`trajectories/use_notes.py`](trajectories/use_notes.py) | Researcher judgments of use. They sit beside a step and never enter $O_{i}$ |
 | [`trajectories/afh.py`](trajectories/afh.py) | $\mathrm{Aff}$, $H(c)$, $\psi$, coverage identity, dataset analysis |
