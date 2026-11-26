@@ -88,8 +88,9 @@
     .pf-detail__type { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
     .pf-detail__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
     .pf-chip-lane { border-left: 3px solid var(--lane-color, var(--line-2)); border-radius: 4px 999px 999px 4px; padding-left: 7px; }
-    .pf-tabs { display: flex; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
-    .pf-tabs::-webkit-scrollbar { display: none; }
+    /* The tabs wrap: in a 400px panel the fourth tab (Evidence) ran past the edge of a row whose
+       scrollbar was hidden, so a mouse could not reach it. */
+    .pf-tabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); }
     .pf-tab {
       border: 0; background: transparent; padding: 10px 8px 9px; font-size: 13px; font-weight: 500; color: var(--ink-3);
       cursor: pointer; position: relative; white-space: nowrap;
@@ -98,7 +99,10 @@
     .pf-tab[aria-selected="true"] { color: var(--ink); }
     .pf-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; background: var(--ink); }
     .pf-tab__n { font-family: var(--mono); font-size: 11px; color: var(--ink-4); margin-left: 4px; }
-    .pf-detail__body { padding: 16px 20px 20px; overflow-y: auto; min-height: 0; flex: 1 1 auto; overscroll-behavior: contain; }
+    /* The panel's max-height assumes it is already stuck below the nav. Before the page scrolls it sits
+       lower and its end is off-screen, so the wheel must pass to the page once the body has scrolled to
+       its end (no overscroll containment); the page then scrolls, the panel sticks, and all of it shows. */
+    .pf-detail__body { padding: 16px 20px 20px; overflow-y: auto; min-height: 0; flex: 1 1 auto; }
     /* Only the filled panel is a flex child. The empty-state sibling must not get
        display:flex — that beats the [hidden] attribute and keeps "Select a platform…"
        on screen (and steals height) after a platform is selected. */
