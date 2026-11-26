@@ -4753,6 +4753,7 @@ if _question_data.is_dir():
 _platform_affordance_evidence_data = Path(__file__).resolve().parent.parent / "ontology" / "platform_affordance_evidence"
 _PLATFORM_AFFORDANCE_EVIDENCE_PUBLIC_FILES = frozenset({
     "platform_affordance_evidence.json",
+    "platform_affordance_evidence_afh-2.0.json",       # numbers/platform_map.py: the AfH 2.0 release, case ids only
     "platform_affordance_evidence_harm_analysis.json",
 })
 

@@ -43,4 +43,5 @@ $PY $N/compute_numbers.py               # numbers.json, sections 1-9
 $PY $N/prevalence.py                    # prevalence.json
 $PY $N/merge_sections.py                # numbers.json, sections 10-12
 $PY $N/write_md.py                      # numbers.md
+$PY $N/platform_map.py                   # /visualization data for this release (case ids only)
 $PY $N/afh_inputs.py --check-unchanged  # the DB and PACER release must hash exactly as before the run
