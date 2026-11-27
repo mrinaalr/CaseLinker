@@ -46,6 +46,30 @@ from state_machines.coding.cues import CUE_VERSION, settle
 
 CODERS = ("coder_A", "coder_B")
 RULE_VERSION = "resolve-1.2.0"
+
+# The standing of each published field under the rule above. ``resolve`` starts from a copy of
+# coder A's event (``e = copy.deepcopy(x)``); only the fields listed as consensus, weaker or
+# intersected are checked against coder B. Everything in ``coder_a`` is coder A's reading of an
+# act both coders agreed on, and coder B's value is never compared. Reports, graphs and /lifecycle
+# read this table so the standing is stated where each field surfaces.
+FIELD_STANDING = {
+    "consensus": ("action", "actor"),                        # rule 2: same action code and same actor (acts matched by cited passage)
+    "weaker_of_two": ("status",),                            # rule 3
+    "intersected": ("affordances", "candidate_affordances", "access", "harms"),   # rule 3: kept only where both annotated
+    "union": ("time",),                                      # rule 4: every cited dated assertion of either coder
+    "coder_a": ("platform_interactions", "platform_mentions", "channels", "targets", "co_actors", "outcome",
+                "repetition", "unresolved_participants", "support", "description", "participants", "tracks"),
+    "rule_derived": ("relations: SAME_ACT (rule 6)", "relations: stated order (rule 5c)",
+                     "observation ties (state_machines.observations)", "chains and date order (state_machines.trajectories.derive)"),
+}
+FIELD_STANDING_NOTE = {
+    "consensus": "both coders coded the act with this value; published only then",
+    "weaker_of_two": "the weaker of the two coders' statuses",
+    "intersected": "kept only where both coders annotated it",
+    "union": "every cited assertion of either coder",
+    "coder_a": "coder A's value on an act both coders agreed on; coder B's value is not compared",
+    "rule_derived": "made by a deterministic rule from published acts or the page text, not asserted by a coder",
+}
 _RANK = {"DIRECT": 0, "INFERRED": 1, "UNSUPPORTED": 2, "CONTRADICTED": 3}
 
 

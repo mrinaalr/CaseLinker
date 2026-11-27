@@ -93,6 +93,10 @@ class _Emitter:
     def __init__(self, bundle: dict):
         self.b = bundle
         self.g = _graph(bundle["case_id"])
+        # Machine resolution keeps coder A's frame: on an agreed act, targets, co-actors, platform interactions and
+        # mentions are coder A's and were never compared with coder B (resolve.FIELD_STANDING). They are marked
+        # single_coder so a query cannot read them as two-coder agreement. An adjudicated bundle is not marked.
+        self.coder_a_frame = (bundle.get("coding") or {}).get("coder_id") == "coder_agreed"
         self.passages = {p["passage_id"]: p for p in bundle["passages"]}
         self.pages = {(d["doc_id"], pg["pdf_page"]): pg for d in bundle["documents"] for pg in d["pages"]}
 
@@ -189,8 +193,11 @@ class _Emitter:
                                                  properties={"clt:assertionStatus": _CL(m["status"])})
                 self.annotate(rel["@id"], m["support"])
 
-    def _role(self, ref: str, action: str, eid: str, role: str, mode: str = "") -> None:
-        props = {"clt:eventRole": _CL(role)}
+    def _single_coder(self) -> Dict[str, Any]:
+        return {"clt:reviewStatus": _CL("single_coder")} if self.coder_a_frame else {}
+
+    def _role(self, ref: str, action: str, eid: str, role: str, mode: str = "", coder_a: bool = False) -> None:
+        props = {"clt:eventRole": _CL(role), **(self._single_coder() if coder_a else {})}
         if mode:
             props["clt:participationMode"] = _CL(mode)
         self.g.create_relationship(self.participant(ref), action, "Has_Event_Role",
@@ -238,9 +245,9 @@ class _Emitter:
             self.annotate(node, e["support"] + [s for c in e.get("channels", []) for s in c["support"]])
             self._role(e["actor"]["participant_ref"], node, eid, e["actor"]["role"], "performer")
             for c in e.get("co_actors", []):
-                self._role(c["participant_ref"], node, eid, c["role"], c["mode"])
+                self._role(c["participant_ref"], node, eid, c["role"], c["mode"], coder_a=True)
             for t in e.get("targets", []):
-                self._role(t["participant_ref"], node, eid, t["role"])
+                self._role(t["participant_ref"], node, eid, t["role"], coder_a=True)
             for a in sorted(e.get("affordances", []), key=lambda a: a["affordance"]):
                 ind = f"kb:affordance-{eid}-{a['affordance']}"
                 self.g.upsert_node(ind, types=[V.AFFORDANCE_CLASSES[a["affordance"]]], properties={
@@ -256,7 +263,7 @@ class _Emitter:
                 if inter["mode"] in ("through", "to"):
                     self.g.add_property(node, "uco-action:instrument", _ref(pnode))
                 iprops = {"clt:assertionStatus": _CL(inter["status"]), "clt:interactionMode": _CL(inter["mode"]),
-                          "clt:audience": _CL(inter["audience"])}
+                          "clt:audience": _CL(inter["audience"]), **self._single_coder()}
                 if inter.get("feature_term"):
                     iprops["clt:featureTerm"] = _CL(inter["feature_term"])
                 if inter.get("configuration"):
@@ -268,7 +275,8 @@ class _Emitter:
             for m in sorted(e.get("platform_mentions", []), key=lambda m: m["platform_surface"]):
                 pnode = self.platform(m["platform_surface"], m["platform_surface"])
                 rel = self.g.create_relationship(node, pnode, "Platform_Named_With",
-                                                 relationship_id=f"kb:named-{eid}-{_slug(m['platform_surface'])}")
+                                                 relationship_id=f"kb:named-{eid}-{_slug(m['platform_surface'])}",
+                                                 **({"properties": self._single_coder()} if self.coder_a_frame else {}))
                 self.annotate(rel["@id"], self._passage_supports(m["passage_ids"], "platform", "DIRECT"))
             for i, h in enumerate(sorted(e.get("harms", []), key=lambda h: (h["harm"], h["victim_ref"]))):
                 props_h = {"clt:harmCode": _CL(h["harm"]), "clt:assertionStatus": _CL(h["status"]),
@@ -332,13 +340,31 @@ def trajectory_graph(bundle: dict, derived: dict) -> CASEGraph:
                                           "clt:immediateAfterPrevious": _BOOL(step["immediate_after_previous"]),
                                           **({"clt:stepAffordance": [_ref(V.AFFORDANCE_CLASSES[o]) for o in step["affordances"]]}
                                              if step["affordances"] else {}),
-                                          **({"clt:stepRelevantAffordance": [_ref(V.AFFORDANCE_CLASSES[o]) for o in step.get("action_relevant_affordances", [])]}
-                                             if step.get("action_relevant_affordances") else {}),
-                                          **({"clt:stepAvailableAffordance": [_ref(V.AFFORDANCE_CLASSES[o]) for o in step.get("available_affordances", [])]}
-                                             if step.get("available_affordances") else {}),
-                                          **({"clt:capabilityEntry": [_CL("|".join(c)) for c in step.get("capability_evidence", [])]}
-                                             if step.get("capability_evidence") else {})})
+                                          **_capability_props(step)})
     return g
+
+
+def _capability_props(step: dict) -> Dict[str, Any]:
+    """Levels A and B on a step. clt:stepRelevantAffordance and clt:stepAvailableAffordance state that the
+    platform provided the class at the time, so they carry only entries the registry supports for the
+    act's dates. Every entry, uncertain ones included, is in clt:capabilityEntry as
+    platform|class|availability|default_on, so an uncertain class is reported and marked, never shown as access.
+    Steps derived before capability_status existed fall back to capability_evidence (status, no default)."""
+    entries = step.get("capability_status")
+    if entries is None:
+        entries = [{"platform": p, "affordance": a, "availability": s, "default_on": None,
+                    "action_relevant": a in (step.get("action_relevant_affordances") or [])}
+                   for p, a, s in step.get("capability_evidence", [])]
+    supported = [e for e in entries if e["availability"] == "supported"]
+    relevant = sorted({e["affordance"] for e in supported if e["action_relevant"]})
+    available = sorted({e["affordance"] for e in supported})
+    fmt = lambda d: "unknown" if d is None else ("yes" if d is True else "no" if d is False else str(d))  # noqa: E731
+    return {
+        **({"clt:stepRelevantAffordance": [_ref(V.AFFORDANCE_CLASSES[o]) for o in relevant]} if relevant else {}),
+        **({"clt:stepAvailableAffordance": [_ref(V.AFFORDANCE_CLASSES[o]) for o in available]} if available else {}),
+        **({"clt:capabilityEntry": [_CL(f"{e['platform']}|{e['affordance']}|{e['availability']}|default_on={fmt(e['default_on'])}")
+                                    for e in entries]} if entries else {}),
+    }
 
 
 def observation_graph(bundle: dict, doc: dict) -> CASEGraph:

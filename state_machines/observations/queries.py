@@ -67,13 +67,19 @@ SELECT ?description (COUNT(DISTINCT ?g) AS ?cases) (COUNT(?obs) AS ?mentions) WH
     "supported": {
         "title": "Level 3. Where does a record state that an act was done by means of a platform or feature?",
         "columns": ["case", "act", "action", "relationship", "platform_or_class", "phrase", "standing"],
+        # The relationship and the act live in the same case's own graphs (node IRIs are case-scoped), so ?rg and ?eg are
+        # bound from ?og instead of ranging over every graph in the store; the unbound form timed out on the live store.
         "sparql": PREFIXES + """SELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {
   GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .
-              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)
+              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs) FILTER(?m != oa:describing)
               OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
+  FILTER(STRSTARTS(STR(?og), "urn:caselinker:pacer:") && STRENDS(STR(?og), ":observations"))
+  BIND(REPLACE(STR(?og), ":observations$", "") AS ?base)
+  BIND(IRI(CONCAT(?base, ":evidence")) AS ?eg)
+  VALUES ?part { ":evidence" ":observations" }
+  BIND(IRI(CONCAT(?base, ?part)) AS ?rg)
   GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }
-  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), ":evidence"))
-  FILTER(?m != oa:describing)
+  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t))
   FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))
   BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
   BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)

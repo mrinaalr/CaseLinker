@@ -188,6 +188,8 @@ def build(release_id: str, *, data_root: Path = DATA, text_root: Optional[Path] 
             **({"observations": observed} if observed is not None else {}),
             "shacl": {"conformance": shacl["conformance"], "violations": len(shacl["violations"]),
                       "upstream_defect_violations": len(shacl["upstream_defect_violations"]),
+                      "upstream_defect_shapes": shacl["upstream_defect_shapes"],
+                      "upstream_defect_breakdown": shacl["upstream_defect_breakdown"],
                       "applicable_skipped": shacl["applicable_skipped"]},
             **({"no_acts": True} if bundle.get("no_acts") is True else {}),
             **({"no_agreed_acts": True} if bundle.get("no_agreed_acts") is True else {}),

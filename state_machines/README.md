@@ -61,6 +61,10 @@ Dataset `pacer-v1` holds all three levels for 30 cases (98 documents): 284 agree
 
 `pacer-v2` (2026-11-24) recodes the cases with the capability registry loaded and replaces `external_extortion` (no press record) with `ut_ag_2026_006`, so all 30 cases link to a press release: 290 agreed acts (`pacer-v1`: 284), 170 chains (163), `candidate_capabilities` on 10 of 210 derived steps (0 of 202; DIRECT derivation), 98 documents. `pacer-v1` is kept unchanged on record. Both use the same graph IRIs, so a SPARQL store loads one of them, not both.
 
+**Known gaps in the source record.** No document carries its ECF entry number: `coding/workflow.py` sets `ecf_document_number` to null when it registers a filing (98 of 98 in `pacer-v2`), so filings are cited by document type and PDF page. Source PDF names keep the case id the filing was fetched under; ids renumbered since (pre-1.0, `local/pacer_text/<case>/files.json` maps them): `doj_safe_childhood_2023_420` ← `ncmec_2023_190` (a different source family: the prosecution's press release is the DOJ one), `ncmec_2022_575` ← `ncmec_2022_586`, `ncmec_2023_222` ← `ncmec_2023_224`, `ncmec_2025_1026` ← `ncmec_2025_1116`, `usss_2021_017` ← `usss_2021_019`; four were fetched under a topic label (`anchorage_pd_2022_007` sextortion, `doj_ceos_2025_007` enterprise, `doj_ceos_2026_001` production, `doj_ceos_2026_006` trafficking). The bundle's document hashes, not the file names, identify the evidence.
+
+**What a chain is not.** A chain can combine `SAME_ACT` alternatives (possible retellings of one act), so chains are not independent observed trajectories: `ncmec_2022_575`'s 12 four-step chains are one fragment with alternatives at three positions. Chains are built per track, so an order relation between acts on different tracks (`ky_sp_2025_038` `e048`→`e049`) is published but enters no chain. `/lifecycle` shows both; neither changes a chain.
+
 ## The documented event graph
 
 $$

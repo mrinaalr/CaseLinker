@@ -86,7 +86,8 @@ Measured on an Apple M4 with 16 GB, one model in memory at a time (`python -m st
 
 [`resolve.py`](resolve.py) turns two codings into one bundle by a fixed rule:
 1. **Events:** published when both coders coded the act (matched by cited passages) with the same action and the same actor. Participants are aligned by the matched events they act in.
-2. **Status, affordances, harms:** the status is the weaker of the two; affordances and harms are kept only where both coders annotated them.
+2. **Status, affordances, harms:** the status is the weaker of the two; affordances, candidate affordances, access and harms are kept only where both coders annotated them.
+   **Everything else is coder A's.** The published act is a copy of coder A's event: its platform interactions, platform mentions, channels, targets, co-actors, outcome and repetition are coder A's reading of an act both coders agreed on, and coder B's values are never compared. So `stated_platform_means` (derived from `platform_interactions`) is a single-coder attribute; graphs mark these relationships `clt:reviewStatus "single_coder"`. The full table is `resolve.FIELD_STANDING`, printed in each release's `REPORT.md`.
 3. **Dates:** every cited date of either coder is kept, and disjoint dates are flagged as a conflict (T1–T5).
 4. **Relations:** those both coders asserted. Order implied by cited dates is derived later.
 5. **Stated order, restated (rule 5c):** each coder could link a sequence sentence only to acts in its own list, so the same sentence rule ([`enrich.stated_prior`](enrich.py)) runs once more over the agreed acts. It never guesses:

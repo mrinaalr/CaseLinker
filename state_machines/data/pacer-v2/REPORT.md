@@ -14,15 +14,30 @@ Review mode **machine**: two local models coded every case independently; a fixe
 | acts: response | 3 |
 | cases | 30 |
 | cases with offender acts | 25 |
+| derived steps with a registry candidate: supported | 3 |
+| derived steps with a registry candidate: uncertain only | 7 |
 | harms recorded: victim minor | 16 |
 | harms recorded: victim unknown | 1 |
 | level-C affordances tied by the stated-means rule | 0 |
 | offender acts naming a victim or an undercover persona | 78 |
-| offender acts where both coders coded a platform interaction | 10 |
+| offender acts with a platform interaction (coder A's attribute; coder B's not compared) | 10 |
 | relations: possibly the same act | 12 |
 | relations: stated order | 2 |
 
 Order between acts comes mostly from cited dates; stated order is published only where a sentence names the earlier act or follows it directly. An act with no date and no stated order is unordered, not placed. Act counts are lower bounds: an act is published only where both coders give the same sentence, action code and actor, and on the blind benchmark split that finds 104 of 247 gold acts.
+
+## What each published field rests on
+
+An act is published when both coders coded it with the same action code and actor (resolve-1.2.0). The act's other fields do not all have that standing:
+
+| Standing | Fields | Meaning |
+|---|---|---|
+| consensus | `action`, `actor` | both coders coded the act with this value; published only then |
+| weaker of two | `status` | the weaker of the two coders' statuses |
+| intersected | `affordances`, `candidate_affordances`, `access`, `harms` | kept only where both coders annotated it |
+| union | `time` | every cited assertion of either coder |
+| coder a | `platform_interactions`, `platform_mentions`, `channels`, `targets`, `co_actors`, `outcome`, `repetition`, `unresolved_participants`, `support`, `description`, `participants`, `tracks` | coder A's value on an act both coders agreed on; coder B's value is not compared |
+| rule derived | relations: SAME_ACT (rule 6), relations: stated order (rule 5c), observation ties (state_machines.observations), chains and date order (state_machines.trajectories.derive) | made by a deterministic rule from published acts or the page text, not asserted by a coder |
 
 ## Models
 
@@ -70,7 +85,22 @@ Inference: `{"temperature": 0, "seed": 7, "num_ctx": 8192, "num_predict": 1500}`
 | `ut_ag_2026_006` | yes | 2 | 0 | 15 | 82 | 5 | 0.211 | fails |
 | `wy_dci_2023_005` | yes | 6 | 0 | 7 | 121 | 3 | 0.143 | partial |
 
-Relations made by rule from agreed acts (stated order, possible retellings) are counted under "What is published", not in this column. **SHACL:** our own shapes have 0 violations in every case. `fails` means a violation only of an upstream CAC shape listed in `state_machines/graphs/shacl_upstream_defects.json`; `partial` means upstream constraints that apply could not be run (see [graphs](../../graphs/README.md)).
+Relations made by rule from agreed acts (stated order, possible retellings) are counted under "What is published", not in this column.
+
+## SHACL
+
+Conformance over 30 published cases: `fails` 25, `full` 1, `partial` 4. Violations of shapes other than listed upstream defects: **0** (every case). `fails` here means a violation of an upstream CAC shape listed in `state_machines/graphs/shacl_upstream_defects.json` (it rejects valid UCO data; kept, counted, and never treated as conformance); `partial` means upstream constraints that apply could not be run. See [graphs](../../graphs/README.md).
+
+| Upstream-defect violation (focus · constraint path) | Count |
+|---|---:|
+| Action (documented act) · object | 92 |
+| ActionLifecycle (trajectory) · object | 170 |
+| ActionLifecycle (trajectory) · performer | 170 |
+
+| Applicable upstream constraint that could not run | Cases |
+|---|---:|
+| `https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape` | 29 |
+| `https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape` | 29 |
 
 
 ## Coverage and drops
@@ -378,11 +408,15 @@ PREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>
 PREFIX clt: <https://w3id.org/caselinker/trajectory#>
 SELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {
   GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .
-              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)
+              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs) FILTER(?m != oa:describing)
               OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }
+  FILTER(STRSTARTS(STR(?og), "urn:caselinker:pacer:") && STRENDS(STR(?og), ":observations"))
+  BIND(REPLACE(STR(?og), ":observations$", "") AS ?base)
+  BIND(IRI(CONCAT(?base, ":evidence")) AS ?eg)
+  VALUES ?part { ":evidence" ":observations" }
+  BIND(IRI(CONCAT(?base, ?part)) AS ?rg)
   GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }
-  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), ":evidence"))
-  FILTER(?m != oa:describing)
+  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t))
   FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))
   BIND(COALESCE(?name, REPLACE(STR(?body), "^.*#", "")) AS ?what)
   BIND(REPLACE(REPLACE(STR(?og), "^urn:caselinker:pacer:", ""), ":observations$", "") AS ?case)

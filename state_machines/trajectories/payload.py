@@ -81,7 +81,16 @@ def case_payload(bundle: dict, derived: Dict[str, dict]) -> dict:
     passages = {p["passage_id"]: p for p in bundle["passages"]}
     docs = {d["doc_id"]: d for d in bundle["documents"]}
     events = {e["event_id"]: _event(e, passages, docs) for e in bundle["events"]}
-    relations = [{"from": r["from_event"], "to": r["to_event"], "type": r["type"], "status": r["status"], "basis": r["basis"]}
+    # Registry entries behind level A/B for each act (DIRECT derivation): availability supported or uncertain
+    # for the act's dates, and the registry default. Availability, not use; an uncertain entry is not access.
+    for dt in (derived.get("DIRECT") or {}).get("tracks", []):
+        for L in dt["trajectories"]:
+            for s in L["steps"]:
+                if s.get("capability_status") and s["event_id"] in events:
+                    events[s["event_id"]]["capabilities"] = [
+                        {k: c[k] for k in ("platform", "affordance", "availability", "default_on", "action_relevant")}
+                        for c in s["capability_status"]]
+    relations =[{"from": r["from_event"], "to": r["to_event"], "type": r["type"], "status": r["status"], "basis": r["basis"]}
                  for r in bundle["relations"]]
     tracks = []
     for t in bundle["tracks"]:
@@ -95,6 +104,25 @@ def case_payload(bundle: dict, derived: Dict[str, dict]) -> dict:
                               "date_order": [list(p) for p in _date_pairs(bundle, thr, set(t["event_ids"]))]}
         tracks.append({"id": t["track_id"], "kind": t["kind"], "anchor": t.get("anchor_ref"),
                        "events": sorted(t["event_ids"]), "views": views})
+    # Shown, not used: chains are built per track and keep SAME_ACT alternatives apart (derive.py). The payload
+    # lists each act's possible retellings and any order relation that joins it to an act on another track, so the
+    # figure can show both without changing a chain.
+    track_of: Dict[str, List[str]] = {}
+    for t in bundle["tracks"]:
+        for x in t["event_ids"]:
+            track_of.setdefault(x, []).append(t["track_id"])
+    for r in bundle["relations"]:
+        a, b = r["from_event"], r["to_event"]
+        if a not in events or b not in events:
+            continue
+        if r["type"] in V.IDENTITY_RELATIONS:
+            for x, y in ((a, b), (b, a)):
+                events[x].setdefault("same_act", []).append({"event": y, "status": r["status"], "basis": r["basis"]})
+        elif r["type"] in V.ORDER_RELATIONS and not set(track_of.get(a, [])) & set(track_of.get(b, [])):
+            for x, y, side in ((a, b, "before"), (b, a, "after")):
+                events[x].setdefault("cross_track_order", []).append(
+                    {"event": y, "this_act_is": side, "type": r["type"], "status": r["status"], "basis": r["basis"],
+                     "other_tracks": sorted(track_of.get(y, []))})
     return {
         "case_id": bundle["case_id"],
         "documents": sorted(({"doc_type": d["doc_type"], "pages": d["page_count"],
@@ -138,8 +166,11 @@ def build_payload(root: Optional[Path] = None, *, from_bundles: bool = False) ->
             cp["observed"] = case_observed(json.loads(obs_path.read_text(encoding="utf-8")),
                                            {k: e["action"] for k, e in cp["events"].items()})
         cases.append(cp)
-    return {"release": {"id": manifest["release_id"], "adjudicated": manifest["adjudicated"],
-                        "review_mode": review_mode(manifest),
-                        "schema_version": manifest["schema_version"], "codebook_version": manifest["codebook_version"],
-                        "derivation_rule": manifest["derivation_rule"], "cases": len(cases)},
-            "cases": cases}
+    from state_machines.coding.resolve import FIELD_STANDING, FIELD_STANDING_NOTE
+    release = {"id": manifest["release_id"], "adjudicated": manifest["adjudicated"],
+               "review_mode": review_mode(manifest),
+               "schema_version": manifest["schema_version"], "codebook_version": manifest["codebook_version"],
+               "derivation_rule": manifest["derivation_rule"], "cases": len(cases)}
+    if review_mode(manifest) == "machine":   # which fields of an agreed act both coders checked; see resolve.FIELD_STANDING
+        release["field_standing"] = {k: {"fields": list(v), "meaning": FIELD_STANDING_NOTE[k]} for k, v in FIELD_STANDING.items()}
+    return {"release": release, "cases": cases}

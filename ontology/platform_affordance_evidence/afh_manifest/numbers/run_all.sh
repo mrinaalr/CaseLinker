@@ -32,6 +32,8 @@ echo "AfH run -> $AFH_OUT" >&2
 $PY $N/run_afh.py                       # build/, public/, harm_open/, harm_closed/
 $PY $N/year_evidence.py                 # year_evidence.json: publication-year corrections and flags
 $PY $N/year_sensitivity.py              # year_sensitivity.json: year-dependent results without the flagged records
+$PY $N/afh_sensitivity.py               # afh_sensitivity.json: section 2 verdicts without unsourced default-on rows, by threshold, leaving out each platform (~20 min)
+$PY $N/primary_interaction.py           # primary_interaction/*.csv: the 2026-11-26 audit's default_on overrides (judgments unchanged)
 mkdir -p "$AFH_OUT/task_forces"
 $PY scripts/verify/icac_tf_verify.py --db "$AFH_DB_COLLECTED" \
   --cross-csv "$AFH_OUT/task_forces/tf_cross.csv" --aggregator-only-csv "$AFH_OUT/task_forces/tf_aggregator_only.csv" \

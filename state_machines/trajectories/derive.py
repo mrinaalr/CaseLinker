@@ -174,13 +174,29 @@ def _step(event, index, eid, admissible, registry, event_levels, meets, chain, i
     return step
 
 
+def _status_entry(c: dict, relevant: set) -> Dict[str, Any]:
+    """One registry entry behind a level A/B claim, with the availability the event's dates allow
+    (codebook: supported, or uncertain and marked) and the registry's default setting."""
+    d = c.get("default_on")
+    if isinstance(d, str) and d.strip().lower() in ("yes", "true", "no", "false"):
+        d = d.strip().lower() in ("yes", "true")
+    return {"platform": c["platform"], "affordance": c["affordance"], "availability": c["availability"],
+            "default_on": d if isinstance(d, bool) else (None if d in (None, "") else str(d)),
+            "action_relevant": c["affordance"] in relevant}
+
+
 def _levels(event: dict, registry, admissible, event_levels) -> Dict[str, Any]:
     lv = event_levels(event, registry, admissible)
+    relevant = {c["affordance"] for c in lv["action_relevant"]}
     return {
         "platforms": sorted({i["platform_key"] for i in event.get("platform_interactions", []) if i["status"] in admissible}),
-        "action_relevant_affordances": sorted({c["affordance"] for c in lv["action_relevant"]}),   # level B
+        # Level B and A as class lists over every status the registry allows (supported or uncertain). An uncertain
+        # entry is not established access: capability_status says which is which, and claims splits them.
+        "action_relevant_affordances": sorted(relevant),                                            # level B
         "available_affordances": sorted({c["affordance"] for c in lv["available"]}),               # level A
         "capability_evidence": sorted({(c["platform"], c["affordance"], c["availability"]) for c in lv["available"]}),
+        "capability_status": sorted((_status_entry(c, relevant) for c in lv["available"]),
+                                    key=lambda s: (s["platform"], s["affordance"])),
         "unmatched_platforms": lv["unmatched_platforms"],
         "level_unit": "event",
     }

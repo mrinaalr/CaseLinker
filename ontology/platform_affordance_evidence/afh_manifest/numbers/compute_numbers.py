@@ -367,8 +367,14 @@ def walk(o, acc):
 # One derivation (DIRECT). The *.inferred.json files hold the same steps under the INFERRED threshold;
 # reading both counted every step twice. A step is one act in one chain, so an act in several chains
 # is several steps: unique acts are counted beside them.
+from state_machines.trajectories.claims import candidate_status  # noqa: E402
+
 acc = [0, 0]
 unique_acts, unique_with = set(), set()
+# The candidate count is availability over supported and uncertain entries together; a supported candidate needs the
+# act's cited dates inside a documented registry period (codebook availability rule). Both are reported.
+steps_supported = steps_uncertain_only = steps_status_unknown = 0
+unique_supported = set()
 for p in sorted((PACER / "derived").glob("*.direct.json")):
     derived = json.loads(p.read_text())
     walk(derived, acc)
@@ -376,8 +382,17 @@ for p in sorted((PACER / "derived").glob("*.direct.json")):
         for chain in track["trajectories"]:
             for step in chain["steps"]:
                 unique_acts.add((derived["case_id"], step["event_id"]))
-                if step["claims"]["candidate_capabilities"]:
+                cl = step["claims"]
+                st = candidate_status(cl)       # state_machines/trajectories/claims.py; 'unknown' is never counted as uncertain
+                if st != "none":
                     unique_with.add((derived["case_id"], step["event_id"]))
+                if st == "unknown":                 # derived before availability status was recorded (e.g. the superseded release)
+                    steps_status_unknown += 1
+                elif st == "supported":
+                    steps_supported += 1
+                    unique_supported.add((derived["case_id"], step["event_id"]))
+                elif st == "uncertain":
+                    steps_uncertain_only += 1
 per_case = {}
 for c in pacer["cases"]:
     a = (rep["cases"].get(c["case_id"], {}).get("agreement_model_coded") or {})
@@ -400,6 +415,11 @@ out["7_pacer"] = {
     "observations": sum(v["observations"] for v in per_case.values()),
     "derived_steps": acc[0], "derived_steps_with_capability_candidates": acc[1],
     "derived_step_acts": len(unique_acts), "derived_step_acts_with_capability_candidates": len(unique_with),
+    # None, not 0, when the release records no availability status: a missing status is unknown, never uncertain
+    "derived_steps_with_supported_candidate": None if steps_status_unknown else steps_supported,
+    "derived_steps_with_uncertain_candidates_only": None if steps_status_unknown else steps_uncertain_only,
+    "derived_step_acts_with_supported_candidate": None if steps_status_unknown else len(unique_supported),
+    **({"derived_steps_with_candidate_status_unknown": steps_status_unknown} if steps_status_unknown else {}),
     "derived_steps_derivation": "DIRECT (derived/*.direct.json); the INFERRED derivation is not added",
     "reliability_overall": rep["reliability_real_cases"],
     "per_case": per_case,

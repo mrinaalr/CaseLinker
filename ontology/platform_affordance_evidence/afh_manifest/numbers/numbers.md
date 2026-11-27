@@ -174,7 +174,7 @@ Coordination parts: multi_defendant_operation 31, §2252A(g) enterprise charge i
 
 ## 7. PACER (pacer-v2)
 
-Cases **30** (press-linked 30/30) · documents **98** · agreed acts **290** · chains **170** · observations **875** · derived steps with capability candidates **10 of 210** (10 of 170 unique acts; DIRECT derivation). Source: `<PACER release>/manifest.json`, `derived/*.direct.json`.
+Cases **30** (press-linked 30/30) · documents **98** · agreed acts **290** · chains **170** · observations **875** · derived steps with capability candidates **10 of 210** (10 of 170 unique acts; DIRECT derivation): **3** with a candidate whose availability the registry supports for the act's dates, 7 with uncertain candidates only (undated act or approximate registry date; not established access). Candidates are availability, not use; documented capability use (level C) is 0. Source: `<PACER release>/manifest.json`, `derived/*.direct.json`.
 
 **Two-coder reliability** (pipeline report, `state_machines/coding/report.py` `build`, `reliability_real_cases`; model-coded acts only, docket-parser acts excluded): coder A 2,684 acts, coder B 5,904, matched 1,070, mean event F1 0.229. Action code on matched pairs: raw agreement 365/1070 = 0.341; mean per-case Cohen's κ 0.296. This is agreement conditional on both coders coding the act; it has no negatives.
 

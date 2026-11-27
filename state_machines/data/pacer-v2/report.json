@@ -136,11 +136,13 @@
   "acts: response": 3,
   "cases": 30,
   "cases with offender acts": 25,
+  "derived steps with a registry candidate: supported": 3,
+  "derived steps with a registry candidate: uncertain only": 7,
   "harms recorded: victim minor": 16,
   "harms recorded: victim unknown": 1,
   "level-C affordances tied by the stated-means rule": 0,
   "offender acts naming a victim or an undercover persona": 78,
-  "offender acts where both coders coded a platform interaction": 10,
+  "offender acts with a platform interaction (coder A's attribute; coder B's not compared)": 10,
   "relations: possibly the same act": 12,
   "relations: stated order": 2
  },
@@ -871,7 +873,7 @@
      "phrase",
      "standing"
     ],
-    "sparql": "PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>\nPREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>\nPREFIX clt: <https://w3id.org/caselinker/trajectory#>\nSELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {\n  GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .\n              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs)\n              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }\n  GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }\n  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t)) FILTER(STRENDS(STR(?eg), \":evidence\"))\n  FILTER(?m != oa:describing)\n  FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))\n  BIND(COALESCE(?name, REPLACE(STR(?body), \"^.*#\", \"\")) AS ?what)\n  BIND(REPLACE(REPLACE(STR(?og), \"^urn:caselinker:pacer:\", \"\"), \":observations$\", \"\") AS ?case)\n  BIND(REPLACE(STR(?act), \"^.*[/#:-](e[0-9]+)$\", \"$1\") AS ?event)\n} ORDER BY ?case ?event ?what",
+    "sparql": "PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX core: <https://ontology.unifiedcyberontology.org/uco/core/>\nPREFIX action: <https://ontology.unifiedcyberontology.org/uco/action/>\nPREFIX clt: <https://w3id.org/caselinker/trajectory#>\nSELECT DISTINCT ?case ?event ?action ?relationship ?what ?phrase ?standing WHERE {\n  GRAPH ?og { ?obs oa:motivatedBy ?m ; oa:hasTarget ?span ; oa:hasBody ?body ; clt:sourceStatus ?standing .\n              ?evidence oa:hasTarget ?span ; oa:hasBody ?rel . FILTER(?evidence != ?obs) FILTER(?m != oa:describing)\n              OPTIONAL { ?obs clt:featureTerm ?phrase } OPTIONAL { ?body core:name ?name } }\n  FILTER(STRSTARTS(STR(?og), \"urn:caselinker:pacer:\") && STRENDS(STR(?og), \":observations\"))\n  BIND(REPLACE(STR(?og), \":observations$\", \"\") AS ?base)\n  BIND(IRI(CONCAT(?base, \":evidence\")) AS ?eg)\n  VALUES ?part { \":evidence\" \":observations\" }\n  BIND(IRI(CONCAT(?base, ?part)) AS ?rg)\n  GRAPH ?rg { ?rel core:kindOfRelationship ?relationship ; core:source ?s ; core:target ?t }\n  GRAPH ?eg { ?act clt:actionCode ?action } FILTER(?act IN (?s, ?t))\n  FILTER(?body IN (?s, ?t) || (BOUND(?phrase) && EXISTS { GRAPH ?any { ?s a ?body } }))\n  BIND(COALESCE(?name, REPLACE(STR(?body), \"^.*#\", \"\")) AS ?what)\n  BIND(REPLACE(REPLACE(STR(?og), \"^urn:caselinker:pacer:\", \"\"), \":observations$\", \"\") AS ?case)\n  BIND(REPLACE(STR(?act), \"^.*[/#:-](e[0-9]+)$\", \"$1\") AS ?event)\n} ORDER BY ?case ?event ?what",
     "rows": [
      [
       "anchorage_pd_2022_006",
@@ -973,6 +975,65 @@
       "SWORN_AFFIDAVIT"
      ]
     ]
+   }
+  }
+ },
+ "field_standing": {
+  "rule": "resolve-1.2.0",
+  "groups": {
+   "consensus": {
+    "fields": [
+     "action",
+     "actor"
+    ],
+    "meaning": "both coders coded the act with this value; published only then"
+   },
+   "weaker_of_two": {
+    "fields": [
+     "status"
+    ],
+    "meaning": "the weaker of the two coders' statuses"
+   },
+   "intersected": {
+    "fields": [
+     "affordances",
+     "candidate_affordances",
+     "access",
+     "harms"
+    ],
+    "meaning": "kept only where both coders annotated it"
+   },
+   "union": {
+    "fields": [
+     "time"
+    ],
+    "meaning": "every cited assertion of either coder"
+   },
+   "coder_a": {
+    "fields": [
+     "platform_interactions",
+     "platform_mentions",
+     "channels",
+     "targets",
+     "co_actors",
+     "outcome",
+     "repetition",
+     "unresolved_participants",
+     "support",
+     "description",
+     "participants",
+     "tracks"
+    ],
+    "meaning": "coder A's value on an act both coders agreed on; coder B's value is not compared"
+   },
+   "rule_derived": {
+    "fields": [
+     "relations: SAME_ACT (rule 6)",
+     "relations: stated order (rule 5c)",
+     "observation ties (state_machines.observations)",
+     "chains and date order (state_machines.trajectories.derive)"
+    ],
+    "meaning": "made by a deterministic rule from published acts or the page text, not asserted by a coder"
    }
   }
  },
@@ -5815,6 +5876,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 21,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 7,
+    "ActionLifecycle (trajectory) \u00b7 object": 7,
+    "ActionLifecycle (trajectory) \u00b7 performer": 7
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 9
    },
@@ -5932,6 +6003,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 12,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 performer": 4
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 15
    },
@@ -6049,6 +6130,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 46,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 8,
+    "ActionLifecycle (trajectory) \u00b7 object": 19,
+    "ActionLifecycle (trajectory) \u00b7 performer": 19
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 25
    },
@@ -6164,6 +6255,12 @@
    },
    "shacl": "partial",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 0,
+   "shacl_upstream_defect_breakdown": {},
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 1
    },
@@ -6276,6 +6373,15 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 2,
+   "shacl_upstream_defect_breakdown": {
+    "ActionLifecycle (trajectory) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 performer": 1
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 5
    },
@@ -6393,6 +6499,12 @@
    },
    "shacl": "partial",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 0,
+   "shacl_upstream_defect_breakdown": {},
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 6
    },
@@ -6504,6 +6616,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 25,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 9,
+    "ActionLifecycle (trajectory) \u00b7 object": 8,
+    "ActionLifecycle (trajectory) \u00b7 performer": 8
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 9
    },
@@ -6622,6 +6744,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 28,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 8,
+    "ActionLifecycle (trajectory) \u00b7 object": 10,
+    "ActionLifecycle (trajectory) \u00b7 performer": 10
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 19
    },
@@ -6731,6 +6863,15 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 18,
+   "shacl_upstream_defect_breakdown": {
+    "ActionLifecycle (trajectory) \u00b7 object": 9,
+    "ActionLifecycle (trajectory) \u00b7 performer": 9
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 15
    },
@@ -6847,6 +6988,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 12,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 performer": 4
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 14
    },
@@ -6958,6 +7109,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 57,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 object": 27,
+    "ActionLifecycle (trajectory) \u00b7 performer": 27
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 32
    },
@@ -7075,6 +7236,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 3,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 performer": 1
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 2
    },
@@ -7191,6 +7362,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 19,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 9,
+    "ActionLifecycle (trajectory) \u00b7 performer": 9
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 14
    },
@@ -7307,6 +7488,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 3,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 performer": 1
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 4
    },
@@ -7423,6 +7614,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 11,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 5,
+    "ActionLifecycle (trajectory) \u00b7 performer": 5
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 6
    },
@@ -7539,6 +7740,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 7,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 performer": 3
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 9
    },
@@ -7659,6 +7870,15 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 8,
+   "shacl_upstream_defect_breakdown": {
+    "ActionLifecycle (trajectory) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 performer": 4
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 5
    },
@@ -7776,6 +7996,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 5,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 2,
+    "ActionLifecycle (trajectory) \u00b7 performer": 2
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 2
    },
@@ -7892,6 +8122,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 9,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 performer": 3
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 4
    },
@@ -8007,6 +8247,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 10,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 performer": 3
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 4
    },
@@ -8127,6 +8377,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 66,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 18,
+    "ActionLifecycle (trajectory) \u00b7 object": 24,
+    "ActionLifecycle (trajectory) \u00b7 performer": 24
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 21
    },
@@ -8236,6 +8496,12 @@
    },
    "shacl": "partial",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 0,
+   "shacl_upstream_defect_breakdown": {},
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 1
    },
@@ -8347,6 +8613,9 @@
    },
    "shacl": "full",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 0,
+   "shacl_upstream_defect_breakdown": {},
+   "shacl_applicable_skipped": [],
    "review": {},
    "passages": {
     "ocr_text_only": 0,
@@ -8464,6 +8733,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 15,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 5,
+    "ActionLifecycle (trajectory) \u00b7 object": 5,
+    "ActionLifecycle (trajectory) \u00b7 performer": 5
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 17
    },
@@ -8586,6 +8865,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 11,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 performer": 4
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 19
    },
@@ -8700,6 +8989,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 14,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 4,
+    "ActionLifecycle (trajectory) \u00b7 object": 5,
+    "ActionLifecycle (trajectory) \u00b7 performer": 5
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 14
    },
@@ -8816,6 +9115,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 17,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 object": 7,
+    "ActionLifecycle (trajectory) \u00b7 performer": 7
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 7
    },
@@ -8931,6 +9240,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 8,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 2,
+    "ActionLifecycle (trajectory) \u00b7 object": 3,
+    "ActionLifecycle (trajectory) \u00b7 performer": 3
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 3
    },
@@ -9040,6 +9359,16 @@
    },
    "shacl": "fails",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 5,
+   "shacl_upstream_defect_breakdown": {
+    "Action (documented act) \u00b7 object": 1,
+    "ActionLifecycle (trajectory) \u00b7 object": 2,
+    "ActionLifecycle (trajectory) \u00b7 performer": 2
+   },
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 2
    },
@@ -9158,6 +9487,12 @@
    },
    "shacl": "partial",
    "shacl_violations": 0,
+   "shacl_upstream_defect_violations": 0,
+   "shacl_upstream_defect_breakdown": {},
+   "shacl_applicable_skipped": [
+    "https://cacontology.projectvic.org/custodial#AuthorityRoleExclusivityShape",
+    "https://cacontology.projectvic.org/detection#DetectionRoleParticipationShape"
+   ],
    "review": {
     "agreed": 6
    },

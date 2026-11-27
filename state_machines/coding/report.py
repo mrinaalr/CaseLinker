@@ -94,6 +94,7 @@ def _coverage(log: Path) -> Counter:
 def published_content(release_id: str) -> dict:
     """What the release's bundles hold, counted: acts by family, dated acts, relations, harms, level C."""
     from state_machines.evidence import vocab as V
+    from state_machines.trajectories.claims import candidate_status
     c: Counter = Counter()
     for path in sorted((DATA / release_id / "cases").glob("*.json")):
         b = json.loads(path.read_text(encoding="utf-8"))
@@ -106,12 +107,24 @@ def published_content(release_id: str) -> dict:
             c["acts with a cited date"] += bool(e["time"]["assertions"])
             if fam == "offender":
                 c["offender acts naming a victim or an undercover persona"] += bool(e["targets"])
-                c["offender acts where both coders coded a platform interaction"] += bool(e["platform_interactions"])
+                # platform_interactions is coder A's attribute on an agreed act; coder B's is never compared (resolve.FIELD_STANDING)
+                c["offender acts with a platform interaction (coder A's attribute; coder B's not compared)"] += bool(e.get("platform_interactions"))
                 c["level-C affordances tied by the stated-means rule"] += len(e["affordances"])
             for h in e["harms"]:
                 c[f"harms recorded: victim {h['victim_kind']}"] += 1
         for r in b["relations"]:
             c["relations: stated order" if r["type"] in V.ORDER_RELATIONS else "relations: possibly the same act"] += 1
+    # Registry availability on derived steps (DIRECT): supported for the act's dates, or uncertain (not established access).
+    for path in sorted((DATA / release_id / "derived").glob("*.direct.json")):
+        d = json.loads(path.read_text(encoding="utf-8"))
+        for t in d["tracks"]:
+            for L in t["trajectories"]:
+                for s in L["steps"]:
+                    cl = s.get("claims") or {}
+                    st = candidate_status(cl)   # unknown (no recorded status) is never counted as uncertain
+                    if st != "none":
+                        key = {"supported": "supported", "uncertain": "uncertain only", "unknown": "status unknown"}[st]
+                        c[f"derived steps with a registry candidate: {key}"] += 1
     return dict(sorted(c.items()))
 
 
@@ -191,8 +204,11 @@ def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
                  "parser_events": rep.get("parser_events"), "coverage": cov}
         if case_id in published:
             p = published[case_id]
-            entry.update(shacl=p["shacl"]["conformance"], shacl_violations=p["shacl"]["violations"], review=p["review"],
-                         passages=p.get("passages"))
+            entry.update(shacl=p["shacl"]["conformance"], shacl_violations=p["shacl"]["violations"],
+                         shacl_upstream_defect_violations=p["shacl"].get("upstream_defect_violations", 0),
+                         shacl_upstream_defect_breakdown=p["shacl"].get("upstream_defect_breakdown", {}),
+                         shacl_applicable_skipped=p["shacl"].get("applicable_skipped", []),
+                         review=p["review"], passages=p.get("passages"))
             totals["cases published"] += 1
         else:
             totals["cases not published"] += 1
@@ -222,7 +238,46 @@ def build(release_id: str, auto: Path, pilot: Path = None) -> dict:
             "privacy_scan": {k: (len(v) if k == "hits" else v) for k, v in privacy.items()},
             "runtime_per_model": model_stats(), "totals": dict(sorted(totals.items())), "reliability_real_cases": reliability,
             "published": published_content(release_id), "observed": observed_content(release_id, pilot),
+            "field_standing": field_standing(),
             "benchmark": benchmark_results(), "reference_real_cases": reference, "cases": cases}
+
+
+def field_standing() -> dict:
+    """Which published fields both coders agreed on and which are coder A's alone (resolve.FIELD_STANDING)."""
+    from state_machines.coding.resolve import FIELD_STANDING, FIELD_STANDING_NOTE, RULE_VERSION
+    return {"rule": RULE_VERSION, "groups": {k: {"fields": list(v), "meaning": FIELD_STANDING_NOTE[k]} for k, v in FIELD_STANDING.items()}}
+
+
+def _shacl_md(cases: dict) -> list:
+    """SHACL, computed from the manifest: our own violations, upstream-defect violations by constraint, unrunnable constraints."""
+    pub = {k: c for k, c in cases.items() if c.get("published")}
+    own = sum(c.get("shacl_violations") or 0 for c in pub.values())
+    conf: Counter = Counter(c.get("shacl") for c in pub.values())
+    br: Counter = Counter()
+    for c in pub.values():
+        br.update(c.get("shacl_upstream_defect_breakdown") or {})
+    skipped: Counter = Counter(s for c in pub.values() for s in c.get("shacl_applicable_skipped") or [])
+    L = ["## SHACL", "",
+         f"Conformance over {len(pub)} published cases: " + ", ".join(f"`{k}` {n}" for k, n in sorted(conf.items())) + ". "
+         f"Violations of shapes other than listed upstream defects: **{own}**"
+         + (" (every case)." if own == 0 else " — these are defects in the release and must be fixed.") + " "
+         "`fails` here means a violation of an upstream CAC shape listed in `state_machines/graphs/shacl_upstream_defects.json` "
+         "(it rejects valid UCO data; kept, counted, and never treated as conformance); `partial` means upstream constraints that apply "
+         "could not be run. See [graphs](../../graphs/README.md).", ""]
+    if br:
+        L += ["| Upstream-defect violation (focus · constraint path) | Count |", "|---|---:|"] + [f"| {k} | {n} |" for k, n in sorted(br.items())] + [""]
+    if skipped:
+        L += ["| Applicable upstream constraint that could not run | Cases |", "|---|---:|"] + [f"| `{k}` | {n} |" for k, n in sorted(skipped.items())] + [""]
+    return L
+
+
+def _standing_md(fs: dict) -> list:
+    L = ["## What each published field rests on", "",
+         f"An act is published when both coders coded it with the same action code and actor ({fs['rule']}). The act's other fields do not all "
+         "have that standing:", "", "| Standing | Fields | Meaning |", "|---|---|---|"]
+    for k, g in fs["groups"].items():
+        L.append(f"| {k.replace('_', ' ')} | {', '.join(f'`{f}`' if ':' not in f and '(' not in f else f for f in g['fields'])} | {g['meaning']} |")
+    return L + [""]
 
 
 _ROWS = [("gold acts found (recall)", lambda o: o["events"]["recall"]), ("coded acts that are gold acts (precision)", lambda o: o["events"]["precision"]),
@@ -336,6 +391,7 @@ def markdown(r: dict) -> str:
          "", "Order between acts comes mostly from cited dates; stated order is published only where a sentence names the earlier act "
          "or follows it directly. An act with no date and no stated order is unordered, not placed. Act counts are lower bounds: an act is "
          "published only where both coders give the same sentence, action code and actor, and on the blind benchmark split that finds 104 of 247 gold acts.", "",
+         *(_standing_md(r["field_standing"]) if r.get("field_standing") else []),
          "## Models", "", "| Coder | Model | Digest | Quantization |", "|---|---|---|---|"]
     for name, spec in r["models"]["coders"].items():
         L.append(f"| {name} | `{spec['model']}` | `{spec['digest'][:19]}…` | {spec.get('quantization', '')} |")
@@ -349,10 +405,8 @@ def markdown(r: dict) -> str:
         L.append(f"| `{cid}` | {'yes' if c['published'] else 'no: ' + str(c.get('failed'))[:60]} | {res.get('published: events both coders coded', '')} | "
                  f"{res.get('published: relations both coders asserted', '')} | {ev.get('coder_a', '')} | {ev.get('coder_b', '')} | {ev.get('matched', '')} | "
                  f"{kap} | {c.get('shacl', '')} |")
-    L += ["", "Relations made by rule from agreed acts (stated order, possible retellings) are counted under \"What is published\", not in this column. "
-          "**SHACL:** our own shapes have 0 violations in every case. `fails` means a violation only of an upstream CAC shape listed in "
-          "`state_machines/graphs/shacl_upstream_defects.json`; `partial` means upstream constraints that apply could not be run "
-          "(see [graphs](../../graphs/README.md)).", ""]
+    L += ["", "Relations made by rule from agreed acts (stated order, possible retellings) are counted under \"What is published\", not in this column.", ""]
+    L += _shacl_md(r["cases"])
     L += ["", "## Coverage and drops", "", "| Measure | Count |", "|---|---:|"] + [f"| {k} | {v} |" for k, v in t.items() if k.startswith("coder_")]
     rel = r["reliability_real_cases"]
     L += ["", "## Reliability on the real cases", "", f"```json\n{json.dumps(rel, indent=1)}\n```", ""]

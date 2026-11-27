@@ -229,6 +229,18 @@
       edges.append(sv("path", { d, class: `edge edge-${e.kind}${b.x < a.x ? " edge-back" : ""}`, "data-from": e.from, "data-to": e.to,
         "marker-end": e.kind === "date" ? "url(#arr-dim)" : "url(#arr)" }));
     }
+    // possible retellings (SAME_ACT, rule-derived): a dotted link with no arrow. It asserts no order and merges
+    // nothing; the chains above still list each alternative separately.
+    const shown = new Set();
+    for (const id of r.ids) for (const s of (r.cs.events[id].same_act || [])) {
+      const key = [id, s.event].sort().join(">");
+      const a = r.pos.get(id), b = r.pos.get(s.event);
+      if (shown.has(key) || !a || !b) continue;
+      shown.add(key);
+      const x1 = a.x + L.w / 2, y1 = a.y + L.h, x2 = b.x + L.w / 2, y2 = b.y + L.h, low = Math.max(y1, y2) + 10;
+      edges.append(sv("path", { d: `M${x1},${y1} C${x1},${low} ${x2},${low} ${x2},${y2}`, class: "edge edge-same",
+        "data-from": id, "data-to": s.event }));
+    }
     g.append(edges);
     for (const id of r.ids) {
       const n = drawNode(r.cs.events[id], r.pos.get(id), color, meansOf(r.cs, id));
@@ -315,6 +327,7 @@
       item(el("i", { class: "line line-direct" }), "stated order"),
       item(el("i", { class: "line line-inferred" }), "inferred"),
       item(el("i", { class: "line line-date" }), "from dates"),
+      item(el("i", { class: "line line-same" }), "possibly the same act (no order)"),
       item(el("i", { class: "box box-inferred" }), "inferred act"),
       item(el("i", { class: "box box-harm", text: "h2" }), "harm to a child"),
       item(el("i", { class: "tick" }), "court, police, response"),
@@ -444,26 +457,52 @@
     ]);
   }
 
+  // registry entries for the act's platform: availability for the act's dates, never use. Supported and
+  // uncertain are listed apart so an undated act never reads as having had the capability.
+  function capabilityRows(ev, kv) {
+    const caps = ev.capabilities || [];
+    if (!caps.length) return [];
+    const line = c => `${AFF[c.affordance] ? AFF[c.affordance].label : c.affordance} on ${c.platform}` +
+      `${c.action_relevant ? " (relevant to this act)" : ""}` +
+      `${c.default_on === true ? " · on by default" : c.default_on === false ? " · off by default" : ""}`;
+    const sup = caps.filter(c => c.availability === "supported"), unc = caps.filter(c => c.availability !== "supported");
+    return [
+      sup.length ? kv("Available (supported)", sup.map(line).join("; ")) : null,
+      unc.length ? kv("Availability uncertain", unc.map(line).join("; ") + " · not established for this act's date") : null,
+      kv("Capability use", ev.affordances.length ? "see Affordances (stated as the means)" : "none documented"),
+    ];
+  }
+
   function showDetail(ev, means = []) {
     const kv = (k, v) => el("div", { class: "kv" }, el("span", { class: "k", text: k }), el("span", { class: "v", text: v }));
     const when = ev.time.length
       ? ev.time.map(a => `${a.earliest === a.latest ? a.earliest : a.earliest + " – " + a.latest} (${a.precision}, ${a.basis.replace(/_/g, " ")}, ${a.status.toLowerCase()})`).join("; ") + (ev.time_conflict ? "; dates conflict" : "")
       : "undated";
+    // machine release: both coders agreed on the act and its actor; targets, co-actors and platforms are coder A's,
+    // never compared with coder B (release.field_standing, from resolve.FIELD_STANDING)
+    const coderA = !!((state.payload.release || {}).field_standing);
+    const a = coderA ? " · coder A only" : "";
     openPanel([
       el("div", { class: "cl-eyebrow", text: ev.id }),
       el("h3", { class: "detail-title", text: ev.label }),
       kv("Evidence", `${ev.status === "DIRECT" ? "stated" : ev.status.toLowerCase()} · ${STANDING_LONG[ev.standing] || "—"}`),
-      kv("Review", ev.review.replace(/_/g, " ")),
+      kv("Review", coderA && ev.review === "agreed" ? "agreed on act and actor (two model coders)" : ev.review.replace(/_/g, " ")),
       kv("Actor", `${ev.actor.participant_ref} (${ev.actor.role.replace("_", "-")})`),
-      ev.co_actors.length ? kv("With", ev.co_actors.map(c => `${c.participant_ref} (${c.role}, ${c.mode})`).join("; ")) : null,
-      ev.targets.length ? kv("Targets", ev.targets.map(t => `${t.participant_ref} (${t.role})`).join("; ")) : null,
+      ev.co_actors.length ? kv("With", ev.co_actors.map(c => `${c.participant_ref} (${c.role}, ${c.mode})`).join("; ") + a) : null,
+      ev.targets.length ? kv("Targets", ev.targets.map(t => `${t.participant_ref} (${t.role})`).join("; ") + a) : null,
       ev.unresolved.length ? kv("Role open", `${ev.unresolved.join(", ")} (not resolved by the coders)`) : null,
       ev.outcome !== "completed" ? kv("Outcome", ev.outcome.replace(/_/g, " ")) : null,
       kv("When", when),
       ev.affordances.length ? kv("Affordances", ev.affordances.map(a => `${AFF[a.class].label} (${a.basis.replace("_", " ")}, ${a.status.toLowerCase()})`).join("; ")) : null,
       ev.harms.length ? kv("Harms", ev.harms.map(h => `${h.code.replace("HARM_", "").replace(/_/g, " ").toLowerCase()}${h.h0 ? " · " + h.h0 : ""} (${h.victim_kind})`).join("; ")) : null,
-      ev.platforms.length ? kv("Platforms", ev.platforms.map(p => `${p.key} (${p.mode}, ${p.audience})`).join("; ")) : null,
-      ev.mentions.length ? kv("Named", ev.mentions.join(", ")) : null,
+      ev.platforms.length ? kv("Platforms", ev.platforms.map(p => `${p.key} (${p.mode}, ${p.audience})`).join("; ") + a) : null,
+      ev.mentions.length ? kv("Named", ev.mentions.join(", ") + a) : null,
+      ...capabilityRows(ev, kv),
+      (ev.same_act || []).length ? kv("Possibly the same act as", ev.same_act.map(s => s.event).join(", ") +
+        " · same action, overlapping dates; linked by rule, not merged; chains list each alternative") : null,
+      (ev.cross_track_order || []).length ? kv("Stated order across tracks", ev.cross_track_order.map(o =>
+        `${o.this_act_is} ${o.event} (${o.other_tracks.join(", ")}; ${o.basis.replace(/_/g, " ")})`).join("; ") +
+        " · not in any chain: chains are built per track") : null,
       means.length ? kv("Stated means", means.map(u => `${meansText(u)} · ${STANDING_LONG[u.standing] || u.standing}`).join("; ")) : null,
       el("div", { class: "detail-sub", text: "Sources" }),
       el("ul", { class: "prov" }, ev.provenance.map(p => el("li", { text: `${p.doc_type.replace(/_/g, " ")}, page ${p.page} · ${STANDING_LONG[p.standing] || p.standing}` })))]);

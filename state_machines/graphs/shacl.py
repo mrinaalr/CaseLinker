@@ -214,11 +214,20 @@ def validation_report(*documents: str) -> dict:
     waived = {w["shape"] for w in waivers()["waivers"]}
     unwaived = [s["shape"] for s in applicable if s["shape"] not in waived]
     ran_ok = bool(conforms) or not (violations or upstream)
+    # What each upstream-defect violation is about: the constraint path, and whether the focus node is a derived
+    # trajectory (uco-action:ActionLifecycle, kb:trajectory-*) or a documented act (kb:action-*). Counted, never dropped.
+    breakdown: dict = {}
+    for _, msg in upstream:
+        focus, rest = msg.split(" ", 1)
+        kind = "ActionLifecycle (trajectory)" if "trajectory-" in focus else "Action (documented act)" if "action-" in focus else "other"
+        key = f"{kind} · {rest.split(':', 1)[0].strip() or '(node)'}"
+        breakdown[key] = breakdown.get(key, 0) + 1
     return {
         "conformance": "fails" if not ran_ok else ("partial" if applicable else "full"),
         "violations": sorted(m for _, m in violations),
         "upstream_defect_violations": sorted(m for _, m in upstream),
         "upstream_defect_shapes": sorted({s for s, _ in upstream}),
+        "upstream_defect_breakdown": dict(sorted(breakdown.items())),
         "violating_shapes": sorted({s for s, _ in violations}),
         "skipped_constraints": skipped,
         "applicable_skipped": [s["shape"] for s in applicable],
