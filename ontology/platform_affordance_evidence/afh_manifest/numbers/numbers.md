@@ -1,6 +1,8 @@
 # AfH 2.0 numbers
 
-AfH 2.0 snapshot: corpus **10,802 cases** · `codebook-9` · registry `platforms-3` · PACER `pacer-v2` (hashes in SNAPSHOT.md). Values in numbers.json; run order in run_all.sh. Read-only on the DB and the PACER release.
+AfH 2.0 snapshot: collected corpus **10,802 records** · `codebook-9` · registry `platforms-3` · PACER `pacer-v2` (hashes in SNAPSHOT.md). Values in numbers.json; run order in run_all.sh. Read-only on the DB and the PACER release.
+
+Analytical denominators use **AfH 2.0 frozen DB minus exclusions v1**: 10,779 records, leaving out 23 verified redundant copies listed in `afh_manifest/config/exclusions.csv` (the same release ingested twice). Corpus-level figures (NCases, NFeatures, NSources and the other cover counts) describe the collected corpus.
 
 Data caveats are marked ⚑ and collected in [Flags](#flags).
 
@@ -8,9 +10,9 @@ Data caveats are marked ⚑ and collected in [Flags](#flags).
 
 | Placeholder | Value | Definition | Source |
 |---|---:|---|---|
-| NCases | 10,802 | rows in `cases` | `CaseStorage.get_all_cases` |
-| NFeatures | 231,988 | `/api/stats` `unique_features`: every value read from the case text and stored; each list value counts; labels count, and the quoted spans behind them are listed, not counted; place names count (their role is not stated); placeholders, program boilerplate (incl. the CyberTipline flag), provenance and copies excluded | `run/feature_count.py` |
-| NSources | 76 | publishing families: distinct `source` labels after `_source_count_key` folding | `run/feature_count.py` `source_count_key` (as in `get_stats`) |
+| NCases | 10,802 | collected corpus: rows in `cases` of the collected DB | `CaseStorage.get_all_cases` |
+| NFeatures | 231,988 | collected corpus: `/api/stats` `unique_features`: every value read from the case text and stored; each list value counts; labels count, and the quoted spans behind them are listed, not counted; place names count (their role is not stated); placeholders, program boilerplate (incl. the CyberTipline flag), provenance and copies excluded | `run/feature_count.py` |
+| NSources | 76 | collected corpus: publishing families: distinct `source` labels after `_source_count_key` folding | `run/feature_count.py` `source_count_key` (as in `get_stats`) |
 | NSourceLabels | 78 | distinct raw `source` labels | same |
 | NAgencies | 4,326 | distinct agencies named in the corpus after `distinct_named_agencies` | `agency_label_normalize.distinct_named_agencies` (as in `get_stats`) |
 | NAgencyVariants | 5,052 | distinct raw `agencies_involved` strings before normalization | `extracted_features.agencies_involved` |
@@ -34,25 +36,25 @@ Rule (`afhq1/harm_release.py` `build`, `_on_at`, `_recurs`): a row is a stated-t
 
 | | <=2003 | 2004-2010 | 2011-2016 | >=2017 | verdict |
 |---|---:|---:|---:|---:|---|
-| cases in bin | 82 | 747 | 498 | 2 ✗ | |
-| Anonymity | **81** | **454** | **448** | 2 | recurs |
+| cases in bin | 82 | 745 | 498 | 2 ✗ | |
+| Anonymity | **81** | **453** | **448** | 2 | recurs |
 | Ephemerality | 0 | 0 | **318** | 0 | first appears in the last qualifying cohort; recurrence untestable |
-| ContactDiscovery | **52** | **261** | **359** | 1 | recurs |
-| UnmonitoredCommunication | **18** | **485** | **456** | 0 | recurs |
-| DistributionInfrastructure | **52** | **272** | **109** | 0 | recurs |
+| ContactDiscovery | **52** | **260** | **359** | 1 | recurs |
+| UnmonitoredCommunication | **18** | **484** | **456** | 0 | recurs |
+| DistributionInfrastructure | **52** | **271** | **109** | 0 | recurs |
 | GenerativeSynthesis (descriptive) | 0 | 0 | 0 | 1 | not tested |
 
 **Persistence by publication era.** Qualifying: <=2016, 2020-2022, 2023-2026.
 
 | | <=2016 | 2017-2019 | 2020-2022 | 2023-2026 | verdict |
 |---|---:|---:|---:|---:|---|
-| cases in bin | 60 | 20 ✗ | 253 | 900 | |
-| Anonymity | **28** | 6 | **179** | **722** | persists |
+| cases in bin | 60 | 20 ✗ | 252 | 899 | |
+| Anonymity | **28** | 6 | **179** | **721** | persists |
 | Ephemerality | 0 | 1 | **65** | **254** | persists |
-| ContactDiscovery | **51** | 15 | **139** | **441** | persists |
-| UnmonitoredCommunication | **9** | 8 | **178** | **724** | persists |
-| DistributionInfrastructure | **53** | 14 | **91** | **282** | persists |
-| GenerativeSynthesis (descriptive) | 0 | 0 | 0 | 62 | not tested |
+| ContactDiscovery | **51** | 15 | **138** | **441** | persists |
+| UnmonitoredCommunication | **9** | 8 | **178** | **723** | persists |
+| DistributionInfrastructure | **53** | 14 | **90** | **282** | persists |
+| GenerativeSynthesis (descriptive) | 0 | 0 | 0 | 61 | not tested |
 
 Bold = present; ✗ = bin does not qualify. Non-qualifying launch cohorts: >=2017 (2 coded cases). Verdicts: Anonymity: recurs (cohort), persists (era); Ephemerality: first appears in the last qualifying cohort; recurrence untestable (cohort), persists (era); ContactDiscovery: recurs (cohort), persists (era); UnmonitoredCommunication: recurs (cohort), persists (era); DistributionInfrastructure: recurs (cohort), persists (era). Top platform per era cell is in numbers.json (`top_platform_share`).
 
@@ -71,35 +73,35 @@ Without P2P: ContactDiscovery 17 cases (present: True); cohort 47 coded cases (q
 
 A row counts a class only while the platform's registry window for it is open (`since`…`ended`, `harm_release._on_at`). `harm_open/` keeps the unclosed tables for comparison.
 
-**Strict** (harm cue in a sentence naming the platform, and the harm in the case set). Distinct cases per cell; base: 1,291 stated-tier cases with a default-on class (1,489 mentions).
+**Strict** (harm cue in a sentence naming the platform, and the harm in the case set). Distinct cases per cell; base: 1,288 stated-tier cases with a default-on class (1,486 mentions).
 
 | class | h1 | h2 | h3 | h4 | h5 |
 |---|---:|---:|---:|---:|---:|
-| Anonymity | 7 | 11 | 544 | 8 | 2 |
+| Anonymity | 7 | 11 | 543 | 8 | 2 |
 | Ephemerality | 3 | 9 | 131 | 4 | 0 |
-| ContactDiscovery | 12 | 14 | 292 | 23 | 1 |
-| UnmonitoredCommunication | 7 | 11 | 504 | 10 | 1 |
-| DistributionInfrastructure | 8 | 2 | 225 | 21 | 1 |
+| ContactDiscovery | 12 | 14 | 291 | 22 | 1 |
+| UnmonitoredCommunication | 7 | 11 | 503 | 10 | 1 |
+| DistributionInfrastructure | 8 | 2 | 224 | 20 | 1 |
 | GenerativeSynthesis | 0 | 20 | 12 | 0 | 0 |
 
-**Broad** (the case-level harm set). Distinct cases per cell; base: 1,291 stated-tier cases with a default-on class (1,489 mentions).
+**Broad** (the case-level harm set). Distinct cases per cell; base: 1,288 stated-tier cases with a default-on class (1,486 mentions).
 
 | class | h1 | h2 | h3 | h4 | h5 |
 |---|---:|---:|---:|---:|---:|
-| Anonymity | 145 | 169 | 822 | 36 | 22 |
+| Anonymity | 145 | 169 | 821 | 36 | 22 |
 | Ephemerality | 48 | 71 | 252 | 20 | 3 |
-| ContactDiscovery | 114 | 157 | 537 | 50 | 13 |
-| UnmonitoredCommunication | 142 | 167 | 803 | 39 | 21 |
-| DistributionInfrastructure | 84 | 100 | 380 | 41 | 10 |
-| GenerativeSynthesis | 17 | 38 | 43 | 1 | 0 |
+| ContactDiscovery | 114 | 156 | 536 | 49 | 13 |
+| UnmonitoredCommunication | 142 | 167 | 802 | 39 | 21 |
+| DistributionInfrastructure | 84 | 99 | 379 | 40 | 10 |
+| GenerativeSynthesis | 16 | 38 | 42 | 1 | 0 |
 
-Moved by closing rows (open → closed): strict Anonymity × h3_imagery_circulated 546→544; strict Ephemerality × h3_imagery_circulated 133→131; strict ContactDiscovery × h3_imagery_circulated 293→292; strict UnmonitoredCommunication × h3_imagery_circulated 506→504; broad Anonymity × h1_contact_sexual_abuse 146→145; broad Anonymity × h2_depicted_in_abuse_imagery 172→169; broad Anonymity × h3_imagery_circulated 827→822; broad Ephemerality × h2_depicted_in_abuse_imagery 72→71; broad Ephemerality × h3_imagery_circulated 255→252; broad ContactDiscovery × h2_depicted_in_abuse_imagery 159→157; broad ContactDiscovery × h3_imagery_circulated 539→537; broad UnmonitoredCommunication × h1_contact_sexual_abuse 143→142; broad UnmonitoredCommunication × h2_depicted_in_abuse_imagery 170→167; broad UnmonitoredCommunication × h3_imagery_circulated 808→803. Stated cases with a default-on class: 1298 → 1291.
+Moved by closing rows (open → closed): strict Anonymity × h3_imagery_circulated 545→543; strict Ephemerality × h3_imagery_circulated 133→131; strict ContactDiscovery × h3_imagery_circulated 292→291; strict UnmonitoredCommunication × h3_imagery_circulated 505→503; broad Anonymity × h1_contact_sexual_abuse 146→145; broad Anonymity × h2_depicted_in_abuse_imagery 172→169; broad Anonymity × h3_imagery_circulated 826→821; broad Ephemerality × h2_depicted_in_abuse_imagery 72→71; broad Ephemerality × h3_imagery_circulated 255→252; broad ContactDiscovery × h2_depicted_in_abuse_imagery 158→156; broad ContactDiscovery × h3_imagery_circulated 538→536; broad UnmonitoredCommunication × h1_contact_sexual_abuse 143→142; broad UnmonitoredCommunication × h2_depicted_in_abuse_imagery 170→167; broad UnmonitoredCommunication × h3_imagery_circulated 807→802. Stated cases with a default-on class: 1295 → 1288.
 
-**h1_form** (cases with h1): in_person 1,674 · online 71 · both 12; no h1 9,045. Rule: `pipeline.h1_form` on line-repaired text (`harm_release.classify_release`).
+**h1_form** (cases with h1): in_person 1,672 · online 70 · both 12; no h1 9,025. Rule: `pipeline.h1_form` on line-repaired text (`harm_release.classify_release`).
 
 **Excluded groups** (`harm_release.build`, `excluded_groups`): ai_no_identifiable_child 54 · attempted_contact 57 · sting_no_minor 4 · **union 113**. Overlaps: ai_no_identifiable_child & attempted_contact 0, ai_no_identifiable_child & sting_no_minor 0, attempted_contact & sting_no_minor 2, all_three 0. Stings kept in the base: 5 keep h2/h3, 0 keep another harm.
 
-**Uncovered share** = 1,040 / 10,689 = **0.0973** (9.73%). Rule: Empty harm set among cases in none of ai_no_identifiable_child, attempted_contact, and sting_no_minor, over that same set.
+**Uncovered share** = 1,035 / 10,666 = **0.0970** (9.70%). Rule: Empty harm set among cases in none of ai_no_identifiable_child, attempted_contact, and sting_no_minor, over that same set.
 
 ## 5. Q1 evidence base
 
@@ -107,13 +109,13 @@ Q1 pool: cases whose platform labels include anything other than `online`/`inter
 
 | Value | Number |
 |---|---:|
-| NQOneCases (Q1 candidate cases) | 3,057 (28.3% of corpus) |
+| NQOneCases (Q1 candidate cases) | 3,052 (28.3% of corpus) |
 | PctNoPlatform (no label beyond online/internet) | 71.7% |
-| NPlatformCaseRecords | 4,628 |
-| stated / inferred / named-only, line-wrap (primary) | 2,335 (50.5%) / 404 (8.7%) / 1,889 (40.8%) |
-| stated / inferred / named-only, tiers-1 (baseline) | 1,806 / 314 / 2,508 |
-| cases with a named platform | 1,843 |
-| named-platform records (line-wrap stated / inferred / named-only) | 2,441 (1,522 / 267 / 652) |
+| NPlatformCaseRecords | 4,621 |
+| stated / inferred / named-only, line-wrap (primary) | 2,330 (50.4%) / 404 (8.7%) / 1,887 (40.8%) |
+| stated / inferred / named-only, tiers-1 (baseline) | 1,803 / 313 / 2,505 |
+| cases with a named platform | 1,841 |
+| named-platform records (line-wrap stated / inferred / named-only) | 2,439 (1,520 / 267 / 652) |
 | named platforms | 52 |
 
 Per platform (manifest table: platforms with ≥3 use-documented cases). Stated = cases whose best line-wrap tier for that platform is stated; total = all cases naming it (`afhq1/build.py` `manifest`).
@@ -126,15 +128,15 @@ Per platform (manifest table: platforms with ≥3 use-documented cases). Stated 
 | Discord | 79 | 128 |
 | Dropbox | 86 | 147 |
 | FaceTime | 3 | 11 |
-| Facebook | 129 | 295 |
+| Facebook | 128 | 294 |
 | Facebook Messenger | 35 | 45 |
-| Gen AI | 62 | 86 |
+| Gen AI | 61 | 85 |
 | Google Drive | 27 | 53 |
 | Grindr | 6 | 14 |
 | IRC | 7 | 15 |
 | Instagram | 77 | 149 |
 | Kazaa | 5 | 6 |
-| Kik | 424 | 550 |
+| Kik | 423 | 549 |
 | MeWe | 10 | 10 |
 | Mega.nz | 15 | 38 |
 | MySpace | 1 | 3 |
@@ -159,20 +161,20 @@ Per platform (manifest table: platforms with ≥3 use-documented cases). Stated 
 
 ## 6. Affordance families
 
-Base: the 3,057 Q1 candidate cases, assigned by offense topic (or the matching codebook-9 harm); a case can sit in several families; 229 sit in none.
+Base: the 3,052 Q1 candidate cases, assigned by offense topic (or the matching codebook-9 harm); a case can sit in several families; 229 sit in none.
 
 | family | cases | rule |
 |---|---:|---|
-| contact and approach | 648 | topic hands_on or sextortion, or h1 or h4 in the codebook-9 case harm set |
-| production | 578 | topic production, or h2 in the case harm set |
-| possession and trade | 2,625 | topic possession or distribution, or h3 in the case harm set |
+| contact and approach | 645 | topic hands_on or sextortion, or h1 or h4 in the codebook-9 case harm set |
+| production | 577 | topic production, or h2 in the case harm set |
+| possession and trade | 2,620 | topic possession or distribution, or h3 in the case harm set |
 | coordination | 32 | extracted multi_defendant_operation, or a §2252A(g) child exploitation enterprise charge named in the case text; naming Discord or a game platform alone does not count |
 
 Coordination parts: multi_defendant_operation 31, §2252A(g) enterprise charge in the text 2 (1 by the charge alone). The charge has no stored field; it is matched in the case text.
 
 ## 7. PACER (pacer-v2)
 
-Cases **30** (press-linked 30/30) · documents **98** · agreed acts **290** · chains **170** · observations **875** · derived steps with capability candidates **20 of 420**. Source: `<PACER release>/manifest.json`, `derived/`.
+Cases **30** (press-linked 30/30) · documents **98** · agreed acts **290** · chains **170** · observations **875** · derived steps with capability candidates **10 of 210** (10 of 170 unique acts; DIRECT derivation). Source: `<PACER release>/manifest.json`, `derived/*.direct.json`.
 
 **Two-coder reliability** (pipeline report, `state_machines/coding/report.py` `build`, `reliability_real_cases`; model-coded acts only, docket-parser acts excluded): coder A 2,684 acts, coder B 5,904, matched 1,070, mean event F1 0.229. Action code on matched pairs: raw agreement 365/1070 = 0.341; mean per-case Cohen's κ 0.296. This is agreement conditional on both coders coding the act; it has no negatives.
 
@@ -211,7 +213,7 @@ Cases **30** (press-linked 30/30) · documents **98** · agreed acts **290** · 
 
 ## 8. Limitations
 
-CSAM-related (rule: topic csam, ai_csam, possession, distribution or production): **NCSAM 9,676** (PctCSAM 89.6%). Of those, **1,762** (18.2%) have a named platform, and NCSAMQOne **2,879** (29.8%) are Q1 candidates (generic categories included). NQOneCases 3,057 (PctQOneCases 28.3%).
+CSAM-related (rule: topic csam, ai_csam, possession, distribution or production): **NCSAM 9,655** (PctCSAM 89.6%). Of those, **1,760** (18.2%) have a named platform, and NCSAMQOne **2,874** (29.8%) are Q1 candidates (generic categories included). NQOneCases 3,052 (PctQOneCases 28.3%).
 
 ## 9. doj_safe_childhood_2023_103 vs 2024_461
 
@@ -229,41 +231,41 @@ Different URLs (plea, then sentencing), different release dates, different finge
 
 ## 10. Platform co-occurrence (BiCM)
 
-Q1 cases × named platforms; an edge is dropped when the case was published after the platform's registry `until`. Bipartite Configuration Model (Saracco et al. 2015) fitted with `bicm` 3.5.0 in an isolated venv; for each platform pair, observed co-occurrence, BiCM expectation, and the exact Poisson-binomial upper-tail p-value; Benjamini–Hochberg at q = 0.05 over every pair. Fit: max degree error 2.5e-10; exact vs package `poibin` p-values differ by at most 1.6e-13. Code: [cooc/](cooc/).
+Q1 cases × named platforms; an edge is dropped when the case was published after the platform's registry `until`. Bipartite Configuration Model (Saracco et al. 2015) fitted with `bicm` 3.5.0 in an isolated venv; for each platform pair, observed co-occurrence, BiCM expectation, and the exact Poisson-binomial upper-tail p-value; Benjamini–Hochberg at q = 0.05 over every pair. Fit: max degree error 1.2e-06; exact vs package `poibin` p-values differ by at most 1.8e-13. Code: [cooc/](cooc/).
 
 | run | cases | platforms | edges | pairs tested | pairs co-occurring | significant | of those flagged (<5 cases or one source) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| stated: stated tier, rows closed at `until` | 1,300 | 45 | 1,510 | 990 | 93 | 1 | 0 |
-| all: all tiers | 1,833 | 51 | 2,423 | 1,275 | 212 | 51 | 45 |
-| stated_clean: stated tier without the 0 boilerplate-only edges (cooc-boilerplate-1) | 1,300 | 45 | 1,510 | 990 | 93 | 1 | 0 |
-| all_clean: all tiers without the 106 boilerplate-only edges (cooc-boilerplate-1) | 1,823 | 49 | 2,317 | 1,176 | 162 | 0 | 0 |
+| stated: stated tier, rows closed at `until` | 1,298 | 45 | 1,508 | 990 | 93 | 1 | 0 |
+| all: all tiers | 1,831 | 51 | 2,421 | 1,275 | 212 | 51 | 45 |
+| stated_clean: stated tier without the 0 boilerplate-only edges (cooc-boilerplate-1) | 1,298 | 45 | 1,508 | 990 | 93 | 1 | 0 |
+| all_clean: all tiers without the 106 boilerplate-only edges (cooc-boilerplate-1) | 1,821 | 49 | 2,315 | 1,176 | 162 | 0 | 0 |
 
 Platform labels carry the Facebook-in-Messenger correction (§12). Boilerplate: an edge is dropped when every sentence naming the platform matches an app-list pattern (`config/cooc_boilerplate_sentences.yaml`).
 
-**Summary.** Stated tier: 990 pairs tested, 1 significant; Facebook + Facebook Messenger 18 cases against 4.288 expected. All tiers: 51 significant, 45 flagged (<5 cases or one source); without boilerplate edges, stated **1**, all tiers **0**. Significant on both boilerplate-free runs: none. Most Q1 cases name one platform (§11), so the test has little power.
+**Summary.** Stated tier: 990 pairs tested, 1 significant; Facebook + Facebook Messenger 18 cases against 4.263 expected. All tiers: 51 significant, 45 flagged (<5 cases or one source); without boilerplate edges, stated **1**, all tiers **0**. Significant on both boilerplate-free runs: none. Most Q1 cases name one platform (§11), so the test has little power.
 
 Affordance classes on each significant pair are in numbers.json (`significant[].classes`). Same-platform class pairs (registry bundling) are listed per platform under `mechanical_same_platform_class_pairs` and not tested.
 
 ## 11. Prevalence by class, tier and level
 
-Over the 4,628 Q1 platform–case records (line-wrap tiers: stated 2,335, inferred 404, named-only 1,889). Levels: A the class is registry default_on on the platform with its window open at publication; A_any the platform offered it at all; B capability-relevant conduct; I inferred facilitation; C instrumental, stated in the platform sentence. Cells: records (share of all Q1 records); then stated / inferred / named-only. Source: `build/records.csv` (`<Class>.<level>` columns).
+Over the 4,621 Q1 platform–case records (line-wrap tiers: stated 2,330, inferred 404, named-only 1,887). Levels: A the class is registry default_on on the platform with its window open at publication; A_any the platform offered it at all; B capability-relevant conduct; I inferred facilitation; C instrumental, stated in the platform sentence. Cells: records (share of all Q1 records); then stated / inferred / named-only. Source: `build/records.csv` (`<Class>.<level>` columns).
 
 | class | A | B | I | C |
 |---|---|---|---|---|
-| Anonymity | 1,463 (31.6%): 1,022 / 167 / 274 | 532 (11.5%): 482 / 50 / 0 | 407 (8.8%): 367 / 40 / 0 | 32 (0.7%): 29 / 3 / 0 |
-| Ephemerality | 415 (9.0%): 321 / 63 / 31 | 402 (8.7%): 371 / 31 / 0 | 177 (3.8%): 162 / 15 / 0 | 0 (0.0%): 0 / 0 / 0 |
-| ContactDiscovery | 1,245 (26.9%): 717 / 147 / 381 | 596 (12.9%): 544 / 52 / 0 | 323 (7.0%): 299 / 24 / 0 | 10 (0.2%): 10 / 0 / 0 |
-| UnmonitoredCommunication | 1,353 (29.2%): 990 / 155 / 208 | 605 (13.1%): 553 / 52 / 0 | 416 (9.0%): 379 / 37 / 0 | 24 (0.5%): 23 / 1 / 0 |
-| DistributionInfrastructure | 938 (20.3%): 469 / 101 / 368 | 1,094 (23.6%): 951 / 143 / 0 | 742 (16.0%): 656 / 86 / 0 | 571 (12.3%): 521 / 50 / 0 |
-| GenerativeSynthesis | 87 (1.9%): 63 / 5 / 19 | 138 (3.0%): 124 / 14 / 0 | 63 (1.4%): 59 / 4 / 0 | 21 (0.4%): 21 / 0 / 0 |
+| Anonymity | 1,462 (31.6%): 1,021 / 167 / 274 | 532 (11.5%): 482 / 50 / 0 | 407 (8.8%): 367 / 40 / 0 | 32 (0.7%): 29 / 3 / 0 |
+| Ephemerality | 415 (9.0%): 321 / 63 / 31 | 401 (8.7%): 370 / 31 / 0 | 177 (3.8%): 162 / 15 / 0 | 0 (0.0%): 0 / 0 / 0 |
+| ContactDiscovery | 1,244 (26.9%): 716 / 147 / 381 | 595 (12.9%): 543 / 52 / 0 | 322 (7.0%): 298 / 24 / 0 | 10 (0.2%): 10 / 0 / 0 |
+| UnmonitoredCommunication | 1,352 (29.3%): 989 / 155 / 208 | 604 (13.1%): 552 / 52 / 0 | 416 (9.0%): 379 / 37 / 0 | 24 (0.5%): 23 / 1 / 0 |
+| DistributionInfrastructure | 937 (20.3%): 468 / 101 / 368 | 1,092 (23.6%): 949 / 143 / 0 | 740 (16.0%): 654 / 86 / 0 | 569 (12.3%): 519 / 50 / 0 |
+| GenerativeSynthesis | 86 (1.9%): 62 / 5 / 19 | 137 (3.0%): 123 / 14 / 0 | 62 (1.3%): 58 / 4 / 0 | 21 (0.4%): 21 / 0 / 0 |
 
-Named platforms per case: stated tier 1,127 cases name exactly 1, 173 name 2+ (of 1,300); all tiers 1,456 vs 377 (of 1,833). B, I and C are zero on named-only records by construction. C, I and B nest within A_any (C ⊆ I ⊆ B ⊆ A_any); A counts only capabilities on by default, so a C on an opt-in feature is not in A. I is B on a default_on platform with its window open, or C. A_any (every capability the platform had shipped): Anonymity 2,256, Ephemerality 1,157, ContactDiscovery 2,300, UnmonitoredCommunication 2,233, DistributionInfrastructure 2,462, GenerativeSynthesis 876 (`A_any` in numbers.json).
+Named platforms per case: stated tier 1,125 cases name exactly 1, 173 name 2+ (of 1,298); all tiers 1,454 vs 377 (of 1,831). B, I and C are zero on named-only records by construction. C, I and B nest within A_any (C ⊆ I ⊆ B ⊆ A_any); A counts only capabilities on by default, so a C on an opt-in feature is not in A. I is B on a default_on platform with its window open, or C. A_any (every capability the platform had shipped): Anonymity 2,254, Ephemerality 1,156, ContactDiscovery 2,297, UnmonitoredCommunication 2,231, DistributionInfrastructure 2,460, GenerativeSynthesis 875 (`A_any` in numbers.json).
 
 ## 12. Data checks
 
 **Boilerplate app lists.** Rule: every sentence naming the platform is awareness/list framing (is_awareness_or_list_framing), or names 3+ of the case's platforms and is a bare enumeration (is_enumeration_only). Flagged: 240 records (225 named-only, 12 inferred, 3 stated); 27 Q1 cases carry only flagged tags, 43 carry only flagged named-platform tags. Named-only totals may be inflated by up to the flagged named-only records. This is an upper bound.
 
-**Facebook double tag.** the platform matcher tags 'Facebook' inside the phrase 'Facebook Messenger'. Corpus: 321 cases tagged Facebook in the DB, 23 only from 'Facebook Messenger' (23 in Q1) → **298**. Applied at load, in every AfH output (snapshot cases, Q1 records, manifest, harm tables, co-occurrence); the DB is unchanged. Manifest Facebook after the correction: 295 total, 129 stated.
+**Facebook double tag.** the platform matcher tags 'Facebook' inside the phrase 'Facebook Messenger'. Corpus: 320 cases tagged Facebook in the DB, 23 only from 'Facebook Messenger' (23 in Q1) → **297**. Applied at load, in every AfH output (snapshot cases, Q1 records, manifest, harm tables, co-occurrence); the DB is unchanged. Manifest Facebook after the correction: 294 total, 128 stated.
 
 **Yahoo Chat end year.** both capability years are right for their product (public chat rooms closed Dec 14, 2012; Yahoo! Messenger private messages until Jul 17, 2018). The platform-level end was wrong: the label also matches 'Yahoo! Messenger' (pattern_processing.py, the 'Yahoo Chat' platform pattern). Fix: capability_sources/messaging.yaml Yahoo Chat ended 2012 -> 2018; platforms.yaml regenerated (until 2012 -> 2018).
 
@@ -314,7 +316,7 @@ Rule: a stored publication year is corrected when >= 2 of the record's publicati
 - ⚑ **Publication year**: 29 stored years corrected at load and 50 records flagged (§13); the DB is unchanged.
 - ⚑ **Launch cohorts** that do not qualify: >=2017 (2 coded cases).
 - ⚑ **PACER doc types**: 25 indictment documents in 24 cases; 2 typed `statement_of_offense`; 8 cases have a factual-statement document of some type.
-- ⚑ **Record tiers**: two rules (line-wrap, primary; tiers-1, baseline). Line-wrap moves 529 records into stated.
+- ⚑ **Record tiers**: two rules (line-wrap, primary; tiers-1, baseline). Line-wrap moves 527 records into stated.
 - ⚑ **PACER reliability** is conditional (matched pairs only): mean κ 0.296, mean event F1 0.229; lowest F1 `ncmec_2025_1026` (0.0: 0 agreed acts from 11 vs 99 coded).
 - ⚑ **Facebook double tag**: 23 DB Facebook tags exist only inside 'Facebook Messenger'; corrected at analysis time, the DB still holds them.
 - ⚑ **Duplicate prosecution**: 2023_103 and 2024_461 are one prosecution counted twice; other such pairs are not measured here.

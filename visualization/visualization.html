@@ -88,8 +88,9 @@
     .pf-detail__type { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
     .pf-detail__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
     .pf-chip-lane { border-left: 3px solid var(--lane-color, var(--line-2)); border-radius: 4px 999px 999px 4px; padding-left: 7px; }
-    .pf-tabs { display: flex; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
-    .pf-tabs::-webkit-scrollbar { display: none; }
+    /* The tabs wrap: in a 400px panel the fourth tab (Evidence) ran past the edge of a row whose
+       scrollbar was hidden, so a mouse could not reach it. */
+    .pf-tabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); }
     .pf-tab {
       border: 0; background: transparent; padding: 10px 8px 9px; font-size: 13px; font-weight: 500; color: var(--ink-3);
       cursor: pointer; position: relative; white-space: nowrap;
@@ -98,7 +99,10 @@
     .pf-tab[aria-selected="true"] { color: var(--ink); }
     .pf-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; background: var(--ink); }
     .pf-tab__n { font-family: var(--mono); font-size: 11px; color: var(--ink-4); margin-left: 4px; }
-    .pf-detail__body { padding: 16px 20px 20px; overflow-y: auto; min-height: 0; flex: 1 1 auto; overscroll-behavior: contain; }
+    /* The panel's max-height assumes it is already stuck below the nav. Before the page scrolls it sits
+       lower and its end is off-screen, so the wheel must pass to the page once the body has scrolled to
+       its end (no overscroll containment); the page then scrolls, the panel sticks, and all of it shows. */
+    .pf-detail__body { padding: 16px 20px 20px; overflow-y: auto; min-height: 0; flex: 1 1 auto; }
     /* Only the filled panel is a flex child. The empty-state sibling must not get
        display:flex — that beats the [hidden] attribute and keeps "Select a platform…"
        on screen (and steals height) after a platform is selected. */
@@ -288,7 +292,22 @@
       analyzedOnly: false,
       evidenceLimit: 12,
       activeTab: null,
+      // ?release=afh2.0 (default): the frozen AfH 2.0 release (numbers/platform_map.py), case ids only.
+      // ?release=phase4: the earlier published evidence file (tiers-1, 2026-11-19), with quotes.
+      release: new URLSearchParams(location.search).get("release") === "phase4" ? "phase4" : "afh2",
+      idsOnly: false,
     };
+    const RELEASE_FILES = {
+      afh2: "platform_affordance_evidence_afh-2.0.json",
+      phase4: "platform_affordance_evidence.json",
+    };
+    // Query string for the current release, kept on every URL the page writes.
+    function releaseQuery(extra) {
+      const q = new URLSearchParams(extra || "");
+      if (state.release === "phase4") q.set("release", "phase4");
+      const s = q.toString();
+      return s ? "?" + s : location.pathname;
+    }
 
     function el(tag, attrs, children) {
       const n = document.createElement(tag);
@@ -442,8 +461,12 @@
       const maxCount = maxBarCount(named.length ? named : list);
       const genericMax = maxBarCount(generic);
       const analysed = list.filter((p) => p.researcherAnalyzed).length;
+      // Footer counts follow the registry statuses (NON_NAMED_LABELS): aliases and technology labels are not named platforms.
+      const namedCount = named.filter((p) => !NON_NAMED_LABELS.has(p.platform)).length;
+      const otherCount = named.length - namedCount;
       document.getElementById("shown-count").textContent =
-        fmt(named.length) + " named · " + fmt(generic.length) + " generic tags · dot = researcher analysis (" + fmt(analysed) + ")";
+        fmt(namedCount) + " named · " + fmt(otherCount) + " alias / technology labels · " + fmt(generic.length) +
+        " generic tags · dot = researcher analysis (" + fmt(analysed) + ")";
 
       LIFECYCLE_LANES.forEach((lane) => {
         const lanePlatforms = named.filter((p) => p.lane === lane.id);
@@ -537,7 +560,8 @@
     }
 
     function tierFilteredRecords(p) {
-      let recs = p.records.filter((r) => r.evidence_quote && r.evidence_quote.trim());
+      // A release file with ids_only carries case ids and no quotes: every record is listed.
+      let recs = state.idsOnly ? p.records.slice() : p.records.filter((r) => r.evidence_quote && r.evidence_quote.trim());
       if (state.tier !== "all") recs = recs.filter((r) => r.stated_vs_inferred === state.tier);
       const tierOrder = { stated: 0, inferred: 1, named_only: 2 };
       recs.sort((a, b) => {
@@ -551,7 +575,7 @@
 
     function closeDetail() {
       state.selected = null;
-      history.replaceState(null, "", location.pathname);
+      history.replaceState(null, "", releaseQuery());
       document.getElementById("detail-empty").hidden = false;
       document.getElementById("detail-content").hidden = true;
       renderLanes();
@@ -568,7 +592,7 @@
       const p = getPlatform(platformName);
       if (!p) return;
 
-      history.replaceState(null, "", "?platform=" + encodeURIComponent(platformName));
+      history.replaceState(null, "", releaseQuery({ platform: platformName }));
       renderLanes();
       renderDetail(p);
     }
@@ -697,7 +721,7 @@
       wrap.appendChild(
         el("p", {
           className: "cl-small cl-muted pf-ev__sum",
-          textContent: fmt(recs.length) + " passages name this platform" + (state.tier !== "all" ? " at the " + (TIER_LABEL[state.tier] || state.tier) + " tier" : "") + ". Showing " + fmt(shown.length) + ".",
+          textContent: fmt(recs.length) + (state.idsOnly ? " cases name this platform" : " passages name this platform") + (state.tier !== "all" ? " at the " + (TIER_LABEL[state.tier] || state.tier) + " tier" : "") + ". Showing " + fmt(shown.length) + ".",
         })
       );
 
@@ -706,7 +730,9 @@
       shown.forEach((rec) => {
         const tier = rec.stated_vs_inferred || "named_only";
         const item = el("li");
-        item.appendChild(el("blockquote", { className: "cl-quote", textContent: rec.evidence_quote.trim() }));
+        if (rec.evidence_quote && rec.evidence_quote.trim()) {
+          item.appendChild(el("blockquote", { className: "cl-quote", textContent: rec.evidence_quote.trim() }));
+        }
         if (rec.platform_role_in_offense) {
           item.appendChild(el("div", { className: "pf-ev__role", textContent: "Role: " + rec.platform_role_in_offense }));
         }
@@ -781,7 +807,7 @@
       setStatus("loading", "Loading platform evidence…");
       try {
         const [evidenceRes, harmRes] = await Promise.all([
-          fetch("/ontology/platform-affordance-evidence/platform_affordance_evidence.json", { cache: "no-store" }),
+          fetch("/ontology/platform-affordance-evidence/" + (RELEASE_FILES[state.release] || RELEASE_FILES.afh2), { cache: "no-store" }),
           fetch("/ontology/platform-affordance-evidence/platform_affordance_evidence_harm_analysis.json", { cache: "no-store" }),
         ]);
 
@@ -791,6 +817,7 @@
         const { _note, ...harm } = harmRaw;
 
         state.evidence = evidence;
+        state.idsOnly = Boolean(evidence._meta && evidence._meta.ids_only);
         state.harm = harm;
         state.platforms = buildPlatforms(evidence, harm);
 

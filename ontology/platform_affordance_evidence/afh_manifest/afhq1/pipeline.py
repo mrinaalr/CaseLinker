@@ -89,7 +89,11 @@ class PlatformInfo:
     family: str
     capabilities: Dict[str, int]          # class key -> first year natively available
     until: Optional[int]
-    default_on: Dict[str, bool] = field(default_factory=dict)   # every use passes through it by design
+    # default_on: the platform's primary interaction (posting, messaging, storing a file, downloading) uses the
+    # capability under the default configuration, without separate activation; secondary features (Stories,
+    # vanish mode, opt-in groups) do not count. Rows were classified before the rule was written; known departures
+    # are listed in the registry provenance audit and are not changed in AfH 2.0.
+    default_on: Dict[str, bool] = field(default_factory=dict)   # registry default_on; rule in afh_manifest/README.md (Operational definitions)
     cap_meta: Dict[str, dict] = field(default_factory=dict)     # confidence, native, ended, sources
 
     @property

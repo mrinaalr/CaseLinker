@@ -19,7 +19,13 @@ def test_every_released_doc_type_has_a_rule():
     so the types are checked against the rule set, not re-derived from the published names.)"""
     import json
     from state_machines.coding.workflow import DOC_TYPE_WORDS
-    root = Path(__file__).resolve().parents[2] / "state_machines" / "data" / "pacer-v2" / "cases"
+    repo = Path(__file__).resolve().parents[2]
+    root = repo / "state_machines" / "data" / "pacer-v2" / "cases"
     released = {d["doc_type"] for p in root.glob("*.json") for d in json.loads(p.read_text())["documents"]}
+    if not released:
+        # A clone without the restricted case bundles: the shipped text-free inventory holds the same document types
+        # (written from the bundles by numbers/compute_numbers.py).
+        inventory = repo / "ontology" / "platform_affordance_evidence" / "afh_manifest" / "numbers" / "pacer_doc_types.json"
+        released = {kind for types in json.loads(inventory.read_text())["cases"].values() for kind in types}
     assert "findings_of_fact" in released
     assert released - {kind for _, kind in DOC_TYPE_WORDS} == set()

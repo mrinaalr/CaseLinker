@@ -47,6 +47,17 @@ for _var in GUARDED_VARS:
 # No import-time cache warming in run/main.py: its thread prints into other tests' captured output.
 os.environ["CASELINKER_NO_WARMUP"] = "1"
 
+# run/main.py opens <repo>/config.DATABASE_PATH at import and creates it if missing. In a clone without the
+# local corpus DB that left an empty caselinker.db in the repo root, so tests that skip when the corpus DB is
+# absent ran against an empty file and failed. Point main at a scratch file instead, only when no corpus DB exists.
+if not (ROOT / "caselinker.db").exists():
+    import tempfile
+
+    sys.path.insert(0, str(ROOT))
+    import config as _config
+
+    _config.DATABASE_PATH = str(Path(tempfile.mkdtemp(prefix="caselinker-tests-")) / "caselinker.db")
+
 # A test that deletes DATABASE_URL (to force SQLite) and then imports run/main.py used to get the
 # production URL back from .env through load_dotenv(override=False). Under pytest, dotenv never
 # applies or returns the guarded variables, so no test can resolve production from a file.

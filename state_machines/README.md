@@ -59,7 +59,7 @@ A record supports three different kinds of claim, and each has its own gate. The
 
 Dataset `pacer-v1` holds all three levels for 30 cases (98 documents): 284 agreed acts, 875 observations, 9 acts tied to a platform by a stated means, 45 sentences in 10 cases that state a means where the two coders dispute the act (kept apart, as disputed machine readings), a case-level [research table](observations/README.md#research-table) and an [affordance evidence matrix](observations/README.md#affordance-evidence-matrix) that keep the kinds of evidence apart. Act counts are lower bounds: on the blind benchmark split the release finds 104 of 247 gold acts. It is machine-coded: no person adjudicated an act or reviewed an observation, and it is complete, loadable and citable as that. A case id is the corpus id of the press release for the same prosecution, where the corpus holds one. The cases are a selected collection of prosecutions, not a sample of offending.
 
-`pacer-v2` (2026-11-24) recodes the cases with the capability registry loaded and replaces `external_extortion` (no press record) with `ut_ag_2026_006`, so all 30 cases link to a press release: 290 agreed acts (`pacer-v1`: 284), 170 chains (163), `candidate_capabilities` on 20 of 420 derived steps (0 of 404), 98 documents. `pacer-v1` is kept unchanged on record. Both use the same graph IRIs, so a SPARQL store loads one of them, not both.
+`pacer-v2` (2026-11-24) recodes the cases with the capability registry loaded and replaces `external_extortion` (no press record) with `ut_ag_2026_006`, so all 30 cases link to a press release: 290 agreed acts (`pacer-v1`: 284), 170 chains (163), `candidate_capabilities` on 10 of 210 derived steps (0 of 202; DIRECT derivation), 98 documents. `pacer-v1` is kept unchanged on record. Both use the same graph IRIs, so a SPARQL store loads one of them, not both.
 
 ## The documented event graph
 
@@ -149,7 +149,7 @@ python -m state_machines.trajectories.digest pacer-v1 --registry <capability_sou
 | [`evidence/CODEBOOK.md`](evidence/CODEBOOK.md), [`evidence/CODER_GUIDE.md`](evidence/CODER_GUIDE.md) | What each code means; how to code a case |
 | [`trajectories/derive.py`](trajectories/derive.py) | Partial order, chains, interruptions, derivation metadata |
 | [`trajectories/affordances.py`](trajectories/affordances.py) | Affordance levels A and B from the shared capability registry |
-| [`trajectories/claims.py`](trajectories/claims.py) | One step, split into stated platform, registry candidates, and documented feature use |
+| [`trajectories/claims.py`](trajectories/claims.py) | One step, split into coded platform interactions, registry candidates, and documented feature use |
 | [`trajectories/digest.py`](trajectories/digest.py) | The analysis frame for a dataset, and the coding bench |
 | [`trajectories/use_notes.py`](trajectories/use_notes.py) | Researcher judgments of use. They sit beside a step and never enter $O_{i}$ |
 | [`trajectories/afh.py`](trajectories/afh.py) | $\mathrm{Aff}$, $H(c)$, $\psi$, coverage identity, dataset analysis |

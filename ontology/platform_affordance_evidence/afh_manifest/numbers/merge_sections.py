@@ -24,7 +24,7 @@ d["13_publication_year"] = {
 }
 d["11_prevalence"] = J("prevalence.json")
 fu = J("data_checks.json")
-db = sqlite3.connect(f"file:{AI.DB}?mode=ro", uri=True)
+db = sqlite3.connect(f"file:{AI.COLLECTED}?mode=ro", uri=True)     # the feature counter describes the collected corpus
 fa = db.execute("select count(*), count(distinct case_id), sum(span_ok) from field_assertions").fetchone()
 fa_fields = dict(db.execute("select field, count(*) from field_assertions group by 1").fetchall())
 d["12_data_checks"] = {

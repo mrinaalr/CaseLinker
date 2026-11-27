@@ -11,6 +11,9 @@ same code, and labelled `afh_2_0_snapshot: false` in RUN_INPUTS.json, numbers.js
               local/afh-runs/<db sha256[:12]>/ (gitignored), so a new corpus never overwrites the
               published AfH 2.0 outputs.
   AFH_ALLOW_OTHER_INPUTS=1   run on inputs that are not the AfH 2.0 snapshot (warns; outputs labelled)
+  AFH_DB_COLLECTED  the collected corpus DB. run_all.sh sets it to the input AFH_DB, then points AFH_DB at the
+              analysis DB that filter_db.py builds (the collected DB minus config/exclusions.csv). Corpus-level
+              figures read AFH_DB_COLLECTED; analytical denominators read AFH_DB.
 """
 import hashlib
 import json
@@ -25,6 +28,8 @@ AFH = HERE.parent
 SNAPSHOT_FILE = HERE / "afh_2_0_snapshot.json"
 
 DB = Path(os.environ.get("AFH_DB") or REPO / "caselinker.db").resolve()
+COLLECTED = Path(os.environ.get("AFH_DB_COLLECTED") or os.environ.get("AFH_DB") or REPO / "caselinker.db").resolve()
+EXCLUSIONS = AFH / "config" / "exclusions.csv"
 PACER = Path(os.environ.get("AFH_PACER") or REPO / "state_machines" / "data" / "pacer-v2").resolve()
 
 
@@ -44,7 +49,7 @@ def sha256_tree(root: Path) -> str:
     return hashlib.sha256(listing.encode()).hexdigest()
 
 
-def identity(db: Path = DB, pacer: Path = PACER, snapshot_file: Path = SNAPSHOT_FILE) -> dict:
+def identity(db: Path = COLLECTED, pacer: Path = PACER, snapshot_file: Path = SNAPSHOT_FILE) -> dict:
     """Hashes of the inputs and whether each matches the AfH 2.0 snapshot."""
     ref = json.loads(snapshot_file.read_text())
     con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
@@ -101,12 +106,14 @@ def inputs_label(out: Optional[Path] = None):
         return "unknown: run outside numbers/run_all.sh, inputs not identified"
 
 
-def check_unchanged(out: Path, db: Path = DB, pacer: Path = PACER) -> list:
+def check_unchanged(out: Path, db: Path = COLLECTED, pacer: Path = PACER, analysis: Path = DB) -> list:
     """Names of inputs whose hash changed since RUN_INPUTS.json was written (empty = untouched)."""
     before = run_inputs(out)
     changed = []
     if sha256_file(db) != before["db_sha256"]:
         changed.append("db")
+    if "analysis_db" in before and sha256_file(analysis) != before["analysis_db"]["analysis_db_sha256"]:
+        changed.append("analysis db")
     if sha256_tree(pacer) != before["pacer_sha256"]:
         changed.append("pacer")
     return changed

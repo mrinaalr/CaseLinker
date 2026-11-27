@@ -116,9 +116,10 @@
     if (!cases.length) { host.append(el("div", { class: "lifecycle-loading", text: "No PACER release is published yet." })); return; }
     const rows = [];
     cases.forEach((cs, ci) => {
-      const main = mainTrack(cs);
+      // A case with no agreed acts has no tracks (pacer-v2: ncmec_2025_1026). It keeps its row, stated as empty.
+      const main = mainTrack(cs) || { kind: "none", events: [], views: {} };
       const tracks = state.open.has(cs.case_id) ? [main, ...cs.tracks.filter(t => t !== main)] : [main];
-      tracks.forEach((t, ti) => rows.push({ cs, ci, track: t, first: ti === 0, more: cs.tracks.length - 1 }));
+      tracks.forEach((t, ti) => rows.push({ cs, ci, track: t, first: ti === 0, more: Math.max(0, cs.tracks.length - 1) }));
     });
     const width = L.label + GROUPS.length * L.col + L.pad;
     const laid = rows.map(r => layoutRow(r));
@@ -188,7 +189,9 @@
     const head = sv("g", { class: "row-head", tabindex: r.more ? 0 : -1, role: r.more ? "button" : "presentation" });
     if (r.first) {
       head.append(svText({ x: 28, y: 26, class: "case-id", fill: color }, r.cs.case_id));
-      head.append(svText({ x: 28, y: 42, class: "case-meta" }, `${TRACK_KIND[r.track.kind] || r.track.kind} track · ${r.ids.length} acts`));
+      head.append(svText({ x: 28, y: 42, class: "case-meta" }, r.track.kind === "none"
+        ? "no agreed acts: the two coders agreed on none"
+        : `${TRACK_KIND[r.track.kind] || r.track.kind} track · ${r.ids.length} acts`));
       if (r.more) head.append(svText({ x: 28, y: 58, class: "case-more" }, state.open.has(r.cs.case_id) ? "− fewer tracks" : `+ ${r.more} more track${r.more > 1 ? "s" : ""}`));
     } else {
       head.append(svText({ x: 28, y: 26, class: "case-meta" }, `${TRACK_KIND[r.track.kind] || r.track.kind} track · ${r.ids.length} acts`));

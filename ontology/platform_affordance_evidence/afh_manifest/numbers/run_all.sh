@@ -22,13 +22,18 @@ export AFH_DB=${AFH_DB:-caselinker.db}
 export CASELINKER_DB="$AFH_DB"          # run/main.py and storage helpers read the same DB
 AFH_OUT=$($PY $N/afh_inputs.py)          # checks the inputs; writes RUN_INPUTS.json (hashes, snapshot match)
 export AFH_OUT
+# Corpus-level figures read the collected DB; every analytical denominator reads the analysis DB, a read-only copy
+# of it minus config/exclusions.csv (verified redundant copies). The collected DB is never written.
+export AFH_DB_COLLECTED="$AFH_DB"
+AFH_DB=$($PY $N/filter_db.py)            # builds the analysis DB; adds its label and hash to RUN_INPUTS.json
+export AFH_DB CASELINKER_DB="$AFH_DB"
 echo "AfH run -> $AFH_OUT" >&2
 
 $PY $N/run_afh.py                       # build/, public/, harm_open/, harm_closed/
 $PY $N/year_evidence.py                 # year_evidence.json: publication-year corrections and flags
 $PY $N/year_sensitivity.py              # year_sensitivity.json: year-dependent results without the flagged records
 mkdir -p "$AFH_OUT/task_forces"
-$PY scripts/verify/icac_tf_verify.py --db "$AFH_DB" \
+$PY scripts/verify/icac_tf_verify.py --db "$AFH_DB_COLLECTED" \
   --cross-csv "$AFH_OUT/task_forces/tf_cross.csv" --aggregator-only-csv "$AFH_OUT/task_forces/tf_aggregator_only.csv" \
   > "$AFH_OUT/task_forces/icac_tf_verify.out"
 # the log names its output files; keep them relative so no machine path (or user name) ships
@@ -43,4 +48,5 @@ $PY $N/compute_numbers.py               # numbers.json, sections 1-9
 $PY $N/prevalence.py                    # prevalence.json
 $PY $N/merge_sections.py                # numbers.json, sections 10-12
 $PY $N/write_md.py                      # numbers.md
+$PY $N/platform_map.py                   # /visualization data for this release (case ids only)
 $PY $N/afh_inputs.py --check-unchanged  # the DB and PACER release must hash exactly as before the run

@@ -19,7 +19,7 @@ from state_machines.trajectories.use_notes import by_step, load as load_notes, v
 
 ADMISSIBLE = ("DIRECT", "INFERRED")
 _CLAIM = {
-    "stated_platform_means": "the record says the act went through this platform",
+    "stated_platform_means": "a platform the act's coding records it as going through (platform_interactions, taken from coder A's coding of an act both coders agreed on; coder B's platform is not compared). It is not the observation layer's stated-means tie",
     "candidate_capabilities": "the registry says the platform offered a capability relevant to this kind of act; this is availability, not use",
     "available_on_platform": "the platform offered this capability, and the codebook does not treat it as relevant to this kind of act",
     "documented_feature_use": "the act's own sentence states the feature as the means; this is O_i",
@@ -161,7 +161,7 @@ def render(digest: dict) -> str:
     ]
     steps = [s for c in digest["cases"] for t in c["tracks"] for L in t["chains"] for s in L["steps"]]
     lines.append(f"{len(digest['cases'])} cases, {len(steps)} steps, "
-                 f"{sum(1 for s in steps if s['stated_platform_means'])} with a stated platform, "
+                 f"{sum(1 for s in steps if s['stated_platform_means'])} with a coded platform interaction, "
                  f"{sum(1 for s in steps if s['documented_feature_use'])} with documented feature use, "
                  f"{digest['use_notes']} use notes.")
     lines.append("")
