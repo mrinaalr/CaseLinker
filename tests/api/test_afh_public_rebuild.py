@@ -43,7 +43,11 @@ def test_public_snapshot_rebuilds_the_shipped_build_byte_for_byte(no_database, c
 def test_public_snapshot_names_the_shipped_corpus():
     meta = json.loads((PUBLIC / "meta.json").read_text())
     ident = json.loads((AFH / "numbers" / "build" / "RUN_IDENTITY.json").read_text())
-    assert meta["dataset_identity"] == ident["dataset_identity"] and meta["case_count"] == 10802
+    # The public snapshot is analytical: the collected corpus (10,802 records) minus the 23 records in
+    # afh_manifest/config/exclusions.csv (exclusions v1).
+    analysis = meta["afh_inputs"]["analysis_db"]
+    assert meta["dataset_identity"] == ident["dataset_identity"] and meta["case_count"] == 10779
+    assert analysis["excluded_records"] == 23 and analysis["analysis_db_cases"] == meta["case_count"] == 10802 - 23
 
 
 def test_public_cases_carry_no_source_url():

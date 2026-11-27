@@ -45,6 +45,13 @@ LEVELS = (
     ("I_inferred_facilitation", "inferred"),
     ("C_explicit_instrumental_use", "instrumental"),
 )
+# default_on, used by levels A and I below (docs only; LEVEL_TEXT is written into
+# numbers/build/affordance_coverage.json and is unchanged): the platform's primary interaction (named per
+# platform: posting, messaging, storing a file, downloading) uses the capability under the default
+# configuration, without separate activation. Secondary features (Stories, vanish mode, opt-in groups) do not
+# make a class default-on. A row the evidence cannot settle is uncertain. The registry rows were classified
+# before this rule was written down. Rows known to depart from it are listed in the registry provenance audit
+# and are not changed in AfH 2.0.
 LEVEL_TEXT = {
     "A_any_available_capability": "the platform offered the capability natively in the case's publication year (registry window since..ended open), on by default or not",
     "A_default_on_capability": "the capability is on for every use by design (registry default_on) and its registry window (since..ended) is open in the publication year",
